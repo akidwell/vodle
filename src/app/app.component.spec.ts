@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'RSPS'`, () => {
+  it(`should have as title 'rsps'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('RSPS');
+    expect(app.title).toEqual('rsps');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('RSPS app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('rsps app is running!');
   });
 });
