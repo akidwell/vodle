@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve -o",
     "build": "ng build",
+    "build:dev": "ng build --watch --deploy-url /rsps/ --base-href /rsps/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
