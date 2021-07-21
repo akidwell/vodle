@@ -1,0 +1,33 @@
+<div class="table-responsive">
+    <table class="table mb-0"
+           *ngIf="importPolicies && importPolicies.length">
+      <thead>
+        <tr>
+          <th>Submission Number</th>   
+          <th>Quote No</th>   
+          <th>Underwriter</th>   
+          <th>Policy No</th>   
+          <th>Policy Eff Date</th>   
+          <th>Insured</th>   
+          <th>Producer</th>   
+          <th>N/R</th>   
+          <th>PAC</th>   
+          <th>Program</th>   
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of importPolicies">
+          <td>{{ product.SubmissionNumber }}</td>    
+          <td>{{ product.quoteNumber }}</td>   
+          <td>{{ product.uwLastName }}</td>  
+          <td>{{ product.policyNumber }}</td>    
+          <td>{{ product.policyEffectiveDate }}</td>   
+          <td>{{ product.insuredName}}</td>    
+          <td>{{ product.producerName}}</td>    
+          <td>{{ product.submissionEventCode}}</td>    
+          <td>{{ product.pacCode}}</td>    
+          <td>{{ product.programName}}</td>      
+        </tr>
+      </tbody>
+    </table>
+  </div>

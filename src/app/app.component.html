@@ -4,17 +4,16 @@ POLICY
 </div>
 <nav>
   <ul class='nav navbar-nav' >
-    <li><a class='nav-link'>Home</a></li>
-    <li><a class='nav-link'>Search</a></li>
-    <li><a class='nav-link'>Policy</a></li>
-    <li><a class='nav-link'>Import</a></li>
-    <li><a class='nav-link'>Reports</a></li>
+    <li><a class='nav-link' routerLinkActive='active' routerLink='/home'>Home</a></li>
+    <li><a class='nav-link' routerLinkActive='active' routerLink='/search'>Search</a></li>
+    <li><a class='nav-link' routerLinkActive='active' routerLink='/policy'>Policy</a></li>
+    <li><a class='nav-link' routerLinkActive='active' routerLink='/import'>Import</a></li>
+    <li><a class='nav-link' routerLinkActive='active' routerLink='/reports'>Reports</a></li>
   </ul>
 </nav>
+<div class='container'>
+  <router-outlet></router-outlet>
+</div>
 <div clas="footer" id="footer">
   <rsps-version></rsps-version> 
-</div>
-
-<div>
-  <rsps-version></rsps-version>
 </div>
