@@ -24,4 +24,8 @@ export class ConfigService {
   get apiBaseUrl() : string {
     return this.appConfig.apiBaseUrl;
   }
+
+  get getBuildVersion() : string {
+    return this.appConfig.buildVersion;
+  }
 }

@@ -13,7 +13,7 @@ export class ImportService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getImportPolicies(): Observable<ImportPolicy[]> {
-    return this.http.get<ImportPolicy[]>(this.config.apiBaseUrl + '/import-policies')
+    return this.http.get<ImportPolicy[]>(this.config.apiBaseUrl + 'api/import-policies')
       .pipe(
         tap(data => console.log(JSON.stringify(data))),
         catchError(this.handleError)

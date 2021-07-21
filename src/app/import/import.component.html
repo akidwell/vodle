@@ -21,7 +21,7 @@
           <td>{{ product.quoteNumber }}</td>   
           <td>{{ product.uwLastName }}</td>  
           <td>{{ product.policyNumber }}</td>    
-          <td>{{ product.policyEffectiveDate }}</td>   
+          <td>{{ product.policyEffectiveDate| date: 'MM/dd/yyyy'}}</td>   
           <td>{{ product.insuredName}}</td>    
           <td>{{ product.producerName}}</td>    
           <td>{{ product.submissionEventCode}}</td>    

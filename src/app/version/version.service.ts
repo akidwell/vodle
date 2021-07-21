@@ -15,7 +15,7 @@ import { IVersion } from "./version";
     getVersion(): Observable<IVersion> {
         const options = {responseType: 'text'};
 
-        return this.http.get<IVersion>(this.config.apiBaseUrl + '/version')
+        return this.http.get<IVersion>(this.config.apiBaseUrl + 'api/version')
           .pipe(
             tap(data => console.log('All: ', JSON.stringify(data))),
             catchError(this.handleError)
