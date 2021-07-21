@@ -1,3 +1,4 @@
 {
-    "apiBaseUrl": "https://localhost:44375/api"
+    "apiBaseUrl": "https://localhost:44375/",
+    "buildVersion" : "!.0.0.0"
 }

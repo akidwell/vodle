@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ConfigService } from '../config/config.service';
 import { VersionService } from './version.service';
 
 @Component({
@@ -7,17 +8,18 @@ import { VersionService } from './version.service';
     templateUrl: './version.component.html'
   })
 export class VersionComponent implements OnInit, OnDestroy {
-    version: string = '';
+    uiVersion: string = '';
+    apiVersion: string = '';
     errorMessage = '';
     sub!: Subscription;
 
-    
-  constructor(private versionService: VersionService) {}
+  constructor(private versionService: VersionService, private config: ConfigService) {}
 
- ngOnInit(): void {
+  ngOnInit(): void {
+    this.uiVersion = this.config.getBuildVersion;
     this.sub = this.versionService.getVersion().subscribe({
       next: version => {
-        this.version = version.version;
+        this.apiVersion = version.version;
       },
       error: err => this.errorMessage = err
     });

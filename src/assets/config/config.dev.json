@@ -1,3 +1,4 @@
 {
-    "apiBaseUrl": "https://garsdev.td.afg/rsps-service/api/version"
+    "apiBaseUrl": "https://garsdev.td.afg/rsps-service/",
+    "buildVersion" : "!.0.0.0"
 }
