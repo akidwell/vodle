@@ -1,5 +1,5 @@
 export interface ImportPolicy {
-    SubmissionNumber: number;
+    submissionNumber: number;
     quoteNumber: number;
     quoteId: number;
     policyNumber: string;
