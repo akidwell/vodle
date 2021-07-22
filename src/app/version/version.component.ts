@@ -5,7 +5,8 @@ import { VersionService } from './version.service';
 
 @Component({
     selector: 'rsps-version',
-    templateUrl: './version.component.html'
+    templateUrl: './version.component.html',
+    styleUrls: ['../app.component.css']
   })
 export class VersionComponent implements OnInit, OnDestroy {
     uiVersion: string = '';
