@@ -1,4 +1,4 @@
 {
     "apiBaseUrl": "https://localhost:44375/",
-    "buildVersion" : "!.0.0.0"
+    "buildVersion" : "1.0.0.0"
 }
