@@ -18,11 +18,11 @@ import { VersionComponent } from './version/version.component';
     AppRoutingModule
   ],
   providers: [
-    { 
-      provide : APP_INITIALIZER, 
-      multi : true, 
-       deps : [ConfigService], 
-       useFactory : (configService : ConfigService) =>  () => configService.loadAppConfig()
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      deps: [ConfigService],
+      useFactory: (configService: ConfigService) => () => configService.loadAppConfig()
     }
   ],
   bootstrap: [AppComponent]

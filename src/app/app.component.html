@@ -1,22 +1,22 @@
 <html>
+
 <body>
-  <div class="container-fluid" id="header">
-    POLICY
+  <div class="container-fluid" id="header">{{title}}</div>
+  <div class='sidebar'>
+    <a class='nav-link' routerLinkActive='active' routerLink='/home'>Home</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/search'>Search</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/policy'>Policy</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/import'>Import</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/reports'>Reports</a>
   </div>
-    <div class='sidebar'>
-         <a class='nav-link' routerLinkActive='active' routerLink='/home'>Home</a>
-          <a class='nav-link' routerLinkActive='active' routerLink='/search'>Search</a>
-         <a class='nav-link' routerLinkActive='active' routerLink='/policy'>Policy</a>
-         <a class='nav-link' routerLinkActive='active' routerLink='/import'>Import</a>
-          <a class='nav-link' routerLinkActive='active' routerLink='/reports'>Reports</a>
-    </div>
-    <div class='container'>
-        <router-outlet></router-outlet>
-    </div>
-      <div class='content'>
-      </div>
-<div class='footer'>
-  <rsps-version></rsps-version>
-</div>
-  </body>
- </html>
+  <div class='container'>
+    <router-outlet></router-outlet>
+  </div>
+  <div class='content'>
+  </div>
+  <div class='footer'>
+    <rsps-version></rsps-version>
+  </div>
+</body>
+
+</html>
