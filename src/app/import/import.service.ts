@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { ImportPolicy } from './import-policy';
+import { IImportPolicy } from './import-policy';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ export class ImportService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  getImportPolicies(): Observable<ImportPolicy[]> {
-    return this.http.get<ImportPolicy[]>(this.config.apiBaseUrl + 'api/import-policies')
+  getImportPolicies(): Observable<IImportPolicy[]> {
+    return this.http.get<IImportPolicy[]>(this.config.apiBaseUrl + 'api/import-policies')
       .pipe(
         tap(data => console.log(JSON.stringify(data))),
         catchError(this.handleError)

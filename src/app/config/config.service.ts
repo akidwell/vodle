@@ -5,12 +5,11 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ConfigService {
-
   private appConfig: any;
-  private http : HttpClient;
-  
+  private http: HttpClient;
+
   constructor(http: HttpClient) {
-	this.http = http;
+    this.http = http;
   }
 
   loadAppConfig() {
@@ -21,11 +20,11 @@ export class ConfigService {
       });
   }
 
-  get apiBaseUrl() : string {
+  get apiBaseUrl(): string {
     return this.appConfig.apiBaseUrl;
   }
 
-  get getBuildVersion() : string {
+  get getBuildVersion(): string {
     return this.appConfig.buildVersion;
   }
 }

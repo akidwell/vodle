@@ -1,4 +1,4 @@
-export interface ImportPolicy {
+export interface IImportPolicy {
     submissionNumber: number;
     quoteNumber: number;
     quoteId: number;
