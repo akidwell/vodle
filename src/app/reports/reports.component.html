@@ -1,3 +1,5 @@
 <div class='content'>
-    <a href = "https://sqlreportscert.gaig.com/Reports/report/Risk%20Solutions/DEV/IUS%20Reports/095_PolicyDetail" target="_blank">095 Policy Detail</a>
+    <tr *ngFor="let report of reports">
+        <a href="{{report.url}}" target="_blank">{{report.description}}</a>
+    </tr>
 </div>

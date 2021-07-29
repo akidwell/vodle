@@ -6,11 +6,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './config/config.service';
 import { VersionComponent } from './version/version.component';
+import { ApplicationsComponent } from './applications/applications.component';
+import { ReportsComponent } from './reports/reports.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    VersionComponent
+    VersionComponent,
+    ApplicationsComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
