@@ -1,15 +1,31 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { IReport } from './report';
+import { ReportService } from './reports.service';
 
 @Component({
   selector: 'rsps-reports',
   templateUrl: './reports.component.html',
-  styleUrls: ['../app.component.css','./reports.component.css']
+  styleUrls: ['../app.component.css', './reports.component.css']
 })
 export class ReportsComponent implements OnInit {
+  errorMessage = '';
+  reports: IReport[] = [];
+  sub!: Subscription;
 
-  constructor() { }
+  constructor(private reportService: ReportService) { }
 
   ngOnInit(): void {
+    this.sub = this.reportService.getReports().subscribe({
+      next: reports => {
+        this.reports = reports;
+      },
+      error: err => this.errorMessage = err
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
 }

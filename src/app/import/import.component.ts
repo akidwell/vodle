@@ -36,7 +36,7 @@ export class ImportComponent implements OnInit {
     this.sub = this.importService.getImportPolicies().subscribe({
       next: importPolicies => {
         this.importPolicies = importPolicies;
-        this.filteredImportPolicies = this.importPolicies;;
+        this.filteredImportPolicies = this.importPolicies;
       },
       error: err => this.errorMessage = err
     });
@@ -45,6 +45,5 @@ export class ImportComponent implements OnInit {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
-
 
 }
