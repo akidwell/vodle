@@ -8,7 +8,7 @@ import { IReport } from './report';
 @Injectable({
     providedIn: 'root'
 })
-export class ReportService {
+export class ReportsService {
 
     constructor(private http: HttpClient, private config: ConfigService) { }
 

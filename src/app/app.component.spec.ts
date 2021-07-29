@@ -136,10 +136,10 @@ describe('AppComponent', () => {
   //   expect(location.path()).toBe('/reports');
   // }));
 
-  it('should have five menu items', () => {
+  it('should have six menu items', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    expect(fixture.debugElement.queryAll(By.css('a')).length).toBe(5);
+    expect(fixture.debugElement.queryAll(By.css('a')).length).toBe(6);
   });
 
 });
