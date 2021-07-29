@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IReport } from './report';
-import { ReportService } from './reports.service';
+import { ReportsService } from './reports.service';
 
 @Component({
   selector: 'rsps-reports',
@@ -13,7 +13,7 @@ export class ReportsComponent implements OnInit {
   reports: IReport[] = [];
   sub!: Subscription;
 
-  constructor(private reportService: ReportService) { }
+  constructor(private reportService: ReportsService) { }
 
   ngOnInit(): void {
     this.sub = this.reportService.getReports().subscribe({

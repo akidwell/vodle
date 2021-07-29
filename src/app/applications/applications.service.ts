@@ -8,7 +8,7 @@ import { IApplication } from './application';
 @Injectable({
     providedIn: 'root'
 })
-export class ApplicationService {
+export class ApplicationsService {
 
     constructor(private http: HttpClient, private config: ConfigService) { }
 

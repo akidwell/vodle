@@ -1,13 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { ApplicationsService } from './applications.service';
 import { ApplicationsComponent } from './applications.component';
 
 describe('ApplicationsComponent', () => {
   let component: ApplicationsComponent;
   let fixture: ComponentFixture<ApplicationsComponent>;
+  let mockApplicationsService: any;
 
   beforeEach(async () => {
+    mockApplicationsService = jasmine.createSpyObj(['getApplications'])
+    mockApplicationsService.getApplications.and.returnValue(of(["test"]));
+
     await TestBed.configureTestingModule({
-      declarations: [ApplicationsComponent]
+      declarations: [ApplicationsComponent],
+      providers: [
+        { provide: ApplicationsService, useValue: mockApplicationsService }
+      ]
     })
       .compileComponents();
   });

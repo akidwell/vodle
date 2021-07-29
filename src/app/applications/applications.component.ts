@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IApplication } from './application';
-import { ApplicationService } from './application.service';
+import { ApplicationsService } from './applications.service';
 
 @Component({
   selector: 'rsps-applications',
@@ -13,10 +13,10 @@ export class ApplicationsComponent implements OnInit {
   applications: IApplication[] = [];
   sub!: Subscription;
 
-  constructor(private applicationService: ApplicationService) { }
+  constructor(private applicationsService: ApplicationsService) { }
 
   ngOnInit(): void {
-    this.sub = this.applicationService.getApplications().subscribe({
+    this.sub = this.applicationsService.getApplications().subscribe({
       next: applications => {
         this.applications = applications;
       },
