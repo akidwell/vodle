@@ -3,6 +3,7 @@
 <body>
   <div class="container-fluid" id="header">{{title}}</div>
   <div class='sidebar'>
+     <button *ngIf="!isAuthenticated" (click)="login()"> Login </button>
     <a class='nav-link' routerLinkActive='active' routerLink='/home'>Home</a>
     <a class='nav-link' routerLinkActive='active' routerLink='/search'>Search</a>
     <a class='nav-link' routerLinkActive='active' routerLink='/policy'>Policy</a>
