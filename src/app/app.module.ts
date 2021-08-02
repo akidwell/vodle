@@ -8,13 +8,15 @@ import { ConfigService } from './config/config.service';
 import { VersionComponent } from './version/version.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ReportsComponent } from './reports/reports.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     VersionComponent,
     ApplicationsComponent,
-    ReportsComponent
+    ReportsComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,

@@ -2,14 +2,8 @@
 
 <body>
   <div class="container-fluid" id="header">{{title}}</div>
-  <div class='sidebar'>
-    <a class='nav-link' routerLinkActive='active' routerLink='/home'>Home</a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/search'>Search</a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/policy'>Policy</a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/import'>Import</a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/reports'>Reports</a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/applications'>Applications</a>
-  </div>
+  <rsps-navigation></rsps-navigation>
+
   <div class='container'>
     <router-outlet></router-outlet>
   </div>
