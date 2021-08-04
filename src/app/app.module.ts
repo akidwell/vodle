@@ -9,6 +9,16 @@ import { VersionComponent } from './version/version.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ReportsComponent } from './reports/reports.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import {OKTA_CONFIG, OktaAuthModule} from '@okta/okta-angular';
+
+
+const config = {
+  clientId: '0oa13ty5ui2LT2Osn1d7',
+  issuer: 'https://logindev.gaig.com',
+  redirectUri: 'callback',
+  scopes: ['openid', 'profile', 'email'],
+  pkce: true
+};
 
 @NgModule({
   declarations: [
@@ -19,6 +29,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     NavigationComponent
   ],
   imports: [
+    OktaAuthModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule
@@ -29,7 +40,8 @@ import { NavigationComponent } from './navigation/navigation.component';
       multi: true,
       deps: [ConfigService],
       useFactory: (configService: ConfigService) => () => configService.loadAppConfig()
-    }
+    },
+    { provide: OKTA_CONFIG, useValue: config },
   ],
   bootstrap: [AppComponent]
 })
