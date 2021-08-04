@@ -21,22 +21,9 @@ export class NavigationComponent implements OnInit {
     }
   
     async ngOnInit() {
-      const accessToken = this.oktaAuth.getAccessToken();
-      this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-  
-      const userClaims = await this.oktaAuth.getUser();
-  
-      // user name is exposed directly as property
-      this.userName = userClaims.name;
-  
-      
+
     }
   
-    login() {
-      this.oktaAuth.signInWithRedirect({
-        originalUri: '/home'
-      })    
-    }
 
   toggleReportNavbar() {
     this.reportNavbarOpen = !this.reportNavbarOpen;
