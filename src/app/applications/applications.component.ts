@@ -6,7 +6,7 @@ import { ApplicationsService } from './applications.service';
 @Component({
   selector: 'rsps-applications',
   templateUrl: './applications.component.html',
-  styleUrls: ['../app.component.css', './applications.component.css']
+  styleUrls: ['./applications.component.css']
 })
 export class ApplicationsComponent implements OnInit {
   errorMessage = '';

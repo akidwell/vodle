@@ -1,0 +1,15 @@
+<div class='sidebar'>
+    <a class='nav-link' routerLinkActive='active' routerLink='/home'>Home</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/search'>Search</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/policy'>Policy</a>
+    <a class='nav-link' routerLinkActive='active' routerLink='/import'>Import</a>
+    <a class='nav-link' (click)="toggleApplicationNavbar()">Apps</a>
+    <div class="collapse navbar-collapse" [ngClass]="{ 'show': applicationNavbarOpen }">
+        <rsps-applications></rsps-applications>
+    </div>
+    <a class='nav-link' (click)="toggleReportNavbar()">
+        Reports</a>
+    <div class="collapse navbar-collapse" [ngClass]="{ 'show': reportNavbarOpen }">
+        <rsps-reports></rsps-reports>
+    </div>
+</div>

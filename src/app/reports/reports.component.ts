@@ -6,7 +6,7 @@ import { ReportsService } from './reports.service';
 @Component({
   selector: 'rsps-reports',
   templateUrl: './reports.component.html',
-  styleUrls: ['../app.component.css', './reports.component.css']
+  styleUrls: ['./reports.component.css']
 })
 export class ReportsComponent implements OnInit {
   errorMessage = '';
