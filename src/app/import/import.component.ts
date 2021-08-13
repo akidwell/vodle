@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IImportPolicy } from './import-policy';
 import { ImportService } from './import.service';
+import { UserAuth } from '../authorization/user-auth';
 
 @Component({
   selector: 'rsps-import',
@@ -13,7 +14,7 @@ export class ImportComponent implements OnInit {
   sub!: Subscription;
   filteredImportPolicies: IImportPolicy[] = [];
   importPolicies: IImportPolicy[] = []
-  
+
   _listFilter = '';
   get listFilter(): string {
     return this._listFilter;
@@ -22,8 +23,8 @@ export class ImportComponent implements OnInit {
     this._listFilter = value;
     this.filteredImportPolicies = this.listFilter ? this.performFilter(this.listFilter) : this.importPolicies;
   }
- 
-  constructor(private importService: ImportService) {}
+
+  constructor(private importService: ImportService, private userAuth: UserAuth) {}
 
   performFilter(filterBy: string): IImportPolicy[] {
     filterBy = filterBy.toLocaleLowerCase();
@@ -44,6 +45,9 @@ export class ImportComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+  }
+  canExecuteImport(): boolean {
+    return this.userAuth.canExecuteImport == "True" ? true : false;
   }
 
 }

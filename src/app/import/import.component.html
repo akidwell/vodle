@@ -20,7 +20,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let importPolicy of filteredImportPolicies">
-            <td>{{ importPolicy.submissionNumber }}</td>
+            <td *ngIf="canExecuteImport();else noExecute">{{ importPolicy.submissionNumber }} import</td>
+            <ng-template #noExecute><td>{{ importPolicy.submissionNumber }}</td></ng-template>
             <td>{{ importPolicy.quoteNumber }}</td>
             <td>{{ importPolicy.uwLastName }}</td>
             <td>{{ importPolicy.policyNumber }}</td>
@@ -35,3 +36,4 @@
       </table>
     </div>
   </div>
+

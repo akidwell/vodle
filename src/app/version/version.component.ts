@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
-import { Subscription } from 'rxjs';
+import { Subscription, pipe, Observable } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { VersionService } from './version.service';
+import { UserAuth } from '../authorization/user-auth';
+import { AuthService } from '../authorization/auth.service';
 
 @Component({
     selector: 'rsps-version',
@@ -14,15 +15,12 @@ export class VersionComponent implements OnInit, OnDestroy {
     apiVersion: string = '';
     errorMessage = '';
     sub!: Subscription;
-    isAuthenticated: boolean = false;
     userName: string | undefined;
+    isAuthenticated: boolean = false;
 
-  constructor(private versionService: VersionService, private config: ConfigService, public oktaAuth: OktaAuthService) {
-    // Subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated,
+  constructor(private versionService: VersionService, private config: ConfigService,
+      private userAuth: UserAuth, private authService: AuthService) {
 
-    );
   }
   async ngOnInit(): Promise<void> {
     this.uiVersion = this.config.getBuildVersion;
@@ -32,28 +30,17 @@ export class VersionComponent implements OnInit, OnDestroy {
       },
       error: err => this.errorMessage = err
     });
-    const accessToken = this.oktaAuth.getAccessToken();
-      this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-  
-      const userClaims = await this.oktaAuth.getUser();
-  
-      // user name is exposed directly as property
-      this.userName = userClaims.name;
+
+
   }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
-  
-    login() {
-      this.oktaAuth.signInWithRedirect({
-        originalUri: '/home'
-      })    
-    }
 
-    async logout() {
-      // Will redirect to Okta to end the session then redirect back to the configured `postLogoutRedirectUri`
-      await this.oktaAuth.signOut();
-    }
+logout() {
+  this.authService.logout();
+}
+
 
 }
