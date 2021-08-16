@@ -26,13 +26,11 @@ export class AuthService {
     });
   }
 
-  isAuthenticated() {
-    if (this.userAuth.isAuthenticated == 'True') {
-      return true;
-    } else {
-      return false;
-    }
-}
+  async isAuthenticated() {
+    // Checks if there is a current accessToken in the TokenManger.
+    return !!(await this.oktaAuth.tokenManager.get('accessToken'));
+  }
+
 header = {
   headers: new HttpHeaders()
     .set('OKTA-Authorization',  'Bearer ' +this.oktaAuth.getAccessToken())
