@@ -1,39 +1,61 @@
 <div class="content">
-    <div class="input-group">
-      <input class="form-control py-2 border-right-0 border" type="search" [(ngModel)]="listFilter" placeholder="Search Submission or Policy No">
-    </div>
-    <div class="table-responsive">
-      <table class="table mb-0" *ngIf="importPolicies && importPolicies.length">
-        <thead>
-          <tr>
-            <th>Submission Number</th>
-            <th>Quote No</th>
-            <th>Underwriter</th>
-            <th>Policy No</th>
-            <th>Policy Eff Date</th>
-            <th>Insured</th>
-            <th>Producer</th>
-            <th>N/R</th>
-            <th>PAC</th>
-            <th>Program</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let importPolicy of filteredImportPolicies">
-            <td *ngIf="canExecuteImport();else noExecute">{{ importPolicy.submissionNumber }} import</td>
-            <ng-template #noExecute><td>{{ importPolicy.submissionNumber }}</td></ng-template>
-            <td>{{ importPolicy.quoteNumber }}</td>
-            <td>{{ importPolicy.uwLastName }}</td>
-            <td>{{ importPolicy.policyNumber }}</td>
-            <td>{{ importPolicy.policyEffectiveDate| date: 'MM/dd/yyyy'}}</td>
-            <td>{{ importPolicy.insuredName}}</td>
-            <td>{{ importPolicy.producerName}}</td>
-            <td>{{ importPolicy.submissionEventCode}}</td>
-            <td>{{ importPolicy.pacCode}}</td>
-            <td>{{ importPolicy.programName}}</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="input-group">
+    <input class="form-control py-2 border-right-0 border" type="search" [(ngModel)]="listFilter"
+      placeholder="Search Submission or Policy No">
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered" *ngIf="importPolicies && importPolicies.length">
+      <thead>
+        <tr>
+          <th>Submission Number</th>
+          <th>Quote No</th>
+          <th>Underwriter</th>
+          <th>Policy No</th>
+          <th>Policy Eff Date</th>
+          <th>Insured</th>
+          <th>Producer</th>
+          <th>N/R</th>
+          <th>PAC</th>
+          <th>Program</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let importPolicy of filteredImportPolicies">
+          <td *ngIf="canExecuteImport();else noExecute"><a [routerLink]="" (click)="import()"> {{
+              importPolicy.submissionNumber }} </a></td>
+          <ng-template #noExecute>
+            <td>{{ importPolicy.submissionNumber }}</td>
+          </ng-template>
+          <td>{{ importPolicy.quoteNumber }}</td>
+          <td>{{ importPolicy.uwLastName }}</td>
+          <td>{{ importPolicy.policyNumber }}</td>
+          <td>{{ importPolicy.policyEffectiveDate| date: 'MM/dd/yyyy'}}</td>
+          <td>{{ importPolicy.insuredName}}</td>
+          <td>{{ importPolicy.producerName}}</td>
+          <td>{{ importPolicy.submissionEventCode}}</td>
+          <td>{{ importPolicy.pacCode}}</td>
+          <td>{{ importPolicy.programName}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div id="mdlSample" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" ng-class="{in: animate}"
+  [ngStyle]="{'display': openModal ? 'block' : 'none', 'opacity': 1}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Import is not enabled!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="import()">Close</button>
+      </div>
     </div>
   </div>
-
+</div>

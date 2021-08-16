@@ -74,6 +74,8 @@ login2() {
     // Will redirect to Okta to end the session then redirect back to the configured `postLogoutRedirectUri`
     this.userAuth.init();
     localStorage.removeItem('jwt_token');
+    // This will clear the token but commented out for now until logout is working
+    //this.oktaAuth.tokenManager.clear();
     await this.oktaAuth.signOut();
   }
 }
