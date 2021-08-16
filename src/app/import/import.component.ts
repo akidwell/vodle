@@ -14,6 +14,7 @@ export class ImportComponent implements OnInit {
   sub!: Subscription;
   filteredImportPolicies: IImportPolicy[] = [];
   importPolicies: IImportPolicy[] = []
+  openModal: boolean = false;
 
   _listFilter = '';
   get listFilter(): string {
@@ -50,4 +51,9 @@ export class ImportComponent implements OnInit {
     return this.userAuth.canExecuteImport == "True" ? true : false;
   }
 
+  import(): void {
+    
+    this.openModal=!this.openModal;
+    console.log(this.openModal);
+  }
 }
