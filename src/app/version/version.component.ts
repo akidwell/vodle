@@ -2,24 +2,19 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, pipe, Observable } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { VersionService } from './version.service';
-import { UserAuth } from '../authorization/user-auth';
-import { AuthService } from '../authorization/auth.service';
 
 @Component({
-    selector: 'rsps-version',
-    templateUrl: './version.component.html',
-    styleUrls: ['../app.component.css']
-  })
+  selector: 'rsps-version',
+  templateUrl: './version.component.html',
+  styleUrls: ['../app.component.css']
+})
 export class VersionComponent implements OnInit, OnDestroy {
-    uiVersion: string = '';
-    apiVersion: string = '';
-    errorMessage = '';
-    sub!: Subscription;
-    userName: string | undefined;
-    isAuthenticated: boolean = false;
+  uiVersion: string = '';
+  apiVersion: string = '';
+  errorMessage = '';
+  sub!: Subscription;
 
-  constructor(private versionService: VersionService, private config: ConfigService,
-      private userAuth: UserAuth, private authService: AuthService) {
+  constructor(private versionService: VersionService, private config: ConfigService) {
 
   }
   async ngOnInit(): Promise<void> {
@@ -30,17 +25,10 @@ export class VersionComponent implements OnInit, OnDestroy {
       },
       error: err => this.errorMessage = err
     });
-
-
   }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
-
-logout() {
-  this.authService.logout();
-}
-
 
 }

@@ -12,6 +12,8 @@ import { NavigationComponent } from './navigation/navigation.component';
 import {OKTA_CONFIG, OktaAuthModule} from '@okta/okta-angular';
 import { AuthInterceptor } from './authorization/auth.interceptor';
 import { JwtModule  } from '@auth0/angular-jwt';
+import { UserComponent } from './user/user.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 const okta_config = {
@@ -28,7 +30,8 @@ const okta_config = {
     VersionComponent,
     ApplicationsComponent,
     ReportsComponent,
-    NavigationComponent
+    NavigationComponent,
+    UserComponent
   ],
   imports: [
     OktaAuthModule,
@@ -41,7 +44,8 @@ const okta_config = {
         return localStorage.getItem('jwt_token');
         }
      }
-   })
+   }),
+    NgbModule
   ],
   providers: [
     {
