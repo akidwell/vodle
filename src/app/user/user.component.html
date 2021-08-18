@@ -1,0 +1,38 @@
+<div ngbDropdown class="d-inline-block" style="float: right;">
+  <button *ngIf='userName' class="btn" id="dropdownUser" ngbDropdownToggle>{{userName.toUpperCase()}}</button>
+  <div ngbDropdownMenu aria-labelledby="dropdownUser">
+    <button (click)="logout()" ngbDropdownItem>Logout</button>
+    <button *ngIf='oktaToken' (click)="triggerModal(modalOktaToken)" ngbDropdownItem>Okta Token</button>
+    <button *ngIf='apiToken' (click)="triggerModal(modalApiToken)" ngbDropdownItem>Api Token</button>
+  </div>
+</div>
+
+<ng-template #modalOktaToken let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Okta Token</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{oktaToken}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #modalApiToken let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Api Token</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{apiToken}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>
