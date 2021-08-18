@@ -13,6 +13,7 @@ import { ImportComponent } from './import/import.component';
 import { ReportsComponent } from './reports/reports.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NavigationComponent } from './navigation/navigation.component';
+import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
 
 @Directive({
   selector: '[routerLink]',
@@ -31,6 +32,12 @@ describe('AppComponent', () => {
   let router: Router;
   let location: Location;
 
+  const oktaConfig = {
+    issuer: 'https://not-real.okta.com',
+    clientId: 'fake-client-id',
+    redirectUri: 'http://localhost:4200'
+  };
+
   @Component({
     selector: 'rsps-version',
     template: '<div id="version">1.0.0.0</div>'
@@ -44,6 +51,7 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ 
         HttpClientTestingModule,
+        OktaAuthModule,
         RouterTestingModule.withRoutes([
           {path: 'home', component: HomeComponent},
           {path: 'search', component: SearchComponent},
@@ -57,7 +65,8 @@ describe('AppComponent', () => {
         FakeVersionComponent,
         RouterLinkDirectiveStub,
         NavigationComponent
-      ]
+      ],
+      providers: [{provide: OKTA_CONFIG, useValue: oktaConfig}]
     }).compileComponents();
   });
 
