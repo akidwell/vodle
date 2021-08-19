@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OktaAuthService } from '@okta/okta-angular';
 import { AuthService } from '../authorization/auth.service';
@@ -29,6 +29,7 @@ export class UserComponent implements OnInit {
     this.authService.logout();
   }
 
+  
   triggerModal(content: any) {
     this.modalService.open(content, {scrollable: true, size: 'xl', ariaLabelledBy: 'modal-basic-title'}).result.then((res) => { 
     }, (res) => {
