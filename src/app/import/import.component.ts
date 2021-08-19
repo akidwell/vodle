@@ -66,13 +66,15 @@ export class ImportComponent implements OnInit {
       error: err => this.errorMessage = err
     });
 
-    if (this.importPolicyResponse.isPolicyImported) {
+    if (this.importPolicyResponse?.isPolicyImported) {
       this.pipeMessage = this.importPolicyResponse.policyId.toString();
+      this.triggerModal();
     }
-    else {
+    else if (this.importPolicyResponse!= null) {
       this.pipeMessage = "Not imported!";
+      this.triggerModal();
     }
-    this.triggerModal();
+    
   }
 
   @ViewChild('modalPipe') modalPipe: any;
