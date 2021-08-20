@@ -71,7 +71,7 @@ export class ImportComponent implements OnInit {
       this.triggerModal();
     }
     else if (this.importPolicyResponse!= null) {
-      this.pipeMessage = "Not imported!";
+      this.pipeMessage = this.importPolicyResponse.errorMessage;
       this.triggerModal();
     }
     
