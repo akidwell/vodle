@@ -33,6 +33,11 @@ export class ImportComponent implements OnInit {
   constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal) { }
 
   performFilter(filterBy: string): IImportPolicy[] {
+    var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
+    if (pattern.test(filterBy)) {
+        throw Error("No special characters");
+    }
+
     filterBy = filterBy.toLocaleLowerCase();
     return this.importPolicies.filter((product: IImportPolicy) =>
       product.submissionNumber.toString().toLocaleLowerCase().includes(filterBy) || product.policyNumber.toString().toLocaleLowerCase().includes(filterBy));
