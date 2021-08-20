@@ -1,5 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,8 @@ import { AuthInterceptor } from './authorization/auth.interceptor';
 import { JwtModule  } from '@auth0/angular-jwt';
 import { UserComponent } from './user/user.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GlobalErrorHandler } from './error-handling/global-error-handler';
+import { ServerErrorInterceptor } from './error-handling/server-error-interceptor';
 
 
 const okta_config = {
@@ -60,6 +62,9 @@ const okta_config = {
       useClass: AuthInterceptor
     },
     { provide: OKTA_CONFIG, useValue: okta_config },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler},
+    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true }
+
   ],
   bootstrap: [AppComponent]
 })

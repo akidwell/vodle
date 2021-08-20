@@ -17,31 +17,15 @@ export class ImportService {
   getImportPolicies(): Observable<IImportPolicy[]> {
     return this.http.get<IImportPolicy[]>(this.config.apiBaseUrl + 'api/import-policies')
       .pipe(
-        tap(data => console.log(JSON.stringify(data))),
-        catchError(this.handleError)
+        tap(data => console.log(JSON.stringify(data)))
       );
   }
   
   postImportPolicies(parm: IImportParameter): Observable<IImportResult> {
     return this.http.post<IImportResult>(this.config.apiBaseUrl + 'api/import-policies',parm)
       .pipe(
-        tap(data => console.log(JSON.stringify(data))),
-        catchError(this.handleError)
+        tap(data => console.log(JSON.stringify(data)))
       );
-  }
-
-  private handleError(err: HttpErrorResponse): Observable<never> {
-    let errorMessage = '';
-    if (err.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      errorMessage = `An error occurred: ${err.error.message}`;
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
-    }
-    console.error(errorMessage);
-    return throwError(errorMessage);
   }
   
 }
