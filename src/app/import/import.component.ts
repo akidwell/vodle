@@ -79,12 +79,12 @@ export class ImportComponent implements OnInit {
       this.pipeMessage = this.importPolicyResponse.errorMessage;
       this.triggerModal();
     }
-    
+  
   }
 
   @ViewChild('modalPipe') modalPipe: any;
 
   triggerModal() {
-    this.modalService.open(this.modalPipe);
+    this.modalService.open(this.modalPipe, { scrollable: true });
   }
 }
