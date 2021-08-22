@@ -1,36 +1,35 @@
 <div ngbDropdown class="d-inline-block" style="float: right;">
-  <button *ngIf='userName' class="btn" id="dropdownUser" ngbDropdownToggle>{{userName.toUpperCase()}}</button>
+  
+  <button *ngIf='userName' class="btn" id="dropdownUser" ngbDropdownToggle>
+    <fa-icon [icon]="faUser"></fa-icon>
+    {{userName.toUpperCase()}}
+  </button>
   <div ngbDropdownMenu aria-labelledby="dropdownUser">
-    <button (click)="logout()" ngbDropdownItem>Logout</button>
-    <button *ngIf='oktaToken' (click)="triggerModal(modalOktaToken)" ngbDropdownItem>Okta Token</button>
-    <button *ngIf='apiToken' (click)="triggerModal(modalApiToken)" ngbDropdownItem>Api Token</button>
+    <div class="dropdown-divider"></div>
+    <button (click)="logout()" ngbDropdownItem>
+      <fa-icon [icon]="faPowerOff"></fa-icon>
+      Logout
+    </button>
+    <button *ngIf='oktaToken' (click)="openOktaModal(modalToken)" ngbDropdownItem>
+      <fa-icon [icon]="faIdBadge"></fa-icon>
+      Okta Token
+    </button>
+    <button *ngIf='apiToken' (click)="openApiModal(modalToken)" ngbDropdownItem>
+      <fa-icon [icon]="faKey"></fa-icon>
+      Api Token
+    </button>
   </div>
 </div>
 
-<ng-template #modalOktaToken let-modal>
+<ng-template #modalToken let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Okta Token</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{modalHeader}}</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">×</span>
     </button>
   </div>
   <div class="modal-body">
-    <p>{{oktaToken}}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
-  </div>
-</ng-template>
-
-<ng-template #modalApiToken let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Api Token</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">×</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p>{{apiToken}}</p>
+    <p>{{modalBody}}</p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>

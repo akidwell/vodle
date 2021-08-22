@@ -1,3 +1,15 @@
+/* This enables newlines to be used in the modal */
 .modal-body{
         white-space: pre-line;
 }
+
+.icon-inside {
+        position: absolute;
+        right: 10px;
+        top: calc(50% - 12px);
+        pointer-events: none;
+        font-size: 16px;
+        font-size: 1.125rem;
+        color: #c4c3c3;
+        z-index:3;
+      }

@@ -1,8 +1,7 @@
 
 .sidebar a.active {
-    text-decoration: none;  color: #fff; font-weight: bold; 
+    text-decoration: none; font-weight: bold; color:black; background-color: white;
   }
-  
-  .sidebar a:hover:not(.active) {
-    text-decoration: none; color: #ff0000;
+.sidebar a:hover:not(.active) {
+    text-decoration: none; font-weight: bold; color: white;  background-color: darkolivegreen;
   }

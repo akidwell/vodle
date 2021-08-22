@@ -6,6 +6,7 @@ import { UserAuth } from '../authorization/user-auth';
 import { IImportParameter } from './import-parameter';
 import { IImportResult } from './import-response';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-import',
@@ -20,6 +21,7 @@ export class ImportComponent implements OnInit {
   openModal: boolean = false;
   importPolicyResponse!: IImportResult;
   pipeMessage: string = "";
+  faSearch = faSearch;
 
   _listFilter = '';
   get listFilter(): string {
