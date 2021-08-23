@@ -1,5 +1,9 @@
 <div class='content'>
-    <tr *ngFor="let report of reports">
-        <a class="nav-link" href="{{report.url}}" target="_blank">{{report.description}}</a>
-    </tr>
+    <div class='sidebar'>
+        <tr *ngFor="let report of reports">
+            <a class="nav-link" href="{{report.url}}" target="_blank">
+                {{report.description}}
+            </a>
+        </tr>
+    </div>
 </div>

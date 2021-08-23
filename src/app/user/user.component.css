@@ -1,5 +1,8 @@
 .btn {
-    background-color: steelblue;
+    background-color: #001f3e;
     color:white;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+
+  .modal-body{
+    font-size: 80%;
   }

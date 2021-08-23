@@ -1,16 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { IImportPolicy } from './import-policy';
 
 import { ImportComponent } from './import.component';
 import { ImportService } from './import.service';
 
+
 describe('ImportComponent', () => {
   let component: ImportComponent;
   let fixture: ComponentFixture<ImportComponent>;
   let mockImportService: any;
   let importPolicies: IImportPolicy[];
+  let router: Router;
 
   beforeEach(async () => {
     mockImportService = jasmine.createSpyObj(['getImportPolicies'])
@@ -25,7 +28,7 @@ describe('ImportComponent', () => {
       imports: [FormsModule],
       declarations: [ImportComponent],
       providers: [
-        { provide: ImportService, useValue: mockImportService }
+        { provide: ImportService, useValue: mockImportService },{provide: Router, useValue: router}
       ]
     })
       .compileComponents();

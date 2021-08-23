@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'import', loadChildren: () => import('./import/import.module').then(m => m.ImportModule), canActivate: [ AuthGuard ]  },
   { path: 'reports', component: ReportsComponent },
   { path: 'applications', component: ApplicationsComponent },
+  { path: 'policy', loadChildren: () => import('./policy/policy.module').then(m => m.PolicyModule)},
   { path: '**', component: PageNotFoundComponent },
 ];
 

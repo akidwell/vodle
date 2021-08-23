@@ -11,7 +11,6 @@ export class AppComponent {
   isAuthenticated: boolean = false;
   userName: string | undefined;
 
-
   constructor(public oktaAuth: OktaAuthService) {
     // Subscribe to authentication state changes
     this.oktaAuth.$authenticationState.subscribe(

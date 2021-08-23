@@ -4,16 +4,20 @@ import { CommonModule } from '@angular/common';
 import { ImportRoutingModule } from './import-routing.module';
 import { ImportComponent } from './import.component';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { BusyComponent } from '../busy/busy.component';
 
 @NgModule({
   declarations: [
-    ImportComponent
+    ImportComponent,
+    BusyComponent
   ],
   imports: [
     CommonModule,
     ImportRoutingModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ]
 })
 export class ImportModule { }

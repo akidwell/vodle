@@ -16,7 +16,7 @@ import { UserComponent } from './user/user.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
 import { ServerErrorInterceptor } from './error-handling/server-error-interceptor';
-
+import { FontAwesomeModule  } from '@fortawesome/angular-fontawesome';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -47,7 +47,8 @@ const okta_config = {
         }
      }
    }),
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [
     {
@@ -68,4 +69,4 @@ const okta_config = {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
