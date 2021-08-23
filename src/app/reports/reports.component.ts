@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IReport } from './report';
 import { ReportsService } from './reports.service';
-import { faSquare } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-reports',
@@ -13,8 +12,7 @@ export class ReportsComponent implements OnInit {
   errorMessage = '';
   reports: IReport[] = [];
   sub!: Subscription;
-  faSquare = faSquare;
-  
+
   constructor(private reportService: ReportsService) { }
 
   ngOnInit(): void {

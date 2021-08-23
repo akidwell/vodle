@@ -52,6 +52,10 @@
   </div>
 </div>
 
+<div *ngIf="showBusy">
+  <rsps-busy></rsps-busy>
+</div>
+
 <ng-template #modalPipe let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Import Error</h4>

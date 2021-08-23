@@ -6,9 +6,12 @@ import { ImportComponent } from './import.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { BusyComponent } from '../busy/busy.component';
+
 @NgModule({
   declarations: [
     ImportComponent,
+    BusyComponent
   ],
   imports: [
     CommonModule,

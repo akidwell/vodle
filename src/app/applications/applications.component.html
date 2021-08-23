@@ -1,8 +1,9 @@
 <div class='content'>
-    <tr *ngFor="let application of applications">
-        <a class="nav-link" href="{{application.url}}" target="_blank">
-            <fa-icon [icon]="faSquare" size="xs"></fa-icon>
-            {{application.description}}
-        </a>
-    </tr>
+    <div class='sidebar'>
+        <tr *ngFor="let application of applications">
+            <a class="nav-link" href="{{application.url}}" target="_blank">
+                {{application.description}}
+            </a>
+        </tr>
+    </div>
 </div>

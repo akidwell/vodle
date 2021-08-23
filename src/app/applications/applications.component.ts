@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IApplication } from './application';
 import { ApplicationsService } from './applications.service';
-import { faSquare } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-applications',
@@ -13,8 +12,7 @@ export class ApplicationsComponent implements OnInit {
   errorMessage = '';
   applications: IApplication[] = [];
   sub!: Subscription;
-  faSquare = faSquare;
-  
+
   constructor(private applicationsService: ApplicationsService) { }
 
   ngOnInit(): void {
