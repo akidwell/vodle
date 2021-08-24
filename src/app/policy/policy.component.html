@@ -1,1 +1,21 @@
-<div class='content'>policy works!</div>
+<div class='content'>
+    <h1>Policy</h1>
+    <form (ngSubmit)="onSubmit()" #policyForm="ngForm">
+    <div class="form-group">
+        <label for="policySymbol">Sym</label>
+        <input type="text" class="form-control" id="policySymbol" required [(ngModel)]="policy.policySymbol" name="policySymbol"
+            #policySymbol="ngModel">
+        <div [hidden]="policySymbol.valid || policySymbol.pristine" class="alert alert-danger">
+            Policy Symbol is required
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="policySymbol">Policy Number</label>
+        <input type="text" class="form-control" id="policyNumber" required [(ngModel)]="policy.fullPolicyNumber" name="policyNumber"
+            #policyNumber="ngModel">
+        <div [hidden]="policyNumber.valid || policyNumber.pristine" class="alert alert-danger">
+            Policy Number is required
+        </div>
+    </div>
+    </form>
+</div>
