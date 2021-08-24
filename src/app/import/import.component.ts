@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IImportPolicy } from './import-policy';
+import { ImportPolicy } from './interfaces/import-policy';
 import { ImportService } from './import.service';
 import { UserAuth } from '../authorization/user-auth';
-import { IImportParameter } from './import-parameter';
-import { IImportResult } from './import-response';
+import { ImportRequest } from './interfaces/import-request';
+import { ImportResult } from './interfaces/import-response';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Router } from "@angular/router";
@@ -17,10 +17,10 @@ import { Router } from "@angular/router";
 export class ImportComponent implements OnInit {
   errorMessage = '';
   sub!: Subscription;
-  filteredImportPolicies: IImportPolicy[] = [];
-  importPolicies: IImportPolicy[] = []
+  filteredImportPolicies: ImportPolicy[] = [];
+  importPolicies: ImportPolicy[] = []
   openModal: boolean = false;
-  importPolicyResponse!: IImportResult;
+  importPolicyResponse!: ImportResult;
   pipeMessage: string = "";
   faSearch = faSearch;
   showBusy: boolean = false;
@@ -36,14 +36,14 @@ export class ImportComponent implements OnInit {
 
   constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router) { }
 
-  performFilter(filterBy: string): IImportPolicy[] {
+  performFilter(filterBy: string): ImportPolicy[] {
     var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
     if (pattern.test(filterBy)) {
         throw Error("No special characters");
     }
 
     filterBy = filterBy.toLocaleLowerCase();
-    return this.importPolicies.filter((product: IImportPolicy) =>
+    return this.importPolicies.filter((product: ImportPolicy) =>
       product.submissionNumber.toString().toLocaleLowerCase().includes(filterBy) || product.policyNumber.toString().toLocaleLowerCase().includes(filterBy));
   }
 
@@ -65,7 +65,7 @@ export class ImportComponent implements OnInit {
   }
 
   async import(selectedRow: any): Promise<void> {
-    const parm: IImportParameter = { submissionNumber: selectedRow.submissionNumber, quoteId: selectedRow.quoteId, programId: selectedRow.programId };
+    const parm: ImportRequest = { submissionNumber: selectedRow.submissionNumber };
 
     this.showBusy = true;
     this.sub = this.importService.postImportPolicies(parm).subscribe({
@@ -81,7 +81,7 @@ export class ImportComponent implements OnInit {
     this.showBusy = false;
     if (this.importPolicyResponse?.isPolicyImported) {
       console.log(this.importPolicyResponse.policyId);
-      this.router.navigate(['/policy']);
+      this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString()]);
     }
     else if (this.importPolicyResponse!= null) {
       this.pipeMessage = this.importPolicyResponse.errorMessage;
