@@ -1,0 +1,29 @@
+<div class="content">
+        <div class="card">
+            <div class="card-header" (click)="collapse.toggle()">
+                Account Information
+                <fa-icon  style="float: right" [icon]="faPlus" *ngIf="accountCollapsed"></fa-icon>
+                <fa-icon  style="float: right" [icon]="faMinus" *ngIf="!accountCollapsed"></fa-icon>
+            </div>
+            <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="policySymbol">Sym</label>
+                        <input type="text" class="form-control" id="policySymbol" required
+                            [(ngModel)]="policy.policySymbol" name="policySymbol" [readonly]="isReadOnly"
+                            #policySymbol="ngModel">
+                        <div [hidden]="policySymbol.valid || policySymbol.pristine" class="alert alert-danger">
+                            Policy Symbol is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="policySymbol">Policy Number</label>
+                        <input type="text" class="form-control" id="policyNumber" required
+                            [(ngModel)]="policy.fullPolicyNumber" name="policyNumber" #policyNumber="ngModel">
+                        <div [hidden]="policyNumber.valid || policyNumber.pristine" class="alert alert-danger">
+                            Policy Number is required
+                        </div>
+                    </div>
+            </div>
+        </div>
+</div>

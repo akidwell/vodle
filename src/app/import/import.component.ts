@@ -29,6 +29,7 @@ export class ImportComponent implements OnInit {
   get listFilter(): string {
     return this._listFilter;
   }
+
   set listFilter(value: string) {
     this._listFilter = value;
     this.filteredImportPolicies = this.listFilter ? this.performFilter(this.listFilter) : this.importPolicies;
@@ -60,6 +61,7 @@ export class ImportComponent implements OnInit {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
+
   canExecuteImport(): boolean {
     return this.userAuth.canExecuteImport == "True" ? true : false;
   }
@@ -94,4 +96,5 @@ export class ImportComponent implements OnInit {
   triggerModal() {
     this.modalService.open(this.modalPipe, { scrollable: true });
   }
+
 }
