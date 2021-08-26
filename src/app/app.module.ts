@@ -1,7 +1,6 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './config/config.service';
@@ -17,6 +16,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
 import { ServerErrorInterceptor } from './error-handling/server-error-interceptor';
 import { FontAwesomeModule  } from '@fortawesome/angular-fontawesome';
+import { CoveragesComponent } from './policy/coverages/coverages.component'; 
+import { FormsModule } from '@angular/forms';
+import { InformationComponent } from './policy/information/information.component';
+import { SchedulesComponent } from './policy/schedules/schedules.component';
+import { ReinsuranceComponent } from './policy/reinsurance/reinsurance.component';
+import { SummaryComponent } from './policy/summary/summary.component';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -33,7 +38,12 @@ const okta_config = {
     ApplicationsComponent,
     ReportsComponent,
     NavigationComponent,
-    UserComponent
+    UserComponent,
+    CoveragesComponent,
+    InformationComponent,
+    SchedulesComponent,
+    ReinsuranceComponent,
+    SummaryComponent
   ],
   imports: [
     OktaAuthModule,
@@ -48,7 +58,8 @@ const okta_config = {
      }
    }),
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    FormsModule
   ],
   providers: [
     {

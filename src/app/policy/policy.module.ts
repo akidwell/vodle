@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { PolicyRoutingModule } from './policy-routing.module';
 import { PolicyComponent } from './policy.component';
 
-
 @NgModule({
   declarations: [
     PolicyComponent

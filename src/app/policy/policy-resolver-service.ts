@@ -17,6 +17,7 @@ export class PolicyResolver implements Resolve<PolicyResolved> {
         if (isNaN(+id)) {
             const message = `Policy id was not a number: ${id}`;
             console.error(message);    
+            // TODO: Might want to do this
             //throw Error("Policy id was not a number");
             return of({ policy: null, error: message });
         }
