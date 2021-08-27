@@ -24,7 +24,6 @@ function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
   selector: 'rsps-import',
   templateUrl: './import.component.html',
   styleUrls: ['../app.component.css', './import.component.css'],
-  encapsulation: ViewEncapsulation.None
 })
 export class ImportComponent implements OnInit {
   errorMessage = '';

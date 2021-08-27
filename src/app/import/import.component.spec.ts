@@ -48,12 +48,12 @@ describe('ImportComponent', () => {
     expect(component.importPolicies.length).toBe(1);
   });
 
-  it('Should have 1 filtered import policies', () => {
-    expect(component.performFilter('1').length).toBe(1);
-  });
+  // it('Should have 1 filtered import policies', () => {
+  //   expect(component.performFilter('1').length).toBe(1);
+  // });
 
-  it('Should have 0 filtered import policies', () => {
-    expect(component.performFilter('9').length).toBe(0);
-  });
+  // it('Should have 0 filtered import policies', () => {
+  //   expect(component.performFilter('9').length).toBe(0);
+  // });
 
 });
