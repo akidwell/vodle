@@ -20,7 +20,8 @@ div.card-header {
      text-decoration: underline;
    }
 
-   /* .employee-highlight {
+/* this if for the nbHighlight, it needed to be here */
+.highlight {
     background-color: yellow;
     font-weight: bold;
-} */
+}
