@@ -9,10 +9,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 
+import { RemoveCommaPipe } from './remove-comma.pipe';
+
 @NgModule({
   declarations: [
     ImportComponent,
-    BusyComponent
+    BusyComponent,
+    RemoveCommaPipe
   ],
   imports: [
     CommonModule,
