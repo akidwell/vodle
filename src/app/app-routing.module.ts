@@ -5,6 +5,7 @@ import { PageNotFoundComponent } from './page-not-found-component';
 import { ReportsComponent } from './reports/reports.component';
 import { OktaCallbackComponent} from '@okta/okta-angular';
 import { AuthGuard } from './authorization/auth.guard';
+import { AccessDeniedComponent } from './access-denied.component';
 const CALLBACK_PATH = 'callback';
 
 
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'reports', component: ReportsComponent },
   { path: 'applications', component: ApplicationsComponent },
   { path: 'policy', loadChildren: () => import('./policy/policy.module').then(m => m.PolicyModule)},
+  { path: 'access-denied', component: AccessDeniedComponent },
   { path: '**', component: PageNotFoundComponent },
 ];
 
