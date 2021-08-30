@@ -34,6 +34,8 @@ export class ImportComponent implements OnInit {
   pipeMessage: string = "";
   faSearch = faSearch;
   showBusy: boolean = false;
+  authSub: Subscription;
+  canExecuteImport: boolean = false;
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
@@ -94,6 +96,11 @@ export class ImportComponent implements OnInit {
     });
 
     this._search$.next();
+
+    // GAM - TEMP -Subscribe
+    this.authSub = this.userAuth.canExecuteImport2$.subscribe(
+      (canExecuteImport2: boolean) => this.canExecuteImport = canExecuteImport2
+    );
   }
 
   ngOnInit(): void {
@@ -110,9 +117,10 @@ export class ImportComponent implements OnInit {
     this.sub.unsubscribe();
   }
 
-  canExecuteImport(): boolean {
-    return this.userAuth.canExecuteImport == "True" ? true : false;
-  }
+  // GAM - TEMP - commented for now
+  // canExecuteImport(): boolean {
+  //   return this.userAuth.canExecuteImport == "True" ? true : false;
+  // }
 
   async import(selectedRow: any): Promise<void> {
     const parm: ImportRequest = { submissionNumber: selectedRow.submissionNumber };

@@ -1,4 +1,4 @@
-<div class='sidebar'>
+<div class='sidebar' *ngIf="isAuthenticated">
     <a class='nav-link' routerLinkActive='active' routerLink='/home'>
         <fa-icon [icon]="faHome"></fa-icon>
         Home

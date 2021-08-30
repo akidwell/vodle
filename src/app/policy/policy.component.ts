@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Policy, PolicyResolved } from './policy';
+import { Policy } from './policy';
 
 @Component({
   selector: 'rsps-policy',
@@ -9,7 +9,6 @@ import { Policy, PolicyResolved } from './policy';
 })
 export class PolicyComponent implements OnInit {
   data: any;
-  // policy: Policy = { policyId: 0, policySymbol: "", fullPolicyNumber: "" };
   policy!: Policy;
   policyNumber: string = "";
 
