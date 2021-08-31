@@ -4,7 +4,7 @@
   <div class="container-fluid" id="header">{{title}}
     <rsps-user></rsps-user>
   </div>
-
+  <ngb-alert *ngIf="errorMessage"> <strong>Warning!</strong> {{errorMessage | json}}</ngb-alert>
   <rsps-navigation></rsps-navigation>
 
   <div class='container'>

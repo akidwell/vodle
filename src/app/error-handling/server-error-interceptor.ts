@@ -22,7 +22,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
           }
           else {
             console.log('this is server side error');
-            errorMsg = `Error Code: ${error.status},  Message: ${error.error.Message}`;
+            errorMsg = `Error Code: ${error.status}, Message: ${error.message.slice(0,75)}` ;
           }
           console.log(errorMsg);
           return throwError(errorMsg);

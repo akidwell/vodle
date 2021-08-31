@@ -1,3 +1,15 @@
 
 <rsps-search-bar></rsps-search-bar>
 <div style="padding: 125px 125px 125px 125px;" class="content">home works!</div>
+
+<ng-container *ngIf="errorMessage">
+    <span name="errorSpan" class="alert alert-danger alert-dismissible msg"  style="width: 100px;" role="alert">
+    <strong>{{errorMessage}}</strong>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="onDismissError()">
+          <span aria-hidden="true">&times;</span></button>
+      </span>
+  </ng-container>
+<p></p>
+<button type="button" mdbBtn color="primary" (click)="throwHttpError()" mdbWavesEffect>Http Error</button>
+<button type="button" mdbBtn color="primary" (click)="throwClientError()" mdbWavesEffect>Client Error</button>
+

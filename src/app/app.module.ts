@@ -13,7 +13,7 @@ import {OKTA_CONFIG, OktaAuthModule} from '@okta/okta-angular';
 import { AuthInterceptor } from './authorization/auth.interceptor';
 import { JwtModule  } from '@auth0/angular-jwt';
 import { UserComponent } from './user/user.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
 import { ServerErrorInterceptor } from './error-handling/server-error-interceptor';
 import { FontAwesomeModule  } from '@fortawesome/angular-fontawesome';
@@ -48,7 +48,8 @@ const okta_config = {
      }
    }),
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgbAlertModule
   ],
   providers: [
     {
@@ -64,7 +65,9 @@ const okta_config = {
     },
     { provide: OKTA_CONFIG, useValue: okta_config },
     { provide: ErrorHandler, useClass: GlobalErrorHandler},
-    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
+    { provide: NgbAlert, useClass: NgbModule, multi: true }
+
 
   ],
   bootstrap: [AppComponent]
