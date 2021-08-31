@@ -10,15 +10,15 @@ export class AppComponent {
   title = 'RSPS';
   isAuthenticated: boolean = false;
   userName: string | undefined;
+  errorMessage = '';
 
   constructor(public oktaAuth: OktaAuthService) {
     // Subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated,
-
-    );
-  }
-
-
+    this.oktaAuth.$authenticationState.subscribe({
+     next: (isAuthenticated: boolean) => {this.isAuthenticated = isAuthenticated
+    },
+    error: err => this.errorMessage = err
+  });
+}
     
 }
