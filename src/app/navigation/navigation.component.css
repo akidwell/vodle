@@ -4,3 +4,8 @@
 .sidebar a:hover:not(.active) {
   text-decoration: none; font-weight: bold; color: #00274e;  background-color: #f2f4f6;
 }
+
+hr.rounded {
+  border-top: 3px solid white;
+  border-radius: 5px;
+}

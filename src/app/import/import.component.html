@@ -5,8 +5,9 @@
         <fa-icon [icon]="faSearch"></fa-icon>
       </span>
     </div>
-    <input class="form-control border-right-0 border" type="search" [(ngModel)]="listFilter"
-      placeholder="Search Submission or Policy No">
+    <input class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
+      placeholder="Search Submission or Policy No or Underwriter" autofocus />
+    <span class="ml-3" *ngIf="loading$ | async">Loading...</span>
   </div>
   <div class="d-flex justify-content-center" *ngIf="!(importPolicies && importPolicies.length)">
     <strong>Loading...</strong>
@@ -30,15 +31,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let importPolicy of filteredImportPolicies">
-          <td *ngIf="canExecuteImport();else noExecute"><a [routerLink]="" (click)="import(importPolicy)"> {{
-              importPolicy.submissionNumber }} </a></td>
+        <tr *ngFor="let importPolicy of policies$ | async">
+          <td *ngIf="canExecuteImport;else noExecute"><a [routerLink]="" (click)="import(importPolicy)">
+          <td>
+            <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm"
+              [highlightClass]="'highlight'"></ngb-highlight>
+          </td>
+          </a>
+          </td>
           <ng-template #noExecute>
-            <td>{{ importPolicy.submissionNumber }}</td>
+            <td>
+              <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm"
+                [highlightClass]="'highlight'"></ngb-highlight>
+            </td>
           </ng-template>
           <td>{{ importPolicy.quoteNumber }}</td>
-          <td>{{ importPolicy.uwLastName }}</td>
-          <td nowrap="nowrap">{{ importPolicy.policyNumber }}</td>
+          <td>
+            <ngb-highlight [result]=" importPolicy.uwLastName" [term]="searchTerm" [highlightClass]="'highlight'">
+            </ngb-highlight>
+          </td>
+          <td nowrap="nowrap">
+            <ngb-highlight [result]="importPolicy.policyNumber" [term]="searchTerm" [highlightClass]="'highlight'">
+            </ngb-highlight>
+          </td>
           <td>{{ importPolicy.policyEffectiveDate| date: 'MM/dd/yyyy'}}</td>
           <td>{{ importPolicy.insuredName}}</td>
           <td>{{ importPolicy.producerName}}</td>
@@ -49,6 +64,17 @@
       </tbody>
 
     </table>
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+        [rotate]="true" [boundaryLinks]="true">
+      </ngb-pagination>
+
+      <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="pageSize">
+        <option [ngValue]="5">5 items per page</option>
+        <option [ngValue]="8">8 items per page</option>
+        <option [ngValue]="10">10 items per page</option>
+      </select>
+    </div>
   </div>
 </div>
 

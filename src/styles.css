@@ -19,3 +19,9 @@ div.card-header {
    a:hover {
      text-decoration: underline;
    }
+
+/* this if for the nbHighlight, it needed to be here */
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+}

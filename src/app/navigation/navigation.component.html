@@ -1,4 +1,4 @@
-<div class='sidebar'>
+<div class='sidebar' *ngIf="isAuthenticated">
     <a class='nav-link' routerLinkActive='active' routerLink='/home'>
         <fa-icon [icon]="faHome"></fa-icon>
         Home
@@ -7,6 +7,7 @@
         <fa-icon [icon]="faFileImport"></fa-icon>
         Import
     </a>
+    <hr class="rounded mt-1 mb-1">
     <a class='nav-link' (click)="toggleApplicationNavbar()">
         <fa-icon [icon]="faToolbox"></fa-icon>
         Apps
