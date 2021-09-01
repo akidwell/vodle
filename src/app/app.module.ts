@@ -59,7 +59,7 @@ const okta_config = {
    }),
     NgbModule,
     FontAwesomeModule,
-    NgbAlertModule
+    NgbAlertModule,
     FormsModule
   ],
   providers: [
