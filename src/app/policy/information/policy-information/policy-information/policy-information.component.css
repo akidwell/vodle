@@ -1,0 +1,28 @@
+.card-header {
+    color: white;
+    background-color: #00274e;
+}
+input[type="text"] {
+    display: inline-block;
+}
+input[type="date"] {
+    display: inline-block;
+    width: 145px;
+}
+input[type="checkbox"] {
+    display: inline-block;
+}
+.container{
+    border-style: solid; 
+    border-width: 1px;
+     border-color: black;
+     margin-top: 5px;
+     padding: 10px;
+     display: inline-block;
+
+}
+.btn-outline-primary{
+    color: black;
+    border-color: black;
+    width: 150px;
+}
