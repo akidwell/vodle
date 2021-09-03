@@ -1,0 +1,239 @@
+<div class="content">
+    <div class="card">
+        <div class="card-header" (click)="collapse.toggle()">
+            Policy Information
+            <fa-icon style="float: right" [icon]="faPlus" *ngIf="policyCollapsed"></fa-icon>
+            <fa-icon style="float: right" [icon]="faMinus" *ngIf="!policyCollapsed"></fa-icon>
+        </div>
+
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="policyCollapsed">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md">
+                        <label for="policyStatus">Status</label>
+                        <input type="text" class="form-control" id="policyStatus" required [readonly]="isReadOnly">
+                    </div>
+                    <div class="col-md">
+                        <label for="policyEnteredDate">Policy Entered Date</label>
+                        <input type="text" class="form-control" id="policyEnteredDate" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md">
+                        <label for="submissionNumber" style="width: 175px;">Submission No.</label>
+                        <input type="text" class="form-control" id="submissionNumber">
+                    </div>
+                    <div class="col-md">
+                        <label for="quoteNumber">Quote No.</label><br>
+                        <input type="text" class="form-control" id="quoteNumber">
+                    </div>
+                    <div class="col-md">
+                        <label for="packagePolicy" style="width: 110px;">Package Policy</label><br>
+                        <input type="text" class="form-control" id="packagePolicy" style="width: 35px;">
+                    </div>
+                    <div class="col-md">
+                        <label for="masterPolicy">Master Policy</label><br>
+                        <input type="checkbox" id="masterPolicy">
+                    </div>
+                    <div class="col-md" style="width: 40px;">
+                        <label for="policyNumber">Sym</label><br>
+                        <input type="text" class="form-control" id="policySymbol" required
+                            [(ngModel)]="policy.policySymbol" name="policySymbol" [readonly]="isReadOnly"
+                            #policySymbol="ngModel">
+                        <div [hidden]="policySymbol.valid || policySymbol.pristine" class="alert alert-danger">
+                            Policy Symbol is required
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="policyNumber">Policy No.</label>
+                        <input type="text" class="form-control" id="policyNumber" required
+                            [(ngModel)]="policy.fullPolicyNumber" name="policyNumber" #policyNumber="ngModel"
+                            style="width: 150px;">
+                        <div [hidden]="policyNumber.valid || policyNumber.pristine" class="alert alert-danger">
+                            Policy Number is required
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="modNumber">Mod</label><br>
+                        <input type="text" class="form-control" id="modNumber" style="width: 50px;">
+                    </div>
+                    <div class="col-md">
+                        <label for="policyId">Policy Id</label>
+                        <input type="text" class="form-control" id="policyId" required [(ngModel)]="policy.policyId"
+                            name="policyId" #policyNumber="ngModel">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <label for="policyState">Policy State</label>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="policyState" ngbDropdownToggle>Select a
+                                State...</button>
+                            <div ngbDropdownMenu aria-labelledby="policyState">
+                                <button ngbDropdownItem>Something</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="pacCode">PAC</label>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="pacCode" ngbDropdownToggle>Select a
+                                PAC...</button>
+                            <div ngbDropdownMenu aria-labelledby="pacCode">
+                                <button ngbDropdownItem>Something</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="effectiveDate">Effective Date</label>
+                        <input type="date" class="form-control" id="effectiveDate">
+                    </div>
+                    <div class="col-md">
+                        <label for="expirationDate">Expiration Date</label>
+                        <input type="date" class="form-control" id="expirationDate">
+                    </div>
+                    <div class="col-md">
+                        <label for="extensionDate" style="width:160px">Policy Extension Date</label>
+                        <input type="date" class="form-control" id="extensionDate">
+                    </div>
+                    <div class="col-md">
+                        <label for="cancelDate">Policy Cancel Date</label>
+                        <input type="date" class="form-control" id="cancelDate">
+                    </div>
+                </div><br>
+                <div class="row">
+                    <label for="carrier">Carrier </label><br>
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="carrier" ngbDropdownToggle>Carrier</button>
+                        <div ngbDropdownMenu aria-labelledby="carrier">
+                            <button ngbDropdownItem>Something</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <label for="coverageCode">Coverage Code </label><br>
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="coverageCode" ngbDropdownToggle>Coverage
+                            Code</button>
+                        <div ngbDropdownMenu aria-labelledby="coverageCode">
+                            <button ngbDropdownItem>Something</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <label for="programId">Program ID</label><br>
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="programId" ngbDropdownToggle>Program ID</button>
+                        <div ngbDropdownMenu aria-labelledby="programId">
+                            <button ngbDropdownItem>Something</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md" style="width:125px">
+                        <label for="riskGrade">Risk Grade</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="riskGrade" ngbDropdownToggle>Risk Grade</button>
+                            <div ngbDropdownMenu aria-labelledby="riskGrade">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="auditCode">Audit Code</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="auditCode" ngbDropdownToggle>Audit Code</button>
+                            <div ngbDropdownMenu aria-labelledby="auditCode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="paymentFrequency">Payment Frequency</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="paymentFrequency" ngbDropdownToggle>Payment
+                                Freq</button>
+                            <div ngbDropdownMenu aria-labelledby="paymentFrequency">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="creditDays">Credit Days</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="creditDays" ngbDropdownToggle>Credit
+                                Days</button>
+                            <div ngbDropdownMenu aria-labelledby="creditDays">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="deregIndicator">Deregulation Indictor</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="deregIndicator" ngbDropdownToggle>Dereg.
+                                Indictor</button>
+                            <div ngbDropdownMenu aria-labelledby="deregIndicator">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="riskType">Risk Type</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="riskType" ngbDropdownToggle>Risk Type</button>
+                            <div ngbDropdownMenu aria-labelledby="riskType">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md"></div>
+                    <div class="col-md"></div>
+                    <div class="col-md"></div>
+                    <div class="col-md"></div>
+                    <div class="col-md">
+                        <label for="nyFreeTradeZone" style="color: red;">NY Free Trade Zone</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="nyFreeTradeZone" ngbDropdownToggle>NY Free
+                                Trade...</button>
+                            <div ngbDropdownMenu aria-labelledby="nyFreeTradeZone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <label for="assumedCarrier" style="color: red;">Assumed Carrier</label><br>
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-outline-primary" id="assumedCarrier" ngbDropdownToggle>Assumed
+                                Carrier</button>
+                            <div ngbDropdownMenu aria-labelledby="assumedCarrier">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md">
+                        <label for="productRecall">Product Recall</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <label for="coinsurance">Coinsurance %</label>
+                        <input type="text" class="form-control" id="coinsurance">
+                    </div>
+                    <div class="col-md">
+                        <label for="productManufacturedate">Product Manufacture Date</label><br>
+                        <input type="date" class="form-control" id="productManufacturedate">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
