@@ -22,7 +22,7 @@ import { InformationComponent } from './policy/information/information.component
 import { SchedulesComponent } from './policy/schedules/schedules.component';
 import { ReinsuranceComponent } from './policy/reinsurance/reinsurance.component';
 import { SummaryComponent } from './policy/summary/summary.component';
-import { PolicyInformationComponent } from './policy/information/policy-information/policy-information/policy-information.component';
+import { PolicyInformationComponent } from './policy/information/policy-information/policy-information.component';
 import { AccountInformationComponent } from './policy/information/account-information/account-information.component';
 
 const okta_config = {
