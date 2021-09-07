@@ -39,7 +39,7 @@ describe('NavigationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have six menu items', () => {
+  it('should have four menu items', () => {
     const fixture = TestBed.createComponent(NavigationComponent);
     fixture.detectChanges();
     expect(fixture.debugElement.queryAll(By.css('a')).length).toBe(4);
