@@ -23,6 +23,7 @@ import { SchedulesComponent } from './policy/schedules/schedules.component';
 import { ReinsuranceComponent } from './policy/reinsurance/reinsurance.component';
 import { SummaryComponent } from './policy/summary/summary.component';
 import { PolicyInformationComponent } from './policy/information/policy-information/policy-information.component';
+import { AccountInformationComponent } from './policy/information/account-information/account-information.component';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -45,7 +46,8 @@ const okta_config = {
     PolicyInformationComponent,
     SchedulesComponent,
     ReinsuranceComponent,
-    SummaryComponent
+    SummaryComponent,
+    AccountInformationComponent
   ],
   imports: [
     OktaAuthModule,
