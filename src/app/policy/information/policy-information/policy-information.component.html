@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-md">
                         <label for="quoteNumber">Quote No.</label><br>
-                        <input type="text" class="form-control" id="quoteNumber">
+                        <input type="text" class="form-control" id="quoteNumber" [readonly]="isReadOnly">
                     </div>
                     <div class="col-md">
                         <label for="packagePolicy" style="width: 110px;">Package Policy</label><br>
@@ -50,7 +50,7 @@
                     <div class="col-md">
                         <label for="policyNumber">Policy No.</label>
                         <input type="text" class="form-control" id="policyNumber" required
-                            [(ngModel)]="policy.fullPolicyNumber" name="policyNumber" #policyNumber="ngModel"
+                            [(ngModel)]="policy.fullPolicyNumber" name="policyNumber" #policyNumber="ngModel" [readonly]="isReadOnly"
                             style="width: 150px;">
                         <div [hidden]="policyNumber.valid || policyNumber.pristine" class="alert alert-danger">
                             Policy Number is required
@@ -58,12 +58,12 @@
                     </div>
                     <div class="col-md">
                         <label for="modNumber">Mod</label><br>
-                        <input type="text" class="form-control" id="modNumber" style="width: 50px;">
+                        <input type="text" class="form-control" id="modNumber" [readonly]="isReadOnly" style="width: 50px;">
                     </div>
                     <div class="col-md">
                         <label for="policyId">Policy Id</label>
-                        <input type="text" class="form-control" id="policyId" required [(ngModel)]="policy.policyId"
-                            name="policyId" #policyNumber="ngModel">
+                        <input type="text" class="form-control" id="policyId" required [(ngModel)]="policy.policyId" 
+                        name="policyId" #policyNumber="ngModel" [readonly]="isReadOnly">
                     </div>
                 </div>
                 <div class="row">
