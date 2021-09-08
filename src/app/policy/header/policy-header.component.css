@@ -1,0 +1,34 @@
+#policyHeader {
+    background-color: #335271;
+    color:white;
+    font-family: 'Arial', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    position: relative;
+    z-index: 1;
+    top: 48px;
+    height: 50px;
+    width: 100%;
+  }
+
+  .insured {
+    width: 48%;
+  }
+
+  .policyNumber {
+    width: 15%;
+  }
+
+  .endorsement {
+    width: 5%;
+  }
+
+  .effectiveDate {
+    width: 10%;
+  }
+
+  .expirationDate {
+    width: 11%;
+  }
+
+  .extensionDate {
+    width: 11%;
+  }
