@@ -6,6 +6,8 @@ import { ImportPolicy } from './interfaces/import-policy';
 
 import { ImportComponent } from './import.component';
 import { ImportService } from './import.service';
+import { DecimalPipe } from '@angular/common';
+import { RemoveCommaPipe } from './remove-comma.pipe';
 
 
 describe('ImportComponent', () => {
@@ -26,9 +28,9 @@ describe('ImportComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [ImportComponent],
+      declarations: [ImportComponent,RemoveCommaPipe],
       providers: [
-        { provide: ImportService, useValue: mockImportService },{provide: Router, useValue: router}
+        { provide: ImportService, useValue: mockImportService },{provide: Router, useValue: router}, DecimalPipe
       ]
     })
       .compileComponents();
