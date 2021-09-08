@@ -1,14 +1,3 @@
-  #policyHeader {
-    background-color: #335271;
-    color:white;
-    font-family: 'Arial', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    position: relative;
-    z-index: 1;
-    top: 50px;
-    height: 35px;
-    width: 100%;
-  }
-
 .nav-tabs .nav-link, .nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
     border: 0;
     border-bottom: 1px solid #e6e9ed;

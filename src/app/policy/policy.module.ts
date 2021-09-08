@@ -5,14 +5,17 @@ import { FormsModule } from '@angular/forms';
 import { PolicyRoutingModule } from './policy-routing.module';
 import { PolicyComponent } from './policy.component';
 
+import { PolicyHeaderComponent } from './header/policy-header.component';
+
 @NgModule({
   declarations: [
-    PolicyComponent
+    PolicyComponent,
+    PolicyHeaderComponent
   ],
   imports: [
     CommonModule,
     PolicyRoutingModule,
-    FormsModule
+    FormsModule   
   ]
 })
 export class PolicyModule { }
