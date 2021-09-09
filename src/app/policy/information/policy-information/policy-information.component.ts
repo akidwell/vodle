@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Policy } from 'src/app/policy/policy';
+import { AccountInformation, Policy, PolicyInformation, QuoteData } from 'src/app/policy/policy';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -17,25 +17,25 @@ export class PolicyInformationComponent implements OnInit {
   policyCollapsed = false;
   faPlus = faPlus;
   faMinus = faMinus;
+  accountInfo!: AccountInformation;
+  policyInfo!: PolicyInformation;
+  quoteData!: QuoteData;
   subPACCodes!: Subscription;
   subRiskGrades!: Subscription;
   subStates!: Subscription;
   subCarrierCodes!: Subscription;
   subCoverageCodes!: Subscription;
-
   subAuditCodes!: Subscription;
   subPaymentFrequencies!: Subscription;
   subDeregulationIndicators!: Subscription;
   subRiskTypes!: Subscription;
   subNYFreeTradeZones!: Subscription;
   subAssumedCarriers!: Subscription;
-
   pacCodes: Code[] = [];
   riskGrades: Code[] = [];
   states: Code[] = [];
   carrierCodes: Code[] = [];
   coverageCodes: Code[] = [];
-
   auditCodes: Code[] = [];
   paymentFrequencies: Code[] = [];
   deregulationIndicators: Code[] = [];
@@ -48,6 +48,10 @@ export class PolicyInformationComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.policy = data['resolvedData'].policy;
+      this.accountInfo = data['accountData'].accountInfo;
+      this.policyInfo = data['policyInfoData'].policyInfo;
+      this.quoteData = data['policyInfoData'].quoteData;
+      console.log(this.quoteData)
     });
 
     this.subPACCodes = this.dropdowns.getPACCodes().subscribe({
@@ -113,6 +117,11 @@ export class PolicyInformationComponent implements OnInit {
     this.subStates.unsubscribe();
     this.subCarrierCodes.unsubscribe();
     this.subCoverageCodes.unsubscribe();
+    this.subAuditCodes.unsubscribe();
+    this.subPaymentFrequencies.unsubscribe();
+    this.subDeregulationIndicators.unsubscribe();
+    this.subRiskTypes.unsubscribe();
+    this.subNYFreeTradeZones.unsubscribe();
+    this.subAssumedCarriers.unsubscribe();
   }
-
 }
