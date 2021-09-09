@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Policy } from 'src/app/policy/policy';
+import { AccountInformation, Policy, PolicyInformation, QuoteData } from 'src/app/policy/policy';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,12 +14,20 @@ export class PolicyInformationComponent implements OnInit {
   policyCollapsed = false;
   faPlus = faPlus;
   faMinus = faMinus;
+  accountInfo!: AccountInformation;
+  policyInfo!: PolicyInformation;
+  quoteData!: QuoteData;
+
   
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.policy = data['resolvedData'].policy;
+      this.accountInfo = data['accountData'].accountInfo;
+      this.policyInfo = data['policyInfoData'].policyInfo;
+      this.quoteData = data['policyInfoData'].quoteData;
+      console.log(this.quoteData)
     });
   }
 

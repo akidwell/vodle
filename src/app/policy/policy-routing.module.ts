@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
-import { PolicyResolver } from './policy-resolver-service';
+import { AccountInformationResolver, PolicyInformationResolver, PolicyResolver } from './policy-resolver-service';
 import { PolicyComponent } from './policy.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -12,7 +12,10 @@ const routes: Routes = [{ path: '', component: PolicyComponent },
 {
   path: ':id',
   component: PolicyComponent,
-  resolve: { resolvedData: PolicyResolver },
+  resolve: { resolvedData: PolicyResolver,
+             accountData: AccountInformationResolver,
+             policyInfoData: PolicyInformationResolver
+            },
   children: [
     { path: '', redirectTo: 'information', pathMatch: 'full' },
     { path: 'information', component: InformationComponent },

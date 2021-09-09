@@ -10,7 +10,7 @@
   }
 
   .insured {
-    width: 48%;
+    width: 38%;
   }
 
   .policyNumber {
@@ -22,13 +22,13 @@
   }
 
   .effectiveDate {
-    width: 10%;
+    width: 14%;
   }
 
   .expirationDate {
-    width: 11%;
+    width: 14%;
   }
 
   .extensionDate {
-    width: 11%;
+    width: 14%;
   }

@@ -10,12 +10,23 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md">
-                        <label for="policyStatus">Status</label>
-                        <input type="text" class="form-control" id="policyStatus" required [readonly]="isReadOnly">
+                        <label for="policyEventCode">Status</label>
+        
+                        <ng-container 
+                        *ngIf="policyInfo.policyEventCode == 'B'; then B; else C">
+                      </ng-container>
+                      <ng-template #B>
+                        <div> Bound </div>
+                      </ng-template>
+                      <ng-template #C>
+                        <div> Cancelled </div>
+                      </ng-template>
+                    
                     </div>
                     <div class="col-md">
-                        <label for="policyEnteredDate">Policy Entered Date</label>
-                        <input type="text" class="form-control" id="policyEnteredDate" required>
+                        <label for="enteredDate">Policy Entered Date</label>
+                        <input type="text" class="form-control" id="enteredDate" required
+                        [ngModel]="policyInfo.enteredDate  | date:'YYYY-MM-dd'" (ngModelChange)="policyInfo.enteredDate=$event" name="enteredDate" #enteredDate="ngModel">
                     </div>
                 </div>
             </div>
@@ -24,45 +35,50 @@
                 <div class="row">
                     <div class="col-md">
                         <label for="submissionNumber" style="width: 175px;">Submission No.</label>
-                        <input type="text" class="form-control" id="submissionNumber">
+                        <input type="text" class="form-control" id="submissionNumber"
+                        [(ngModel)]="policyInfo.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="quoteNumber">Quote No.</label><br>
-                        <input type="text" class="form-control" id="quoteNumber" [readonly]="isReadOnly">
+                        <input type="text" class="form-control" id="quoteNumber" [readonly]="isReadOnly"
+                        [(ngModel)]="policyInfo.quoteData.quoteNumber" name="quoteNumber" #quoteNo="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="packagePolicy" style="width: 110px;">Package Policy</label><br>
-                        <input type="text" class="form-control" id="packagePolicy" style="width: 35px;">
+                        <input type="text" class="form-control" id="packageInd" style="width:37px;"
+                        [(ngModel)]="policyInfo.packageInd" name="packageInd" #packageInd="ngModel">
                     </div>
                     <div class="col-md">
-                        <label for="masterPolicy">Master Policy</label><br>
-                        <input type="checkbox" id="masterPolicy">
+                        <label for="policyType">Master Policy</label><br>
+                        <input type="checkbox" id="policyType"
+                        [(ngModel)]="policyInfo.policyType" name="policyType" #policyType="ngModel">
                     </div>
                     <div class="col-md" style="width: 40px;">
                         <label for="policyNumber">Sym</label><br>
                         <input type="text" class="form-control" id="policySymbol" required
-                            [(ngModel)]="policy.policySymbol" name="policySymbol" [readonly]="isReadOnly"
+                            [(ngModel)]="policyInfo.policySymbol" name="policySymbol" [readonly]="isReadOnly"
                             #policySymbol="ngModel">
                         <div [hidden]="policySymbol.valid || policySymbol.pristine" class="alert alert-danger">
                             Policy Symbol is required
                         </div>
                     </div>
                     <div class="col-md">
-                        <label for="policyNumber">Policy No.</label>
-                        <input type="text" class="form-control" id="policyNumber" required
-                            [(ngModel)]="policy.fullPolicyNumber" name="policyNumber" #policyNumber="ngModel" [readonly]="isReadOnly"
+                        <label for="policyNo">Policy No.</label>
+                        <input type="text" class="form-control" id="policyNo" required
+                            [(ngModel)]="policyInfo.policyNo" name="policyNo" #policyNo="ngModel" [readonly]="isReadOnly"
                             style="width: 150px;">
-                        <div [hidden]="policyNumber.valid || policyNumber.pristine" class="alert alert-danger">
+                        <div [hidden]="policyNo.valid || policyNo.pristine" class="alert alert-danger">
                             Policy Number is required
                         </div>
                     </div>
                     <div class="col-md">
-                        <label for="modNumber">Mod</label><br>
-                        <input type="text" class="form-control" id="modNumber" [readonly]="isReadOnly" style="width: 50px;">
+                        <label for="policyModNo">Mod</label><br>
+                        <input type="text" class="form-control" id="policyModNo" 
+                        [(ngModel)]="policyInfo.policyModNo" name="policyModNo" #policyModNo="ngModel" [readonly]="isReadOnly">
                     </div>
                     <div class="col-md">
                         <label for="policyId">Policy Id</label>
-                        <input type="text" class="form-control" id="policyId" required [(ngModel)]="policy.policyId" 
+                        <input type="text" class="form-control" id="policyId" required [(ngModel)]="policyInfo.policyId" 
                         name="policyId" #policyNumber="ngModel" [readonly]="isReadOnly">
                     </div>
                 </div>
@@ -70,44 +86,46 @@
                     <div class="col-md">
                         <label for="policyState">Policy State</label>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="policyState" ngbDropdownToggle>Select a
-                                State...</button>
+                            <button class="btn btn-outline-primary" id="policyState" ngbDropdownToggle>{{policyInfo.policyInsuredState}}</button>
                             <div ngbDropdownMenu aria-labelledby="policyState">
-                                <button ngbDropdownItem>Something</button>
+                                <button ngbDropdownItem>{{policyInfo.policyInsuredState}}</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md">
                         <label for="pacCode">PAC</label>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="pacCode" ngbDropdownToggle>Select a
-                                PAC...</button>
+                            <button class="btn btn-outline-primary" id="pacCode" ngbDropdownToggle>{{policyInfo.quoteData.pacCode}}</button>
                             <div ngbDropdownMenu aria-labelledby="pacCode">
                                 <button ngbDropdownItem>Something</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md">
-                        <label for="effectiveDate">Effective Date</label>
-                        <input type="date" class="form-control" id="effectiveDate">
+                        <label for="policyEffectiveDate">Effective Date</label>
+                        <input type="text" class="form-control" id="policyEffectiveDate"
+                        [ngModel]="policyInfo.policyEffectiveDate  | date:'YYYY-MM-dd'" (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
                     </div>
                     <div class="col-md">
-                        <label for="expirationDate">Expiration Date</label>
-                        <input type="date" class="form-control" id="expirationDate">
+                        <label for="policyExpirationDate">Expiration Date</label>
+                        <input type="text" class="form-control" id="policyExpirationDate"
+                        [ngModel]="policyInfo.policyExpirationDate  | date:'YYYY-MM-dd'" (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate" #policyExpirationDate="ngModel">
                     </div>
                     <div class="col-md">
-                        <label for="extensionDate" style="width:160px">Policy Extension Date</label>
-                        <input type="date" class="form-control" id="extensionDate">
+                        <label for="policyExtendedExpDate" style="width:160px">Policy Extension Date</label>
+                        <input type="text" class="form-control" id="policyExtendedExpDate"
+                        [ngModel]="policyInfo.policyExtendedExpDate  | date:'YYYY-MM-dd'" (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate" #policyExtendedExpDate="ngModel">
                     </div>
                     <div class="col-md">
-                        <label for="cancelDate">Policy Cancel Date</label>
-                        <input type="date" class="form-control" id="cancelDate">
+                        <label for="policyCancelDate">Policy Cancel Date</label>
+                        <input type="text" class="form-control" id="policyCancelDate"
+                        [ngModel]="policyInfo.policyCancelDate  | date:'YYYY-MM-dd'" (ngModelChange)="policyInfo.policyCancelDate=$event" name="policyCancelDate" #policyCancelDate="ngModel">
                     </div>
                 </div><br>
                 <div class="row">
                     <label for="carrier">Carrier </label><br>
                     <div ngbDropdown class="d-inline-block">
-                        <button class="btn btn-outline-primary" id="carrier" ngbDropdownToggle>Carrier</button>
+                        <button class="btn btn-outline-primary" id="carrier" ngbDropdownToggle>{{policyInfo.quoteData.carrierCode}}</button>
                         <div ngbDropdownMenu aria-labelledby="carrier">
                             <button ngbDropdownItem>Something</button>
                         </div>
@@ -117,8 +135,7 @@
                 <div class="row">
                     <label for="coverageCode">Coverage Code </label><br>
                     <div ngbDropdown class="d-inline-block">
-                        <button class="btn btn-outline-primary" id="coverageCode" ngbDropdownToggle>Coverage
-                            Code</button>
+                        <button class="btn btn-outline-primary" id="coverageCode" ngbDropdownToggle>{{policyInfo.quoteData.coverageCode}}</button>
                         <div ngbDropdownMenu aria-labelledby="coverageCode">
                             <button ngbDropdownItem>Something</button>
                         </div>
@@ -127,29 +144,25 @@
                 <br>
                 <div class="row">
                     <label for="programId">Program ID</label><br>
-                    <div ngbDropdown class="d-inline-block">
-                        <button class="btn btn-outline-primary" id="programId" ngbDropdownToggle>Program ID</button>
-                        <div ngbDropdownMenu aria-labelledby="programId">
-                            <button ngbDropdownItem>Something</button>
-                        </div>
-                    </div>
+                    <input type="text" class="form-control" id="programId" style="width: 150px; margin-left: 10px;" 
+                        [(ngModel)]="policyInfo.programId" name="programId" #policyModNo="ngModel" [readonly]="isReadOnly">
                 </div>
             </div>
 
             <div class="container">
                 <div class="row">
                     <div class="col-md" style="width:125px">
-                        <label for="riskGrade">Risk Grade</label><br>
+                        <label for="riskGradeCode">Risk Grade</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="riskGrade" ngbDropdownToggle>Risk Grade</button>
-                            <div ngbDropdownMenu aria-labelledby="riskGrade">
+                            <button class="btn btn-outline-primary" id="riskGradeCode" ngbDropdownToggle>{{policyInfo.riskGradeCode}}</button>
+                            <div ngbDropdownMenu aria-labelledby="riskGradeCode">
                             </div>
                         </div>
                     </div>
                     <div class="col-md">
                         <label for="auditCode">Audit Code</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="auditCode" ngbDropdownToggle>Audit Code</button>
+                            <button class="btn btn-outline-primary" id="auditCode" ngbDropdownToggle>{{policyInfo.auditCode}}</button>
                             <div ngbDropdownMenu aria-labelledby="auditCode">
                             </div>
                         </div>
@@ -157,26 +170,20 @@
                     <div class="col-md">
                         <label for="paymentFrequency">Payment Frequency</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="paymentFrequency" ngbDropdownToggle>Payment
-                                Freq</button>
+                            <button class="btn btn-outline-primary" id="paymentFrequency" ngbDropdownToggle>{{policyInfo.paymentFrequency}}</button>
                             <div ngbDropdownMenu aria-labelledby="paymentFrequency">
                             </div>
                         </div>
                     </div>
                     <div class="col-md">
                         <label for="creditDays">Credit Days</label><br>
-                        <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="creditDays" ngbDropdownToggle>Credit
-                                Days</button>
-                            <div ngbDropdownMenu aria-labelledby="creditDays">
-                            </div>
-                        </div>
+                        <input type="text" class="form-control" id="creditDays" required [(ngModel)]="policyInfo.quoteData.creditDays" 
+                        name="creditDays" #creditDays="ngModel" [readonly]="isReadOnly">
                     </div>
                     <div class="col-md">
                         <label for="deregIndicator">Deregulation Indictor</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="deregIndicator" ngbDropdownToggle>Dereg.
-                                Indictor</button>
+                            <button class="btn btn-outline-primary" id="deregIndicator" ngbDropdownToggle>{{policyInfo.deregulationIndicator}}</button>
                             <div ngbDropdownMenu aria-labelledby="deregIndicator">
                             </div>
                         </div>
@@ -184,7 +191,7 @@
                     <div class="col-md">
                         <label for="riskType">Risk Type</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="riskType" ngbDropdownToggle>Risk Type</button>
+                            <button class="btn btn-outline-primary" id="riskType" ngbDropdownToggle>{{policyInfo.riskType}}</button>
                             <div ngbDropdownMenu aria-labelledby="riskType">
                             </div>
                         </div>
@@ -197,19 +204,17 @@
                     <div class="col-md"></div>
                     <div class="col-md"></div>
                     <div class="col-md">
-                        <label for="nyFreeTradeZone" style="color: red;">NY Free Trade Zone</label><br>
+                        <label for="NYFTZ" style="color: red;">NY Free Trade Zone</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="nyFreeTradeZone" ngbDropdownToggle>NY Free
-                                Trade...</button>
-                            <div ngbDropdownMenu aria-labelledby="nyFreeTradeZone">
+                            <button class="btn btn-outline-primary" id="NYFTZ" ngbDropdownToggle>{{policyInfo.NYFTZ}}</button>
+                            <div ngbDropdownMenu aria-labelledby="NYFTZ">
                             </div>
                         </div>
                     </div>
                     <div class="col-md">
                         <label for="assumedCarrier" style="color: red;">Assumed Carrier</label><br>
                         <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="assumedCarrier" ngbDropdownToggle>Assumed
-                                Carrier</button>
+                            <button class="btn btn-outline-primary" id="assumedCarrier" ngbDropdownToggle>{{policyInfo.assumedCarrier}}</button>
                             <div ngbDropdownMenu aria-labelledby="assumedCarrier">
                             </div>
                         </div>
@@ -225,12 +230,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md">
-                        <label for="coinsurance">Coinsurance %</label>
-                        <input type="text" class="form-control" id="coinsurance">
+                        <label for="coinsurancePercentage">Coinsurance %</label>
+                        <input type="text" class="form-control" id="coinsurancePercentage" required [(ngModel)]="policyInfo.coinsurancePercentage" 
+                        name="coinsurancePercentage" #coinsurancePercentage="ngModel" [readonly]="isReadOnly">
                     </div>
                     <div class="col-md">
-                        <label for="productManufacturedate">Product Manufacture Date</label><br>
-                        <input type="date" class="form-control" id="productManufacturedate">
+                        <label for="productManufactureDate">Product Manufacture Date</label><br>
+                        <input type="text" class="form-control" id="productManufactureDate" [(ngModel)]="policyInfo.productManufactureDate" 
+                        name="productManufactureDate" #productManufactureDate="ngModel" [readonly]="isReadOnly">
                     </div>
                 </div>
             </div>
