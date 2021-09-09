@@ -73,7 +73,7 @@
                             <button class="btn btn-outline-primary" id="policyState" ngbDropdownToggle>Select a
                                 State...</button>
                             <div ngbDropdownMenu aria-labelledby="policyState">
-                                <button ngbDropdownItem>Something</button>
+                                <button ngbDropdownItem *ngFor="let state of states;" >{{state.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -82,8 +82,9 @@
                         <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="pacCode" ngbDropdownToggle>Select a
                                 PAC...</button>
+                              
                             <div ngbDropdownMenu aria-labelledby="pacCode">
-                                <button ngbDropdownItem>Something</button>
+                                <button ngbDropdownItem *ngFor="let pacCode of pacCodes;" >{{pacCode.code}} - {{pacCode.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -109,7 +110,7 @@
                     <div ngbDropdown class="d-inline-block">
                         <button class="btn btn-outline-primary" id="carrier" ngbDropdownToggle>Carrier</button>
                         <div ngbDropdownMenu aria-labelledby="carrier">
-                            <button ngbDropdownItem>Something</button>
+                            <button ngbDropdownItem *ngFor="let carrierCode of carrierCodes;" >{{carrierCode.description}}</button>
                         </div>
                     </div>
                 </div>
@@ -120,7 +121,7 @@
                         <button class="btn btn-outline-primary" id="coverageCode" ngbDropdownToggle>Coverage
                             Code</button>
                         <div ngbDropdownMenu aria-labelledby="coverageCode">
-                            <button ngbDropdownItem>Something</button>
+                            <button ngbDropdownItem *ngFor="let coverageCode of coverageCodes;" >{{coverageCode.code}} - {{coverageCode.description}}</button>
                         </div>
                     </div>
                 </div>
@@ -143,6 +144,7 @@
                         <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="riskGrade" ngbDropdownToggle>Risk Grade</button>
                             <div ngbDropdownMenu aria-labelledby="riskGrade">
+                                <button ngbDropdownItem *ngFor="let riskGrade of riskGrades;" >{{riskGrade.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -151,6 +153,7 @@
                         <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="auditCode" ngbDropdownToggle>Audit Code</button>
                             <div ngbDropdownMenu aria-labelledby="auditCode">
+                                <button ngbDropdownItem *ngFor="let auditCode of auditCodes;" >{{auditCode.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -160,6 +163,7 @@
                             <button class="btn btn-outline-primary" id="paymentFrequency" ngbDropdownToggle>Payment
                                 Freq</button>
                             <div ngbDropdownMenu aria-labelledby="paymentFrequency">
+                                <button ngbDropdownItem *ngFor="let paymentFrequency of paymentFrequencies;" >{{paymentFrequency.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -178,6 +182,7 @@
                             <button class="btn btn-outline-primary" id="deregIndicator" ngbDropdownToggle>Dereg.
                                 Indictor</button>
                             <div ngbDropdownMenu aria-labelledby="deregIndicator">
+                                <button ngbDropdownItem *ngFor="let deregulationIndicator of deregulationIndicators;" >{{deregulationIndicator.code}} - {{deregulationIndicator.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -186,6 +191,7 @@
                         <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="riskType" ngbDropdownToggle>Risk Type</button>
                             <div ngbDropdownMenu aria-labelledby="riskType">
+                                <button ngbDropdownItem *ngFor="let riskType of riskTypes;" >{{riskType.code}} - {{riskType.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -202,6 +208,7 @@
                             <button class="btn btn-outline-primary" id="nyFreeTradeZone" ngbDropdownToggle>NY Free
                                 Trade...</button>
                             <div ngbDropdownMenu aria-labelledby="nyFreeTradeZone">
+                                <button ngbDropdownItem *ngFor="let nyFreeTradeZone of nyFreeTradeZones;" >{{nyFreeTradeZone.code}} - {{nyFreeTradeZone.description}}</button>
                             </div>
                         </div>
                     </div>
@@ -211,6 +218,7 @@
                             <button class="btn btn-outline-primary" id="assumedCarrier" ngbDropdownToggle>Assumed
                                 Carrier</button>
                             <div ngbDropdownMenu aria-labelledby="assumedCarrier">
+                                <button ngbDropdownItem *ngFor="let assumedCarrier of assumedCarriers;" >{{assumedCarrier.code}} - {{assumedCarrier.description}}</button>
                             </div>
                         </div>
                     </div>
