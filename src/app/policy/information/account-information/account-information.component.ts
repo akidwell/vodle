@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
-import { Policy } from '../../policy';
+import { AccountInformation, Policy } from '../../policy';
 
 @Component({
   selector: 'rsps-account-information',
@@ -10,6 +10,7 @@ import { Policy } from '../../policy';
 })
 export class AccountInformationComponent implements OnInit {
   policy!: Policy;
+  accountInfo!: AccountInformation;
   isReadOnly: boolean = true;
   accountCollapsed = false;
   faPlus = faPlus;
@@ -20,6 +21,8 @@ export class AccountInformationComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.policy = data['resolvedData'].policy;
+      this.accountInfo = data['accountData'].accountInfo;
+      console.log(this.accountInfo);
     });
   }
 
