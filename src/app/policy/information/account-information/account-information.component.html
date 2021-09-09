@@ -40,11 +40,11 @@
             <div class="row">
                 <div class="col-md">
                     <input type="text" class="form-control" id="insuredAddress" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.insuredAddress1 + ' ' + accountInfo.insuredAddress2" name="insuredAddress" #insuredAddress="ngModel">
+                    [(ngModel)]="accountInfo.insuredAddress2 == null ? accountInfo.insuredAddress1 : accountInfo.insuredAddress1 + ' ' + accountInfo.insuredAddress2 " >
                 </div>
                 <div class="col-md">
                     <input type="text" class="form-control" id="producerAddress" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.producerAddress1 + ' ' + accountInfo.producerAddress2" name="producerAddress" #producerAddress="ngModel">
+                    [(ngModel)]="accountInfo.producerAddress2 == null ? accountInfo.producerAddress1 : accountInfo.producerAddress1 + ' ' + accountInfo.producerAddress2 " >
                 </div>
             </div>
             <div class="row">
