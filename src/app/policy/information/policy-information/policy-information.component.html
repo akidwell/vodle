@@ -7,27 +7,28 @@
         </div>
 
         <div #collapse="ngbCollapse" [(ngbCollapse)]="policyCollapsed">
-            <div class="container">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md">
                         <label for="policyEventCode">Status</label>
                         <input type="text" class="form-control" id="policyEventCode" required [readonly]="isReadOnly"
                             value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
                     </div>
+                    <div class="col-md"></div>
                     <div class="col-md">
                         <label for="enteredDate">Policy Entered Date</label>
                         <input type="text" class="form-control" id="enteredDate" required [readonly]="isReadOnly"
-                            [ngModel]="policyInfo.enteredDate  | date:'dd-MM-YYYY'"
+                            [ngModel]="policyInfo.enteredDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.enteredDate=$event" name="enteredDate" #enteredDate="ngModel">
                     </div>
+                    <div class="col-md"></div>
                 </div>
             </div>
-
-            <div class="container">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md">
                         <label for="submissionNumber" style="width: 175px;">Submission No.</label>
-                        <input type="text" class="form-control" id="submissionNumber"
+                        <input type="text" class="form-control" id="submissionNumber"  [readonly]="isReadOnly"
                             [(ngModel)]="policyInfo.submissionNumber" name="submissionNumber"
                             #submissionNumber="ngModel">
                     </div>
@@ -73,6 +74,7 @@
                             name="policyId" #policyNumber="ngModel" [readonly]="isReadOnly">
                     </div>
                 </div>
+              <br>
                 <div class="row">
                     <div class="col-md">
                         <label for="policyState">Policy State</label>
@@ -107,30 +109,30 @@
                     </div>
 
                     <div class="col-md">
-                        <label for="policyEffectiveDate">Effective Date</label>
+                        <label for="policyEffectiveDate" >Effective Date</label>
                         <input type="text" class="form-control" id="policyEffectiveDate"
-                            [ngModel]="policyInfo.policyEffectiveDate  | date:'dd-MM-YYYY'"
+                            [ngModel]="policyInfo.policyEffectiveDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
                             #policyEffectiveDate="ngModel">
                     </div>
                     <div class="col-md">
-                        <label for="policyExpirationDate">Expiration Date</label>
+                        <label for="policyExpirationDate" >Expiration Date</label>
                         <input type="text" class="form-control" id="policyExpirationDate"
-                            [ngModel]="policyInfo.policyExpirationDate  | date:'dd-MM-YYYY'"
+                            [ngModel]="policyInfo.policyExpirationDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate"
                             #policyExpirationDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyExtendedExpDate" style="width:160px">Policy Extension Date</label>
-                        <input type="text" class="form-control" id="policyExtendedExpDate"
-                            [ngModel]="policyInfo.policyExtendedExpDate  | date:'dd-MM-YYYY'"
+                        <input type="text" class="form-control" id="policyExtendedExpDate"  [readonly]="isReadOnly"
+                            [ngModel]="policyInfo.policyExtendedExpDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate"
                             #policyExtendedExpDate="ngModel">
                     </div>
                     <div class="col-md">
-                        <label for="policyCancelDate">Policy Cancel Date</label>
-                        <input type="text" class="form-control" id="policyCancelDate"
-                            [ngModel]="policyInfo.policyCancelDate  | date:'dd-MM-YYYY'"
+                        <label for="policyCancelDate" >Policy Cancel Date</label>
+                        <input type="text" class="form-control" id="policyCancelDate"  [readonly]="isReadOnly"
+                            [ngModel]="policyInfo.policyCancelDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.policyCancelDate=$event" name="policyCancelDate"
                             #policyCancelDate="ngModel">
                     </div>
@@ -175,12 +177,12 @@
                 <div class="row">
                     <label for="programId">Program ID</label><br>
                     <input type="text" class="form-control" id="programId" style="width: 150px; margin-left: 10px;"
-                        [(ngModel)]="policyInfo.programId" name="programId" #policyModNo="ngModel"
+                        [(ngModel)]="policyInfo.programName" name="programName" #programName="ngModel"
                         [readonly]="isReadOnly">
                 </div>
             </div>
 
-            <div class="container">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md" style="width:125px">
                         <label for="riskGradeCode">Risk Grade</label><br>
@@ -272,7 +274,7 @@
                     <div class="col-md"></div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>
-                    <div class="col-md">
+                    <div class="col-md" [ngStyle]="{'display': policyInfo.deregulationIndicator == 'F' ? 'block' : 'none' }">
                         <label for="NYFTZ" style="color: red;">NY Free Trade Zone</label><br>
                         <select id="NYFTZ" [(ngModel)]="policyInfo.NYFTZ">
                             <option *ngFor="let nyFreeTradeZone of nyFreeTradeZones" [value]="nyFreeTradeZone.code">
@@ -288,7 +290,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <div class="col-md">
+                    <div class="col-md" [ngStyle]="{'display': policyInfo.riskType == 'A' ? 'block' : 'none' }">
                         <label for="assumedCarrier" style="color: red;">Assumed Carrier</label><br>
                         <select id="assumedCarrier" [(ngModel)]="policyInfo.assumedCarrier">
                             <option *ngFor="let assumedCarrier of assumedCarriers" [value]="assumedCarrier.code">
@@ -306,27 +308,32 @@
                     </div>
                 </div>
             </div>
-
-            <div class="container">
+            <br>
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md">
                         <label for="productRecall">Product Recall</label>
                     </div>
                 </div>
                 <div class="row">
+                    
                     <div class="col-md">
                         <label for="coinsurancePercentage">Coinsurance %</label>
                         <input type="text" class="form-control" id="coinsurancePercentage" required
                             [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
                             #coinsurancePercentage="ngModel" [readonly]="isReadOnly">
                     </div>
+                    <div class="col-md"></div>
+                    <div class="col-md"></div>
+                  
                     <div class="col-md">
                         <label for="productManufactureDate">Product Manufacture Date</label><br>
                         <input type="text" class="form-control" id="productManufactureDate"
-                            [ngModel]="policyInfo.productManufactureDate  | date:'dd-MM-YYYY'"
+                            [ngModel]="policyInfo.productManufactureDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
                             #policyCancelDate="ngModel" [readonly]="isReadOnly">
                     </div>
+                    <div class="col-md"></div>
                 </div>
             </div>
         </div>
