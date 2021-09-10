@@ -59,7 +59,7 @@ export class PolicyInformationComponent implements OnInit {
         this.pacCodes = pacCodes;
       }
     });
-    this.subRiskGrades = this.dropdowns.getRiskGrades(62).subscribe({
+    this.subRiskGrades = this.dropdowns.getRiskGrades(this.policyInfo.programId).subscribe({
       next: riskGrades => {
         this.riskGrades = riskGrades;
       }

@@ -11,13 +11,14 @@
                 <div class="row">
                     <div class="col-md">
                         <label for="policyEventCode">Status</label>
-                       <input type="text" class="form-control" id="policyEventCode" required
-                        value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
+                        <input type="text" class="form-control" id="policyEventCode" required [readonly]="isReadOnly"
+                            value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
                     </div>
                     <div class="col-md">
                         <label for="enteredDate">Policy Entered Date</label>
                         <input type="text" class="form-control" id="enteredDate" required [readonly]="isReadOnly"
-                        [ngModel]="policyInfo.enteredDate  | date:'dd-MM-YYYY'" (ngModelChange)="policyInfo.enteredDate=$event" name="enteredDate" #enteredDate="ngModel">
+                            [ngModel]="policyInfo.enteredDate  | date:'dd-MM-YYYY'"
+                            (ngModelChange)="policyInfo.enteredDate=$event" name="enteredDate" #enteredDate="ngModel">
                     </div>
                 </div>
             </div>
@@ -75,24 +76,25 @@
                 <div class="row">
                     <div class="col-md">
                         <label for="policyState">Policy State</label>
-                        <div ngbDropdown class="d-inline-block">
-                            <button class="btn btn-outline-primary" id="policyState"
+                        <select id="policyState" [(ngModel)]="policyInfo.policyInsuredState">
+                            <option *ngFor="let state of states" [value]="state.code">
+                                {{state.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
+                                            <button class="btn btn-outline-primary" id="policyState"
                                 ngbDropdownToggle>{{policyInfo.policyInsuredState}}</button>
                             <div ngbDropdownMenu aria-labelledby="policyState">
                                 <button ngbDropdownItem *ngFor="let state of states;">{{state.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md">
-                        <label for="pacCode">PAC</label>     
-                        <!-- <div class="form-group"> -->
-                            <select id="pacCode" 
-                                [(ngModel)]="policyInfo.quoteData.pacCode">
-                                <option *ngFor="let pacCode of pacCodes" [value]="pacCode.code">
-                                    {{pacCode.code}} -
-                                    {{pacCode.description}}</option>
-                            </select>
-                        <!-- </div> -->
+                        <label for="pacCode">PAC</label>
+                        <select id="pacCode" [(ngModel)]="policyInfo.quoteData.pacCode">
+                            <option *ngFor="let pacCode of pacCodes" [value]="pacCode.code">
+                                {{pacCode.code}} -
+                                {{pacCode.description}}</option>
+                        </select>
 
                         <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="policyInfo.quoteData.pacCode"
@@ -107,44 +109,59 @@
                     <div class="col-md">
                         <label for="policyEffectiveDate">Effective Date</label>
                         <input type="text" class="form-control" id="policyEffectiveDate"
-                        [ngModel]="policyInfo.policyEffectiveDate  | date:'dd-MM-YYYY'" (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
+                            [ngModel]="policyInfo.policyEffectiveDate  | date:'dd-MM-YYYY'"
+                            (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
+                            #policyEffectiveDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyExpirationDate">Expiration Date</label>
                         <input type="text" class="form-control" id="policyExpirationDate"
-                        [ngModel]="policyInfo.policyExpirationDate  | date:'dd-MM-YYYY'" (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate" #policyExpirationDate="ngModel">
+                            [ngModel]="policyInfo.policyExpirationDate  | date:'dd-MM-YYYY'"
+                            (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate"
+                            #policyExpirationDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyExtendedExpDate" style="width:160px">Policy Extension Date</label>
                         <input type="text" class="form-control" id="policyExtendedExpDate"
-                        [ngModel]="policyInfo.policyExtendedExpDate  | date:'dd-MM-YYYY'" (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate" #policyExtendedExpDate="ngModel">
+                            [ngModel]="policyInfo.policyExtendedExpDate  | date:'dd-MM-YYYY'"
+                            (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate"
+                            #policyExtendedExpDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyCancelDate">Policy Cancel Date</label>
                         <input type="text" class="form-control" id="policyCancelDate"
-                        [ngModel]="policyInfo.policyCancelDate  | date:'dd-MM-YYYY'" (ngModelChange)="policyInfo.policyCancelDate=$event" name="policyCancelDate" #policyCancelDate="ngModel">
+                            [ngModel]="policyInfo.policyCancelDate  | date:'dd-MM-YYYY'"
+                            (ngModelChange)="policyInfo.policyCancelDate=$event" name="policyCancelDate"
+                            #policyCancelDate="ngModel">
                     </div>
                 </div><br>
                 <div class="row">
-                    <label for="carrier">Carrier </label><br>
-                    <div ngbDropdown class="d-inline-block">
+                    <div class="col-md">
+                        <label for="carrierCode">Carrier</label><br>
+                        <select id="carrierCode" [(ngModel)]="policyInfo.quoteData.carrierCode">
+                            <option *ngFor="let carrierCode of carrierCodes" [value]="carrierCode.code">
+                                {{carrierCode.description}}</option>
+                        </select>
+                    </div>
+                    <!-- <div ngbDropdown class="d-inline-block">
                         <button class="btn btn-outline-primary" id="carrier"
                             ngbDropdownToggle>{{policyInfo.quoteData.carrierCode}}</button>
                         <div ngbDropdownMenu aria-labelledby="carrier">
                             <button ngbDropdownItem
                                 *ngFor="let carrierCode of carrierCodes;">{{carrierCode.description}}</button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <br>
                 <div class="row">
-                    <label for="coverageCode">Coverage Code </label><br>
-                    <select id="coverageCode" [(ngModel)]="policyInfo.quoteData.coverageCode">
-                        <option *ngFor="let coverageCode of coverageCodes" [value]="coverageCode.code">
-                            {{coverageCode.code}} -
-                            {{coverageCode.description}}</option>
-                    </select>
-
+                    <div class="col-md">
+                        <label for="coverageCode">Coverage Code </label><br>
+                        <select id="coverageCode" [(ngModel)]="policyInfo.quoteData.coverageCode">
+                            <option *ngFor="let coverageCode of coverageCodes" [value]="coverageCode.code">
+                                {{coverageCode.code}} -
+                                {{coverageCode.description}}</option>
+                        </select>
+                    </div>
                     <!-- <div ngbDropdown class="d-inline-block">
                         <button class="btn btn-outline-primary" id="coverageCode"
                             ngbDropdownToggle>{{policyInfo.quoteData.coverageCode}}</button>
@@ -167,36 +184,48 @@
                 <div class="row">
                     <div class="col-md" style="width:125px">
                         <label for="riskGradeCode">Risk Grade</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="riskGradeCode" [(ngModel)]="policyInfo.riskGradeCode">
+                            <option *ngFor="let riskGrade of riskGrades" [value]="riskGrade.code">
+                                {{riskGrade.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="riskGradeCode"
                                 ngbDropdownToggle>{{policyInfo.riskGradeCode}}</button>
                             <div ngbDropdownMenu aria-labelledby="riskGradeCode">
                                 <button ngbDropdownItem
                                     *ngFor="let riskGrade of riskGrades;">{{riskGrade.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md">
                         <label for="auditCode">Audit Code</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="auditCode" [(ngModel)]="policyInfo.auditCode">
+                            <option *ngFor="let auditCode of auditCodes" [value]="auditCode.code">
+                                {{auditCode.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="auditCode"
                                 ngbDropdownToggle>{{policyInfo.auditCode}}</button>
                             <div ngbDropdownMenu aria-labelledby="auditCode">
                                 <button ngbDropdownItem
                                     *ngFor="let auditCode of auditCodes;">{{auditCode.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md">
                         <label for="paymentFrequency">Payment Frequency</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="paymentFrequency" [(ngModel)]="policyInfo.paymentFrequency">
+                            <option *ngFor="let paymentFrequency of paymentFrequencies" [value]="paymentFrequency.code">
+                                {{paymentFrequency.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="paymentFrequency"
                                 ngbDropdownToggle>{{policyInfo.paymentFrequency}}</button>
                             <div ngbDropdownMenu aria-labelledby="paymentFrequency">
                                 <button ngbDropdownItem
                                     *ngFor="let paymentFrequency of paymentFrequencies;">{{paymentFrequency.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md">
                         <label for="creditDays">Credit Days</label><br>
@@ -206,7 +235,12 @@
                     </div>
                     <div class="col-md">
                         <label for="deregulationIndicator">Deregulation Indictor</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="deregulationIndicator" [(ngModel)]="policyInfo.deregulationIndicator">
+                            <option *ngFor="let deregulationIndicator of deregulationIndicators"
+                                [value]="deregulationIndicator.code">
+                                {{deregulationIndicator.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="deregIndicator"
                                 ngbDropdownToggle>{{policyInfo.deregulationIndicator}}</button>
                             <div ngbDropdownMenu aria-labelledby="deregIndicator">
@@ -214,18 +248,22 @@
                                     *ngFor="let deregulationIndicator of deregulationIndicators;">{{deregulationIndicator.code}}
                                     - {{deregulationIndicator.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md">
                         <label for="riskType">Risk Type</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="deregulationIndicator" [(ngModel)]="policyInfo.riskType">
+                            <option *ngFor="let riskType of riskTypes" [value]="riskType.code">
+                                {{riskType.code}} - {{riskType.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="riskType"
                                 ngbDropdownToggle>{{policyInfo.riskType}}</button>
                             <div ngbDropdownMenu aria-labelledby="riskType">
                                 <button ngbDropdownItem *ngFor="let riskType of riskTypes;">{{riskType.code}} -
                                     {{riskType.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <br>
@@ -236,7 +274,11 @@
                     <div class="col-md"></div>
                     <div class="col-md">
                         <label for="NYFTZ" style="color: red;">NY Free Trade Zone</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="NYFTZ" [(ngModel)]="policyInfo.NYFTZ">
+                            <option *ngFor="let nyFreeTradeZone of nyFreeTradeZones" [value]="nyFreeTradeZone.code">
+                                {{nyFreeTradeZone.code}} - {{nyFreeTradeZone.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="NYFTZ"
                                 ngbDropdownToggle>{{policyInfo.NYFTZ}}</button>
                             <div ngbDropdownMenu aria-labelledby="NYFTZ">
@@ -244,11 +286,15 @@
                                     *ngFor="let nyFreeTradeZone of nyFreeTradeZones;">{{nyFreeTradeZone.code}} -
                                     {{nyFreeTradeZone.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md">
                         <label for="assumedCarrier" style="color: red;">Assumed Carrier</label><br>
-                        <div ngbDropdown class="d-inline-block">
+                        <select id="assumedCarrier" [(ngModel)]="policyInfo.assumedCarrier">
+                            <option *ngFor="let assumedCarrier of assumedCarriers" [value]="assumedCarrier.code">
+                                {{assumedCarrier.code}} - {{assumedCarrier.description}}</option>
+                        </select>
+                        <!-- <div ngbDropdown class="d-inline-block">
                             <button class="btn btn-outline-primary" id="assumedCarrier"
                                 ngbDropdownToggle>{{policyInfo.assumedCarrier}}</button>
                             <div ngbDropdownMenu aria-labelledby="assumedCarrier">
@@ -256,7 +302,7 @@
                                     *ngFor="let assumedCarrier of assumedCarriers;">{{assumedCarrier.code}} -
                                     {{assumedCarrier.description}}</button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -276,12 +322,12 @@
                     </div>
                     <div class="col-md">
                         <label for="productManufactureDate">Product Manufacture Date</label><br>
-                        <input type="text" class="form-control" id="productManufactureDate" 
-                        [ngModel]="policyInfo.productManufactureDate  | date:'dd-MM-YYYY'" 
-                        (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate" #policyCancelDate="ngModel" [readonly]="isReadOnly">
+                        <input type="text" class="form-control" id="productManufactureDate"
+                            [ngModel]="policyInfo.productManufactureDate  | date:'dd-MM-YYYY'"
+                            (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
+                            #policyCancelDate="ngModel" [readonly]="isReadOnly">
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
