@@ -50,6 +50,7 @@ export interface AccountInformationResolved {
           policyExtendedExpDate: Date
           policyCancelDate: Date
           programId: number
+          programName: string
           riskGradeCode: string
           auditCode: string
           paymentFrequency: string
