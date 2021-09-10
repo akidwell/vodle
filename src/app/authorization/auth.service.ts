@@ -76,6 +76,7 @@ login2() {
     this.userAuth.isAuthenticated = token.valid;
     
     this.userAuth.canExecuteImport = token.CanExecuteImport;
+    this.userAuth.canEditPolicy = token.CanEditPolicy;
 
       // GAM - TEMP - New observables 
     this.userAuth.canExecuteImport2 = token.CanExecuteImport == 'True';

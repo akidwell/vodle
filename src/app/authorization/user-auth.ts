@@ -10,7 +10,8 @@ export class UserAuth {
   bearerToken: string = "";
   isAuthenticated: string = "false";
   canExecuteImport: string = "false";
-
+  canEditPolicy: string = "false";
+  
   // GAM - TEMP - Header test
   private _isApiAuthenticated = new BehaviorSubject<boolean>(false);
   isApiAuthenticated$ = this._isApiAuthenticated.asObservable();
