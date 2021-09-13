@@ -80,7 +80,7 @@
                         <label for="policyState">Policy State</label>
                         <ng-select id="policyState" [items]="states$ | async" bindLabel="description" bindValue="code"
                             [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy"
-                            [required]="canEditPolicy" [(ngModel)]="policyInfo.policyInsuredState" #policyState2>
+                            [required]="canEditPolicy" [(ngModel)]="policyInfo.riskLocation.state" #policyState2>
                         </ng-select>
 
                     </div>
@@ -139,7 +139,7 @@
                         <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
                             [required]="canEditPolicy" bindValue="code" [clearable]="false"
                             placeholder="Select Coverage" [readonly]="!canEditPolicy"
-                            [(ngModel)]="policyInfo.quoteData.coverageCode">
+                            [(ngModel)]="policyInfo.quoteData.coverageCode" >
                             <ng-template ng-label-tmp let-item="item">
                                 {{item.code}} - {{item.description}}
                             </ng-template>
@@ -234,23 +234,23 @@
             <br>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md">
+                    <div class="col-md" >
                         <label for="productRecall">Product Recall</label>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row"   >
                     <div class="col-md">
                         <label for="coinsurancePercentage">Coinsurance %</label>
                         <input type="text" class="form-control" id="coinsurancePercentage"
                             [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
-                            #coinsurancePercentage="ngModel" [readonly]="isReadOnly">
+                            #coinsurancePercentage="ngModel" >
                     </div>        
                     <div class="col-md">
                         <label for="productManufactureDate">Product Manufacture Date</label><br>
                         <input type="text" class="form-control" id="productManufactureDate"
                             [ngModel]="policyInfo.productManufactureDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
-                            #policyCancelDate="ngModel" [readonly]="isReadOnly">
+                            #policyCancelDate="ngModel">
                     </div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>

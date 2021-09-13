@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountInformation, Policy, PolicyInformation, QuoteData } from 'src/app/policy/policy';
+import { AccountInformation, Policy, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -21,6 +21,7 @@ export class PolicyInformationComponent implements OnInit {
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;
+  riskLocation!: RiskLocation;
   pacCodes$: Observable<Code[]> | undefined;
   riskGrades$: Observable<Code[]> | undefined;
   states$: Observable<Code[]> | undefined;
@@ -35,9 +36,9 @@ export class PolicyInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth) { 
-     // GAM - TEMP -Subscribe
-     this.authSub = this.userAuth.canEditPolicy$.subscribe(
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth) {
+    // GAM - TEMP -Subscribe
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
@@ -48,7 +49,7 @@ export class PolicyInformationComponent implements OnInit {
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.quoteData = data['policyInfoData'].quoteData;
-      console.log(this.quoteData)
+      this.riskLocation = data['policyInfoData'].riskLocation;
     });
 
     this.pacCodes$ = this.dropdowns.getPACCodes();
