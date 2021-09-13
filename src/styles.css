@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 div.card-header {
     font-size: large;
@@ -24,4 +25,11 @@ div.card-header {
 .highlight {
     background-color: yellow;
     font-weight: bold;
+}
+
+/* Added here to allow the drop downs show full width of values, only worked here*/
+ng-select .ng-dropdown-panel {
+  width: auto !important;
+  max-width: 550px;
+  min-width: 100%;
 }

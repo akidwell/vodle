@@ -10,17 +10,26 @@ input[type="date"] {
 }
 input[type="checkbox"] {
     display: inline-block;
+    width: 20px;
+    height: 20px;  
 }
 
 .card-body{
     border-style: solid; 
     border-width: 1px;
-     border-color: black;
-     display: inline-block;
-     width: 100%;
+    border-color: black;
+    display: inline-block;
+    width: 100%;
 }
 
-button, select {
-    text-transform: none;
-    height: 40px;
+input[type="checkbox"][readonly] {
+    pointer-events: none;
+}
+
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+}
+  
+.ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
 }

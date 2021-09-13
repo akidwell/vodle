@@ -55,7 +55,7 @@ export interface AccountInformationResolved {
           auditCode: string
           paymentFrequency: string
           deregulationIndicator: string
-          NYFTZ: string
+          nyftz: string
           riskType: string
           assumedCarrier:  string
           coinsurancePercentage: number

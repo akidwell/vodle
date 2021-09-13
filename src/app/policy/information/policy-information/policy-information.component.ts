@@ -3,8 +3,9 @@ import { AccountInformation, Policy, PolicyInformation, QuoteData } from 'src/ap
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
+import { UserAuth } from 'src/app/authorization/user-auth';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -20,30 +21,26 @@ export class PolicyInformationComponent implements OnInit {
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;
-  subPACCodes!: Subscription;
-  subRiskGrades!: Subscription;
-  subStates!: Subscription;
-  subCarrierCodes!: Subscription;
-  subCoverageCodes!: Subscription;
-  subAuditCodes!: Subscription;
-  subPaymentFrequencies!: Subscription;
-  subDeregulationIndicators!: Subscription;
-  subRiskTypes!: Subscription;
-  subNYFreeTradeZones!: Subscription;
-  subAssumedCarriers!: Subscription;
-  pacCodes: Code[] = [];
-  riskGrades: Code[] = [];
-  states: Code[] = [];
-  carrierCodes: Code[] = [];
-  coverageCodes: Code[] = [];
-  auditCodes: Code[] = [];
-  paymentFrequencies: Code[] = [];
-  deregulationIndicators: Code[] = [];
-  riskTypes: Code[] = [];
-  nyFreeTradeZones: Code[] = [];
-  assumedCarriers: Code[] = [];
+  pacCodes$: Observable<Code[]> | undefined;
+  riskGrades$: Observable<Code[]> | undefined;
+  states$: Observable<Code[]> | undefined;
+  carrierCodes$: Observable<Code[]> | undefined;
+  coverageCodes$: Observable<Code[]> | undefined;
+  auditCodes$: Observable<Code[]> | undefined;
+  paymentFrequencies$: Observable<Code[]> | undefined;
+  deregulationIndicators$: Observable<Code[]> | undefined;
+  riskTypes$: Observable<Code[]> | undefined;
+  nyFreeTradeZones$: Observable<Code[]> | undefined;
+  assumedCarriers$: Observable<Code[]> | undefined;
+  canEditPolicy: boolean = false;
+  authSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService) { }
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth) { 
+     // GAM - TEMP -Subscribe
+     this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+  }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
@@ -54,74 +51,20 @@ export class PolicyInformationComponent implements OnInit {
       console.log(this.quoteData)
     });
 
-    this.subPACCodes = this.dropdowns.getPACCodes().subscribe({
-      next: pacCodes => {
-        this.pacCodes = pacCodes;
-      }
-    });
-    this.subRiskGrades = this.dropdowns.getRiskGrades(this.policyInfo.programId).subscribe({
-      next: riskGrades => {
-        this.riskGrades = riskGrades;
-      }
-    });
-    this.subStates = this.dropdowns.getStates().subscribe({
-      next: states => {
-        this.states = states;
-      }
-    });
-    this.subCarrierCodes = this.dropdowns.getCarrierCodes().subscribe({
-      next: carrierCodes => {
-        this.carrierCodes = carrierCodes;
-      }
-    });
-    this.subCoverageCodes = this.dropdowns.getCoverageCodes().subscribe({
-      next: coverageCodes => {
-        this.coverageCodes = coverageCodes;
-      }
-    });
-    this.subAuditCodes = this.dropdowns.getAuditCodes().subscribe({
-      next: auditCodes => {
-        this.auditCodes = auditCodes;
-      }
-    });
-    this.subPaymentFrequencies = this.dropdowns.getPaymentFrequencies().subscribe({
-      next: paymentFrequencies => {
-        this.paymentFrequencies = paymentFrequencies;
-      }
-    });
-    this.subDeregulationIndicators = this.dropdowns.getDeregulationIndicators().subscribe({
-      next: deregulationIndicators => {
-        this.deregulationIndicators = deregulationIndicators;
-      }
-    });
-    this.subRiskTypes = this.dropdowns.getRiskTypes().subscribe({
-      next: riskTypes => {
-        this.riskTypes = riskTypes;
-      }
-    });
-    this.subNYFreeTradeZones = this.dropdowns.getNYFreeTradeZones().subscribe({
-      next: nyFreeTradeZones => {
-        this.nyFreeTradeZones = nyFreeTradeZones;
-      }
-    });
-    this.subAssumedCarriers = this.dropdowns.getAssumedCarriers().subscribe({
-      next: assumedCarriers => {
-        this.assumedCarriers = assumedCarriers;
-      }
-    });
+    this.pacCodes$ = this.dropdowns.getPACCodes();
+    this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
+    this.states$ = this.dropdowns.getStates();
+    this.carrierCodes$ = this.dropdowns.getCarrierCodes();
+    this.coverageCodes$ = this.dropdowns.getCoverageCodes();
+    this.auditCodes$ = this.dropdowns.getAuditCodes();
+    this.paymentFrequencies$ = this.dropdowns.getPaymentFrequencies();
+    this.deregulationIndicators$ = this.dropdowns.getDeregulationIndicators();
+    this.riskTypes$ = this.dropdowns.getRiskTypes();
+    this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
+    this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
   }
 
   ngOnDestroy(): void {
-    this.subPACCodes.unsubscribe();
-    this.subRiskGrades.unsubscribe();
-    this.subStates.unsubscribe();
-    this.subCarrierCodes.unsubscribe();
-    this.subCoverageCodes.unsubscribe();
-    this.subAuditCodes.unsubscribe();
-    this.subPaymentFrequencies.unsubscribe();
-    this.subDeregulationIndicators.unsubscribe();
-    this.subRiskTypes.unsubscribe();
-    this.subNYFreeTradeZones.unsubscribe();
-    this.subAssumedCarriers.unsubscribe();
+    this.authSub.unsubscribe();
   }
 }

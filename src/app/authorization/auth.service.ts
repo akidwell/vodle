@@ -74,12 +74,13 @@ login2() {
     console.log(token);
     this.userAuth.userName = token.name;
     this.userAuth.isAuthenticated = token.valid;
-    
     this.userAuth.canExecuteImport = token.CanExecuteImport;
 
-      // GAM - TEMP - New observables 
+    // GAM - TEMP - New observables 
     this.userAuth.canExecuteImport2 = token.CanExecuteImport == 'True';
     this.userAuth.isApiAuthenticated = token.valid == 'True';
+    this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
+    this.userAuth.role = token.role;
 
     console.log(this.userAuth);
     if (this.userAuth.isAuthenticated == 'False' )

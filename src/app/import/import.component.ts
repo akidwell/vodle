@@ -1,4 +1,4 @@
-import { Component, OnInit, PipeTransform, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, PipeTransform, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { ImportPolicy } from './interfaces/import-policy';
 import { ImportService } from './import.service';
@@ -115,6 +115,7 @@ export class ImportComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+    this.authSub.unsubscribe();
   }
 
   // GAM - TEMP - commented for now
