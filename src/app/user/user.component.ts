@@ -3,8 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OktaAuthService } from '@okta/okta-angular';
 import { AuthService } from '../authorization/auth.service';
 import { UserAuth } from '../authorization/user-auth';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faPowerOff, faKey, faIdBadge } from '@fortawesome/free-solid-svg-icons';
+import { faUser,faPowerOff, faKey, faIdBadge, faUserLock } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -23,8 +22,12 @@ export class UserComponent implements OnInit {
   faPowerOff = faPowerOff;
   faKey = faKey;
   faIdBadge = faIdBadge;
+  faUserLock = faUserLock;
   isAuthenticated: boolean = false;
+  role: string = "";
   authSub: Subscription;
+  roleSub: Subscription;
+isReadOnly: boolean = false;
 
   constructor(private userAuth: UserAuth, public oktaAuth: OktaAuthService, private authService: AuthService, private modalService: NgbModal) {
     // GAM - TEMP -Subscribe
@@ -41,6 +44,11 @@ export class UserComponent implements OnInit {
     this.authSub = this.userAuth.ApiBearerToken$.subscribe(
       (ApiBearerToken: string) => { this.apiToken = ApiBearerToken }
     );
+
+    this.roleSub = this.userAuth.role$.subscribe(
+      (role: string) => { this.role = role;
+        this.isReadOnly = role == "ReadOnly"; }
+    );
   }
 
   async ngOnInit(): Promise<void> {
@@ -53,6 +61,7 @@ export class UserComponent implements OnInit {
 
   ngOnDestroy() {
     this.authSub.unsubscribe();
+    this.roleSub.unsubscribe();
   }
 
   async logout() {

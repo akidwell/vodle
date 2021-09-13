@@ -10,7 +10,6 @@ export class UserAuth {
   bearerToken: string = "";
   isAuthenticated: string = "false";
   canExecuteImport: string = "false";
-  canEditPolicy: string = "false";
   
   // GAM - TEMP - Header test
   private _isApiAuthenticated = new BehaviorSubject<boolean>(false);
@@ -30,6 +29,17 @@ export class UserAuth {
   get canExecuteImport2(): boolean { return this._canExecuteImport2.getValue(); }
   set canExecuteImport2(value: boolean) { this._canExecuteImport2.next(value); }
 
+  // GAM - TEMP - Header test
+  private _canEditPolicy = new BehaviorSubject<boolean>(false);
+  canEditPolicy$ = this._canExecuteImport2.asObservable();
+  get canEditPolicy(): boolean { return this._canEditPolicy.getValue(); }
+  set canEditPolicy(value: boolean) { this._canEditPolicy.next(value); }
+
+    // GAM - TEMP - Header test
+    private _role = new BehaviorSubject<string>("");
+    role$ = this._role.asObservable();
+    get role(): string { return this._role.getValue(); }
+    set role(value: string) { this._role.next(value); }
 
   init(): void {
     this.userName = "";
@@ -37,6 +47,5 @@ export class UserAuth {
     this.isAuthenticated = "false";
     this.canExecuteImport = "false";
   }
-
 
 }
