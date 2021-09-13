@@ -36,6 +36,7 @@ export interface AccountInformationResolved {
   export interface PolicyInformation {
        
           quoteData: QuoteData;
+          riskLocation: RiskLocation;
           policyEventCode: string;
           packageInd: string
           policyType: string
@@ -74,5 +75,16 @@ export interface QuoteData {
   carrierCode: string;
   coverageCode: string;
   creditDays: string;
+
+}
+
+export interface RiskLocation {
+       
+   street: string;
+   city: string;
+   state : string;
+   zip: string;
+   taxCode: string;
+   countryCode : string;
 
 }

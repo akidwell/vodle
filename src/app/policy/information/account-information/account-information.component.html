@@ -50,11 +50,13 @@
             <div class="row">
                 <div class="col-md">
                     <input type="text" class="form-control" id="insuredCityStateZip" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.insuredCity + ', ' + accountInfo.insuredState + '  ' + accountInfo.insuredZip" name="insuredAddress" #insuredAddress="ngModel">
+                    [ngModel]="accountInfo.insuredCity + ', ' + accountInfo.insuredState + '  ' + (accountInfo.insuredZip | zipCode)" name="insuredCityStateZip" #insuredCityStateZip="ngModel"
+                    (ngModelChange)="accountInfo.insuredZip=$event">
                 </div>
                 <div class="col-md">
                     <input type="text" class="form-control" id="producerCityStateZip" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.producerCity + ', ' + accountInfo.producerZip + '  ' + accountInfo.producerState" name="insuredAddress" #producerCityStateZip="ngModel">
+                    [ngModel]="accountInfo.producerCity + ', ' + accountInfo.producerState + '  ' + (accountInfo.producerZip | zipCode)" name="producerCityStateZip" #producerCityStateZip="ngModel"
+                    (ngModelChange)="accountInfo.producerZip=$event">
                 </div>
             </div>
     </div>
