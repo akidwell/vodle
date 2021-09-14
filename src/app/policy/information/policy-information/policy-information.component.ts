@@ -35,6 +35,7 @@ export class PolicyInformationComponent implements OnInit {
   assumedCarriers$: Observable<Code[]> | undefined;
   canEditPolicy: boolean = false;
   authSub: Subscription;
+  productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
