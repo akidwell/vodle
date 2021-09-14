@@ -99,17 +99,23 @@
                     </div>
                     <div class="col-md">
                         <label for="policyEffectiveDate">Effective Date</label>
-                        <input type="text" class="form-control" id="policyEffectiveDate" [readonly]="!canEditPolicy"
+                        <!-- <input type="text" class="form-control" id="policyEffectiveDate" [readonly]="!canEditPolicy"
                             [required]="canEditPolicy" [ngModel]="policyInfo.policyEffectiveDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
-                            #policyEffectiveDate="ngModel">
+                            #policyEffectiveDate="ngModel"> -->
+
+                            <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.policyEffectiveDate = $event.target.value" 
+                            [value]="policyInfo.policyEffectiveDate | date: 'dd/MM/yyyy'" name="policyEffectiveDate">
+
                     </div>
                     <div class="col-md">
                         <label for="policyExpirationDate">Expiration Date</label>
-                        <input type="text" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy"
-                            [required]="canEditPolicy" [ngModel]="policyInfo.policyExpirationDate  | date:'MM-dd-YYYY'"
+                        <!-- <input type="text" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy"
+                            [required]="canEditPolicy" [ngModel]="policyInfo.policyExpirationDate | date:'dd-MM-yyyy'"
                             (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate"
-                            #policyExpirationDate="ngModel">
+                            #policyExpirationDate="ngModel"> -->
+                            <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.policyExpirationDate = $event.target.value" 
+                            [value]="policyInfo.policyExpirationDate | date: 'dd/MM/yyyy'" name="policyExpirationDate">
                     </div>
                     <div class="col-md">
                         <label for="policyExtendedExpDate" style="width:160px">Policy Extension Date</label>
@@ -232,13 +238,13 @@
                 </div>
             </div>
             <br>
-            <div class="card-body">
+            <div class="card-body" *ngIf="productRecallCovCodes.includes(policyInfo.quoteData.coverageCode)">
                 <div class="row">
                     <div class="col-md" >
                         <label for="productRecall">Product Recall</label>
                     </div>
                 </div>
-                <div class="row"   >
+                <div class="row"  >
                     <div class="col-md">
                         <label for="coinsurancePercentage">Coinsurance %</label>
                         <input type="text" class="form-control" id="coinsurancePercentage"
@@ -247,10 +253,12 @@
                     </div>        
                     <div class="col-md">
                         <label for="productManufactureDate">Product Manufacture Date</label><br>
-                        <input type="text" class="form-control" id="productManufactureDate"
+                        <!-- <input type="text" class="form-control" id="productManufactureDate"
                             [ngModel]="policyInfo.productManufactureDate  | date:'MM-dd-YYYY'"
                             (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
-                            #policyCancelDate="ngModel">
+                            #productManufactureDate="ngModel"> -->
+                            <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.productManufactureDate = $event.target.value" 
+                            [value]="policyInfo.productManufactureDate | date: 'dd/MM/yyyy'" name="productManufactureDate">
                     </div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>
