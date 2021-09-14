@@ -105,7 +105,7 @@
                             #policyEffectiveDate="ngModel"> -->
 
                             <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.policyEffectiveDate = $event.target.value" 
-                            [value]="policyInfo.policyEffectiveDate | date: 'dd/MM/yyyy'" name="policyEffectiveDate">
+                            [value]="policyInfo.policyEffectiveDate | date: 'MM/dd/yyyy'" name="policyEffectiveDate">
 
                     </div>
                     <div class="col-md">
@@ -115,7 +115,7 @@
                             (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate"
                             #policyExpirationDate="ngModel"> -->
                             <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.policyExpirationDate = $event.target.value" 
-                            [value]="policyInfo.policyExpirationDate | date: 'dd/MM/yyyy'" name="policyExpirationDate">
+                            [value]="policyInfo.policyExpirationDate | date: 'MM/dd/yyyy'" name="policyExpirationDate">
                     </div>
                     <div class="col-md">
                         <label for="policyExtendedExpDate" style="width:160px">Policy Extension Date</label>
@@ -258,7 +258,7 @@
                             (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
                             #productManufactureDate="ngModel"> -->
                             <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.productManufactureDate = $event.target.value" 
-                            [value]="policyInfo.productManufactureDate | date: 'dd/MM/yyyy'" name="productManufactureDate">
+                            [value]="policyInfo.productManufactureDate | date: 'MM/dd/yyyy'" name="productManufactureDate">
                     </div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>
