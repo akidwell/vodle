@@ -77,13 +77,18 @@
                 <br>
                 <div class="row">
                     <div class="col-md">
-                        <label for="policyState">Policy State</label>
-                        <ng-select id="policyState" [items]="states$ | async" bindLabel="description" bindValue="code"
+                        <label for="riskState">Policy State</label>
+                        <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
                             [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy"
-                            [required]="canEditPolicy" [(ngModel)]="policyInfo.riskLocation.state" #policyState2>
+                            [required]="canEditPolicy" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
                         </ng-select>
-
                     </div>
+                    <div class="col-md">
+                      <label for="riskZipCode">Policy Zip Code</label><br>
+                      <input type="text" class="form-control" id="riskZipCode" [required]="canEditPolicy"
+                          [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.riskLocation.zip"
+                          #riskZipCode="ngModel">
+                  </div>
                     <div class="col-md">
                         <label for="pacCode">PAC</label>
                         <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description"
@@ -107,7 +112,7 @@
                     <div class="col-md">
                         <label for="policyExpirationDate">Expiration Date</label>
                         <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy"
-                            [required]="canEditPolicy"  [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'" 
+                            [required]="canEditPolicy"  [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.policyExpirationDate = $event"name="policyExpirationDate"
                             #policyExpirationDate="ngModel">
                     </div>
@@ -244,14 +249,14 @@
                         <input type="text" class="form-control" id="coinsurancePercentage"
                             [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
                             #coinsurancePercentage="ngModel" >
-                    </div>        
+                    </div>
                     <div class="col-md">
                         <label for="productManufactureDate">Product Manufacture Date</label><br>
                         <input type="date" class="form-control" id="productManufactureDate"
                             [ngModel]="policyInfo.productManufactureDate  | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
                             #productManufactureDate="ngModel">
-           
+
                     </div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>
@@ -259,4 +264,7 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-2">
+          <button class="btn btn-sm btn-primary pull-right" (click)="this.savePolicyInfo()">Save</button>
+      </div>
     </div>

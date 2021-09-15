@@ -13,17 +13,17 @@ export interface PolicyResolved {
         insuredCode: string;
         namedInsured: string;
         insuredAddress1: string;
-        insuredAddress2: string; 
-        insuredCity: string; 
-        insuredState: string; 
-        insuredZip: string; 
-        producerCode: string; 
-        producerBranch: string; 
-        producerAddress1: string; 
-        producerAddress2: string; 
-        producerCity: string; 
-        producerState: string; 
-        producerZip: string; 
+        insuredAddress2: string;
+        insuredCity: string;
+        insuredState: string;
+        insuredZip: string;
+        producerCode: string;
+        producerBranch: string;
+        producerAddress1: string;
+        producerAddress2: string;
+        producerCity: string;
+        producerState: string;
+        producerZip: string;
         commissionRate: string;
         producerName: string;
 }
@@ -34,7 +34,6 @@ export interface AccountInformationResolved {
   }
 
   export interface PolicyInformation {
-       
           quoteData: QuoteData;
           riskLocation: RiskLocation;
           policyEventCode: string;
@@ -69,7 +68,7 @@ policyInfo: PolicyInformation | null;
 error?: any;
 }
 export interface QuoteData {
-       
+
   pacCode: string;
   quoteNumber: string;
   carrierCode: string;
@@ -77,14 +76,14 @@ export interface QuoteData {
   creditDays: string;
 
 }
-
 export interface RiskLocation {
-       
-   street: string;
-   city: string;
-   state : string;
-   zip: string;
-   taxCode: string;
-   countryCode : string;
+
+  policyId: string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  taxCode: string;
+  countryCode: string;
 
 }

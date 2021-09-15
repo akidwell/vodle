@@ -6,7 +6,9 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { PolicyService } from '../../policy.service';
+import { HttpClient } from '@angular/common/http';
+import { ConfigService } from 'src/app/config/config.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -38,11 +40,9 @@ export class PolicyInformationComponent implements OnInit {
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
 
-  updateSub: Subscription | undefined;
-  
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService) {
-    // GAM - TEMP -Subscribe
-    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService) {
+     // GAM - TEMP -Subscribe
+     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
@@ -52,8 +52,6 @@ export class PolicyInformationComponent implements OnInit {
       this.policy = data['resolvedData'].policy;
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
-      this.quoteData = data['policyInfoData'].quoteData;
-      this.riskLocation = data['policyInfoData'].riskLocation;
     });
 
     this.pacCodes$ = this.dropdowns.getPACCodes();
@@ -67,10 +65,21 @@ export class PolicyInformationComponent implements OnInit {
     this.riskTypes$ = this.dropdowns.getRiskTypes();
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
+    this.savePolicyInfo = this.savePolicyInfo;
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
-
+  
+  savePolicyInfo(): any{
+    let call = this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', this.policyInfo)
+    .pipe(
+      tap(r => {
+        console.log(r);
+      }),
+      )
+      call.subscribe();
+      return call;
+  }
 }
