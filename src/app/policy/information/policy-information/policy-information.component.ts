@@ -6,6 +6,9 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Observable, of, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { HttpClient } from '@angular/common/http';
+import { ConfigService } from 'src/app/config/config.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -35,7 +38,7 @@ export class PolicyInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth) { 
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService) {
      // GAM - TEMP -Subscribe
      this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -62,9 +65,20 @@ export class PolicyInformationComponent implements OnInit {
     this.riskTypes$ = this.dropdowns.getRiskTypes();
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
+    this.savePolicyInfo = this.savePolicyInfo;
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
+  }
+  savePolicyInfo(): any{
+    let call = this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', this.policyInfo)
+    .pipe(
+      tap(r => {
+        console.log(r);
+      }),
+      )
+      call.subscribe();
+      return call;
   }
 }
