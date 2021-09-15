@@ -52,8 +52,6 @@ export class PolicyInformationComponent implements OnInit {
       this.policy = data['resolvedData'].policy;
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
-      this.quoteData = data['policyInfoData'].quoteData;
-      this.riskLocation = data['policyInfoData'].riskLocation;
     });
 
     this.pacCodes$ = this.dropdowns.getPACCodes();
