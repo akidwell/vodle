@@ -62,6 +62,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
+        //const end = route.paramMap.get('end') ?? "0";
         if (isNaN(+id)) {
             const message = `Policy id was not a number: ${id}`;
             console.error(message);    

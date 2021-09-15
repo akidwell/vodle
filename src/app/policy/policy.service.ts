@@ -33,12 +33,4 @@ export class PolicyService {
       );
   }
 
-  putPolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
-    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/PolicyInfo/' + policyInfo.policyId.toString(),policyInfo)
-      .pipe(
-        tap(data => console.log(JSON.stringify(data)))
-      );
-  }
-
-
 }
