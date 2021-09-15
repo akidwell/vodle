@@ -25,6 +25,7 @@ import { SummaryComponent } from './policy/summary/summary.component';
 import { PolicyInformationComponent } from './policy/information/policy-information/policy-information.component';
 import { AccountInformationComponent } from './policy/information/account-information/account-information.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ZipCodePipe } from './policy/information/account-information/zip-code.pipe';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -48,7 +49,8 @@ const okta_config = {
     SchedulesComponent,
     ReinsuranceComponent,
     SummaryComponent,
-    AccountInformationComponent
+    AccountInformationComponent,
+    ZipCodePipe
   ],
   imports: [
     OktaAuthModule,

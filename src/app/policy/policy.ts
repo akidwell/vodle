@@ -34,8 +34,8 @@ export interface AccountInformationResolved {
   }
 
   export interface PolicyInformation {
-          riskLocation: RiskLocation,
           quoteData: QuoteData;
+          riskLocation: RiskLocation;
           policyEventCode: string;
           packageInd: string
           policyType: string

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountInformation, Policy, PolicyInformation, QuoteData } from 'src/app/policy/policy';
+import { AccountInformation, Policy, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -24,6 +24,7 @@ export class PolicyInformationComponent implements OnInit {
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;
+  riskLocation!: RiskLocation;
   pacCodes$: Observable<Code[]> | undefined;
   riskGrades$: Observable<Code[]> | undefined;
   states$: Observable<Code[]> | undefined;
@@ -37,6 +38,7 @@ export class PolicyInformationComponent implements OnInit {
   assumedCarriers$: Observable<Code[]> | undefined;
   canEditPolicy: boolean = false;
   authSub: Subscription;
+  productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService) {
      // GAM - TEMP -Subscribe
@@ -51,7 +53,7 @@ export class PolicyInformationComponent implements OnInit {
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.quoteData = data['policyInfoData'].quoteData;
-      console.log(this.quoteData)
+      this.riskLocation = data['policyInfoData'].riskLocation;
     });
 
     this.pacCodes$ = this.dropdowns.getPACCodes();
