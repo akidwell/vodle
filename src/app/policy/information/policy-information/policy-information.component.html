@@ -1,4 +1,9 @@
 <div class="content">
+
+      <ngb-alert #selfClosingAlert *ngIf="successMessage" type="success" (closed)="successMessage = ''">{{ successMessage }}
+      </ngb-alert>
+      <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+
     <div class="card">
         <div class="card-header" (click)="collapse.toggle()">
             Policy Information
@@ -190,7 +195,7 @@
                         <label for="creditDays">Credit Days</label><br>
                         <input type="text" class="form-control" id="creditDays" [required]="canEditPolicy"
                             [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays"
-                            #creditDays="ngModel">
+                            #creditDays="ngModel" (change)="onChange()">
                     </div>
                     <div class="col-md">
                         <label for="deregulationIndicator">Deregulation Indictor</label><br>
