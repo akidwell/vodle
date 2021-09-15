@@ -21,8 +21,8 @@
                     <div class="col-md"></div>
                     <div class="col-md">
                         <label for="enteredDate">Policy Entered Date</label>
-                        <input type="text" class="form-control" id="enteredDate" [readonly]="isReadOnly"
-                            [ngModel]="policyInfo.enteredDate  | date:'MM-dd-YYYY'"
+                        <input type="date" class="form-control" id="enteredDate" [readonly]="isReadOnly"
+                            [ngModel]="policyInfo.enteredDate  | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.enteredDate=$event" name="enteredDate" #enteredDate="ngModel">
                     </div>
                     <div class="col-md"></div>
@@ -104,35 +104,29 @@
                     </div>
                     <div class="col-md">
                         <label for="policyEffectiveDate">Effective Date</label>
-                        <!-- <input type="text" class="form-control" id="policyEffectiveDate" [readonly]="!canEditPolicy"
-                            [required]="canEditPolicy" [ngModel]="policyInfo.policyEffectiveDate  | date:'MM-dd-YYYY'"
+                        <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEditPolicy"
+                            [required]="canEditPolicy" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
-                            #policyEffectiveDate="ngModel"> -->
-
-                            <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.policyEffectiveDate = $event.target.value" 
-                            [value]="policyInfo.policyEffectiveDate | date: 'MM/dd/yyyy'" name="policyEffectiveDate">
-
+                            #policyEffectiveDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyExpirationDate">Expiration Date</label>
-                        <!-- <input type="text" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy"
-                            [required]="canEditPolicy" [ngModel]="policyInfo.policyExpirationDate | date:'dd-MM-yyyy'"
-                            (ngModelChange)="policyInfo.policyExpirationDate=$event" name="policyExpirationDate"
-                            #policyExpirationDate="ngModel"> -->
-                            <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.policyExpirationDate = $event.target.value" 
-                            [value]="policyInfo.policyExpirationDate | date: 'MM/dd/yyyy'" name="policyExpirationDate">
+                        <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy"
+                            [required]="canEditPolicy"  [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'" 
+                            (ngModelChange)="policyInfo.policyExpirationDate = $event"name="policyExpirationDate"
+                            #policyExpirationDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyExtendedExpDate" style="width:160px">Policy Extension Date</label>
-                        <input type="text" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
-                            [ngModel]="policyInfo.policyExtendedExpDate  | date:'MM-dd-YYYY'"
+                        <input type="date" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
+                            [ngModel]="policyInfo.policyExtendedExpDate | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate"
                             #policyExtendedExpDate="ngModel">
                     </div>
                     <div class="col-md">
                         <label for="policyCancelDate">Policy Cancel Date</label>
-                        <input type="text" class="form-control" id="policyCancelDate" [readonly]="isReadOnly"
-                            [ngModel]="policyInfo.policyCancelDate  | date:'MM-dd-YYYY'"
+                        <input type="date" class="form-control" id="policyCancelDate" [readonly]="isReadOnly"
+                            [ngModel]="policyInfo.policyCancelDate | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.policyCancelDate=$event" name="policyCancelDate"
                             #policyCancelDate="ngModel">
                     </div>
@@ -258,12 +252,11 @@
                     </div>        
                     <div class="col-md">
                         <label for="productManufactureDate">Product Manufacture Date</label><br>
-                        <!-- <input type="text" class="form-control" id="productManufactureDate"
-                            [ngModel]="policyInfo.productManufactureDate  | date:'MM-dd-YYYY'"
+                        <input type="date" class="form-control" id="productManufactureDate"
+                            [ngModel]="policyInfo.productManufactureDate  | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
-                            #productManufactureDate="ngModel"> -->
-                            <input type="text" class="form-control" placeholder="MM/DD/YYYY" input="policyInfo.productManufactureDate = $event.target.value" 
-                            [value]="policyInfo.productManufactureDate | date: 'MM/dd/yyyy'" name="productManufactureDate">
+                            #productManufactureDate="ngModel">
+           
                     </div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>
