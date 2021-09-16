@@ -1,79 +1,71 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AccountInformationResolved, PolicyInformationResolved, PolicyResolved } from './policy';
+import { catchError, map } from 'rxjs/operators';
+import { AccountInformationResolved, PolicyInformationResolved } from './policy';
 import { PolicyService } from './policy.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PolicyResolver implements Resolve<PolicyResolved> {
-
-    constructor(private policyService: PolicyService) { }
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyResolved> {
-        const id = route.paramMap.get('id') ?? "";
-        if (isNaN(+id)) {
-            const message = `Policy id was not a number: ${id}`;
-            console.error(message);    
-            // TODO: Might want to do this
-            //throw Error("Policy id was not a number");
-            return of({ policy: null, error: message });
-        }
-
-        return this.policyService.getPolicy(Number(id))
-            .pipe(
-                map(policy => ({ policy }))
-            );
-    }
-
-}
-@Injectable({
-    providedIn: 'root'
-})
 export class AccountInformationResolver implements Resolve<AccountInformationResolved> {
 
-    constructor(private policyService: PolicyService) { }
+    constructor(private router: Router, private policyService: PolicyService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<AccountInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
+        const end = route.paramMap.get('end') ?? "0";
         if (isNaN(+id)) {
             const message = `Policy id was not a number: ${id}`;
-            console.error(message);    
-            // TODO: Might want to do this
-            //throw Error("Policy id was not a number");
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ accountInfo: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ accountInfo: null, error: message });
         }
 
         return this.policyService.getPolicyAccountInfo(Number(id))
             .pipe(
-                map(accountInfo => ({ accountInfo }))
+                map(accountInfo => ({ accountInfo })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ accountInfo: null, error: error });
+                })
             );
     }
 
 }
+
 @Injectable({
     providedIn: 'root'
 })
 export class PolicyInformationResolver implements Resolve<PolicyInformationResolved> {
 
-    constructor(private policyService: PolicyService) { }
+    constructor(private router: Router, private policyService: PolicyService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
-        //const end = route.paramMap.get('end') ?? "0";
+        const end = route.paramMap.get('end') ?? "0";
         if (isNaN(+id)) {
             const message = `Policy id was not a number: ${id}`;
-            console.error(message);    
-            // TODO: Might want to do this
-            //throw Error("Policy id was not a number");
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ policyInfo: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ policyInfo: null, error: message });
         }
 
         return this.policyService.getPolicyInfo(Number(id))
             .pipe(
-                map(policyInfo => ({ policyInfo }))
+                map(policyInfo => ({ policyInfo })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ policyInfo: null, error: error });
+                })
             );
     }
 

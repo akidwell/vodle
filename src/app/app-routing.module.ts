@@ -6,6 +6,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { OktaCallbackComponent} from '@okta/okta-angular';
 import { AuthGuard } from './authorization/auth.guard';
 import { AccessDeniedComponent } from './access-denied.component';
+import { PolicyNotFoundComponent } from './policy/policy-not-found.component';
 const CALLBACK_PATH = 'callback';
 
 

@@ -1,10 +1,9 @@
-import {Component, TemplateRef} from '@angular/core';
-
-import {ToastService} from './toast-service';
+import { Component, TemplateRef } from '@angular/core';
+import { NotificationService } from './notification-service';
 
 
 @Component({
-  selector: 'app-toasts',
+  selector: 'app-notification',
   template: `
     <ngb-toast
       *ngFor="let toast of toastService.toasts"
@@ -20,10 +19,10 @@ import {ToastService} from './toast-service';
       <ng-template #text>{{ toast.textOrTpl }}</ng-template>
     </ngb-toast>
   `,
-  host: {'[class.ngb-toasts]': 'true'}
+  host: { '[class.ngb-toasts]': 'true' }
 })
-export class ToastsContainer {
-  constructor(public toastService: ToastService) {}
+export class NotificationComponent {
+  constructor(public toastService: NotificationService) { }
 
   isTemplate(toast: { textOrTpl: any; }) { return toast.textOrTpl instanceof TemplateRef; }
 }

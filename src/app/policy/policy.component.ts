@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ToastService } from './information/policy-information/toast-service';
-import { Policy, PolicyInformation } from './policy';
+import { NotificationService } from '../notification/notification-service';
+import { PolicyInformation } from './policy';
 import { PolicyService } from './policy.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class PolicyComponent implements OnInit {
   data: any;
   updateSub: Subscription | undefined;
   policyInfo!: PolicyInformation;
-  constructor(private route: ActivatedRoute,private policyService: PolicyService,private toastService: ToastService) { }
+
+  constructor(private route: ActivatedRoute,private policyService: PolicyService,private notification: NotificationService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {

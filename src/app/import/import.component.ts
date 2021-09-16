@@ -135,12 +135,12 @@ export class ImportComponent implements OnInit {
     });
   }
 
-  // Decide to either show errors or if seccesful open up the policy
+  // Decide to either show errors or if succesful open up the policy
   routeImport() {
     this.showBusy = false;
     if (this.importPolicyResponse?.isPolicyImported) {
       console.log(this.importPolicyResponse.policyId);
-      this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString()]);
+      this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString()]) + '/0';
     }
     else if (this.importPolicyResponse!= null) {
       this.pipeMessage = this.importPolicyResponse.errorMessage;
