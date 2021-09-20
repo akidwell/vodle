@@ -1,36 +1,42 @@
 #policyHeader {
-    background-color: #335271;
-    color:white;
-    font-family: 'Arial', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;    
-    position: relative;
-    z-index: 1;
-    top: 48px;
-    height: 10%;
-    margin-left: 9.5%;
-    padding:.25%;
-   
-  }
+  background-color: #335271;
+  color: white;
+  font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+    sans-serif;
+  position: sticky;
+  z-index: 1;
+  width: 100%;
+  top: 48px;
+  height: fit-content;
+  padding: 0.25%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
-  .insured {
-    width: 38%;
-  }
+/* Overwrite margin size */
+.row {
+  margin: 0;
+}
 
-  .policyNumber {
-    width: 15%;
-  }
+.insured {
+  width: 38%;
+}
 
-  .endorsement {
-    width: 5%;
-  }
+.policyNumber {
+  width: 15%;
+}
 
-  .effectiveDate {
-    width: 14%;
-  }
+.endorsement {
+  width: 5%;
+}
 
-  .expirationDate {
-    width: 14%;
-  }
+.effectiveDate {
+  width: 14%;
+}
 
-  .extensionDate {
-    width: 14%;
-  }
+.expirationDate {
+  width: 14%;
+}
+
+.extensionDate {
+  width: 14%;
+}

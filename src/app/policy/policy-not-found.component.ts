@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  template: `<div class='content'>
+  template: `<div class='error-message'>
     <h1>Policy Not Found!</h1>
-    <h2>{{errorMessage}}</h2>
+    <h4>{{errorMessage}}</h4>
     </div>`,
   styleUrls: ['../app.component.css']
 })

@@ -1,7 +1,7 @@
 .nav-tabs .nav-link, .nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
-    border: 0;
-    border-bottom: 1px solid #e6e9ed;
-    color: #677d95;
+  border: 0;
+  border-bottom: 1px solid #e6e9ed;
+  color: #677d95;
 }
 
 .nav-tabs a:hover:not(.active) {
@@ -9,7 +9,8 @@
 }
 
 .nav-tabs .nav-link.active {
-    color: #000000;
-    border-radius: 0;
-    border-bottom: 3px solid #00274e;
+  color: #000000;
+  border-radius: 0;
+  border-bottom: 3px solid #00274e;
+  font-weight: bold;
 }

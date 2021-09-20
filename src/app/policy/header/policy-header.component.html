@@ -1,47 +1,27 @@
 <div  id="policyHeader" class="header">
   <div class="row">
     <div class="insured">
-      <h6>Insured</h6>
+      <u><h6>Insured</h6></u>
       {{accountInfo.namedInsured}}
     </div>
     <div class="policyNumber">
-      <h6>Policy Number</h6>
+      <u><h6>Policy Number</h6></u>
       {{policyInfo.policySymbol}}{{policyInfo.policyNo}}
     </div>
     <div class="endorsement">
-      <h6>Endt</h6>
+      <u><h6>Endt</h6></u>
     </div>
     <div class="effectiveDate">
-      <h6>Policy Eff Date</h6>
+      <u><h6>Policy Eff Date</h6></u>
       {{policyInfo.policyEffectiveDate | date:'MM/dd/YYYY'}}
     </div>
     <div class="expirationDate">
-      <h6>Policy Exp Date</h6>
+      <u><h6>Policy Exp Date</h6></u>
       {{policyInfo.policyExpirationDate  | date:'MM/dd/YYYY'}}
     </div>
     <div class="extensionDate">
-      <h6>Policy Ext Date</h6>
+      <u><h6>Policy Ext Date</h6></u>
       {{policyInfo.policyExtendedExpDate  | date:'MM/dd/YYYY'}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="insured">
-      <h6></h6>
-    </div>
-    <div class="policyNumber">
-      <h6></h6>
-    </div>
-    <div class="endorsement">
-      <h6></h6>
-    </div>
-    <div class="effectiveDate">
-      <h6></h6>
-    </div>
-    <div class="expirationDate">
-      <h6></h6>
-    </div>
-    <div class="extensionDate">
-      <h6></h6>
     </div>
   </div>
 </div>
