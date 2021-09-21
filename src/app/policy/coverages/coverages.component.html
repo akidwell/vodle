@@ -1,1 +1,5 @@
-<h1>Coverages</h1>
+<div class="content">
+  <div *ngFor="let item of endorsementCoveragesGroups; index as i">
+  <rsps-endorsement-coverages [endorsementCoveragesGroup]=item></rsps-endorsement-coverages>
+  </div>
+</div>
