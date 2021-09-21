@@ -8,7 +8,6 @@ import { AuthGuard } from './authorization/auth.guard';
 import { AccessDeniedComponent } from './access-denied.component';
 const CALLBACK_PATH = 'callback';
 
-
 const routes: Routes = [
   { path: CALLBACK_PATH, component: OktaCallbackComponent },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule)},
@@ -20,7 +19,6 @@ const routes: Routes = [
   { path: 'access-denied', component: AccessDeniedComponent },
   { path: '**', component: PageNotFoundComponent },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes),

@@ -1,8 +1,8 @@
 /* This enables newlines to be used in the modal */
-.modal-body{
-        white-space: pre-line;
+.modal-body {
+  white-space: pre-line;
 }
 
 .table {
-        background-color: white;      
+  background-color: white;
 }

@@ -1,7 +1,14 @@
-.nav-link{
-  cursor: pointer; font-size: 75%; color: white; width: 200px; background-color: #335271; text-decoration: none;
+.nav-link {
+  cursor: pointer;
+  font-size: 75%;
+  color: white;
+  width: 200px;
+  background-color: #335271;
+  text-decoration: none;
 }
 
 .sidebar a:hover {
-  text-decoration: none; color: black;  background-color: #ccd4dc;
+  text-decoration: none;
+  color: black;
+  background-color: #ccd4dc;
 }

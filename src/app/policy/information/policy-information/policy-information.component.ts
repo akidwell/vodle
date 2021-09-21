@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountInformation, Policy, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
+import { AccountInformation, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from 'src/app/config/config.service';
 import { tap } from 'rxjs/operators';
+import { NotificationService } from 'src/app/notification/notification-service';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -16,7 +17,6 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./policy-information.component.css']
 })
 export class PolicyInformationComponent implements OnInit {
-  policy!: Policy;
   isReadOnly: boolean = true;
   policyCollapsed = false;
   faPlus = faPlus;
@@ -40,16 +40,15 @@ export class PolicyInformationComponent implements OnInit {
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService,private notification: NotificationService) {
      // GAM - TEMP -Subscribe
      this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
-
+  
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
-      this.policy = data['resolvedData'].policy;
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
     });
@@ -71,11 +70,13 @@ export class PolicyInformationComponent implements OnInit {
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
+
   savePolicyInfo(): any{
     let call = this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', this.policyInfo)
     .pipe(
       tap(r => {
         console.log(r);
+        this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000});
       }),
       )
       call.subscribe();

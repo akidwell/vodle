@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AccountInformation, Policy } from './policy';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { NotificationService } from '../notification/notification-service';
+import { PolicyInformation } from './policy';
+import { PolicyService } from './policy.service';
 
 @Component({
   selector: 'rsps-policy',
@@ -9,20 +12,24 @@ import { AccountInformation, Policy } from './policy';
 })
 export class PolicyComponent implements OnInit {
   data: any;
-  policy!: Policy;
+  updateSub: Subscription | undefined;
+  policyInfo!: PolicyInformation;
 
-  policyNumber: string = "";
-  accountInformation!: AccountInformation;
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,private policyService: PolicyService,private notification: NotificationService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.policy = data['resolvedData'].policy;
-      this.accountInformation = data['accountData'].accountData;
-      this.policyNumber = this.policy.policySymbol + this.policy.fullPolicyNumber;
+      this.policyInfo = data['policyInfoData'].policyInfo;
     });
   }
 
   onSubmit() { }
 
+  onChange() {
+    // this.updateSub = this.policyService.putPolicyInfo(this.policyInfo).subscribe({
+    //   next: () => {
+    //     this.toastService.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000});
+    //   }
+    // });
+  }
 }
