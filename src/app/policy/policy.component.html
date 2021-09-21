@@ -1,23 +1,21 @@
 <rsps-policy-header></rsps-policy-header>
-<body>
-  <div class='content'>
-    <ul class="nav nav-tabs nav-fill">
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Policy Info</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['coverages']">Coverages</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['schedules']">Schedules</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['reinsurance']">Reinsurance</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" (click)="onChange()" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
-      </li>
-    </ul>
-    <router-outlet></router-outlet>
-  </div>
-</body>
+<div class='content-fluid'>
+  <ul class="nav nav-tabs nav-fill">
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Policy Info</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['coverages']">Coverages</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['schedules']">Schedules</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['reinsurance']">Reinsurance</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" (click)="onChange()" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
+    </li>
+  </ul>
+  <router-outlet></router-outlet>
+</div>

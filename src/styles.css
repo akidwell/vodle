@@ -2,29 +2,18 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
-div.card-header {
-    font-size: large;
-   }
-   
-   div.card {
-     margin-top: 10px
-   }
-   
-   .table {
-     margin-top: 10px
-   }
-   
-   a {
-     text-decoration: none; 
-   }
-   a:hover {
-     text-decoration: underline;
-   }
+div.card {
+  margin-top: 10px
+}
+
+.table {
+  margin-top: 10px
+}
 
 /* this if for the nbHighlight, it needed to be here */
 .highlight {
-    background-color: yellow;
-    font-weight: bold;
+  background-color: yellow;
+  font-weight: bold;
 }
 
 /* Added here to allow the drop downs show full width of values, only worked here*/
