@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
@@ -16,6 +17,8 @@ export class EndorsementLocationGroupComponent implements OnInit {
   faMinus = faMinus;
   authSub: Subscription;
   canEditPolicy: boolean = false;
+  @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
+  formStatus!: string;
 
   constructor(private dropdowns: DropDownsService, private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
@@ -29,5 +32,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
   @Input()
   public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
+  @Output() status: EventEmitter<any> = new EventEmitter();
+
 }
 

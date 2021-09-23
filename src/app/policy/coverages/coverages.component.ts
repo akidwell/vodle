@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EndorsementCoverageComponent } from '../endorsement-coverage/endorsement-coverage.component';
 import { EndorsementCoveragesGroup } from './coverages';
 
 @Component({
@@ -9,6 +10,7 @@ import { EndorsementCoveragesGroup } from './coverages';
 })
 export class CoveragesComponent implements OnInit {
   endorsementCoveragesGroups! : EndorsementCoveragesGroup[];
+  formStatus: any;
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -16,5 +18,6 @@ export class CoveragesComponent implements OnInit {
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
     });
   }
+  @Output() status: EventEmitter<any> = new EventEmitter();
 
   };

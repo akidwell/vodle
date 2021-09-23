@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'rsps-summary',
@@ -11,5 +11,6 @@ export class SummaryComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  @Output() status: EventEmitter<any> = new EventEmitter();
 
 }

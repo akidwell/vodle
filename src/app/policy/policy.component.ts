@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component,OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../notification/notification-service';
 import { PolicyInformation } from './policy';
@@ -14,6 +14,7 @@ export class PolicyComponent implements OnInit {
   data: any;
   updateSub: Subscription | undefined;
   policyInfo!: PolicyInformation;
+  formstatus!: string;
 
   constructor(private route: ActivatedRoute,private policyService: PolicyService,private notification: NotificationService) { }
 
@@ -32,4 +33,15 @@ export class PolicyComponent implements OnInit {
     //   }
     // });
   }
+
+  @ViewChild("myRouterOutlet", { static: true }) routerOutlet!: RouterOutlet;
+
+onActivate(event : any) {
+  console.log(event)
+  event.status.subscribe((res: any) => { 
+   this.formstatus = res;
+   console.log(res)
+    }
+    
+  )}
 }

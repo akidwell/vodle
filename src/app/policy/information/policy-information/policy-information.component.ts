@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,  OnInit,  ViewChild } from '@angular/core';
 import { AccountInformation, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from 'src/app/config/config.service';
 import { tap } from 'rxjs/operators';
 import { NotificationService } from 'src/app/notification/notification-service';
+import {  NgForm } from '@angular/forms';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -39,6 +40,8 @@ export class PolicyInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
+  @ViewChild(NgForm,  { static: false })policyInfoForm!: NgForm;
+  formStatus!: string;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService,private notification: NotificationService) {
      // GAM - TEMP -Subscribe
@@ -72,6 +75,10 @@ export class PolicyInformationComponent implements OnInit {
   }
 
   savePolicyInfo(): any{
+    if(this.policyInfoForm.status != "VALID"){
+      this.notification.show('Policy not saved.', { classname: 'bg-danger text-light', delay: 5000});
+      return;
+    }
     let call = this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', this.policyInfo)
     .pipe(
       tap(r => {
