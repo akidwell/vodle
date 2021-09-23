@@ -6,6 +6,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Endorsement } from '../../policy';
+import { PolicyService } from '../../policy.service';
 
 @Component({
   selector: 'rsps-endorsement-header',
@@ -14,13 +15,14 @@ import { Endorsement } from '../../policy';
 })
 export class EndorsementHeaderComponent implements OnInit {
   endorsement!: Endorsement;
-  isReadOnly: boolean = false;
+  isReadOnly: boolean = true;
   canEditPolicy: boolean = false;
   authSub: Subscription;
   transactionTypes$: Observable<Code[]> | undefined;
   terrorismCodes$: Observable<Code[]> | undefined;
-
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService) {
+  endSub: Subscription | undefined;
+  
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -46,4 +48,7 @@ export class EndorsementHeaderComponent implements OnInit {
     return item.code.toLowerCase().indexOf(term) > -1 || item.description.toLowerCase() === term;
   }
 
+  saveEndorsement(): any{
+    this.endSub = this.policyService.updateEndorsement(this.endorsement).subscribe();
+  }
 }

@@ -28,6 +28,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ZipCodePipe } from './policy/information/account-information/zip-code.pipe';
 import { NotificationComponent } from './notification/notification-container.component';
 import { EndorsementHeaderComponent } from './policy/coverages/endorsement-header/endorsement-header.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -72,7 +73,8 @@ const okta_config = {
     FontAwesomeModule,
     NgbAlertModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxMaskModule.forRoot()
   ],
   providers: [
     {

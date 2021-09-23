@@ -40,4 +40,11 @@ export class PolicyService {
       );
   }
 
+  updateEndorsement(endorsement: Endorsement): Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements', endorsement)
+      .pipe(
+        tap(data => console.log(JSON.stringify(data)))
+      );
+  }
+
 }
