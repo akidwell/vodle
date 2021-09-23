@@ -87,3 +87,21 @@ export interface RiskLocation {
   countryCode: string;
 
 }
+
+export interface EndorsementResolved {
+  endorsement: Endorsement | null;
+  error?: any;
+  }
+
+export interface Endorsement {
+  policyId: number;
+  endorsementNumber: number;
+  transactionTypeCode: string;
+  transactionEffectiveDate: Date;
+  transactionExpirationDate: Date;
+  terrorismCode: string;
+  premium: number;
+  limit: number;
+  attachmentPoint: number;
+  invoiceStatus: string;
+}

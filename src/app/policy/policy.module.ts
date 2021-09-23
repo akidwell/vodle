@@ -17,6 +17,7 @@ import { ZipCodePipe } from './information/account-information/zip-code.pipe';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { EndorsementCoverageComponent } from './endorsement-coverage/endorsement-coverage.component';
 import { HoverClassDirective } from '../directives/hover-class.directive';
+import { EndorsementHeaderComponent } from './coverages/endorsement-header/endorsement-header.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { HoverClassDirective } from '../directives/hover-class.directive';
     CoveragesComponent,
     ZipCodePipe,
     EndorsementCoverageComponent,
-    HoverClassDirective
+    HoverClassDirective,
+    EndorsementHeaderComponent
   ],
   imports: [
     CommonModule,

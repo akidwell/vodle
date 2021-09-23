@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-md">
+    <label for="endorementEffectiveDate">Trans Eff Date</label>
+    <input type="date" class="form-control" id="endorementEffectiveDate" [readonly]="!canEditPolicy"
+      [ngModel]="endorsement.transactionEffectiveDate | date:'yyyy-MM-dd'"
+      (ngModelChange)="endorsement.transactionEffectiveDate=$event" name="endorsementEffectiveDate"
+      #endorsementEffectiveDate="ngModel">
+  </div>
+  <div class="col-md">
+    <label for="endorementExpirationDate">Trans Exp Date</label>
+    <input type="date" class="form-control" id="endorementExpirationDate" [readonly]="!canEditPolicy"
+      [ngModel]="endorsement.transactionExpirationDate | date:'yyyy-MM-dd'"
+      (ngModelChange)="endorsement.transactionExpirationDate=$event" name="endorsementExpirationDate"
+      #endorsementExpirationDate="ngModel">
+  </div>
+  <div class="col-md">
+    <label for="transactionType">Transaction Type</label><br>
+    <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="code"
+      [required]="canEditPolicy" [clearable]="false" placeholder="Select Transaction Type" [searchFn]="dropDownSearch"
+      [readonly]="!canEditPolicy" [(ngModel)]="endorsement.transactionTypeCode">
+      <ng-template ng-label-tmp let-item="item">
+        {{item.code}} - {{item.description}}
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item">
+        {{item.code}} - {{item.description}}
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="col-md">
+    <label for="attachmentPoint">Attachment Point</label><br>
+    <input type="text" class="form-control" id="attachmentPoint" [required]="canEditPolicy" [readonly]="!canEditPolicy"
+      [ngModel]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator="," name="attachmentPoint" #attachmentPoint="ngModel">
+  </div>
+  <div class="col-md">
+    <label for="limit">Underlying Limits</label><br>
+    <input type="text" class="form-control" id="limit" [required]="canEditPolicy" [readonly]="!canEditPolicy"
+      [(ngModel)]="endorsement.limit" mask="separator.0" thousandSeparator="," name="limit" #limit="ngModel">
+  </div>
+  <div class="col-md">
+    <label for="terrorism">Terrorism</label><br>
+    <ng-select id="terrorism" [items]="terrorismCodes$ | async" bindLabel="description" bindValue="code"
+      [required]="canEditPolicy" [clearable]="false" placeholder="Select Terrorism" [searchFn]="dropDownSearch"
+      [readonly]="!canEditPolicy" [(ngModel)]="endorsement.terrorismCode">
+      <ng-template ng-label-tmp let-item="item">
+        {{item.code}}
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item">
+        {{item.code}} - {{item.description}}
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="col-md">
+    <label for="invoiceStatus">Status</label><br>
+    <input type="text" class="form-control" id="invoiceStatus" [required]="canEditPolicy" [readonly]="true"
+      [(ngModel)]="endorsement.invoiceStatus" name="invoiceStatus" #invoiceStatus="ngModel">
+  </div>
+  <!-- <div class="col-sm-2">
+    <button class="btn btn-sm btn-primary pull-right" (click)="this.saveEndorsement()">Save</button>
+  </div> -->
+</div>
