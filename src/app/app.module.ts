@@ -21,6 +21,8 @@ import { SchedulesComponent } from './policy/schedules/schedules.component';
 import { ReinsuranceComponent } from './policy/reinsurance/reinsurance.component';
 import { SummaryComponent } from './policy/summary/summary.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NotificationComponent } from './notification/notification-container.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -40,6 +42,8 @@ const okta_config = {
     UserComponent,
     SchedulesComponent,
     ReinsuranceComponent,
+    SummaryComponent,
+    NotificationComponent,
     SummaryComponent
   ],
   imports: [
@@ -58,7 +62,8 @@ const okta_config = {
     FontAwesomeModule,
     NgbAlertModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxMaskModule.forRoot()
   ],
   providers: [
     {
