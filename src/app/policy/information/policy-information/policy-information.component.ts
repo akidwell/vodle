@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountInformation, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Observable, Subscription } from 'rxjs';
@@ -19,8 +19,8 @@ import { NotificationService } from 'src/app/notification/notification-service';
 export class PolicyInformationComponent implements OnInit {
   isReadOnly: boolean = true;
   policyCollapsed = false;
-  faPlus = faPlus;
-  faMinus = faMinus;
+  faPlus = faAngleUp;
+  faMinus = faAngleDown;
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;
@@ -46,7 +46,7 @@ export class PolicyInformationComponent implements OnInit {
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
-  
+
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;

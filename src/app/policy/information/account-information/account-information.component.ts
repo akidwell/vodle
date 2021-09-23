@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { AccountInformation } from '../../policy';
 
@@ -12,8 +12,8 @@ export class AccountInformationComponent implements OnInit {
   accountInfo!: AccountInformation;
   isReadOnly: boolean = true;
   accountCollapsed = false;
-  faPlus = faPlus;
-  faMinus = faMinus;
+  faPlus = faAngleUp;
+  faMinus = faAngleDown;
 
   constructor(private route: ActivatedRoute) { }
 

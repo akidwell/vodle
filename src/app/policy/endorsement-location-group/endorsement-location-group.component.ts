@@ -6,11 +6,11 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { EndorsementCoveragesGroup } from '../coverages/coverages';
 
 @Component({
-  selector: 'rsps-endorsement-coverages',
-  templateUrl: './endorsement-coverages.component.html',
-  styleUrls: ['./endorsement-coverages.component.css']
+  selector: 'rsps-endorsement-location-group',
+  templateUrl: './endorsement-location-group.component.html',
+  styleUrls: ['./endorsement-location-group.component.css']
 })
-export class EndorsementCoveragesComponent implements OnInit {
+export class EndorsementLocationGroupComponent implements OnInit {
   ecCollapsed = true;
   faPlus = faPlus;
   faMinus = faMinus;
