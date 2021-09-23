@@ -2,6 +2,7 @@ export interface EndorsementCoverage {
   coverageId: number;
   policyId: number;
   endorsementNumber: number;
+  programId: number;
   premium: number;
   subCode: number;
   limitsPattern: string;
@@ -13,7 +14,7 @@ export interface EndorsementCoverage {
   action: string;
   deductible: number;
   deductibleType: string;
-  rateAmt: number;
+  rateAmount: number;
   limitsPatternGroupCode: number;
   limit: number;
   coverageType: string;
