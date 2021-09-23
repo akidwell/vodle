@@ -45,7 +45,7 @@ export class EndorsementHeaderComponent implements OnInit {
 
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
-    return item.code.toLowerCase().indexOf(term) > -1 || item.description.toLowerCase() === term;
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description.toLowerCase() === term;
   }
 
   saveEndorsement(): any{

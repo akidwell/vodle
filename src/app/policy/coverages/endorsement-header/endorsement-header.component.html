@@ -15,21 +15,21 @@
   </div>
   <div class="col-md">
     <label for="transactionType">Transaction Type</label><br>
-    <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="code"
+    <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="key"
       [required]="canEditPolicy" [clearable]="false" placeholder="Select Transaction Type" [searchFn]="dropDownSearch"
       [readonly]="!canEditPolicy" [(ngModel)]="endorsement.transactionTypeCode">
       <ng-template ng-label-tmp let-item="item">
-        {{item.code}} - {{item.description}}
+        {{item.key}} - {{item.description}}
       </ng-template>
       <ng-template ng-option-tmp let-item="item">
-        {{item.code}} - {{item.description}}
+        {{item.key}} - {{item.description}}
       </ng-template>
     </ng-select>
   </div>
   <div class="col-md">
     <label for="attachmentPoint">Attachment Point</label><br>
     <input type="text" class="form-control" id="attachmentPoint" [required]="canEditPolicy" [readonly]="!canEditPolicy"
-      [ngModel]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator="," name="attachmentPoint" #attachmentPoint="ngModel">
+      [(ngModel)]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator="," name="attachmentPoint" #attachmentPoint="ngModel">
   </div>
   <div class="col-md">
     <label for="limit">Underlying Limits</label><br>
