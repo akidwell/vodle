@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { AccountInformation, Policy, PolicyInformation } from './policy';
+import { AccountInformation, Endorsement, Policy, PolicyInformation } from './policy';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,13 @@ export class PolicyService {
 
   getPolicyInfo(id: number): Observable<PolicyInformation> {
     return this.http.get<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo/' + id.toString())
+      .pipe(
+        tap(data => console.log(JSON.stringify(data)))
+      );
+  }
+
+  getEndorsement(id: number,endorsementNumber: number): Observable<Endorsement> {
+    return this.http.get<Endorsement>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/endorsements/' + endorsementNumber.toString())
       .pipe(
         tap(data => console.log(JSON.stringify(data)))
       );

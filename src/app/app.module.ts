@@ -27,6 +27,7 @@ import { AccountInformationComponent } from './policy/information/account-inform
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ZipCodePipe } from './policy/information/account-information/zip-code.pipe';
 import { NotificationComponent } from './notification/notification-container.component';
+import { EndorsementHeaderComponent } from './policy/coverages/endorsement-header/endorsement-header.component';
 
 const okta_config = {
   clientId: '0oa13ty5ui2LT2Osn1d7',
@@ -52,7 +53,8 @@ const okta_config = {
     SummaryComponent,
     AccountInformationComponent,
     ZipCodePipe,
-    NotificationComponent
+    NotificationComponent,
+    EndorsementHeaderComponent
   ],
   imports: [
     OktaAuthModule,

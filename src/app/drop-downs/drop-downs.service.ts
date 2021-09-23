@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { Code } from './code';
 
@@ -55,6 +56,14 @@ export class DropDownsService {
 
   getRiskTypes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
+  }
+
+  getTransactionTypes(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/transaction-types')
+  }
+
+  getTerrorismCodes(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/terrorism_code')
   }
 
 }

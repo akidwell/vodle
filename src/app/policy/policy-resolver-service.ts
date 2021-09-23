@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { AccountInformationResolved, PolicyInformationResolved } from './policy';
+import { AccountInformationResolved, EndorsementResolved, PolicyInformationResolved } from './policy';
 import { PolicyService } from './policy.service';
 
 @Injectable({
@@ -71,4 +71,35 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
 
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class EndorsementResolver implements Resolve<EndorsementResolved> {
 
+    constructor(private router: Router, private policyService: PolicyService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EndorsementResolved> {
+        const id = route.paramMap.get('id') ?? "";
+        const end = route.paramMap.get('end') ?? "0";
+        if (isNaN(+id)) {
+            const message = `Policy id was not a number: ${id}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ endorsement: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ endorsement: null, error: message });
+        }
+
+        return this.policyService.getEndorsement(Number(id),Number(end))
+            .pipe(
+                map(endorsement => ({ endorsement })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ endorsement: null, error: error });
+                })
+            );
+    }
+
+}
