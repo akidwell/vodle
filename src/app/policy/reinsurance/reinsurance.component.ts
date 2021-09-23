@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'rsps-reinsurance',
@@ -12,4 +12,5 @@ export class ReinsuranceComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  @Output() status: EventEmitter<any> = new EventEmitter();
 }

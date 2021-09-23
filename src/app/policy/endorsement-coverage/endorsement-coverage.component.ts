@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { faPlus, faArrowUp, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
@@ -28,4 +29,8 @@ export class EndorsementCoverageComponent implements OnInit {
   }
   @Input()
   public coverage!: EndorsementCoverage;
+  
+  @Output() status: EventEmitter<any> = new EventEmitter();
+  @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
+  formStatus!: string;
 }

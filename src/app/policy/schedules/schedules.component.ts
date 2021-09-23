@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { CoveragesComponent } from '../coverages/coverages.component';
 
 @Component({
   selector: 'rsps-schedules',
@@ -11,5 +12,6 @@ export class SchedulesComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  @Output() status: EventEmitter<any> = new EventEmitter();
 
 }
