@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-information',
@@ -9,8 +9,8 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 export class InformationComponent implements OnInit {
   isReadOnly: boolean = true;
   accountCollapsed = false;
-  faPlus = faPlus;
-  faMinus = faMinus;
+  faPlus = faAngleUp;
+  faMinus = faAngleDown;
 
   constructor() { }
 

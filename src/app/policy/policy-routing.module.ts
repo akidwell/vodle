@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
 import { PolicyNotFoundComponent } from './policy-not-found.component';
-import { AccountInformationResolver, EndorsementResolver, PolicyInformationResolver } from './policy-resolver-service';
+import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver } from './policy-resolver-service';
 import { PolicyComponent } from './policy.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -21,7 +21,8 @@ const routes: Routes = [
     resolve: {
       accountData: AccountInformationResolver,
       policyInfoData: PolicyInformationResolver,
-      endorsementData: EndorsementResolver
+      endorsementData: EndorsementResolver,
+      endorsementCoveragesGroups: EndorsementCoveragesResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },

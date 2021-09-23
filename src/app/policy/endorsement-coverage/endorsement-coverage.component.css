@@ -1,0 +1,98 @@
+.card-header {
+  color: white;
+  background-color: #00274e;
+}
+input[type="text"] {
+  display: inline-block;
+}
+input[type="date"] {
+  display: inline-block;
+}
+input[type="checkbox"] {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+.card-body{
+  width: 100%;
+  padding: 5px;
+}
+.empty-space{
+  height: 15px;
+}
+.astext {
+  background:none;
+  border:none;
+  margin:0;
+  padding:0;
+  color: #00274e;
+  cursor: pointer;
+  text-align: center;
+}
+.expanded{
+  border: solid #00274e;
+  border-width: 2px;
+  border-radius: 16px;
+}
+.btn{
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  Vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s;
+}
+.btn-link{
+  font-weight: 400;
+  color: #007bff;
+  background-color: transparent;
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.row{
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+label{
+  white-space: nowrap;
+  min-width: 100%;
+}
+input[type="checkbox"][readonly] {
+  pointer-events: none;
+}
+.hidden-label{
+  visibility: hidden;
+  height: 1px;
+  position:absolute;
+  bottom: 0;
+}
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+

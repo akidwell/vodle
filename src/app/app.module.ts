@@ -16,18 +16,12 @@ import { NgbAlert, NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
 import { ServerErrorInterceptor } from './error-handling/server-error-interceptor';
 import { FontAwesomeModule  } from '@fortawesome/angular-fontawesome';
-import { CoveragesComponent } from './policy/coverages/coverages.component'; 
 import { FormsModule } from '@angular/forms';
-import { InformationComponent } from './policy/information/information.component';
 import { SchedulesComponent } from './policy/schedules/schedules.component';
 import { ReinsuranceComponent } from './policy/reinsurance/reinsurance.component';
 import { SummaryComponent } from './policy/summary/summary.component';
-import { PolicyInformationComponent } from './policy/information/policy-information/policy-information.component';
-import { AccountInformationComponent } from './policy/information/account-information/account-information.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ZipCodePipe } from './policy/information/account-information/zip-code.pipe';
 import { NotificationComponent } from './notification/notification-container.component';
-import { EndorsementHeaderComponent } from './policy/coverages/endorsement-header/endorsement-header.component';
 import { NgxMaskModule } from 'ngx-mask';
 
 const okta_config = {
@@ -46,16 +40,11 @@ const okta_config = {
     ReportsComponent,
     NavigationComponent,
     UserComponent,
-    CoveragesComponent,
-    InformationComponent,
-    PolicyInformationComponent,
     SchedulesComponent,
     ReinsuranceComponent,
     SummaryComponent,
-    AccountInformationComponent,
-    ZipCodePipe,
     NotificationComponent,
-    EndorsementHeaderComponent
+    SummaryComponent
   ],
   imports: [
     OktaAuthModule,

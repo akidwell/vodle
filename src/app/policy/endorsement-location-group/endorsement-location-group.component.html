@@ -1,0 +1,50 @@
+<div class="content">
+  <div class="card">
+    <div class="card-header" >
+      ID #: {{endorsementCoveragesGroup.location.locationId}}
+      <fa-icon title="Add New Coverage" [icon]="faPlus" style="float: right;"></fa-icon>
+    </div>
+    <div class="card-body" >
+      <div class="row container">
+        <div class="col-lg-4">
+          <div class="header-label">
+            <label>Coverage Description</label>
+            <input type="text" class="header-input">
+          </div>
+        </div >
+        <div class="col-lg-2">
+          <div >
+            <label>Premium</label>
+            <input type="text" class="header-input">
+          </div>
+        </div>
+        <div class="col-lg-2">
+          <div class="header-label">
+            <label>Limits</label>
+            <input type="text" class="header-input">
+          </div>
+        </div>
+        <div class="col-lg-1">
+          <div class="header-label">
+            <label>Incl/Excl</label>
+            <input type="text" class="header-input">
+          </div>
+        </div>
+        <div class="col-lg-1">
+          <div class="header-label">
+            <label>CLM/OCC</label>
+            <input type="text" class="header-input">
+          </div>
+        </div>
+        <div class="col-lg-2">
+          <div class="header-label">
+            <label>Retro Date</label>
+            <input type="text" class="header-input">
+          </div>
+        </div>
+      </div>
+    </div>
+    <rsps-endorsement-coverage *ngFor="let coverage of endorsementCoveragesGroup.coverages" [coverage]="coverage"></rsps-endorsement-coverage>
+
+  </div>
+</div>

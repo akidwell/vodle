@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EndorsementCoveragesGroup } from './coverages';
 
 @Component({
   selector: 'rsps-coverages',
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./coverages.component.css']
 })
 export class CoveragesComponent implements OnInit {
-
-  constructor() { }
+  endorsementCoveragesGroups! : EndorsementCoveragesGroup[];
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.parent?.data.subscribe(data => {
+      this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
+    });
   }
 
-}
+  };
