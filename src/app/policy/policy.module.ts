@@ -18,6 +18,8 @@ import { CoveragesComponent } from './coverages/coverages.component';
 import { EndorsementCoverageComponent } from './endorsement-coverage/endorsement-coverage.component';
 import { HoverClassDirective } from '../directives/hover-class.directive';
 import { EndorsementHeaderComponent } from './coverages/endorsement-header/endorsement-header.component';
+import { NgxMaskModule } from 'ngx-mask';
+import { NotificationComponent } from '../notification/notification-container.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { EndorsementHeaderComponent } from './coverages/endorsement-header/endor
     ZipCodePipe,
     EndorsementCoverageComponent,
     HoverClassDirective,
-    EndorsementHeaderComponent
+    EndorsementHeaderComponent,
+    NotificationComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +42,8 @@ import { EndorsementHeaderComponent } from './coverages/endorsement-header/endor
     FormsModule,
     FontAwesomeModule,
     NgbModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxMaskModule.forRoot()
   ]
 })
 export class PolicyModule { }

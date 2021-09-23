@@ -96,7 +96,7 @@ export interface EndorsementResolved {
 export interface Endorsement {
   policyId: number;
   endorsementNumber: number;
-  transactionTypeCode: string;
+  transactionTypeCode: number;
   transactionEffectiveDate: Date;
   transactionExpirationDate: Date;
   terrorismCode: string;

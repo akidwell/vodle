@@ -75,7 +75,6 @@ export class PolicyInformationComponent implements OnInit {
     let call = this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', this.policyInfo)
     .pipe(
       tap(r => {
-        console.log(r);
         this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000});
       }),
       )
