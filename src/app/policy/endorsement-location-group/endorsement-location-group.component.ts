@@ -19,8 +19,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
   canEditPolicy: boolean = false;
   @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
   formStatus!: string;
+  coveragesSequence: number = 1;
 
-  constructor(private dropdowns: DropDownsService, private userAuth: UserAuth) {
+  constructor(private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy

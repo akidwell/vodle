@@ -10,13 +10,13 @@ import { Code } from './code';
 })
 export class DropDownsService {
   private readonly refreshSubject = new Subject();
-  
+
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getPACCodes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/pac-codes');
   }
-  
+
   getCoverageCodes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-codes');
   }
@@ -59,9 +59,7 @@ export class DropDownsService {
   }
 
   getCoverageDescriptions(coverageCode: string, classCode: number, policySymbol: string): Observable<Code[]> {
-    const params = new HttpParams().append('coverageCode', coverageCode);
-    params.append('classCode', classCode);
-    params.append('policySymbol', policySymbol);
+    const params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode).append('policySymbol', policySymbol);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
   }
 

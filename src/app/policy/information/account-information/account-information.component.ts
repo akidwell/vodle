@@ -12,8 +12,8 @@ export class AccountInformationComponent implements OnInit {
   accountInfo!: AccountInformation;
   isReadOnly: boolean = true;
   accountCollapsed = false;
-  faPlus = faAngleUp;
-  faMinus = faAngleDown;
+  faPlus = faAngleDown;
+  faMinus = faAngleUp;
 
   constructor(private route: ActivatedRoute) { }
 

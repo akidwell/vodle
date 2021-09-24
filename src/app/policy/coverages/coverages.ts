@@ -12,6 +12,7 @@ export interface EndorsementCoverage {
   locationId: number;
   premiumType: string;
   action: string;
+  policySymbol: string;
   deductible: number;
   deductibleType: string;
   rateAmount: number;

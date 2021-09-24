@@ -5,8 +5,10 @@
     <div class="row container">
       <div class="col-lg-4">
           <label class='hidden-label' for="coverageDescription">Coverage Description</label>
-          <input type="text" class="form-control" id="coverageDescription" [readonly]="!canEditPolicy"
-          [required]="canEditPolicy" [ngModel]="coverage.coverageId" name="coverageDescription" #coverageDescription="ngModel">
+          <ng-select id="coverageDescription" name="coverageDescription" [items]="coverageDescriptions$ | async" bindLabel="description" bindValue="key"
+                            [clearable]="false" placeholder="Select Coverage" [readonly]="!canEditPolicy"
+                            [required]="canEditPolicy" [(ngModel)]="coverage.coverageId" #coverageDescription="ngModel">
+                        </ng-select>
       </div>
       <div class="col-lg-2">
           <label class='hidden-label' for="premium">Premium</label>

@@ -20,8 +20,8 @@ import {  NgForm } from '@angular/forms';
 export class PolicyInformationComponent implements OnInit {
   isReadOnly: boolean = true;
   policyCollapsed = false;
-  faPlus = faAngleUp;
-  faMinus = faAngleDown;
+  faPlus = faAngleDown;
+  faMinus = faAngleUp;
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;
