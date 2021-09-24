@@ -1,4 +1,4 @@
-import { Component,  OnInit,  ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AccountInformation, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
@@ -6,11 +6,10 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { HttpClient } from '@angular/common/http';
-import { ConfigService } from 'src/app/config/config.service';
 import { tap } from 'rxjs/operators';
 import { NotificationService } from 'src/app/notification/notification-service';
-import {  NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { PolicyService } from '../../policy.service';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -40,12 +39,13 @@ export class PolicyInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
-  @ViewChild(NgForm,  { static: false })policyInfoForm!: NgForm;
+  @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
   formStatus!: string;
+  policySub!: Subscription;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private http: HttpClient, private config: ConfigService,private notification: NotificationService) {
-     // GAM - TEMP -Subscribe
-     this.authSub = this.userAuth.canEditPolicy$.subscribe(
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
+    // GAM - TEMP -Subscribe
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
@@ -74,18 +74,14 @@ export class PolicyInformationComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  savePolicyInfo(): any{
-    if(this.policyInfoForm.status != "VALID"){
-      this.notification.show('Policy not saved.', { classname: 'bg-danger text-light', delay: 5000});
+  savePolicyInfo(): any {
+    if (this.policyInfoForm.status != "VALID") {
+      this.notification.show('Policy not saved.', { classname: 'bg-danger text-light', delay: 5000 });
       return;
     }
-    let call = this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', this.policyInfo)
-    .pipe(
-      tap(r => {
-        this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000});
-      }),
-      )
-      call.subscribe();
-      return call;
+
+    this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
+        this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+    });
   }
 }

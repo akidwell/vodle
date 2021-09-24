@@ -11,3 +11,8 @@
   padding-top: 20px;
   padding-bottom: 20px;
 }
+
+#premium,
+#attachmentPoint {
+  text-align: right;
+}

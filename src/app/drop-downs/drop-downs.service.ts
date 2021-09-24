@@ -59,7 +59,7 @@ export class DropDownsService {
   }
 
   getCoverageDescriptions(coverageCode: string, classCode: number, policySymbol: string): Observable<Code[]> {
-    const params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode).append('policySymbol', policySymbol);
+    const params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
   }
 
@@ -92,11 +92,6 @@ export class DropDownsService {
 
   getDeductibleTypes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
-  }
-
-  GetEndorsementCoverageLocations(policyId: number): Observable<Code[]> {
-    const params = new HttpParams().append('policyId', policyId);
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/endorsement-coverage-locations', { params })
   }
 
   getExposureCodes(): Observable<Code[]> {
