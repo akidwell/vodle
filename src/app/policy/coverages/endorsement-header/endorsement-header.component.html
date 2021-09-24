@@ -39,6 +39,11 @@
         [(ngModel)]="endorsement.limit" mask="separator.0" thousandSeparator="," name="limit" #limit="ngModel">
     </div>
     <div class="col-md">
+      <label for="premium">Premium</label><br>
+      <input type="text" class="form-control" id="premium" [required]="canEditPolicy" [readonly]="!canEditPolicy"
+        [(ngModel)]="endorsement.premium" mask="separator.0" thousandSeparator="," name="premium" #limit="ngModel">
+    </div>
+    <div class="col-md">
       <label for="terrorism">Terrorism</label><br>
       <ng-select id="terrorism" [items]="terrorismCodes$ | async" bindLabel="description" bindValue="code"
         [required]="canEditPolicy" [clearable]="false" placeholder="Select Terrorism" [searchFn]="dropDownSearch"
