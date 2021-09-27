@@ -38,7 +38,7 @@ export interface AccountInformationResolved {
           riskLocation: RiskLocation;
           policyEventCode: string;
           packageInd: string
-          policyType: string
+          policyType: string | null
           policySymbol: string
           policyNo: string
           policyModNo: string
