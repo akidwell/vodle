@@ -46,8 +46,7 @@
                     </div>
                     <div class="col-md">
                         <label for="policyType">Master Policy</label><br>
-                        <input type="checkbox" id="policyType" [readonly]="!canEditPolicy"
-                            [checked]="policyInfo.policyType == '1'" name="policyType">
+                        <input type="checkbox" [ngModel]="policyInfo.policyType == '1'" name="policyType" (ngModelChange)="policyInfo.policyType=$event?'1': null"> 
                     </div>
                     <div class="col-md" style="width: 40px;">
                         <label for="policyNumber">Sym</label><br>
@@ -88,7 +87,7 @@
                     <div class="col-md">
                       <label for="riskZipCode">Policy Zip Code</label><br>
                       <input type="text" class="form-control" id="riskZipCode" [required]="canEditPolicy" minlength="5"
-                          [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.riskLocation.zip"
+                          [readonly]="!canEditPolicy"[ngModel]="policyInfo.riskLocation.zip   | zipCode"
                           #riskZipCode="ngModel" name="riskZipCode">
                   </div>
                     <div class="col-md">
@@ -113,7 +112,7 @@
                     </div>
                     <div class="col-md">
                         <label for="policyExpirationDate">Expiration Date</label>
-                        <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy"
+                        <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEditPolicy" 
                             [required]="canEditPolicy"  [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
                             (ngModelChange)="policyInfo.policyExpirationDate = $event"name="policyExpirationDate"
                             #policyExpirationDate="ngModel">
@@ -219,14 +218,14 @@
                         [ngStyle]="{'display': policyInfo.deregulationIndicator == 'F' ? 'block' : 'none' }">
                         <label for="NYFTZ">NY Free Trade Zone</label><br>
                         <ng-select id="NYFTZ" [items]="nyFreeTradeZones$ | async" bindLabel="description"
-                            [required]="canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select NYFTZ"
+                            [required]="policyInfo.deregulationIndicator == 'F' && canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select NYFTZ"
                             [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
                         </ng-select>
                     </div>
                     <div class="col-md" [ngStyle]="{'display': policyInfo.riskType == 'A' ? 'block' : 'none' }">
                         <label for="assumedCarrier">Assumed Carrier</label><br>
                         <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
-                            [required]="policyInfo.riskType == 'A'" bindValue="code" [clearable]="false" placeholder="Select Carrier"
+                            [required]="policyInfo.riskType == 'A' && canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select Carrier"
                             [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.assumedCarrier" name="assumedCarrier">
                             <ng-template ng-label-tmp let-item="item">
                                 {{item.description}}
