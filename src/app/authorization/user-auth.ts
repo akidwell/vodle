@@ -36,10 +36,10 @@ export class UserAuth {
   set canEditPolicy(value: boolean) { this._canEditPolicy.next(value); }
 
     // GAM - TEMP - Header test
-    private _role = new BehaviorSubject<string>("");
-    role$ = this._role.asObservable();
-    get role(): string { return this._role.getValue(); }
-    set role(value: string) { this._role.next(value); }
+    private _userRole = new BehaviorSubject<string>("");
+    userRole$ = this._userRole.asObservable();
+    get userRole(): string { return this._userRole.getValue(); }
+    set userRole(value: string) { this._userRole.next(value); }
 
   init(): void {
     this.userName = "";

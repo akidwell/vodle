@@ -40,7 +40,6 @@ export class PolicyInformationComponent implements OnInit {
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
-  formStatus!: string;
   policySub!: Subscription;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
@@ -50,11 +49,14 @@ export class PolicyInformationComponent implements OnInit {
     );
   }
 
+  @ViewChild(NgForm) form: NgForm | undefined;
+  
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
     });
+
 
     this.pacCodes$ = this.dropdowns.getPACCodes();
     this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
@@ -68,6 +70,12 @@ export class PolicyInformationComponent implements OnInit {
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
     this.savePolicyInfo = this.savePolicyInfo;
+  }
+
+  ngAfterViewInit() : void {
+    this.policyInfoForm?.statusChanges?.subscribe(() => {
+      console.log("Is form dirty yet: " + this.form?.dirty);
+    });
   }
 
   ngOnDestroy(): void {
