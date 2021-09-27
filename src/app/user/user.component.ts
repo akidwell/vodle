@@ -3,7 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OktaAuthService } from '@okta/okta-angular';
 import { AuthService } from '../authorization/auth.service';
 import { UserAuth } from '../authorization/user-auth';
-import { faUser,faPowerOff, faKey, faIdBadge, faUserLock } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPowerOff, faKey, faIdBadge, faUserLock } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,7 +27,7 @@ export class UserComponent implements OnInit {
   role: string = "";
   authSub: Subscription;
   roleSub: Subscription;
-isReadOnly: boolean = false;
+  isReadOnly: boolean = false;
 
   constructor(private userAuth: UserAuth, public oktaAuth: OktaAuthService, private authService: AuthService, private modalService: NgbModal) {
     // GAM - TEMP -Subscribe
@@ -45,9 +45,11 @@ isReadOnly: boolean = false;
       (ApiBearerToken: string) => { this.apiToken = ApiBearerToken }
     );
 
-    this.roleSub = this.userAuth.role$.subscribe(
-      (role: string) => { this.role = role;
-        this.isReadOnly = role == "ReadOnly"; }
+    this.roleSub = this.userAuth.userRole$.subscribe(
+      (userRole: string) => {
+        this.role = userRole;
+        this.isReadOnly = userRole == "ReadOnly";
+      }
     );
   }
 

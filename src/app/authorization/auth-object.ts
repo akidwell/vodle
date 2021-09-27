@@ -1,7 +1,7 @@
 export interface IAuthObject {
   CanExecuteImport: string,
   CanEditPolicy: string,
-  role: string,
+  userRole: string,
   aud: string,
   exp: number,
   iss: string,

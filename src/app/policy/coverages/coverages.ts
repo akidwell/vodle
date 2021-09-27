@@ -35,9 +35,13 @@ export interface EndorsementCoverage {
 export interface EndorsementCoverageLocation {
   locationId: number;
   policyId: number;
+  taxCode: string;
   street: string;
+  street2: string;
   city: string;
   state: string;
+  county: string;
+  zip: string;
 }
 
 export interface EndorsementCoveragesGroup {

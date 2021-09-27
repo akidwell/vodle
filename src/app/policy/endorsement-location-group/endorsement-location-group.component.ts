@@ -4,7 +4,8 @@ import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { EndorsementCoveragesGroup } from '../coverages/coverages';
+import { EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
+import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 
 @Component({
   selector: 'rsps-endorsement-location-group',
@@ -34,6 +35,16 @@ export class EndorsementLocationGroupComponent implements OnInit {
   @Input()
   public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Output() status: EventEmitter<any> = new EventEmitter();
+
+
+  @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent   | undefined
+
+  // Modal is used to show import errors
+  async triggerModal() {
+    const location: EndorsementCoverageLocation = { policyId: 1, taxCode: "test", street: "test", locationId: 1, street2: "test", city: "test", state: "OH", zip: "45202", county: "" };
+
+    return await this.locationComponent?.open(location);
+  }
 
 }
 

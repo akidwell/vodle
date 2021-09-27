@@ -80,7 +80,7 @@ login2() {
     this.userAuth.canExecuteImport2 = token.CanExecuteImport == 'True';
     this.userAuth.isApiAuthenticated = token.valid == 'True';
     this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
-    this.userAuth.role = token.role;
+    this.userAuth.userRole = token.userRole;
 
     console.log(this.userAuth);
     if (this.userAuth.isAuthenticated == 'False' )

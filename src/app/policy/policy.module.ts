@@ -20,6 +20,7 @@ import { HoverClassDirective } from '../directives/hover-class.directive';
 import { EndorsementHeaderComponent } from './coverages/endorsement-header/endorsement-header.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { NotificationComponent } from '../notification/notification-container.component';
+import { EndorsementCoverageLocationComponent } from './endorsement-coverage-location/endorsement-coverage-location.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { NotificationComponent } from '../notification/notification-container.co
     EndorsementCoverageComponent,
     HoverClassDirective,
     EndorsementHeaderComponent,
-    NotificationComponent
+    NotificationComponent,
+    EndorsementCoverageLocationComponent
   ],
   imports: [
     CommonModule,
