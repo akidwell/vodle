@@ -3,4 +3,9 @@
   <div *ngFor="let item of endorsementCoveragesGroups; index as i">
     <rsps-endorsement-location-group [endorsementCoveragesGroup]=item></rsps-endorsement-location-group>
   </div>
+  <div class="col-sm-2">
+    <button class="btn btn-sm btn-primary pull-right" [hidden]="!canEditPolicy" (click)="openLocation()">Add Location</button>
+  </div>
 </div>
+
+<rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>
