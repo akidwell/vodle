@@ -1,7 +1,7 @@
 <div class="content">
   <div class="card">
     <div class="card-header" >
-      ID #: {{endorsementCoveragesGroup.location.locationId}}
+      <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup.location)">ID #: {{endorsementCoveragesGroup.location.locationId}}</a>
       <fa-icon title="Add New Coverage" [icon]="faPlus" style="float: right;"></fa-icon>
     </div>
     <div class="card-body" >
@@ -49,9 +49,4 @@
   </div>
 </div>
 
- <div class="col-sm-2">
-   <button class="btn btn-sm btn-primary pull-right" (click)="this.triggerModal()">Add Location</button>
- </div>
-
- <rsps-endorsement-coverage-location #modal>
- </rsps-endorsement-coverage-location>
+<rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>

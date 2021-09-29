@@ -1,18 +1,51 @@
-<ng-template #modalPipe let-modal>
+<form  #locationForm="ngForm" >
+
+ <ng-template #modal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Location</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">×</span>
-    </button>
   </div>
   <div class="modal-body">
+    <div class="col-md"  [hidden]="!showLocationId">
+      <label for="street">Location Id:</label>
+      <input type="text" class="form-control" id="locationId" [readonly]="true"
+        [(ngModel)]="location.locationId" name="locationId" #locationId="ngModel">
+    </div>
     <div class="col-md">
-      <label for="street">Street</label>
-      <input type="text" class="form-control" id="street" [readonly]="isReadOnly"
+      <label for="street">Address Street 1</label>
+      <input type="text" class="form-control" id="street" [readonly]="!canEditPolicy" [required]="canEditPolicy"
         [(ngModel)]="location.street" name="street" #street="ngModel">
+    </div>
+    <div class="col-md">
+      <label for="street2">Addres Street 2</label>
+      <input type="text" class="form-control" id="street2"  [readonly]="!canEditPolicy"
+        [(ngModel)]="location.street2" name="street2" #street2="ngModel">
+    </div>
+    <div class="col-md">
+      <label for="zip">Zip Code</label>
+      <input type="text" class="form-control" id="zip" [readonly]="!canEditPolicy" [required]="canEditPolicy" mask="00000||00000-0000"
+        [(ngModel)]="location.zip" name="zip" #zip="ngModel">
+    </div>  
+    <div class="col-md">
+      <label for="city">City</label>
+      <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy" [required]="canEditPolicy"
+        [(ngModel)]="location.city" name="city" #city="ngModel">
+    </div>  
+      <div class="col-md">
+        <label for="riskState">Policy State</label>
+        <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
+            [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy" name="riskState"
+            [required]="canEditPolicy" [(ngModel)]="location.state" #riskState="ngModel">
+        </ng-select>
+    </div>
+    <div class="col-md">
+      <label for="county">County</label>
+      <input type="text" class="form-control" id="county" [readonly]="!canEditPolicy"
+        [(ngModel)]="location.county" name="county" #county="ngModel">
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+    <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy" [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
+    <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
   </div>
 </ng-template>

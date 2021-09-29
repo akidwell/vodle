@@ -30,7 +30,6 @@ export class EndorsementHeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
-      console.log("Init");
       this.endorsement = data['endorsementData'].endorsement;
       console.log(this.endorsement);
     });

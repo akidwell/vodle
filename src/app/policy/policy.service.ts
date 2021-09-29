@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { EndorsementCoveragesGroup } from './coverages/coverages';
+import { EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages/coverages';
 import { AccountInformation, Endorsement, Policy, PolicyInformation } from './policy';
 
 @Injectable({
@@ -51,6 +51,10 @@ export class PolicyService {
       .pipe(
         tap(data => console.log(JSON.stringify(data)))
       );
+  }
+
+  addEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<number> {
+    return this.http.post<number>(this.config.apiBaseUrl + 'api/policies/endorsement-coverage-locations/', location)
   }
 
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
