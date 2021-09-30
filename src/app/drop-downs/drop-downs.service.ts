@@ -71,7 +71,7 @@ export class DropDownsService {
 
   getClassCodes(coverageCode: string): Observable<Code[]> {
     const params = new HttpParams().append('coverageCode', coverageCode);
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
   }
 
   getTransactionTypes(): Observable<Code[]> {
@@ -98,4 +98,7 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/exposure-codes')
   }
 
+  getPremTypeCodes(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
+  }
 }

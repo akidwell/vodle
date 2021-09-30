@@ -22,7 +22,7 @@
                 <div class="col-md">
                     <label for="commissionRate">Commission Rate</label>
                     <input type="text" class="form-control" id="commissionRate" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.commissionRate" name="commissionRate" #commissionRate="ngModel">
+                    [ngModel]="accountInfo.commissionRate | percent" name="commissionRate" #commissionRate="ngModel"  (ngModelChange)="accountInfo.commissionRate=$event">
                 </div>
             </div>
             <div class="row">
