@@ -41,6 +41,8 @@ export class PolicyInformationComponent implements OnInit {
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
   policySub!: Subscription;
+  dereg!: boolean;
+  assumed!: boolean;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
     // GAM - TEMP -Subscribe
@@ -91,5 +93,11 @@ export class PolicyInformationComponent implements OnInit {
     this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
         this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
     });
+  }
+  checkDereg(): boolean{
+    return this.dereg = this.policyInfo.deregulationIndicator == 'F'? true : false;
+  }
+  checkAssumed(): boolean{
+   return this.assumed = this.policyInfo.riskType == 'A'? true : false;
   }
 }
