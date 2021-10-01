@@ -23,15 +23,29 @@
         </div>
         <div class="col-lg-1">
           <label class='hidden-label' for="includeExclude">Incl/Excl</label>
-          <input type="text" class="form-control" id="includeExclude" [readonly]="!canEditPolicy"
-            [required]="canEditPolicy" [ngModel]="coverage.includeExclude" name="includeExclude"
-            #includeExclude="ngModel">
+            <ng-select id="includeExclude" [items]="includeExcludes$ | async" bindValue="code" bindLabel="description"
+            name="includeExclude" [required]="canEditPolicy" [clearable]="false" placeholder="Select Include/Exclude"
+            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.includeExclude">
+            <ng-template ng-label-tmp let-item="item">
+              {{item.code}} - {{item.description}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              {{item.code}} - {{item.description}}
+            </ng-template>
+          </ng-select>
         </div>
         <div class="col-lg-1">
           <label class='hidden-label' for="claimsMadeOrOccurrence">CLM/OCC</label>
-          <input type="text" class="form-control" id="claimsMadeOrOccurrence"
-            [readonly]="!canEditPolicy || !coverage.occurrenceOrClaimsMade" [required]="canEditPolicy"
-            [ngModel]="coverage.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence" #claimsMadeOrOccurrence="ngModel">
+            <ng-select id="claimsMadeOrOccurrence" [items]="claimsMadeOrOccurrence$ | async" bindValue="code" bindLabel="description"
+            name="claimsMadeOrOccurrence" [required]="canEditPolicy" [clearable]="false" placeholder="Select ClaimsMade/Occurence"
+            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.claimsMadeOrOccurrence">
+            <ng-template ng-label-tmp let-item="item">
+              {{item.code}} - {{item.description}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              {{item.code}} - {{item.description}}
+            </ng-template>
+          </ng-select>
         </div>
         <div class="col-lg-2">
           <label class='hidden-label' for="retroDate">Retro Date</label>
@@ -43,11 +57,6 @@
     </div>
     <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ecCollapsed">
       <div class="row container">
-        <div class="col-lg-1">
-          <label for="location">Location</label>
-          <input type="text" class="form-control" id="location" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-            [ngModel]="coverage.locationId" name="location" #location="ngModel">
-        </div>
         <div class="col-lg-1">
           <label for="premiumType">Prem</label>
           <ng-select id="premiumType" [items]="premTypeCodes$ | async" bindValue="code"
@@ -93,7 +102,7 @@
             </ng-template>
           </ng-select>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-1">
           <label for="rate">Rate</label>
           <input type="text" class="form-control" id="rate" [readonly]="!canEditPolicy" [required]="canEditPolicy"
             [ngModel]="coverage.rateAmount" name="rate" #rate="ngModel">
