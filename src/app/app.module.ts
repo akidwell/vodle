@@ -27,7 +27,8 @@ const okta_config = {
   issuer: 'https://logindev.gaig.com',
   redirectUri: 'callback',
   scopes: ['openid', 'profile', 'email'],
-  pkce: true
+  pkce: true,
+  postLogoutRedirectUri: "http://localhost:4200/logged-out",
 };
 
 @NgModule({
