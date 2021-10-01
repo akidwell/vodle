@@ -18,7 +18,7 @@ export class PolicyHeaderComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
-      this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
+      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
   }
 
