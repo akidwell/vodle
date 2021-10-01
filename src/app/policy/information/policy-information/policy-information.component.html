@@ -87,7 +87,7 @@
                     <div class="col-md">
                       <label for="riskZipCode">Policy Zip Code</label><br>
                       <input type="text" class="form-control" id="riskZipCode" [required]="canEditPolicy" minlength="5"
-                          [readonly]="!canEditPolicy"[ngModel]="policyInfo.riskLocation.zip   | zipCode"
+                          [readonly]="!canEditPolicy"[ngModel]="policyInfo.riskLocation.zip"  mask="00000||00000-0000"
                           #riskZipCode="ngModel" name="riskZipCode">
                   </div>
                     <div class="col-md">
@@ -214,18 +214,17 @@
                     <div class="col-md"></div>
                     <div class="col-md"></div>
                     <div class="col-md"></div>
-                    <div class="col-md"
-                        [ngStyle]="{'display': policyInfo.deregulationIndicator == 'F' ? 'block' : 'none' }">
+                    <div class="col-md" *ngIf="checkDereg()">
                         <label for="NYFTZ">NY Free Trade Zone</label><br>
                         <ng-select id="NYFTZ" [items]="nyFreeTradeZones$ | async" bindLabel="description"
-                            [required]="policyInfo.deregulationIndicator == 'F' && canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select NYFTZ"
+                            [required]="checkDereg() && canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select NYFTZ"
                             [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
                         </ng-select>
                     </div>
-                    <div class="col-md" [ngStyle]="{'display': policyInfo.riskType == 'A' ? 'block' : 'none' }">
+                    <div class="col-md" *ngIf="checkAssumed()">
                         <label for="assumedCarrier">Assumed Carrier</label><br>
                         <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
-                            [required]="policyInfo.riskType == 'A' && canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select Carrier"
+                            [required]="checkAssumed() && canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select Carrier"
                             [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.assumedCarrier" name="assumedCarrier">
                             <ng-template ng-label-tmp let-item="item">
                                 {{item.description}}

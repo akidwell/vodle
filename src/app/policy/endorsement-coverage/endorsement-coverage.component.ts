@@ -19,6 +19,12 @@ export class EndorsementCoverageComponent implements OnInit {
   color = "blue"
   authSub: Subscription;
   coverageDescriptions$: Observable<Code[]> | undefined;
+  exposureCodes$: Observable<Code[]> | undefined;
+  actionCodes$: Observable<Code[]> | undefined;
+  premTypeCodes$: Observable<Code[]> | undefined;
+  deductibleTypes$: Observable<Code[]> | undefined;
+  classCodes$: Observable<Code[]> | undefined;
+
   canEditPolicy: boolean = false;
     constructor(private dropdowns: DropDownsService, private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
@@ -29,7 +35,16 @@ export class EndorsementCoverageComponent implements OnInit {
 
   ngOnInit(): void {
     this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode,this.coverage.policySymbol);
+    this.exposureCodes$ = this.dropdowns.getExposureCodes();
+    this.actionCodes$ = this.dropdowns.getActionCodes();
+    this.premTypeCodes$ = this.dropdowns.getPremTypeCodes();
+    this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
+    this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.coverageCode);
+  }
 
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description.toLowerCase() === term;
   }
   @Input()
   public coverage!: EndorsementCoverage;
