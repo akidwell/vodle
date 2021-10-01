@@ -24,6 +24,8 @@ export class EndorsementCoverageComponent implements OnInit {
   premTypeCodes$: Observable<Code[]> | undefined;
   deductibleTypes$: Observable<Code[]> | undefined;
   classCodes$: Observable<Code[]> | undefined;
+  includeExcludes$: Observable<Code[]> | undefined;
+  claimsMadeOrOccurrence$: Observable<Code[]> | undefined;
 
   canEditPolicy: boolean = false;
     constructor(private dropdowns: DropDownsService, private userAuth: UserAuth) {
@@ -40,6 +42,8 @@ export class EndorsementCoverageComponent implements OnInit {
     this.premTypeCodes$ = this.dropdowns.getPremTypeCodes();
     this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
     this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.coverageCode);
+    this.includeExcludes$ = this.dropdowns.getIncludeExcludes(this.coverage.programId, this.coverage.coverageId);
+    this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
   }
 
   dropDownSearch(term: string, item: Code) {
