@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faPlus, faArrowUp, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export class EndorsementCoverageComponent implements OnInit {
   authSub: Subscription;
   coverageDescriptions$: Observable<Code[]> | undefined;
   canEditPolicy: boolean = false;
+  anchorId!: string;
     constructor(private dropdowns: DropDownsService, private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -29,12 +30,36 @@ export class EndorsementCoverageComponent implements OnInit {
 
   ngOnInit(): void {
     this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode,this.coverage.policySymbol);
-
+    this.anchorId = 'focusHere' + this.coverage.locationId;
   }
+
+  copyCoverage(): void {
+    this.copyExistingCoverage.emit(this.coverage);
+  }
+
+  focus(): void {
+    this.ecCollapsed = false;
+    setTimeout(() => {
+      document.getElementById(this.anchorId)!.scrollIntoView();
+    }, 250);
+  }
+
   @Input()
   public coverage!: EndorsementCoverage;
 
   @Output() status: EventEmitter<any> = new EventEmitter();
+  @Output() copyExistingCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
   @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
+  @ViewChild('focusHere', { static: false }) homeElement!: ElementRef;
   formStatus!: string;
+
+  findPos(obj: any):any {
+    var curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+    return [curtop];
+    }
+}
 }

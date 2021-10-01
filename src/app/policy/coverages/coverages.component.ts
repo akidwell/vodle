@@ -11,8 +11,7 @@ import { EndorsementCoveragesGroup } from './coverages';
 export class CoveragesComponent implements OnInit {
   endorsementCoveragesGroups! : EndorsementCoveragesGroup[];
   formStatus: any;
-  coveragesSequence: number = -1;
-
+  coveragesSequence!: number;
 
   constructor(private route: ActivatedRoute) { }
 
@@ -20,10 +19,19 @@ export class CoveragesComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
       //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
-      this.coveragesSequence = this.endorsementCoveragesGroups.map(g => g.coverages.map(c => c.sequence)).reduce(
-        (r, seq) => r.concat(seq.map(s => s)),[]).reduce(
-          (a,b) => Math.max(a,b));
+      this.coveragesSequence = this.getNextCoverageSequence(this.endorsementCoveragesGroups);
     });
+  }
+  onIncrement(newSeq : number) {
+    this.coveragesSequence = newSeq;
+  }
+  getNextCoverageSequence(allGroups: EndorsementCoveragesGroup[]) {
+    return allGroups.map(group => group.coverages.map(coverage => coverage.sequence)).reduce(
+      (locGroup, seq) => locGroup.concat(seq),[]).reduce(
+        (a,b) => Math.max(a,b)) + 1;
+  }
+  getProgramId(firstGroup: EndorsementCoveragesGroup){
+    return firstGroup.coverages[0].programId;
   }
   @Output() status: EventEmitter<any> = new EventEmitter();
 

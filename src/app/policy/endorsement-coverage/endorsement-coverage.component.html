@@ -1,7 +1,7 @@
 <form  #endorsementCoveragesForm="ngForm" >
 
   <div [ngClass]="{'expanded':!ecCollapsed}">
-  <div class="card-body" (click)="ecCollapsed = false" >
+  <div #coverageInfo class="card-body" (click)="ecCollapsed = false" >
     <div class="row container">
       <div class="col-lg-4">
           <label class='hidden-label' for="coverageDescription">Coverage Description</label>
@@ -113,9 +113,9 @@
 
     </div>
     <div class="empty-space"></div>
-    <div class="row container">
+    <div class="row container" >
       <div class="col-lg-2">
-        <span class="btn btn-secondary" hover-class="btn-primary">Copy</span>
+        <span class="btn btn-secondary" (click)=copyCoverage() hover-class="btn-primary">Copy</span>
         <span class="btn btn-secondary" hover-class="btn-danger">Delete</span>
       </div>
         <span class='astext' (click)="ecCollapsed = true"><fa-icon [icon]="faArrowUp" ></fa-icon></span>
