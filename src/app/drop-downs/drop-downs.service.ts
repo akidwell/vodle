@@ -64,8 +64,7 @@ export class DropDownsService {
   }
 
   getIncludeExcludes(programId: number, coverageDescriptionId: number): Observable<Code[]> {
-    const params = new HttpParams().append('programId', programId);
-    params.append('coverageDescriptionId', coverageDescriptionId);
+    const params = new HttpParams().append('programId', programId).append('coverageDescriptionId', coverageDescriptionId);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/include-excludes', { params })
   }
 
