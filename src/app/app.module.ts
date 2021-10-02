@@ -22,14 +22,6 @@ import { ReinsuranceComponent } from './policy/reinsurance/reinsurance.component
 import { SummaryComponent } from './policy/summary/summary.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-const okta_config = {
-  clientId: '0oa13ty5ui2LT2Osn1d7',
-  issuer: 'https://logindev.gaig.com',
-  redirectUri: 'callback',
-  scopes: ['openid', 'profile', 'email'],
-  pkce: true,
-  postLogoutRedirectUri: "http://localhost:4200/logged-out",
-};
 
 @NgModule({
   declarations: [
@@ -73,7 +65,19 @@ const okta_config = {
       multi: true,
       useClass: AuthInterceptor
     },
-    { provide: OKTA_CONFIG, useValue: okta_config },
+    {
+      provide: OKTA_CONFIG, deps: [ConfigService], useFactory: (configService: ConfigService) => {
+        let okta_config = {
+          clientId: configService.oktaClientId,
+          issuer: configService.oktaIssuer,
+          redirectUri: configService.oktaRedirectUri,
+          scopes: ['openid', 'profile', 'email'],
+          pkce: true,
+          postLogoutRedirectUri: configService.oktaPostLogoutRedirectUri,
+        };
+        return okta_config;
+      }
+    },
     { provide: ErrorHandler, useClass: GlobalErrorHandler},
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true }
