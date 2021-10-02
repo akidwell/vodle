@@ -11,8 +11,8 @@
     <a class='nav-link' (click)="toggleApplicationNavbar()">
         <fa-icon [icon]="faToolbox"></fa-icon>
         Apps
-        <fa-icon style="float: right" [icon]="faPlusSquare" *ngIf="!applicationNavbarOpen"></fa-icon>
-        <fa-icon style="float: right" [icon]="faMinusSquare" *ngIf="applicationNavbarOpen"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!applicationNavbarOpen"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="applicationNavbarOpen"></fa-icon>
     </a>
     <div class="collapse navbar-collapse" [ngClass]="{ 'show': applicationNavbarOpen }">
         <rsps-applications></rsps-applications>
@@ -20,8 +20,8 @@
     <a class='nav-link' (click)="toggleReportNavbar()">
         <fa-icon [icon]="faFileAlt"></fa-icon>
         Reports
-        <fa-icon style="float: right" [icon]="faPlusSquare" *ngIf="!reportNavbarOpen"></fa-icon>
-        <fa-icon style="float: right" [icon]="faMinusSquare" *ngIf="reportNavbarOpen"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!reportNavbarOpen"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="reportNavbarOpen"></fa-icon>
     </a>
     <div class="collapse navbar-collapse" [ngClass]="{ 'show': reportNavbarOpen }">
         <rsps-reports></rsps-reports>

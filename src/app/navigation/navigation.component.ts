@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
-import { faFileAlt, faFileImport, faHome, faToolbox, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
 
@@ -18,8 +18,8 @@ export class NavigationComponent implements OnInit {
   faFileImport = faFileImport;
   faHome = faHome;
   faToolbox = faToolbox;
-  faPlusSquare = faPlusSquare;
-  faMinusSquare = faMinusSquare;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   authSub: Subscription;
 
   constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth) {

@@ -19,8 +19,8 @@ import { PolicyService } from '../../policy.service';
 export class PolicyInformationComponent implements OnInit {
   isReadOnly: boolean = true;
   policyCollapsed = false;
-  faPlus = faAngleDown;
-  faMinus = faAngleUp;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;

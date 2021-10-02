@@ -4,8 +4,8 @@
     <div class="card">
         <div class="card-header" (click)="collapse.toggle()">
             Policy Information
-            <fa-icon style="float: right" [icon]="faPlus" *ngIf="policyCollapsed"></fa-icon>
-            <fa-icon style="float: right" [icon]="faMinus" *ngIf="!policyCollapsed"></fa-icon>
+            <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyCollapsed"></fa-icon>
+            <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyCollapsed"></fa-icon>
         </div>
         <div #collapse="ngbCollapse" [(ngbCollapse)]="policyCollapsed">
             <div class="card-body">
