@@ -34,14 +34,15 @@ export class PolicyComponent implements OnInit {
     // });
   }
 
-  @ViewChild("myRouterOutlet", { static: true }) routerOutlet!: RouterOutlet;
+  // Check with Amber
+//   @ViewChild("myRouterOutlet", { static: true }) routerOutlet!: RouterOutlet;
 
-onActivate(event : any) {
-  console.log(event)
-  event.status.subscribe((res: any) => { 
-   this.formstatus = res;
-   console.log(res)
-    }
-    
-  )}
+// onActivate(event : any) {
+//   console.log(event)
+//   event.status.subscribe((res: any) => { 
+//    this.formstatus = res;
+//    console.log(res)
+//     }
+
+//   )}
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { AccountInformation } from '../../policy';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'rsps-account-information',
@@ -15,6 +16,8 @@ export class AccountInformationComponent implements OnInit {
   faPlus = faAngleDown;
   faMinus = faAngleUp;
 
+  @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
+  
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {

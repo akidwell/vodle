@@ -1,3 +1,4 @@
+<form  #accountInfoForm="ngForm" ></form>
 <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
         Account Information
@@ -7,19 +8,19 @@
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
         <div class="card-body">
             <div class="row">
-                <div class="col-md">
+                <div class="col-lg-2">
                     <label for="insuredCode">Insured Code</label>
                     <input type="text" class="form-control" id="insuredCode"
                     [(ngModel)]="accountInfo.insuredCode" name="insuredCode" [readonly]="isReadOnly"
                     #insuredCode="ngModel">
                 </div>
-                <div class="col-md"></div>
-                <div class="col-md">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-2">
                     <label for="producerCode">Producer Code</label>
                     <input type="text" class="form-control" id="producerCode" [readonly]="isReadOnly"
                     [(ngModel)]="accountInfo.producerCode" name="producerCode" #producerCode="ngModel">
                 </div>
-                <div class="col-md">
+                <div class="col-lg-2">
                     <label for="commissionRate">Commission Rate</label>
                     <input type="text" class="form-control" id="commissionRate" [readonly]="isReadOnly"
                     [ngModel]="accountInfo.commissionRate | percent" name="commissionRate" #commissionRate="ngModel"  (ngModelChange)="accountInfo.commissionRate=$event">

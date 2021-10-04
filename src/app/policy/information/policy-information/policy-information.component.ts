@@ -39,10 +39,11 @@ export class PolicyInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
-  @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
   policySub!: Subscription;
   dereg!: boolean;
   assumed!: boolean;
+
+  @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
     // GAM - TEMP -Subscribe
@@ -71,7 +72,8 @@ export class PolicyInformationComponent implements OnInit {
     this.riskTypes$ = this.dropdowns.getRiskTypes();
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
-    this.savePolicyInfo = this.savePolicyInfo;
+    // Check with Amber 
+    //this.savePolicyInfo = this.savePolicyInfo;
   }
 
   ngAfterViewInit() : void {
