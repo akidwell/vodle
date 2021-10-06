@@ -34,7 +34,6 @@ export class InformationComponent implements OnInit {
   ngOnInit(): void { }
 
   isValid() {
-    this.policyInfoComp.policyInfoForm.controls
     return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID'
   }
 

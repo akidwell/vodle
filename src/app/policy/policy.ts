@@ -43,7 +43,7 @@ export interface AccountInformationResolved {
           policyNo: string
           policyModNo: string
           enteredDate: Date
-          policyId: string
+          policyId: number
           policyInsuredState: string
           policyEffectiveDate: Date
           policyExpirationDate: Date
@@ -100,6 +100,7 @@ export interface Endorsement {
   transactionEffectiveDate: Date;
   transactionExpirationDate: Date;
   terrorismCode: string;
+  sir: number;
   premium: number;
   limit: number;
   attachmentPoint: number;

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
+import { PolicyInformation } from '../policy';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages';
 
 @Component({
@@ -15,6 +16,7 @@ export class CoveragesComponent implements OnInit {
   formStatus: any;
   authSub: Subscription;
   canEditPolicy: boolean = false;
+  policyInfo!: PolicyInformation;
   
   constructor(private route: ActivatedRoute, private userAuth: UserAuth) { 
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -25,6 +27,7 @@ export class CoveragesComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
+      this.policyInfo = data['policyInfoData'].policyInfo;
     }); 
   }
 
@@ -49,6 +52,11 @@ export class CoveragesComponent implements OnInit {
       if (result) {
         let coverage: EndorsementCoverage = ({} as any) as EndorsementCoverage;
         let group: EndorsementCoveragesGroup = { coverages: [], location: location }
+        coverage.programId = this.policyInfo.programId;
+        coverage.coverageCode = this.policyInfo.quoteData.coverageCode;    
+        coverage.policySymbol = this.policyInfo.policySymbol;
+        coverage.policyId = this.policyInfo.policyId;
+        coverage.action = "A";
         group.coverages.push(coverage);
         this.endorsementCoveragesGroups.push(group);
       }

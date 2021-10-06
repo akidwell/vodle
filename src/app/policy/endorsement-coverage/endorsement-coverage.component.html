@@ -7,7 +7,7 @@
           <label class='hidden-label' for="coverageDescription">Coverage Description</label>
           <ng-select id="coverageDescription" name="coverageDescription" [items]="coverageDescriptions$ | async"
             bindLabel="description" bindValue="key" [clearable]="false" placeholder="Select Coverage"
-            [readonly]="!canEditPolicy" [required]="canEditPolicy" [(ngModel)]="coverage.coverageId"
+            [readonly]="!canEditPolicy" [required]="canEditPolicy" [(ngModel)]="coverage.coverageId" (change)="changeCoverageDescription($event)"
             #coverageDescription="ngModel">
           </ng-select>
         </div>
@@ -24,23 +24,17 @@
         <div class="col-lg-1">
           <label class='hidden-label' for="includeExclude">Incl/Excl</label>
             <ng-select id="includeExclude" [items]="includeExcludes$ | async" bindValue="code" bindLabel="description"
-            name="includeExclude" [required]="canEditPolicy" [clearable]="false" placeholder="Select Include/Exclude"
-            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.includeExclude">
-            <ng-template ng-label-tmp let-item="item">
-              {{item.code}} - {{item.description}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-              {{item.code}} - {{item.description}}
-            </ng-template>
+            name="includeExclude"
+            [readonly]="!canEditPolicy || !showIncludeExlude" [(ngModel)]="coverage.includeExclude">
           </ng-select>
         </div>
         <div class="col-lg-1">
           <label class='hidden-label' for="claimsMadeOrOccurrence">CLM/OCC</label>
             <ng-select id="claimsMadeOrOccurrence" [items]="claimsMadeOrOccurrence$ | async" bindValue="code" bindLabel="description"
             name="claimsMadeOrOccurrence" [required]="canEditPolicy" [clearable]="false" placeholder="Select ClaimsMade/Occurence"
-            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.claimsMadeOrOccurrence">
+            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.claimsMadeOrOccurrence" (change)="changeClaimsMadeOccurrence()">
             <ng-template ng-label-tmp let-item="item">
-              {{item.code}} - {{item.description}}
+              {{item.code}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item">
               {{item.code}} - {{item.description}}
@@ -49,9 +43,15 @@
         </div>
         <div class="col-lg-2">
           <label class='hidden-label' for="retroDate">Retro Date</label>
-          <input type="date" class="form-control" id="retroDate"
-            [readonly]="!canEditPolicy || coverage.claimsMadeOrOccurrence != 'C'"
-            [ngModel]="coverage.retroDate  | date:'yyyy-MM-dd'" name="date" #retroDate="ngModel">
+          <div *ngIf="retroDateRequired">
+            <input type="date" class="form-control" id="retroDate" [required]="retroDateRequired"
+              [ngModel]="coverage.retroDate  | date:'yyyy-MM-dd'" (ngModelChange)="coverage.retroDate=$event"
+              name="retroDate" #retroDate="ngModel">
+          </div>
+          <div *ngIf="!retroDateRequired">
+            <input type="text" class="form-control" id="retroDateReadonly" [readonly]="true"
+              [ngModel]="coverage.retroDate | date:'MM/dd/yyyy'" name="retroDateReadonly">
+          </div>
         </div>
       </div>
     </div>
@@ -59,24 +59,18 @@
       <div class="row container">
         <div class="col-lg-1">
           <label for="premiumType">Prem</label>
-          <ng-select id="premiumType" [items]="premTypeCodes$ | async" bindValue="code"
+          <ng-select id="premiumType" [items]="premTypes$ | async" bindValue="code" bindLabel="description"
             name="premiumType" [required]="canEditPolicy" [clearable]="false" placeholder="Select Premium Type"
-            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.premiumType">
-            <ng-template ng-label-tmp let-item="item">
-              {{item.code}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-              {{item.code}} 
-            </ng-template>
+            [readonly]="!canEditPolicy" [(ngModel)]="coverage.premiumType">
           </ng-select>
         </div>
         <div class="col-lg-1">
           <label for="action">Action</label>
-          <ng-select id="action" [items]="actionCodes$ | async" bindLabel="description" bindValue="code" name="action"
+          <ng-select id="action" [items]="actionCodes$ | async" bindLabel="description" bindValue="code" name="description"
             [required]="canEditPolicy" [clearable]="false" placeholder="Select Action Type" [searchFn]="dropDownSearch"
             [readonly]="!canEditPolicy" [(ngModel)]="coverage.action">
             <ng-template ng-label-tmp let-item="item">
-              {{item.code}} - {{item.description}}
+              {{item.code}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item">
               {{item.code}} - {{item.description}}
@@ -84,46 +78,35 @@
           </ng-select>
         </div>
         <div class="col-lg-1">
-          <label for="deductible">Deductible</label>
-          <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-            [ngModel]="coverage.deductible" name="deductible" #deductible="ngModel" mask="separator.0"
+          <label for="deductible">Deductible</label>       
+          <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible"
+            [(ngModel)]="coverage.deductible" name="deductible" #deductible="ngModel" mask="separator.0"
             thousandSeparator=",">
         </div>
         <div class="col-lg-2">
           <label for="deductibleType">Deductible Type</label>
             <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code" name="deductibleType"
-            [required]="canEditPolicy" [clearable]="false" placeholder="Select Deductible Type" [searchFn]="dropDownSearch"
-            [readonly]="!canEditPolicy" [(ngModel)]="coverage.deductibleType">
-            <ng-template ng-label-tmp let-item="item">
-              {{item.code}} - {{item.description}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-              {{item.code}} - {{item.description}}
-            </ng-template>
+            [readonly]="!canEditPolicy || !showDeductible" [(ngModel)]="coverage.deductibleType">
           </ng-select>
         </div>
         <div class="col-lg-1">
           <label for="rate">Rate</label>
-          <input type="text" class="form-control" id="rate" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-            [ngModel]="coverage.rateAmount" name="rate" #rate="ngModel">
+          <input type="text" class="form-control" id="rate" [readonly]="!canEditPolicy"
+            [ngModel]="coverage.rateAmount" name="rate" #rate="ngModel"
+            mask="separator.5" thousandSeparator=",">
         </div>
         <div class="col-lg-2">
           <label for="limitsPattern">Limits Pattern</label>
-          <input type="text" class="form-control" id="limitsPattern" [readonly]="!canEditPolicy"
-            [required]="canEditPolicy" [ngModel]="coverage.limitsPattern" name="limitsPattern" #limitsPattern="ngModel">
-        </div>
-        <div class="col-lg-2">
-          <label for="sir">SIR</label>
-          <input type="text" class="form-control" id="sir" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-            [ngModel]="coverage.sir" name="sir" #sir="ngModel">
+          <input type="text" class="form-control" id="limitsPattern" [readonly]="true"
+            [ngModel]="coverage.limitsPattern" name="limitsPattern" #limitsPattern="ngModel">
         </div>
       </div>
       <div class="row container">
-        <div class="col-lg-2">
+        <div class="col-lg-7">
           <label for="classCode">Class Code</label>
             <ng-select id="classCode" [items]="classCodes$ | async" bindLabel="description" bindValue="key" name="classCode"
             [required]="canEditPolicy" [clearable]="false" placeholder="Select Class Code" [searchFn]="dropDownSearch"
-            [readonly]="!canEditPolicy" [(ngModel)]="coverage.glClassCode"> 
+            [readonly]="!canEditPolicy" [(ngModel)]="coverage.glClassCode" (change)="changeClassCode($event)"> 
             <ng-template ng-label-tmp let-item="item">
               {{item.key}} - {{item.description}}
             </ng-template>
@@ -131,38 +114,26 @@
               {{item.key}} - {{item.description}}
             </ng-template>
           </ng-select>
-        </div>
-        <div class="col-lg-5">
-          <label for="classDescription">Class Description</label>
-          <input type="text" class="form-control" id="classDescription" [ngModel]="coverage.classDescription"
-            [readonly]="!canEditPolicy" [required]="canEditPolicy" name="classDescription" #classDescription="ngModel">
         </div>
         <div class="col-lg-2">
           <label for="exposureCode">Exposure Code</label>
           <ng-select id="exposureCode" [items]="exposureCodes$ | async" bindLabel="description" bindValue="code"
-            name="exposureCode" [required]="canEditPolicy" [clearable]="false" placeholder="Select Exposure Code"
-            [searchFn]="dropDownSearch" [readonly]="!canEditPolicy" [(ngModel)]="coverage.exposureCode">
-            <ng-template ng-label-tmp let-item="item">
-              {{item.code}} - {{item.description}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-              {{item.code}} - {{item.description}}
-            </ng-template>
+            name="exposureCode" placeholder="Select Exposure Code"
+            [readonly]="!canEditPolicy" [(ngModel)]="coverage.exposureCode">
           </ng-select>
-
         </div>
         <div class="col-lg-1">
           <label for="rateBasis">Rate Basis</label>
-          <input type="text" class="form-control" id="rateBasis" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-            [ngModel]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel">
+          <input type="text" class="form-control" id="rateBasis" [readonly]="!canEditPolicy"
+            [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel"
+            mask="separator.0" thousandSeparator=",">
         </div>
         <div class="col-lg-2">
           <label for="exposureBase">Exposure</label>
           <input type="text" class="form-control" id="exposureBase" [readonly]="!canEditPolicy"
-            [required]="canEditPolicy" [ngModel]="coverage.exposureBase" name="exposureBase" #sir="ngModel"
-            mask="separator.0" thousandSeparator=",">
+            [(ngModel)]="coverage.exposureBase" name="exposureBase" #sir="ngModel" mask="separator.0"
+            thousandSeparator=",">
         </div>
-
       </div>
       <div class="empty-space"></div>
       <div class="row container">

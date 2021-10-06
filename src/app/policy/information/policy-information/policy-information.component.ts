@@ -52,7 +52,7 @@ export class PolicyInformationComponent implements OnInit {
     );
   }
 
-  @ViewChild(NgForm) form: NgForm | undefined;
+  // @ViewChild(NgForm) form: NgForm | undefined;
   
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
@@ -78,7 +78,7 @@ export class PolicyInformationComponent implements OnInit {
 
   ngAfterViewInit() : void {
     this.policyInfoForm?.statusChanges?.subscribe(() => {
-      console.log("Is form dirty yet: " + this.form?.dirty);
+      console.log("Is form dirty yet: " + this.policyInfoForm.dirty);
     });
   }
 

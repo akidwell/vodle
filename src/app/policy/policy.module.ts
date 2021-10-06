@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PolicyRoutingModule } from './policy-routing.module';
 import { PolicyComponent } from './policy.component';
@@ -53,7 +53,8 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
     NgxMaskModule.forRoot()
   ],
   providers: [
-    CanDeactivateGuard
+    CanDeactivateGuard,
+    DatePipe
   ]
 })
 export class PolicyModule { }
