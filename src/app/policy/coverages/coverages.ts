@@ -6,15 +6,15 @@ export interface EndorsementCoverage {
   premium: number;
   subCode: number;
   limitsPattern: string;
-  includeExclude?: string;
+  includeExclude?: string | null;
   claimsMadeOrOccurrence: string;
   retroDate?: Date | null;
   locationId: number;
   premiumType: string;
   action: string;
   policySymbol: string;
-  deductible?: number;
-  deductibleType?: string;
+  deductible?: number | null;
+  deductibleType?: string | null;
   rateAmount: number;
   limitsPatternGroupCode: number;
   limit: number;

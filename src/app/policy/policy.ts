@@ -24,7 +24,7 @@ export interface PolicyResolved {
         producerCity: string;
         producerState: string;
         producerZip: string;
-        commissionRate: string;
+        commissionRate: number;
         producerName: string;
 }
 

@@ -23,26 +23,24 @@ export class EndorsementHeaderComponent implements OnInit {
   transactionTypes$: Observable<Code[]> | undefined;
   terrorismCodes$: Observable<Code[]> | undefined;
   endSub: Subscription | undefined;
-  transactionEffectiveDateValid: boolean = true;
-  transactionExpirationDateValid: boolean = true;
-  sirReadonly: boolean = false;
+  isTransactionEffectiveDateValid: boolean = true;
+  isTransactionExpirationDateValid: boolean = true;
+  canEditTransactionType: boolean = false;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService,private datePipe: DatePipe) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService, private datePipe: DatePipe) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
-  @ViewChild('endorsementHeaderForm') endorsementCoveragesForm!: NgForm;
-  
+  @ViewChild('endorsementHeaderForm', { static: false }) endorsementHeaderForm!: NgForm;
+
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.endorsement = data['endorsementData'].endorsement;
       this.policyInfo = data['policyInfoData'].policyInfo;
-      this.sirReadonly = this.policyInfo.programId != 92 && this.policyInfo.programId != 94;
-      console.log(this.endorsement);
+      this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
     });
-
     this.transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
   }
@@ -56,30 +54,30 @@ export class EndorsementHeaderComponent implements OnInit {
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
   }
 
-  saveEndorsement(): any{
+  saveEndorsement(): any {
     this.endSub = this.policyService.updateEndorsement(this.endorsement).subscribe();
   }
 
   changeEffectiveDate() {
     if (this.endorsement.endorsementNumber == 0 && this.endorsement.transactionEffectiveDate) {
-      this.transactionEffectiveDateValid = this.datePipe.transform(this.endorsement.transactionEffectiveDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd');
-      if (this.transactionEffectiveDateValid) {
-        this.endorsementCoveragesForm.controls['endorsementEffectiveDate'].markAsPristine();
+      this.isTransactionEffectiveDateValid = this.datePipe.transform(this.endorsement.transactionEffectiveDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd');
+      if (this.isTransactionEffectiveDateValid) {
+        this.endorsementHeaderForm.controls['endorsementEffectiveDate'].markAsPristine();
       }
       else {
-        this.endorsementCoveragesForm.controls['endorsementEffectiveDate'].setErrors({ 'incorrect': !this.transactionEffectiveDateValid });
+        this.endorsementHeaderForm.controls['endorsementEffectiveDate'].setErrors({ 'incorrect': !this.isTransactionEffectiveDateValid });
       }
     }
   }
 
   changeExpirationDate() {
     if (this.endorsement.endorsementNumber == 0 && this.endorsement.transactionExpirationDate) {
-      this.transactionExpirationDateValid = this.datePipe.transform(this.endorsement.transactionExpirationDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd');
-      if (this.transactionExpirationDateValid) {
-        this.endorsementCoveragesForm.controls['endorsementExpirationDate'].markAsPristine();
+      this.isTransactionExpirationDateValid = this.datePipe.transform(this.endorsement.transactionExpirationDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd');
+      if (this.isTransactionExpirationDateValid) {
+        this.endorsementHeaderForm.controls['endorsementExpirationDate'].markAsPristine();
       }
       else {
-        this.endorsementCoveragesForm.controls['endorsementExpirationDate'].setErrors({ 'incorrect': !this.transactionExpirationDateValid });
+        this.endorsementHeaderForm.controls['endorsementExpirationDate'].setErrors({ 'incorrect': !this.isTransactionExpirationDateValid });
       }
     }
   }
