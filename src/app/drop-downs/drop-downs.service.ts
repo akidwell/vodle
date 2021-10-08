@@ -67,12 +67,6 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
   }
 
-  getIncludeExcludes(programId: number, coverageDescriptionId: number): Observable<Code[]> {
-    console.log("include");
-    const params = new HttpParams().append('programId', programId).append('coverageDescriptionId', coverageDescriptionId);
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/include-excludes', { params })
-  }
-
   private cacheClassCodese: any;
   private cacheClassCodese$!: Observable<any> | null;
 
