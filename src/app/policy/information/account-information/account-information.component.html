@@ -1,63 +1,65 @@
-<div class="card">
+<form #accountInfoForm="ngForm">
+  <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
-        Account Information
-        <fa-icon  style="float: right" [icon]="faPlus" *ngIf="accountCollapsed"></fa-icon>
-        <fa-icon  style="float: right" [icon]="faMinus" *ngIf="!accountCollapsed"></fa-icon>
+      Account Information
+      <fa-icon style="float: right" [icon]="faPlus" *ngIf="accountCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faMinus" *ngIf="!accountCollapsed"></fa-icon>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md">
-                    <label for="insuredCode">Insured Code</label>
-                    <input type="text" class="form-control" id="insuredCode"
-                    [(ngModel)]="accountInfo.insuredCode" name="insuredCode" [readonly]="isReadOnly"
-                    #insuredCode="ngModel">
-                </div>
-                <div class="col-md"></div>
-                <div class="col-md">
-                    <label for="producerCode">Producer Code</label>
-                    <input type="text" class="form-control" id="producerCode" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.producerCode" name="producerCode" #producerCode="ngModel">
-                </div>
-                <div class="col-md">
-                    <label for="commissionRate">Commission Rate</label>
-                    <input type="text" class="form-control" id="commissionRate" [readonly]="isReadOnly"
-                    [ngModel]="accountInfo.commissionRate | percent" name="commissionRate" #commissionRate="ngModel"  (ngModelChange)="accountInfo.commissionRate=$event">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md">
-                    <label for="namedInsured">Named Insured</label>
-                    <input type="text" class="form-control" id="namedInsured" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.namedInsured" name="namedInsured" #namedInsured="ngModel">
-                </div>
-                <div class="col-md">
-                    <label for="producerName">Producer</label>
-                    <input type="text" class="form-control" id="producerName" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.producerName" name="producerName" #producerName="ngModel">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md">
-                    <input type="text" class="form-control" id="insuredAddress" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.insuredAddress2 == null ? accountInfo.insuredAddress1 : accountInfo.insuredAddress1 + ' ' + accountInfo.insuredAddress2 " >
-                </div>
-                <div class="col-md">
-                    <input type="text" class="form-control" id="producerAddress" [readonly]="isReadOnly"
-                    [(ngModel)]="accountInfo.producerAddress2 == null ? accountInfo.producerAddress1 : accountInfo.producerAddress1 + ' ' + accountInfo.producerAddress2 " >
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md">
-                    <input type="text" class="form-control" id="insuredCityStateZip" [readonly]="isReadOnly"
-                    [ngModel]="accountInfo.insuredCity + ', ' + accountInfo.insuredState + '  ' + (accountInfo.insuredZip | zipCode)" name="insuredCityStateZip" #insuredCityStateZip="ngModel"
-                    (ngModelChange)="accountInfo.insuredZip=$event">
-                </div>
-                <div class="col-md">
-                    <input type="text" class="form-control" id="producerCityStateZip" [readonly]="isReadOnly"
-                    [ngModel]="accountInfo.producerCity + ', ' + accountInfo.producerState + '  ' + (accountInfo.producerZip | zipCode)" name="producerCityStateZip" #producerCityStateZip="ngModel"
-                    (ngModelChange)="accountInfo.producerZip=$event">
-                </div>
-            </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-2">
+            <label for="insuredCode">Insured Code</label>
+            <input type="text" class="form-control" id="insuredCode" [ngModel]="accountInfo.insuredCode"
+              name="insuredCode" [readonly]="isReadOnly" #insuredCode="ngModel">
+          </div>
+          <div class="col-lg-4"></div>
+          <div class="col-lg-2">
+            <label for="producerCode">Producer Code</label>
+            <input type="text" class="form-control" id="producerCode" [readonly]="isReadOnly"
+              [ngModel]="accountInfo.producerCode" name="producerCode">
+          </div>
+          <div class="col-lg-2">
+            <label for="commissionRate">Commission Rate</label>
+            <input type="text" class="form-control" id="commissionRate" [readonly]="!canEditPolicy" mask="percent"
+              suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="accountInfo.commissionRate" name="commissionRate"
+              #commissionRate="ngModel">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <label for="namedInsured">Named Insured</label>
+            <input type="text" class="form-control" id="namedInsured" [readonly]="isReadOnly"
+              [ngModel]="accountInfo.namedInsured" name="namedInsured" #namedInsured="ngModel">
+          </div>
+          <div class="col-md">
+            <label for="producerName">Producer</label>
+            <input type="text" class="form-control" id="producerName" [readonly]="isReadOnly"
+              [ngModel]="accountInfo.producerName" name="producerName" #producerName="ngModel">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <input type="text" class="form-control" id="insuredAddress" [readonly]="isReadOnly" name="insuredAddress"
+              [ngModel]="accountInfo.insuredAddress2 == null ? accountInfo.insuredAddress1 : accountInfo.insuredAddress1 + ' ' + accountInfo.insuredAddress2 ">
+          </div>
+          <div class="col-md">
+            <input type="text" class="form-control" id="producerAddress" [readonly]="isReadOnly" name="producerAddress"
+              [ngModel]="accountInfo.producerAddress2 == null ? accountInfo.producerAddress1 : accountInfo.producerAddress1 + ' ' + accountInfo.producerAddress2 ">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <input type="text" class="form-control" id="insuredCityStateZip" [readonly]="isReadOnly"
+              [ngModel]="accountInfo.insuredCity + ', ' + accountInfo.insuredState + '  ' + (accountInfo.insuredZip | zipCode)"
+              name="insuredCityStateZip" #insuredCityStateZip="ngModel" (ngModelChange)="accountInfo.insuredZip=$event">
+          </div>
+          <div class="col-md">
+            <input type="text" class="form-control" id="producerCityStateZip" [readonly]="isReadOnly"
+              [ngModel]="accountInfo.producerCity + ', ' + accountInfo.producerState + '  ' + (accountInfo.producerZip | zipCode)"
+              name="producerCityStateZip" #producerCityStateZip="ngModel"
+              (ngModelChange)="accountInfo.producerZip=$event">
+          </div>
+        </div>
+      </div>
     </div>
-</div>

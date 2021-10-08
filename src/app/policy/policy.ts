@@ -1,71 +1,72 @@
 export interface Policy {
-    policyId: number;
-    policySymbol: string;
-    fullPolicyNumber: string;
+  policyId: number;
+  policySymbol: string;
+  fullPolicyNumber: string;
 }
 
 export interface PolicyResolved {
-    policy: Policy | null;
-    error?: any;
-  }
+  policy: Policy | null;
+  error?: any;
+}
 
-  export interface AccountInformation {
-        insuredCode: string;
-        namedInsured: string;
-        insuredAddress1: string;
-        insuredAddress2: string;
-        insuredCity: string;
-        insuredState: string;
-        insuredZip: string;
-        producerCode: string;
-        producerBranch: string;
-        producerAddress1: string;
-        producerAddress2: string;
-        producerCity: string;
-        producerState: string;
-        producerZip: string;
-        commissionRate: string;
-        producerName: string;
+export interface AccountInformation {
+  policyId: number;
+  insuredCode: string;
+  namedInsured: string;
+  insuredAddress1: string;
+  insuredAddress2: string;
+  insuredCity: string;
+  insuredState: string;
+  insuredZip: string;
+  producerCode: string;
+  producerBranch: string;
+  producerAddress1: string;
+  producerAddress2: string;
+  producerCity: string;
+  producerState: string;
+  producerZip: string;
+  commissionRate: number;
+  producerName: string;
 }
 
 export interface AccountInformationResolved {
-    accountInfo: AccountInformation | null;
-    error?: any;
-  }
+  accountInfo: AccountInformation | null;
+  error?: any;
+}
 
-  export interface PolicyInformation {
-          quoteData: QuoteData;
-          riskLocation: RiskLocation;
-          policyEventCode: string;
-          packageInd: string
-          policyType: string | null
-          policySymbol: string
-          policyNo: string
-          policyModNo: string
-          enteredDate: Date
-          policyId: string
-          policyInsuredState: string
-          policyEffectiveDate: Date
-          policyExpirationDate: Date
-          policyExtendedExpDate: Date
-          policyCancelDate: Date
-          programId: number
-          programName: string
-          riskGradeCode: string
-          auditCode: string
-          paymentFrequency: string
-          deregulationIndicator: string
-          nyftz: string
-          riskType: string
-          assumedCarrier:  string
-          coinsurancePercentage: number
-          productManufactureDate: Date
-          submissionNumber: number
+export interface PolicyInformation {
+  quoteData: QuoteData;
+  riskLocation: RiskLocation;
+  policyEventCode: string;
+  packageInd: string
+  policyType: string | null
+  policySymbol: string
+  policyNo: string
+  policyModNo: string
+  enteredDate: Date
+  policyId: number
+  policyInsuredState: string
+  policyEffectiveDate: Date
+  policyExpirationDate: Date
+  policyExtendedExpDate: Date
+  policyCancelDate: Date
+  programId: number
+  programName: string
+  riskGradeCode: string
+  auditCode: string
+  paymentFrequency: string
+  deregulationIndicator: string
+  nyftz: string
+  riskType: string
+  assumedCarrier: string
+  coinsurancePercentage: number
+  productManufactureDate: Date
+  submissionNumber: number
 }
 
 export interface PolicyInformationResolved {
-policyInfo: PolicyInformation | null;
-error?: any;
+  policyInfo: PolicyInformation | null;
+  error?: any;
 }
 export interface QuoteData {
 
@@ -91,7 +92,7 @@ export interface RiskLocation {
 export interface EndorsementResolved {
   endorsement: Endorsement | null;
   error?: any;
-  }
+}
 
 export interface Endorsement {
   policyId: number;
@@ -100,6 +101,7 @@ export interface Endorsement {
   transactionEffectiveDate: Date;
   transactionExpirationDate: Date;
   terrorismCode: string;
+  sir: number;
   premium: number;
   limit: number;
   attachmentPoint: number;

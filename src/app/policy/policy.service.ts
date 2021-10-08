@@ -59,10 +59,9 @@ export class PolicyService {
 
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', policyInfo);
-    // .pipe(
-    //   tap(r => {
-    //     this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000});
-    //   })
+  }
 
+  updateAccountInfo(accountInfo: AccountInformation):Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/AccountInfo', accountInfo);
   }
 }

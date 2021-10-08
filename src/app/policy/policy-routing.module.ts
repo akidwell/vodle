@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CanDeactivateGuard } from './can-deactivate-guard';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
 import { PolicyNotFoundComponent } from './policy-not-found.component';
@@ -26,8 +27,8 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: InformationComponent },
-      { path: 'coverages', component: CoveragesComponent },
+      { path: 'information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'coverages', component: CoveragesComponent,  canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'schedules', component: SchedulesComponent },
       { path: 'reinsurance', component: ReinsuranceComponent },
       { path: 'summary', component: SummaryComponent }
