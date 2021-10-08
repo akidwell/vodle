@@ -44,7 +44,7 @@
             </div>
             <div class="col-lg-1">
               <label for="policyType">Master Policy</label><br>
-              <input type="checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
+              <input type="checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType" [readonly]="!canEditPolicy"
                 (ngModelChange)="policyInfo.policyType=$event?'1': null">
             </div>
             <div class="col-lg-1">
