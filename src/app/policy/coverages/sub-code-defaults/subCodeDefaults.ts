@@ -5,5 +5,7 @@ export interface SubCodeDefaults {
     coverageExcluded: boolean,
     occurrenceOrClaimsMade: boolean,
     defaultLimitPatternGroupCode: number,
-    defaultLimitPatternDescription: string
+    defaultLimitPatternDescription: string,
+    defaultLimitPatternBasis: string,
+    subCode: number
 }

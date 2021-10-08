@@ -19,8 +19,8 @@
         </div>
         <div class="col-lg-2">
           <label class='hidden-label' for="limits">Limits</label>
-          <input type="text" class="form-control" id="limits" [readonly]="!canEditPolicy || !canEditLimitPattern"
-            [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="limitsPatternMask()" 
+          <input type="text" class="form-control" id="limits" [readonly]="!canEditPolicy || !canEditLimitPattern" [required]="canEditPolicy && canEditLimitPattern"
+            [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="setLimitsPatternMask()" 
             (change)="changeLimitsPattern()" [dropSpecialCharacters]="false">
           <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
             Invalid Pattern
@@ -52,11 +52,14 @@
           <div *ngIf="isRetroDateRequired">
             <input type="date" class="form-control" id="retroDate" [required]="canEditPolicy && isRetroDateRequired"
               [ngModel]="coverage.retroDate  | date:'yyyy-MM-dd'" (ngModelChange)="coverage.retroDate=$event"
-              name="retroDate" #retroDate="ngModel">
+              name="retroDate" #retroDate="ngModel" (change)="changeRetroDate()">
           </div>
           <div *ngIf="!isRetroDateRequired">
             <input type="text" class="form-control" id="retroDateReadonly" [readonly]="true"
               [ngModel]="coverage.retroDate | date:'MM/dd/yyyy'" name="retroDateReadonly">
+          </div>
+          <div [hidden]="isRetroDateValid" class="alert alert-danger">
+            Invalid Date
           </div>
         </div>
       </div>
@@ -85,13 +88,13 @@
         </div>
         <div class="col-lg-1">
           <label for="deductible">Deductible</label>
-          <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible"
+          <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible" [required]="canEditPolicy && isDeductibleRequired"
             [(ngModel)]="coverage.deductible" name="deductible" #deductible="ngModel" mask="separator.0"
             thousandSeparator=",">
         </div>
         <div class="col-lg-2">
           <label for="deductibleType">Deductible Type</label>
-          <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code"
+          <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code" [required]="canEditPolicy && isDeductibleRequired"
             name="deductibleType" [readonly]="!canEditPolicy || !showDeductible" [(ngModel)]="coverage.deductibleType">
           </ng-select>
         </div>

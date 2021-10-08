@@ -10,6 +10,7 @@ import { tap } from 'rxjs/operators';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from '../../policy.service';
+import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -51,8 +52,6 @@ export class PolicyInformationComponent implements OnInit {
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
-
-  // @ViewChild(NgForm) form: NgForm | undefined;
   
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
@@ -72,30 +71,29 @@ export class PolicyInformationComponent implements OnInit {
     this.riskTypes$ = this.dropdowns.getRiskTypes();
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
-    // Check with Amber 
-    //this.savePolicyInfo = this.savePolicyInfo;
-  }
-
-  ngAfterViewInit() : void {
-    this.policyInfoForm?.statusChanges?.subscribe(() => {
-      console.log("Is form dirty yet: " + this.policyInfoForm.dirty);
-    });
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
 
-  savePolicyInfo(): any {
-    if (this.policyInfoForm.status != "VALID") {
-      this.notification.show('Policy not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-      return;
-    }
+  save(): boolean {
+    if (this.canEditPolicy && this.policyInfoForm.dirty) {
+      if (this.policyInfoForm.status != "VALID") {
+        this.notification.show('Policy Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        return false;
+      }
 
-    this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
-        this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-    });
+      this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
+        this.policyInfoForm.form.markAsPristine();
+        this.policyInfoForm.form.markAsUntouched();
+        this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        return result;
+      });
+    }
+    return false;
   }
+
   checkDereg(): boolean{
     return this.dereg = this.policyInfo.deregulationIndicator == 'F'? true : false;
   }

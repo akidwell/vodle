@@ -28,7 +28,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'coverages', component: CoveragesComponent, data: { saveComponent: true } },
+      { path: 'coverages', component: CoveragesComponent,  canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'schedules', component: SchedulesComponent },
       { path: 'reinsurance', component: ReinsuranceComponent },
       { path: 'summary', component: SummaryComponent }

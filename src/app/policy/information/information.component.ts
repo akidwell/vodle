@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { NotificationService } from 'src/app/notification/notification-service';
 import { AccountInformationComponent } from './account-information/account-information.component';
 import { PolicyInformationComponent } from './policy-information/policy-information.component';
 
@@ -15,7 +16,7 @@ export class InformationComponent implements OnInit {
   faMinus = faMinus;
   formStatus: boolean | null = false;
 
-  constructor() { }
+  constructor(private notification: NotificationService) { }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
@@ -37,11 +38,27 @@ export class InformationComponent implements OnInit {
     return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID'
   }
 
+  isDirty() {
+    return this.policyInfoComp.policyInfoForm.dirty || this.accountInfoComp.accountInfoForm.dirty;
+  }
+
+  save() {
+    this.accountInfoComp.save();
+    this.policyInfoComp.save();
+  }
+  
   invalidControls() {
-    const invalid = [];
-    const controls = this.policyInfoComp.policyInfoForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
+    let invalid = [];
+    let policyControls = this.policyInfoComp.policyInfoForm.controls;
+    for (let name in policyControls) {
+      if (policyControls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+
+    let accountControls = this.accountInfoComp.accountInfoForm.controls;
+    for (let name in accountControls) {
+      if (accountControls[name].invalid) {
         invalid.push(name);
       }
     }

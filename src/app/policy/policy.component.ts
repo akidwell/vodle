@@ -1,5 +1,5 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../notification/notification-service';
 import { PolicyInformation } from './policy';
@@ -16,12 +16,20 @@ export class PolicyComponent implements OnInit {
   policyInfo!: PolicyInformation;
   formstatus!: string;
 
-  constructor(private route: ActivatedRoute,private policyService: PolicyService,private notification: NotificationService) { }
+  constructor(private route: ActivatedRoute,private policyService: PolicyService,private notification: NotificationService,private router: Router) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
     });
+
+    this.router.events.subscribe(event =>{
+      if (event instanceof NavigationStart){
+         console.log(event.url)
+     console.log(this.route.url);
+         //this.routerChangeMethod(event.url);
+      }
+   })
   }
 
   onSubmit() { }

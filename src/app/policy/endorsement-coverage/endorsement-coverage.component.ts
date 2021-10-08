@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { faPlus, faAngleUp, faGlasses } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { faPlus, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { EndorsementCoverage } from '../coverages/coverages';
 import { SubCodeDefaultsService } from '../coverages/sub-code-defaults/sub-code-defaults.service';
 import { SubCodeDefaults } from '../coverages/sub-code-defaults/subCodeDefaults';
+import { PolicyInformation } from '../policy';
 
 @Component({
   selector: 'rsps-endorsement-coverage',
@@ -29,15 +31,18 @@ export class EndorsementCoverageComponent implements OnInit {
   claimsMadeOrOccurrence$: Observable<Code[]> | undefined;
   subCodeDefaults!: SubCodeDefaults;
   defaultsSub!: Subscription;
+  policyInfo!: PolicyInformation;
   showDeductible: boolean = false;
   showIncludeExlude: boolean = false;
   canEditPolicy: boolean = false;
   includeExclude: Code[] = [];
   isRetroDateRequired: boolean = false;
+  isDeductibleRequired: boolean = false;
   isLimitsPatternValid: boolean = true;
+  isRetroDateValid: boolean = true;
   canEditLimitPattern: boolean = false;
 
-  constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -45,32 +50,15 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.parent?.data.subscribe(data => {
+      this.policyInfo = data['policyInfoData'].policyInfo;
+    });
+
     this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.coverageId);
-    // this.exposureCodes$ = this.dropdowns.getExposureCodes();
-    // this.actionCodes$ = this.dropdowns.getActionCodes();
-    // this.premTypes$ = this.dropdowns.getPremTypes();
-    // this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
-    // this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId,this.coverage.coverageCode);
     this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
 
     if ((this.coverage.coverageId ?? 0) > 0) {
-      //this.includeExcludes$ = this.dropdowns.getIncludeExcludes(this.coverage.programId, this.coverage.coverageId ?? 0);
-
       this.changeCoverageDescription("open");
-
-      // this.retroDateRequired = this.coverage.claimsMadeOrOccurrence == 'C';
-
-      //this.canEditLimitPattern = this.coverage.includeExclude != 'E';
-
-      // this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0).subscribe({
-      //   next: subCodeDefaults => {
-      //     this.subCodeDefaults = subCodeDefaults;
-      //     this.showDeductible = subCodeDefaults.deductible;
-      //     this.showIncludeExlude = subCodeDefaults.coverageIncluded || subCodeDefaults.coverageExcluded;
-      //     this.retroDateRequired = this.canEditPolicy && this.coverage.claimsMadeOrOccurrence == 'C';
-      //     this.populateExcludeInclude();
-      //   }
-      // });
     }
   }
 
@@ -111,7 +99,12 @@ export class EndorsementCoverageComponent implements OnInit {
           }
         }
         this.populateExcludeInclude();
-        this.isLimitsPatternValid = this.limitsPatternValid();
+        this.isLimitsPatternValid = this.checkLimitsPatternValid();
+        this.canEditLimitPattern = this.isNotExcluded();
+        if (!this.canEditLimitPattern) {
+          this.coverage.limitsPattern = '';
+        }
+        this.isDeductibleRequired = this.checkDeductibleRequired();
       }
     });
   }
@@ -125,7 +118,8 @@ export class EndorsementCoverageComponent implements OnInit {
 
   changeClaimsMadeOccurrence() {
     this.coverage.retroDate = null;
-    this.isRetroDateRequired = this.retroDateRequired();
+    this.isRetroDateRequired = this.checkRetroDateRequired();
+    this.isRetroDateValid = this.checkRetroDateValid();
   }
 
   changeIncludeExclude(event: any) {
@@ -136,14 +130,33 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   changeLimitsPattern() {
-    this.isLimitsPatternValid = this.limitsPatternValid();
+    this.isLimitsPatternValid = this.checkLimitsPatternValid();
   }
 
-  private retroDateRequired(): boolean {
+  changeRetroDate() {
+    this.isRetroDateValid = this.checkRetroDateValid();
+  }
+
+  private checkRetroDateRequired(): boolean {
     return this.coverage.claimsMadeOrOccurrence == 'C';
   }
 
-  limitsPatternValid(): boolean {
+  private checkDeductibleRequired(): boolean {
+    return this.subCodeDefaults.subCode == 336
+  }
+
+  checkRetroDateValid(): boolean {
+    if (this.coverage.retroDate != null && this.isRetroDateRequired) {
+      let isValid = (this.coverage?.retroDate <= this.policyInfo.policyExpirationDate);
+      if (!isValid) {
+        this.endorsementCoveragesForm.controls['retroDate'].setErrors({ 'incorrect': !isValid });
+      }
+      return isValid;
+    }
+    return true;
+  }
+
+  checkLimitsPatternValid(): boolean {
     if (this.subCodeDefaults != null && this.isNotExcluded()) {
       let isValid = this.subCodeDefaults.defaultLimitPatternDescription.split("/").length == this.coverage.limitsPattern.split("/").length;
       for (let x of this.coverage.limitsPattern.split("/")) {
@@ -159,7 +172,7 @@ export class EndorsementCoverageComponent implements OnInit {
     return true;
   }
 
-  limitsPatternMask(): string {
+  setLimitsPatternMask(): string {
     let mask: string = "";
     if (this.subCodeDefaults != null) {
       for (let x of this.subCodeDefaults.defaultLimitPatternDescription.split("/")) {
@@ -171,7 +184,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   private isNotExcluded(): boolean {
-    return this.coverage.includeExclude != 'E';
+    return this.coverage.includeExclude != 'E' && this.subCodeDefaults.defaultLimitPatternBasis != '0';
   }
 
   collapseExpand(event: boolean) {
@@ -186,10 +199,8 @@ export class EndorsementCoverageComponent implements OnInit {
     this.ecCollapsed = event;
   }
 
-  @Input()
-  public coverage!: EndorsementCoverage;
-
+  @Input() public coverage!: EndorsementCoverage;
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
-  formStatus!: string;
+
 }
