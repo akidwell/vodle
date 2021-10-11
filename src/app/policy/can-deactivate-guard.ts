@@ -14,12 +14,12 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
   ): Observable<boolean> | boolean {
     if (component.isValid()) {
       if (component.isDirty()) {
-        console.log("SAVE");
+        component.hideInvalid();
         component.save();
       }
       return true;
     }
-    const confirmation = window.confirm(component.invalidControls().join(",") || 'Is it OK?');
+    component.showInvalidControls()
     return false;
   }
 }
