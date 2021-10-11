@@ -51,13 +51,19 @@ export class EndorsementLocationGroupComponent implements OnInit {
           return false;
         }
       }
-  }
+    }
     return true;
   }
 
   isDirty() {
-    //return this.groupComp.endorsementCoveragesForm.dirty;
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.endorsementCoveragesForm.dirty) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 }
-

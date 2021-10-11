@@ -5,6 +5,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
 import { PolicyInformation } from '../policy';
+import { PolicySave } from '../policy-save';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
 
@@ -13,14 +14,16 @@ import { EndorsementHeaderComponent } from './endorsement-header/endorsement-hea
   templateUrl: './coverages.component.html',
   styleUrls: ['./coverages.component.css']
 })
-export class CoveragesComponent implements OnInit {
+export class CoveragesComponent implements OnInit, PolicySave {
   endorsementCoveragesGroups!: EndorsementCoveragesGroup[];
   formStatus: any;
   authSub: Subscription;
   canEditPolicy: boolean = false;
   policyInfo!: PolicyInformation;
-  
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth) { 
+  invalidMessage: string = "";
+  showInvalid: boolean = false;
+
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -30,13 +33,13 @@ export class CoveragesComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
       this.policyInfo = data['policyInfoData'].policyInfo;
-    }); 
+    });
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
-  
+
   @Output() status: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
@@ -47,9 +50,9 @@ export class CoveragesComponent implements OnInit {
     let result: boolean = false;
 
     if (this.locationComponent != null) {
-      let location: EndorsementCoverageLocation =({} as any) as EndorsementCoverageLocation;
+      let location: EndorsementCoverageLocation = ({} as any) as EndorsementCoverageLocation;
       // get policyId from route
-      let policyId: number  = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
+      let policyId: number = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       location.policyId = policyId;
 
       result = await this.locationComponent.open(location);
@@ -57,7 +60,7 @@ export class CoveragesComponent implements OnInit {
         let coverage: EndorsementCoverage = ({} as any) as EndorsementCoverage;
         let group: EndorsementCoveragesGroup = { coverages: [], location: location }
         coverage.programId = this.policyInfo.programId;
-        coverage.coverageCode = this.policyInfo.quoteData.coverageCode;    
+        coverage.coverageCode = this.policyInfo.quoteData.coverageCode;
         coverage.policySymbol = this.policyInfo.policySymbol;
         coverage.policyId = this.policyInfo.policyId;
         coverage.action = "A";
@@ -70,38 +73,56 @@ export class CoveragesComponent implements OnInit {
   }
 
 
-  isValid() {
+  isValid(): boolean {
     return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp.isValid();
   }
 
-  isDirty() {
-    return this.headerComp.endorsementHeaderForm.dirty || this.groupComp.endorsementCoveragesForm.dirty;
+  isDirty(): boolean {
+    return (this.headerComp.endorsementHeaderForm.dirty ?? false) || this.groupComp.isDirty();
   }
 
-  save() {
+  save(): void {
     this.headerComp.save();
     //this.groupComp.save();
   }
-  
-  invalidControls() {
+
+  showInvalidControls(): void {
     let invalid = [];
     let controls = this.headerComp.endorsementHeaderForm.controls;
+
+    // Check each control if it is valid
     for (let name in controls) {
       if (controls[name].invalid) {
         invalid.push(name);
       }
     }
 
+    // Loop through each child component to see it any of them have invalid controls
     if (this.groupComp.components != null) {
       for (let child of this.groupComp.components) {
         for (let name in child.endorsementCoveragesForm.controls) {
           if (child.endorsementCoveragesForm.controls[name].invalid) {
-            invalid.push(name);
+            invalid.push(name + " - Location: #" + child.coverage.locationId.toString());
           }
-        } 
+        }
       }
     }
-    return invalid;
+
+    // Compile all invalide controls in a list
+    if (invalid.length > 0) {
+      this.showInvalid = true;
+      this.invalidMessage = "Following fields are invalid";
+      for (let test of invalid) {
+        this.invalidMessage += "<br><li>" + test;
+      }
+    }
+    else {
+      this.hideInvalid();
+    }
+  }
+
+  hideInvalid(): void {
+    this.showInvalid = false;
   }
 
 }
