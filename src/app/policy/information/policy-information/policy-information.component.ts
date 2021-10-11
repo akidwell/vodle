@@ -50,7 +50,7 @@ export class PolicyInformationComponent implements OnInit {
   }
 
   @ViewChild(NgForm) form: NgForm | undefined;
-  
+
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;

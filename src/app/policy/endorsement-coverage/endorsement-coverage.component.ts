@@ -52,14 +52,8 @@ export class EndorsementCoverageComponent implements OnInit {
   @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
   @ViewChild('focusHere', { static: false }) homeElement!: ElementRef;
   formStatus!: string;
+  deleteCoverage() {
+    console.log(this.coverage)
+  }
+}
 
-  findPos(obj: any):any {
-    var curtop = 0;
-    if (obj.offsetParent) {
-        do {
-            curtop += obj.offsetTop;
-        } while (obj = obj.offsetParent);
-    return [curtop];
-    }
-}
-}
