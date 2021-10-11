@@ -72,9 +72,11 @@ export class CoveragesComponent implements OnInit, PolicySave {
     return false;
   }
 
-
   isValid(): boolean {
-    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp.isValid();
+    let total:number = 0;
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium })});
+
+    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp.isValid() && this.headerComp.endorsement.premium == total;
   }
 
   isDirty(): boolean {
@@ -108,17 +110,32 @@ export class CoveragesComponent implements OnInit, PolicySave {
       }
     }
 
+    this.invalidMessage = "";
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
-      this.invalidMessage = "Following fields are invalid";
-      for (let test of invalid) {
-        this.invalidMessage += "<br><li>" + test;
+     // this.invalidMessage = "Following fields are invalid";
+      for (let error of invalid) {
+        this.invalidMessage += "<br><li>" + error;
       }
+    }
+    if (!this.checkPremiumMatches()) {
+      this.showInvalid = true;
+      this.invalidMessage += "<br><li>Premium totals do not match";
+    }
+
+    if (this.showInvalid) {
+      this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
     }
     else {
       this.hideInvalid();
     }
+  }
+
+  checkPremiumMatches() : boolean {
+    let total:number = 0;
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium })});
+    return this.headerComp.endorsement.premium == total
   }
 
   hideInvalid(): void {
