@@ -55,7 +55,7 @@ export class ImportComponent implements OnInit {
   // Defaul pagination settings
   private _state: State = {
     page: 1,
-    pageSize: 10,
+    pageSize: 15,
     searchTerm: ''
   };
 
