@@ -1,10 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { faGlasses, faGlassWhiskey } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
+import { AddressLookupService } from '../address-lookup/address-lookup.service';
 import { EndorsementCoverageLocation } from '../coverages/coverages';
 import { PolicyService } from '../policy.service';
 
@@ -24,9 +26,12 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   locationSub!: Subscription;
   isDirty: boolean = false;
   dirtySub!: Subscription | undefined;
+  addressSub!: Subscription;
+  isLoadingAddress: boolean = false;
+  counties: string[] = [];
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
 
-  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService) {
+  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -40,6 +45,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
     this.authSub.unsubscribe();
     this.locationSub?.unsubscribe();
     this.dirtySub?.unsubscribe();
+    this.addressSub.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -61,6 +67,27 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
       this.modalRef.result.then(resolve, resolve)
     })
+  }
+
+  changeZipCode(): void {
+    if (this.locationForm.controls["zipCode"].valid) {
+      this.isLoadingAddress = true;
+      this.location.city = "";
+      this.location.state = "";
+      this.location.county = "";
+      this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
+        next: address => {
+          this.location.city = address.city;
+          this.location.state = address.state;
+          this.location.county = address.county[0];
+          this.counties = [];
+          for (let county of address.county) {
+            this.counties = this.counties.concat(county);
+          }
+          this.isLoadingAddress = false;
+        }
+      });
+    }
   }
 
   async save(): Promise<void> {
