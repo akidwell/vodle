@@ -1,9 +1,9 @@
 <form #endorsementCoveragesForm="ngForm">
 
   <div [ngClass]="{'expanded':!ecCollapsed}">
-    <div class="card-body" (click)="collapseExpand(false)">
-      <div class="row container">
-        <div class="col-lg-4">
+  <div #coverageInfo class="card-body" (click)="ecCollapsed = false" >
+    <div class="row container">
+      <div class="col-lg-4">
           <label class='hidden-label' for="coverageDescription">Coverage Description</label>
           <ng-select id="coverageDescription" name="coverageDescription" [items]="coverageDescriptions$ | async"
             bindLabel="description" bindValue="key" [clearable]="false" placeholder="Select Coverage"
@@ -20,7 +20,7 @@
         <div class="col-lg-2">
           <label class='hidden-label' for="limits">Limits</label>
           <input type="text" class="form-control" id="limits" [readonly]="!canEditPolicy || !canEditLimitPattern" [required]="canEditPolicy && canEditLimitPattern"
-            [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="setLimitsPatternMask()" 
+            [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="setLimitsPatternMask()"
             (change)="changeLimitsPattern()" [dropSpecialCharacters]="false">
           <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
             Invalid Pattern
@@ -153,8 +153,8 @@
       <div class="empty-space"></div>
       <div class="row container">
         <div class="col-lg-2">
-          <span class="btn btn-secondary" hover-class="btn-primary">Copy</span>
-          <span class="btn btn-secondary" hover-class="btn-danger">Delete</span>
+          <span class="btn btn-secondary" (click)=copyCoverage() hover-class="btn-primary">Copy</span>
+          <span class="btn btn-secondary" (click)=deleteCoverage() hover-class="btn-danger">Delete</span>
         </div>
         <span class='astext' (click)="collapseExpand(true)">
           <fa-icon [icon]="faArrowUp"></fa-icon>

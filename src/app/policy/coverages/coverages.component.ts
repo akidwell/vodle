@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { PolicyService } from '../policy.service';
 import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
 import { PolicyInformation } from '../policy';
@@ -22,8 +23,11 @@ export class CoveragesComponent implements OnInit, PolicySave {
   policyInfo!: PolicyInformation;
   invalidMessage: string = "";
   showInvalid: boolean = false;
+  coveragesSequence!: number;
+  coveragesSub!: Subscription;
+  notification: any;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -32,15 +36,35 @@ export class CoveragesComponent implements OnInit, PolicySave {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
+      //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
+      this.coveragesSequence = this.getNextCoverageSequence(this.endorsementCoveragesGroups);
+      this.saveEndorsementCoverages = this.saveEndorsementCoverages;
       this.policyInfo = data['policyInfoData'].policyInfo;
+    });
+  }
+
+  onIncrement(newSeq : number) {
+    this.coveragesSequence = newSeq;
+  }
+  getNextCoverageSequence(allGroups: EndorsementCoveragesGroup[]) {
+    return allGroups.map(group => group.coverages.map(coverage => coverage.sequence)).reduce(
+      (locGroup, seq) => locGroup.concat(seq),[]).reduce(
+        (a,b) => Math.max(a,b)) + 1;
+  }
+  getProgramId(firstGroup: EndorsementCoveragesGroup){
+    return firstGroup.coverages[0].programId;
+  }
+  @Output() status: EventEmitter<any> = new EventEmitter();
+  saveEndorsementCoverages(): any {
+    console.log(this.endorsementCoveragesGroups)
+    this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
+        this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
     });
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
-
-  @Output() status: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
   @ViewChild(EndorsementLocationGroupComponent) groupComp!: EndorsementLocationGroupComponent;

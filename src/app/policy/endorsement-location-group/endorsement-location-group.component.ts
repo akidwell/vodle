@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
 import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementCoverageComponent } from '../endorsement-coverage/endorsement-coverage.component';
 
@@ -19,23 +19,53 @@ export class EndorsementLocationGroupComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy: boolean = false;
   formStatus!: string;
-  coveragesSequence: number = 1;
+  anchorId!: string;
 
-  @Input()
-  public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
+  @Input()  public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
+  @Input()  public currentSequence!: number;
+  @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
   @ViewChildren(EndorsementCoverageComponent) components:QueryList<EndorsementCoverageComponent> | undefined;
-  
+  @ViewChildren("coverageDiv") private coverageDivs!: QueryList<EndorsementCoverageComponent>;
+
   constructor(private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
-      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
-    );
-  }
+     (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+   );
+ }
+ addNewCoverage(): void {
+  const newCoverage: EndorsementCoverage = this.createNewCoverage();
+  this.incrementSequence.emit(this.currentSequence + 1);
+  this.endorsementCoveragesGroup.coverages.push(newCoverage);
+ }
 
-  ngOnInit(): void { }
+  copyExistingCoverage(existingCoverage: EndorsementCoverage){
+    const newCoverage: EndorsementCoverage = JSON.parse(JSON.stringify(existingCoverage));
+    newCoverage.sequence = this.currentSequence;
+    newCoverage.ecCollapsed = true;
+    this.incrementSequence.emit(this.currentSequence + 1);
+    console.log('new: ', newCoverage, 'existing: ', existingCoverage)
+    this.endorsementCoveragesGroup.coverages.push(newCoverage);
+  }
+  ngOnInit(): void {
+    this.anchorId = 'focusHere' + this.endorsementCoveragesGroup.location.locationId;
+  }
+  ngAfterViewInit() {
+    this.coverageDivs.changes.subscribe(() => {
+      if (this.coverageDivs && this.coverageDivs.last) {
+        setTimeout(() => {
+          console.log(this.coverageDivs)
+          this.coverageDivs.last.focus();
+          console.log(this.coverageDivs)
+        }, 0);
+      }
+
+    });
+
+  }
 
   async openLocation(location: EndorsementCoverageLocation) {
     if (this.locationComponent != null) {
@@ -53,6 +83,40 @@ export class EndorsementLocationGroupComponent implements OnInit {
       }
     }
     return true;
+  }
+  createNewCoverage(): EndorsementCoverage {
+    return {
+      sequence: this.currentSequence,
+      classDescription: '',
+      coverageCode: '',
+      coverageId: 0,
+      coverageType: '',
+      action: 'A',
+      claimsMadeOrOccurrence: this.endorsementCoveragesGroup.coverages[0].claimsMadeOrOccurrence,
+      deductible: 0,
+      deductibleType: '',
+      ecCollapsed: true,
+      endorsementNumber: this.endorsementCoveragesGroup.coverages[0].endorsementNumber,
+      exposureBase: 0,
+      exposureCode: '',
+      glClassCode: 0,
+      includeExclude: '',
+      limit: 0,
+      limitsPattern: '',
+      limitsPatternGroupCode: 998,
+      locationId: this.endorsementCoveragesGroup.location.locationId,
+      occurrenceOrClaimsMade: true,
+      policyId: this.endorsementCoveragesGroup.location.policyId,
+      policySymbol: '',
+      premium: 0,
+      premiumType: '',
+      programId:  this.endorsementCoveragesGroup.coverages[0].programId,
+      rateAmount: 0,
+      rateBasis: 0,
+      retroDate: null,
+      subCode: 0
+    }
+
   }
 
   isDirty() {

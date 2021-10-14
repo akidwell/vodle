@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faPlus, faAngleUp } from '@fortawesome/free-solid-svg-icons';
@@ -41,7 +41,7 @@ export class EndorsementCoverageComponent implements OnInit {
   isLimitsPatternValid: boolean = true;
   isRetroDateValid: boolean = true;
   canEditLimitPattern: boolean = false;
-
+  anchorId!: string;
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -56,10 +56,20 @@ export class EndorsementCoverageComponent implements OnInit {
 
     this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.coverageId);
     this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
-
+    this.anchorId = 'focusHere' + this.coverage.locationId;
     if ((this.coverage.coverageId ?? 0) > 0) {
       this.changeCoverageDescription("open");
     }
+  }
+  copyCoverage(): void {
+    this.copyExistingCoverage.emit(this.coverage);
+  }
+
+  focus(): void {
+    this.ecCollapsed = false;
+    setTimeout(() => {
+      document.getElementById(this.anchorId)!.scrollIntoView();
+    }, 250);
   }
 
   ngOnDestroy(): void {
@@ -198,9 +208,16 @@ export class EndorsementCoverageComponent implements OnInit {
     }
     this.ecCollapsed = event;
   }
-
+  deleteCoverage() {
+    console.log(this.coverage)
+  }
   @Input() public coverage!: EndorsementCoverage;
   @Output() status: EventEmitter<any> = new EventEmitter();
-  @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
+  @Output() copyExistingCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
+  @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
+  @ViewChild('focusHere', { static: false }) homeElement!: ElementRef;
+  formStatus!: string;
+
 
 }
+

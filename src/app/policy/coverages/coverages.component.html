@@ -2,11 +2,16 @@
   <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage"></ngb-alert>
   <rsps-endorsement-header></rsps-endorsement-header>
   <div *ngFor="let item of endorsementCoveragesGroups; index as i">
-    <rsps-endorsement-location-group [endorsementCoveragesGroup]=item></rsps-endorsement-location-group>
+    <rsps-endorsement-location-group
+    (incrementSequence)=onIncrement($event)
+    [endorsementCoveragesGroup]=item
+    [currentSequence]=coveragesSequence
+    ></rsps-endorsement-location-group>
   </div>
   <div class="col-sm-2">
+    <button class="btn btn-sm btn-primary pull-right"  (click)="this.saveEndorsementCoverages()">Save</button>
+</div>
     <button class="btn btn-sm btn-primary pull-right" [hidden]="!canEditPolicy" (click)="openLocation()">Add Location</button>
   </div>
-</div>
 
 <rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>

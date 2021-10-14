@@ -52,7 +52,9 @@ export class PolicyInformationComponent implements OnInit {
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
-  
+
+  @ViewChild(NgForm) form: NgForm | undefined;
+
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;

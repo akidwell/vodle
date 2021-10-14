@@ -38,7 +38,7 @@ export class PolicyService {
   getEndorsement(id: number,endorsementNumber: number): Observable<Endorsement> {
     return this.http.get<Endorsement>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/endorsements/' + endorsementNumber.toString())
   }
-  
+
   getEndorsementCoveragesGroups(policyId: number, endorsementNo: number): Observable<EndorsementCoveragesGroup[]> {
     return this.http.get<EndorsementCoveragesGroup[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/coveragesgroups')
       .pipe(
@@ -51,6 +51,9 @@ export class PolicyService {
       .pipe(
         tap(data => console.log(JSON.stringify(data)))
       );
+  }
+  updateEndorsementGroups(endorsementCoveragesGroups: EndorsementCoveragesGroup[]) : Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/coveragesgroups', endorsementCoveragesGroups);
   }
 
   addEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<number> {
