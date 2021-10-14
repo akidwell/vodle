@@ -1,51 +1,79 @@
-<form  #locationForm="ngForm" >
+<form #locationForm="ngForm">
 
- <ng-template #modal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Location</h4>
-  </div>
-  <div class="modal-body">
-    <div class="col-md"  [hidden]="!showLocationId">
-      <label for="street">Location Id:</label>
-      <input type="text" class="form-control" id="locationId" [readonly]="true"
-        [(ngModel)]="location.locationId" name="locationId" #locationId="ngModel">
+  <ng-template #modal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Location</h4>
     </div>
-    <div class="col-md">
-      <label for="street">Address Street 1</label>
-      <input type="text" class="form-control" id="street" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-        [(ngModel)]="location.street" name="street" #street="ngModel">
-    </div>
-    <div class="col-md">
-      <label for="street2">Addres Street 2</label>
-      <input type="text" class="form-control" id="street2"  [readonly]="!canEditPolicy"
-        [(ngModel)]="location.street2" name="street2" #street2="ngModel">
-    </div>
-    <div class="col-md">
-      <label for="zip">Zip Code</label>
-      <input type="text" class="form-control" id="zip" [readonly]="!canEditPolicy" [required]="canEditPolicy" mask="00000||00000-0000"
-        [(ngModel)]="location.zip" name="zip" #zip="ngModel">
-    </div>  
-    <div class="col-md">
-      <label for="city">City</label>
-      <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-        [(ngModel)]="location.city" name="city" #city="ngModel">
-    </div>  
+    <div class="modal-body">
+      <div class="col-md" [hidden]="!showLocationId">
+        <label for="street">Location Id:</label>
+        <input type="text" class="form-control" id="locationId" [readonly]="true" [(ngModel)]="location.locationId"
+          name="locationId" #locationId="ngModel">
+      </div>
       <div class="col-md">
-        <label for="riskState">Policy State</label>
-        <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
-            [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy" name="riskState"
-            [required]="canEditPolicy" [(ngModel)]="location.state" #riskState="ngModel">
-        </ng-select>
+        <label for="street">Address Street 1</label>
+        <input type="text" class="form-control" id="street" [readonly]="!canEditPolicy" [required]="canEditPolicy"
+          [(ngModel)]="location.street" name="street" #street="ngModel">
+      </div>
+      <div class="col-md">
+        <label for="street2">Addres Street 2</label>
+        <input type="text" class="form-control" id="street2" [readonly]="!canEditPolicy" [(ngModel)]="location.street2"
+          name="street2" #street2="ngModel">
+      </div>
+      <div class="col-md">
+        <label for="zipCode">Zip Code</label>
+        <input type="text" class="form-control" id="zipCode" [readonly]="!canEditPolicy" [required]="canEditPolicy"
+          mask="00000||00000-0000" [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
+          (ngModelChange)="changeZipCode()">
+      </div>
+      <div class="col-md">
+        <label for="city">City</label>
+        <div *ngIf="isLoadingAddress">
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+          </div>
+        </div>
+        <div *ngIf="!isLoadingAddress">
+          <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
+            [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
+        </div>
+      </div>
+      <div class="col-md">
+        <label for="locationState">State</label>
+        <div *ngIf="isLoadingAddress">
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+          </div>
+        </div>
+        <div *ngIf="!isLoadingAddress">
+          <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
+            [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy || isLoadingAddress"
+            name="locationState" [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md">
+        <label for="locationCounty">County</label>
+        <div *ngIf="isLoadingAddress">
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+          </div>
+        </div>
+        <div *ngIf="!isLoadingAddress">
+          <div *ngIf="counties.length <= 1">
+            <input type="text" class="form-control" id="locationCounty" [readonly]="!canEditPolicy || isLoadingAddress"
+              [(ngModel)]="location.county" name="locationCounty" #locationCounty="ngModel">
+          </div>
+          <div *ngIf="counties.length > 1">
+            <ng-select id="locationCounty" [items]="counties" [clearable]="false"
+              [readonly]="!canEditPolicy || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
+              #locationCounty="ngModel">
+            </ng-select>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="col-md">
-      <label for="county">County</label>
-      <input type="text" class="form-control" id="county" [readonly]="!canEditPolicy"
-        [(ngModel)]="location.county" name="county" #county="ngModel">
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy"
+        [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
+      <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
+      <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy" [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
-    <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
-    <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
-  </div>
-</ng-template>
+  </ng-template>

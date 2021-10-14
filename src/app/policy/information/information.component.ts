@@ -49,7 +49,7 @@ export class InformationComponent implements OnInit, PolicySave {
     this.accountInfoComp.save();
     this.policyInfoComp.save();
   }
-  
+
   showInvalidControls(): void {
     let invalid = [];
     let policyControls = this.policyInfoComp.policyInfoForm.controls;
@@ -69,13 +69,17 @@ export class InformationComponent implements OnInit, PolicySave {
       }
     }
 
+    this.invalidMessage = "";
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
-      this.invalidMessage = "Following fields are invalid";
-      for (let test of invalid) {
-        this.invalidMessage += "<br><li>" + test;
+      for (let error of invalid) {
+        this.invalidMessage += "<br><li>" + error;
       }
+    }
+
+    if (this.showInvalid) {
+      this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
     }
     else {
       this.hideInvalid();

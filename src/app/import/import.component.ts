@@ -7,11 +7,12 @@ import { ImportRequest } from './interfaces/import-request';
 import { ImportResult } from './interfaces/import-response';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Router } from "@angular/router";
+import { Router, RouteReuseStrategy } from "@angular/router";
 import { DecimalPipe } from '@angular/common';
 import { switchMap, tap } from 'rxjs/operators';
 import { State } from './interfaces/state';
 import { SearchResult } from './interfaces/serarch-result';
+import { CustomReuseStrategy } from '../app-reuse-strategy';
 
 
 function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
@@ -54,7 +55,7 @@ export class ImportComponent implements OnInit {
   // Defaul pagination settings
   private _state: State = {
     page: 1,
-    pageSize: 10,
+    pageSize: 15,
     searchTerm: ''
   };
 
@@ -85,7 +86,7 @@ export class ImportComponent implements OnInit {
     return of({policies, total});
   }
 
-  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe) { 
+  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe,private routeReuseStrategy: RouteReuseStrategy) { 
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       switchMap(() => this._search()),
@@ -139,7 +140,9 @@ export class ImportComponent implements OnInit {
   routeImport() {
     this.showBusy = false;
     if (this.importPolicyResponse?.isPolicyImported) {
-      console.log(this.importPolicyResponse.policyId);
+      
+      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
+      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString()]) + '/0';
     }
     else if (this.importPolicyResponse!= null) {
