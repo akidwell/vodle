@@ -77,12 +77,14 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.county = "";
       this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
         next: address => {
-          this.location.city = address.city;
-          this.location.state = address.state;
-          this.location.county = address.county[0];
-          this.counties = [];
-          for (let county of address.county) {
-            this.counties = this.counties.concat(county);
+          if (address != null) {
+            this.location.city = address?.city;
+            this.location.state = address?.state;
+            this.location.county = address?.county[0];
+            this.counties = [];
+            for (let county of address.county) {
+              this.counties = this.counties.concat(county);
+            }    
           }
           this.isLoadingAddress = false;
         }
