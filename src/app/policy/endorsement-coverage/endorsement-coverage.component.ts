@@ -204,7 +204,7 @@ export class EndorsementCoverageComponent implements OnInit {
     return this.coverage.includeExclude != 'E' && this.subCodeDefaults.defaultLimitPatternBasis != '0';
   }
 
-  // collapseExpand(event: boolean) {
+   collapseExpand(event: boolean) {
   //   if (this.firstExpand) {
   //     this.actionCodes$ = this.dropdowns.getActionCodes();
   //     this.premTypes$ = this.dropdowns.getPremTypes();
@@ -213,8 +213,8 @@ export class EndorsementCoverageComponent implements OnInit {
   //     this.exposureCodes$ = this.dropdowns.getExposureCodes();
   //     this.firstExpand = false;
   //   }
-  //   this.ecCollapsed = event;
-  // }
+     this.ecCollapsed = event;
+  }
 
   deleteCoverage() {
     console.log(this.coverage)
