@@ -54,7 +54,14 @@ export class EndorsementCoverageComponent implements OnInit {
       this.policyInfo = data['policyInfoData'].policyInfo;
     });
 
-    this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.coverageId);
+    if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
+      this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId);
+    }
+    this.actionCodes$ = this.dropdowns.getActionCodes();
+    this.premTypes$ = this.dropdowns.getPremTypes();
+    this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
+    this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId, this.coverage.coverageCode);
+    this.exposureCodes$ = this.dropdowns.getExposureCodes();
     this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
     this.anchorId = 'focusHere' + this.coverage.locationId;
     if ((this.coverage.coverageId ?? 0) > 0) {
@@ -197,17 +204,18 @@ export class EndorsementCoverageComponent implements OnInit {
     return this.coverage.includeExclude != 'E' && this.subCodeDefaults.defaultLimitPatternBasis != '0';
   }
 
-  collapseExpand(event: boolean) {
-    if (this.firstExpand) {
-      this.actionCodes$ = this.dropdowns.getActionCodes();
-      this.premTypes$ = this.dropdowns.getPremTypes();
-      this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
-      this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId, this.coverage.coverageCode);
-      this.exposureCodes$ = this.dropdowns.getExposureCodes();
-      this.firstExpand = false;
-    }
-    this.ecCollapsed = event;
-  }
+  // collapseExpand(event: boolean) {
+  //   if (this.firstExpand) {
+  //     this.actionCodes$ = this.dropdowns.getActionCodes();
+  //     this.premTypes$ = this.dropdowns.getPremTypes();
+  //     this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
+  //     this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId, this.coverage.coverageCode);
+  //     this.exposureCodes$ = this.dropdowns.getExposureCodes();
+  //     this.firstExpand = false;
+  //   }
+  //   this.ecCollapsed = event;
+  // }
+
   deleteCoverage() {
     console.log(this.coverage)
   }
