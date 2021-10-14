@@ -10,6 +10,7 @@ import { AccountInformation, PolicyInformation } from '../policy';
 export class PolicyHeaderComponent implements OnInit {
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
+  endorsementNumber: number = 0;
 
   constructor(private route: ActivatedRoute) { }
 
@@ -17,6 +18,7 @@ export class PolicyHeaderComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
+      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
   }
 

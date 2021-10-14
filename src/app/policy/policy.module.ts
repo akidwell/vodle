@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { PolicyRoutingModule } from './policy-routing.module';
 import { PolicyComponent } from './policy.component';
-
 import { PolicyHeaderComponent } from './header/policy-header.component';
 import { EndorsementLocationGroupComponent } from './endorsement-location-group/endorsement-location-group.component';
 import { AccountInformationComponent } from './information/account-information/account-information.component';
@@ -21,6 +19,10 @@ import { EndorsementHeaderComponent } from './coverages/endorsement-header/endor
 import { NgxMaskModule } from 'ngx-mask';
 import { NotificationComponent } from '../notification/notification-container.component';
 import { EndorsementCoverageLocationComponent } from './endorsement-coverage-location/endorsement-coverage-location.component';
+import { SchedulesComponent } from './schedules/schedules.component';
+import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
+import { SummaryComponent } from './summary/summary.component';
+import { CanDeactivateGuard } from './can-deactivate-guard';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,10 @@ import { EndorsementCoverageLocationComponent } from './endorsement-coverage-loc
     HoverClassDirective,
     EndorsementHeaderComponent,
     NotificationComponent,
-    EndorsementCoverageLocationComponent
+    EndorsementCoverageLocationComponent,
+    SchedulesComponent,
+    ReinsuranceComponent,
+    SummaryComponent
   ],
   imports: [
     CommonModule,
@@ -46,6 +51,10 @@ import { EndorsementCoverageLocationComponent } from './endorsement-coverage-loc
     NgbModule,
     NgSelectModule,
     NgxMaskModule.forRoot()
+  ],
+  providers: [
+    CanDeactivateGuard,
+    DatePipe
   ]
 })
 export class PolicyModule { }

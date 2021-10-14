@@ -18,9 +18,17 @@ export class EndorsementLocationGroupComponent implements OnInit {
   faMinus = faMinus;
   authSub: Subscription;
   canEditPolicy: boolean = false;
-  @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
   formStatus!: string;
   anchorId!: string;
+
+  @Input()  public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
+  @Input()  public currentSequence!: number;
+  @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
+  @Output() status: EventEmitter<any> = new EventEmitter();
+  @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
+  @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
+  @ViewChildren(EndorsementCoverageComponent) components:QueryList<EndorsementCoverageComponent> | undefined;
+  @ViewChildren("coverageDiv") private coverageDivs!: QueryList<EndorsementCoverageComponent>;
 
   constructor(private userAuth: UserAuth) {
     // GAM - TEMP -Subscribe
@@ -35,7 +43,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
  }
 
   copyExistingCoverage(existingCoverage: EndorsementCoverage){
-    const newCoverage: EndorsementCoverage = existingCoverage;
+    const newCoverage: EndorsementCoverage = JSON.parse(JSON.stringify(existingCoverage));
     newCoverage.sequence = this.currentSequence;
     newCoverage.ecCollapsed = true;
     this.incrementSequence.emit(this.currentSequence + 1);
@@ -59,22 +67,22 @@ export class EndorsementLocationGroupComponent implements OnInit {
 
   }
 
-  @Input()
-  public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
-  @Input()
-  public currentSequence!: number;
-  @Input()
-  @Output() status: EventEmitter<any> = new EventEmitter();
-  @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
+  async openLocation(location: EndorsementCoverageLocation) {
+    if (this.locationComponent != null) {
+      return await this.locationComponent.open(location);
+    }
+    return false;
+  }
 
-  @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent   | undefined
-  @ViewChildren("coverageDiv") private coverageDivs!: QueryList<EndorsementCoverageComponent>;
-
-  // Modal is used to show import errors
-  async triggerModal() {
-    const location: EndorsementCoverageLocation = { policyId: 1, taxCode: "test", street: "test", locationId: 1, street2: "test", city: "test", state: "OH", zip: "45202", county: "" };
-
-    return await this.locationComponent?.open(location);
+  isValid(): boolean {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.endorsementCoveragesForm.status != 'VALID') {
+          return false;
+        }
+      }
+    }
+    return true;
   }
   createNewCoverage(): EndorsementCoverage {
     return {
@@ -106,10 +114,20 @@ export class EndorsementLocationGroupComponent implements OnInit {
       rateAmount: 0,
       rateBasis: 0,
       retroDate: null,
-      sir: 0,
       subCode: 0
     }
 
   }
-}
 
+  isDirty() {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.endorsementCoveragesForm.dirty) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+}

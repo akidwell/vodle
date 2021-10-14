@@ -5,9 +5,20 @@
 input[type="text"] {
   display: inline-block;
 }
+
+#rate,
+#premium,
+#deductible,
+#exposureBase,
+#rateBasis{
+  text-align: right; 
+}
 input[type="date"] {
   display: inline-block;
 }
+/* #retroDate{
+  color: transparent;
+} */
 input[type="checkbox"] {
   display: inline-block;
   width: 20px;
@@ -33,6 +44,7 @@ input[type="checkbox"] {
   border: solid #00274e;
   border-width: 2px;
   border-radius: 16px;
+  background-color: rgb(243, 240, 240);
 }
 .btn{
   display: inline-block;
@@ -96,4 +108,3 @@ input[type="checkbox"][readonly] {
 .ng-invalid:not(form)  {
   border-left: 5px solid #a94442; /* red */
 }
-

@@ -10,6 +10,7 @@ import { tap } from 'rxjs/operators';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from '../../policy.service';
+import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -19,8 +20,8 @@ import { PolicyService } from '../../policy.service';
 export class PolicyInformationComponent implements OnInit {
   isReadOnly: boolean = true;
   policyCollapsed = false;
-  faPlus = faAngleDown;
-  faMinus = faAngleUp;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   quoteData!: QuoteData;
@@ -39,8 +40,11 @@ export class PolicyInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
-  @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
   policySub!: Subscription;
+  dereg!: boolean;
+  assumed!: boolean;
+
+  @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
     // GAM - TEMP -Subscribe
@@ -69,27 +73,33 @@ export class PolicyInformationComponent implements OnInit {
     this.riskTypes$ = this.dropdowns.getRiskTypes();
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
-    this.savePolicyInfo = this.savePolicyInfo;
-  }
-
-  ngAfterViewInit() : void {
-    this.policyInfoForm?.statusChanges?.subscribe(() => {
-      console.log("Is form dirty yet: " + this.form?.dirty);
-    });
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
 
-  savePolicyInfo(): any {
-    if (this.policyInfoForm.status != "VALID") {
-      this.notification.show('Policy not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-      return;
-    }
+  save(): boolean {
+    if (this.canEditPolicy && this.policyInfoForm.dirty) {
+      if (this.policyInfoForm.status != "VALID") {
+        this.notification.show('Policy Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        return false;
+      }
 
-    this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
-        this.notification.show('Policy successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-    });
+      this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
+        this.policyInfoForm.form.markAsPristine();
+        this.policyInfoForm.form.markAsUntouched();
+        this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        return result;
+      });
+    }
+    return false;
+  }
+
+  checkDereg(): boolean{
+    return this.dereg = this.policyInfo.deregulationIndicator == 'F'? true : false;
+  }
+  checkAssumed(): boolean{
+   return this.assumed = this.policyInfo.riskType == 'A'? true : false;
   }
 }
