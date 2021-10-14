@@ -86,7 +86,7 @@
             <div class="col-lg-2">
               <label for="riskZipCode">Policy Zip Code</label>
               <input type="text" class="form-control" id="riskZipCode" [required]="canEditPolicy" minlength="5"
-                [readonly]="!canEditPolicy" [ngModel]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
+                [readonly]="!canEditPolicy" [(ngModel)]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
                 #riskZipCode="ngModel" name="riskZipCode">
             </div>
             <div class="col-lg-1">
