@@ -154,7 +154,8 @@
       <div class="row container">
         <div class="col-lg-2">
           <span class="btn btn-secondary" (click)=copyCoverage() hover-class="btn-primary">Copy</span>
-          <span class="btn btn-secondary" (click)=deleteCoverage() hover-class="btn-danger">Delete</span>
+          <span class="btn btn-secondary" (click)=deleteCoverage() hover-class="btn-danger" *ngIf="!coverage.isNew && originalAction == 'A'">Delete</span>
+          <span class="btn btn-secondary" (click)=deleteCoverage() hover-class="btn-warning" *ngIf="coverage.isNew && originalAction == 'A'" >Remove</span>
         </div>
         <span class='astext'>
           <fa-icon [icon]="faArrowUp" (click)="collapseExpand(true)"></fa-icon>

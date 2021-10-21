@@ -23,6 +23,7 @@ import { SchedulesComponent } from './schedules/schedules.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SummaryComponent } from './summary/summary.component';
 import { CanDeactivateGuard } from './can-deactivate-guard';
+import { NotifyOnSave } from './services/notify-on-save.service';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
   ],
   providers: [
     CanDeactivateGuard,
-    DatePipe
+    DatePipe,
+    NotifyOnSave
   ]
 })
 export class PolicyModule { }

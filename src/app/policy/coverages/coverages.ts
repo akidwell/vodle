@@ -28,6 +28,7 @@ export interface EndorsementCoverage {
   exposureBase?: number | null;
   ecCollapsed: boolean;
   occurrenceOrClaimsMade: boolean | null;
+  isNew?: boolean;
 }
 
 

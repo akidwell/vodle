@@ -9,6 +9,7 @@ import { PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { defaultEndorsementCoverage, EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
+import { NotifyOnSave } from '../services/notify-on-save.service';
 
 @Component({
   selector: 'rsps-coverages',
@@ -27,8 +28,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
   coveragesSub!: Subscription;
   notification: any;
   endorsementNumber!: number;
-  
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService) {
+
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notifyOnSave: NotifyOnSave) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -60,6 +61,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   saveEndorsementCoverages(): any {
     console.log(this.endorsementCoveragesGroups)
     this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
+        this.notifyOnSave.notifyChild();
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
     });
   }
@@ -86,7 +88,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
         let coverage: EndorsementCoverage = ({} as EndorsementCoverage) as EndorsementCoverage;
         let group: EndorsementCoveragesGroup = { coverages: [], location: location }
 
-        coverage = this.createNewCoverage();
+       // coverage = this.createNewCoverage();
         coverage = defaultEndorsementCoverage();
 
         coverage.locationId = location.locationId;
@@ -173,39 +175,39 @@ export class CoveragesComponent implements OnInit, PolicySave {
     this.showInvalid = false;
   }
 
-  createNewCoverage(): EndorsementCoverage {
-    return {
-      sequence: 1,
-      classDescription: '',
-      coverageCode: '',
-      coverageId: null,
-      coverageType: '',
-      action: 'A',
-      claimsMadeOrOccurrence: 'O',
-      deductible: 0,
-      deductibleType: '',
-      ecCollapsed: true,
-      endorsementNumber: this.endorsementNumber,
-      exposureBase: 0,
-      exposureCode: '',
-      glClassCode: null,
-      includeExclude: '',
-      limit: 0,
-      limitsPattern: '',
-      limitsPatternGroupCode: 998,
-      locationId: 0,
-      occurrenceOrClaimsMade: true,
-      policyId: this.policyInfo.policyId,
-      policySymbol: '',
-      premium: 0,
-      premiumType: '',
-      programId:  this.policyInfo.programId,
-      rateAmount: 0,
-      rateBasis: 0,
-      retroDate: null,
-      subCode: 0
-    }
+  // createNewCoverage(): EndorsementCoverage {
+  //   return {
+  //     sequence: 1,
+  //     classDescription: '',
+  //     coverageCode: '',
+  //     coverageId: null,
+  //     coverageType: '',
+  //     action: 'A',
+  //     claimsMadeOrOccurrence: 'O',
+  //     deductible: 0,
+  //     deductibleType: '',
+  //     ecCollapsed: true,
+  //     endorsementNumber: this.endorsementNumber,
+  //     exposureBase: 0,
+  //     exposureCode: '',
+  //     glClassCode: null,
+  //     includeExclude: '',
+  //     limit: 0,
+  //     limitsPattern: '',
+  //     limitsPatternGroupCode: 998,
+  //     locationId: 0,
+  //     occurrenceOrClaimsMade: true,
+  //     policyId: this.policyInfo.policyId,
+  //     policySymbol: '',
+  //     premium: 0,
+  //     premiumType: '',
+  //     programId:  this.policyInfo.programId,
+  //     rateAmount: 0,
+  //     rateBasis: 0,
+  //     retroDate: null,
+  //     subCode: 0
+  //   }
 
-  }
+  //}
 
 }
