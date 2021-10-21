@@ -11,7 +11,7 @@ input[type="text"] {
 #deductible,
 #exposureBase,
 #rateBasis{
-  text-align: right; 
+  text-align: right;
 }
 input[type="date"] {
   display: inline-block;
@@ -80,6 +80,11 @@ input[type="checkbox"] {
   color: #fff;
   background-color: #dc3545;
   border-color: #dc3545;
+}
+.btn-warning {
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
 }
 .row{
   max-width: 100%;

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages/coverages';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages/coverages';
 import { AccountInformation, Endorsement, Policy, PolicyInformation } from './policy';
 
 @Injectable({
@@ -66,5 +66,9 @@ export class PolicyService {
 
   updateAccountInfo(accountInfo: AccountInformation):Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/AccountInfo', accountInfo);
+  }
+  deleteEndorsementCoverage(coverage: EndorsementCoverage): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
+    + '/endorsements/' + coverage.endorsementNumber.toString() + '/coverages/' + coverage.sequence.toString() )
   }
 }

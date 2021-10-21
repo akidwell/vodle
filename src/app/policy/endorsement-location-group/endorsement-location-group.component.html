@@ -45,7 +45,10 @@
         </div>
       </div>
     </div>
-    <rsps-endorsement-coverage #coverageDiv *ngFor="let coverage of endorsementCoveragesGroup.coverages" (copyExistingCoverage)=copyExistingCoverage($event) [coverage]="coverage"></rsps-endorsement-coverage>
+    <rsps-endorsement-coverage #coverageDiv *ngFor="let coverage of endorsementCoveragesGroup.coverages"
+    (deleteThisCoverage)=deleteCoverage($event)
+    (copyExistingCoverage)=copyExistingCoverage($event)
+    [coverage]="coverage"></rsps-endorsement-coverage>
     <div [id]='anchorId'></div>
   </div>
 </div>

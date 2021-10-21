@@ -9,6 +9,7 @@ import { PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
+import { NotifyOnSave } from '../services/notify-on-save.service';
 
 @Component({
   selector: 'rsps-coverages',
@@ -27,7 +28,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   coveragesSub!: Subscription;
   notification: any;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notifyOnSave: NotifyOnSave) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -58,6 +59,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   saveEndorsementCoverages(): any {
     console.log(this.endorsementCoveragesGroups)
     this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
+        this.notifyOnSave.notifyChild();
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
     });
   }

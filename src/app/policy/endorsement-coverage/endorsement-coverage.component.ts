@@ -10,6 +10,8 @@ import { EndorsementCoverage } from '../coverages/coverages';
 import { SubCodeDefaultsService } from '../coverages/sub-code-defaults/sub-code-defaults.service';
 import { SubCodeDefaults } from '../coverages/sub-code-defaults/subCodeDefaults';
 import { PolicyInformation } from '../policy';
+import { PolicyService } from '../policy.service';
+import { NotifyOnSave } from '../services/notify-on-save.service';
 
 @Component({
   selector: 'rsps-endorsement-coverage',
@@ -31,6 +33,7 @@ export class EndorsementCoverageComponent implements OnInit {
   claimsMadeOrOccurrence$: Observable<Code[]> | undefined;
   subCodeDefaults!: SubCodeDefaults;
   defaultsSub!: Subscription;
+  deleteSub!: Subscription;
   policyInfo!: PolicyInformation;
   showDeductible: boolean = false;
   showIncludeExlude: boolean = false;
@@ -42,7 +45,11 @@ export class EndorsementCoverageComponent implements OnInit {
   isRetroDateValid: boolean = true;
   canEditLimitPattern: boolean = false;
   anchorId!: string;
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService) {
+  originalAction!: string;
+  saveEventSubscription!: Subscription;
+
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private notifyOnSave: NotifyOnSave,
+    private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -53,13 +60,23 @@ export class EndorsementCoverageComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
     });
-
     this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.coverageId);
     this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
     this.anchorId = 'focusHere' + this.coverage.locationId;
     if ((this.coverage.coverageId ?? 0) > 0) {
       this.changeCoverageDescription("open");
     }
+    this.originalAction = this.coverage.action;
+
+    this.saveEventSubscription = this.notifyOnSave.notifyObservable$.subscribe(() => {
+        this.coverage.isNew = false;
+        this.originalAction = this.coverage.action;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.defaultsSub.unsubscribe();
+    this.saveEventSubscription.unsubscribe();
   }
   copyCoverage(): void {
     this.copyExistingCoverage.emit(this.coverage);
@@ -72,9 +89,7 @@ export class EndorsementCoverageComponent implements OnInit {
     }, 250);
   }
 
-  ngOnDestroy(): void {
-    this.defaultsSub.unsubscribe();
-  }
+
 
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
@@ -209,15 +224,23 @@ export class EndorsementCoverageComponent implements OnInit {
     this.ecCollapsed = event;
   }
   deleteCoverage() {
-    console.log(this.coverage)
+    if(this.coverage.isNew) {
+      this.deleteThisCoverage.emit(this.coverage);
+    } else {
+      this.deleteSub = this.policyService.deleteEndorsementCoverage(this.coverage).subscribe(result => {
+        this.deleteThisCoverage.emit(this.coverage);
+        //this.notification.show('Account Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        return result;
+      });
+    }
   }
+
   @Input() public coverage!: EndorsementCoverage;
   @Output() status: EventEmitter<any> = new EventEmitter();
   @Output() copyExistingCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
+  @Output() deleteThisCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
   @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
   @ViewChild('focusHere', { static: false }) homeElement!: ElementRef;
   formStatus!: string;
-
-
 }
 

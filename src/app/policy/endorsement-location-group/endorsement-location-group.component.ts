@@ -21,8 +21,8 @@ export class EndorsementLocationGroupComponent implements OnInit {
   formStatus!: string;
   anchorId!: string;
 
-  @Input()  public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
-  @Input()  public currentSequence!: number;
+  @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
+  @Input() public currentSequence!: number;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
@@ -46,9 +46,16 @@ export class EndorsementLocationGroupComponent implements OnInit {
     const newCoverage: EndorsementCoverage = JSON.parse(JSON.stringify(existingCoverage));
     newCoverage.sequence = this.currentSequence;
     newCoverage.ecCollapsed = true;
+    newCoverage.isNew = true;
     this.incrementSequence.emit(this.currentSequence + 1);
     console.log('new: ', newCoverage, 'existing: ', existingCoverage)
     this.endorsementCoveragesGroup.coverages.push(newCoverage);
+  }
+  deleteCoverage(existingCoverage: EndorsementCoverage){
+    const index = this.endorsementCoveragesGroup.coverages.indexOf(existingCoverage, 0);
+    if (index > -1) {
+      this.endorsementCoveragesGroup.coverages.splice(index, 1);
+    }
   }
   ngOnInit(): void {
     this.anchorId = 'focusHere' + this.endorsementCoveragesGroup.location.locationId;
@@ -62,11 +69,10 @@ export class EndorsementLocationGroupComponent implements OnInit {
           console.log(this.coverageDivs)
         }, 0);
       }
-
     });
-
   }
-
+  ngOnDestroy() {
+  }
   async openLocation(location: EndorsementCoverageLocation) {
     if (this.locationComponent != null) {
       return await this.locationComponent.open(location);
@@ -84,15 +90,16 @@ export class EndorsementLocationGroupComponent implements OnInit {
     }
     return true;
   }
+
   createNewCoverage(): EndorsementCoverage {
-    return {
+    const newCoverage: EndorsementCoverage = {
       sequence: this.currentSequence,
       classDescription: '',
-      coverageCode: '',
+      coverageCode: this.endorsementCoveragesGroup.coverages[0].coverageCode,
       coverageId: 0,
       coverageType: '',
       action: 'A',
-      claimsMadeOrOccurrence: this.endorsementCoveragesGroup.coverages[0].claimsMadeOrOccurrence,
+      claimsMadeOrOccurrence: '',
       deductible: 0,
       deductibleType: '',
       ecCollapsed: true,
@@ -107,16 +114,17 @@ export class EndorsementLocationGroupComponent implements OnInit {
       locationId: this.endorsementCoveragesGroup.location.locationId,
       occurrenceOrClaimsMade: true,
       policyId: this.endorsementCoveragesGroup.location.policyId,
-      policySymbol: '',
+      policySymbol: this.endorsementCoveragesGroup.coverages[0].policySymbol,
       premium: 0,
       premiumType: '',
       programId:  this.endorsementCoveragesGroup.coverages[0].programId,
       rateAmount: 0,
       rateBasis: 0,
       retroDate: null,
-      subCode: 0
+      subCode: 0,
+      isNew: true
     }
-
+    return newCoverage;
   }
 
   isDirty() {
