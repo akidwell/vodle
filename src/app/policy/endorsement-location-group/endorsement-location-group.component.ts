@@ -67,7 +67,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
 
   }
 
-  async openLocation(location: EndorsementCoverageLocation) {
+  async openLocation(location: EndorsementCoveragesGroup) {
     if (this.locationComponent != null) {
       return await this.locationComponent.open(location);
     }
@@ -130,4 +130,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
     return false;
   }
 
+  calcTotal(): number {
+    let total: number = 0;
+    this.endorsementCoveragesGroup.coverages.forEach( group => { total += (group.premium.toString() == "" ? 0 : group.premium ?? 0)});
+    return total;
+  }
 }

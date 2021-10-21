@@ -7,7 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { AddressLookupService } from '../address-lookup/address-lookup.service';
-import { EndorsementCoverageLocation } from '../coverages/coverages';
+import { EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
 import { PolicyService } from '../policy.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   isReadOnly: boolean = false;
   authSub: Subscription;
   canEditPolicy: boolean = false;
+  canDeleteLocation: boolean = false;
   states$: Observable<Code[]> | undefined;
   showLocationId: boolean = false;
   locationSub!: Subscription;
@@ -58,12 +59,31 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
   private modalRef!: NgbModalRef
 
-  open(locationInfo: EndorsementCoverageLocation): Promise<boolean> {  
+  open(locationInfo: EndorsementCoveragesGroup): Promise<boolean> {  
     return new Promise<boolean>(resolve => {
       this.locationForm.form.markAsPristine();
-      this.originallocation = Object.assign({}, locationInfo);
-      this.location = locationInfo;
+      this.originallocation = Object.assign({}, locationInfo.location);
+      this.location = locationInfo.location;
       this.showLocationId = (this.location.locationId ?? 0) > 0;
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
+      this.modalRef.result.then(resolve, resolve)
+      
+      this.canDeleteLocation = true;
+      for(let x of locationInfo.coverages) {
+        if ( x.action != "A") {
+          this.canDeleteLocation = false;
+          break;
+        }       
+      }
+    })
+  }
+
+  new(locationInfo: EndorsementCoverageLocation): Promise<boolean> {  
+    return new Promise<boolean>(resolve => {
+      this.locationForm.form.markAsPristine();
+      //this.originallocation = Object.assign({}, locationInfo);
+      this.location = locationInfo;
+     // this.showLocationId = (this.location.locationId ?? 0) > 0;
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
       this.modalRef.result.then(resolve, resolve)
     })
@@ -93,8 +113,12 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   }
 
   async save(): Promise<void> {
-    this.locationSub = this.policyService.addEndorsementCoverageLocation(this.location).subscribe(result => this.location.locationId = result);
-    this.modalRef.close(true);
+    this.locationSub = this.policyService.addEndorsementCoverageLocation(this.location)
+    .subscribe(result => { 
+      this.location.locationId = result; 
+      this.modalRef.close(true); 
+    });
+
   }
 
   async cancel(): Promise<void> {
@@ -110,6 +134,11 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.county = this.originallocation.county;
     }
     this.modalRef.close(false);
+  }
+
+  async delete(): Promise<void> {
+   // this.locationSub = this.policyService.delete(this.location).subscribe(result => this.location.locationId = result);
+    this.modalRef.close(true);
   }
 
 }

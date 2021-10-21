@@ -55,7 +55,7 @@ export class EndorsementCoverageComponent implements OnInit {
     });
 
     if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
-      this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId);
+      this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode);
     }
     this.actionCodes$ = this.dropdowns.getActionCodes();
     this.premTypes$ = this.dropdowns.getPremTypes();
@@ -130,7 +130,9 @@ export class EndorsementCoverageComponent implements OnInit {
     if (this.coverage.programId != 84 && this.coverage.programId != 85) {
       this.coverage.coverageId = null;
     }
-    this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.glClassCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.coverageId);
+    if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
+      this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode, this.coverage.coverageId);
+    }
   }
 
   changeClaimsMadeOccurrence() {

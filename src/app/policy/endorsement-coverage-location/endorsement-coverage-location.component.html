@@ -73,6 +73,7 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy"
         [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
+       <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy || !canDeleteLocation" (click)="delete()">Delete</button>
       <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
       <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
     </div>
