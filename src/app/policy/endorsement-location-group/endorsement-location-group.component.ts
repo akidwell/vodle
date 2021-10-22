@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
-import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
+import { newEndorsementCoverage, EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
+import { EndorsementCoverageLocationComponent, LocationResult } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementCoverageComponent } from '../endorsement-coverage/endorsement-coverage.component';
+import { PolicyInformation } from '../policy';
 
 @Component({
   selector: 'rsps-endorsement-location-group',
@@ -20,7 +22,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
   canEditPolicy: boolean = false;
   formStatus!: string;
   anchorId!: string;
-
+  policyInfo!: PolicyInformation;
+  endorsementNumber!: number;
+  
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
@@ -29,8 +33,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
   @ViewChildren(EndorsementCoverageComponent) components:QueryList<EndorsementCoverageComponent> | undefined;
   @ViewChildren("coverageDiv") private coverageDivs!: QueryList<EndorsementCoverageComponent>;
+  @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth) {
+  constructor(private userAuth: UserAuth,private route: ActivatedRoute) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -59,6 +64,12 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
   ngOnInit(): void {
     this.anchorId = 'focusHere' + this.endorsementCoveragesGroup.location.locationId;
+
+    this.route.parent?.data.subscribe(data => {
+      this.policyInfo = data['policyInfoData'].policyInfo;
+      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
+    });
+
   }
   ngAfterViewInit() {
     this.coverageDivs.changes.subscribe(() => {
@@ -71,11 +82,17 @@ export class EndorsementLocationGroupComponent implements OnInit {
       }
     });
   }
+
   ngOnDestroy() {
+    this.authSub.unsubscribe();
   }
-  async openLocation(location: EndorsementCoverageLocation) {
+
+  async openLocation(location: EndorsementCoveragesGroup) {
     if (this.locationComponent != null) {
-      return await this.locationComponent.open(location);
+      var result = await this.locationComponent.open(location,this);
+      if (result == LocationResult.delete) {
+        this.deleteThisGroup.emit(this.endorsementCoveragesGroup);
+      }
     }
     return false;
   }
@@ -92,38 +109,15 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
 
   createNewCoverage(): EndorsementCoverage {
-    const newCoverage: EndorsementCoverage = {
-      sequence: this.currentSequence,
-      classDescription: '',
-      coverageCode: this.endorsementCoveragesGroup.coverages[0].coverageCode,
-      coverageId: 0,
-      coverageType: '',
-      action: 'A',
-      claimsMadeOrOccurrence: '',
-      deductible: 0,
-      deductibleType: '',
-      ecCollapsed: true,
-      endorsementNumber: this.endorsementCoveragesGroup.coverages[0].endorsementNumber,
-      exposureBase: 0,
-      exposureCode: '',
-      glClassCode: 0,
-      includeExclude: '',
-      limit: 0,
-      limitsPattern: '',
-      limitsPatternGroupCode: 998,
-      locationId: this.endorsementCoveragesGroup.location.locationId,
-      occurrenceOrClaimsMade: true,
-      policyId: this.endorsementCoveragesGroup.location.policyId,
-      policySymbol: this.endorsementCoveragesGroup.coverages[0].policySymbol,
-      premium: 0,
-      premiumType: '',
-      programId:  this.endorsementCoveragesGroup.coverages[0].programId,
-      rateAmount: 0,
-      rateBasis: 0,
-      retroDate: null,
-      subCode: 0,
-      isNew: true
-    }
+    let newCoverage = newEndorsementCoverage();
+    newCoverage.sequence = this.currentSequence;
+    newCoverage.locationId = this.endorsementCoveragesGroup.location.locationId;
+    newCoverage.endorsementNumber = this.endorsementNumber;
+    newCoverage.programId = this.policyInfo.programId;
+    newCoverage.coverageCode = this.policyInfo.quoteData.coverageCode;
+    newCoverage.policySymbol = this.policyInfo.policySymbol;
+    newCoverage.policyId = this.endorsementCoveragesGroup.location.policyId;
+
     return newCoverage;
   }
 
@@ -138,4 +132,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
     return false;
   }
 
+  calcTotal(): number {
+    let total: number = 0;
+    this.endorsementCoveragesGroup.coverages.forEach( group => { total += (group.premium.toString() == "" ? 0 : group.premium ?? 0)});
+    return total;
+  }
 }

@@ -1,13 +1,13 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { faGlasses, faGlassWhiskey } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { AddressLookupService } from '../address-lookup/address-lookup.service';
-import { EndorsementCoverageLocation } from '../coverages/coverages';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
+import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
 import { PolicyService } from '../policy.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   isReadOnly: boolean = false;
   authSub: Subscription;
   canEditPolicy: boolean = false;
+  canDeleteLocation: boolean = false;
   states$: Observable<Code[]> | undefined;
   showLocationId: boolean = false;
   locationSub!: Subscription;
@@ -29,6 +30,9 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   addressSub!: Subscription;
   isLoadingAddress: boolean = false;
   counties: string[] = [];
+  coverage!: EndorsementCoveragesGroup;
+  parent!: EndorsementLocationGroupComponent;
+
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
 
   constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService) {
@@ -45,25 +49,43 @@ export class EndorsementCoverageLocationComponent implements OnInit {
     this.authSub.unsubscribe();
     this.locationSub?.unsubscribe();
     this.dirtySub?.unsubscribe();
-    this.addressSub.unsubscribe();
+    this.addressSub?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     this.dirtySub = this.locationForm.statusChanges?.subscribe(() => {
       this.isDirty = this.locationForm.dirty ?? false;
-      console.log("Is form dirty yet: " + this.locationForm?.dirty);
     });
   }
 
   @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
   private modalRef!: NgbModalRef
 
-  open(locationInfo: EndorsementCoverageLocation): Promise<boolean> {  
-    return new Promise<boolean>(resolve => {
+  open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementLocationGroupComponent): Promise<LocationResult> {
+    return new Promise<LocationResult>(resolve => {
+      this.coverage = locationInfo;
+      this.parent = parent;
       this.locationForm.form.markAsPristine();
-      this.originallocation = Object.assign({}, locationInfo);
-      this.location = locationInfo;
+      this.originallocation = Object.assign({}, locationInfo.location);
+      this.location = locationInfo.location;
       this.showLocationId = (this.location.locationId ?? 0) > 0;
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
+      this.modalRef.result.then(resolve, resolve)
+      this.canDeleteLocation = true;
+      for (let x of locationInfo.coverages) {
+        if (x.action != "A") {
+          this.canDeleteLocation = false;
+          break;
+        }
+      }
+    })
+  }
+
+  new(locationInfo: EndorsementCoverageLocation): Promise<LocationResult> {
+    return new Promise<LocationResult>(resolve => {
+      this.locationForm.form.markAsPristine();
+      this.location = locationInfo;
+      this.location.isNew = true;
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
       this.modalRef.result.then(resolve, resolve)
     })
@@ -84,7 +106,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
             this.counties = [];
             for (let county of address.county) {
               this.counties = this.counties.concat(county);
-            }    
+            }
           }
           this.isLoadingAddress = false;
         }
@@ -93,15 +115,24 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   }
 
   async save(): Promise<void> {
-    this.locationSub = this.policyService.addEndorsementCoverageLocation(this.location).subscribe(result => this.location.locationId = result);
-    this.modalRef.close(true);
+    if (this.location.isNew) {
+      this.locationSub = this.policyService.addEndorsementCoverageLocation(this.location)
+        .subscribe(result => {
+          this.location.locationId = result;
+          this.modalRef.close(LocationResult.new);
+        });
+    }
+    else {
+      this.locationSub = this.policyService.updateEndorsementCoverageLocation(this.location)
+        .subscribe(() => {
+          this.modalRef.close(LocationResult.update);
+        });
+    }
   }
 
   async cancel(): Promise<void> {
     // Rollback changes if editing existing location
     if (this.location.locationId > 0) {
-      // this.location = this.copylocation;
-      // this.location = Object.assign({}, this.copylocation);
       this.location.street = this.originallocation.street;
       this.location.street2 = this.originallocation.street2;
       this.location.city = this.originallocation.city;
@@ -112,4 +143,39 @@ export class EndorsementCoverageLocationComponent implements OnInit {
     this.modalRef.close(false);
   }
 
+  @Output() deleteThisCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
+
+  async delete(): Promise<void> {
+    if (this.parent.components != null) {
+      for (let coverageComponent of this.parent.components) {
+        await coverageComponent.deleteCoverage();
+      }
+    }
+    this.locationSub = this.policyService.deleteEndorsementCoverageLocation(this.location)
+      .subscribe(result => {
+        if (result) {
+          this.modalRef.close(LocationResult.delete);
+        }
+        else {
+          window.alert("Could not delete location!");
+        }
+      });
+  }
+
+  @ViewChild('modalConfirmation') modalConfirmation: any;
+
+  openDeleteConfirmation() {
+    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+      if (result == 'Yes') {
+        this.delete();
+      }
+    });
+  }
+}
+
+export enum LocationResult {
+  new,
+  update,
+  cancel,
+  delete,
 }

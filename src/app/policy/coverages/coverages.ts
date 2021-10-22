@@ -21,13 +21,12 @@ export interface EndorsementCoverage {
   coverageType: string;
   coverageCode: string;
   sequence: number;
-  glClassCode: number;
+  glClassCode?: number | null;
   classDescription: string;
   exposureCode: string;
-  rateBasis: number;
-  exposureBase: number;
+  rateBasis?: number | null;
+  exposureBase?: number | null;
   ecCollapsed: boolean;
-  occurrenceOrClaimsMade: boolean | null;
   isNew?: boolean;
 }
 
@@ -42,6 +41,7 @@ export interface EndorsementCoverageLocation {
   state: string;
   county: string;
   zip: string;
+  isNew: boolean;
 }
 
 export interface EndorsementCoveragesGroup {
@@ -53,3 +53,39 @@ export interface EndorsementCoveragesResolved {
   endorsementCoveragesGroups: EndorsementCoveragesGroup[] | null;
   error?: any;
   }
+
+
+  export const newEndorsementCoverage = (): EndorsementCoverage => ({
+    sequence: 0,
+    classDescription: '',
+    coverageCode: '',
+    coverageId: null,
+    coverageType: '',
+    action: 'A',
+    claimsMadeOrOccurrence: 'O',
+    deductible: 0,
+    deductibleType: '',
+    ecCollapsed: true,
+    endorsementNumber: 0,
+    exposureBase: null,
+    exposureCode: '',
+    glClassCode: null,
+    includeExclude: '',
+    limit: 0,
+    limitsPattern: '',
+    limitsPatternGroupCode: 0,
+    locationId: 0,
+    policyId: 0,
+    policySymbol: '',
+    premium: 0,
+    premiumType: '',
+    programId:  0,
+    rateAmount: 0,
+    rateBasis: null,
+    retroDate: null,
+    subCode: 0,
+    isNew: true
+});
+
+ 
+

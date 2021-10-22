@@ -60,6 +60,15 @@ export class PolicyService {
     return this.http.post<number>(this.config.apiBaseUrl + 'api/policies/endorsement-coverage-locations/', location)
   }
 
+  updateEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<number> {
+    return this.http.put<number>(this.config.apiBaseUrl + 'api/policies/endorsement-coverage-locations/', location)
+  }
+  
+  deleteEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + location.policyId.toString()
+    + '/endorsement-coverage-locations/' + location.locationId.toString() )
+  }
+
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', policyInfo);
   }
@@ -71,4 +80,5 @@ export class PolicyService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
     + '/endorsements/' + coverage.endorsementNumber.toString() + '/coverages/' + coverage.sequence.toString() )
   }
+
 }
