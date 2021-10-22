@@ -27,7 +27,6 @@ export interface EndorsementCoverage {
   rateBasis?: number | null;
   exposureBase?: number | null;
   ecCollapsed: boolean;
-  occurrenceOrClaimsMade: boolean | null;
   isNew?: boolean;
 }
 
@@ -42,6 +41,7 @@ export interface EndorsementCoverageLocation {
   state: string;
   county: string;
   zip: string;
+  isNew: boolean;
 }
 
 export interface EndorsementCoveragesGroup {
@@ -55,7 +55,7 @@ export interface EndorsementCoveragesResolved {
   }
 
 
-  export const defaultEndorsementCoverage = (): EndorsementCoverage => ({
+  export const newEndorsementCoverage = (): EndorsementCoverage => ({
     sequence: 0,
     classDescription: '',
     coverageCode: '',
@@ -75,7 +75,6 @@ export interface EndorsementCoveragesResolved {
     limitsPattern: '',
     limitsPatternGroupCode: 0,
     locationId: 0,
-    occurrenceOrClaimsMade: true,
     policyId: 0,
     policySymbol: '',
     premium: 0,
@@ -84,7 +83,8 @@ export interface EndorsementCoveragesResolved {
     rateAmount: 0,
     rateBasis: null,
     retroDate: null,
-    subCode: 0
+    subCode: 0,
+    isNew: true
 });
 
  

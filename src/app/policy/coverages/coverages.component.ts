@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../policy.service';
-import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
+import { EndorsementCoverageLocationComponent, LocationResult } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
 import { PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
-import { defaultEndorsementCoverage, EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup, newEndorsementCoverage } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
 import { NotifyOnSave } from '../services/notify-on-save.service';
 
@@ -74,22 +74,18 @@ export class CoveragesComponent implements OnInit, PolicySave {
   @ViewChild(EndorsementLocationGroupComponent) groupComp!: EndorsementLocationGroupComponent;
   @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined
 
-  async openLocation() {
-    let result: boolean = false;
-
+  async newLocation() {
     if (this.locationComponent != null) {
       let location: EndorsementCoverageLocation = ({} as any) as EndorsementCoverageLocation;
       // get policyId from route
       let policyId: number = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       location.policyId = policyId;
 
-      result = await this.locationComponent.new(location);
-      if (result) {
+      var result = await this.locationComponent.new(location);
+      if (result == LocationResult.new) {
         let coverage: EndorsementCoverage = ({} as EndorsementCoverage) as EndorsementCoverage;
         let group: EndorsementCoveragesGroup = { coverages: [], location: location }
-
-       // coverage = this.createNewCoverage();
-        coverage = defaultEndorsementCoverage();
+        coverage = newEndorsementCoverage();
 
         coverage.locationId = location.locationId;
         coverage.endorsementNumber =  this.endorsementNumber,
@@ -108,7 +104,6 @@ export class CoveragesComponent implements OnInit, PolicySave {
   isValid(): boolean {
     let total:number = 0;
     this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0})});
-
     return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp.isValid() && this.headerComp.endorsement.premium == total;
   }
 
@@ -119,6 +114,13 @@ export class CoveragesComponent implements OnInit, PolicySave {
   save(): void {
     this.headerComp.save();
     //this.groupComp.save();
+  }
+
+  deleteGroup(existingGroup: EndorsementCoveragesGroup){
+    const index = this.endorsementCoveragesGroups.indexOf(existingGroup, 0);
+    if (index > -1) {
+      this.endorsementCoveragesGroups.splice(index, 1);
+    }
   }
 
   showInvalidControls(): void {
@@ -174,40 +176,5 @@ export class CoveragesComponent implements OnInit, PolicySave {
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
-  // createNewCoverage(): EndorsementCoverage {
-  //   return {
-  //     sequence: 1,
-  //     classDescription: '',
-  //     coverageCode: '',
-  //     coverageId: null,
-  //     coverageType: '',
-  //     action: 'A',
-  //     claimsMadeOrOccurrence: 'O',
-  //     deductible: 0,
-  //     deductibleType: '',
-  //     ecCollapsed: true,
-  //     endorsementNumber: this.endorsementNumber,
-  //     exposureBase: 0,
-  //     exposureCode: '',
-  //     glClassCode: null,
-  //     includeExclude: '',
-  //     limit: 0,
-  //     limitsPattern: '',
-  //     limitsPatternGroupCode: 998,
-  //     locationId: 0,
-  //     occurrenceOrClaimsMade: true,
-  //     policyId: this.policyInfo.policyId,
-  //     policySymbol: '',
-  //     premium: 0,
-  //     premiumType: '',
-  //     programId:  this.policyInfo.programId,
-  //     rateAmount: 0,
-  //     rateBasis: 0,
-  //     retroDate: null,
-  //     subCode: 0
-  //   }
-
-  //}
 
 }

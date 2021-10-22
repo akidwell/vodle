@@ -83,8 +83,10 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.defaultsSub.unsubscribe();
+    this.defaultsSub?.unsubscribe();
     this.saveEventSubscription.unsubscribe();
+    this.authSub.unsubscribe();
+    this.deleteSub?.unsubscribe();
   }
   copyCoverage(): void {
     this.copyExistingCoverage.emit(this.coverage);
@@ -137,6 +139,7 @@ export class EndorsementCoverageComponent implements OnInit {
         if (!this.canEditLimitPattern) {
           this.coverage.limitsPattern = '';
         }
+        this.coverage.limitsPatternGroupCode = subCodeDefaults.defaultLimitPatternGroupCode;
         this.isDeductibleRequired = this.checkDeductibleRequired();
       }
     });
@@ -234,7 +237,7 @@ export class EndorsementCoverageComponent implements OnInit {
      this.ecCollapsed = event;
   }
 
-  deleteCoverage() {
+  async deleteCoverage() {
     if(this.coverage.isNew) {
       this.deleteThisCoverage.emit(this.coverage);
     } else {

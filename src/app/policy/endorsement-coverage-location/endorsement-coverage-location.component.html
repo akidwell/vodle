@@ -73,8 +73,26 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy"
         [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
-       <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy || !canDeleteLocation" (click)="delete()">Delete</button>
+       <button type="button" class="btn btn-danger" [hidden]="!canEditPolicy || !canDeleteLocation" (click)="openDeleteConfirmation()">Delete</button>
       <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
       <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
     </div>
   </ng-template>
+
+
+  
+<ng-template #modalConfirmation let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Delete Location Confirmation</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this location and all coverages?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
+  </div>
+</ng-template>
