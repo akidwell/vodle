@@ -3,7 +3,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@a
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
-import { AccountInformationResolved, EndorsementResolved, PolicyInformationResolved } from './policy';
+import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementResolved, PolicyInformationResolved } from './policy';
 import { PolicyService } from './policy.service';
 
 @Injectable({
@@ -136,4 +136,34 @@ export class EndorsementCoveragesResolver implements Resolve<EndorsementCoverage
     }
 
 }
+@Injectable({
+    providedIn: 'root'
+})
+export class AdditionalNamedInsuredsResolver implements Resolve<AdditionalNamedInsuredsResolved> {
 
+    constructor(private router: Router, private policyService: PolicyService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<AdditionalNamedInsuredsResolved> {
+        const id = route.paramMap.get('id') ?? "";
+        const end = route.paramMap.get('end') ?? 0;
+        if (isNaN(+id)) {
+            const message = `Policy id was not a number: ${id}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ additionalNamedInsureds: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ additionalNamedInsureds: null, error: message });
+        }
+
+        return this.policyService.getAdditionalNamedInsureds(Number(id), Number(end))
+        .pipe(
+            map(additionalNamedInsureds => ({ additionalNamedInsureds })),
+            catchError((error) => {
+                this.router.navigate(['/policy/ANI-not-found'], { state: { error: error } });
+                return of({ additionalNamedInsureds: null, error: error });
+            })
+        );
+    }
+}

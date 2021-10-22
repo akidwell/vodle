@@ -107,3 +107,21 @@ export interface Endorsement {
   attachmentPoint: number;
   invoiceStatus: string;
 }
+
+
+export interface AdditionalNamedInsureds {
+  intPolicyId: number;
+  srtEndorsementNo: number;
+  intSequenceNo: number;
+  intRole : number;
+  strName: string;
+  intCreatedBy: number;
+  dtmCreatedDate : Date;
+  intModifiedBy? : number;
+  dtmModifiedDate?: Date;
+}
+
+export interface AdditionalNamedInsuredsResolved {
+  additionalNamedInsureds:  AdditionalNamedInsureds[] | null;
+  error?: any;
+}

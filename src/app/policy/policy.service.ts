@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages/coverages';
-import { AccountInformation, Endorsement, Policy, PolicyInformation } from './policy';
+import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
+import { AccountInformation, AdditionalNamedInsureds, AdditionalNamedInsuredsResolved, Endorsement, Policy, PolicyInformation } from './policy';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +80,20 @@ export class PolicyService {
   deleteEndorsementCoverage(coverage: EndorsementCoverage): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
     + '/endorsements/' + coverage.endorsementNumber.toString() + '/coverages/' + coverage.sequence.toString() )
+  }
+  getAdditionalNamedInsureds(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsureds[]> {
+    return this.http.get<AdditionalNamedInsureds[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds')
+  }
+
+  updateAdditionalNamedInsureds(aniData: AdditionalNamedInsureds): Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData)
+  }
+  addAdditionalNamedInsureds(aniData: AdditionalNamedInsureds): Observable<boolean> {
+    return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData)
+  }
+
+  deleteAdditionalNamedInsureds(policyId: number, endorsementNo: number, intSequenceNo: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds/' + intSequenceNo)
   }
 
 }
