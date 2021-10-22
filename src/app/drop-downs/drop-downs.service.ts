@@ -237,5 +237,7 @@ export class DropDownsService {
   //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
   // }
 
-
+   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ANI_ROLE')
+  }
 }

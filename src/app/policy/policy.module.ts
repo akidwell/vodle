@@ -24,6 +24,8 @@ import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SummaryComponent } from './summary/summary.component';
 import { CanDeactivateGuard } from './can-deactivate-guard';
 import { NotifyOnSave } from './services/notify-on-save.service';
+import { AdditionalNamedInsuredsComponent } from './schedules/additional-named-insureds/additional-named-insureds.component';
+import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-named-insureds-group/additional-named-insureds-group.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { NotifyOnSave } from './services/notify-on-save.service';
     EndorsementCoverageLocationComponent,
     SchedulesComponent,
     ReinsuranceComponent,
-    SummaryComponent
+    SummaryComponent,
+    AdditionalNamedInsuredsComponent,
+    AdditionalNamedInsuredsGroupComponent
   ],
   imports: [
     CommonModule,

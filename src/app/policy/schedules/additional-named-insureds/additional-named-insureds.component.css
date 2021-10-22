@@ -1,0 +1,47 @@
+.card-header {
+    color: white;
+    background-color: #00274e;
+}
+input[type="text"] {
+    display: inline-block;
+}
+input[type="date"] {
+    display: inline-block;
+}
+input[type="checkbox"] {
+    display: inline-block;
+    width: 20px;
+    height: 20px;  
+}
+
+div.card {
+    margin-top: 0px;
+  }
+
+.card-body{
+    display: inline-block;
+    width: 100%;
+}
+
+input[type="checkbox"][readonly] {
+    pointer-events: none;
+}
+
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948;
+}
+  
+.ng-invalid:not(form)  {
+    border-left: 5px solid #a94442;
+}
+.button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+  }
