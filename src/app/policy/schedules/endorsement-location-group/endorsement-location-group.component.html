@@ -4,13 +4,16 @@
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
-    <a [routerLink]="" (click)="addNewEndorsementLocation()">Add Location</a>
     <div *ngFor="let item of locationData; let i = index">
-      <!-- <rsps-endorsement-location (copyExistingAni)=copyExistingAni($event)
-    (deleteExistingAni)=deleteExistingAni($event) [aniData]=item> -->
       <rsps-endorsement-location  (deleteThisLocation)=deleteLocation($event)
       (copyExistingLocation)=copyExistingLocation($event)
       [location]=item [index]=i></rsps-endorsement-location>
+    </div>
+  </div>
+  <div class="card-footer" >
+    <div id="locationFooter">
+      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewEndorsementLocation();">Add Location</button>
+      <div style="float:right;">Locations: {{locationData.length}}</div> 
     </div>
   </div>
 </div>

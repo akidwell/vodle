@@ -1,4 +1,19 @@
 .card-header {
-    color: white;
-    background-color: #00274e;
+  color: white;
+  background-color: #00274e;
+}
+
+a:hover {
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.underline:hover {
+  text-decoration: underline;
+}
+
+#locationFooter {
+  font-weight: bold;
+  text-align: center;
 }
