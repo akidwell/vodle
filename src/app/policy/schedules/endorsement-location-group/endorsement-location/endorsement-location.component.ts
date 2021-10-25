@@ -27,7 +27,10 @@ export class EndorsementLocationComponent implements OnInit {
   isDirty: boolean = false;
   dirtySub!: Subscription | undefined;
   deleteSub!: Subscription;
+  addSub!: Subscription;
+  updateSub!: Subscription;
   anchorId!: string;
+  saveSub!: Subscription;
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
@@ -55,6 +58,8 @@ export class EndorsementLocationComponent implements OnInit {
     this.dirtySub?.unsubscribe();
     this.addressSub?.unsubscribe();
     this.deleteSub?.unsubscribe();
+    this.updateSub?.unsubscribe();
+    this.addSub?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -99,6 +104,23 @@ export class EndorsementLocationComponent implements OnInit {
         return result;
       });
     }
+  }
+
+  save(): boolean {
+    if(this.location.isNew) {
+      this.addSub = this.policyService.addEndorsementLocation(this.location).subscribe(result => {
+        // this.deleteThisLocation.emit(this.location);
+        // return result;
+      });
+    } else {
+      this.updateSub = this.policyService.updateEndorsementLocation(this.location).subscribe(result => {
+        // this.deleteThisLocation.emit(this.location);
+        // return result;
+      });
+    }
+
+  
+    return true;
   }
 
   collapseExpand(event: boolean) {

@@ -58,7 +58,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
   }
 
   save(): void {
-    //this.locationComp.save();
+    this.locationComp.save();
     this.groupComp.saveAdditionalNamedInsureds();
   }
 

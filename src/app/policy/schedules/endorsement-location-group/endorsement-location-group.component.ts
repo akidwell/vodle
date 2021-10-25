@@ -1,8 +1,11 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { NotificationService } from 'src/app/notification/notification-service';
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../policy';
+import { PolicyService } from '../../policy.service';
 import { EndorsementLocationComponent } from './endorsement-location/endorsement-location.component';
 
 @Component({
@@ -17,10 +20,16 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
   locationData: EndorsementLocation[] = [];
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
+  authSub!: Subscription;
+  canEditPolicy: boolean = false;
 
   @ViewChildren(EndorsementLocationComponent) components: QueryList<EndorsementLocationComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth) { }
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService) { 
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+  }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
@@ -90,4 +99,28 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     return false;
   }
 
+  save(): boolean {
+    if (this.canEditPolicy && this.isDirty()) {
+      if (this.components != null) {
+        for (let child of this.components) {
+          if (child.locationForm.dirty) {
+            child.save();
+          }
+        }
+      }
+      if (!this.isValid()) {
+        this.notification.show('Endorsesement Header not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        return false;
+      }
+
+      // this.endSub = this.policyService.updateEndorsement(this.endorsement).subscribe(result => {
+      //   this.endorsementHeaderForm.form.markAsPristine();
+      //   this.endorsementHeaderForm.form.markAsUntouched();
+      //   this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+      //   return result;
+      // });
+    }
+    return false;
+  }
+  
 }
