@@ -4,7 +4,7 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
 import { PolicyNotFoundComponent } from './policy-not-found.component';
-import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver } from './policy-resolver-service';
+import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver } from './policy-resolver-service';
 import { PolicyComponent } from './policy.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -23,14 +23,15 @@ const routes: Routes = [
       accountData: AccountInformationResolver,
       policyInfoData: PolicyInformationResolver,
       endorsementData: EndorsementResolver,
-      endorsementCoveragesGroups: EndorsementCoveragesResolver, 
-      aniData: AdditionalNamedInsuredsResolver
+      endorsementCoveragesGroups: EndorsementCoveragesResolver,
+      aniData: AdditionalNamedInsuredsResolver,
+      endorsementLocationData: EndorsementLocationResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'coverages', component: CoveragesComponent,  canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'schedules', component: SchedulesComponent },
+      { path: 'coverages', component: CoveragesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'schedules', component: SchedulesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'reinsurance', component: ReinsuranceComponent },
       { path: 'summary', component: SummaryComponent }
     ]

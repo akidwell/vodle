@@ -5,7 +5,7 @@
           <div class="col-lg-3">
               <label for="role">Role</label>
               <ng-select class="form-control" id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key" [searchFn]="dropDownSearch" 
-              [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy"  name="role" [(ngModel)]="aniData.intRole"  #role="ngModel">
+              [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy"  name="role" [(ngModel)]="aniData.role"  #role="ngModel">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.key}}  - {{item.description}}
                 </ng-template>
@@ -15,14 +15,14 @@
               </ng-select>
             </div>
           <div class="col-lg-4">
-            <label for="strName">Additional Named Insured</label>
-            <input type="text" class="form-control" id="strName" #strName="ngModel" [readonly]="!canEditPolicy" [required]="canEditPolicy" 
-             name="strName" [(ngModel)]="aniData.strName" >
+            <label for="name">Additional Named Insured</label>
+            <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" [required]="canEditPolicy" 
+             name="name" [(ngModel)]="aniData.name" >
           </div>
           <div class="col-lg-2">
             <label for="createDate">Create Date</label>
               <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" 
-                 name="createDate"      [ngModel]="aniData.dtmCreatedDate  | date:'MM-dd-yyyy'" (ngModelChange)="aniData.dtmCreatedDate=$event">
+                 name="createDate" [ngModel]="aniData.createdDate  | date:'MM-dd-yyyy'" (ngModelChange)="aniData.createdDate=$event">
           </div>
           <br>
           <div class="col-lg-2" style="padding-top: 20px;">

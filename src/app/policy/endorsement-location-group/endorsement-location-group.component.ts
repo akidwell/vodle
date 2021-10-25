@@ -116,6 +116,17 @@ export class EndorsementLocationGroupComponent implements OnInit {
     return true;
   }
 
+  isDirty() {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.endorsementCoveragesForm.dirty) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   createNewCoverage(): EndorsementCoverage {
     let newCoverage = newEndorsementCoverage();
     newCoverage.sequence = this.currentSequence;
@@ -127,17 +138,6 @@ export class EndorsementLocationGroupComponent implements OnInit {
     newCoverage.policyId = this.endorsementCoveragesGroup.location.policyId;
 
     return newCoverage;
-  }
-
-  isDirty() {
-    if (this.components != null) {
-      for (let child of this.components) {
-        if (child.endorsementCoveragesForm.dirty) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   calcTotal(): number {

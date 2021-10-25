@@ -26,6 +26,8 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
 import { NotifyOnSave } from './services/notify-on-save.service';
 import { AdditionalNamedInsuredsComponent } from './schedules/additional-named-insureds/additional-named-insureds.component';
 import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-named-insureds-group/additional-named-insureds-group.component';
+import { EndorsementLocationComponent } from './schedules/endorsement-location-group/endorsement-location/endorsement-location.component';
+import { EndorsementLocationGroupComponent2 } from './schedules/endorsement-location-group/endorsement-location-group.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-na
     ReinsuranceComponent,
     SummaryComponent,
     AdditionalNamedInsuredsComponent,
-    AdditionalNamedInsuredsGroupComponent
+    AdditionalNamedInsuredsGroupComponent,
+    EndorsementLocationGroupComponent2,
+    EndorsementLocationComponent
   ],
   imports: [
     CommonModule,

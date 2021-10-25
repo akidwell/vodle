@@ -108,20 +108,50 @@ export interface Endorsement {
   invoiceStatus: string;
 }
 
-
-export interface AdditionalNamedInsureds {
-  intPolicyId: number;
-  srtEndorsementNo: number;
-  intSequenceNo: number;
-  intRole : number;
-  strName: string;
-  intCreatedBy: number;
-  dtmCreatedDate : Date;
-  intModifiedBy? : number;
-  dtmModifiedDate?: Date;
-}
-
 export interface AdditionalNamedInsuredsResolved {
   additionalNamedInsureds:  AdditionalNamedInsureds[] | null;
   error?: any;
 }
+
+export interface AdditionalNamedInsureds {
+  policyId: number;
+  endorsementNo: number;
+  sequenceNo: number;
+  role : number;
+  name: string;
+  createdBy: number;
+  createdDate : Date;
+  modifiedBy? : number;
+  modifiedDate?: Date;
+}
+
+export interface EndorsementLocationResolved {
+  endorsementLocation:  EndorsementLocation[] | null;
+  error?: any;
+}
+
+export interface EndorsementLocation {
+  policyId: number;
+  endorsementNumber: number;
+  sequence: number;
+  street1: string;
+  street2? : string | null;
+  city: string;
+  state? : string | null;
+  county? : string | null;
+  zip: string;
+  isNew: boolean;
+}
+export const newEndorsementLocation = (): EndorsementLocation => ({
+  policyId: 0,
+  endorsementNumber: 0,
+  sequence: 0,
+  street1: '',
+  street2: null,
+  city: '',
+  state: null,
+  county: null,
+  zip: '',
+  isNew: true
+});
+
