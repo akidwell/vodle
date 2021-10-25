@@ -1,11 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
-import { AccountInformation, AdditionalNamedInsureds, AdditionalNamedInsuredsResolved, Endorsement, EndorsementLocation, EndorsementLocationResolved, Policy, PolicyInformation } from './policy';
+import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation } from './policy';
 
 @Injectable({
   providedIn: 'root'
@@ -100,12 +99,12 @@ export class PolicyService {
     return this.http.get<EndorsementLocation[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/locations')
   }
 
-  addEndorsementLocation(location: EndorsementLocation): Observable<number> {
-    return this.http.post<number>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
+  addEndorsementLocation(location: EndorsementLocation): Observable<boolean> {
+    return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
   }
 
-  updateEndorsementLocation(location: EndorsementLocation): Observable<number> {
-    return this.http.put<number>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
+  updateEndorsementLocation(location: EndorsementLocation): Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location);
   }
   
   deleteEndorsementLocation(location: EndorsementLocation): Observable<boolean> {

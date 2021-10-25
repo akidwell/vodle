@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { EndorsementLocation } from 'src/app/policy/policy';
@@ -8,6 +8,8 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { NgForm } from '@angular/forms';
 import { AddressLookupService } from 'src/app/policy/address-lookup/address-lookup.service';
 import { PolicyService } from 'src/app/policy/policy.service';
+import { NotificationService } from 'src/app/notification/notification-service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'rsps-endorsement-location',
@@ -37,8 +39,9 @@ export class EndorsementLocationComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
   @Output() copyExistingLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
   @Output() deleteThisLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
+  @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private notification: NotificationService,private modalService: NgbModal) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -95,6 +98,14 @@ export class EndorsementLocationComponent implements OnInit {
      this.copyExistingLocation.emit(this.location);
   }
 
+  openDeleteConfirmation() {
+    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+      if (result == 'Yes') {
+        this.deleteLocation();
+      }
+    });
+  }
+
   async deleteLocation() {
     if(this.location.isNew) {
       this.deleteThisLocation.emit(this.location);
@@ -106,21 +117,23 @@ export class EndorsementLocationComponent implements OnInit {
     }
   }
 
-  save(): boolean {
-    if(this.location.isNew) {
-      this.addSub = this.policyService.addEndorsementLocation(this.location).subscribe(result => {
-        // this.deleteThisLocation.emit(this.location);
-        // return result;
-      });
-    } else {
-      this.updateSub = this.policyService.updateEndorsementLocation(this.location).subscribe(result => {
-        // this.deleteThisLocation.emit(this.location);
-        // return result;
-      });
-    }
-
-  
-    return true;
+  async save(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (this.location.isNew) {
+        this.addSub = this.policyService.addEndorsementLocation(this.location).subscribe(result => {
+         // return result;
+          resolve(result);
+        });
+      } else {
+        this.updateSub = this.policyService.updateEndorsementLocation(this.location).subscribe(result => {
+          this.locationForm.form.markAsPristine();
+          this.locationForm.form.markAsUntouched();
+         // return result;
+          resolve(result);
+        });
+      }
+    })
+    // return false;
   }
 
   collapseExpand(event: boolean) {

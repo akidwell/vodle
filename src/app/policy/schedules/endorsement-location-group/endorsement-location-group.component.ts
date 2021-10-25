@@ -63,10 +63,6 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     const newLocation: EndorsementLocation = JSON.parse(JSON.stringify(existingLocation));
     newLocation.sequence = this.getNextSequence();
     newLocation.isNew = true;
-    // newCoverage.collapsed = true;
-    //newLocation.isNew = true;
-    //this.incrementSequence.emit(this.currentSequence + 1);
-    //console.log('new: ', newCoverage, 'existing: ', existingCoverage)
     this.locationData.push(newLocation);
   }
 
@@ -74,6 +70,7 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     const index = this.locationData.indexOf(existingLocation, 0);
     if (index > -1) {
       this.locationData.splice(index, 1);
+      this.notification.show('Endorsement Location deleted.', { classname: 'bg-success text-light', delay: 5000 });
     }
   }
 
@@ -99,26 +96,29 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     return false;
   }
 
-  save(): boolean {
+  async save(): Promise<boolean> {
     if (this.canEditPolicy && this.isDirty()) {
+      let saveCount: number = 0;
       if (this.components != null) {
         for (let child of this.components) {
           if (child.locationForm.dirty) {
-            child.save();
+            let result = await child.save();
+            if (result === false) {
+              this.notification.show('Endorsesement Locations ' + child.location.sequence.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+            }
+            else {
+              saveCount++;
+            }
           }
+        }
+        if (saveCount > 0) {
+          this.notification.show('Endorsement Locations successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         }
       }
       if (!this.isValid()) {
-        this.notification.show('Endorsesement Header not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        this.notification.show('Endorsesement Locations not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
-
-      // this.endSub = this.policyService.updateEndorsement(this.endorsement).subscribe(result => {
-      //   this.endorsementHeaderForm.form.markAsPristine();
-      //   this.endorsementHeaderForm.form.markAsUntouched();
-      //   this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-      //   return result;
-      // });
     }
     return false;
   }
