@@ -2,6 +2,5 @@
   <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage"></ngb-alert>
   <rsps-additional-named-insureds-group (incrementSequence)=onIncrement($event)
     [currentSequence]=additionalNamedInsuredsSequence></rsps-additional-named-insureds-group>
-  <button (click)="save()">save</button>
   <rsps-endorsement-location-group2></rsps-endorsement-location-group2>
 </div>

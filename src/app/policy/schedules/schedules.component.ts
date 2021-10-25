@@ -25,8 +25,9 @@ export class SchedulesComponent implements OnInit, PolicySave {
   aniSub!: Subscription;
   notification: any;
   
-  @ViewChild(AdditionalNamedInsuredsGroupComponent) aniComp!: AdditionalNamedInsuredsGroupComponent;
   @ViewChild(EndorsementLocationGroupComponent2) locationComp!: EndorsementLocationGroupComponent2;
+  @Output() status: EventEmitter<any> = new EventEmitter();
+  @ViewChild(AdditionalNamedInsuredsGroupComponent) aniGroupComp!: AdditionalNamedInsuredsGroupComponent;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -45,20 +46,17 @@ export class SchedulesComponent implements OnInit, PolicySave {
     return allGroups.map(group => group.sequenceNo).reduce(
       (a,b) => Math.max(a,b),0) + 1;}
 
-  @Output() status: EventEmitter<any> = new EventEmitter();
-  @ViewChild(AdditionalNamedInsuredsGroupComponent) groupComp!: AdditionalNamedInsuredsGroupComponent;
-
   isValid(): boolean {
-    return this.locationComp.isValid();
+    return this.locationComp.isValid() && this.aniGroupComp.isValid();
   }
 
   isDirty(): boolean {
-    return this.locationComp.isDirty();
+    return this.locationComp.isDirty() || this.aniGroupComp.isDirty();
   }
 
   save(): void {
     this.locationComp.save();
-    this.groupComp.saveAdditionalNamedInsureds();
+    this.aniGroupComp.saveAdditionalNamedInsureds();
   }
 
   onIncrement(newSeq : number) {
@@ -74,6 +72,16 @@ export class SchedulesComponent implements OnInit, PolicySave {
         for (let name in child.locationForm.controls) {
           if (child.locationForm.controls[name].invalid) {
             invalid.push(name + " - Location: #" + child.location.sequence.toString());
+          }
+        }
+      }
+    }
+
+    if (this.aniGroupComp.components != null) {
+      for (let child of this.aniGroupComp.components) {
+        for (let name in child.aniForm.controls) {
+          if (child.aniForm.controls[name].invalid) {
+            invalid.push(name + " - Ani: #" + child.aniData.sequenceNo.toString());
           }
         }
       }

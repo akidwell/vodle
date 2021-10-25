@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { AdditionalNamedInsureds, Endorsement, PolicyInformation } from '../../policy';
@@ -19,8 +19,8 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   invalidMessage: string = "";
   showInvalid: boolean = false;
   aniData!: AdditionalNamedInsureds[];
-  faPlus = faPlus;
-  faMinus = faMinus;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   aniCollapsed = false;
   newAni!: AdditionalNamedInsureds;
   copyAni!: AdditionalNamedInsureds;
@@ -30,12 +30,11 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   aniSub!: Subscription;
  
   @Input()  public additionalNamedInsuredsGroup!: AdditionalNamedInsuredsGroupComponent;
-
-  @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
-  @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Input()  public currentSequence!: number;
+  @ViewChildren(AdditionalNamedInsuredsComponent) components: QueryList<AdditionalNamedInsuredsComponent> | undefined;
+
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -54,25 +53,26 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
 
 
   isValid(): boolean {
-    console.log(this.aniComp.aniForm.status)
-    if (this.aniComp != null) {
-        if (this.aniComp.aniForm.status != 'VALID') {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.aniForm.status != 'VALID') {
           return false;
         }
       }
-    
+    }
     return true;
   }
-  
+
   isDirty() {
-    if (this.aniComp != null) {
-        if (this.aniComp.aniForm.dirty) {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.aniForm.dirty) {
           return true;
         }
       }
+    }
     return false;
   }
-
   hideInvalid(): void {
     this.showInvalid = false;
   }
@@ -117,7 +117,8 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   saveAdditionalNamedInsureds(): any {
-    console.log(this.isDirty)
+    console.log(this.isDirty())
+  if (this.isDirty())
     this.aniData.forEach((ani)=>{
       this.aniSub = this.policyService.updateAdditionalNamedInsureds(ani).subscribe(() => {
         console.log(ani + "in update")
