@@ -3,6 +3,7 @@
   <div class="card">
     <div class="card-header" (click)="locationCollapsed = !locationCollapsed">
       <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup)">ID #: {{endorsementCoveragesGroup.location.locationId}}</a>
+      <span *ngIf="groupCount > 1" style="margin-left: 5px;">{{endorsementCoveragesGroup.location.street ? (endorsementCoveragesGroup.location.street + ' '): ('') }} {{endorsementCoveragesGroup.location.city + ', ' + endorsementCoveragesGroup.location.state + ' ' + endorsementCoveragesGroup.location.zip}}</span>
       <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
       <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
     </div>

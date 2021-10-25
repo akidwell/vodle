@@ -31,6 +31,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;
   @Input() public locationIndex!: number;
+  @Input() public groupCount!: number;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
@@ -74,7 +75,6 @@ export class EndorsementLocationGroupComponent implements OnInit {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
-    console.log(this.locationIndex)
     if (this.locationIndex == 0) {
       this.locationCollapsed = false;
     }
@@ -139,7 +139,13 @@ export class EndorsementLocationGroupComponent implements OnInit {
 
     return newCoverage;
   }
-
+  expandCollapsePanel(action: string) {
+    if (action == 'collapse'){
+      this.locationCollapsed = true;
+    } else if (action == 'expand') {
+      this.locationCollapsed = false;
+    }
+  }
   calcTotal(): number {
     let total: number = 0;
     this.endorsementCoveragesGroup.coverages.forEach( group => { total += (group.premium.toString() == "" ? 0 : group.premium ?? 0)});
