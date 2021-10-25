@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
@@ -16,10 +16,13 @@ export class EndorsementLocationGroupComponent implements OnInit {
   ecCollapsed = true;
   faPlus = faPlus;
   faMinus = faMinus;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   authSub: Subscription;
   canEditPolicy: boolean = false;
   formStatus!: string;
   anchorId!: string;
+  locationCollapsed: boolean = false;
 
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;

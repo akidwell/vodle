@@ -1,11 +1,13 @@
 <form #endorsementCoveragesForm="ngForm">
 <div class="content">
   <div class="card">
-    <div class="card-header" >
+    <div class="card-header" (click)="locationCollapsed = !locationCollapsed">
       <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup.location)">ID #: {{endorsementCoveragesGroup.location.locationId}}</a>
-      <fa-icon title="Add New Coverage" (click)="addNewCoverage()" [icon]="faPlus" style="float: right;"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
+      <!-- <fa-icon title="Add New Coverage" (click)="addNewCoverage()" [icon]="faPlus" style="float: right;"></fa-icon> -->
     </div>
-    <div class="card-body" >
+    <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
       <div class="row container">
         <div class="col-lg-4">
           <div class="header-label">
@@ -44,12 +46,15 @@
           </div>
         </div>
       </div>
-    </div>
-    <rsps-endorsement-coverage #coverageDiv *ngFor="let coverage of endorsementCoveragesGroup.coverages"
+      <rsps-endorsement-coverage #coverageDiv *ngFor="let coverage of endorsementCoveragesGroup.coverages"
     (deleteThisCoverage)=deleteCoverage($event)
     (copyExistingCoverage)=copyExistingCoverage($event)
     [coverage]="coverage"></rsps-endorsement-coverage>
     <div [id]='anchorId'></div>
+    </div>
+    <div class="card-footer" (click)="locationCollapsed = !locationCollapsed">
+      <fa-icon title="Add New Coverage" (click)="addNewCoverage()" [icon]="faPlus" style="float: right;"></fa-icon>
+    </div>
   </div>
 </div>
 
