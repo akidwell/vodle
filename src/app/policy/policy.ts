@@ -114,15 +114,15 @@ export interface AdditionalNamedInsuredsResolved {
 }
 
 export interface AdditionalNamedInsureds {
-  intPolicyId: number;
-  srtEndorsementNo: number;
-  intSequenceNo: number;
-  intRole : number;
-  strName: string;
-  intCreatedBy: number;
-  dtmCreatedDate : Date;
-  intModifiedBy? : number;
-  dtmModifiedDate?: Date;
+  policyId: number;
+  endorsementNo: number;
+  sequenceNo: number;
+  role : number;
+  name: string;
+  createdBy: number;
+  createdDate : Date;
+  modifiedBy? : number;
+  modifiedDate?: Date;
 }
 
 export interface EndorsementLocationResolved {
