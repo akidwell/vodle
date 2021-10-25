@@ -1,0 +1,105 @@
+<form #locationForm="ngForm">
+  <div class="card-body">
+    <div class="row container">
+      <div class="col-lg-8">
+        <label for="address" *ngIf="index==0">Location</label>
+      </div>
+      <div class="col-lg-2">
+        <label for="createDate" *ngIf="index==0">Create Date</label>
+      </div>
+    </div>
+  </div>
+  <div [ngClass]="{'expanded':!collapsed}"> 
+    <div #locationInfo class="card-body" (click)="collapseExpand(false)">
+      <div class="row container" *ngIf="collapsed">
+        <div class="col-lg-8">
+          <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address" [required]="canEditPolicy" 
+            [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
+        </div>
+        <div class="col-lg-2">
+          <input type="text" class="form-control" id="createDate" #createDate="ngModel" [readonly]="true"
+            name="createDate" [ngModel]="">
+        </div>
+      </div>
+    </div>
+    <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+      <div class="row container">
+        <div class="col-lg-6">
+          <label for="street1">Address Street 1</label>
+          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy"
+            [required]="canEditPolicy" name="street1" [(ngModel)]="location.street1">
+        </div>
+        <div class="col-lg-6">
+          <label for="street2">Address Street 2</label>
+          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy"
+            name="street2" [(ngModel)]="location.street2">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <label for="zipCode">Zip Code</label>
+          <input type="text" class="form-control" id="zipCode" [readonly]="!canEditPolicy" [required]="canEditPolicy"
+            mask="00000||00000-0000" [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
+            (ngModelChange)="changeZipCode()">
+        </div>
+        <div class="col-lg-3">
+          <label for="street2">City</label>
+          <div *ngIf="isLoadingAddress">
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+            </div>
+          </div>
+          <div *ngIf="!isLoadingAddress">
+            <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
+              [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <label for="locationState">State</label>
+          <div *ngIf="isLoadingAddress">
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+            </div>
+          </div>
+          <div *ngIf="!isLoadingAddress">
+            <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
+              [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy || isLoadingAddress"
+              name="locationState" [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <label for="locationCounty">County</label>
+          <div *ngIf="isLoadingAddress">
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+            </div>
+          </div>
+          <div *ngIf="!isLoadingAddress">
+            <div *ngIf="counties.length <= 1">
+              <input type="text" class="form-control" id="locationCounty"
+                [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
+                #locationCounty="ngModel">
+            </div>
+            <div *ngIf="counties.length > 1">
+              <ng-select id="locationCounty" [items]="counties" [clearable]="false"
+                [readonly]="!canEditPolicy || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
+                #locationCounty="ngModel">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="empty-space"></div>
+      <div class="row container">
+        <div class="col-lg-2">
+          <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary">Copy</span>
+          <span class="btn btn-secondary" (click)=deleteLocation() hover-class="btn-danger"
+            *ngIf="!location.isNew">Delete</span>
+          <span class="btn btn-secondary" (click)=deleteLocation() hover-class="btn-warning"
+            *ngIf="location.isNew">Remove</span>
+        </div>
+        <div [id]='anchorId'></div>
+        <span class='astext' (click)="collapseExpand(true)">
+          <fa-icon [icon]="faArrowUp"></fa-icon>
+        </span>
+      </div>
+    </div>
+  </div>

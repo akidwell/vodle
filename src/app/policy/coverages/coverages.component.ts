@@ -149,7 +149,6 @@ export class CoveragesComponent implements OnInit, PolicySave {
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
-     // this.invalidMessage = "Following fields are invalid";
       for (let error of invalid) {
         this.invalidMessage += "<br><li>" + error;
       }

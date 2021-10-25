@@ -1,0 +1,60 @@
+/* .card-header {
+  color: white;
+  background-color: #00274e;
+} */
+
+.card-body {
+  width: 100%;
+  padding: 5px;
+} 
+
+.row {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  Vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s;
+}
+
+.empty-space {
+  height: 15px;
+}
+
+.astext {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  color: #00274e;
+  cursor: pointer;
+  text-align: center;
+}
+
+.expanded {
+  border: solid #00274e;
+  border-width: 2px;
+  border-radius: 16px;
+  background-color: rgb(243, 240, 240);
+}
+
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+}

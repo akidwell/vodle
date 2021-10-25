@@ -1,6 +1,4 @@
 <div class="content">
-    <!-- Check with Amber-->
-    <!-- <div *ngIf="checkFormStatus()"></div> -->
     <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage"></ngb-alert>
     <rsps-account-information></rsps-account-information>
     <rsps-policy-information></rsps-policy-information>
