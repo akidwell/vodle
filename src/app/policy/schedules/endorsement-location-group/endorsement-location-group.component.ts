@@ -1,8 +1,11 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { NotificationService } from 'src/app/notification/notification-service';
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../policy';
+import { PolicyService } from '../../policy.service';
 import { EndorsementLocationComponent } from './endorsement-location/endorsement-location.component';
 
 @Component({
@@ -17,10 +20,16 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
   locationData: EndorsementLocation[] = [];
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
+  authSub!: Subscription;
+  canEditPolicy: boolean = false;
 
   @ViewChildren(EndorsementLocationComponent) components: QueryList<EndorsementLocationComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth) { }
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService) { 
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+  }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
@@ -54,10 +63,6 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     const newLocation: EndorsementLocation = JSON.parse(JSON.stringify(existingLocation));
     newLocation.sequence = this.getNextSequence();
     newLocation.isNew = true;
-    // newCoverage.collapsed = true;
-    //newLocation.isNew = true;
-    //this.incrementSequence.emit(this.currentSequence + 1);
-    //console.log('new: ', newCoverage, 'existing: ', existingCoverage)
     this.locationData.push(newLocation);
   }
 
@@ -65,6 +70,7 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     const index = this.locationData.indexOf(existingLocation, 0);
     if (index > -1) {
       this.locationData.splice(index, 1);
+      this.notification.show('Endorsement Location deleted.', { classname: 'bg-success text-light', delay: 5000 });
     }
   }
 
@@ -90,4 +96,31 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     return false;
   }
 
+  async save(): Promise<boolean> {
+    if (this.canEditPolicy && this.isDirty()) {
+      let saveCount: number = 0;
+      if (this.components != null) {
+        for (let child of this.components) {
+          if (child.locationForm.dirty) {
+            let result = await child.save();
+            if (result === false) {
+              this.notification.show('Endorsesement Locations ' + child.location.sequence.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+            }
+            else {
+              saveCount++;
+            }
+          }
+        }
+        if (saveCount > 0) {
+          this.notification.show('Endorsement Locations successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        }
+      }
+      if (!this.isValid()) {
+        this.notification.show('Endorsesement Locations not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        return false;
+      }
+    }
+    return false;
+  }
+  
 }
