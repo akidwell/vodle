@@ -175,5 +175,10 @@ export class CoveragesComponent implements OnInit, PolicySave {
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
+  collapseAllLocations(): void {
+    console.log('collapse')
+  }
+  expandAllLocations(): void {
+    console.log('expand')
+  }
 }

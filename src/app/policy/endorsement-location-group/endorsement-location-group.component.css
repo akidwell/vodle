@@ -58,7 +58,9 @@ a:hover {
   text-decoration: underline;
   font-weight: bold;
 }
-
+.underline:hover {
+  text-decoration: underline;
+}
 #locationTotal {
   font-weight: bold;
   text-align: center;

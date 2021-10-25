@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Attribute, Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { newEndorsementCoverage, EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
@@ -15,18 +15,22 @@ import { PolicyInformation } from '../policy';
   styleUrls: ['./endorsement-location-group.component.css']
 })
 export class EndorsementLocationGroupComponent implements OnInit {
-  ecCollapsed = true;
   faPlus = faPlus;
   faMinus = faMinus;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   authSub: Subscription;
   canEditPolicy: boolean = false;
   formStatus!: string;
   anchorId!: string;
+  locationCollapsed: boolean = true;
+
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
-  
+
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;
+  @Input() public locationIndex!: number;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
@@ -42,6 +46,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
    );
  }
  addNewCoverage(): void {
+  this.locationCollapsed = false;
   const newCoverage: EndorsementCoverage = this.createNewCoverage();
   this.incrementSequence.emit(this.currentSequence + 1);
   this.endorsementCoveragesGroup.coverages.push(newCoverage);
@@ -69,7 +74,10 @@ export class EndorsementLocationGroupComponent implements OnInit {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
-
+    console.log(this.locationIndex)
+    if (this.locationIndex == 0) {
+      this.locationCollapsed = false;
+    }
   }
   ngAfterViewInit() {
     this.coverageDivs.changes.subscribe(() => {

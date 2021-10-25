@@ -28,7 +28,6 @@ export class SchedulesComponent implements OnInit, PolicySave {
   @ViewChild(AdditionalNamedInsuredsGroupComponent) aniComp!: AdditionalNamedInsuredsGroupComponent;
   @ViewChild(EndorsementLocationGroupComponent2) locationComp!: EndorsementLocationGroupComponent2;
 
-
   constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -44,7 +43,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
 
   getNextAniSequence(allGroups: AdditionalNamedInsureds[]) {
     return allGroups.map(group => group.sequenceNo).reduce(
-        (a,b) => Math.max(a,b)) + 1;}
+      (a,b) => Math.max(a,b),0) + 1;}
 
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(AdditionalNamedInsuredsGroupComponent) groupComp!: AdditionalNamedInsuredsGroupComponent;
