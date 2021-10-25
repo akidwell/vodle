@@ -6,11 +6,9 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { tap } from 'rxjs/operators';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from '../../policy.service';
-import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'rsps-policy-information',

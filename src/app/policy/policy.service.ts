@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
-import { AccountInformation, AdditionalNamedInsureds, AdditionalNamedInsuredsResolved, Endorsement, Policy, PolicyInformation } from './policy';
+import { AccountInformation, AdditionalNamedInsureds, AdditionalNamedInsuredsResolved, Endorsement, EndorsementLocation, EndorsementLocationResolved, Policy, PolicyInformation } from './policy';
 
 @Injectable({
   providedIn: 'root'
@@ -96,4 +96,19 @@ export class PolicyService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds/' + intSequenceNo)
   }
 
+  getEndorsementLocation(policyId: number, endorsementNo: number): Observable<EndorsementLocation[]> {
+    return this.http.get<EndorsementLocation[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/locations')
+  }
+
+  addEndorsementLocation(location: EndorsementLocation): Observable<number> {
+    return this.http.post<number>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
+  }
+
+  updateEndorsementLocation(location: EndorsementLocation): Observable<number> {
+    return this.http.put<number>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
+  }
+  
+  deleteEndorsementLocation(location: EndorsementLocation): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + location.policyId + '/endorsements/' + location.endorsementNumber + '/locations/' + location.sequence )
+  }
 }
