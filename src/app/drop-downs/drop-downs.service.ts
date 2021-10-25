@@ -58,7 +58,7 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
   }
 
-  getCoverageDescriptions(coverageCode: string, classCode: number, policySymbol: string,programId: number, coverageId?: number | null): Observable<Code[]> {
+  getCoverageDescriptions(coverageCode: string, policySymbol: string,programId: number, classCode: number, coverageId?: number | null): Observable<Code[]> {
     let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
     if (coverageId != null)
     {
@@ -237,5 +237,7 @@ export class DropDownsService {
   //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
   // }
 
-
+   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ANI_ROLE')
+  }
 }

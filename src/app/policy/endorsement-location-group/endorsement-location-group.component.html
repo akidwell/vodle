@@ -2,10 +2,9 @@
 <div class="content">
   <div class="card">
     <div class="card-header" (click)="locationCollapsed = !locationCollapsed">
-      <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup.location)">ID #: {{endorsementCoveragesGroup.location.locationId}}</a>
+      <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup)">ID #: {{endorsementCoveragesGroup.location.locationId}}</a>
       <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
       <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
-      <!-- <fa-icon title="Add New Coverage" (click)="addNewCoverage()" [icon]="faPlus" style="float: right;"></fa-icon> -->
     </div>
     <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
       <div class="row container">
@@ -52,8 +51,12 @@
     [coverage]="coverage"></rsps-endorsement-coverage>
     <div [id]='anchorId'></div>
     </div>
-    <div class="card-footer" (click)="locationCollapsed = !locationCollapsed">
-      <fa-icon title="Add New Coverage" (click)="addNewCoverage()" [icon]="faPlus" style="float: right;"></fa-icon>
+    <div class="card-footer" >
+      <div id="locationTotal">
+        <button style="float:left; background:none; border:none;" class="underline" (click)="addNewCoverage();">Add Coverage</button>
+        <div style="display: inline-block;">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}</div>
+        <div style="float:right;">Coverages: {{endorsementCoveragesGroup.coverages.length}}</div>
+      </div>
     </div>
   </div>
 </div>

@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../policy.service';
-import { EndorsementCoverageLocationComponent } from '../endorsement-coverage-location/endorsement-coverage-location.component';
+import { EndorsementCoverageLocationComponent, LocationResult } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
 import { PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
-import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from './coverages';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup, newEndorsementCoverage } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
 import { NotifyOnSave } from '../services/notify-on-save.service';
 
@@ -27,6 +27,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   coveragesSequence!: number;
   coveragesSub!: Subscription;
   notification: any;
+  endorsementNumber!: number;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notifyOnSave: NotifyOnSave) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -41,6 +42,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
       this.coveragesSequence = this.getNextCoverageSequence(this.endorsementCoveragesGroups);
       this.saveEndorsementCoverages = this.saveEndorsementCoverages;
       this.policyInfo = data['policyInfoData'].policyInfo;
+      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
   }
 
@@ -72,24 +74,25 @@ export class CoveragesComponent implements OnInit, PolicySave {
   @ViewChild(EndorsementLocationGroupComponent) groupComp!: EndorsementLocationGroupComponent;
   @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined
 
-  async openLocation() {
-    let result: boolean = false;
-
+  async newLocation() {
     if (this.locationComponent != null) {
       let location: EndorsementCoverageLocation = ({} as any) as EndorsementCoverageLocation;
       // get policyId from route
       let policyId: number = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       location.policyId = policyId;
 
-      result = await this.locationComponent.open(location);
-      if (result) {
-        let coverage: EndorsementCoverage = ({} as any) as EndorsementCoverage;
+      var result = await this.locationComponent.new(location);
+      if (result == LocationResult.new) {
+        let coverage: EndorsementCoverage = ({} as EndorsementCoverage) as EndorsementCoverage;
         let group: EndorsementCoveragesGroup = { coverages: [], location: location }
+        coverage = newEndorsementCoverage();
+
+        coverage.locationId = location.locationId;
+        coverage.endorsementNumber =  this.endorsementNumber,
         coverage.programId = this.policyInfo.programId;
         coverage.coverageCode = this.policyInfo.quoteData.coverageCode;
         coverage.policySymbol = this.policyInfo.policySymbol;
         coverage.policyId = this.policyInfo.policyId;
-        coverage.action = "A";
         group.coverages.push(coverage);
         this.endorsementCoveragesGroups.push(group);
       }
@@ -100,8 +103,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   isValid(): boolean {
     let total:number = 0;
-    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium })});
-
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0})});
     return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp.isValid() && this.headerComp.endorsement.premium == total;
   }
 
@@ -112,6 +114,13 @@ export class CoveragesComponent implements OnInit, PolicySave {
   save(): void {
     this.headerComp.save();
     //this.groupComp.save();
+  }
+
+  deleteGroup(existingGroup: EndorsementCoveragesGroup){
+    const index = this.endorsementCoveragesGroups.indexOf(existingGroup, 0);
+    if (index > -1) {
+      this.endorsementCoveragesGroups.splice(index, 1);
+    }
   }
 
   showInvalidControls(): void {
@@ -160,12 +169,17 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   checkPremiumMatches() : boolean {
     let total:number = 0;
-    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium })});
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0 })});
     return this.headerComp.endorsement.premium == total
   }
 
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
+  collapseAllLocations(): void {
+    console.log('collapse')
+  }
+  expandAllLocations(): void {
+    console.log('expand')
+  }
 }
