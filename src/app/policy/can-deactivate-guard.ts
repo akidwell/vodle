@@ -14,10 +14,10 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
     state: RouterStateSnapshot
   ): Observable<boolean> | boolean {
     if (component.isValid()) {
-      if (component.isDirty()) {
-        component.hideInvalid();
+      if (component.isDirty()) {   
         component.save();
       }
+      component.hideInvalid();
       return true;
     }
     component.showInvalidControls()
