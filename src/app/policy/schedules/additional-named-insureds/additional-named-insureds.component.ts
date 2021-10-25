@@ -19,15 +19,16 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy: boolean = false;
   aniRoles$: Observable<Code[]> | undefined;
+  collapsed: boolean = true;
+
   @Input() aniData!: AdditionalNamedInsureds;
-  faPlus = faPlus;
-  faMinus = faMinus;
+  @Input() ani!: AdditionalNamedInsureds;
+
   aniCollapsed = false;
   isReadOnly: boolean = true;
 
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
-  @Output() status: EventEmitter<any> = new EventEmitter();
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
 
@@ -60,5 +61,6 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   deleteAni(): void{
     this.deleteExistingAni.emit(this.aniData);
   }
+  
 
 }
