@@ -39,65 +39,31 @@ export class SchedulesComponent implements OnInit, PolicySave {
     this.aniGroups = data['aniData'].additionalNamedInsureds;
     //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
     this.additionalNamedInsuredsSequence = this.getNextAniSequence(this.aniGroups);
-    this.saveAdditionalNamedInsureds = this.saveAdditionalNamedInsureds;
-
   });
   }
 
   getNextAniSequence(allGroups: AdditionalNamedInsureds[]) {
-    return allGroups.map(group => group.intSequenceNo).reduce(
-        (a,b) => Math.max(a,b),0) + 1;}
-  
+    return allGroups.map(group => group.sequenceNo).reduce(
+        (a,b) => Math.max(a,b)) + 1;}
+
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(AdditionalNamedInsuredsGroupComponent) groupComp!: AdditionalNamedInsuredsGroupComponent;
 
-
   isValid(): boolean {
-    return this.locationComp.isValid() ;
-    // return this.groupComp.aniForm.status == 'VALID' &&  this.locationComp.isValid();
+    return this.locationComp.isValid();
   }
 
   isDirty(): boolean {
     return this.locationComp.isDirty();
-    // return (this.groupComp.aniForm.dirty ?? false)  || this.locationComp.isDirty();
   }
 
   save(): void {
     //this.locationComp.save();
+    this.groupComp.saveAdditionalNamedInsureds();
   }
 
   onIncrement(newSeq : number) {
     this.additionalNamedInsuredsSequence = newSeq;
-  }
-
-  saveAdditionalNamedInsureds(): any {
-    console.log(this.groupComp)
-    console.log("aniData " + this.groupComp.aniComp.aniData)
-
-    this.groupComp.aniData.forEach((ani)=>{
-      this.aniSub = this.policyService.updateAdditionalNamedInsureds(ani).subscribe(() => {
-        console.log(ani)
-      });
-  });
-
-    if (this.groupComp.newAni != null) {
-      console.log(this.groupComp)
-    this.aniSub = this.policyService.addAdditionalNamedInsureds(this.groupComp.newAni).subscribe(() => {
-        //this.notification.show('ANI successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-    });
-    }
-    if (this.groupComp.copyAni != null) {
-      console.log(this.groupComp)
-    this.aniSub = this.policyService.addAdditionalNamedInsureds(this.groupComp.copyAni).subscribe(() => {
-        //this.notification.show('ANI successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-    });
-    }
-    if (this.groupComp.deletedAni != null) {
-      console.log(this.groupComp)
-    this.aniSub = this.policyService.deleteAdditionalNamedInsureds(this.groupComp.deletedAni.intPolicyId, this.groupComp.deletedAni.srtEndorsementNo, this.groupComp.deletedAni.intSequenceNo).subscribe(() => {
-        //this.notification.show('ANI successfully deleted.', { classname: 'bg-success text-light', delay: 5000 });
-    });
-    }
   }
 
   showInvalidControls(): void {
