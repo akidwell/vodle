@@ -1,0 +1,53 @@
+<form #aniForm="ngForm">
+  <!-- <div class="row container">
+    <div class="col-lg-3">
+      <label for="address" *ngIf="index==0">Role</label>
+    </div>
+    <div class="col-lg-4">
+      <label for="createDate">Additional Named Insured</label>
+    </div>
+    <div class="col-lg-2">
+      <label for="createDate">Create Date</label>
+    </div>
+  </div> -->
+
+  <div class="row container" style="padding-top: 10px; width: 100%">
+    <div class="col-lg-3">
+      <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key" placeholder=""
+        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="role"
+        [(ngModel)]="aniData.role" #role="ngModel">
+      </ng-select>
+    </div>
+    <div class="col-lg-5">
+      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
+        [required]="canEditPolicy" name="name" [(ngModel)]="aniData.name">
+    </div>
+    <div class="col-lg-2">
+      <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" name="createDate"
+        [ngModel]="aniData.createdDate  | date:'MM/dd/yyyy'" (ngModelChange)="aniData.createdDate=$event">
+    </div>
+    <div class="col-lg-2">
+      <span class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary">Copy </span>&nbsp;
+      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger" *ngIf="!aniData.isNew">
+        Delete</span>
+      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+        *ngIf="aniData.isNew">Remove</span>
+    </div>
+    <div style="height: 5px"></div>
+
+  </div>
+  <ng-template #modalConfirmation let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Delete Additional Named Insured Confirmation</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this Additional Named Insured?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
+    </div>
+  </ng-template>
