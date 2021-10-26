@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { AdditionalNamedInsureds } from '../policy';
+import { AdditionalNamedInsureds, EndorsementLocation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { PolicyService } from '../policy.service';
 import { AdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
@@ -24,6 +24,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
   additionalNamedInsuredsSequence!: number;
   aniSub!: Subscription;
   notification: any;
+  locationData: EndorsementLocation[] = [];
   
   @ViewChild(EndorsementLocationGroupComponent2) locationComp!: EndorsementLocationGroupComponent2;
   @Output() status: EventEmitter<any> = new EventEmitter();
@@ -37,6 +38,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
     this.aniGroups = data['aniData'].additionalNamedInsureds;
+    this.locationData = data['endorsementLocationData'].endorsementLocation;
     //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
     this.additionalNamedInsuredsSequence = this.getNextAniSequence(this.aniGroups);
   });
@@ -106,6 +108,14 @@ export class SchedulesComponent implements OnInit, PolicySave {
 
   hideInvalid(): void {
     this.showInvalid = false;
+  }
+
+  collapseAllLocations(): void {
+    console.log('collapse')
+  }
+  
+  expandAllLocations(): void {
+    console.log('expand')
   }
 
 }

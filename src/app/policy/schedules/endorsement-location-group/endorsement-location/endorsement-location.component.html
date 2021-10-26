@@ -26,12 +26,12 @@
       <div class="row container">
         <div class="col-lg-6">
           <label for="street1">Address Street 1</label>
-          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy"
+          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy" maxlength="40"
             [required]="canEditPolicy" name="street1" [(ngModel)]="location.street1">
         </div>
         <div class="col-lg-6">
           <label for="street2">Address Street 2</label>
-          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy"
+          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy" maxlength="40"
             name="street2" [(ngModel)]="location.street2">
         </div>
       </div>
@@ -43,13 +43,13 @@
             (ngModelChange)="changeZipCode()">
         </div>
         <div class="col-lg-3">
-          <label for="street2">City</label>
+          <label for="city">City</label>
           <div *ngIf="isLoadingAddress">
             <div class="spinner-border ml-auto" role="status" aria-hidden="true">
             </div>
           </div>
           <div *ngIf="!isLoadingAddress">
-            <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
+            <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress" maxlength="25"
               [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
           </div>
         </div>
@@ -75,7 +75,7 @@
           <div *ngIf="!isLoadingAddress">
             <div *ngIf="counties.length <= 1">
               <input type="text" class="form-control" id="locationCounty"
-                [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
+                [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty" maxlength="100"
                 #locationCounty="ngModel">
             </div>
             <div *ngIf="counties.length > 1">

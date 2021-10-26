@@ -46,7 +46,6 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
     newLocation.sequence = this.getNextSequence();
     this.locationData.push(newLocation);
     this.locationCollapsed = false;
-    console.log(newLocation)
   }
 
   getNextSequence(): number {
