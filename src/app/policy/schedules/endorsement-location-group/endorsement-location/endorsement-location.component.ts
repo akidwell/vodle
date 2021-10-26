@@ -51,7 +51,7 @@ export class EndorsementLocationComponent implements OnInit {
   ngOnInit(): void {
     this.anchorId = 'focusHere' + this.location.sequence;
     if (this.location.isNew) {
-      this.collapsed = false;
+      this.collapseExpand(false);
       this.focus();
     }
   }
