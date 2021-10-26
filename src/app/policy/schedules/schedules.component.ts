@@ -39,14 +39,9 @@ export class SchedulesComponent implements OnInit, PolicySave {
     this.route.parent?.data.subscribe(data => {
     this.aniGroups = data['aniData'].additionalNamedInsureds;
     this.locationData = data['endorsementLocationData'].endorsementLocation;
-    //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
-    this.additionalNamedInsuredsSequence = this.getNextAniSequence(this.aniGroups);
   });
   }
 
-  getNextAniSequence(allGroups: AdditionalNamedInsureds[]) {
-    return allGroups.map(group => group.sequenceNo).reduce(
-      (a,b) => Math.max(a,b),0) + 1;}
 
   isValid(): boolean {
     return this.locationComp.isValid() && this.aniGroupComp.isValid();

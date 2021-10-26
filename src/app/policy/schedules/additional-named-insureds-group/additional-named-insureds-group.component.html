@@ -1,13 +1,29 @@
-<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage"></ngb-alert>
-<div class="col-lg-2">
-</div>
-<div class="card-header" (click)="collapse.toggle()">
-  Additional Named Insured    
-  <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
-  <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
- </div>
- <div #collapse="ngbCollapse" [(ngbCollapse)]="aniCollapsed">
- <span class="button" hover-class="btn-primary" (click)="addNewAdditionalNamedInsured()">Add Additional Named Insured...</span>
- <div *ngFor="let item of aniData; index as i">
-    <rsps-additional-named-insureds  (copyExistingAni)=copyExistingAni($event) (deleteExistingAni)=deleteExistingAni($event) [aniData]=item></rsps-additional-named-insureds>
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">Additional Named Insureds
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
   </div>
+<div #collapse="ngbCollapse" [(ngbCollapse)]="aniCollapsed">
+  <div class="row container" style="padding-top: 5px">
+    <div class="col-lg-3">
+      <label for="address">Role</label>
+    </div>
+    <div class="col-lg-5">
+      <label for="createDate">Additional Named Insured</label>
+    </div>
+    <div class="col-lg-2">
+      <label for="createDate">Create Date</label>
+    </div>
+  </div>
+    <div *ngFor="let item of aniData; let i = index">
+      <rsps-additional-named-insureds  (copyExistingAni)=copyExistingAni($event) (deleteExistingAni)=deleteExistingAni($event) [aniData]=item></rsps-additional-named-insureds>
+    </div>
+  </div>
+  <div class="card-footer" >
+    <div id="aniFooter">
+      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
+      <div style="float:right;">Additional Named Insureds: {{aniData.length}}</div> 
+    </div>
+  </div>
+</div>
+  
