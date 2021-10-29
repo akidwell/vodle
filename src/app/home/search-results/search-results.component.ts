@@ -36,10 +36,12 @@ export class SearchResultsComponent implements OnInit {
 
     this.searchSub = this.policySearchService.onResults().subscribe({
       next: results => {
-
+        // Flag for every new policy number
+        let policyNumber: string = "";
         for (let x of results) {
-          if (x.firstPolicyRow) {
-            results.push()
+          if (x.policyNumber != policyNumber) {
+            x.firstPolicyRow = true;
+            policyNumber = x.policyNumber;
           }
         }
 
