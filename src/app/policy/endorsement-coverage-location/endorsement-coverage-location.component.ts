@@ -119,6 +119,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.locationSub = this.policyService.addEndorsementCoverageLocation(this.location)
         .subscribe(result => {
           this.location.locationId = result;
+          this.location.isNew = false;
           this.modalRef.close(LocationResult.new);
         });
     }
@@ -140,7 +141,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.state = this.originallocation.state;
       this.location.county = this.originallocation.county;
     }
-    this.modalRef.close(false);
+    this.modalRef.close(LocationResult.cancel);
   }
 
   @Output() deleteThisCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();

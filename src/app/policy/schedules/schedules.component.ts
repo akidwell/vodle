@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/cor
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { AdditionalNamedInsureds } from '../policy';
+import { AdditionalNamedInsureds, EndorsementLocation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { PolicyService } from '../policy.service';
 import { AdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
@@ -24,9 +24,11 @@ export class SchedulesComponent implements OnInit, PolicySave {
   additionalNamedInsuredsSequence!: number;
   aniSub!: Subscription;
   notification: any;
+  locationData: EndorsementLocation[] = [];
   
-  @ViewChild(AdditionalNamedInsuredsGroupComponent) aniComp!: AdditionalNamedInsuredsGroupComponent;
   @ViewChild(EndorsementLocationGroupComponent2) locationComp!: EndorsementLocationGroupComponent2;
+  @Output() status: EventEmitter<any> = new EventEmitter();
+  @ViewChild(AdditionalNamedInsuredsGroupComponent) aniGroupComp!: AdditionalNamedInsuredsGroupComponent;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -36,29 +38,22 @@ export class SchedulesComponent implements OnInit, PolicySave {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
     this.aniGroups = data['aniData'].additionalNamedInsureds;
-    //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
-    this.additionalNamedInsuredsSequence = this.getNextAniSequence(this.aniGroups);
+    this.locationData = data['endorsementLocationData'].endorsementLocation;
   });
   }
 
-  getNextAniSequence(allGroups: AdditionalNamedInsureds[]) {
-    return allGroups.map(group => group.sequenceNo).reduce(
-      (a,b) => Math.max(a,b),0) + 1;}
-
-  @Output() status: EventEmitter<any> = new EventEmitter();
-  @ViewChild(AdditionalNamedInsuredsGroupComponent) groupComp!: AdditionalNamedInsuredsGroupComponent;
 
   isValid(): boolean {
-    return this.locationComp.isValid();
+    return this.locationComp.isValid() && this.aniGroupComp.isValid();
   }
 
   isDirty(): boolean {
-    return this.locationComp.isDirty();
+    return this.locationComp.isDirty() || this.aniGroupComp.isDirty();
   }
 
   save(): void {
     this.locationComp.save();
-    this.groupComp.saveAdditionalNamedInsureds();
+    this.aniGroupComp.saveAdditionalNamedInsureds();
   }
 
   onIncrement(newSeq : number) {
@@ -74,6 +69,16 @@ export class SchedulesComponent implements OnInit, PolicySave {
         for (let name in child.locationForm.controls) {
           if (child.locationForm.controls[name].invalid) {
             invalid.push(name + " - Location: #" + child.location.sequence.toString());
+          }
+        }
+      }
+    }
+
+    if (this.aniGroupComp.components != null) {
+      for (let child of this.aniGroupComp.components) {
+        for (let name in child.aniForm.controls) {
+          if (child.aniForm.controls[name].invalid) {
+            invalid.push(name + " - Ani: #" + child.aniData.sequenceNo.toString());
           }
         }
       }
@@ -98,6 +103,14 @@ export class SchedulesComponent implements OnInit, PolicySave {
 
   hideInvalid(): void {
     this.showInvalid = false;
+  }
+
+  collapseAllLocations(): void {
+    console.log('collapse')
+  }
+  
+  expandAllLocations(): void {
+    console.log('expand')
   }
 
 }

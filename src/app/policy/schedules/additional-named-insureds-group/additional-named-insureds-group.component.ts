@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { AdditionalNamedInsureds, Endorsement, PolicyInformation } from '../../policy';
 import { PolicyService } from '../../policy.service';
-import { AdditionalNamedInsuredsComponent } from '../additional-named-insureds/additional-named-insureds.component';
+import { AdditionalNamedInsuredsComponent } from './additional-named-insureds/additional-named-insureds.component';
+import { NotificationService } from 'src/app/notification/notification-service';
 
 @Component({
   selector: 'rsps-additional-named-insureds-group',
@@ -19,8 +19,8 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   invalidMessage: string = "";
   showInvalid: boolean = false;
   aniData!: AdditionalNamedInsureds[];
-  faPlus = faPlus;
-  faMinus = faMinus;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   aniCollapsed = false;
   newAni!: AdditionalNamedInsureds;
   copyAni!: AdditionalNamedInsureds;
@@ -30,14 +30,13 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   aniSub!: Subscription;
  
   @Input()  public additionalNamedInsuredsGroup!: AdditionalNamedInsuredsGroupComponent;
-
-  @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
-  @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Input()  public currentSequence!: number;
+  @ViewChildren(AdditionalNamedInsuredsComponent) components: QueryList<AdditionalNamedInsuredsComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService) {
+
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -49,30 +48,30 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
     this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
     this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
   });
-  console.log(this.aniComp)
   }
 
 
   isValid(): boolean {
-    console.log(this.aniComp.aniForm.status)
-    if (this.aniComp != null) {
-        if (this.aniComp.aniForm.status != 'VALID') {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.aniForm.status != 'VALID') {
           return false;
         }
       }
-    
+    }
     return true;
   }
-  
+
   isDirty() {
-    if (this.aniComp != null) {
-        if (this.aniComp.aniForm.dirty) {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.aniForm.dirty) {
           return true;
         }
       }
+    }
     return false;
   }
-
   hideInvalid(): void {
     this.showInvalid = false;
   }
@@ -80,60 +79,73 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   copyExistingAni(existingAni: AdditionalNamedInsureds){
     this.copyAni = JSON.parse(JSON.stringify(existingAni));
     this.copyAni.name = 'CopyOf ' + existingAni.name
-    this.copyAni.sequenceNo = this.currentSequence;
+    this.copyAni.sequenceNo = this.getNextSequence();
     this.copyAni.createdDate = new Date();
-    this.incrementSequence.emit(this.currentSequence + 1);
-    console.log('new: ', this.copyAni, 'existing: ', existingAni, this.currentSequence)
+    this.copyAni.isNew = true;
+    this.aniComp.aniForm.form.markAsDirty;
     this.aniData.push(this.copyAni);
   }
 
-  deleteExistingAni(existingAni: AdditionalNamedInsureds){
-    this.deletedAni = existingAni;
-    this.aniData.forEach((value,index)=>{
-        if(value.sequenceNo==existingAni.sequenceNo) this.aniData.splice(index,1);
-        console.log(existingAni)
-    });
-    console.log(this.aniData)
+  deleteExistingAni(existingAni: AdditionalNamedInsureds) {
+    const index = this.aniData.indexOf(existingAni, 0);
+    if (index > -1) {
+      this.aniData.splice(index, 1);
+      this.notification.show('Additional Named Insureds deleted.', { classname: 'bg-success text-light', delay: 5000 });
+    }
+  }
+  getNextSequence(): number {
+    if (this.aniData.length == 0) {
+      return 1;
+    }
+    else {
+      return Math.max(...this.aniData.map(o => o.sequenceNo)) + 1;
+    }
   }
 
   addNewAdditionalNamedInsured(): void {
     this.newAni = this.createNewAni();
-    this.incrementSequence.emit(this.currentSequence + 1);
     this.aniData.push(this.newAni);
-    console.log(this.aniData)
    }
 
    createNewAni(): AdditionalNamedInsureds {
     return {
  name: "",
- role: 1,
+ role: undefined ,
  createdBy: 0,
  policyId: this.policyId,
- sequenceNo: this.currentSequence, 
+ sequenceNo: this.getNextSequence(), 
  endorsementNo: this.endorsementNumber,
  modifiedBy: 0,
- createdDate: new Date()
+ createdDate: new Date(),
+ isNew: true
     }
   }
 
-  saveAdditionalNamedInsureds(): any {
-    console.log(this.isDirty)
-    this.aniData.forEach((ani)=>{
-      this.aniSub = this.policyService.updateAdditionalNamedInsureds(ani).subscribe(() => {
-        console.log(ani + "in update")
-      });
-  });
-    if (this.newAni != null) {
-    this.aniSub = this.policyService.addAdditionalNamedInsureds(this.newAni).subscribe(() => {
-    });
+  async saveAdditionalNamedInsureds(): Promise<boolean> {
+    if (this.canEditPolicy && this.isDirty()) {
+      let saveCount: number = 0;
+      if (this.components != null) {
+        for (let child of this.components) {
+          if (child.aniForm.dirty) {
+            let result = await child.save();
+            if (result === false) {
+              this.notification.show('Additional Named Insureds ' + child.aniData.sequenceNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+            }
+            else {
+              saveCount++;
+            }
+          }
+        }
+        if (saveCount > 0) {
+          this.notification.show('Additional Named Insureds successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        }
+      }
+      if (!this.isValid()) {
+        this.notification.show('Additional Named Insureds not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        return false;
+      }
     }
-    if (this.copyAni != null) {
-    this.aniSub = this.policyService.addAdditionalNamedInsureds(this.copyAni).subscribe(() => {
-    });
-    }
-    if (this.deletedAni != null) {
-    this.aniSub = this.policyService.deleteAdditionalNamedInsureds(this.deletedAni.policyId, this.deletedAni.endorsementNo, this.deletedAni.sequenceNo).subscribe(() => {
-    });
-    }
+    return false;
   }
+  
 }

@@ -40,14 +40,12 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
   }
 
   addNewEndorsementLocation(): void {
-    // this.newAni = this.createNewAni();
-    // this.incrementSequence.emit(this.currentSequence + 1);
     let newLocation = newEndorsementLocation();
     newLocation.policyId = this.policyInfo.policyId;
     newLocation.endorsementNumber = this.endorsementNumber;
     newLocation.sequence = this.getNextSequence();
     this.locationData.push(newLocation);
-    console.log(newLocation)
+    this.locationCollapsed = false;
   }
 
   getNextSequence(): number {

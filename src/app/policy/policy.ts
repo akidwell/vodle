@@ -117,12 +117,13 @@ export interface AdditionalNamedInsureds {
   policyId: number;
   endorsementNo: number;
   sequenceNo: number;
-  role : number;
+  role? : number;
   name: string;
   createdBy: number;
   createdDate : Date;
   modifiedBy? : number;
   modifiedDate?: Date;
+  isNew: boolean;
 }
 
 export interface EndorsementLocationResolved {
