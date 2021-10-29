@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" >
   <div class="card-header" (click)="collapse.toggle()">Additional Named Insureds
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
@@ -16,7 +16,7 @@
     </div>
   </div>
     <div *ngFor="let item of aniData; let i = index">
-      <rsps-additional-named-insureds  (copyExistingAni)=copyExistingAni($event) (deleteExistingAni)=deleteExistingAni($event) [aniData]=item></rsps-additional-named-insureds>
+      <rsps-additional-named-insureds  (copyExistingAni)=copyExistingAni($event) (deleteExistingAni)=deleteExistingAni($event) [aniData]=item ></rsps-additional-named-insureds>
     </div>
   </div>
   <div class="card-footer" >

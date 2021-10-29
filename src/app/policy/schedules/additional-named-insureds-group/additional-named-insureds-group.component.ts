@@ -28,26 +28,22 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   endorsementNumber!: number;
   policyId!: number;
   aniSub!: Subscription;
- 
-  @Input()  public additionalNamedInsuredsGroup!: AdditionalNamedInsuredsGroupComponent;
+
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
-  @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
-  @Input()  public currentSequence!: number;
   @ViewChildren(AdditionalNamedInsuredsComponent) components: QueryList<AdditionalNamedInsuredsComponent> | undefined;
 
-
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
-    this.aniData = data['aniData'].additionalNamedInsureds;
-    this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
-    this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
-  });
+      this.aniData = data['aniData'].additionalNamedInsureds;
+      this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
+      this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
+    });
   }
 
 
@@ -76,13 +72,12 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
     this.showInvalid = false;
   }
 
-  copyExistingAni(existingAni: AdditionalNamedInsureds){
+  copyExistingAni(existingAni: AdditionalNamedInsureds) {
     this.copyAni = JSON.parse(JSON.stringify(existingAni));
     this.copyAni.name = 'CopyOf ' + existingAni.name
     this.copyAni.sequenceNo = this.getNextSequence();
     this.copyAni.createdDate = new Date();
     this.copyAni.isNew = true;
-    this.aniComp.aniForm.form.markAsDirty;
     this.aniData.push(this.copyAni);
   }
 
@@ -105,19 +100,19 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   addNewAdditionalNamedInsured(): void {
     this.newAni = this.createNewAni();
     this.aniData.push(this.newAni);
-   }
+  }
 
-   createNewAni(): AdditionalNamedInsureds {
+  createNewAni(): AdditionalNamedInsureds {
     return {
- name: "",
- role: undefined ,
- createdBy: 0,
- policyId: this.policyId,
- sequenceNo: this.getNextSequence(), 
- endorsementNo: this.endorsementNumber,
- modifiedBy: 0,
- createdDate: new Date(),
- isNew: true
+      name: "",
+      role: undefined,
+      createdBy: 0,
+      policyId: this.policyId,
+      sequenceNo: this.getNextSequence(),
+      endorsementNo: this.endorsementNumber,
+      modifiedBy: 0,
+      createdDate: new Date(),
+      isNew: true
     }
   }
 
@@ -126,7 +121,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
       let saveCount: number = 0;
       if (this.components != null) {
         for (let child of this.components) {
-          if (child.aniForm.dirty) {
+          if (child.aniForm.dirty) {         
             let result = await child.save();
             if (result === false) {
               this.notification.show('Additional Named Insureds ' + child.aniData.sequenceNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
@@ -147,5 +142,5 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
     }
     return false;
   }
-  
+
 }
