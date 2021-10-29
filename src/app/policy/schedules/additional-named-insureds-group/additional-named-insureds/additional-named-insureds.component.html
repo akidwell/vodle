@@ -15,12 +15,12 @@
     <div class="col-lg-3">
       <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key" placeholder=""
         [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="role"
-        [(ngModel)]="aniData.role" #role="ngModel">
+        [(ngModel)]="aniData.role" #role="ngModel"  (change)="duplicateNameRoleCombo()">
       </ng-select>
     </div>
     <div class="col-lg-5">
       <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-        [required]="canEditPolicy" name="name" [(ngModel)]="aniData.name">
+        [required]="canEditPolicy" name="name" [(ngModel)]="aniData.name" (change)="duplicateNameRoleCombo()">
     </div>
     <div class="col-lg-2">
       <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" name="createDate"

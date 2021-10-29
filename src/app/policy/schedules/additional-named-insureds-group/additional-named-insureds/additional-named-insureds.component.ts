@@ -29,11 +29,13 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   saveSub!: Subscription;
   aniCollapsed = false;
   isReadOnly: boolean = true;
-  
+  ani!: AdditionalNamedInsureds[];
+    //these are used to check for a same name/role combo
+    nameRoleArray: string[] = new Array;
+    nameRoleDuplicates: string[] = new Array;
+
   @Input() aniData!: AdditionalNamedInsureds;
-  @Input() index!: number;
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
-  @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
   @ViewChild('modalConfirmation') modalConfirmation: any;
@@ -46,6 +48,9 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   }
 
   ngOnInit(): void {    
+    this.route.parent?.data.subscribe(data => {
+      this.ani = data['aniData'].additionalNamedInsureds;
+    });
     this.aniRoles$ = this.dropdowns.getAdditonalNamedInsuredsRoles();
   } 
 
@@ -85,14 +90,16 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
       });
     }
   }
-
   
+
   async save(): Promise<boolean> {
     return new Promise((resolve) => {
-      if (this.aniData .isNew) {
+      if (this.aniData.isNew) {
         this.addSub = this.policyService.addAdditionalNamedInsureds(this.aniData).subscribe(result => {
-         // return result;
           resolve(result);
+          this.aniForm.form.markAsPristine();
+          this.aniForm.form.markAsUntouched();
+          this.aniData.isNew = false;
         });
       } else {
         this.updateSub = this.policyService.updateAdditionalNamedInsureds(this.aniData).subscribe(result => {
@@ -107,4 +114,17 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
     // return false;
   }
 
+    duplicateNameRoleCombo(): void {
+    this.nameRoleArray = this.ani.map(a => a.role + a.name);
+    this.nameRoleDuplicates = this.nameRoleArray.filter((item, index) => this.nameRoleArray.indexOf(item) != index);
+    if (this.nameRoleDuplicates.length == 0) {
+      this.nameRoleArray = [];
+    } else if (this.nameRoleDuplicates.length != 0) {
+      this.nameRoleArray = [];
+      this.nameRoleDuplicates = [];
+      this.aniForm.controls['name'].setErrors({ 'incorrect': false });
+      this.aniForm.controls['role'].setErrors({ 'incorrect': false });
+      this.notification.show('Can not have an Additional Insured with the same name and role combination.', { classname: 'bg-danger text-light', delay: 5000 });
+    }
+  }
 }

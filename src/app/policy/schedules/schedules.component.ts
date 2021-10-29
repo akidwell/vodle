@@ -56,10 +56,6 @@ export class SchedulesComponent implements OnInit, PolicySave {
     this.aniGroupComp.saveAdditionalNamedInsureds();
   }
 
-  onIncrement(newSeq : number) {
-    this.additionalNamedInsuredsSequence = newSeq;
-  }
-
   showInvalidControls(): void {
     let invalid = [];
 
