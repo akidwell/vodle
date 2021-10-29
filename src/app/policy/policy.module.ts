@@ -23,11 +23,11 @@ import { SchedulesComponent } from './schedules/schedules.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SummaryComponent } from './summary/summary.component';
 import { CanDeactivateGuard } from './can-deactivate-guard';
-import { NotifyOnSave } from './services/notify-on-save.service';
-import { AdditionalNamedInsuredsComponent } from './schedules/additional-named-insureds/additional-named-insureds.component';
+import { AdditionalNamedInsuredsComponent } from './schedules/additional-named-insureds-group/additional-named-insureds/additional-named-insureds.component';
 import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-named-insureds-group/additional-named-insureds-group.component';
 import { EndorsementLocationComponent } from './schedules/endorsement-location-group/endorsement-location/endorsement-location.component';
 import { EndorsementLocationGroupComponent2 } from './schedules/endorsement-location-group/endorsement-location-group.component';
+import { UpdatePolicyChild} from './services/update-child.service';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,7 @@ import { EndorsementLocationGroupComponent2 } from './schedules/endorsement-loca
   providers: [
     CanDeactivateGuard,
     DatePipe,
-    NotifyOnSave
+    UpdatePolicyChild
   ]
 })
 export class PolicyModule { }

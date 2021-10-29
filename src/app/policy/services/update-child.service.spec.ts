@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NotifyOnSave } from './notify-on-save.service';
+import { UpdatePolicyChild } from './update-child.service';
 
 describe('NotifyOnSave.Service.TsService', () => {
-  let service: NotifyOnSave;
+  let service: UpdatePolicyChild;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(NotifyOnSave);
+    service = TestBed.inject(UpdatePolicyChild);
   });
 
   it('should be created', () => {

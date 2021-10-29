@@ -25,3 +25,22 @@
   .button:hover{
       color: blue;
   }
+  .collapse.show{
+    background-color: white;
+}
+  
+  a:hover {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  
+  .underline:hover {
+    text-decoration: underline;
+  }
+  
+  #aniFooter {
+    font-weight: bold;
+    text-align: center;
+  }
+  

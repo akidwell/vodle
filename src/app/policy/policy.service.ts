@@ -91,8 +91,8 @@ export class PolicyService {
     return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData)
   }
 
-  deleteAdditionalNamedInsureds(policyId: number, endorsementNo: number, intSequenceNo: number): Observable<boolean> {
-    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds/' + intSequenceNo)
+  deleteAdditionalNamedInsureds(ani: AdditionalNamedInsureds): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + ani.policyId + '/endorsements/' + ani.endorsementNo + '/additional-insureds/' + ani.sequenceNo)
   }
 
   getEndorsementLocation(policyId: number, endorsementNo: number): Observable<EndorsementLocation[]> {
