@@ -52,7 +52,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   getNextCoverageSequence(allGroups: EndorsementCoveragesGroup[]) {
     return allGroups.map(group => group.coverages.map(coverage => coverage.sequence)).reduce(
       (locGroup, seq) => locGroup.concat(seq),[]).reduce(
-        (a,b) => Math.max(a,b)) + 1;
+        (a,b) => Math.max(a,b),0) + 1;
   }
   getProgramId(firstGroup: EndorsementCoveragesGroup){
     return firstGroup.coverages[0].programId;
@@ -104,7 +104,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   isValid(): boolean {
     let total:number = 0;
     this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0})});
-    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp.isValid() && this.headerComp.endorsement.premium == total;
+    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp?.isValid() && this.headerComp.endorsement.premium == total;
   }
 
   isDirty(): boolean {
@@ -135,7 +135,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     }
 
     // Loop through each child component to see it any of them have invalid controls
-    if (this.groupComp.components != null) {
+    if (this.groupComp?.components != null) {
       for (let child of this.groupComp.components) {
         for (let name in child.endorsementCoveragesForm.controls) {
           if (child.endorsementCoveragesForm.controls[name].invalid) {

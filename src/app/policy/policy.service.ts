@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation } from './policy';
@@ -104,7 +104,12 @@ export class PolicyService {
   }
 
   updateEndorsementLocation(location: EndorsementLocation): Observable<boolean> {
-    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location);
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
+    .pipe(
+      catchError(() => {
+        return of(false); 
+      })
+    );
   }
   
   deleteEndorsementLocation(location: EndorsementLocation): Observable<boolean> {

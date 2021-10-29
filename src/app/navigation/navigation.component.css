@@ -1,5 +1,5 @@
 .sidebar a.active {
-  text-decoration: none; font-weight: bold; color: white ;background-color: #ed0139;;
+  text-decoration: none; font-weight: bold; color: white ;background-color: #ed0139;
 }
 .sidebar a:hover:not(.active) {
   text-decoration: none; font-weight: bold; color: #00274e;  background-color: #f2f4f6;

@@ -21,7 +21,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './app-reuse-strategy';
 
-
 @NgModule({
   declarations: [
     AppComponent,
