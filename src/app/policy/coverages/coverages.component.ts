@@ -9,7 +9,7 @@ import { PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup, newEndorsementCoverage } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
-import { NotifyOnSave } from '../services/notify-on-save.service';
+import { UpdatePolicyChild } from '../services/update-child.service';
 
 @Component({
   selector: 'rsps-coverages',
@@ -29,7 +29,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   notification: any;
   endorsementNumber!: number;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notifyOnSave: NotifyOnSave) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -61,7 +61,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   saveEndorsementCoverages(): any {
     console.log(this.endorsementCoveragesGroups)
     this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
-        this.notifyOnSave.notifyChild();
+        this.updatePolicyChild.notifyEndorsementCoverages();
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
     });
   }
@@ -176,9 +176,9 @@ export class CoveragesComponent implements OnInit, PolicySave {
     this.showInvalid = false;
   }
   collapseAllLocations(): void {
-    console.log('collapse')
+    this.updatePolicyChild.collapseLocationsCoverages();
   }
   expandAllLocations(): void {
-    console.log('expand')
+    this.updatePolicyChild.expandLocationsCoverages();
   }
 }

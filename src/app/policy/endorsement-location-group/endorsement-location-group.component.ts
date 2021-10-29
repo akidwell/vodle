@@ -8,6 +8,7 @@ import { newEndorsementCoverage, EndorsementCoverage, EndorsementCoverageLocatio
 import { EndorsementCoverageLocationComponent, LocationResult } from '../endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementCoverageComponent } from '../endorsement-coverage/endorsement-coverage.component';
 import { PolicyInformation } from '../policy';
+import { UpdatePolicyChild } from '../services/update-child.service';
 
 @Component({
   selector: 'rsps-endorsement-location-group',
@@ -24,6 +25,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
   formStatus!: string;
   anchorId!: string;
   locationCollapsed: boolean = true;
+  collapsePanelSubscription!: Subscription;
+  expandPanelSubscription!: Subscription;
+
 
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
@@ -40,7 +44,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
   @ViewChildren("coverageDiv") private coverageDivs!: QueryList<EndorsementCoverageComponent>;
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth,private route: ActivatedRoute) {
+  constructor(private userAuth: UserAuth,private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -88,6 +92,12 @@ export class EndorsementLocationGroupComponent implements OnInit {
           console.log(this.coverageDivs)
         }, 0);
       }
+    });
+    this.collapsePanelSubscription = this.updatePolicyChild.collapseLocationsObservable$.subscribe(() => {
+      this.locationCollapsed = true;
+    });
+    this.expandPanelSubscription = this.updatePolicyChild.expandLocationsObservable$.subscribe(() => {
+      this.locationCollapsed = false;
     });
   }
 

@@ -11,7 +11,7 @@ import { SubCodeDefaultsService } from '../coverages/sub-code-defaults/sub-code-
 import { SubCodeDefaults } from '../coverages/sub-code-defaults/subCodeDefaults';
 import { PolicyInformation } from '../policy';
 import { PolicyService } from '../policy.service';
-import { NotifyOnSave } from '../services/notify-on-save.service';
+import { UpdatePolicyChild } from '../services/update-child.service';
 
 @Component({
   selector: 'rsps-endorsement-coverage',
@@ -47,8 +47,9 @@ export class EndorsementCoverageComponent implements OnInit {
   anchorId!: string;
   originalAction!: string;
   saveEventSubscription!: Subscription;
+  collapsePanelSubscription!: Subscription;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private notifyOnSave: NotifyOnSave,
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -76,9 +77,12 @@ export class EndorsementCoverageComponent implements OnInit {
     }
     this.originalAction = this.coverage.action;
 
-    this.saveEventSubscription = this.notifyOnSave.notifyObservable$.subscribe(() => {
+    this.saveEventSubscription = this.updatePolicyChild.endorsementCoveragesObservable$.subscribe(() => {
         this.coverage.isNew = false;
         this.originalAction = this.coverage.action;
+    });
+    this.collapsePanelSubscription = this.updatePolicyChild.collapseLocationsObservable$.subscribe(() => {
+      this.ecCollapsed = true;
     });
   }
 
