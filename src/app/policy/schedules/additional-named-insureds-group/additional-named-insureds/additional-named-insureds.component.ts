@@ -31,7 +31,6 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   isReadOnly: boolean = true;
   ani!: AdditionalNamedInsureds[];
     //these are used to check for a same name/role combo
-    newNameRoleCombo!: string;
     nameRoleArray: string[] = new Array;
     nameRoleDuplicates: string[] = new Array;
 
@@ -116,22 +115,15 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   }
 
     duplicateNameRoleCombo(): void {
-    console.log("in other dupe function")
-    this.ani.forEach((value) => {
-      this.newNameRoleCombo = value.role + value.name;
-      this.nameRoleArray.push(this.newNameRoleCombo)
-    });
+    this.nameRoleArray = this.ani.map(a => a.role + a.name);
     this.nameRoleDuplicates = this.nameRoleArray.filter((item, index) => this.nameRoleArray.indexOf(item) != index);
-    let isValid!:boolean;
     if (this.nameRoleDuplicates.length == 0) {
-      isValid = true;
       this.nameRoleArray = [];
     } else if (this.nameRoleDuplicates.length != 0) {
-      isValid = false;
       this.nameRoleArray = [];
       this.nameRoleDuplicates = [];
-      this.aniForm.controls['name'].setErrors({ 'incorrect': !isValid });
-      this.aniForm.controls['role'].setErrors({ 'incorrect': !isValid });
+      this.aniForm.controls['name'].setErrors({ 'incorrect': false });
+      this.aniForm.controls['role'].setErrors({ 'incorrect': false });
       this.notification.show('Can not have an Additional Insured with the same name and role combination.', { classname: 'bg-danger text-light', delay: 5000 });
     }
   }
