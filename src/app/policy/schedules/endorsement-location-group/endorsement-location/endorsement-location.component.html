@@ -9,11 +9,12 @@
       </div>
     </div>
   </div>
-  <div [ngClass]="{'expanded':!collapsed}"> 
+  <div [ngClass]="{'expanded':!collapsed}">
     <div #locationInfo class="card-body" (click)="collapseExpand(false)">
       <div class="row container" *ngIf="collapsed">
         <div class="col-lg-8">
-          <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address" [required]="canEditPolicy" 
+          <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address"
+            [required]="canEditPolicy"
             [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
         </div>
         <div class="col-lg-2">
@@ -26,13 +27,13 @@
       <div class="row container">
         <div class="col-lg-6">
           <label for="street1">Address Street 1</label>
-          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy" maxlength="40"
-            [required]="canEditPolicy" name="street1" [(ngModel)]="location.street1">
+          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy"
+            maxlength="40" [required]="canEditPolicy" name="street1" [(ngModel)]="location.street1">
         </div>
         <div class="col-lg-6">
           <label for="street2">Address Street 2</label>
-          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy" maxlength="40"
-            name="street2" [(ngModel)]="location.street2">
+          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy"
+            maxlength="40" name="street2" [(ngModel)]="location.street2">
         </div>
       </div>
       <div class="row">
@@ -49,8 +50,8 @@
             </div>
           </div>
           <div *ngIf="!isLoadingAddress">
-            <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress" maxlength="25"
-              [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
+            <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
+              maxlength="25" [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
           </div>
         </div>
         <div class="col-lg-3">
@@ -75,8 +76,8 @@
           <div *ngIf="!isLoadingAddress">
             <div *ngIf="counties.length <= 1">
               <input type="text" class="form-control" id="locationCounty"
-                [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty" maxlength="100"
-                #locationCounty="ngModel">
+                [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
+                maxlength="100" #locationCounty="ngModel">
             </div>
             <div *ngIf="counties.length > 1">
               <ng-select id="locationCounty" [items]="counties" [clearable]="false"

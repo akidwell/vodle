@@ -1,0 +1,40 @@
+.card-header {
+  color: white;
+  background-color: #00274e;
+}
+
+.Expired {
+  color: #ed0139;
+}
+
+.InForce {
+  color: green;
+}
+
+#searchHeader {
+  background-color: #335271;
+  color: white;
+}
+
+#searchFooter {
+  font-weight: bold;
+  text-align: center;
+}
+
+.table {
+  margin-top: 0px;
+  margin-bottom: 0px
+}
+
+#actionCell {
+  margin: 0px;
+  padding: 0px;
+}
+
+#action {
+  height: 100%;
+}
+
+.policyBorder {
+  border-top: 10px solid black;
+}

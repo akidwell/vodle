@@ -143,7 +143,8 @@ export class ImportComponent implements OnInit {
       
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
-      this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString()]) + '/0';
+      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
+      this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {
       this.pipeMessage = this.importPolicyResponse.errorMessage;
