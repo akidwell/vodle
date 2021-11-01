@@ -16,10 +16,6 @@ export class PolicySearchService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  onResults() {
-    return this.searchResults.asObservable();
-  }
-
   getPolicySearch(filter: string): Observable<PolicySearchResults[]> {
     const params = new HttpParams().append('filter', filter);
     this._loading$.next(true)

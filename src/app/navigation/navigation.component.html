@@ -1,29 +1,38 @@
 <div class='sidebar' *ngIf="isAuthenticated">
-    <a class='nav-link' routerLinkActive='active' routerLink='/home'>
-        <fa-icon [icon]="faHome"></fa-icon>
-        Home
+  <a class='nav-link' routerLinkActive='active' routerLink='/home'>
+    <fa-icon [icon]="faHome"></fa-icon>
+    Home
+  </a>
+  <a class='nav-link' routerLinkActive='active' routerLink='/import'>
+    <fa-icon [icon]="faFileImport"></fa-icon>
+    Import
+  </a>
+  <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1">
+  <div *ngFor="let policy of policyHistory">
+    <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
+      [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]" #policyActive="routerLinkActive">
+      <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
+      <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
+      {{ policy.policyNumber + ":" + policy.endorsementNumber}}
     </a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/import'>
-        <fa-icon [icon]="faFileImport"></fa-icon>
-        Import
-    </a>
-    <hr class="rounded mt-1 mb-1">
-    <a class='nav-link' (click)="toggleApplicationNavbar()">
-        <fa-icon [icon]="faToolbox"></fa-icon>
-        Apps
-        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!applicationNavbarOpen"></fa-icon>
-        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="applicationNavbarOpen"></fa-icon>
-    </a>
-    <div class="collapse navbar-collapse" [ngClass]="{ 'show': applicationNavbarOpen }">
-        <rsps-applications></rsps-applications>
-    </div>
-    <a class='nav-link' (click)="toggleReportNavbar()">
-        <fa-icon [icon]="faFileAlt"></fa-icon>
-        Reports
-        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!reportNavbarOpen"></fa-icon>
-        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="reportNavbarOpen"></fa-icon>
-    </a>
-    <div class="collapse navbar-collapse" [ngClass]="{ 'show': reportNavbarOpen }">
-        <rsps-reports></rsps-reports>
-    </div>
+  </div>
+  <hr class="rounded mt-1 mb-1">
+  <a class='nav-link' (click)="toggleApplicationNavbar()">
+    <fa-icon [icon]="faToolbox"></fa-icon>
+    Apps
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!applicationNavbarOpen"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="applicationNavbarOpen"></fa-icon>
+  </a>
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': applicationNavbarOpen }">
+    <rsps-applications></rsps-applications>
+  </div>
+  <a class='nav-link' (click)="toggleReportNavbar()">
+    <fa-icon [icon]="faFileAlt"></fa-icon>
+    Reports
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!reportNavbarOpen"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="reportNavbarOpen"></fa-icon>
+  </a>
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': reportNavbarOpen }">
+    <rsps-reports></rsps-reports>
+  </div>
 </div>
