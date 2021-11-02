@@ -29,9 +29,14 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/carrier-codes');
   }
 
-  getRiskGrades(programId: number): Observable<Code[]> {
-    const params = new HttpParams().append('programId', programId);
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades', {params})
+  getRiskGrades(programId?: number): Observable<Code[]> {
+    if (programId) {
+      const params = new HttpParams().append('programId', programId);
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades', { params })
+    }
+    else {
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades')
+    }
   }
 
   getAuditCodes(): Observable<Code[]> {
@@ -58,11 +63,10 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
   }
 
-  getCoverageDescriptions(coverageCode: string, policySymbol: string,programId: number, classCode?: number | null, coverageId?: number | null): Observable<Code[]> {
+  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageId?: number | null): Observable<Code[]> {
     let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
-    if (coverageId != null)
-    {
-      params = params.append('coverageId',coverageId);
+    if (coverageId != null) {
+      params = params.append('coverageId', coverageId);
     }
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
   }
@@ -126,11 +130,7 @@ export class DropDownsService {
     return observable;
   }
 
-  // getActionCodes(): Observable<Code[]> {
-  //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/coverage_action')
-  // }
-
-
+  //ClaimsMade
   private cacheClaimsMade: any;
   private cacheClaimsMade$!: Observable<any> | null;
 
@@ -153,11 +153,7 @@ export class DropDownsService {
     return observable;
   }
 
-  // getClaimsMadeCodes(): Observable<Code[]> {
-  //   console.log("claimsmade");
-  //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/claimsmade');
-  // }
-
+  // Deductibe Type
   private cacheDeductibleType: any;
   private cacheDeductibleType$!: Observable<any> | null;
 
@@ -180,10 +176,8 @@ export class DropDownsService {
     return observable;
   }
 
-  // getDeductibleTypes(): Observable<Code[]> {
-  //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
-  // }
 
+//Exposure Codes
   private cacheExposureCodes: any;
   private cacheExposureCodes$!: Observable<any> | null;
 
@@ -206,11 +200,7 @@ export class DropDownsService {
     return observable;
   }
 
-  // getExposureCodes(): Observable<Code[]> {
-  //   console.log("exposure-codes");
-  //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/exposure-codes')
-  // }
-
+  // Premium Type
   private cachePremTypes: any;
   private cachePremTypes$!: Observable<any> | null;
 
@@ -233,11 +223,7 @@ export class DropDownsService {
     return observable;
   }
 
-  // getPremTypeCodes(): Observable<Code[]> {
-  //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
-  // }
-
-   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
+  getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ANI_ROLE')
   }
 }

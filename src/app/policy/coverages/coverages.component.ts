@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../policy.service';
-import { EndorsementCoverageLocationComponent, LocationResult } from '../endorsement-coverage-location/endorsement-coverage-location.component';
-import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
+import { EndorsementCoverageLocationComponent, LocationResult } from './endorsement-coverage-location-group/endorsement-coverage-location/endorsement-coverage-location.component';
+import { EndorsementCoverageLocationGroupComponent } from './endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup, newEndorsementCoverage } from './coverages';
@@ -71,7 +71,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
-  @ViewChild(EndorsementLocationGroupComponent) groupComp!: EndorsementLocationGroupComponent;
+  @ViewChild(EndorsementCoverageLocationGroupComponent) groupComp!: EndorsementCoverageLocationGroupComponent;
   @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined
 
   async newLocation() {

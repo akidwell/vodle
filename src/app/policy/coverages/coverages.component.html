@@ -9,14 +9,14 @@
   </div>
 
   <div *ngFor="let item of endorsementCoveragesGroups; index as i">
-    <rsps-endorsement-location-group
+    <rsps-endorsement-coverage-location-group
     (incrementSequence)=onIncrement($event)
     (deleteThisGroup)=deleteGroup($event)
     [endorsementCoveragesGroup]=item
     [currentSequence]=coveragesSequence
     [locationIndex]="i"
     [groupCount]="endorsementCoveragesGroups.length"
-    ></rsps-endorsement-location-group>
+    ></rsps-endorsement-coverage-location-group>
   </div>
 
 </div>

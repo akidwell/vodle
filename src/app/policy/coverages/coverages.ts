@@ -27,6 +27,7 @@ export interface EndorsementCoverage {
   rateBasis?: number | null;
   exposureBase?: number | null;
   ecCollapsed: boolean;
+  isFirst: boolean;
   isNew?: boolean;
 }
 
@@ -84,5 +85,6 @@ export const newEndorsementCoverage = (): EndorsementCoverage => ({
   rateBasis: null,
   retroDate: null,
   subCode: 0,
+  isFirst: false,
   isNew: true
 });

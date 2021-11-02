@@ -5,15 +5,14 @@ import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../policy';
-import { PolicyService } from '../../policy.service';
 import { EndorsementLocationComponent } from './endorsement-location/endorsement-location.component';
 
 @Component({
-  selector: 'rsps-endorsement-location-group2',
+  selector: 'rsps-endorsement-location-group',
   templateUrl: './endorsement-location-group.component.html',
   styleUrls: ['./endorsement-location-group.component.css']
 })
-export class EndorsementLocationGroupComponent2 implements OnInit {
+export class EndorsementLocationGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   locationCollapsed: boolean = false;
@@ -25,7 +24,7 @@ export class EndorsementLocationGroupComponent2 implements OnInit {
 
   @ViewChildren(EndorsementLocationComponent) components: QueryList<EndorsementLocationComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService) { 
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService) { 
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );

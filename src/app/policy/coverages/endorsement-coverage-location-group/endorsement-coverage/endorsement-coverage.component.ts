@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faPlus, faAngleUp } from '@fortawesome/free-solid-svg-icons';
@@ -6,21 +6,19 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { EndorsementCoverage } from '../coverages/coverages';
-import { SubCodeDefaultsService } from '../coverages/sub-code-defaults/sub-code-defaults.service';
-import { SubCodeDefaults } from '../coverages/sub-code-defaults/subCodeDefaults';
-import { PolicyInformation } from '../policy';
-import { PolicyService } from '../policy.service';
-import { UpdatePolicyChild } from '../services/update-child.service';
+import { EndorsementCoverage } from '../../coverages';
+import { SubCodeDefaultsService } from '../../sub-code-defaults/sub-code-defaults.service';
+import { SubCodeDefaults } from '../../sub-code-defaults/subCodeDefaults';
+import { PolicyInformation } from '../../../policy';
+import { PolicyService } from '../../../policy.service';
+import { UpdatePolicyChild } from '../../../services/update-child.service';
 
 @Component({
-  selector: 'rsps-endorsement-coverage',
   templateUrl: './endorsement-coverage.component.html',
   styleUrls: ['./endorsement-coverage.component.css']
 })
 export class EndorsementCoverageComponent implements OnInit {
   ecCollapsed = true;
-  firstExpand = true;
   faPlus = faPlus;
   faArrowUp = faAngleUp;
   authSub: Subscription;
@@ -65,21 +63,27 @@ export class EndorsementCoverageComponent implements OnInit {
     if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
       this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode);
     }
+
     this.actionCodes$ = this.dropdowns.getActionCodes();
     this.premTypes$ = this.dropdowns.getPremTypes();
     this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
     this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId, this.coverage.coverageCode);
     this.exposureCodes$ = this.dropdowns.getExposureCodes();
     this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
-    this.anchorId = 'focusHere' + this.coverage.locationId;
+
+    this.anchorId = 'focusHere' + this.coverage.locationId + '-' + this.coverage.sequence;
     if ((this.coverage.coverageId ?? 0) > 0) {
       this.changeCoverageDescription("open");
     }
     this.originalAction = this.coverage.action;
 
+    if (this.coverage.isNew) {
+      this.focus();
+    }
+
     this.saveEventSubscription = this.updatePolicyChild.endorsementCoveragesObservable$.subscribe(() => {
-        this.coverage.isNew = false;
-        this.originalAction = this.coverage.action;
+      this.coverage.isNew = false;
+      this.originalAction = this.coverage.action;
     });
     this.collapsePanelSubscription = this.updatePolicyChild.collapseLocationsObservable$.subscribe(() => {
       this.ecCollapsed = true;
@@ -91,7 +95,10 @@ export class EndorsementCoverageComponent implements OnInit {
     this.saveEventSubscription.unsubscribe();
     this.authSub.unsubscribe();
     this.deleteSub?.unsubscribe();
+    this.saveEventSubscription?.unsubscribe();
+    this.collapsePanelSubscription?.unsubscribe();
   }
+
   copyCoverage(): void {
     this.copyExistingCoverage.emit(this.coverage);
   }
@@ -99,11 +106,9 @@ export class EndorsementCoverageComponent implements OnInit {
   focus(): void {
     this.ecCollapsed = false;
     setTimeout(() => {
-      document.getElementById(this.anchorId)!.scrollIntoView();
-    }, 250);
+      document.getElementById(this.anchorId)!.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 350);
   }
-
-
 
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
@@ -229,20 +234,12 @@ export class EndorsementCoverageComponent implements OnInit {
     return this.coverage.includeExclude != 'E' && this.subCodeDefaults.defaultLimitPatternBasis != '0';
   }
 
-   collapseExpand(event: boolean) {
-  //   if (this.firstExpand) {
-  //     this.actionCodes$ = this.dropdowns.getActionCodes();
-  //     this.premTypes$ = this.dropdowns.getPremTypes();
-  //     this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
-  //     this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId, this.coverage.coverageCode);
-  //     this.exposureCodes$ = this.dropdowns.getExposureCodes();
-  //     this.firstExpand = false;
-  //   }
-     this.ecCollapsed = event;
+  collapseExpand(event: boolean) {
+    this.ecCollapsed = event;
   }
 
   async deleteCoverage() {
-    if(this.coverage.isNew) {
+    if (this.coverage.isNew) {
       this.deleteThisCoverage.emit(this.coverage);
     } else {
       this.deleteSub = this.policyService.deleteEndorsementCoverage(this.coverage).subscribe(result => {
@@ -257,8 +254,6 @@ export class EndorsementCoverageComponent implements OnInit {
   @Output() status: EventEmitter<any> = new EventEmitter();
   @Output() copyExistingCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
   @Output() deleteThisCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
-  @ViewChild(NgForm,  { static: false })endorsementCoveragesForm!: NgForm;
-  @ViewChild('focusHere', { static: false }) homeElement!: ElementRef;
-  formStatus!: string;
+  @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
 }
 

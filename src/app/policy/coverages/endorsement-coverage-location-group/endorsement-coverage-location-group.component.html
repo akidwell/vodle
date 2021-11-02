@@ -1,0 +1,28 @@
+<form #endorsementCoveragesForm="ngForm">
+  <div class="content">
+    <div class="card">
+      <div class="card-header" (click)="collapsePanel(!locationCollapsed)">
+        <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup);$event.stopPropagation()">ID #:
+          {{endorsementCoveragesGroup.location.locationId}}</a>
+        <span *ngIf="groupCount > 1"
+          style="margin-left: 5px;">{{endorsementCoveragesGroup.location.street ? (endorsementCoveragesGroup.location.street + ' '): ('') }}
+          {{endorsementCoveragesGroup.location.city + ', ' + endorsementCoveragesGroup.location.state + ' ' + endorsementCoveragesGroup.location.zip}}</span>
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
+      </div>
+      <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
+        <ng-template endorsement-coverage-directive></ng-template>
+      </div>
+      <div class="card-footer">
+        <div id="locationTotal">
+          <button style="float:left; background:none; border:none;" class="underline" (click)="addNewCoverage();">Add
+            Coverage</button>
+          <div style="display: inline-block;">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}
+          </div>
+          <div style="float:right;">Coverages: {{endorsementCoveragesGroup.coverages.length}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>

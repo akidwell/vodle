@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PolicyRoutingModule } from './policy-routing.module';
 import { PolicyComponent } from './policy.component';
 import { PolicyHeaderComponent } from './header/policy-header.component';
-import { EndorsementLocationGroupComponent } from './endorsement-location-group/endorsement-location-group.component';
+import { EndorsementCoverageLocationGroupComponent } from './coverages/endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { AccountInformationComponent } from './information/account-information/account-information.component';
 import { PolicyInformationComponent } from './information/policy-information/policy-information.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,12 +13,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { InformationComponent } from './information/information.component';
 import { ZipCodePipe } from './information/account-information/zip-code.pipe';
 import { CoveragesComponent } from './coverages/coverages.component';
-import { EndorsementCoverageComponent } from './endorsement-coverage/endorsement-coverage.component';
+import { EndorsementCoverageComponent } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.component';
 import { HoverClassDirective } from '../directives/hover-class.directive';
 import { EndorsementHeaderComponent } from './coverages/endorsement-header/endorsement-header.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { NotificationComponent } from '../notification/notification-container.component';
-import { EndorsementCoverageLocationComponent } from './endorsement-coverage-location/endorsement-coverage-location.component';
+import { EndorsementCoverageLocationComponent } from './coverages/endorsement-coverage-location-group/endorsement-coverage-location/endorsement-coverage-location.component';
 import { SchedulesComponent } from './schedules/schedules.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SummaryComponent } from './summary/summary.component';
@@ -26,14 +26,15 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
 import { AdditionalNamedInsuredsComponent } from './schedules/additional-named-insureds-group/additional-named-insureds/additional-named-insureds.component';
 import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-named-insureds-group/additional-named-insureds-group.component';
 import { EndorsementLocationComponent } from './schedules/endorsement-location-group/endorsement-location/endorsement-location.component';
-import { EndorsementLocationGroupComponent2 } from './schedules/endorsement-location-group/endorsement-location-group.component';
+import { EndorsementLocationGroupComponent } from './schedules/endorsement-location-group/endorsement-location-group.component';
 import { UpdatePolicyChild} from './services/update-child.service';
+import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.directive'; 
 
 @NgModule({
   declarations: [
     PolicyComponent,
     PolicyHeaderComponent,
-    EndorsementLocationGroupComponent,
+    EndorsementCoverageLocationGroupComponent,
     AccountInformationComponent,
     InformationComponent,
     PolicyInformationComponent,
@@ -49,8 +50,9 @@ import { UpdatePolicyChild} from './services/update-child.service';
     SummaryComponent,
     AdditionalNamedInsuredsComponent,
     AdditionalNamedInsuredsGroupComponent,
-    EndorsementLocationGroupComponent2,
-    EndorsementLocationComponent
+    EndorsementLocationGroupComponent,
+    EndorsementLocationComponent,
+    EndorsementCoverageDirective
   ],
   imports: [
     CommonModule,
