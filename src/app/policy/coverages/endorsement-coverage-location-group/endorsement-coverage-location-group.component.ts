@@ -51,8 +51,8 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     );
   }
 
-  addNewCoverage(): void {
-    this.locationCollapsed = false;
+  async addNewCoverage(): Promise<void> {
+    await this.collapsePanel(false);
     const newCoverage: EndorsementCoverage = this.createNewCoverage();
     this.incrementSequence.emit(this.currentSequence + 1);
     this.endorsementCoveragesGroup.coverages.push(newCoverage);
