@@ -5,10 +5,10 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { AddressLookupService } from '../address-lookup/address-lookup.service';
-import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
-import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
-import { PolicyService } from '../policy.service';
+import { AddressLookupService } from '../../../address-lookup/address-lookup.service';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../../coverages';
+import { EndorsementCoverageLocationGroupComponent } from '../endorsement-coverage-location-group.component';
+import { PolicyService } from '../../../policy.service';
 
 @Component({
   selector: 'rsps-endorsement-coverage-location',
@@ -31,7 +31,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   isLoadingAddress: boolean = false;
   counties: string[] = [];
   coverage!: EndorsementCoveragesGroup;
-  parent!: EndorsementLocationGroupComponent;
+  parent!: EndorsementCoverageLocationGroupComponent;
 
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
 
@@ -61,7 +61,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
   private modalRef!: NgbModalRef
 
-  open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementLocationGroupComponent): Promise<LocationResult> {
+  open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementCoverageLocationGroupComponent): Promise<LocationResult> {
     return new Promise<LocationResult>(resolve => {
       this.coverage = locationInfo;
       this.parent = parent;

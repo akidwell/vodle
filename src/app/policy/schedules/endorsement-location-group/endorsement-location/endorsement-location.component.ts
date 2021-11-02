@@ -8,8 +8,8 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { NgForm } from '@angular/forms';
 import { AddressLookupService } from 'src/app/policy/address-lookup/address-lookup.service';
 import { PolicyService } from 'src/app/policy/policy.service';
-import { NotificationService } from 'src/app/notification/notification-service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UpdatePolicyChild } from 'src/app/policy/services/update-child.service';
 
 @Component({
   selector: 'rsps-endorsement-location',
@@ -33,6 +33,7 @@ export class EndorsementLocationComponent implements OnInit {
   updateSub!: Subscription;
   anchorId!: string;
   saveSub!: Subscription;
+  collapsePanelSubscription!: Subscription;
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
@@ -41,7 +42,7 @@ export class EndorsementLocationComponent implements OnInit {
   @Output() deleteThisLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private notification: NotificationService,private modalService: NgbModal) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private modalService: NgbModal, private updatePolicyChild: UpdatePolicyChild) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -63,11 +64,15 @@ export class EndorsementLocationComponent implements OnInit {
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
+    this.collapsePanelSubscription?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     this.dirtySub = this.locationForm.statusChanges?.subscribe(() => {
       this.isDirty = this.locationForm.dirty ?? false;
+    });
+    this.collapsePanelSubscription = this.updatePolicyChild.collapseEndorsementLocationsObservable$.subscribe(() => {
+      this.collapseExpand(true);
     });
   }
 
@@ -121,19 +126,19 @@ export class EndorsementLocationComponent implements OnInit {
     return new Promise((resolve) => {
       if (this.location.isNew) {
         this.addSub = this.policyService.addEndorsementLocation(this.location).subscribe(result => {
-         // return result;
+          this.location.isNew = false;
+          this.locationForm.form.markAsPristine();
+          this.locationForm.form.markAsUntouched();
           resolve(result);
         });
       } else {
         this.updateSub = this.policyService.updateEndorsementLocation(this.location).subscribe(result => {
           this.locationForm.form.markAsPristine();
           this.locationForm.form.markAsUntouched();
-         // return result;
           resolve(result);
         });
       }
     })
-    // return false;
   }
 
   collapseExpand(event: boolean) {
@@ -150,5 +155,4 @@ export class EndorsementLocationComponent implements OnInit {
       document.getElementById(this.anchorId)!.scrollIntoView();
     }, 250);
   }
-
 }

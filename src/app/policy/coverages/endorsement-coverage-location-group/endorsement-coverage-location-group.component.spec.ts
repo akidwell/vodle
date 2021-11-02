@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EndorsementLocationGroupComponent } from './endorsement-location-group.component';
+import { EndorsementCoverageLocationGroupComponent } from './endorsement-coverage-location-group.component';
 
 describe('EndorsementCoveragesComponent', () => {
-  let component: EndorsementLocationGroupComponent;
-  let fixture: ComponentFixture<EndorsementLocationGroupComponent>;
+  let component: EndorsementCoverageLocationGroupComponent;
+  let fixture: ComponentFixture<EndorsementCoverageLocationGroupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EndorsementLocationGroupComponent ]
+      declarations: [ EndorsementCoverageLocationGroupComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EndorsementLocationGroupComponent);
+    fixture = TestBed.createComponent(EndorsementCoverageLocationGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

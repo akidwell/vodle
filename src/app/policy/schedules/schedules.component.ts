@@ -5,8 +5,9 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { AdditionalNamedInsureds, EndorsementLocation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { PolicyService } from '../policy.service';
+import { UpdatePolicyChild } from '../services/update-child.service';
 import { AdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
-import { EndorsementLocationGroupComponent2 } from './endorsement-location-group/endorsement-location-group.component';
+import { EndorsementLocationGroupComponent } from './endorsement-location-group/endorsement-location-group.component';
 
 @Component({
   selector: 'rsps-schedules',
@@ -26,11 +27,11 @@ export class SchedulesComponent implements OnInit, PolicySave {
   notification: any;
   locationData: EndorsementLocation[] = [];
   
-  @ViewChild(EndorsementLocationGroupComponent2) locationComp!: EndorsementLocationGroupComponent2;
+  @ViewChild(EndorsementLocationGroupComponent) locationComp!: EndorsementLocationGroupComponent;
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(AdditionalNamedInsuredsGroupComponent) aniGroupComp!: AdditionalNamedInsuredsGroupComponent;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth,  private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -102,10 +103,12 @@ export class SchedulesComponent implements OnInit, PolicySave {
   }
 
   collapseAllLocations(): void {
+    this.updatePolicyChild.collapseEndorsementLocations();
     console.log('collapse')
   }
   
   expandAllLocations(): void {
+    // Not sure if we need this
     console.log('expand')
   }
 
