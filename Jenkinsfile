@@ -36,7 +36,7 @@ pipeline {
         }
 				checkout([  
 				            $class: 'GitSCM', 
-				            branches: [[name: 'master']], 
+				            branches: [[name: 'gm-branch']], 
 				            doGenerateSubmoduleConfigurations: false, 
 				            submoduleCfg: [], 
 				            userRemoteConfigs: [[credentialsId: 'buildmaster', url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
@@ -58,9 +58,10 @@ pipeline {
 		      "initial setup4": {		
 		      		sh 'nvm use v14.18.1'
 		      }, */
-		      "initial setup3": {
-				      sh 'whoami'
+		       "initial setup1": {
 				      sh 'pwd'
+		      }, 
+		      "initial setup3": {
 		      		sh './build.sh'
 		      }, 
 		      "Build npm Install": {
