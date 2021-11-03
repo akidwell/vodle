@@ -61,7 +61,7 @@ pipeline {
 		       "initial setup1": {
 				      sh 'pwd'
 		      }, 
-		      "initial setup3": {
+		      "initial setup2": {
 		      		sh 'chmod +x ./build.sh'
 		      }, 
 		       "initial setup3": {
