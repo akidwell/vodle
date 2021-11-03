@@ -66,13 +66,13 @@ pipeline {
 		      }, 
 		       "initial setup3": {
 		      		sh './build.sh'
-		      }, 
-		      "Build npm Install": {
+		      },
+		    /*  "Build npm Install": {
 		      		sh 'npm install'
 		      },
 		      "Build rsps": {
 		      		sh 'npm run build:server'
-		      }
+		      } */
 				)
     	} 
 		}
