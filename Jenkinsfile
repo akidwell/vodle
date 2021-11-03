@@ -46,10 +46,16 @@ pipeline {
 		stage("Builds"){
 			steps{
 	      parallel ( 
-	       "initial setup": {
+	       "initial setup1": {
 		      		sh 'export NVM_DIR="$HOME/.nvm"'
+		      }, 
+		      "initial setup2": {
 		      		sh '[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"'
+		      }, 
+		      "initial setup3": {
 		      		sh '[ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"'
+		      }, 
+		      "initial setup4": {		
 		      		sh 'nvm use v14.18.1'
 		      }, 
 		      "Build npm Install": {
