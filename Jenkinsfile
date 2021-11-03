@@ -46,35 +46,24 @@ pipeline {
 		stage("Builds"){
 			steps{
 	      parallel ( 
-	      /* "initial setup1": {
-		      		sh 'export NVM_DIR="$HOME/.nvm"'
-		      }, 
-		      "initial setup2": {
-		      		sh '[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"'
-		      }, 
-		      "initial setup3": {
-		      		sh '[ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"'
-		      }, 
-		      "initial setup4": {		
-		      		sh 'nvm use v14.18.1'
-		      }, */
-		       "initial setup1": {
-				      sh 'pwd'
-		      }, 
-		      "initial setup2": {
+		      "Setup security on build file": {
 		      		sh 'chmod +x ./build.sh'
 		      }, 
-		       "initial setup3": {
+		       "Run build script file": {
 		      		sh './build.sh'
-		      },
-		    /*  "Build npm Install": {
-		      		sh 'npm install'
-		      },
-		      "Build rsps": {
-		      		sh 'npm run build:server'
-		      } */
+		      }
 				)
     	} 
+		}
+		stage('Zip') {	
+			steps{
+				zip zipFile: "RSPS_${fileVersion}.zip", archive: false, dir: "Archive"
+			}
+		}
+		stage('Archive') {	
+			steps{
+				archiveArtifacts artifacts: "RSPS_${fileVersion}.zip", fingerprint: true
+			}
 		}
 	}
 }
