@@ -46,6 +46,9 @@ pipeline {
 		stage("Builds"){
 			steps{
 	      parallel ( 
+	       "Update verson in config": {
+		      	  jq '.buildVersion = ${fileVersion}' ./src/assets/config/config.dev.json|sponge ./src/assets/config/config.dev.json
+		      },     
 		      "Setup security on build file": {
 		      		sh 'chmod +x ./build.sh'
 		      }, 
