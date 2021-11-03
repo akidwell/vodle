@@ -9,10 +9,10 @@ pipeline {
 		stage('Clean Workspace'){
 			steps{
 				dir('Archive') {
-    			deleteDir()
+    				deleteDir()
 				}
 				sh 'mkdir Archive'
-    	}
+    		}
     }
     stage('Setup File Version'){
 	  	steps{
@@ -39,7 +39,7 @@ pipeline {
 				branches: [[name: 'gm-branch']], 
 				doGenerateSubmoduleConfigurations: false, 
 				submoduleCfg: [], 
-				userRemoteConfigs: [[credentialsId: 'buildmaster', url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
+				userRemoteConfigs: [[url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
 			])
 		}
 	}
