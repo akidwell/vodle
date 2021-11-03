@@ -43,31 +43,25 @@ pipeline {
 				        ])
 			}
 		}
+		stage('Config') {
+	    steps{
+	    	script {
+	    		def jsonfile = readJSON file: './src/assets/config/config.dev.json'
+	       			 jsonfile['buildVersion'] = ${fileVersion}
+               writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
+        }
+      }
+    }
 		stage("Builds"){
 			steps{
-	      parallel ( 
-	      /* "Update verson in config": {
-	       			sh """
-		      	  jq '.buildVersion = \${fileVersion}' ./src/assets/config/config.dev.json|sponge ./src/assets/config/config.dev.json
-		      	  """
-		      },     */
-		      "Update version in config": {
-		      
-	       		
-	       			def jsonfile = readJSON file: './src/assets/config/config.dev.json'
-	       			 jsonfile['buildVersion'] = ${fileVersion}""
-               writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
-
-	       			
-		      },  
-		       
+	       
 		      "Setup security on build file": {
 		      		sh 'chmod +x ./build.sh'
 		      }, 
 		       "Run build script file": {
 		      		sh './build.sh'
 		      }
-				)
+	
     	} 
 		}
 		stage('Zip') {	
