@@ -59,6 +59,8 @@ pipeline {
 		      		sh 'nvm use v14.18.1'
 		      }, */
 		      "initial setup3": {
+				      sh 'whoami'
+				      sh 'pwd'
 		      		sh './build.sh'
 		      }, 
 		      "Build npm Install": {
