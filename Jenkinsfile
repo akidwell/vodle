@@ -55,12 +55,9 @@ pipeline {
 		stage("Builds"){
 			steps{
 	       
-		      "Setup security on build file": {
 		      		sh 'chmod +x ./build.sh'
-		      }, 
-		       "Run build script file": {
 		      		sh './build.sh'
-		      }
+		     
 	
     	} 
 		}
