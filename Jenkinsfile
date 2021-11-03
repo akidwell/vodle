@@ -46,11 +46,17 @@ pipeline {
 		stage("Builds"){
 			steps{
 	      parallel ( 
-	       "Update verson in config": {
+	      /* "Update verson in config": {
 	       			sh """
 		      	  jq '.buildVersion = \${fileVersion}' ./src/assets/config/config.dev.json|sponge ./src/assets/config/config.dev.json
 		      	  """
-		      },     
+		      },     */
+		      "Update verson in config": {
+	       			jsonDictionary = readJSON file: "./src/assets/config/config.dev.json"
+	       			jsonEnvDefinition = jsonDictionary.get(0);
+	       			jsonEnvDefinition['buildVersion'] = "${fileVersion}".inspect()
+		      },  
+		       
 		      "Setup security on build file": {
 		      		sh 'chmod +x ./build.sh'
 		      }, 
