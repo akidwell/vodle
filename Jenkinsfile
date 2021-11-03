@@ -47,7 +47,7 @@ pipeline {
 	    steps{
 	    	script {
 	    		def jsonfile = readJSON file: './src/assets/config/config.dev.json'
-	       			 jsonfile['buildVersion'] = ${fileVersion}
+	       			 jsonfile['buildVersion'] = '1.0.0'
                writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
         }
       }
