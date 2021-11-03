@@ -51,10 +51,12 @@ pipeline {
 		      	  jq '.buildVersion = \${fileVersion}' ./src/assets/config/config.dev.json|sponge ./src/assets/config/config.dev.json
 		      	  """
 		      },     */
-		      "Update verson in config": {
+		      "Update version in config": {
+		      script {
 	       			jsonDictionary = readJSON file: "./src/assets/config/config.dev.json"
 	       			jsonEnvDefinition = jsonDictionary.get(0);
-	       			jsonEnvDefinition['buildVersion'] = "${fileVersion}".inspect()
+	       			jsonEnvDefinition['buildVersion'] = "${fileVersion}".toString()
+	       			}
 		      },  
 		       
 		      "Setup security on build file": {
