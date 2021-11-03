@@ -57,7 +57,7 @@ pipeline {
 		}
 		stage('Zip') {	
 			steps{
-				zip zipFile: "RSPS_${fileVersion}.zip", archive: false, dir: "Archive"
+				zip zipFile: "RSPS_${fileVersion}.zip", archive: false, dir: "dist/rsps"
 			}
 		}
 		stage('Archive') {	
