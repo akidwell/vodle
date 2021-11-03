@@ -53,9 +53,11 @@ pipeline {
 		      },     */
 		      "Update version in config": {
 		      script {
-	       			jsonDictionary = readJSON file: "./src/assets/config/config.dev.json"
-	       			jsonEnvDefinition = jsonDictionary.get(0);
-	       			jsonEnvDefinition['buildVersion'] = "${fileVersion}".toString()
+	       		
+	       			def jsonfile = readJSON file: './src/assets/config/config.dev.json'
+	       			 jsonfile['buildVersion'] = ${fileVersion}""
+               writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
+
 	       			}
 		      },  
 		       
