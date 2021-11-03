@@ -33,43 +33,40 @@ pipeline {
                     currentBuild.result = 'ABORTED'
                     error('Version not set')
                 }
-        }
-				checkout([  
-				            $class: 'GitSCM', 
-				            branches: [[name: 'gm-branch']], 
-				            doGenerateSubmoduleConfigurations: false, 
-				            submoduleCfg: [], 
-				            userRemoteConfigs: [[credentialsId: 'buildmaster', url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
-				        ])
-			}
+        	}
+			checkout([  
+			 	$class: 'GitSCM', 
+				branches: [[name: 'gm-branch']], 
+				doGenerateSubmoduleConfigurations: false, 
+				submoduleCfg: [], 
+				userRemoteConfigs: [[credentialsId: 'buildmaster', url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
+			])
 		}
-		stage('Config') {
+	}
+	stage('Config') {
 	    steps{
 	    	script {
 	    		def jsonfile = readJSON file: './src/assets/config/config.dev.json'
-	       			 jsonfile['buildVersion'] = '1.0.0'
-               writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
-        }
-      }
+	       		jsonfile['buildVersion'] = "${fileVersion}"
+               	writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
+        	}
+      	}
     }
-		stage("Builds"){
-			steps{
-	       
-		      		sh 'chmod +x ./build.sh'
-		      		sh './build.sh'
-		     
-	
+	stage("Builds"){
+		steps{
+		    sh 'chmod +x ./build.sh'
+		    sh './build.sh'
     	} 
-		}
-		stage('Zip') {	
-			steps{
-				zip zipFile: "RSPS_${fileVersion}.zip", archive: false, dir: "dist/rsps"
-			}
-		}
-		stage('Archive') {	
-			steps{
-				archiveArtifacts artifacts: "RSPS_${fileVersion}.zip", fingerprint: true
-			}
+	}
+	stage('Zip') {	
+		steps{
+			zip zipFile: "RSPS_${fileVersion}.zip", archive: false, dir: "dist/rsps"
 		}
 	}
+	stage('Archive') {	
+		steps{
+			archiveArtifacts artifacts: "RSPS_${fileVersion}.zip", fingerprint: true
+		}
+	}
+}
 }
