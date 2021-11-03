@@ -4,6 +4,6 @@
     "oktaClientId": "0oa13ty5ui2LT2Osn1d7",
     "oktaIssuer": "https://logindev.gaig.com",
     "oktaScopes": ["openid", "profile", "email"],
-    "oktaRedirectUri" : "http://localhost:4200/callback",
-    "oktaPostLogoutRedirectUri" : "http://localhost:4200/logged-out"
+    "oktaRedirectUri" : "https://garsdev.td.afg/rsps/callback",
+    "oktaPostLogoutRedirectUri" : "https://garsdev.td.afg/rsps/logged-out"
 }
