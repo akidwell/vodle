@@ -62,6 +62,7 @@ pipeline {
 				      sh 'pwd'
 		      }, 
 		      "initial setup3": {
+		      		sh 'chmod +x ./build.sh'
 		      		sh './build.sh'
 		      }, 
 		      "Build npm Install": {
