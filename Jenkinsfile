@@ -52,13 +52,13 @@ pipeline {
 		      	  """
 		      },     */
 		      "Update version in config": {
-		      script {
+		      
 	       		
 	       			def jsonfile = readJSON file: './src/assets/config/config.dev.json'
 	       			 jsonfile['buildVersion'] = ${fileVersion}""
                writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
 
-	       			}
+	       			
 		      },  
 		       
 		      "Setup security on build file": {
