@@ -63,6 +63,8 @@ pipeline {
 		      }, 
 		      "initial setup3": {
 		      		sh 'chmod +x ./build.sh'
+		      }, 
+		       "initial setup3": {
 		      		sh './build.sh'
 		      }, 
 		      "Build npm Install": {
