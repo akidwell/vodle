@@ -50,7 +50,7 @@ pipeline {
 		      		bat("npm install")
 		      },
 		      "Build rsps": {
-		      		bat("npm run ng build --prod --aot")
+		      		bat("npm run build:server")
 		      }
 				)
     	} 
