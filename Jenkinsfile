@@ -11,7 +11,7 @@ pipeline {
 				dir('Archive') {
     			deleteDir()
 				}
-				bat("mkdir Archive")
+				sh 'mkdir Archive'
     	}
     }
     stage('Setup File Version'){
@@ -46,11 +46,17 @@ pipeline {
 		stage("Builds"){
 			steps{
 	      parallel ( 
+	       "initial setup": {
+		      		sh 'export NVM_DIR="$HOME/.nvm"'
+		      		sh '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+		      		sh '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
+		      		sh 'nvm use v14.18.1'
+		      },
 		      "Build npm Install": {
-		      		bat("npm install")
+		      		sh 'npm install'
 		      },
 		      "Build rsps": {
-		      		bat("npm run build:server")
+		      		sh 'npm run build:server'
 		      }
 				)
     	} 
