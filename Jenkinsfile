@@ -36,7 +36,7 @@ pipeline {
 				}
 				checkout([  
 					$class: 'GitSCM', 
-					branches: [[name: 'gm-branch']], 
+					branches: [[name: 'master']], 
 					doGenerateSubmoduleConfigurations: false, 
 					submoduleCfg: [], 
 					userRemoteConfigs: [[url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
