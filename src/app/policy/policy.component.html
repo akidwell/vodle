@@ -14,23 +14,9 @@
       <a class="nav-link" routerLinkActive='active' [routerLink]="['reinsurance']">Reinsurance</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" (click)="onChange()" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
     </li>
-    <!-- <li class="nav-item">
-      <a class="nav-link" routerLinkActive='active' [routerLink]="['coverages']" [class.disabled]="formstatus != 'VALID'">Coverages</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLinkActive='active' [routerLink]="['schedules']" [class.disabled]="formstatus != 'VALID'">Schedules</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLinkActive='active' [routerLink]="['reinsurance']"[class.disabled]="formstatus != 'VALID'">Reinsurance</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" (click)="onChange()" routerLinkActive='active' [routerLink]="['summary']" [class.disabled]="formstatus != 'VALID'">Summary</a>
-    </li> -->
   </ul>
-  <!-- Chek with Amber-->
-  <!-- <router-outlet #myRouterOutlet="outlet" (activate)='onActivate($event)'></router-outlet> -->
   <router-outlet></router-outlet>
 </div>
 <app-notification aria-live="polite" aria-atomic="true"></app-notification>

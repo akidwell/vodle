@@ -3,10 +3,12 @@
 </div>
 <ngb-alert *ngIf="errorMessage"> <strong>Warning!</strong> {{errorMessage | json}}</ngb-alert>
 <rsps-navigation></rsps-navigation>
-
 <body>
   <router-outlet></router-outlet>
 </body>
 <div class='footer'>
   <rsps-version></rsps-version>
+</div>
+<div *ngIf="loading">
+  <rsps-busy></rsps-busy>
 </div>

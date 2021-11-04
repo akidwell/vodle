@@ -8,6 +8,7 @@ pipeline {
 	stages {
 		stage('Clean Workspace'){
 			steps{
+				cleanWs()
 				dir('Archive') {
     				deleteDir()
 				}
