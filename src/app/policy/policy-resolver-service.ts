@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
+import { PolicyHistoryService } from '../navigation/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, PolicyInformationResolved } from './policy';
 import { PolicyService } from './policy.service';
@@ -44,7 +45,7 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
 })
 export class PolicyInformationResolver implements Resolve<PolicyInformationResolved> {
 
-    constructor(private router: Router, private policyService: PolicyService) { }
+    constructor(private router: Router, private policyService: PolicyService, private policyHistoryService: PolicyHistoryService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
@@ -59,9 +60,10 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ policyInfo: null, error: message });
         }
-
+     
         return this.policyService.getPolicyInfo(Number(id))
             .pipe(
+                tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId,res.policySymbol+res.policyNo,Number(end))),
                 map(policyInfo => ({ policyInfo })),
                 catchError((error) => {
                     this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });

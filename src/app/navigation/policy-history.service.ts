@@ -25,7 +25,7 @@ export class PolicyHistoryService {
             match.openDate = new Date;
         }
         else {
-            // if list if list is large then 5 then remove item before adding new one to beggining
+            // if list if list is large then 5 then remove item before adding new one to beginning
             if (previousPolicies.length >= 5) {
                 previousPolicies.pop();
             }

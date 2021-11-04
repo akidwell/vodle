@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './app-reuse-strategy';
+import { BusyModule } from './busy/busy.module';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { CustomReuseStrategy } from './app-reuse-strategy';
     FontAwesomeModule,
     NgbAlertModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    BusyModule
   ],
   providers: [
     {
