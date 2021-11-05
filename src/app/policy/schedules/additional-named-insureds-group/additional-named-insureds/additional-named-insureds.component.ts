@@ -1,3 +1,4 @@
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -30,9 +31,9 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   aniCollapsed = false;
   isReadOnly: boolean = true;
   ani!: AdditionalNamedInsureds[];
-    //these are used to check for a same name/role combo
-    nameRoleArray: string[] = new Array;
-    nameRoleDuplicates: string[] = new Array;
+  nameRoleArray: string[] = new Array;
+  nameRoleDuplicates: string[] = new Array;
+  isNameRoleValid: boolean = true;
 
   @Input() aniData!: AdditionalNamedInsureds;
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
@@ -40,26 +41,26 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService,  private policyService: PolicyService, private modalService: NgbModal) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService, private modalService: NgbModal) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.ani = data['aniData'].additionalNamedInsureds;
     });
     this.aniRoles$ = this.dropdowns.getAdditonalNamedInsuredsRoles();
-  } 
+  }
 
   ngAfterViewInit(): void {
     this.dirtySub = this.aniForm.statusChanges?.subscribe(() => {
       this.isDirty = this.aniForm.dirty ?? false;
     });
   }
-  
+
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.dirtySub?.unsubscribe();
@@ -70,6 +71,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
 
   copyAni(): void {
     this.copyExistingAni.emit(this.aniData);
+    this.aniForm.form.markAsDirty();
   }
 
   openDeleteConfirmation() {
@@ -81,7 +83,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   }
 
   async deleteAni() {
-    if(this.aniData.isNew) {
+    if (this.aniData.isNew) {
       this.deleteExistingAni.emit(this.aniData);
     } else {
       this.deleteSub = this.policyService.deleteAdditionalNamedInsureds(this.aniData).subscribe(result => {
@@ -90,7 +92,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
       });
     }
   }
-  
+
 
   async save(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -114,17 +116,26 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
     // return false;
   }
 
-    duplicateNameRoleCombo(): void {
+  checkDuplicateNameRoleCombo(): void {
+
+    if (this.aniForm.controls['role'].errors?.duplicate == true || this.aniForm.controls['name'].errors?.duplicate == true || this.aniForm.controls['name'].value == '') {
+      this.aniForm.controls['name'].setErrors(null);
+      this.aniForm.controls['role'].setErrors(null);
+    }
     this.nameRoleArray = this.ani.map(a => a.role + a.name);
     this.nameRoleDuplicates = this.nameRoleArray.filter((item, index) => this.nameRoleArray.indexOf(item) != index);
-    if (this.nameRoleDuplicates.length == 0) {
+    if (this.nameRoleDuplicates.length == 0 && this.aniForm.controls['name'].value != '') {
+      this.isNameRoleValid = true;
       this.nameRoleArray = [];
     } else if (this.nameRoleDuplicates.length != 0) {
+      this.isNameRoleValid = false;
       this.nameRoleArray = [];
       this.nameRoleDuplicates = [];
-      this.aniForm.controls['name'].setErrors({ 'incorrect': false });
-      this.aniForm.controls['role'].setErrors({ 'incorrect': false });
-      this.notification.show('Can not have an Additional Insured with the same name and role combination.', { classname: 'bg-danger text-light', delay: 5000 });
+      this.aniForm.controls['name'].setErrors({ 'duplicate': true });
+      this.aniForm.controls['role'].setErrors({ 'duplicate': true });
+    } else if (this.aniForm.controls['name'].value == '') {
+      this.isNameRoleValid = true;
+      this.aniForm.controls['name'].setErrors({ nullName: true });
     }
   }
 }
