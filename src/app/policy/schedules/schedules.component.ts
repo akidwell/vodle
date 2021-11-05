@@ -22,7 +22,6 @@ export class SchedulesComponent implements OnInit, PolicySave {
   invalidMessage: string = "";
   showInvalid: boolean = false;
   aniData!: AdditionalNamedInsureds[];
-  additionalNamedInsuredsSequence!: number;
   aniSub!: Subscription;
   notification: any;
   locationData: EndorsementLocation[] = [];
@@ -75,7 +74,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
       for (let child of this.aniGroupComp.components) {
         for (let name in child.aniForm.controls) {
           if (child.aniForm.controls[name].invalid) {
-            invalid.push(name + " - Ani: #" + child.aniData.sequenceNo.toString());
+            invalid.push(name + " - Additional Named Insured: #" + child.aniData.sequenceNo.toString());
           }
         }
       }
