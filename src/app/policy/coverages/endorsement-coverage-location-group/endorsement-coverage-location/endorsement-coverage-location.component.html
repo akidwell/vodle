@@ -13,12 +13,12 @@
       <div class="col-md">
         <label for="street">Address Street 1</label>
         <input type="text" class="form-control" id="street" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-          [(ngModel)]="location.street" name="street" #street="ngModel">
+          maxlength="40" [(ngModel)]="location.street" name="street" #street="ngModel">
       </div>
       <div class="col-md">
         <label for="street2">Addres Street 2</label>
         <input type="text" class="form-control" id="street2" [readonly]="!canEditPolicy" [(ngModel)]="location.street2"
-          name="street2" #street2="ngModel">
+          maxlength="40" name="street2" #street2="ngModel">
       </div>
       <div class="col-md">
         <label for="zipCode">Zip Code</label>
@@ -34,7 +34,7 @@
         </div>
         <div *ngIf="!isLoadingAddress">
           <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
-            [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
+            maxlength="25" [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
         </div>
       </div>
       <div class="col-md">
@@ -59,7 +59,7 @@
         <div *ngIf="!isLoadingAddress">
           <div *ngIf="counties.length <= 1">
             <input type="text" class="form-control" id="locationCounty" [readonly]="!canEditPolicy || isLoadingAddress"
-              [(ngModel)]="location.county" name="locationCounty" #locationCounty="ngModel">
+              maxlength="100" [(ngModel)]="location.county" name="locationCounty" #locationCounty="ngModel">
           </div>
           <div *ngIf="counties.length > 1">
             <ng-select id="locationCounty" [items]="counties" [clearable]="false"
@@ -73,26 +73,27 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy"
         [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
-       <button type="button" class="btn btn-danger" [hidden]="!canEditPolicy || !canDeleteLocation" (click)="openDeleteConfirmation()">Delete</button>
+      <button type="button" class="btn btn-danger" [hidden]="!canEditPolicy || !canDeleteLocation"
+        (click)="openDeleteConfirmation()">Delete</button>
       <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
       <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
     </div>
   </ng-template>
 
 
-  
-<ng-template #modalConfirmation let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Delete Location Confirmation</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">×</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p>Are you sure you want to delete this location and all coverages?</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
-  </div>
-</ng-template>
+
+  <ng-template #modalConfirmation let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Delete Location Confirmation</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this location and all coverages?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
+    </div>
+  </ng-template>

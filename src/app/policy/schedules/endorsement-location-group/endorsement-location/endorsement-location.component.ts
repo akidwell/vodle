@@ -57,6 +57,7 @@ export class EndorsementLocationComponent implements OnInit {
     }
   }
 
+  
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.dirtySub?.unsubscribe();
@@ -73,6 +74,12 @@ export class EndorsementLocationComponent implements OnInit {
     });
     this.collapsePanelSubscription = this.updatePolicyChild.collapseEndorsementLocationsObservable$.subscribe(() => {
       this.collapseExpand(true);
+    });
+
+    setTimeout(() => {
+      if (this.location.isNew) {
+        this.locationForm.form.markAsDirty();
+      }
     });
   }
 
