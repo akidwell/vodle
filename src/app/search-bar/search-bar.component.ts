@@ -14,6 +14,7 @@ export class SearchBarComponent implements OnInit {
   faSearch = faSearch;
   searchTerm: string = "";
   sub!: Subscription;
+  disabled: boolean = true;
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   get loading$() { return this._loading$.asObservable(); }

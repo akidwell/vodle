@@ -1,0 +1,12 @@
+.button:disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    color: #c0c0c0;
+    background-color: green;
+}
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+}

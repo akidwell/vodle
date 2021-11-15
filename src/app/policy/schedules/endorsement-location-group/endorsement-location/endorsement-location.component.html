@@ -1,25 +1,18 @@
 <form #locationForm="ngForm">
   <div class="header-label">
     <div class="row container">
-      <div class="col-lg-8">
+      <div class="col-lg-6">
         <label for="address" *ngIf="index==0">Location</label>
-      </div>
-      <div class="col-lg-2">
-        <label for="createDate" *ngIf="index==0">Create Date</label>
       </div>
     </div>
   </div>
   <div [ngClass]="{'expanded':!collapsed}">
     <div #locationInfo class="card-body" (click)="collapseExpand(false)">
       <div class="row container" *ngIf="collapsed">
-        <div class="col-lg-8">
+        <div class="col-lg-6">
           <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address"
             [required]="canEditPolicy"
             [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
-        </div>
-        <div class="col-lg-2">
-          <input type="text" class="form-control" id="createDate" #createDate="ngModel" [readonly]="true"
-            name="createDate" [ngModel]="">
         </div>
       </div>
     </div>
@@ -91,11 +84,12 @@
       <div class="empty-space"></div>
       <div class="row container">
         <div class="col-lg-2">
-          <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary">Copy</span>
+          <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
+          *ngIf="canEditPolicy">Copy</span>
           <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-            *ngIf="!location.isNew">Delete</span>
+            *ngIf="!location.isNew && canEditPolicy">Delete</span>
           <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-            *ngIf="location.isNew">Remove</span>
+            *ngIf="location.isNew && canEditPolicy">Remove</span>
         </div>
         <div [id]='anchorId'></div>
         <span class='astext' (click)="collapseExpand(true)">
