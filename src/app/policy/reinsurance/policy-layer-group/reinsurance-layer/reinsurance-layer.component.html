@@ -1,56 +1,38 @@
 <form #reinsuranceForm="ngForm">
   <div class="row container">
-    <div class="col-lg-1">
-      <label for="programId2">ProgramId</label>
-      <input type="text" class="form-control" id="name" #programId2="ngModel" name="programId2" [(ngModel)]="programId">
-    </div>
-    <div class="col-lg-2">
-      <label for="policyEffectiveDate">Effective Date</label>
-      <input type="date" class="form-control" id="policyEffectiveDate" [ngModel]="effectiveDate   | date:'yyyy-MM-dd'"
-        (ngModelChange)="effectiveDate=$event" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
-    </div>
-  </div>
-  <span class="btn btn-secondary" (click)=search() hover-class="btn-primary">search</span>
-  <div class="row container">
-    <div class="col-lg-1">
-      <label for="policyLayer">Policy Layer</label>
-      <input type="text" class="form-control" id="name" #layerNumber="ngModel" [readonly]="false" [required]="true"
-        name="policyLayer" [(ngModel)]="reinsuranceLayer.policyLayer">
-    </div>
-  </div>
-  <div class="row container">
     <div class="reinsuranceLayer">
-      <label for="layerNumber">RLN</label>
+      <label for="layerNumber" *ngIf="index==0">RLN</label>
     </div>
     <div class="attachmentPoint">
-      <label for="attachmentPoint">Attachment Point</label>
+      <label for="attachmentPoint" *ngIf="index==0">Attachment Point</label>
     </div>
     <div class="reinsuranceLimits">
-      <label for="reinsuranceLimits">Reinsurance Limits</label>
+      <label for="reinsuranceLimits" *ngIf="index==0">Reinsurance Limits</label>
     </div>
     <div class="cededPremium">
-      <label for="reinsuranceLimits">Ceded Premium</label>
+      <label for="reinsuranceLimits" *ngIf="index==0">Ceded Premium</label>
     </div>
     <div class="commissionRate">
-      <label for="commissionRate">Comm Rate</label>
+      <label for="commissionRate" *ngIf="index==0">Comm Rate</label>
     </div>
     <div class="reinsuranceCode">
-      <label for="reinsuranceCode">Reinsurance Code</label>
+      <label for="reinsuranceCode" *ngIf="index==0">Reinsurance Code</label>
     </div>
     <div class="isFaculative">
-      <label for="isFaculative">Fac</label>
+      <label for="isFaculative" *ngIf="index==0">Fac</label>
     </div>
     <div class="intermediary">
-      <label for="intermediary">Intermediary</label>
+      <label for="intermediary" *ngIf="index==0">Intermediary</label>
     </div>
     <div class="certificatNumber">
-      <label for="certificatNumber" [hidden]="!reinsuranceLayer.isFaculative">Certificate No</label>
+      <!-- <label for="certificatNumber" [hidden]="!reinsuranceLayer.isFaculative">Certificate No</label> -->
+      <label for="certificatNumber" *ngIf="index==0">Certificate No</label>
     </div>
   </div>
   <div class="row container">
     <div class="reinsuranceLayer">
       <input type="text" class="form-control" id="name" #layerNumber="ngModel" [readonly]="false" [required]="true"
-        name="layerNumber" [(ngModel)]="reinsuranceLayer.layerNumber">
+        name="layerNumber" [(ngModel)]="reinsuranceLayer.reinsLayerNo">
     </div>
     <div class="attachmentPoint">
       <input type="text" class="form-control" id="name" #attachmentPoint="ngModel" name="attachmentPoint"
@@ -58,7 +40,7 @@
     </div>
     <div class="reinsuranceLimits">
       <input type="text" class="form-control" id="name" #reinsuranceLimit="ngModel" [readonly]="false" [required]="true"
-        name="reinsuranceLimits"[(ngModel)]="reinsuranceLayer.reinsuranceLimit" mask="separator.0" thousandSeparator="," >
+        name="reinsuranceLimits"[(ngModel)]="reinsuranceLayer.reinsLimit" mask="separator.0" thousandSeparator="," >
     </div>
     <div class="cededPremium">
       <input type="text" class="form-control" id="name" #cededPremium="ngModel" [readonly]="false" [required]="true"
@@ -66,11 +48,11 @@
     </div>
     <div class="commissionRate">
       <input type="text" class="form-control" id="name" #commissionRate="ngModel" [readonly]="false" [required]="true"
-        name="commissionRate" [(ngModel)]="reinsuranceLayer.commissionRate" mask="percent" suffix="%">
+        name="commissionRate" [(ngModel)]="reinsuranceLayer.reinsCededCommRate" mask="percent" suffix="%">
     </div>
     <div class="reinsuranceCode">
-      <ng-select id="reinsuranceCode" [items]="states$ | async" bindLabel="treatyName" bindValue="treatyNumber"
-        [required]="true" [clearable]="false" name="reinsuranceCode" [(ngModel)]="reinsuranceLayer.treatyNumber"
+      <ng-select id="reinsuranceCode" [items]="reinsuranceCodes$ | async" bindLabel="treatyName" bindValue="treatyNumber"
+        [required]="true" [clearable]="false" name="reinsuranceCode" [(ngModel)]="reinsuranceLayer.treatyNo"
         #locationState="ngModel" [searchFn]="dropDownSearchReinsurance" (change)="changeReinsurerCode()">
         <ng-template ng-label-tmp let-item="item">
           {{item.treatyNumber}}
@@ -89,12 +71,12 @@
     </div>
     <div class="intermediary">
       <input type="text" class="form-control" id="intermediary" #intermediary="ngModel" [readonly]="false"
-        name="intermediary" [(ngModel)]="reinsuranceLayer.intermediary">
+        name="intermediary" [(ngModel)]="reinsuranceLayer.intermediaryNo">
     </div>
     <div class="certificatNumber">
       <input type="text" class="form-control" id="certificatNumber" #certificatNumber="ngModel" [readonly]="false"
         [hidden]="!reinsuranceLayer.isFaculative" name="certificatNumber"
-        [(ngModel)]="reinsuranceLayer.certificateNumber">
+        [(ngModel)]="reinsuranceLayer.reinsCertificateNo">
     </div>
   </div>
 </form>

@@ -13,7 +13,7 @@ export class ReinsuranceLookupService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getReinsurance(programId: number,effectiveDate: Date): Observable<ReinsuranceLookup[]> {
-    const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDate.toISOString());;
+    const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDate.toString());;
     return this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/reinsurance-lookup', { params })
       // .pipe(
       //   catchError(() => {

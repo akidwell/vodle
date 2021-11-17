@@ -201,6 +201,8 @@ export interface ReinsuranceLayerData{
   expirationDate: Date;
   cededCommissionRat: number;
   effectiveDate: Date;
+  isFaculative: boolean;
+  attachmentPoint: number;
 }
 
 export interface PolicyLayerDataResolved {
