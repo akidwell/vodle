@@ -29,6 +29,7 @@ import { EndorsementLocationComponent } from './schedules/endorsement-location-g
 import { EndorsementLocationGroupComponent } from './schedules/endorsement-location-group/endorsement-location-group.component';
 import { UpdatePolicyChild} from './services/update-child.service';
 import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.directive'; 
+import { ReinsuranceLayerComponent } from './reinsurance/reinsurance-layer/reinsurance-layer.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-l
     AdditionalNamedInsuredsGroupComponent,
     EndorsementLocationGroupComponent,
     EndorsementLocationComponent,
-    EndorsementCoverageDirective
+    EndorsementCoverageDirective,
+    ReinsuranceLayerComponent
   ],
   imports: [
     CommonModule,

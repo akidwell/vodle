@@ -1,0 +1,60 @@
+.row {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+  width: 20px;
+  height: 20px;  
+}
+
+input[type="checkbox"][readonly] {
+  pointer-events: none;
+}
+
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+}
+
+.reinsuranceLayer {
+  width: 5%;
+}
+
+.attachmentPoint {
+  width: 13%;
+}
+
+.reinsuranceLimits {
+  width: 13%;
+}
+
+.cededPremium {
+  width: 13%;
+}
+
+.commissionRate {
+  width: 13%;
+}
+
+.reinsuranceCode {
+  width: 12%;
+}
+
+.isFaculative {
+  width: 3%;
+}
+
+.intermediary {
+  width: 14%;
+}
+
+.certificatNumber {
+  width: 14%;
+}
