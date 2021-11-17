@@ -1,0 +1,82 @@
+<form #reinsuranceForm="ngForm">
+  <div class="row container">
+    <div class="reinsuranceLayer">
+      <label for="layerNumber" *ngIf="index==0">RLN</label>
+    </div>
+    <div class="attachmentPoint">
+      <label for="attachmentPoint" *ngIf="index==0">Attachment Point</label>
+    </div>
+    <div class="reinsuranceLimits">
+      <label for="reinsuranceLimits" *ngIf="index==0">Reinsurance Limits</label>
+    </div>
+    <div class="cededPremium">
+      <label for="reinsuranceLimits" *ngIf="index==0">Ceded Premium</label>
+    </div>
+    <div class="commissionRate">
+      <label for="commissionRate" *ngIf="index==0">Comm Rate</label>
+    </div>
+    <div class="reinsuranceCode">
+      <label for="reinsuranceCode" *ngIf="index==0">Reinsurance Code</label>
+    </div>
+    <div class="isFaculative">
+      <label for="isFaculative" *ngIf="index==0">Fac</label>
+    </div>
+    <div class="intermediary">
+      <label for="intermediary" *ngIf="index==0">Intermediary</label>
+    </div>
+    <div class="certificatNumber">
+      <!-- <label for="certificatNumber" [hidden]="!reinsuranceLayer.isFaculative">Certificate No</label> -->
+      <label for="certificatNumber" *ngIf="index==0">Certificate No</label>
+    </div>
+  </div>
+  <div class="row container">
+    <div class="reinsuranceLayer">
+      <input type="text" class="form-control" id="name" #layerNumber="ngModel" [readonly]="false" [required]="true"
+        name="layerNumber" [(ngModel)]="reinsuranceLayer.reinsLayerNo">
+    </div>
+    <div class="attachmentPoint">
+      <input type="text" class="form-control" id="name" #attachmentPoint="ngModel" name="attachmentPoint"
+      [(ngModel)]="reinsuranceLayer.attachmentPoint" mask="separator.0" thousandSeparator="," >
+    </div>
+    <div class="reinsuranceLimits">
+      <input type="text" class="form-control" id="name" #reinsuranceLimit="ngModel" [readonly]="false" [required]="true"
+        name="reinsuranceLimits"[(ngModel)]="reinsuranceLayer.reinsLimit" mask="separator.0" thousandSeparator="," >
+    </div>
+    <div class="cededPremium">
+      <input type="text" class="form-control" id="name" #cededPremium="ngModel" [readonly]="false" [required]="true"
+        name="cededPremium" [(ngModel)]="reinsuranceLayer.cededPremium" mask="separator.0" thousandSeparator="," >
+    </div>
+    <div class="commissionRate">
+      <input type="text" class="form-control" id="name" #commissionRate="ngModel" [readonly]="false" [required]="true"
+        name="commissionRate" [(ngModel)]="reinsuranceLayer.reinsCededCommRate" mask="percent" suffix="%">
+    </div>
+    <div class="reinsuranceCode">
+      <ng-select id="reinsuranceCode" [items]="reinsuranceCodes$ | async" bindLabel="treatyName" bindValue="treatyNumber"
+        [required]="true" [clearable]="false" name="reinsuranceCode" [(ngModel)]="reinsuranceLayer.treatyNo"
+        #locationState="ngModel" [searchFn]="dropDownSearchReinsurance" (change)="changeReinsurerCode()">
+        <ng-template ng-label-tmp let-item="item">
+          {{item.treatyNumber}}
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item">
+          {{item.treatyNumber}} - {{item.treatyName}}
+        </ng-template>
+      </ng-select>
+      <!-- <input type="text" class="form-control" id="reinsuranceCode" #reinsuranceCode="ngModel" [readonly]="false"
+        [required]="true" [hidden]="!reinsuranceLayer.isFaculative" name="reinsuranceCode"
+        [(ngModel)]="reinsuranceLayer.treatyNumber"> -->
+    </div>
+    <div class="isFaculative">
+      <input type="checkbox" id="isFaculative" [(ngModel)]="reinsuranceLayer.isFaculative" name="isFaculative"
+        [readonly]="false" (change)="changeFaculative()">
+    </div>
+    <div class="intermediary">
+      <input type="text" class="form-control" id="intermediary" #intermediary="ngModel" [readonly]="false"
+        name="intermediary" [(ngModel)]="reinsuranceLayer.intermediaryNo">
+    </div>
+    <div class="certificatNumber">
+      <input type="text" class="form-control" id="certificatNumber" #certificatNumber="ngModel" [readonly]="false"
+        [hidden]="!reinsuranceLayer.isFaculative" name="certificatNumber"
+        [(ngModel)]="reinsuranceLayer.reinsCertificateNo">
+    </div>
+  </div>
+</form>

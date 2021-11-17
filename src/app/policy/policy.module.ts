@@ -29,6 +29,7 @@ import { EndorsementLocationComponent } from './schedules/endorsement-location-g
 import { EndorsementLocationGroupComponent } from './schedules/endorsement-location-group/endorsement-location-group.component';
 import { UpdatePolicyChild} from './services/update-child.service';
 import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.directive'; 
+import { ReinsuranceLayerComponent } from './reinsurance/policy-layer-group/reinsurance-layer/reinsurance-layer.component';
 import { PolicyLayerHeaderComponent } from './reinsurance/policy-layer-header/policy-layer-header.component';
 import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/policy-layer-group.component';
 
@@ -55,7 +56,7 @@ import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/poli
     EndorsementLocationGroupComponent,
     EndorsementLocationComponent,
     EndorsementCoverageDirective,
-    EndorsementLocationComponent,
+    ReinsuranceLayerComponent,
     PolicyLayerHeaderComponent,
     PolicyLayerGroupComponent
   ],

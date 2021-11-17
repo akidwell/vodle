@@ -33,7 +33,7 @@ const routes: Routes = [
       { path: 'information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'coverages', component: CoveragesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'schedules', component: SchedulesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'reinsurance', component: ReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }  },
+      { path: 'reinsurance', component: ReinsuranceComponent, data: { saveComponent: true }  },
       { path: 'summary', component: SummaryComponent }
     ]
   },

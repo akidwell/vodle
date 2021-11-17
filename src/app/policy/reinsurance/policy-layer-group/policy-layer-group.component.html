@@ -1,11 +1,10 @@
-
 <br>
 <div class="card-header" (click)="collapse.toggle()">Policy Layer {{policyLayerData.policyLayerNo}}:
-    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyLayerCollapsed"></fa-icon>
-    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyLayerCollapsed"></fa-icon>
+  <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyLayerCollapsed"></fa-icon>
+  <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyLayerCollapsed"></fa-icon>
 </div>
 <div #collapse="ngbCollapse" [(ngbCollapse)]="policyLayerCollapsed">
-    <div class="row container" style="padding-top: 5px">
-<div>placeholder</div>
-    </div>
+  <div *ngFor="let item of policyLayerData.reinsuranceData; let i = index">
+    <rsps-reinsurance-layer [reinsuranceLayer]=item [index]=i></rsps-reinsurance-layer>
+  </div>
 </div>
