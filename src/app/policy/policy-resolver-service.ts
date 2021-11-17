@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PolicyHistoryService } from '../navigation/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
-import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, PolicyInformationResolved } from './policy';
+import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
 
 @Injectable({
@@ -201,3 +201,36 @@ export class EndorsementLocationResolver implements Resolve<EndorsementLocationR
         );
     }
 }
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PolicyLayerResolver implements Resolve<PolicyLayerDataResolved> {
+
+    constructor(private router: Router, private policyService: PolicyService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyLayerDataResolved> {
+        const id = route.paramMap.get('id') ?? "";
+        const end = route.paramMap.get('end') ?? 0;
+        if (isNaN(+id)) {
+            const message = `Policy id was not a number: ${id}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ policyLayer: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ policyLayer: null, error: message });
+        }
+
+        return this.policyService.getPolicyAndReinsuranceLayers(Number(id), Number(end))
+        .pipe(
+            map(policyLayer => ({ policyLayer })),
+            catchError((error) => {
+                this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                return of({ policyLayer: null, error: error });
+            })
+        );
+    }
+}
+
