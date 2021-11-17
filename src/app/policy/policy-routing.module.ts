@@ -4,7 +4,7 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
 import { PolicyNotFoundComponent } from './policy-not-found.component';
-import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver } from './policy-resolver-service';
+import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, PolicyLayerResolver } from './policy-resolver-service';
 import { PolicyComponent } from './policy.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -25,14 +25,15 @@ const routes: Routes = [
       endorsementData: EndorsementResolver,
       endorsementCoveragesGroups: EndorsementCoveragesResolver,
       aniData: AdditionalNamedInsuredsResolver,
-      endorsementLocationData: EndorsementLocationResolver
+      endorsementLocationData: EndorsementLocationResolver,
+      policyLayerData: PolicyLayerResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'coverages', component: CoveragesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'schedules', component: SchedulesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'reinsurance', component: ReinsuranceComponent },
+      { path: 'reinsurance', component: ReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }  },
       { path: 'summary', component: SummaryComponent }
     ]
   },

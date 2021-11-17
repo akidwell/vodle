@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
-import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation } from './policy';
+import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation, PolicyLayerData } from './policy';
 
 @Injectable({
   providedIn: 'root'
@@ -114,5 +114,9 @@ export class PolicyService {
   
   deleteEndorsementLocation(location: EndorsementLocation): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + location.policyId + '/endorsements/' + location.endorsementNumber + '/locations/' + location.sequence )
+  }
+
+  getPolicyAndReinsuranceLayers(policyId: number, endorsementNo: number): Observable<PolicyLayerData[]> {
+    return this.http.get<PolicyLayerData[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/reinsurance')
   }
 }
