@@ -1,1 +1,4 @@
-<h1>Reinsurance</h1>
+<rsps-policy-layer-header></rsps-policy-layer-header>
+<div *ngFor="let item of policyLayerData; let i = index">
+    <rsps-policy-layer-group [policyLayerData]=item></rsps-policy-layer-group>
+    </div>

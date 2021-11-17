@@ -156,3 +156,54 @@ export const newEndorsementLocation = (): EndorsementLocation => ({
   isNew: true
 });
 
+
+export interface PolicyLayerData {
+
+  policyId: number;
+  endorsementNo: number;
+  policyLayerNo: number
+  policyLayerAttachmentPoint: number;
+  policyLayerLimit: number;
+  policyLayerPremium: number;
+  invoiceNo: number;
+  copyEndorsementNo: number;
+  endType: number;
+  transCode: number;
+  transEffectiveDate: Date;
+  transExpirationDate: Date;
+  reinsuranceData: ReinsuranceLayerData[];
+}
+
+export interface ReinsuranceLayerData{
+
+  policyId: number;
+  endorsementNumber: number;
+  policyLayerNo: number;
+  reinsLayerNo: number;
+  reinsLimit: number;
+  reinsCededPremium: number;
+  reinsCededCommRate: number;
+  treatyType: number;
+  treatyNo: number;
+  subTreatyNo: number;
+  reinsurerCode: number;
+  reinsCertificateNo: number;
+  proflag: number;
+  enteredDate: number;
+  invoiceNo: number;
+  payableNo: number;
+  intermediaryNo: number;
+  facBalance: number;
+  cededPremium: number;
+  cededCommission: number;
+  sumIuscededPrmByTreatyInv: number;
+  sumProcededPrmByTreatyInv: number;
+  expirationDate: Date;
+  cededCommissionRat: number;
+  effectiveDate: Date;
+}
+
+export interface PolicyLayerDataResolved {
+  policyLayer:  PolicyLayerData[] | null;
+  error?: any;
+}
