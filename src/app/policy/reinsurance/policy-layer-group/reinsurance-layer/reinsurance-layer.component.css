@@ -24,7 +24,7 @@ input[type="checkbox"][readonly] {
 }
 
 .reinsuranceLayer {
-  width: 5%;
+  width: 6%;
 }
 
 .attachmentPoint {
@@ -40,7 +40,7 @@ input[type="checkbox"][readonly] {
 }
 
 .commissionRate {
-  width: 13%;
+  width: 10%;
 }
 
 .reinsuranceCode {
@@ -52,9 +52,13 @@ input[type="checkbox"][readonly] {
 }
 
 .intermediary {
-  width: 14%;
+  width: 13%;
 }
 
 .certificatNumber {
-  width: 14%;
+  width: 13%;
+}
+
+.delete {
+  width: 4%;
 }

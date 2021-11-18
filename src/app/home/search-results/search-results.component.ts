@@ -79,6 +79,7 @@ export class SearchResultsComponent implements OnInit {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
     this.policyHistoryService.updatePolicyHistory(policy.policyId,policy.policyNumber,policy.endorsementNumber);
     this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
   }

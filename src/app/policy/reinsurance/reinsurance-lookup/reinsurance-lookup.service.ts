@@ -23,7 +23,7 @@ export class ReinsuranceLookupService {
   }
 
   getFaculativeReinsurance(effectiveDate: Date): Observable<ReinsuranceLookup[]> {
-    const params = new HttpParams().append('effectiveDate', effectiveDate.toISOString());;
+    const params = new HttpParams().append('effectiveDate', effectiveDate.toString());;
     return this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/reinsurance-lookup/faculative', { params })
       // .pipe(
       //   catchError(() => {
