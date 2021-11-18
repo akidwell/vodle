@@ -184,10 +184,10 @@ export interface ReinsuranceLayerData{
   reinsCededPremium: number;
   reinsCededCommRate: number;
   treatyType: number;
-  treatyNo: number;
+  treatyNo?: number | null;
   subTreatyNo: number;
   reinsurerCode: number;
-  reinsCertificateNo: number;
+  reinsCertificateNo?: number | null;
   proflag: number;
   enteredDate: number;
   invoiceNo: number;
@@ -202,6 +202,7 @@ export interface ReinsuranceLayerData{
   cededCommissionRat: number;
   effectiveDate: Date;
   isFaculative: boolean;
+  maxLayerLimit?: number | null;
   attachmentPoint: number;
 }
 
