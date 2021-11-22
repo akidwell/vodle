@@ -52,18 +52,20 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
     this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
     this.isAPPolicy = (this.policyInfo.programId == 84 || this.policyInfo.programId == 85) ? true : false;
-    this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
-      (limitBasisDescriptions: UnderlyingLimitBasis[]) =>
-      {
-        this.limitBasisDescriptions = limitBasisDescriptions;
-         //Process Limits Pattern Group Code selection (for PAUL policies)
-        this.generateLimits();
+    if ((this.ucData.primaryCoverageCode && this.ucData.primaryCoverageCode > 0) || (this.ucData.limitsPatternGroupCode && this.ucData.limitsPatternGroupCode > 0)) {
+      this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
+        (limitBasisDescriptions: UnderlyingLimitBasis[]) =>
+        {
+          this.limitBasisDescriptions = limitBasisDescriptions;
+          //Process Limits Pattern Group Code selection (for PAUL policies)
+          this.generateLimits();
 
-        this.updateLimitsPatternBasisCodes();
-        //Get count of untracked limits
-        this.getUserAddedCount();
-      }
-    );
+          this.updateLimitsPatternBasisCodes();
+          //Get count of untracked limits
+          this.getUserAddedCount();
+        }
+      );
+    }
   }
   //This drives PAUL policies
   updateLimitsPatternGroupCode():void {
