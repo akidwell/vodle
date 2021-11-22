@@ -46,7 +46,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
       primaryCoverageCode: 13,
       limitsPatternGroupCode: 998,
       limitsPattern: '',
-      policyNumber: 0,
+      policyNumber: '',
       carrierCode: 0,
       underlyingScheduleLimitData: []
     }

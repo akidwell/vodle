@@ -7,7 +7,7 @@ export interface UnderlyingCoverage {
   limitsPattern?: string;
   effectiveDate?: Date;
   expirationDate?: Date;
-  policyNumber?: Number;
+  policyNumber?: String;
   carrierCode?: Number;
   carrierName?: String;
   retroDate?: Date;
