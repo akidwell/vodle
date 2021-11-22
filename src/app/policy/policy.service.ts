@@ -5,6 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation, PolicyLayerData } from './policy';
+import { UnderlyingCoverage } from './schedules/schedules';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,19 @@ export class PolicyService {
         tap(data => console.log(JSON.stringify(data)))
       );
   }
-
+  getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UnderlyingCoverage[]> {
+    return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule')
+    .pipe(
+      tap(data => console.log(JSON.stringify(data)))
+    );;
+  }
+  updateUnderlyingCoverages(underlyingCoverages: UnderlyingCoverage[]): Observable<boolean> {
+    console.log('save')
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/underlying-schedule', underlyingCoverages)
+    .pipe(
+      tap(data => console.log(JSON.stringify(data)))
+    );
+  }
   updateEndorsement(endorsement: Endorsement): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements', endorsement)
       .pipe(
@@ -63,7 +76,7 @@ export class PolicyService {
   updateEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<number> {
     return this.http.put<number>(this.config.apiBaseUrl + 'api/policies/endorsement-coverage-locations/', location)
   }
-  
+
   deleteEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + location.policyId.toString()
     + '/endorsement-coverage-locations/' + location.locationId.toString() )
@@ -107,11 +120,11 @@ export class PolicyService {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/locations/', location)
     .pipe(
       catchError(() => {
-        return of(false); 
+        return of(false);
       })
     );
   }
-  
+
   deleteEndorsementLocation(location: EndorsementLocation): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + location.policyId + '/endorsements/' + location.endorsementNumber + '/locations/' + location.sequence )
   }

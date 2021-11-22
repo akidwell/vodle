@@ -1,0 +1,99 @@
+<form #ucForm="ngForm">
+  <!-- <div class="row container">
+    <div class="col-lg-3">
+      <label for="address" *ngIf="index==0">Role</label>
+    </div>
+    <div class="col-lg-4">
+      <label for="createDate">Additional Named Insured</label>
+    </div>
+    <div class="col-lg-2">
+      <label for="createDate">Create Date</label>
+    </div>
+  </div> -->
+  <div class="card-body" >
+    <div class="row container" style="padding-top: 10px; width: 100%" (click)="ucdCollapsed = !ucdCollapsed">
+      <div class="col-lg-2">
+        <div>Coverage Type</div>
+        <ng-select id="primaryCoverageCode" click-stop-propagation [items]="UCService.coverageTypeDescriptions" bindLabel="description" bindValue="key" placeholder=""
+        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="primaryCoverageCode"
+        [(ngModel)]="ucData.primaryCoverageCode" #limitsPattern="ngModel"  (change)="updateCoverageType()">
+      </ng-select>
+      </div>
+      <div class="col-lg-2">
+        <div>Carrier</div>
+        <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
+          [required]="canEditPolicy" name="name" [(ngModel)]="ucData.carrierName" >
+      </div>
+      <div class="col-lg-3">
+        <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
+        <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
+          [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()">
+
+      </div>
+      <div class="col-lg-4">
+        <div>Limits Pattern</div>
+        <ng-select click-stop-propagation *ngIf="this.policyInfo.programId != 84 && this.policyInfo.programId != 85" id="limitsPatternGroupCode" [items]="UCService.limitsPatternDescriptions" bindLabel="description" bindValue="key" placeholder=""
+          [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="limitsPatternGroupCode"
+          [(ngModel)]="ucData.limitsPatternGroupCode" #limitsPatternGroupCode="ngModel"  (change)="updateLimitsPatternGroupCode()">
+        </ng-select>
+        <div *ngIf="this.policyInfo.programId == 84 || this.policyInfo.programId == 85">{{this.limitedLimitsPatternString}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ucdCollapsed">
+    <div class="row container" style="width: 100%" >
+      <div class="col-lg-2">
+        <div>Policy Number</div>
+        <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
+          [required]="canEditPolicy" name="policyNumber" [(ngModel)]="ucData.policyNumber" >
+      </div>
+
+      <div class="col-lg-2">
+        <label for="effectiveDate">Policy Effective Date</label>
+        <input type="date" class="form-control" id="effectiveDate" [readonly]="!canEditPolicy"
+          [required]="canEditPolicy" [ngModel]="ucData.effectiveDate| date:'yyyy-MM-dd'"
+          name="effectiveDate"
+          #endorsementExpirationDate="ngModel" >
+          <!-- <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
+            Invalid date
+          </div> -->
+      </div>
+      <div class="col-lg-2">
+        <label for="expirationDate">Policy Expiration Date</label>
+        <input type="date" class="form-control" id="expirationDate" [readonly]="!canEditPolicy"
+          [required]="canEditPolicy" [ngModel]="ucData.expirationDate| date:'yyyy-MM-dd'"
+          name="expirationDate"
+          #endorsementExpirationDate="ngModel" >
+          <!-- <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
+            Invalid date
+          </div> -->
+      </div>
+      <div class="col-lg-2">
+        <label for="expirationDate">Retro Date</label>
+        <input type="date" class="form-control" id="expirationDate" [readonly]="!canEditPolicy"
+          [required]="canEditPolicy" [ngModel]="ucData.expirationDate| date:'yyyy-MM-dd'"
+          name="expirationDate"
+          #endorsementExpirationDate="ngModel" >
+          <!-- <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
+            Invalid date
+          </div> -->
+      </div>
+
+    </div>
+    <div><button style="background:none; border:none;" class="underline" (click)="ucbCollapsed = !ucbCollapsed;">{{ucbCollapsed == true ? 'Show Limit Basis Detail' : 'Hide Limit Basis Detail'}}</button></div>
+    <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ucbCollapsed">
+      <div class="row container" style="padding-top: 10px; width: 100%">
+        <div *ngFor="let item of ucData.underlyingScheduleLimitData; let i = index">
+          <rsps-underlying-coverage-limit-basis
+          (onLimitChange)="updateLimitsPattern()"
+          (deleteThisLimit)=deleteUserAddedLimit($event)
+          [ucLimit]=item>
+          </rsps-underlying-coverage-limit-basis>
+        </div>
+      </div>
+      <button style="float:left; background:none; border:none;" class="underline"  (click)="addUserDefinedLimitBasis()">Add Limit</button>
+    </div>
+  </div>
+
+
+</form>

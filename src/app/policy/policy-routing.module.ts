@@ -4,7 +4,7 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
 import { PolicyNotFoundComponent } from './policy-not-found.component';
-import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, PolicyLayerResolver } from './policy-resolver-service';
+import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, UnderlyingCoveragesResolver, PolicyLayerResolver } from './policy-resolver-service';
 import { PolicyComponent } from './policy.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -26,7 +26,8 @@ const routes: Routes = [
       endorsementCoveragesGroups: EndorsementCoveragesResolver,
       aniData: AdditionalNamedInsuredsResolver,
       endorsementLocationData: EndorsementLocationResolver,
-      policyLayerData: PolicyLayerResolver
+      policyLayerData: PolicyLayerResolver,
+      underlyingCoverages: UnderlyingCoveragesResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },

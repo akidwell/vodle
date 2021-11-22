@@ -75,7 +75,7 @@ import { BusyModule } from './busy/busy.module';
         return okta_config;
       }
     },
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    // { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

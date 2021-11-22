@@ -28,10 +28,15 @@ import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-na
 import { EndorsementLocationComponent } from './schedules/endorsement-location-group/endorsement-location/endorsement-location.component';
 import { EndorsementLocationGroupComponent } from './schedules/endorsement-location-group/endorsement-location-group.component';
 import { UpdatePolicyChild} from './services/update-child.service';
-import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.directive'; 
+import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.directive';
 import { ReinsuranceLayerComponent } from './reinsurance/policy-layer-group/reinsurance-layer/reinsurance-layer.component';
 import { PolicyLayerHeaderComponent } from './reinsurance/policy-layer-header/policy-layer-header.component';
 import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/policy-layer-group.component';
+import { UnderlyingCoveragesComponent } from './schedules/underlying-coverages/underlying-coverages.component';
+import { UnderlyingCoverageDetailComponent } from './schedules/underlying-coverages/underlying-coverage-detail/underlying-coverage-detail.component';
+import { UnderlyingCoverageLimitBasisComponent } from './schedules/underlying-coverages/underlying-coverage-limit-basis/underlying-coverage-limit-basis.component';
+import { ClickStopPropagation } from '../directives/click-stop-propagation.directive';
+import { UnderlyingCoverageService } from './schedules/services/underlying-coverage.service';
 
 @NgModule({
   declarations: [
@@ -45,6 +50,7 @@ import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/poli
     ZipCodePipe,
     EndorsementCoverageComponent,
     HoverClassDirective,
+    ClickStopPropagation,
     EndorsementHeaderComponent,
     NotificationComponent,
     EndorsementCoverageLocationComponent,
@@ -58,7 +64,10 @@ import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/poli
     EndorsementCoverageDirective,
     ReinsuranceLayerComponent,
     PolicyLayerHeaderComponent,
-    PolicyLayerGroupComponent
+    PolicyLayerGroupComponent,
+    UnderlyingCoveragesComponent,
+    UnderlyingCoverageDetailComponent,
+    UnderlyingCoverageLimitBasisComponent
   ],
   imports: [
     CommonModule,
@@ -72,7 +81,8 @@ import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/poli
   providers: [
     CanDeactivateGuard,
     DatePipe,
-    UpdatePolicyChild
+    UpdatePolicyChild,
+    UnderlyingCoverageService
   ]
 })
 export class PolicyModule { }

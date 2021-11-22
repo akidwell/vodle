@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { finalize, share, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
+import { UnderlyingLimitBasis } from '../policy/schedules/schedules';
 import { Code } from './code';
 
 @Injectable({
@@ -24,7 +25,12 @@ export class DropDownsService {
   getStates(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/states');
   }
-
+  getLimitsPatterns(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns');
+  }
+  getLimitsBasis(): Observable<Code[]> {
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-basis');
+  }
   getCarrierCodes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/carrier-codes');
   }
@@ -71,6 +77,14 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
   }
 
+  getUnderlyingCoverageDescriptions(){
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/underlying-coverage-descriptions');
+  }
+  getLimitBasisDescriptions(coverageCode: number,programId: number, limitsPatternGroupCode: number){
+    let params = new HttpParams().append('primaryCoverageCode', coverageCode).append('limitsPatternGroupCode', limitsPatternGroupCode).append('programId', programId);
+    console.log('happens', params)
+    return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
+  }
   private cacheClassCodese: any;
   private cacheClassCodese$!: Observable<any> | null;
 
