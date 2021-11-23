@@ -6,6 +6,7 @@ import { PolicyHistoryService } from '../navigation/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
+import { UnderlyingCoveragesResolved } from './schedules/schedules';
 
 @Injectable({
     providedIn: 'root'
@@ -60,7 +61,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ policyInfo: null, error: message });
         }
-     
+
         return this.policyService.getPolicyInfo(Number(id))
             .pipe(
                 tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId,res.policySymbol+res.policyNo,Number(end))),
@@ -234,3 +235,34 @@ export class PolicyLayerResolver implements Resolve<PolicyLayerDataResolved> {
     }
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export class UnderlyingCoveragesResolver implements Resolve<UnderlyingCoveragesResolved> {
+
+  constructor(private router: Router, private policyService: PolicyService) { }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UnderlyingCoveragesResolved> {
+      const id = route.paramMap.get('id') ?? "";
+      const end = route.paramMap.get('end') ?? 0;
+      if (isNaN(+id)) {
+          const message = `Policy id was not a number: ${id}`;
+          this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+          return of({ underlyingCoverages: null, error: message });
+      }
+      if (isNaN(+end)) {
+          const message = `Endorsement was not a number: ${end}`;
+          this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+          return of({ underlyingCoverages: null, error: message });
+      }
+
+      return this.policyService.getUnderlyingCoverages(Number(id), Number(end))
+          .pipe(
+              map(underlyingCoverages => ({ underlyingCoverages })),
+              catchError((error) => {
+                  this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                  return of({ underlyingCoverages: null, error: error });
+              })
+          );
+  }
+
+}

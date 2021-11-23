@@ -25,7 +25,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
   aniSub!: Subscription;
   notification: any;
   locationData: EndorsementLocation[] = [];
-  
+
   @ViewChild(EndorsementLocationGroupComponent) locationComp!: EndorsementLocationGroupComponent;
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild(AdditionalNamedInsuredsGroupComponent) aniGroupComp!: AdditionalNamedInsuredsGroupComponent;
@@ -37,9 +37,9 @@ export class SchedulesComponent implements OnInit, PolicySave {
   }
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
-    this.aniGroups = data['aniData'].additionalNamedInsureds;
-    this.locationData = data['endorsementLocationData'].endorsementLocation;
-  });
+      this.aniGroups = data['aniData'].additionalNamedInsureds;
+      this.locationData = data['endorsementLocationData'].endorsementLocation;
+    });
   }
 
 
@@ -105,7 +105,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
     this.updatePolicyChild.collapseEndorsementLocations();
     console.log('collapse')
   }
-  
+
   expandAllLocations(): void {
     // Not sure if we need this
     console.log('expand')
