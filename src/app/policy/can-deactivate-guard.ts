@@ -8,10 +8,13 @@ import { SchedulesComponent } from './schedules/schedules.component';
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
 
+  constructor() { }
+
   canDeactivate(
     component: InformationComponent | CoveragesComponent | SchedulesComponent,
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
+    nextState: RouterStateSnapshot
   ): Observable<boolean> | boolean {
     if (component.isValid()) {
       if (component.isDirty()) {   
@@ -20,6 +23,7 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
       component.hideInvalid();
       return true;
     }
+    console.log(nextState.url);
     component.showInvalidControls()
     return false;
   }
