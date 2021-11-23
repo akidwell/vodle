@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output,  ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -29,9 +29,9 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   collapsePanelSubscription!: Subscription;
   expandPanelSubscription!: Subscription;
   loaded: boolean = false;
-
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
+  components: EndorsementCoverageComponent[] = [];
 
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;
@@ -41,7 +41,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
-  @ViewChildren(EndorsementCoverageComponent) components: QueryList<EndorsementCoverageComponent> | undefined;
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver) {
@@ -153,7 +152,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     newCoverage.coverageCode = this.policyInfo.quoteData.coverageCode;
     newCoverage.policySymbol = this.policyInfo.policySymbol;
     newCoverage.policyId = this.endorsementCoveragesGroup.location.policyId;
-
     return newCoverage;
   }
 
@@ -177,7 +175,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     }
     this.locationCollapsed = action;
   }
-
+  
   async addComponent(coverage: any, focus: boolean) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(EndorsementCoverageComponent);
     const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
@@ -185,11 +183,13 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     componentRef.instance.coverage = coverage;
     componentRef.instance.copyExistingCoverage.subscribe(evt => this.copyExistingCoverage(evt));
     componentRef.instance.deleteThisCoverage.subscribe(evt => this.deleteCoverage(evt));
+    this.components.push(componentRef.instance);
   }
 
   async deleteComponent(index: any) {
     const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
     viewContainerRef.remove(index);
+    this.components.splice(index,1);
   }
 
   focus(): void {
