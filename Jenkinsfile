@@ -69,5 +69,40 @@ pipeline {
 				archiveArtifacts artifacts: "rsps_${fileVersion}.zip", fingerprint: true
 			}
 		}
+		stage('Deploy to DEV') {	
+			steps{
+				script {
+					powershell """
+					New-Item -Path "${WORKSPACE}" -Name "datmp" -ItemType "directory"
+					Move-Item -Path "${WORKSPACE}\\*.zip" -Destination "${WORKSPACE}\\datmp"
+					"""
+				    withCredentials([string(credentialsId: "JENKINSSDATOKEN", variable: "JENKINSTOKEN")]) {      	
+					powershell """
+					iex "${MFDAPS} createVersion -component 59803989-b407-49e1-8d9e-b718f4d2d947 -status imported -name TFSBLDS:rsps_${fileVersion}"
+					"""
+					powershell """
+					iex "${MFDAPS} addVersionFiles -component 59803989-b407-49e1-8d9e-b718f4d2d947 -version TFSBLDS:rsps_${fileVersion} -base ${WORKSPACE}\\datmp"
+					"""
+				    }						
+				}
+				wrap([$class: 'BuildUser']) {
+				build (job: 'TFS_to_SDA', 
+					parameters: [
+						string(name: 'SDAAPPLICATION', value: "f8ae9b8a-bb31-41f1-ba52-4f3e62f1add1"),
+						string(name: 'SDACOMPONENT', value: "59803989-b407-49e1-8d9e-b718f4d2d947"),
+						string(name: 'SDAENV', value: "079dfff5-a084-4eb8-a0e0-848cf586593e"),
+						string(name: 'SDAPROCESS', value: "10f049ac-a05e-42b9-bd45-81f745cbab7e"),
+            string(name: 'PROJECTNAME', value: "RSPS_UI"),
+						string(name: 'DMPRODUCT', value: "TFSBLDS"),
+						string(name: 'BUILDNAME', value: "rsps_${fileVersion}"),
+						string(name: 'TFSUSER', value: "$BUILD_USER"),
+						string(name: 'SKIPIMPORT', value: "false"),
+						string(name: 'DEPLOYME', value: "true")
+					],
+					wait: true
+				)
+				}
+			}
+		}    
 	}
 }
