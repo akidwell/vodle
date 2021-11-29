@@ -72,16 +72,18 @@ pipeline {
 		stage('Deploy to DEV') {	
 			steps{
 				script {
-					powershell """
-					New-Item -Path "${WORKSPACE}" -Name "datmp" -ItemType "directory"
-					Move-Item -Path "${WORKSPACE}\\*.zip" -Destination "${WORKSPACE}\\datmp"
+					sh """
+					mkdir ${WORKSPACE}/datmp
+					mv ${WORKSPACE}/*.zip ${WORKSPACE}/datmp/
 					"""
 				    withCredentials([string(credentialsId: "JENKINSSDATOKEN", variable: "JENKINSTOKEN")]) {      	
-					powershell """
-					iex "${MFDAPS} createVersion -component 59803989-b407-49e1-8d9e-b718f4d2d947 -status imported -name TFSBLDS:rsps_${fileVersion}"
+					sh """
+          DACREATEOUTPUT=`${SDACMD} createVersion -component 59803989-b407-49e1-8d9e-b718f4d2d947 -status imported -name TFSBLDS:rsps_${fileVersion}`
+          set |grep DACREATEOUT
 					"""
-					powershell """
-					iex "${MFDAPS} addVersionFiles -component 59803989-b407-49e1-8d9e-b718f4d2d947 -version TFSBLDS:rsps_${fileVersion} -base ${WORKSPACE}\\datmp"
+					sh """
+          DAADDOUTPUT=`${SDACMD} addVersionFiles -component 59803989-b407-49e1-8d9e-b718f4d2d947 -version TFSBLDS:rsps_${fileVersion} -base ${WORKSPACE}/datmp/`
+          set |grep DAADDOUT
 					"""
 				    }						
 				}
