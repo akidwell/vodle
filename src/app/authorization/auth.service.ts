@@ -64,17 +64,21 @@ export class AuthService {
   }
 
   getAuthToken(): Observable<string> {
-    // GAM - TEMP - Header test
     const headers = this._headers.append('OKTA-Authorization', 'Bearer ' + this.oktaAuth.getAccessToken());
     return this.http.get<string>(this.config.apiBaseUrl + 'api/userauth/gettoken', { headers: headers })
       .pipe(
         tap(async token => {
           if (token == null) {
             console.log("No token");
-            //await  this.logout();
           }
           else {
-            this.processAuthClaims(this.jwtHelper.decodeToken(JSON.parse(JSON.stringify(token)).data));
+            const tokenString = JSON.parse(JSON.stringify(token));
+            if (tokenString.data == null) {
+              this.router.navigate(['/access-denied']);
+            }
+            else {
+              this.processAuthClaims(this.jwtHelper.decodeToken(tokenString.data));
+            }
           }
         }),
         catchError(err => {
@@ -109,7 +113,6 @@ export class AuthService {
     // Will redirect to Okta to end the session then redirect back to the configured `postLogoutRedirectUri`
     this.userAuth.init();
     localStorage.removeItem('jwt_token');
-    // This will clear the token but commented out for now until logout is working
     await this.oktaAuth.signOut();
     //this.oktaAuth.tokenManager.clear();
   }
