@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
@@ -71,7 +71,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
-  @ViewChild(EndorsementCoverageLocationGroupComponent) groupComp!: EndorsementCoverageLocationGroupComponent;
+  @ViewChildren(EndorsementCoverageLocationGroupComponent) components: QueryList<EndorsementCoverageLocationGroupComponent> | undefined;
   @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined
 
   async newLocation() {
@@ -104,11 +104,25 @@ export class CoveragesComponent implements OnInit, PolicySave {
   isValid(): boolean {
     let total:number = 0;
     this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0})});
-    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.groupComp?.isValid() && this.headerComp.endorsement.premium == total;
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (!child.isValid()) {
+          return false;
+        }
+      }
+    }
+    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
   }
 
   isDirty(): boolean {
-    return (this.headerComp.endorsementHeaderForm.dirty ?? false) || this.groupComp.isDirty();
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.isDirty()) {
+          return true;
+        }
+      }
+    }
+    return (this.headerComp.endorsementHeaderForm.dirty ?? false); //|| this.groupComp.isDirty();
   }
 
   save(): void {
@@ -127,6 +141,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
     let invalid = [];
     let controls = this.headerComp.endorsementHeaderForm.controls;
 
+    this.showInvalid = false;
+
     // Check each control if it is valid
     for (let name in controls) {
       if (controls[name].invalid) {
@@ -135,8 +151,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
     }
 
     // Loop through each child component to see it any of them have invalid controls
-    if (this.groupComp?.components != null) {
-      for (let child of this.groupComp.components) {
+    for (let groups of this.components!) {
+      for (let child of groups.components) {
         for (let name in child.endorsementCoveragesForm.controls) {
           if (child.endorsementCoveragesForm.controls[name].invalid) {
             invalid.push(name + " - Location: #" + child.coverage.locationId.toString());

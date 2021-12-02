@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { PolicySave } from '../policy-save';
@@ -35,7 +35,7 @@ export class InformationComponent implements OnInit, PolicySave {
   //     })
   // }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {  }
 
   isValid(): boolean {
     return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID'
@@ -53,6 +53,7 @@ export class InformationComponent implements OnInit, PolicySave {
   showInvalidControls(): void {
     let invalid = [];
     let policyControls = this.policyInfoComp.policyInfoForm.controls;
+    this.showInvalid = false;
 
     // Check each control in policy information component if it is valid
     for (let name in policyControls) {
@@ -60,7 +61,6 @@ export class InformationComponent implements OnInit, PolicySave {
         invalid.push(name);
       }
     }
-
     // Check each control in account information component if it is valid
     let accountControls = this.accountInfoComp.accountInfoForm.controls;
     for (let name in accountControls) {
@@ -68,7 +68,6 @@ export class InformationComponent implements OnInit, PolicySave {
         invalid.push(name);
       }
     }
-
     this.invalidMessage = "";
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
@@ -77,7 +76,6 @@ export class InformationComponent implements OnInit, PolicySave {
         this.invalidMessage += "<br><li>" + error;
       }
     }
-
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
     }

@@ -37,6 +37,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       window.alert(errorMessage);
     }
     else if (error.message.includes("AuthApiError")) {
+      console.log("Ignored AuthApiError");
       // Do nothing for now
     } else {
       // Client Error
