@@ -1,0 +1,35 @@
+<form #invoiceGroupForm="ngForm">
+  <div class="card">
+    <div style="display: inline-block;">
+      <button class="btn btn-md btn-primary" style="float:left;" [hidden]="!canSave"
+        [disabled]="!invoiceGroupForm.valid || !isDirty" (click)="this.tempSave()">Save</button>
+      <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canPost" (click)="post()">Post</button>
+      <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" [hidden]="!canVoid"
+        (click)="voidInvoice()">Void</button>
+      <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canExport"
+        (click)="export()">Export</button>
+    </div>
+    <div class="card-header" (click)="collapse.toggle()">{{title}}
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="invoiceCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!invoiceCollapsed"></fa-icon>
+    </div>
+    <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true"
+    [innerHTML]="invalidMessage"></ngb-alert>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="invoiceCollapsed">
+      <rsps-invoice-master [invoice]=invoice></rsps-invoice-master>
+      <div class="card-body">
+        <div *ngFor="let item of invoice.invoiceDetail; index as i">
+          <rsps-invoice-detail [invoice]=invoice [invoiceDetail]=item [index]=i></rsps-invoice-detail>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div id="invoiceFooter" *ngIf="showFooter">
+        <button [hidden]="!canAddDetail" style="float:left; background:none; border:none;" class="underline"
+          (click)="addNewInvoiceDetail();">Add Line Item</button>
+        <span class="float-center">Total: {{totalNetAmount | currency}}
+        </span>
+      </div>
+    </div>
+  </div>
+</form>

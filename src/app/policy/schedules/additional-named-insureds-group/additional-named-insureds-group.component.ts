@@ -43,6 +43,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
       this.aniData = data['aniData'].additionalNamedInsureds;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
+      this.aniCollapsed = false;
     });
   }
 

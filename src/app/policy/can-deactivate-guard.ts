@@ -4,6 +4,7 @@ import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@ang
 import { InformationComponent } from './information/information.component';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { SchedulesComponent } from './schedules/schedules.component';
+import { SummaryComponent } from './summary/summary.component';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
@@ -11,7 +12,7 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
   constructor() { }
 
   canDeactivate(
-    component: InformationComponent | CoveragesComponent | SchedulesComponent,
+    component: InformationComponent | CoveragesComponent | SchedulesComponent | SummaryComponent,
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot

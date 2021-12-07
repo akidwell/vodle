@@ -1,0 +1,247 @@
+import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { InvoiceData, newInvoiceDetail } from '../invoice';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { UserAuth } from 'src/app/authorization/user-auth';
+import { PolicyService } from '../../policy.service';
+import { NotificationService } from 'src/app/notification/notification-service';
+import { DatePipe } from '@angular/common';
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router, RouteReuseStrategy } from '@angular/router';
+import { PolicyStatusService } from '../../services/policy-status.service';
+import { InvoiceMasterComponent } from './invoice-master/invoice-master.component';
+import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
+
+@Component({
+  selector: 'rsps-invoice-group',
+  templateUrl: './invoice-group.component.html',
+  styleUrls: ['./invoice-group.component.css']
+})
+export class InvoiceGroupComponent implements OnInit {
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
+  invoiceCollapsed: boolean = false;
+  authSub: Subscription;
+  canEditPolicy: boolean = false;
+  title: string = "Transaction Summary";
+  addSub!: Subscription;
+  updateSub!: Subscription;
+  showInvalid: boolean = false;
+  invalidMessage: string = "";
+
+  @Input() public invoice!: InvoiceData;
+  @Input() index!: number;
+  @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
+  @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
+  @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
+
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private policyStatusService: PolicyStatusService) {
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+  }
+
+  ngOnInit(): void {
+    if (this.index > 0) {
+      this.invoiceCollapsed = true;
+      this.title += " - " + this.invoice.invoiceNumber + " - " + this.datepipe.transform(this.invoice.invoiceDate, 'M/dd/yyyy') + " - " + this.invoice.invoiceStatusDescription;
+    }
+  }
+
+  ngAfterViewInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.addSub?.unsubscribe();
+    this.updateSub?.unsubscribe();
+  }
+
+  addNewInvoiceDetail(): void {
+    let newDetail = newInvoiceDetail();
+    newDetail.invoiceNumber = this.invoice.invoiceNumber;
+    newDetail.lineNumber = this.getNextSequence();
+    this.invoice.invoiceDetail.push(newDetail);
+    this.invoiceCollapsed = false;
+  }
+
+  getNextSequence(): number {
+    if (this.invoice.invoiceDetail.length == 0) {
+      return 1;
+    }
+    else {
+      return Math.max(...this.invoice.invoiceDetail.map(o => o.lineNumber)) + 1;
+    }
+  }
+  get canSave(): boolean {
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+  }
+
+  get canPost(): boolean {
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+  }
+
+  get canVoid(): boolean {
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+  }
+
+  get canExport(): boolean {
+    return this.invoice != null && ((this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == "P") && this.canEditPolicy
+  }
+
+  get canAddDetail(): boolean {
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+  }
+
+  get showFooter(): boolean {
+    return this.invoice != null && (this.invoice.invoiceStatus != "V")
+  }
+
+  get totalNetAmount(): number {
+    let total: number = 0;
+    this.invoice.invoiceDetail.forEach(element => { total += element.netAmount });
+    return total;
+  }
+
+  tempSave(): void {
+    if (this.isValid()) {
+      if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
+        if (this.invoice.invoiceStatus == "N") {
+          this.invoice.invoiceStatus = "T";
+          this.invoice.proFlag = 0;
+          this.save();
+        }
+        else if (this.isDirty()) {
+          this.save();
+        }
+      }
+    }
+    else {
+      this.showInvalidControls();
+    }
+  }
+
+  post(): void {
+    if (this.isValid()) {
+      if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
+        this.invoice.invoiceStatus = "T";
+        this.invoice.proFlag = 3;
+        this.save();
+      }
+    }
+    else {
+      this.showInvalidControls();
+    }
+  }
+
+  private save(): void {
+    if (this.invoice.isNew) {
+
+      this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
+        if (result == null) {
+          this.invoice.isNew = false;
+          this.refresh();
+        }
+        else {
+          this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        }
+      });
+    }
+    else {
+      this.updateSub = this.policyService.updatePolicyInvoice(this.invoice).subscribe(result => {
+        if (result == null) {
+          this.refresh();
+        }
+        else {
+          this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        }
+      });
+    }
+  }
+
+  refresh() {
+    this.header.invoiceMasterForm.form.markAsPristine();
+    if (this.components != null) {
+      for (let child of this.components) {
+        child.invoiceDetailForm.form.markAsPristine();
+      }
+    }
+    this.policyStatusService.refreshPolicyStatus(this.invoice.policyId, this.invoice.endorsementNumber);
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate([this.router.url])
+    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
+  voidInvoice(): void {
+  }
+
+  export(): void {
+  }
+
+  isValid(): boolean {
+    if (this.header != null) {
+      if (this.header.invoiceMasterForm.status != 'VALID') {
+        return false;
+      };
+    }
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.invoiceDetailForm.status != 'VALID') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  isDirty() {
+    if (this.header != null) {
+      if (this.header.invoiceMasterForm.dirty) {
+        return true;
+      }
+    }
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.invoiceDetailForm.dirty) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  showInvalidControls(): void {
+    let invalid = [];
+    // Loop through each child component to see it any of them have invalid controls
+    if (this.components != null) {
+      for (let child of this.components) {
+        for (let name in child.invoiceDetailForm.controls) {
+          if (child.invoiceDetailForm.controls[name].invalid) {
+            invalid.push(name);
+          }
+        }
+      }
+    }
+
+    this.invalidMessage = "";
+    // Compile all invalide controls in a list
+    if (invalid.length > 0) {
+      this.showInvalid = true;
+      for (let error of invalid) {
+        this.invalidMessage += "<br><li>" + error;
+      }
+    }
+
+    if (this.showInvalid) {
+      this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
+    }
+    else {
+      this.hideInvalid();
+    }
+  }
+
+  hideInvalid(): void {
+    this.showInvalid = false;
+  }
+
+}
