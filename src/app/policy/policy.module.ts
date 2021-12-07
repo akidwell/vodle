@@ -37,6 +37,7 @@ import { UnderlyingCoverageDetailComponent } from './schedules/underlying-covera
 import { UnderlyingCoverageLimitBasisComponent } from './schedules/underlying-coverages/underlying-coverage-limit-basis/underlying-coverage-limit-basis.component';
 import { ClickStopPropagation } from '../directives/click-stop-propagation.directive';
 import { UnderlyingCoverageService } from './schedules/services/underlying-coverage.service';
+import { LimitsPatternHelperService } from './services/limits-pattern-helper.service';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { UnderlyingCoverageService } from './schedules/services/underlying-cover
     CanDeactivateGuard,
     DatePipe,
     UpdatePolicyChild,
-    UnderlyingCoverageService
+    UnderlyingCoverageService,
+    LimitsPatternHelperService
   ]
 })
 export class PolicyModule { }

@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { PolicyInformation } from 'src/app/policy/policy';
+import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 import { UnderlyingCoverageLimit } from '../../schedules';
 import { UnderlyingCoverageService } from '../../services/underlying-coverage.service';
 
@@ -16,10 +17,11 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
   canEditPolicy: boolean = true;
   authSub: Subscription;
   policyInfo!: PolicyInformation;
+  isLimitsPatternValid: boolean = true;
   @Input() ucLimit!: UnderlyingCoverageLimit;
   @Output() onLimitChange: EventEmitter<any> = new EventEmitter();
   @Output() deleteThisLimit: EventEmitter<UnderlyingCoverageLimit> = new EventEmitter();
-  constructor(private route: ActivatedRoute, public UCService: UnderlyingCoverageService, private userAuth: UserAuth) {
+  constructor(private route: ActivatedRoute, public UCService: UnderlyingCoverageService, private userAuth: UserAuth, private limitsPatternHelperService: LimitsPatternHelperService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -31,10 +33,10 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     });
   }
   limitChange(): void{
+    this.ucLimit.limit = this.limitsPatternHelperService.parseLimitsPattern(this.ucLimit.limit || '', 1)
     this.onLimitChange.emit();
   }
   deleteLimit(): void {
-    console.log('happens')
     if(this.ucLimit.isUserAdded) {
       this.deleteThisLimit.emit(this.ucLimit);
     };
