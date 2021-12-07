@@ -67,7 +67,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
     const index = this.locationData.indexOf(existingLocation, 0);
     if (index > -1) {
       this.locationData.splice(index, 1);
-      this.notification.show('Endorsement Location deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      if (!existingLocation.isNew) {
+        this.notification.show('Endorsement Location deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      }
     }
   }
 

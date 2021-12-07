@@ -30,13 +30,17 @@
 }
 
 .effectiveDate {
-  width: 14%;
+  width: 10%;
 }
 
 .expirationDate {
-  width: 14%;
+  width: 10%;
 }
 
 .extensionDate {
-  width: 14%;
+  width: 10%;
+}
+
+.status {
+  width: 12%;
 }

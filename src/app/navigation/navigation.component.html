@@ -10,7 +10,7 @@
   <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1">
   <div *ngFor="let policy of policyHistory">
     <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
-      [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]" #policyActive="routerLinkActive">
+      [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]" (click)="openPolicy(policy)" #policyActive="routerLinkActive">
       <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
       <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
       {{ policy.policyNumber + ":" + policy.endorsementNumber}}

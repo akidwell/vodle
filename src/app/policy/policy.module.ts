@@ -38,6 +38,9 @@ import { UnderlyingCoverageLimitBasisComponent } from './schedules/underlying-co
 import { ClickStopPropagation } from '../directives/click-stop-propagation.directive';
 import { UnderlyingCoverageService } from './schedules/services/underlying-coverage.service';
 import { LimitsPatternHelperService } from './services/limits-pattern-helper.service';
+import { InvoiceDetailComponent } from './summary/invoice-group/invoice-detail/invoice-detail.component';
+import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.component';
+import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +71,10 @@ import { LimitsPatternHelperService } from './services/limits-pattern-helper.ser
     PolicyLayerGroupComponent,
     UnderlyingCoveragesComponent,
     UnderlyingCoverageDetailComponent,
-    UnderlyingCoverageLimitBasisComponent
+    UnderlyingCoverageLimitBasisComponent,
+    InvoiceGroupComponent,
+    InvoiceDetailComponent,
+    InvoiceMasterComponent
   ],
   imports: [
     CommonModule,
