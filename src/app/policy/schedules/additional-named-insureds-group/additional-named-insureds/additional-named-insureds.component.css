@@ -1,44 +1,24 @@
-.card-header {
-    color: white;
-    background-color: #00274e;
-}
 input[type="text"] {
-    display: inline-block;
+  display: inline-block;
 }
+
 input[type="date"] {
-    display: inline-block;
+  display: inline-block;
 }
 
-.header-label {
-  padding-left: 5px;
-  padding-top: 5px;
+.row {
+  margin-bottom: 2px;
 }
 
-div.card {
-    margin-top: 0px;
-  }
-
-.card-body{
-    display: inline-block;
-    width: 100%;
-    background-color: white;
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
 }
 
-.ng-valid[required], .ng-valid.required  {
-    border-left: 5px solid #42A948;
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
 }
-  
-.ng-invalid:not(form)  {
-    border-left: 5px solid #a94442;
+
+.btn {
+  margin-right: 5px;
 }
-.button {
-    background: none!important;
-    border: none;
-    padding: 0!important;
-    /*optional*/
-    font-family: arial, sans-serif;
-    /*input has OS specific font-family*/
-    color: #069;
-    text-decoration: underline;
-    cursor: pointer;
-  }
