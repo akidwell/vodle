@@ -15,14 +15,14 @@
       </div>
       <div class="card-footer">
         <div id="locationTotal">
-          <button style="float:left; background:none; border:none;" class="underline" (click)="addNewCoverage();">Add
-            Coverage</button>
-          <div style="display: inline-block;">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}
-          </div>
+          <button *ngIf="canEditPolicy" style="float:left; background:none; border:none;" class="underline"
+            (click)="addNewCoverage();">Add Coverage</button>
+          <span class="float-center">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}
+          </span>
           <div style="float:right;">Coverages: {{endorsementCoveragesGroup.coverages.length}}</div>
         </div>
       </div>
     </div>
   </div>
-
   <rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>
+</form>

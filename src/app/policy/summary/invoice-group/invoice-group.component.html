@@ -25,7 +25,7 @@
     </div>
     <div class="card-footer">
       <div id="invoiceFooter" *ngIf="showFooter">
-        <button [hidden]="!canAddDetail" style="float:left; background:none; border:none;" class="underline"
+        <button *ngIf="canAddDetail" style="float:left; background:none; border:none;" class="underline"
           (click)="addNewInvoiceDetail();">Add Line Item</button>
         <span class="float-center">Total: {{totalNetAmount | currency}}
         </span>
