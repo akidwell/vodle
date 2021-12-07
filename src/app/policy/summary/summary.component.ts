@@ -54,7 +54,7 @@ export class SummaryComponent implements OnInit {
       this.accountInfo = data['accountData'].accountInfo;
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
-      if (this.invoices.length == 0 || this.invoices[0].isNew) {
+      if ((this.invoices.length == 0 || this.invoices[0].isNew) && this.canEditPolicy) {
         let invoice = newInvoice();
         invoice.policyId = this.policyInfo.policyId;
         invoice.PolicySymbol = this.policyInfo.policySymbol;
@@ -81,7 +81,7 @@ export class SummaryComponent implements OnInit {
   }
 
   async reloadInvoice() {
-    if (this.invoices[0].isNew || (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0))) {
+    if (this.canEditPolicy && (this.invoices[0].isNew || (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0)))) {
       this.invoices[0].effectiveDate = this.policyInfo.policyEffectiveDate;
       this.invoices[0].expirationDate = this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate;
       this.invoices[0].invoiceDetail[0].lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
@@ -103,7 +103,7 @@ export class SummaryComponent implements OnInit {
   @ViewChildren(InvoiceGroupComponent) invoiceGroupComp: QueryList<InvoiceGroupComponent> | undefined;
 
   isValid(): boolean {
-    return this.invoiceGroupComp?.get(0)?.isValid() ?? false;
+    return this.invoiceGroupComp?.get(0)?.isValid() ?? true;
   }
 
   isDirty(): boolean {

@@ -1,11 +1,9 @@
 <div class="content">
   <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
   </ngb-alert>
-  <rsps-additional-named-insureds-group></rsps-additional-named-insureds-group><br>
+  <rsps-additional-named-insureds-group></rsps-additional-named-insureds-group>
   <div>
-    <!-- <button class="btn btn-sm btn-primary pull-right" [hidden]="locationData.length == 1"
-      (click)="expandAllLocations()">Expand All</button> -->
-    <button class="btn btn-sm btn-primary pull-right" [hidden]="locationData.length == 1"
+    <button class="btn btn-sm btn-primary pull-right" *ngIf="locationData.length > 1"
       (click)="collapseAllLocations()">Collapse All</button>
   </div>
   <rsps-endorsement-location-group></rsps-endorsement-location-group>

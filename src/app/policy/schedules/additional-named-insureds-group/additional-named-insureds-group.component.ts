@@ -86,7 +86,9 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
     const index = this.aniData.indexOf(existingAni, 0);
     if (index > -1) {
       this.aniData.splice(index, 1);
-      this.notification.show('Additional Named Insureds deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      if (!existingAni.isNew) {
+        this.notification.show('Additional Named Insureds deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      }
     }
   }
   getNextSequence(): number {

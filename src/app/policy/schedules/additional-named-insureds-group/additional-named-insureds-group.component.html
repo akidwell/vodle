@@ -4,24 +4,13 @@
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
   </div>
 <div #collapse="ngbCollapse" [(ngbCollapse)]="aniCollapsed">
-  <div class="row container" style="padding-top: 5px">
-    <div class="col-lg-3">
-      <label for="address">Role</label>
-    </div>
-    <div class="col-lg-5">
-      <label for="createDate">Additional Named Insured</label>
-    </div>
-    <div class="col-lg-2">
-      <label for="createDate">Create Date</label>
-    </div>
-  </div>
     <div *ngFor="let item of aniData; let i = index">
-      <rsps-additional-named-insureds  (copyExistingAni)=copyExistingAni($event) (deleteExistingAni)=deleteExistingAni($event) [aniData]=item ></rsps-additional-named-insureds>
+      <rsps-additional-named-insureds  (copyExistingAni)=copyExistingAni($event) (deleteExistingAni)=deleteExistingAni($event) [aniData]=item [index]=i></rsps-additional-named-insureds>
     </div>
   </div>
   <div class="card-footer" >
     <div id="aniFooter">
-      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
+      <button *ngIf="canEditPolicy" style="float:left; background:none; border:none;" class="underline" (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
       <div style="float:right;">Additional Named Insureds: {{aniData.length}}</div> 
     </div>
   </div>
