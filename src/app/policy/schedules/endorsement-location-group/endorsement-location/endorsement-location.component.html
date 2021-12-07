@@ -1,14 +1,12 @@
 <form #locationForm="ngForm">
-  <div class="header-label">
-    <div class="row container">
-      <div class="col-lg-6">
-        <label for="address" *ngIf="index==0">Location</label>
-      </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <label for="address" *ngIf="index==0">Location</label>
     </div>
   </div>
   <div [ngClass]="{'expanded':!collapsed}">
-    <div #locationInfo class="card-body" (click)="collapseExpand(false)">
-      <div class="row container" *ngIf="collapsed">
+    <div #locationInfo (click)="collapseExpand(false)">
+      <div class="row" *ngIf="collapsed">
         <div class="col-lg-6">
           <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address"
             [required]="canEditPolicy"
@@ -17,7 +15,7 @@
       </div>
     </div>
     <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-      <div class="row container">
+      <div class="row">
         <div class="col-lg-6">
           <label for="street1">Address Street 1</label>
           <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy"
@@ -85,7 +83,7 @@
       <div class="row container">
         <div class="col-lg-2">
           <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
-          *ngIf="canEditPolicy">Copy</span>
+            *ngIf="canEditPolicy">Copy</span>
           <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
             *ngIf="!location.isNew && canEditPolicy">Delete</span>
           <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
@@ -114,3 +112,4 @@
       <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
     </div>
   </ng-template>
+</form>
