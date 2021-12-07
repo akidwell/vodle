@@ -4,6 +4,9 @@ import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faF
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
 import { PolicyHistory, PolicyHistoryService } from './policy-history.service';
+import { Router, RouteReuseStrategy } from '@angular/router';
+import { DropDownsService } from '../drop-downs/drop-downs.service';
+import { CustomReuseStrategy } from '../app-reuse-strategy';
 
 @Component({
   selector: 'rsps-navigation',
@@ -27,7 +30,7 @@ export class NavigationComponent implements OnInit {
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
 
-  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService) {
+  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private router: Router, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
@@ -57,4 +60,12 @@ export class NavigationComponent implements OnInit {
     this.applicationNavbarOpen = !this.applicationNavbarOpen;
   }
 
+  openPolicy(policy: PolicyHistory): void {
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
+    this.dropDownService.clearPolicyDropDowns();
+  }
 }

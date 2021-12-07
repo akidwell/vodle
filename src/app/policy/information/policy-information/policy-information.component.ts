@@ -9,6 +9,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from '../../policy.service';
+import { PolicyStatusService } from '../../services/policy-status.service';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -41,10 +42,13 @@ export class PolicyInformationComponent implements OnInit {
   policySub!: Subscription;
   dereg!: boolean;
   assumed!: boolean;
+  status: string = "";
+  readonlyStatus: boolean = false;
+  statusSub!: Subscription;
 
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private policyStatusService: PolicyStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -57,24 +61,28 @@ export class PolicyInformationComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
+      this.pacCodes$ = this.dropdowns.getPACCodes();
+      this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
+      this.states$ = this.dropdowns.getStates();
+      this.carrierCodes$ = this.dropdowns.getCarrierCodes();
+      this.coverageCodes$ = this.dropdowns.getCoverageCodes();
+      this.auditCodes$ = this.dropdowns.getAuditCodes();
+      this.paymentFrequencies$ = this.dropdowns.getPaymentFrequencies();
+      this.deregulationIndicators$ = this.dropdowns.getDeregulationIndicators();
+      this.riskTypes$ = this.dropdowns.getRiskTypes();
+      this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
+      this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
     });
-
-
-    this.pacCodes$ = this.dropdowns.getPACCodes();
-    this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
-    this.states$ = this.dropdowns.getStates();
-    this.carrierCodes$ = this.dropdowns.getCarrierCodes();
-    this.coverageCodes$ = this.dropdowns.getCoverageCodes();
-    this.auditCodes$ = this.dropdowns.getAuditCodes();
-    this.paymentFrequencies$ = this.dropdowns.getPaymentFrequencies();
-    this.deregulationIndicators$ = this.dropdowns.getDeregulationIndicators();
-    this.riskTypes$ = this.dropdowns.getRiskTypes();
-    this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
-    this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
+    this.statusSub = this.policyStatusService.readonly.subscribe({
+      next: readonly => {
+        this.readonlyStatus = readonly;  
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   save(): boolean {
@@ -99,5 +107,9 @@ export class PolicyInformationComponent implements OnInit {
   }
   checkAssumed(): boolean{
    return this.assumed = this.policyInfo.riskType == 'A'? true : false;
+  }
+
+  get canEdit(): boolean {
+    return !this.readonlyStatus && this.canEditPolicy
   }
 }

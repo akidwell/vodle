@@ -1,0 +1,55 @@
+<form #headerForm="ngForm">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-2">
+        <label for="invoiceStatus">Status</label>
+        <input type="text" class="form-control" id="invoiceStatus" [readonly]="true"
+          [ngModel]="invoice.invoiceStatusDescription" name="invoiceStatus" #invoiceStatus="ngModel">
+      </div>
+      <div class="col-lg-3">
+        <label for="invoiceType">Type</label>
+        <input type="text" class="form-control" id="invoiceType" [readonly]="true"
+          [ngModel]="invoice.transactionTypeCode + ' - ' + invoice.transctionTypeDescription" name="invoiceType"
+          #invoiceType="ngModel">
+      </div>
+      <div class="col-lg-3">
+        <label for="invoiceReason">Reason</label>
+        <input type="text" class="form-control" id="invoiceReason" [readonly]="true" [ngModel]="invoice.reason"
+          name="invoiceReason" #invoiceReason="ngModel">
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-2">
+        <label for="invoiceNumber">Invoice Number</label>
+        <input type="text" class="form-control" id="invoiceNumber" [readonly]="true" [ngModel]="invoice.invoiceNumber"
+          name="invoiceNumber" #invoiceNumber="ngModel">
+      </div>
+      <div class="col-lg-2">
+        <label for="invoiceDate">Invoice Date</label>
+        <input type="text" class="form-control" id="invoiceDate" [readonly]="true"
+          [ngModel]="invoice.invoiceDate | date:'MM/dd/yyyy'" name="invoiceDate" #invoiceDate="ngModel">
+      </div>
+      <div class="col-lg-4">
+      </div>
+      <div class="col-lg-2">
+        <label for="effectiveDate">Effective Date</label>
+        <input type="text" class="form-control" id="effectiveDate" [readonly]="true"
+          [ngModel]="invoice.effectiveDate | date:'MM/dd/yyyy'" name="effectiveDate" #effectiveDate="ngModel">
+      </div>
+      <div class="col-lg-2">
+        <label for="expirationDate">Expiration Date</label>
+        <input type="text" class="form-control" id="expirationDate" [readonly]="true"
+          [ngModel]="invoice.expirationDate | date:'MM/dd/yyyy'" name="expirationDate" #expirationDate="ngModel">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <label for="invoiceNumber">Comment</label>
+        <input type="text" class="form-control" id="comment" [readonly]="!canEditComment" [(ngModel)]="invoice.comment"
+          name="comment" #comment="ngModel">
+      </div>
+    </div>
+  </div>
+</form>

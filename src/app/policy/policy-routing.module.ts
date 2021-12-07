@@ -4,7 +4,7 @@ import { CanDeactivateGuard } from './can-deactivate-guard';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { InformationComponent } from './information/information.component';
 import { PolicyNotFoundComponent } from './policy-not-found.component';
-import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, UnderlyingCoveragesResolver, PolicyLayerResolver } from './policy-resolver-service';
+import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, UnderlyingCoveragesResolver, PolicyLayerResolver, InvoiceResolver } from './policy-resolver-service';
 import { PolicyComponent } from './policy.component';
 import { ReinsuranceComponent } from './reinsurance/reinsurance.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -35,7 +35,14 @@ const routes: Routes = [
       { path: 'coverages', component: CoveragesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'schedules', component: SchedulesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'reinsurance', component: ReinsuranceComponent, data: { saveComponent: true }  },
-      { path: 'summary', component: SummaryComponent }
+      {
+        path: 'summary',
+        component: SummaryComponent,
+        runGuardsAndResolvers: 'always',
+        canDeactivate: [CanDeactivateGuard],
+        resolve: { invoices: InvoiceResolver },
+        data: { saveComponent: true }
+      }
     ]
   },
   {

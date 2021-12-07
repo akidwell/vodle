@@ -1,14 +1,3 @@
-export interface Policy {
-  policyId: number;
-  policySymbol: string;
-  fullPolicyNumber: string;
-}
-
-export interface PolicyResolved {
-  policy: Policy | null;
-  error?: any;
-}
-
 export interface AccountInformation {
   policyId: number;
   insuredCode: string;
@@ -155,7 +144,6 @@ export const newEndorsementLocation = (): EndorsementLocation => ({
   zip: '',
   isNew: true
 });
-
 
 export interface PolicyLayerData {
 

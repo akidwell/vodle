@@ -1,0 +1,39 @@
+.card-header {
+  color: white;
+  background-color: #00274e;
+}
+
+#invoiceFooter {
+  font-weight: bold;
+  text-align: center;
+}
+
+a:link,a:visited {
+  color: white;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.underline:hover {
+  text-decoration: underline;
+}
+
+.btn {
+ margin: 3px;
+}
+
+.float-center {
+  float: right;
+  position: relative;
+  left: -50%; /* or right 50% */
+  text-align: left;
+}
+.float-center > .child {
+  position: relative;
+  left: 50%;
+}
+
