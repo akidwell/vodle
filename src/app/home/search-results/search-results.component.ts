@@ -6,6 +6,7 @@ import { PolicySearchResults } from './policy-search-results';
 import { PolicySearchService } from './policy-search.service';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history.service';
+import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 
 @Component({
   selector: 'rsps-search-results',
@@ -24,7 +25,7 @@ export class SearchResultsComponent implements OnInit {
   insuredName: string = "";
   status: string = "";
 
-  constructor(private router: Router, private route: ActivatedRoute, private policySearchService: PolicySearchService, private routeReuseStrategy: RouteReuseStrategy, private policyHistoryService: PolicyHistoryService) {
+  constructor(private router: Router, private route: ActivatedRoute, private policySearchService: PolicySearchService, private routeReuseStrategy: RouteReuseStrategy, private policyHistoryService: PolicyHistoryService, private dropDownService: DropDownsService) {
   }
 
   ngOnInit(): void {
@@ -80,6 +81,8 @@ export class SearchResultsComponent implements OnInit {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
+    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
+    this.dropDownService.clearPolicyDropDowns();
     this.policyHistoryService.updatePolicyHistory(policy.policyId,policy.policyNumber,policy.endorsementNumber);
     this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
   }

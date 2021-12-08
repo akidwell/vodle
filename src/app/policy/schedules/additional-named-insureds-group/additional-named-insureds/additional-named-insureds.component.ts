@@ -35,6 +35,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   nameRoleDuplicates: string[] = new Array;
   isNameRoleValid: boolean = true;
 
+  @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsureds;
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();

@@ -1,0 +1,81 @@
+<form #invoiceDetailForm="ngForm">
+  <div class="row">
+    <div class="col-lg-4">
+      <label for="lineItemDescription" *ngIf="index==0">Coverage Description</label>
+    </div>
+    <div class="col-lg-2">
+      <label for="feeAmount" *ngIf="index==0">Premium</label>
+    </div>
+    <div class="col-lg-1">
+      <label for="commissionRate" *ngIf="index==0">Comm Rate</label>
+    </div>
+    <div class="col-lg-2">
+      <label for="commissionAmount" *ngIf="index==0">Commission Amt</label>
+    </div>
+    <div class="col-lg-2">
+      <label for="netAmount" *ngIf="index==0">Net Amount</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4" *ngIf="index == 0">
+      <input type="text" class="form-control" id="lineItemDescription" [readonly]="true"
+        [ngModel]="invoiceDetail.lineItemDescription" name="lineItemDescription" #lineItemDescription="ngModel">
+    </div>
+    <div class="col-lg-4" *ngIf="index > 0">
+      <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description"
+        bindValue="code" [required]="true" [clearable]="false" name="lineItemDescription"
+        [(ngModel)]="invoiceDetail.lineItemCode" [readonly]="!canEditDetail" #lineItemDescription="ngModel"
+        (ngModelChange)="changedDescription($event)">
+        <ng-template ng-label-tmp let-item="item">
+          {{item.description}} {{item.state != null ? " (" + item.state + ")" : ""}}
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item">
+          {{item.description}} {{item.state != null ? " (" + item.state + ")" : ""}}
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="col-lg-2">
+      <input type="text" class="form-control" id="feeAmount" [readonly]="!canEditDetail"
+        [(ngModel)]="invoiceDetail.feeAmount" name="feeAmount" #feeAmount="ngModel" mask="separator.2"
+        thousandSeparator="," (ngModelChange)="changeFeeAmount($event)" [required]="canEditPolicy"
+        [allowNegativeNumbers]="true">
+    </div>
+    <div class="col-lg-1">
+      <input type="text" class="form-control" id="commissionRate" [readonly]="true"
+        [ngModel]="invoiceDetail.commissionRate" name="commissionRate" #commissionRate="ngModel" mask="percent"
+        suffix="%" [dropSpecialCharacters]="false">
+    </div>
+    <div class="col-lg-2">
+      <input type="text" class="form-control" id="commissionAmount" [readonly]="true"
+        [ngModel]="invoiceDetail.commissionAmount | currency: 'USD' : '' : '1.2-2'" name="commissionAmount"
+        #commissionAmount="ngModel">
+    </div>
+    <div class="col-lg-2">
+      <input type="text" class="form-control" id="netAmount" [readonly]="true"
+        [ngModel]="invoiceDetail.netAmount | currency: 'USD' : '' : '1.2-2'" name="netAmount" #netAmount="ngModel">
+    </div>
+    <div class="col-lg-1">
+      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+        *ngIf="!invoiceDetail.isNew && !!canEditDetail">
+        Delete</span>
+      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+        *ngIf="invoiceDetail.isNew && !!canEditDetail">Remove</span>
+    </div>
+  </div>
+
+  <ng-template #modalConfirmation let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Delete Invoice Detail Confirmation</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this Invoice Detail?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
+    </div>
+  </ng-template>
+</form>

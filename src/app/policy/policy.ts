@@ -1,14 +1,3 @@
-export interface Policy {
-  policyId: number;
-  policySymbol: string;
-  fullPolicyNumber: string;
-}
-
-export interface PolicyResolved {
-  policy: Policy | null;
-  error?: any;
-}
-
 export interface AccountInformation {
   policyId: number;
   insuredCode: string;
@@ -38,30 +27,31 @@ export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
   policyEventCode: string;
-  packageInd: string
-  policyType: string | null
-  policySymbol: string
-  policyNo: string
-  policyModNo: string
-  enteredDate: Date
-  policyId: number
-  policyInsuredState: string
-  policyEffectiveDate: Date
-  policyExpirationDate: Date
-  policyExtendedExpDate: Date
-  policyCancelDate: Date
-  programId: number
-  programName: string
-  riskGradeCode: string
-  auditCode: string
-  paymentFrequency: string
-  deregulationIndicator: string
-  nyftz: string
-  riskType: string
-  assumedCarrier: string
-  coinsurancePercentage: number
-  productManufactureDate: Date
-  submissionNumber: number
+  packageInd: string;
+  policyType: string | null;
+  policySymbol: string;
+  policyNo: string;
+  policyModNo: string;
+  fullPolicyNo: string;
+  enteredDate: Date;
+  policyId: number;
+  policyInsuredState: string;
+  policyEffectiveDate: Date;
+  policyExpirationDate: Date;
+  policyExtendedExpDate: Date;
+  policyCancelDate: Date;
+  programId: number;
+  programName: string;
+  riskGradeCode: string;
+  auditCode: string;
+  paymentFrequency: string;
+  deregulationIndicator: string;
+  nyftz: string;
+  riskType: string;
+  assumedCarrier: string;
+  coinsurancePercentage: number;
+  productManufactureDate: Date;
+  submissionNumber: number;
 }
 
 export interface PolicyInformationResolved {
@@ -155,7 +145,6 @@ export const newEndorsementLocation = (): EndorsementLocation => ({
   zip: '',
   isNew: true
 });
-
 
 export interface PolicyLayerData {
 

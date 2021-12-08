@@ -6,7 +6,7 @@
     </div>
     <div class="policyNumber">
       <u><h6>Policy Number</h6></u>
-      {{policyInfo.policySymbol}}{{policyInfo.policyNo}}
+      {{policyInfo.policySymbol}}{{policyInfo.policyNo}}-{{policyInfo.policyModNo}}
     </div>
     <div class="endorsement">
       <u><h6>Endt</h6></u>
@@ -23,6 +23,10 @@
     <div class="extensionDate">
       <u><h6>Policy Ext Date</h6></u>
       {{policyInfo.policyExtendedExpDate  | date:'MM/dd/YYYY'}}
+    </div>
+    <div class="status">
+      <u><h6>Status</h6></u>
+      {{status}}
     </div>
   </div>
 </div>

@@ -42,6 +42,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
       this.aniData = data['aniData'].additionalNamedInsureds;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
+      this.aniCollapsed = false;
     });
   }
 
@@ -84,7 +85,9 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
     const index = this.aniData.indexOf(existingAni, 0);
     if (index > -1) {
       this.aniData.splice(index, 1);
-      this.notification.show('Additional Named Insureds deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      if (!existingAni.isNew) {
+        this.notification.show('Additional Named Insureds deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      }
     }
   }
   getNextSequence(): number {

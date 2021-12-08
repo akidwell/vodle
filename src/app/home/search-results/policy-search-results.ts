@@ -1,6 +1,7 @@
 export interface PolicySearchResults {
     policyId: number;
     policyNumber: string;
+    fullPolicyNumber: string;
     insuredName: string;
     endorsementNumber: number;
     policyEffectiveDate: Date;

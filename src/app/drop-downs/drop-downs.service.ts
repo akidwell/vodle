@@ -18,8 +18,25 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/pac-codes');
   }
 
+  private cacheCoverageCodes: any;
+  private cacheCoverageCodes$!: Observable<any> | null;
+
   getCoverageCodes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-codes');
+    let observable: Observable<any>;
+    if (this.cacheCoverageCodes) {
+      observable = of(this.cacheCoverageCodes);
+    } else if (this.cacheCoverageCodes$) {
+      observable = this.cacheCoverageCodes$;
+    } else {
+      this.cacheCoverageCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-codes')
+        .pipe(
+          tap(res => this.cacheCoverageCodes = res),
+          share(),
+          finalize(() => this.cacheCoverageCodes$ = null)
+        );
+      observable = this.cacheCoverageCodes$;
+    }
+    return observable;
   }
 
   getStates(): Observable<Code[]> {
@@ -68,6 +85,9 @@ export class DropDownsService {
   getRiskTypes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
   }
+  clearPolicyDropDowns() {
+    this.clearClassCodes();
+  }
 
   getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageId?: number | null): Observable<Code[]> {
     let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
@@ -85,27 +105,33 @@ export class DropDownsService {
     console.log('happens', params)
     return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
   }
-  private cacheClassCodese: any;
-  private cacheClassCodese$!: Observable<any> | null;
+
+  private cacheClassCodes: any;
+  private cacheClassCodes$!: Observable<any> | null;
 
   getClassCodes(programId: number, coverageCode: string): Observable<Code[]> {
     let observable: Observable<any>;
-    if (this.cacheClassCodese) {
-      observable = of(this.cacheClassCodese);
-    } else if (this.cacheClassCodese$) {
-      observable = this.cacheClassCodese$;
+    if (this.cacheClassCodes) {
+      observable = of(this.cacheClassCodes);
+    } else if (this.cacheClassCodes$) {
+      observable = this.cacheClassCodes$;
     } else {
       console.log("codetable/deducttype");
       let params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
-      this.cacheClassCodese$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
+      this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
         .pipe(
-          tap(res => this.cacheClassCodese = res),
+          tap(res => this.cacheClassCodes = res),
           share(),
-          finalize(() => this.cacheClassCodese$ = null)
+          finalize(() => this.cacheClassCodes$ = null)
         );
-      observable = this.cacheClassCodese$;
+      observable = this.cacheClassCodes$;
     }
     return observable;
+  }
+
+  clearClassCodes() {
+    this.cacheClassCodes = null;
+    this.cacheClassCodes$ == null;
   }
 
   // getClassCodes(coverageCode: string): Observable<Code[]> {
@@ -113,14 +139,30 @@ export class DropDownsService {
   //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
   // }
 
+  private cacheTransationTypes: any;
+  private cacheTransationTypes$!: Observable<any> | null;
+
   getTransactionTypes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/transaction-types')
+    let observable: Observable<any>;
+    if (this.cacheTransationTypes) {
+      observable = of(this.cacheTransationTypes);
+    } else if (this.cacheTransationTypes$) {
+      observable = this.cacheTransationTypes$;
+    } else {
+      this.cacheTransationTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/transaction-types')
+        .pipe(
+          tap(res => this.cacheTransationTypes = res),
+          share(),
+          finalize(() => this.cacheTransationTypes$ = null)
+        );
+      observable = this.cacheTransationTypes$;
+    }
+    return observable;
   }
 
   getTerrorismCodes(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/terrorism_code')
   }
-
 
   private cacheActions: any;
   private cacheActions$!: Observable<any> | null;
@@ -236,6 +278,28 @@ export class DropDownsService {
     }
     return observable;
   }
+   //Limits Pattern Descriptions
+   private cacheLimitsPatternDescriptions: any;
+   private cacheLimitsPatternDescriptions$!: Observable<any> | null;
+
+   getLimitsPatternDescriptions(): Observable<Code[]> {
+     let observable: Observable<any>;
+     if (this.cacheDeductibleType) {
+       observable = of(this.cacheLimitsPatternDescriptions);
+     } else if (this.cacheLimitsPatternDescriptions$) {
+       observable = this.cacheLimitsPatternDescriptions$;
+     } else {
+       console.log("api/dropdowns/limits-patterns");
+       this.cacheLimitsPatternDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
+         .pipe(
+           tap(res => this.cacheLimitsPatternDescriptions = res),
+           share(),
+           finalize(() => this.cacheLimitsPatternDescriptions$ = null)
+         );
+       observable = this.cacheLimitsPatternDescriptions$;
+     }
+     return observable;
+   }
 
   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ANI_ROLE')
