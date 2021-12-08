@@ -1,14 +1,8 @@
-import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { NotificationService } from 'src/app/notification/notification-service';
-import { Endorsement, PolicyLayerData } from '../../policy';
-import { PolicyService } from '../../policy.service';
+import { Endorsement } from '../../policy';
 
 @Component({
   selector: 'rsps-policy-layer-header',
@@ -21,9 +15,10 @@ export class PolicyLayerHeaderComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   canEditTransactionType: boolean = false;
- 
+  reinsuranceLayerNo!: number;
+  updateSub!: Subscription;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService, private datePipe: DatePipe, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -32,8 +27,6 @@ export class PolicyLayerHeaderComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.endorsement = data['endorsementData'].endorsement;
-      this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
     });
-
   }
 }
