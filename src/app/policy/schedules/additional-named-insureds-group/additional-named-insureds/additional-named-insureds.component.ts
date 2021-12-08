@@ -93,7 +93,6 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
     }
   }
 
-
   async save(): Promise<boolean> {
     return new Promise((resolve) => {
       if (this.aniData.isNew) {

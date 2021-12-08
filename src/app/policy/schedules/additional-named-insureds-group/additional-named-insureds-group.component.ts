@@ -27,7 +27,6 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   deletedAni!: AdditionalNamedInsureds;
   endorsementNumber!: number;
   policyId!: number;
-  aniSub!: Subscription;
 
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
   @ViewChildren(AdditionalNamedInsuredsComponent) components: QueryList<AdditionalNamedInsuredsComponent> | undefined;
