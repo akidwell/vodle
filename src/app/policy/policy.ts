@@ -31,6 +31,7 @@ export interface PolicyInformation {
   policyType: string | null
   policySymbol: string
   policyNo: string
+  fullPolicyNo: string
   policyModNo: string
   enteredDate: Date
   policyId: number

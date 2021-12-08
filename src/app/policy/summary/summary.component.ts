@@ -33,7 +33,7 @@ export class SummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe((response: any) => {
+    this.route.data.subscribe(response => {
       this.invoices = response.invoices.invoices;
       this.loadInvoice();
     });
@@ -54,16 +54,15 @@ export class SummaryComponent implements OnInit {
       this.accountInfo = data['accountData'].accountInfo;
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
-      if ((this.invoices.length == 0 || this.invoices[0].isNew) && this.canEditPolicy) {
+      if (this.invoices.length == 0 || this.invoices[0].isNew) {
         let invoice = newInvoice();
         invoice.policyId = this.policyInfo.policyId;
         invoice.PolicySymbol = this.policyInfo.policySymbol;
-        invoice.FullPolicyNumber = this.policyInfo.policyNo;
+        invoice.FullPolicyNumber = this.policyInfo.fullPolicyNo;
         invoice.endorsementNumber = this.endorsementNumber;
         invoice.effectiveDate = this.endorsement.transactionEffectiveDate;
         invoice.expirationDate = this.endorsement.transactionExpirationDate;
         invoice.transactionTypeCode = this.endorsement.transactionTypeCode;
-        invoice.dueDate?.setDate((invoice.invoiceDate?.getDate() ?? new Date().getDate()) + 30);
         const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
         const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
         invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
@@ -81,7 +80,7 @@ export class SummaryComponent implements OnInit {
   }
 
   async reloadInvoice() {
-    if (this.canEditPolicy && (this.invoices[0].isNew || (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0)))) {
+    if (this.invoices.length > 0 && (this.invoices[0].isNew || (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0)))) {
       this.invoices[0].effectiveDate = this.policyInfo.policyEffectiveDate;
       this.invoices[0].expirationDate = this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate;
       this.invoices[0].invoiceDetail[0].lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
@@ -111,7 +110,7 @@ export class SummaryComponent implements OnInit {
   }
 
   save(): void {
-    this.invoiceGroupComp?.get(0)?.tempSave();
+    this.invoiceGroupComp?.get(0)?.tempSave(false);
   }
 
   showInvalidControls(): void {

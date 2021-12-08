@@ -40,6 +40,7 @@ import { UnderlyingCoverageService } from './schedules/services/underlying-cover
 import { InvoiceDetailComponent } from './summary/invoice-group/invoice-detail/invoice-detail.component';
 import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.component';
 import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
+import { BusyModule } from '../busy/busy.module';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/i
     FontAwesomeModule,
     NgbModule,
     NgSelectModule,
+    BusyModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
