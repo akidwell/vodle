@@ -39,8 +39,16 @@
     text-decoration: underline;
   }
   
+  .card-footer{
+    border: 1px solid #ced4da
+  }
+
   #aniFooter {
     font-weight: bold;
     text-align: center;
   }
   
+  .footer-input{
+    background-color: #e9ecef;
+     border: 1px solid #ced4da
+  }

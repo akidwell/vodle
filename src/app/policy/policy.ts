@@ -27,31 +27,31 @@ export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
   policyEventCode: string;
-  packageInd: string
-  policyType: string | null
-  policySymbol: string
-  policyNo: string
-  fullPolicyNo: string
-  policyModNo: string
-  enteredDate: Date
-  policyId: number
-  policyInsuredState: string
-  policyEffectiveDate: Date
-  policyExpirationDate: Date
-  policyExtendedExpDate: Date
-  policyCancelDate: Date
-  programId: number
-  programName: string
-  riskGradeCode: string
-  auditCode: string
-  paymentFrequency: string
-  deregulationIndicator: string
-  nyftz: string
-  riskType: string
-  assumedCarrier: string
-  coinsurancePercentage: number
-  productManufactureDate: Date
-  submissionNumber: number
+  packageInd: string;
+  policyType: string | null;
+  policySymbol: string;
+  policyNo: string;
+  policyModNo: string;
+  fullPolicyNo: string;
+  enteredDate: Date;
+  policyId: number;
+  policyInsuredState: string;
+  policyEffectiveDate: Date;
+  policyExpirationDate: Date;
+  policyExtendedExpDate: Date;
+  policyCancelDate: Date;
+  programId: number;
+  programName: string;
+  riskGradeCode: string;
+  auditCode: string;
+  paymentFrequency: string;
+  deregulationIndicator: string;
+  nyftz: string;
+  riskType: string;
+  assumedCarrier: string;
+  coinsurancePercentage: number;
+  productManufactureDate: Date;
+  submissionNumber: number;
 }
 
 export interface PolicyInformationResolved {
@@ -151,15 +151,16 @@ export interface PolicyLayerData {
   policyId: number;
   endorsementNo: number;
   policyLayerNo: number
-  policyLayerAttachmentPoint: number;
-  policyLayerLimit: number;
-  policyLayerPremium: number;
-  invoiceNo: number;
-  copyEndorsementNo: number;
-  endType: number;
-  transCode: number;
-  transEffectiveDate: Date;
-  transExpirationDate: Date;
+  policyLayerAttachmentPoint?: number | null;
+  policyLayerLimit?: number| null;
+  policyLayerPremium?: number| null;
+  invoiceNo: number| null;
+  copyEndorsementNo: number| null;
+  endType: number| null;
+  transCode: number| null;
+  transEffectiveDate: Date| null;
+  transExpirationDate: Date| null;
+  isNew: Boolean;
   reinsuranceData: ReinsuranceLayerData[];
 }
 
@@ -169,33 +170,67 @@ export interface ReinsuranceLayerData{
   endorsementNumber: number;
   policyLayerNo: number;
   reinsLayerNo: number;
-  reinsLimit: number;
-  reinsCededPremium: number;
-  reinsCededCommRate: number;
-  treatyType: number;
-  treatyNo?: number | null;
-  subTreatyNo: number;
-  reinsurerCode: number;
-  reinsCertificateNo?: number | null;
-  proflag: number;
-  enteredDate: number;
-  invoiceNo: number;
-  payableNo: number;
-  intermediaryNo: number;
-  facBalance: number;
-  cededPremium: number;
-  cededCommission: number;
-  sumIuscededPrmByTreatyInv: number;
-  sumProcededPrmByTreatyInv: number;
-  expirationDate: Date;
-  cededCommissionRat: number;
-  effectiveDate: Date;
-  isFaculative: boolean;
+  reinsLimit: number| null;
+  reinsCededPremium: number| null;
+  reinsCededCommRate: number| null;
+  treatyType: number| null;
+  treatyNo?: number| null;
+  subTreatyNo: number| null;
+  reinsurerCode: number| null;
+  reinsCertificateNo?: number| null;
+  proflag: number| null;
+  enteredDate: number| null;
+  invoiceNo: number| null;
+  payableNo: number| null;
+  intermediaryNo: number| null;
+  facBalance: number| null;
+  cededPremium: number| undefined;
+  cededCommission: number| null;
+  sumIuscededPrmByTreatyInv: number| null;
+  sumProcededPrmByTreatyInv: number| null;
+  expirationDate: Date| null;
+  cededCommissionRat: number| null;
+  effectiveDate: Date| null;
+  isFaculative: boolean| null;
   maxLayerLimit?: number | null;
-  attachmentPoint: number;
+  attachmentPoint?: number| null;
+  isNew: Boolean;
 }
 
 export interface PolicyLayerDataResolved {
   policyLayer:  PolicyLayerData[] | null;
   error?: any;
+}
+
+export const newReinsuranceLayer = (policyId: number, endorsementNumber: number, policyLayerNo: number, reinsLayerNo: number): ReinsuranceLayerData => {
+  return {
+    policyId: policyId,
+    endorsementNumber: endorsementNumber,
+    policyLayerNo: policyLayerNo,
+    reinsLayerNo!: reinsLayerNo,
+    reinsLimit: 0,
+    reinsCededPremium: 0,
+    reinsCededCommRate: null,
+    treatyType: null,
+    treatyNo: undefined,
+    subTreatyNo: null,
+    reinsurerCode: null,
+    reinsCertificateNo: null,
+    proflag: null,
+    enteredDate: null,
+    invoiceNo: null,
+    payableNo: null,
+    intermediaryNo: null,
+    facBalance: null,
+    cededPremium: 0,
+    cededCommission: null,
+    sumIuscededPrmByTreatyInv: null,
+    sumProcededPrmByTreatyInv: null,
+    expirationDate: null,
+    cededCommissionRat: null,
+    effectiveDate: null,
+    isFaculative: false,
+    attachmentPoint: undefined,
+    isNew: true
+    }
 }

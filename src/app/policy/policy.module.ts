@@ -37,6 +37,7 @@ import { UnderlyingCoverageDetailComponent } from './schedules/underlying-covera
 import { UnderlyingCoverageLimitBasisComponent } from './schedules/underlying-coverages/underlying-coverage-limit-basis/underlying-coverage-limit-basis.component';
 import { ClickStopPropagation } from '../directives/click-stop-propagation.directive';
 import { UnderlyingCoverageService } from './schedules/services/underlying-coverage.service';
+import { LimitsPatternHelperService } from './services/limits-pattern-helper.service';
 import { InvoiceDetailComponent } from './summary/invoice-group/invoice-detail/invoice-detail.component';
 import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.component';
 import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
@@ -90,7 +91,8 @@ import { BusyModule } from '../busy/busy.module';
     CanDeactivateGuard,
     DatePipe,
     UpdatePolicyChild,
-    UnderlyingCoverageService
+    UnderlyingCoverageService,
+    LimitsPatternHelperService
   ]
 })
 export class PolicyModule { }

@@ -278,6 +278,28 @@ export class DropDownsService {
     }
     return observable;
   }
+   //Limits Pattern Descriptions
+   private cacheLimitsPatternDescriptions: any;
+   private cacheLimitsPatternDescriptions$!: Observable<any> | null;
+
+   getLimitsPatternDescriptions(): Observable<Code[]> {
+     let observable: Observable<any>;
+     if (this.cacheDeductibleType) {
+       observable = of(this.cacheLimitsPatternDescriptions);
+     } else if (this.cacheLimitsPatternDescriptions$) {
+       observable = this.cacheLimitsPatternDescriptions$;
+     } else {
+       console.log("api/dropdowns/limits-patterns");
+       this.cacheLimitsPatternDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
+         .pipe(
+           tap(res => this.cacheLimitsPatternDescriptions = res),
+           share(),
+           finalize(() => this.cacheLimitsPatternDescriptions$ = null)
+         );
+       observable = this.cacheLimitsPatternDescriptions$;
+     }
+     return observable;
+   }
 
   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ANI_ROLE')

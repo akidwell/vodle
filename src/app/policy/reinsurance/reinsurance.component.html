@@ -1,4 +1,9 @@
 <rsps-policy-layer-header></rsps-policy-layer-header>
+<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
+</ngb-alert>
+<div class="col-lg-2">
+  <button class="btn btn-sm btn-primary pull-right" [hidden]="!canEditPolicy" (click)="addPolicyLayer()">Add Policy Layer</button>
+</div>
 <div *ngFor="let item of policyLayerData; let i = index">
-  <rsps-policy-layer-group [policyLayerData]=item></rsps-policy-layer-group>
+  <rsps-policy-layer-group [policyLayerData]=item ></rsps-policy-layer-group>
 </div>
