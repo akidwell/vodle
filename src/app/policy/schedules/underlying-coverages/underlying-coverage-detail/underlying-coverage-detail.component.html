@@ -28,11 +28,13 @@
         <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
         <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
           [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()">
-
+          <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
+            Invalid Pattern
+          </div>
       </div>
       <div class="col-lg-4">
         <div>Limits Pattern</div>
-        <ng-select click-stop-propagation *ngIf="this.policyInfo.programId != 84 && this.policyInfo.programId != 85" id="limitsPatternGroupCode" [items]="UCService.limitsPatternDescriptions" bindLabel="description" bindValue="key" placeholder=""
+        <ng-select click-stop-propagation *ngIf="this.policyInfo.programId != 84 && this.policyInfo.programId != 85" id="limitsPatternGroupCode" [items]="this.allLimitsPatternDescription" bindLabel="description" bindValue="key" placeholder=""
           [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="limitsPatternGroupCode"
           [(ngModel)]="ucData.limitsPatternGroupCode" #limitsPatternGroupCode="ngModel"  (change)="updateLimitsPatternGroupCode()">
         </ng-select>

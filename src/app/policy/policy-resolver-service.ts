@@ -7,6 +7,7 @@ import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
 import { UnderlyingCoveragesResolved } from './schedules/schedules';
+import { InvoiceResolved } from './summary/invoice';
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +39,6 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
                 })
             );
     }
-
 }
 
 @Injectable({
@@ -64,7 +64,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
 
         return this.policyService.getPolicyInfo(Number(id))
             .pipe(
-                tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId,res.policySymbol+res.policyNo,Number(end))),
+                tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol + res.fullPolicyNo, Number(end))),
                 map(policyInfo => ({ policyInfo })),
                 catchError((error) => {
                     this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
@@ -72,7 +72,6 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
                 })
             );
     }
-
 }
 
 
@@ -137,7 +136,6 @@ export class EndorsementCoveragesResolver implements Resolve<EndorsementCoverage
                 })
             );
     }
-
 }
 @Injectable({
     providedIn: 'root'
@@ -161,13 +159,13 @@ export class AdditionalNamedInsuredsResolver implements Resolve<AdditionalNamedI
         }
 
         return this.policyService.getAdditionalNamedInsureds(Number(id), Number(end))
-        .pipe(
-            map(additionalNamedInsureds => ({ additionalNamedInsureds })),
-            catchError((error) => {
-                this.router.navigate(['/policy/ANI-not-found'], { state: { error: error } });
-                return of({ additionalNamedInsureds: null, error: error });
-            })
-        );
+            .pipe(
+                map(additionalNamedInsureds => ({ additionalNamedInsureds })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/ANI-not-found'], { state: { error: error } });
+                    return of({ additionalNamedInsureds: null, error: error });
+                })
+            );
     }
 }
 
@@ -193,13 +191,13 @@ export class EndorsementLocationResolver implements Resolve<EndorsementLocationR
         }
 
         return this.policyService.getEndorsementLocation(Number(id), Number(end))
-        .pipe(
-            map(endorsementLocation => ({ endorsementLocation })),
-            catchError((error) => {
-                this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
-                return of({ endorsementLocation: null, error: error });
-            })
-        );
+            .pipe(
+                map(endorsementLocation => ({ endorsementLocation })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ endorsementLocation: null, error: error });
+                })
+            );
     }
 }
 
@@ -225,44 +223,84 @@ export class PolicyLayerResolver implements Resolve<PolicyLayerDataResolved> {
         }
 
         return this.policyService.getPolicyAndReinsuranceLayers(Number(id), Number(end))
-        .pipe(
-            map(policyLayer => ({ policyLayer })),
-            catchError((error) => {
-                this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
-                return of({ policyLayer: null, error: error });
-            })
-        );
+            .pipe(
+                map(policyLayer => ({ policyLayer })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ policyLayer: null, error: error });
+                })
+            );
     }
 }
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UnderlyingCoveragesResolver implements Resolve<UnderlyingCoveragesResolved> {
 
-  constructor(private router: Router, private policyService: PolicyService) { }
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UnderlyingCoveragesResolved> {
-      const id = route.paramMap.get('id') ?? "";
-      const end = route.paramMap.get('end') ?? 0;
-      if (isNaN(+id)) {
-          const message = `Policy id was not a number: ${id}`;
-          this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-          return of({ underlyingCoverages: null, error: message });
-      }
-      if (isNaN(+end)) {
-          const message = `Endorsement was not a number: ${end}`;
-          this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-          return of({ underlyingCoverages: null, error: message });
-      }
+    constructor(private router: Router, private policyService: PolicyService) { }
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UnderlyingCoveragesResolved> {
+        const id = route.paramMap.get('id') ?? "";
+        const end = route.paramMap.get('end') ?? 0;
+        if (isNaN(+id)) {
+            const message = `Policy id was not a number: ${id}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ underlyingCoverages: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ underlyingCoverages: null, error: message });
+        }
 
-      return this.policyService.getUnderlyingCoverages(Number(id), Number(end))
-          .pipe(
-              map(underlyingCoverages => ({ underlyingCoverages })),
-              catchError((error) => {
-                  this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
-                  return of({ underlyingCoverages: null, error: error });
-              })
-          );
-  }
-
+        return this.policyService.getUnderlyingCoverages(Number(id), Number(end))
+            .pipe(
+                map(underlyingCoverages => ({ underlyingCoverages })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ underlyingCoverages: null, error: error });
+                })
+            );
+    }
 }
+
+@Injectable({
+    providedIn: 'root'
+})
+export class InvoiceResolver implements Resolve<InvoiceResolved> {
+
+    constructor(private router: Router, private policyService: PolicyService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InvoiceResolved> {
+        let id: any;
+        let end: any;
+        if ((route.parent?.paramMap?.keys?.length ?? 0) > 0) {
+            id = route.parent?.paramMap.get('id') ?? "";
+            end = route.parent?.paramMap.get('end') ?? 0;
+        }
+        else {
+            id = route.paramMap.get('id') ?? "";
+            end = route.paramMap.get('end') ?? 0;
+        }
+        if (isNaN(+id)) {
+            const message = `Policy id was not a number: ${id}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ invoices: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ invoices: null, error: message });
+        }
+
+        return this.policyService.getPolicyInvoices(Number(id), Number(end))
+            .pipe(
+                map(invoices => ({ invoices })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ invoices: null, error: error });
+                })
+            );
+    }
+}
+

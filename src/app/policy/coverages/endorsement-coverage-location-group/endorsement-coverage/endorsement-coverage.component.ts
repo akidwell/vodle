@@ -12,6 +12,7 @@ import { SubCodeDefaults } from '../../sub-code-defaults/subCodeDefaults';
 import { PolicyInformation } from '../../../policy';
 import { PolicyService } from '../../../policy.service';
 import { UpdatePolicyChild } from '../../../services/update-child.service';
+import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 
 @Component({
   templateUrl: './endorsement-coverage.component.html',
@@ -48,7 +49,8 @@ export class EndorsementCoverageComponent implements OnInit {
   collapsePanelSubscription!: Subscription;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
-    private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService) {
+    private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
+    private limitsPatternHelper: LimitsPatternHelperService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -177,6 +179,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   changeLimitsPattern() {
+    this.coverage.limitsPattern = this.limitsPatternHelper.parseLimitsPattern(this.coverage.limitsPattern, this.subCodeDefaults.defaultLimitPatternDescription.split("/").length)
     this.isLimitsPatternValid = this.checkLimitsPatternValid();
   }
 
@@ -207,7 +210,7 @@ export class EndorsementCoverageComponent implements OnInit {
     if (this.subCodeDefaults != null && this.isNotExcluded()) {
       let isValid = this.subCodeDefaults.defaultLimitPatternDescription.split("/").length == this.coverage.limitsPattern.split("/").length;
       for (let x of this.coverage.limitsPattern.split("/")) {
-        if (x == "") {
+        if ((x == "") || (x == '0')) {
           isValid = false;
         }
       }

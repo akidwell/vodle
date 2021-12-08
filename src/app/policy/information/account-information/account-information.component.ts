@@ -7,6 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Subscription } from 'rxjs';
 import { PolicyService } from '../../policy.service';
 import { NotificationService } from 'src/app/notification/notification-service';
+import { PolicyStatusService } from '../../services/policy-status.service';
 
 @Component({
   selector: 'rsps-account-information',
@@ -22,10 +23,11 @@ export class AccountInformationComponent implements OnInit {
   accountSub!: Subscription;
   faPlus = faAngleDown;
   faMinus = faAngleUp;
-
+  readonlyStatus: boolean = false;
+  
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private policyStatusService: PolicyStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -35,6 +37,11 @@ export class AccountInformationComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.accountInfo = data['accountData'].accountInfo;
+    });
+    this.policyStatusService.readonly.subscribe({
+      next: readonly => {
+        this.readonlyStatus = readonly;  
+      }
     });
   }
 

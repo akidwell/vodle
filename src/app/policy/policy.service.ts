@@ -6,6 +6,7 @@ import { ConfigService } from '../config/config.service';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
 import { UnderlyingCoverage } from './schedules/schedules';
+import { InvoiceData } from './summary/invoice';
 
 @Injectable({
   providedIn: 'root'
@@ -133,6 +134,26 @@ export class PolicyService {
     return this.http.get<PolicyLayerData[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/reinsurance')
   }
 
+  getPolicyInvoices(policyId: number, endorsementNo: number): Observable<InvoiceData[]> {
+    return this.http.get<InvoiceData[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/invoices')
+  }
+
+  addPolicyInvoice(invoice: InvoiceData): Observable<boolean> {
+    return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/invoices/', invoice)
+  }
+
+  updatePolicyInvoice(invoice: InvoiceData): Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/invoices/', invoice)
+    .pipe(
+      catchError(() => {
+        return of(false);
+      })
+    );
+  }
+
+  deletePolicyInvoiceDetails(policyId: number, endorsementNo: number, invoiceNumber: number, lineNumber: number): Observable<InvoiceData[]> {
+    return this.http.delete<InvoiceData[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/invoices/' + invoiceNumber + '/details/' + lineNumber)
+  }
   putPolicyAndReinsuranceLayers(data: PolicyLayerData[]): Observable<boolean>{
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/reinsurance', data);
 
@@ -144,4 +165,5 @@ export class PolicyService {
   deletePolicyAndReinsuranceLayers(reinsuranceLayer: ReinsuranceLayerData): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + reinsuranceLayer.policyId + '/endorsements/' + reinsuranceLayer.endorsementNumber + '/policy-reinsurance/' + reinsuranceLayer.policyLayerNo + '/' + reinsuranceLayer.reinsLayerNo)
   }
+
 }

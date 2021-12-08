@@ -1,21 +1,20 @@
 <form #aniForm="ngForm">
-  <!-- <div class="row container">
+    <div class="row">
+      <div class="col-lg-3">
+        <label for="address" *ngIf="index==0">Role</label>
+      </div>
+      <div class="col-lg-5">
+        <label for="createDate" *ngIf="index==0">Additional Named Insured</label>
+      </div>
+      <div class="col-lg-2">
+        <label for="createDate" *ngIf="index==0">Create Date</label>
+      </div>
+    </div>
+  <div class="row">
     <div class="col-lg-3">
-      <label for="address" *ngIf="index==0">Role</label>
-    </div>
-    <div class="col-lg-4">
-      <label for="createDate">Additional Named Insured</label>
-    </div>
-    <div class="col-lg-2">
-      <label for="createDate">Create Date</label>
-    </div>
-  </div> -->
-
-  <div class="row container" style="padding-top: 10px; width: 100%">
-    <div class="col-lg-3">
-      <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key" placeholder=""
-        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="role" (change)="checkDuplicateNameRoleCombo()"
-        [(ngModel)]="aniData.role" #role="ngModel">
+      <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key"
+        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="role"
+        (change)="checkDuplicateNameRoleCombo()" [(ngModel)]="aniData.role" #role="ngModel">
       </ng-select>
     </div>
     <div class="col-lg-5">
@@ -24,21 +23,22 @@
     </div>
     <div class="col-lg-2">
       <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" name="createDate"
-        [ngModel]="aniData.createdDate  | date:'MM/dd/yyyy'" (ngModelChange)="aniData.createdDate=$event">
+        [ngModel]="aniData.createdDate | date:'MM/dd/yyyy'" (ngModelChange)="aniData.createdDate=$event">
     </div>
     <div class="col-lg-2">
-      <span class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary">Copy </span>&nbsp;
-      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger" *ngIf="!aniData.isNew">
+      <span class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary" *ngIf="canEditPolicy">Copy
+      </span>
+      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+        *ngIf="!aniData.isNew && canEditPolicy">
         Delete</span>
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-        *ngIf="aniData.isNew">Remove</span>
+        *ngIf="aniData.isNew && canEditPolicy">Remove</span>
     </div>
     <div [hidden]="isNameRoleValid" class="alert alert-danger">
       Invalid Name/Role Combination
     </div>
-    <div style="height: 5px"></div>
-
   </div>
+
   <ng-template #modalConfirmation let-modal>
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Delete Additional Named Insured Confirmation</h4>
@@ -54,3 +54,4 @@
       <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
     </div>
   </ng-template>
+</form>

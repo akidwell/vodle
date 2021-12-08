@@ -8,7 +8,6 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 export class UnderlyingCoverageService{
   public limitBasisDescriptions: Code[] = [];
   public coverageTypeDescriptions: Code[] = [];
-  public limitsPatternDescriptions: Code[] = [];
 
   constructor(private dropdowns: DropDownsService){
     this.dropdowns.getLimitsBasis().subscribe((limitBasisList) =>
@@ -19,10 +18,5 @@ export class UnderlyingCoverageService{
     {
       this.coverageTypeDescriptions = coverageTypes
     });
-    this.dropdowns.getLimitsPatterns().subscribe((limitsPattern) =>
-    {
-      this.limitsPatternDescriptions = limitsPattern
-    });
   }
-
 }
