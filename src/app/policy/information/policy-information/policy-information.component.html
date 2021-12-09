@@ -72,9 +72,27 @@
               <input type="text" class="form-control" id="policyId" [(ngModel)]="policyInfo.policyId" name="policyId"
                 #policyNumber="ngModel" [readonly]="isReadOnly">
             </div>
+            <div class="col-lg-2">
+              <label for="policyExtendedExpDate">Extension Date</label>
+              <div *ngIf="!isReadOnly">
+                <input type="date" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
+                  [ngModel]="policyInfo.policyExtendedExpDate | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate"
+                  #policyExtendedExpDate="ngModel">
+              </div>
+              <div *ngIf="isReadOnly">
+                <input type="text" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
+                  [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
+              </div>
+            </div>
           </div>
           <br>
           <div class="row">
+            <div class="col-lg-2">
+              <label for="riskCity">Policy City</label>
+              <input id="riskCity" class="form-control" [readonly]="!canEdit" name="riskCity"
+                [required]="canEditPolicy" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
+            </div>
             <div class="col-lg-2">
               <label for="riskState">Policy State</label>
               <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
@@ -91,7 +109,7 @@
             <div class="col-lg-1">
               <label for="pacCode">PAC</label>
               <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
-                bindValue="code" [clearable]="false" [readonly]="!canEdit"> 
+                bindValue="code" [clearable]="false" [readonly]="!canEdit">
                 <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
                 </ng-template>
@@ -100,34 +118,23 @@
                 </ng-template>
               </ng-select>
             </div>
-            <div class="col-lg">
-              <label for="policyEffectiveDate">Effective Date</label>
-              <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
-                [required]="canEditPolicy" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
-                (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
-                #policyEffectiveDate="ngModel">
-            </div>
-            <div class="col-lg">
-              <label for="policyExpirationDate">Expiration Date</label>
-              <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
-                [required]="canEditPolicy" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
-                (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
-                #policyExpirationDate="ngModel">
-            </div>
-            <div class="col-lg">
-              <label for="policyExtendedExpDate">Extension Date</label>
-              <div *ngIf="!isReadOnly">
-                <input type="date" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
-                  [ngModel]="policyInfo.policyExtendedExpDate | date:'yyyy-MM-dd'"
-                  (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate"
-                  #policyExtendedExpDate="ngModel">
+            <div class="col-lg-3">
+              <div style='width: 47%; display: inline-block;'>
+                <label for="policyEffectiveDate">Effective Date</label>
+                <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
+                  [required]="canEditPolicy" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
+                  #policyEffectiveDate="ngModel">
               </div>
-              <div *ngIf="isReadOnly">
-                <input type="text" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
-                  [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
+              <div style='width: 47%; display: inline-block; margin-left: 6%;'>
+                <label for="policyExpirationDate">Expiration Date</label>
+                <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
+                  [required]="canEditPolicy" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
+                  #policyExpirationDate="ngModel">
               </div>
-            </div>
-            <div class="col-lg">
+          </div>
+            <div class="col-lg-2">
               <label for="policyCancelDate">Cancel Date</label>
               <div *ngIf="!isReadOnly">
                 <input type="date" class="form-control" id="policyCancelDate" [readonly]="isReadOnly"
