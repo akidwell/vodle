@@ -5,7 +5,7 @@
         [disabled]="!invoiceGroupForm.valid || !isDirty" (click)="this.tempSave(true)">Save</button>
       <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canPost" (click)="post()">Post</button>
       <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" [hidden]="!canVoid"
-        (click)="comfirmVoid()">Void</button>
+        (click)="confirmVoid()">Void</button>
       <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canExport"
         (click)="export()">Export</button>
     </div>

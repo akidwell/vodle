@@ -144,8 +144,11 @@ export class InvoiceGroupComponent implements OnInit {
         if (effectiveDate < this.invoice.invoiceDate) {
           this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
         }
-        this.save(true);
-        this.export();
+        const saved = await this.save(false);
+        if (saved) {
+          await this.export();
+          this.refresh();
+        }
       }
     }
     else {
@@ -153,11 +156,12 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
 
-  export(): void {
+  async export(): Promise<void> {
     const parm: PolicyIssuanceRequest = { policyId: this.invoice.policyId, endorsementNumber: this.invoice.endorsementNumber };
     this.showBusy = true;
-    this.issuanceSub = this.policyIssuanceService.postPolicyIssuance(parm).subscribe({
-      next: importPolicyResponse => {
+
+    await this.policyIssuanceService.postPolicyIssuance(parm).toPromise().then(
+      importPolicyResponse => {
         this.showBusy = false;
         if (importPolicyResponse.isPolicyIssued) {
           this.issuanceTitle = "Export to Issuance";
@@ -173,66 +177,69 @@ export class InvoiceGroupComponent implements OnInit {
         }
         this.openIssuanceModal();
       },
-      error: err => {
+      err => {
         this.issuanceTitle = "Export to Issuance failed";
         this.issuanceMessage = "Error Message: " + err;
         this.showBusy = false;
         this.openIssuanceModal();
       }
-    });
+    );
   }
 
-  private save(refresh: boolean = false): void {
+  private async save(refresh: boolean = false): Promise<boolean> {
     if (this.invoice.isNew) {
-      this.addInvoice(refresh);
+      return await this.addInvoice(refresh);
     }
     else {
-      this.updateInvoice(refresh);
+      return await this.updateInvoice(refresh);
     }
   }
 
-  showInvoiceSaved(): void {
+  private async addInvoice(refresh: boolean = false): Promise<boolean> {
+    return await this.policyService.addPolicyInvoice(this.invoice).toPromise<boolean>()
+      .then(result => {
+        if (result == null) {
+          this.invoice.isNew = false;
+          if (refresh) {
+            this.refresh();
+          }
+          this.showInvoiceSaved();
+          return true;
+        }
+        else {
+          this.showInvoiceNotSaved();
+          return false;
+        }
+      });
+  }
+
+  private async updateInvoice(refresh: boolean = false): Promise<boolean> {
+    return await this.policyService.updatePolicyInvoice(this.invoice)
+      .toPromise<boolean>()
+      .then(result => {
+        if (result == null) {
+          if (refresh) {
+            this.refresh();
+          }
+          this.showInvoiceSaved();
+          return true;
+        }
+        else {
+          this.showInvoiceNotSaved();
+          return false;
+        }
+      });
+  }
+
+  private showInvoiceSaved(): void {
     this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
   }
 
-  showInvoiceNotSaved(): void {
+  private showInvoiceNotSaved(): void {
     this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
   }
 
-  addInvoice(refresh: boolean = false) {
-    this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
-      if (result == null) {
-        this.invoice.isNew = false;
-        if (refresh) {
-          this.refresh();
-        }
-        else {
-          this.showInvoiceSaved();
-        }
-      }
-      else {
-        this.showInvoiceNotSaved();
-      }
-    });
-  }
-
-  updateInvoice(refresh: boolean = false) {
-    this.updateSub = this.policyService.updatePolicyInvoice(this.invoice).subscribe(result => {
-      if (result == null) {
-        if (refresh) {
-          this.refresh();
-        }
-        else {
-          this.showInvoiceSaved();
-        }
-      }
-      else {
-        this.showInvoiceNotSaved();
-      }
-    });
-  }
-
-  refresh() {
+  private refresh() {
     this.header.invoiceMasterForm.form.markAsPristine();
     if (this.components != null) {
       for (let child of this.components) {
@@ -242,10 +249,9 @@ export class InvoiceGroupComponent implements OnInit {
     this.policyStatusService.refreshPolicyStatus(this.invoice.policyId, this.invoice.endorsementNumber);
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate([this.router.url])
-    this.showInvoiceSaved();
   }
 
-  comfirmVoid(): void {
+  confirmVoid(): void {
     this.issuanceTitle = "Void Confirmation";
     this.issuanceMessage = "Are you sure you want to void this invoice?";
     this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true }).result.then((result) => {
@@ -255,7 +261,7 @@ export class InvoiceGroupComponent implements OnInit {
     });
   }
 
-  voidInvoice(): void {
+  private voidInvoice(): void {
     if (this.isValid()) {
       if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
         this.invoice.invoiceStatus = "V";
@@ -334,7 +340,7 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   // Modal is used to show errors
-  openIssuanceModal(): void {
+  private openIssuanceModal(): void {
     this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true, scrollable: true });
   }
 
