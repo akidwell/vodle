@@ -11,7 +11,7 @@ import { Router, RouteReuseStrategy } from "@angular/router";
 import { DecimalPipe } from '@angular/common';
 import { switchMap, tap } from 'rxjs/operators';
 import { State } from './interfaces/state';
-import { SearchResult } from './interfaces/serarch-result';
+import { SearchResult } from './interfaces/search-result';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
 

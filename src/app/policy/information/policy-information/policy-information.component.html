@@ -72,49 +72,7 @@
               <input type="text" class="form-control" id="policyId" [(ngModel)]="policyInfo.policyId" name="policyId"
                 #policyNumber="ngModel" [readonly]="isReadOnly">
             </div>
-          </div>
-          <br>
-          <div class="row">
             <div class="col-lg-2">
-              <label for="riskState">Policy State</label>
-              <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
-                [clearable]="false" placeholder="Select State" [readonly]="!canEdit" name="riskState"
-                [required]="canEditPolicy" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
-              </ng-select>
-            </div>
-            <div class="col-lg-2">
-              <label for="riskZipCode">Policy Zip Code</label>
-              <input type="text" class="form-control" id="riskZipCode" [required]="canEditPolicy" minlength="5"
-                [readonly]="!canEdit" [(ngModel)]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
-                #riskZipCode="ngModel" name="riskZipCode">
-            </div>
-            <div class="col-lg-1">
-              <label for="pacCode">PAC</label>
-              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
-                bindValue="code" [clearable]="false" [readonly]="!canEdit"> 
-                <ng-template ng-label-tmp let-item="item">
-                {{item.code}}
-                </ng-template>
-                <ng-template ng-option-tmp let-item="item">
-                  {{item.code}} - {{item.description}}
-                </ng-template>
-              </ng-select>
-            </div>
-            <div class="col-lg">
-              <label for="policyEffectiveDate">Effective Date</label>
-              <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
-                [required]="canEditPolicy" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
-                (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
-                #policyEffectiveDate="ngModel">
-            </div>
-            <div class="col-lg">
-              <label for="policyExpirationDate">Expiration Date</label>
-              <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
-                [required]="canEditPolicy" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
-                (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
-                #policyExpirationDate="ngModel">
-            </div>
-            <div class="col-lg">
               <label for="policyExtendedExpDate">Extension Date</label>
               <div *ngIf="!isReadOnly">
                 <input type="date" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
@@ -127,7 +85,56 @@
                   [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
               </div>
             </div>
-            <div class="col-lg">
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-2">
+              <label for="riskCity">Policy City</label>
+              <input id="riskCity" class="form-control" [readonly]="!canEdit" name="riskCity"
+                [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
+            </div>
+            <div class="col-lg-2">
+              <label for="riskState">Policy State</label>
+              <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
+                [clearable]="false" placeholder="Select State" [readonly]="!canEdit" name="riskState"
+                [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
+              </ng-select>
+            </div>
+            <div class="col-lg-2">
+              <label for="riskZipCode">Policy Zip Code</label>
+              <input type="text" class="form-control" id="riskZipCode" [required]="canEdit" minlength="5"
+                [readonly]="!canEdit" [(ngModel)]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
+                #riskZipCode="ngModel" name="riskZipCode">
+            </div>
+            <div class="col-lg-1">
+              <label for="pacCode">PAC</label>
+              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
+                bindValue="code" [clearable]="false" [readonly]="!canEdit">
+                <ng-template ng-label-tmp let-item="item">
+                {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-lg-3">
+              <div style='width: 47%; display: inline-block;'>
+                <label for="policyEffectiveDate">Effective Date</label>
+                <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
+                  [required]="canEdit" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
+                  #policyEffectiveDate="ngModel">
+              </div>
+              <div style='width: 47%; display: inline-block; margin-left: 6%;'>
+                <label for="policyExpirationDate">Expiration Date</label>
+                <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
+                  [required]="canEdit" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
+                  #policyExpirationDate="ngModel">
+              </div>
+          </div>
+            <div class="col-lg-2">
               <label for="policyCancelDate">Cancel Date</label>
               <div *ngIf="!isReadOnly">
                 <input type="date" class="form-control" id="policyCancelDate" [readonly]="isReadOnly"
@@ -145,14 +152,14 @@
             <div class="col-lg-4">
               <label for="carrierCode">Carrier</label><br>
               <ng-select id="carrierCode" [items]="carrierCodes$ | async" bindLabel="description"
-                [required]="canEditPolicy" bindValue="code" [clearable]="false" [readonly]="!canEdit"
+                [required]="canEdit" bindValue="code" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.quoteData.carrierCode" name="carrierCode">
               </ng-select>
             </div>
             <div class="col-lg-4">
               <label for="coverageCode">Coverage Code </label><br>
               <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
-                [required]="canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select Coverage"
+                [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Coverage"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.code}} - {{item.description}}
@@ -175,27 +182,27 @@
             <div class="col-lg-1">
               <label for="riskGradeCode">Risk Grade</label><br>
               <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
-                [required]="canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select Risk Grade"
+                [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Risk Grade"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
               </ng-select>
             </div>
             <div class="col-lg-2">
               <label for="auditCode">Audit Code</label><br>
               <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
-                [required]="canEditPolicy" [clearable]="false" placeholder="Select Audit Code" [readonly]="!canEdit"
+                [required]="canEdit" [clearable]="false" placeholder="Select Audit Code" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.auditCode" name="auditCode">
               </ng-select>
             </div>
             <div class="col-lg-2">
               <label for="paymentFrequency">Payment Frequency</label><br>
               <ng-select id="paymentFrequency" [items]="paymentFrequencies$ | async" bindLabel="description"
-                [required]="canEditPolicy" bindValue="code" [clearable]="false" placeholder="Select Payment Freq."
+                [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Payment Freq."
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
               </ng-select>
             </div>
             <div class="col-lg-1">
               <label for="creditDays">Credit Days</label><br>
-              <input type="number" class="form-control" id="creditDays" [required]="canEditPolicy" [readonly]="!canEdit"
+              <input type="number" class="form-control" id="creditDays" [required]="canEdit" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
             </div>
             <div class="col-lg-3">
@@ -208,7 +215,7 @@
             <div class="col-lg-3">
               <label for="riskType">Risk Type</label><br>
               <ng-select id="riskType" [items]="riskTypes$ | async" bindLabel="description" bindValue="code"
-                [required]="canEditPolicy" [clearable]="false" placeholder="Select Risk Type" [readonly]="!canEdit"
+                [required]="canEdit" [clearable]="false" placeholder="Select Risk Type" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.riskType" name="riskType">
               </ng-select>
             </div>

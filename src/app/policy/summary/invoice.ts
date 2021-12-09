@@ -11,6 +11,7 @@ export interface InvoiceData {
   dueDate?: Date | null;
   effectiveDate?: Date | null;
   expirationDate?: Date | null;
+  voidDate?: Date | null;
   transactionTypeCode: number;
   transctionTypeDescription: string;
   reason: string;
@@ -32,6 +33,7 @@ export const newInvoice = (): InvoiceData => ({
   dueDate: null,
   effectiveDate: null,
   expirationDate: null,
+  voidDate: null,
   transactionTypeCode: 0,
   transctionTypeDescription: '',
   reason: '',

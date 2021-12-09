@@ -7,10 +7,13 @@ import { PolicyService } from '../../policy.service';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { DatePipe } from '@angular/common';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute, Router, RouteReuseStrategy } from '@angular/router';
+import { Router } from '@angular/router';
 import { PolicyStatusService } from '../../services/policy-status.service';
 import { InvoiceMasterComponent } from './invoice-master/invoice-master.component';
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
+import { PolicyIssuanceRequest } from '../policy-issuance-service/policy-issuance-request';
+import { PolicyIssuanceService } from '../policy-issuance-service/policy-issuance.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -28,14 +31,19 @@ export class InvoiceGroupComponent implements OnInit {
   updateSub!: Subscription;
   showInvalid: boolean = false;
   invalidMessage: string = "";
+  showBusy: boolean = false;
+  issuanceTitle: string = "";
+  issuanceMessage: string = "";
+  issuanceSub!: Subscription;
 
   @Input() public invoice!: InvoiceData;
   @Input() index!: number;
   @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
+  @ViewChild('modalPipe') modalPipe: any;
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private policyStatusService: PolicyStatusService) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private policyStatusService: PolicyStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -55,6 +63,7 @@ export class InvoiceGroupComponent implements OnInit {
     this.authSub.unsubscribe();
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
+    this.issuanceSub?.unsubscribe();
   }
 
   addNewInvoiceDetail(): void {
@@ -103,16 +112,16 @@ export class InvoiceGroupComponent implements OnInit {
     return total;
   }
 
-  tempSave(): void {
+  tempSave(refresh: boolean): void {
     if (this.isValid()) {
       if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
         if (this.invoice.invoiceStatus == "N") {
           this.invoice.invoiceStatus = "T";
           this.invoice.proFlag = 0;
-          this.save();
+          this.save(refresh);
         }
         else if (this.isDirty()) {
-          this.save();
+          this.save(refresh);
         }
       }
     }
@@ -121,12 +130,22 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
 
-  post(): void {
+  async post(): Promise<void> {
     if (this.isValid()) {
-      if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
+      if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
         this.invoice.invoiceStatus = "T";
         this.invoice.proFlag = 3;
-        this.save();
+        this.invoice.invoiceDate = new Date();
+        this.invoice.invoiceDate.setHours(0, 0, 0, 0);
+        let effectiveDate = new Date(this.invoice.effectiveDate);
+        let dueDate = new Date();
+        dueDate.setDate(effectiveDate.getDate() + 30);
+        this.invoice.dueDate = dueDate;
+        if (effectiveDate < this.invoice.invoiceDate) {
+          this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
+        }
+        this.save(true);
+        this.export();
       }
     }
     else {
@@ -134,29 +153,83 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
 
-  private save(): void {
-    if (this.invoice.isNew) {
-
-      this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
-        if (result == null) {
-          this.invoice.isNew = false;
-          this.refresh();
+  export(): void {
+    const parm: PolicyIssuanceRequest = { policyId: this.invoice.policyId, endorsementNumber: this.invoice.endorsementNumber };
+    this.showBusy = true;
+    this.issuanceSub = this.policyIssuanceService.postPolicyIssuance(parm).subscribe({
+      next: importPolicyResponse => {
+        this.showBusy = false;
+        if (importPolicyResponse.isPolicyIssued) {
+          this.issuanceTitle = "Export to Issuance";
+          this.issuanceMessage = "Successful";
+        }
+        else if (importPolicyResponse.errorMessage.indexOf("already exist") > 0) {
+          this.issuanceTitle = "Export to Issuance";
+          this.issuanceMessage = "Policy already imported";
         }
         else {
-          this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+          this.issuanceTitle = "Export to Issuance failed";
+          this.issuanceMessage = "Error Message: " + importPolicyResponse.errorMessage;
         }
-      });
+        this.openIssuanceModal();
+      },
+      error: err => {
+        this.issuanceTitle = "Export to Issuance failed";
+        this.issuanceMessage = "Error Message: " + err;
+        this.showBusy = false;
+        this.openIssuanceModal();
+      }
+    });
+  }
+
+  private save(refresh: boolean = false): void {
+    if (this.invoice.isNew) {
+      this.addInvoice(refresh);
     }
     else {
-      this.updateSub = this.policyService.updatePolicyInvoice(this.invoice).subscribe(result => {
-        if (result == null) {
+      this.updateInvoice(refresh);
+    }
+  }
+
+  showInvoiceSaved(): void {
+    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
+  showInvoiceNotSaved(): void {
+    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
+  addInvoice(refresh: boolean = false) {
+    this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
+      if (result == null) {
+        this.invoice.isNew = false;
+        if (refresh) {
           this.refresh();
         }
         else {
-          this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+          this.showInvoiceSaved();
         }
-      });
-    }
+      }
+      else {
+        this.showInvoiceNotSaved();
+      }
+    });
+  }
+
+  updateInvoice(refresh: boolean = false) {
+    this.updateSub = this.policyService.updatePolicyInvoice(this.invoice).subscribe(result => {
+      if (result == null) {
+        if (refresh) {
+          this.refresh();
+        }
+        else {
+          this.showInvoiceSaved();
+        }
+      }
+      else {
+        this.showInvoiceNotSaved();
+      }
+    });
   }
 
   refresh() {
@@ -169,13 +242,31 @@ export class InvoiceGroupComponent implements OnInit {
     this.policyStatusService.refreshPolicyStatus(this.invoice.policyId, this.invoice.endorsementNumber);
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate([this.router.url])
-    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+    this.showInvoiceSaved();
+  }
+
+  comfirmVoid(): void {
+    this.issuanceTitle = "Void Confirmation";
+    this.issuanceMessage = "Are you sure you want to void this invoice?";
+    this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true }).result.then((result) => {
+      if (result == 'Void') {
+        this.voidInvoice();
+      }
+    });
   }
 
   voidInvoice(): void {
-  }
-
-  export(): void {
+    if (this.isValid()) {
+      if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
+        this.invoice.invoiceStatus = "V";
+        this.invoice.proFlag = 0;
+        this.invoice.voidDate = new Date();
+        this.save(true);
+      }
+    }
+    else {
+      this.showInvalidControls();
+    }
   }
 
   isValid(): boolean {
@@ -222,7 +313,6 @@ export class InvoiceGroupComponent implements OnInit {
         }
       }
     }
-
     this.invalidMessage = "";
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
@@ -231,7 +321,6 @@ export class InvoiceGroupComponent implements OnInit {
         this.invalidMessage += "<br><li>" + error;
       }
     }
-
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
     }
@@ -242,6 +331,11 @@ export class InvoiceGroupComponent implements OnInit {
 
   hideInvalid(): void {
     this.showInvalid = false;
+  }
+
+  // Modal is used to show errors
+  openIssuanceModal(): void {
+    this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true, scrollable: true });
   }
 
 }

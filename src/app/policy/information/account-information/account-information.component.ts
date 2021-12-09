@@ -66,4 +66,7 @@ export class AccountInformationComponent implements OnInit {
     return false;
   }
 
+  get canEdit(): boolean {
+    return !this.readonlyStatus && this.canEditPolicy
+  }
 }
