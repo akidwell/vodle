@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subscription } from 'rxjs';
+import {  Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { Endorsement, newReinsuranceLayer, PolicyLayerData, ReinsuranceLayerData } from '../../policy';
@@ -103,21 +103,16 @@ export class PolicyLayerGroupComponent implements OnInit {
 
   async savePolicyLayers(): Promise<boolean> {
 
-    if (this.canEditPolicy && this.isDirty() ) {
+    if (this.canEditPolicy) {
       let saveCount: number = 0;
-      if (this.components != null) {
-        for (let child of this.components) {
-          if (child.reinsuranceForm.dirty) {         
-            let result = await child.save(this.policyLayer);
+            let result = await this.reinsComp.save(this.policyLayer);
             if (result === false) {
-              this.notification.show('Reinsurance Layer ' + child.reinsuranceLayer.reinsLayerNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+              this.notification.show('Reinsurance Layer ' + this.reinsComp.reinsuranceLayer.reinsLayerNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
             }
             else {
               saveCount++;
             }
-          }
-        }
-      }
+
         if (saveCount > 0) {
           this.notification.show('Reinsurance Layers successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         }
@@ -138,7 +133,7 @@ export class PolicyLayerGroupComponent implements OnInit {
 
   calcTotalPolicyLayerPremium(): number {
     let total: number = 0;
-    this.policyLayerData.reinsuranceData.forEach(layer => total += layer.cededPremium ?? 0);
+    this.policyLayerData.reinsuranceData.forEach(layer => total += layer.reinsCededPremium ?? 0);
     return total;
   }
 
@@ -146,10 +141,9 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.existingPl.emit(this.policyLayerData.policyLayerNo)
     this.reinsuranceLayerNo = this.getNextReinsuranceLayerSequence();
     this.newReinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayerNo);
+    this.policyLayerData.reinsuranceData.push(this.newReinsuranceLayer)
     this.newReinsuranceLayer.treatyNo = this.reinsComp.treatyNo
     this.newReinsuranceLayer.reinsCededCommRate = this.reinsComp.commRate
-    //this.reinsComp.reinsuranceForm.form.markAsDirty();
-    this.policyLayerData.reinsuranceData.push(this.newReinsuranceLayer)
   }
 
   addNewPolicyLayer(): void {
