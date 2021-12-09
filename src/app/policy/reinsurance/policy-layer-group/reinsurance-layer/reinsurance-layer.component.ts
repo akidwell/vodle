@@ -29,10 +29,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   dirtySub!: Subscription | undefined;
   isDirty: boolean = false;
   treatyNo!: number;
-  facTreatyNo!: number;
   commRate!: number;
-  facCommRate!: number;
-
 
   @Input() policyLayerData!: PolicyLayerData;
   @ViewChild('modalConfirmation') modalConfirmation: any;
@@ -41,10 +38,8 @@ export class ReinsuranceLayerComponent implements OnInit {
 
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
 
-
   @Input() reinsuranceLayer!: ReinsuranceLayerData;
   @Input() index!: number;
-
 
   constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal) { }
 
@@ -61,10 +56,14 @@ export class ReinsuranceLayerComponent implements OnInit {
   ngAfterViewInit(): void {
     this.dirtySub = this.reinsuranceForm.statusChanges?.subscribe(() => {
       this.isDirty = this.reinsuranceForm.form.dirty ?? false;
-      console.log(this.isDirty)
-      if (this.isDirty)
-      this.reinsuranceForm.form.markAsDirty();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.dirtySub?.unsubscribe();
+    this.deleteSub?.unsubscribe();
+    this.updateSub?.unsubscribe();
+    this.reinsuranceSub?.unsubscribe();
   }
 
   populateReinsuranceCodes(): void {
@@ -88,7 +87,6 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   async save(policyLayerData: PolicyLayerData[]): Promise<boolean> {
-    console.log(policyLayerData)
     return new Promise((resolve) => {
 
       this.updateSub = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData).subscribe(result => {
@@ -97,7 +95,6 @@ export class ReinsuranceLayerComponent implements OnInit {
       });
 
     })
-    // return false;
   }
 
   changeFaculative(): void {
