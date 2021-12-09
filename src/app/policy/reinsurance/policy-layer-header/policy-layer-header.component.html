@@ -1,14 +1,12 @@
-<div class="policy-layer-header">
+<div  class="policy-layer-header">
     <div class="row">
         <div class="col-lg-2">
-            <label for="premium">Limit</label>
-            <input type="text" class="form-control" id="premium" [required]="canEditPolicy"
-                [readonly]="!canEditPolicy" mask="separator.0" thousandSeparator="," name="Limit">
-        </div>
+            <label  for="premium"  >Limit</label><br>
+                <input type="text" class="form-control"  value="{{endorsement.limit  | currency: 'USD' : 'symbol':'1.0-0' }}" [readonly]="true">
+            </div>
         <div class="col-lg-2">
-            <label for="premium">Premium</label>
-            <input type="text" class="form-control" id="premium" [required]="canEditPolicy"
-                [readonly]="!canEditPolicy" mask="separator.0" thousandSeparator="," name="premium">
+            <label for="premium">Premium</label><br>
+                <input type="text"  style="text-align: right" class="form-control"  value="{{endorsement.premium  | currency: 'USD' : 'symbol':'1.0-0' }}" [readonly]="true">
         </div>
         <div class="col-lg-5"></div>
         <div class="col-lg-2">
@@ -17,7 +15,4 @@
                 [(ngModel)]="endorsement.invoiceStatus" name="invoiceStatus" #invoiceStatus="ngModel">
         </div>
         <br><br><br>
-        <div class="col-lg-2">
-            <button class="btn btn-sm btn-primary pull-right" [hidden]="!canEditPolicy">Add Policy Layer</button>
-        </div>
     </div>

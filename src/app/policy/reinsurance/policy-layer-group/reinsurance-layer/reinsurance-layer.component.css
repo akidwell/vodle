@@ -28,7 +28,7 @@ input[type="checkbox"][readonly] {
 }
 
 .attachmentPoint {
-  width: 13%;
+  width: 12%;
 }
 
 .reinsuranceLimits {
@@ -52,13 +52,16 @@ input[type="checkbox"][readonly] {
 }
 
 .intermediary {
-  width: 13%;
+  width: 12%;
 }
 
 .certificatNumber {
-  width: 13%;
+  width: 12%;
+}
+.delete{
+  width:7%;  
 }
 
-.delete {
-  width: 4%;
+.row{
+  padding-bottom: 2px;
 }

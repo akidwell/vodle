@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
-import { PolicyInformation, ReinsuranceLayerData } from 'src/app/policy/policy';
+import { PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from 'src/app/policy/policy';
 import { ReinsuranceLookup } from '../../reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from '../../reinsurance-lookup/reinsurance-lookup.service';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PolicyService } from 'src/app/policy/policy.service';
+import { NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'rsps-reinsurance-layer',
@@ -12,35 +15,65 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./reinsurance-layer.component.css']
 })
 export class ReinsuranceLayerComponent implements OnInit {
-  faTrash = faTrash;
   programId: number = 0;
   effectiveDate: Date = new Date();
   reinsuranceSub!: Subscription;
   reinsuranceCodes$: Observable<ReinsuranceLookup[]> | undefined;
-  reisuranceCodes!: ReinsuranceLookup[];
+  reinsuranceCodes!: ReinsuranceLookup[];
   reinsuranceFacCodes$: Observable<ReinsuranceLookup[]> | undefined;
   reinsuranceFacCodes!: ReinsuranceLookup[];
   policyInfo!: PolicyInformation;
-  
+  deleteSub!: Subscription;
+  policyLayer!: PolicyLayerData[];
+  updateSub!: Subscription;
+  dirtySub!: Subscription | undefined;
+  isDirty: boolean = false;
+  treatyNo!: number;
+  facTreatyNo!: number;
+  commRate!: number;
+  facCommRate!: number;
+
+
+  @Input() policyLayerData!: PolicyLayerData;
+  @ViewChild('modalConfirmation') modalConfirmation: any;
+  @Output() deleteExistingReinsuranceLayer: EventEmitter<ReinsuranceLayerData> = new EventEmitter();
+  @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
+
+  @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
+
+
   @Input() reinsuranceLayer!: ReinsuranceLayerData;
   @Input() index!: number;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService) { }
+
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
+      this.policyLayer = data['policyLayerData'].policyLayer;
       this.populateReinsuranceCodes();
       this.populateReinsuranceFacCodes();
     });
     var test = this.reinsuranceLayer.reinsCededPremium;
   }
 
+  ngAfterViewInit(): void {
+    this.dirtySub = this.reinsuranceForm.statusChanges?.subscribe(() => {
+      this.isDirty = this.reinsuranceForm.form.dirty ?? false;
+      console.log(this.isDirty)
+      if (this.isDirty)
+      this.reinsuranceForm.form.markAsDirty();
+    });
+  }
+
   populateReinsuranceCodes(): void {
     this.reinsuranceSub = this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).subscribe({
       next: reisuranceCodes => {
-        this.reisuranceCodes = reisuranceCodes;
+        this.reinsuranceCodes = reisuranceCodes;
         this.reinsuranceCodes$ = of(reisuranceCodes);
+        this.treatyNo = this.reinsuranceCodes[0].treatyNumber
+        this.commRate = this.reinsuranceCodes[0].cededCommissionRate
       }
     });
   }
@@ -52,6 +85,19 @@ export class ReinsuranceLayerComponent implements OnInit {
         this.reinsuranceFacCodes$ = of(reisuranceCodes);
       }
     });
+  }
+
+  async save(policyLayerData: PolicyLayerData[]): Promise<boolean> {
+    console.log(policyLayerData)
+    return new Promise((resolve) => {
+
+      this.updateSub = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData).subscribe(result => {
+
+        resolve(result);
+      });
+
+    })
+    // return false;
   }
 
   changeFaculative(): void {
@@ -66,7 +112,7 @@ export class ReinsuranceLayerComponent implements OnInit {
       match = (this.reinsuranceFacCodes.find(c => c.treatyNumber == this.reinsuranceLayer.treatyNo));
     }
     else {
-      match = (this.reisuranceCodes.find(c => c.treatyNumber == this.reinsuranceLayer.treatyNo));
+      match = (this.reinsuranceCodes.find(c => c.treatyNumber == this.reinsuranceLayer.treatyNo));
     }
     if (match != null) {
       this.reinsuranceLayer.reinsCededCommRate = match.cededCommissionRate;
@@ -77,4 +123,32 @@ export class ReinsuranceLayerComponent implements OnInit {
     code = code.toLowerCase();
     return item.treatyNumber.toString().toLowerCase().indexOf(code) > -1 || item.treatyName.toString().toLowerCase().indexOf(code) > -1;
   }
+
+  openDeleteConfirmation() {
+    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+      if (result == 'Yes') {
+        this.deleteReinsuranceLayer();
+      }
+    });
+  }
+  async deleteReinsuranceLayer() {
+    console.log(this.policyLayerData)
+    if (this.reinsuranceLayer.isNew) {
+      this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
+    } else if (this.index !== 0 || (this.index == 0 && this.policyLayerData.reinsuranceData.length > 1)) {
+      this.save(this.policyLayer).then(() => this.deleteSub = this.policyService.deleteReinsuranceLayers(this.reinsuranceLayer).subscribe(result => {
+        this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
+        return result;
+      }));
+      ;
+    } else if (this.index == 0 && this.policyLayerData.reinsuranceData.length == 1) {
+      this.save(this.policyLayer).then(() => this.deleteSub = this.policyService.deletePolicyAndReinsuranceLayers(this.reinsuranceLayer).subscribe(result => {
+        this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
+        this.deleteExistingPolicyLayer.emit(this.policyLayerData)
+        return result;
+      }));
+      this.save(this.policyLayer)
+    }
+  }
+
 }
