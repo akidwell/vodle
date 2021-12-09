@@ -53,7 +53,8 @@ export class InvoiceDetailComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      if (this.invoiceDetail.isNew) {
+      // Don't make diry if readonly will still populate invoice but just not save it for readonly
+      if (this.invoiceDetail.isNew && this.canEditPolicy) {
         this.invoiceDetailForm.form.markAsDirty();
       }
     });

@@ -7,7 +7,7 @@
     background-color: #00274e;
 }
 
-.ng-valid[required]:not(:read-only), .ng-valid.required  {
+.ng-valid[required], .ng-valid.required  {
     border-left: 5px solid #42A948;
 }
   

@@ -1,5 +1,5 @@
 export interface ImportResult {
-    isPolicyImported: number;
+    isPolicyImported: boolean;
     policyId: number;
     errorMessage: string;
 }

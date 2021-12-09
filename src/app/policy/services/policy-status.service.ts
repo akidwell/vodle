@@ -18,8 +18,8 @@ export class PolicyStatusService {
       data => {
         this.status.next(data?.invoiceStatusDescription ?? "");
         // GAM - commented out until bugfix
-        // const editFlag = data == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
-        // this.readonly.next(!editFlag);
+        const editFlag = data == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
+        this.readonly.next(!editFlag);
       }
     );
   }
