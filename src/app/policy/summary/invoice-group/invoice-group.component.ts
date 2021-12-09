@@ -191,6 +191,14 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
 
+  showInvoiceSaved(): void {
+    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
+  showInvoiceNotSaved(): void {
+    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
   addInvoice(refresh: boolean = false) {
     this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
       if (result == null) {
@@ -198,9 +206,12 @@ export class InvoiceGroupComponent implements OnInit {
         if (refresh) {
           this.refresh();
         }
+        else {
+          this.showInvoiceSaved();
+        }
       }
       else {
-        this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        this.showInvoiceNotSaved();
       }
     });
   }
@@ -211,9 +222,12 @@ export class InvoiceGroupComponent implements OnInit {
         if (refresh) {
           this.refresh();
         }
+        else {
+          this.showInvoiceSaved();
+        }
       }
       else {
-        this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        this.showInvoiceNotSaved();
       }
     });
   }
@@ -228,7 +242,7 @@ export class InvoiceGroupComponent implements OnInit {
     this.policyStatusService.refreshPolicyStatus(this.invoice.policyId, this.invoice.endorsementNumber);
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate([this.router.url])
-    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+    this.showInvoiceSaved();
   }
 
   comfirmVoid(): void {
