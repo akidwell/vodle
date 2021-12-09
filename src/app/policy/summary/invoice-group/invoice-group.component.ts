@@ -41,6 +41,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
+  @ViewChild('modalPipe') modalPipe: any;
 
   constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private policyStatusService: PolicyStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -117,16 +118,10 @@ export class InvoiceGroupComponent implements OnInit {
         if (this.invoice.invoiceStatus == "N") {
           this.invoice.invoiceStatus = "T";
           this.invoice.proFlag = 0;
-          this.save();
-          if (refresh) {
-            this.refresh();
-          }
+          this.save(refresh);
         }
         else if (this.isDirty()) {
-          this.save();
-          if (refresh) {
-            this.refresh();
-          }
+          this.save(refresh);
         }
       }
     }
@@ -140,8 +135,8 @@ export class InvoiceGroupComponent implements OnInit {
       if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
         this.invoice.invoiceStatus = "T";
         this.invoice.proFlag = 3;
-        this.invoice.invoiceDate = new Date()
-        this.invoice.invoiceDate .setHours(0,0,0,0)
+        this.invoice.invoiceDate = new Date();
+        this.invoice.invoiceDate.setHours(0, 0, 0, 0);
         let effectiveDate = new Date(this.invoice.effectiveDate);
         let dueDate = new Date();
         dueDate.setDate(effectiveDate.getDate() + 30);
@@ -149,8 +144,8 @@ export class InvoiceGroupComponent implements OnInit {
         if (effectiveDate < this.invoice.invoiceDate) {
           this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
         }
-        this.save();
-        this.export(true);
+        this.save(true);
+        this.export();
       }
     }
     else {
@@ -158,7 +153,7 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
 
-  export(refresh: boolean = false): void {
+  export(): void {
     const parm: PolicyIssuanceRequest = { policyId: this.invoice.policyId, endorsementNumber: this.invoice.endorsementNumber };
     this.showBusy = true;
     this.issuanceSub = this.policyIssuanceService.postPolicyIssuance(parm).subscribe({
@@ -176,44 +171,51 @@ export class InvoiceGroupComponent implements OnInit {
           this.issuanceTitle = "Export to Issuance failed";
           this.issuanceMessage = "Error Message: " + importPolicyResponse.errorMessage;
         }
-        this.triggerModal();
-        if (refresh) {
-          this.refresh();
-        }
+        this.openIssuanceModal();
       },
       error: err => {
         this.issuanceTitle = "Export to Issuance failed";
         this.issuanceMessage = "Error Message: " + err;
         this.showBusy = false;
-        this.triggerModal();
-        if (refresh) {
-          this.refresh();
-        }
+        this.openIssuanceModal();
       }
     });
   }
 
-  private save(): void {
+  private save(refresh: boolean = false): void {
     if (this.invoice.isNew) {
-
-      this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
-        if (result == null) {
-          this.invoice.isNew = false;
-        }
-        else {
-          this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        }
-      });
+      this.addInvoice(refresh);
     }
     else {
-      this.updateSub = this.policyService.updatePolicyInvoice(this.invoice).subscribe(result => {
-        if (result == null) {
-        }
-        else {
-          this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        }
-      });
+      this.updateInvoice(refresh);
     }
+  }
+
+  addInvoice(refresh: boolean = false) {
+    this.addSub = this.policyService.addPolicyInvoice(this.invoice).subscribe(result => {
+      if (result == null) {
+        this.invoice.isNew = false;
+        if (refresh) {
+          this.refresh();
+        }
+      }
+      else {
+        this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+      }
+    });
+  }
+
+  updateInvoice(refresh: boolean = false) {
+    this.updateSub = this.policyService.updatePolicyInvoice(this.invoice).subscribe(result => {
+      if (result == null) {
+        if (refresh) {
+          this.refresh();
+        }
+      }
+      else {
+        this.notification.show('Invoice not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+      }
+    });
   }
 
   refresh() {
@@ -229,7 +231,28 @@ export class InvoiceGroupComponent implements OnInit {
     this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
   }
 
+  comfirmVoid(): void {
+    this.issuanceTitle = "Void Confirmation";
+    this.issuanceMessage = "Are you sure you want to void this invoice?";
+    this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true }).result.then((result) => {
+      if (result == 'Void') {
+        this.voidInvoice();
+      }
+    });
+  }
+
   voidInvoice(): void {
+    if (this.isValid()) {
+      if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
+        this.invoice.invoiceStatus = "V";
+        this.invoice.proFlag = 0;
+        this.invoice.voidDate = new Date();
+        this.save(true);
+      }
+    }
+    else {
+      this.showInvalidControls();
+    }
   }
 
   isValid(): boolean {
@@ -296,11 +319,9 @@ export class InvoiceGroupComponent implements OnInit {
     this.showInvalid = false;
   }
 
-  @ViewChild('modalPipe') modalPipe: any;
-
   // Modal is used to show errors
-  triggerModal() {
-    this.modalService.open(this.modalPipe, { scrollable: true });
+  openIssuanceModal(): void {
+    this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true, scrollable: true });
   }
 
 }

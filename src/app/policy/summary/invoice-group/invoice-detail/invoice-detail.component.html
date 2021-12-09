@@ -37,7 +37,7 @@
     <div class="col-lg-2">
       <input type="text" class="form-control" id="feeAmount" [readonly]="!canEditDetail"
         [(ngModel)]="invoiceDetail.feeAmount" name="feeAmount" #feeAmount="ngModel" mask="separator.2"
-        thousandSeparator="," (ngModelChange)="changeFeeAmount($event)" [required]="canEditPolicy"
+        thousandSeparator="," (ngModelChange)="changeFeeAmount($event)" [required]="canEditDetail"
         [allowNegativeNumbers]="true">
     </div>
     <div class="col-lg-1">

@@ -19,9 +19,9 @@
             <input type="text" class="form-control" id="producerCode" [readonly]="isReadOnly"
               [ngModel]="accountInfo.producerCode" name="producerCode">
           </div>
-          <div class="col-lg-2">
-            <label for="commissionRate">Commission Rate</label>
-            <input type="text" class="form-control" id="commissionRate" [readonly]="!canEditPolicy || readonlyStatus" [required]="canEditPolicy" mask="percent"
+          <div class="col-lg-1">
+            <label for="commissionRate">Comm Rate</label>
+            <input type="text" class="form-control" id="commissionRate" [readonly]="!canEdit" [required]="canEdit" mask="percent"
               suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="accountInfo.commissionRate" name="commissionRate"
               #commissionRate="ngModel">
           </div>

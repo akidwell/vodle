@@ -5,9 +5,9 @@
         [disabled]="!invoiceGroupForm.valid || !isDirty" (click)="this.tempSave(true)">Save</button>
       <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canPost" (click)="post()">Post</button>
       <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" [hidden]="!canVoid"
-        (click)="voidInvoice()">Void</button>
+        (click)="comfirmVoid()">Void</button>
       <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canExport"
-        (click)="export(false)">Export</button>
+        (click)="export()">Export</button>
     </div>
     <div class="card-header" (click)="collapse.toggle()">{{title}}
       <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="invoiceCollapsed"></fa-icon>
@@ -49,6 +49,8 @@
     <p>{{issuanceMessage}}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+    <button type="button" class="btn btn-danger" *ngIf="issuanceTitle == 'Void Confirmation'" (click)="modal.close('Void')">Yes</button>
+    <button type="button" class="btn btn-secondary" *ngIf="issuanceTitle == 'Void Confirmation'" (click)="modal.close()">No</button>
+    <button type="button" class="btn btn-danger" *ngIf="issuanceTitle != 'Void Confirmation'" (click)="modal.close()">Close</button>
   </div>
 </ng-template>

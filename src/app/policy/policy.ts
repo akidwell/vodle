@@ -94,8 +94,8 @@ export interface Endorsement {
   sir: number;
   premium: number;
   limit: number;
+  underlyingLimit: number;
   attachmentPoint: number;
-  invoiceStatus: string;
 }
 
 export interface AdditionalNamedInsuredsResolved {
