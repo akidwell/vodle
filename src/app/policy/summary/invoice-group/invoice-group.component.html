@@ -14,7 +14,7 @@
       <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!invoiceCollapsed"></fa-icon>
     </div>
     <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true"
-    [innerHTML]="invalidMessage"></ngb-alert>
+      [innerHTML]="invalidMessage"></ngb-alert>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="invoiceCollapsed">
       <rsps-invoice-master [invoice]=invoice></rsps-invoice-master>
       <div class="card-body">
@@ -23,8 +23,8 @@
         </div>
       </div>
     </div>
-    <div class="card-footer">
-      <div id="invoiceFooter" *ngIf="showFooter">
+    <div class="card-footer" *ngIf="showFooter">
+      <div id="invoiceFooter">
         <button *ngIf="canAddDetail" style="float:left; background:none; border:none;" class="underline"
           (click)="addNewInvoiceDetail();">Add Line Item</button>
         <span class="float-center">Total: {{totalNetAmount | currency}}
@@ -49,8 +49,11 @@
     <p>{{issuanceMessage}}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" *ngIf="issuanceTitle == 'Void Confirmation'" (click)="modal.close('Void')">Yes</button>
-    <button type="button" class="btn btn-secondary" *ngIf="issuanceTitle == 'Void Confirmation'" (click)="modal.close()">No</button>
-    <button type="button" class="btn btn-danger" *ngIf="issuanceTitle != 'Void Confirmation'" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-danger" *ngIf="issuanceTitle == 'Void Confirmation'"
+      (click)="modal.close('Void')">Yes</button>
+    <button type="button" class="btn btn-secondary" *ngIf="issuanceTitle == 'Void Confirmation'"
+      (click)="modal.close()">No</button>
+    <button type="button" class="btn btn-danger" *ngIf="issuanceTitle != 'Void Confirmation'"
+      (click)="modal.close()">Close</button>
   </div>
 </ng-template>

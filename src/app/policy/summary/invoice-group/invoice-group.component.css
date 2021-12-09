@@ -3,6 +3,14 @@
   background-color: #00274e;
 }
 
+.card-body{
+  border-style: solid; 
+  border-width: 1px;
+  border-color: black;
+  display: inline-block;
+  width: 100%;
+}
+
 #invoiceFooter {
   font-weight: bold;
   text-align: center;
