@@ -33,6 +33,7 @@ export interface PolicyInformation {
   policyNo: string;
   policyModNo: string;
   fullPolicyNo: string;
+  formattedPolicyNo: string;
   enteredDate: Date;
   policyId: number;
   policyInsuredState: string;
