@@ -8,24 +8,23 @@
         <rsps-reinsurance-layer [reinsuranceLayer]=item [index]=i [policyLayerData]="policyLayerData"
             (deleteExistingReinsuranceLayer)=deleteExistingReinsuranceLayer($event)></rsps-reinsurance-layer>
     </div>
+</div>
     <br>
     <div class="card-footer">
         <div class="aniFooter">
             <div class="row">
-                <div style="padding-left: 10px" class="col-lg-2">
-                    <button class="btn btn-sm btn-primary pull-right" style="float:left; background:none; border:none;"
+                <div style="padding-left: 10px" class="col-lg-3">
+                    <button class="btn btn-sm btn-primary pull-right" style="float:left; background:none; border:none;" [hidden]="!canEditPolicy"
                         class="underline" (click)="addNewReinsuranceLayer()">Add Reinsurance Layer</button> &nbsp;
                 </div>
                 <div class="col-lg-2">
-                    <b>Policy Layer Totals:</b>
+                    <b>Policy Layer Limit:</b> {{calcTotalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
                 </div>
                 <div class="col-lg-2">
-                  {{calcTotalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
+                    <b>Policy Layer Premium:</b>  {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' }}
                 </div>
-                <div class="col-lg-2">
-                   {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' }}
-                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-2" style="text-align:right"><b>Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}</b></div>
             </div>
         </div>
     </div>
-</div>
