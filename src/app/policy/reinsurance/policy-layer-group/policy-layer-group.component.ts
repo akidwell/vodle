@@ -2,10 +2,10 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import {  Subscription } from 'rxjs';
+import {   Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
-import { Endorsement, newReinsuranceLayer, PolicyLayerData, ReinsuranceLayerData } from '../../policy';
+import { Endorsement, newReinsuranceLayer,  PolicyLayerData, ReinsuranceLayerData } from '../../policy';
 import { PolicyService } from '../../policy.service';
 import { ReinsuranceLayerComponent } from './reinsurance-layer/reinsurance-layer.component';
 
@@ -40,7 +40,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   @ViewChild(ReinsuranceLayerComponent) reinsComp!: ReinsuranceLayerComponent;
   @ViewChildren(ReinsuranceLayerComponent) components: QueryList<ReinsuranceLayerComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private datePipe: DatePipe, private notification: NotificationService, private policyService: PolicyService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private datePipe: DatePipe, private notification: NotificationService, private policyService: PolicyService ){
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -142,18 +142,13 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.reinsuranceLayerNo = this.getNextReinsuranceLayerSequence();
     this.newReinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayerNo);
     this.policyLayerData.reinsuranceData.push(this.newReinsuranceLayer)
-    this.newReinsuranceLayer.treatyNo = this.reinsComp.treatyNo
-    this.newReinsuranceLayer.reinsCededCommRate = this.reinsComp.commRate
   }
 
   addNewPolicyLayer(): void {
     this.newPolicyLayer = this.createNewPolicyLayer();
     this.newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerNo, 1);
-    this.newReinsurance.treatyNo = this.reinsComp.treatyNo
-    this.newReinsurance.reinsCededCommRate = this.reinsComp.commRate
     this.newPolicyLayer.reinsuranceData.push(this.newReinsurance)
     this.policyLayer.push(this.newPolicyLayer);
-    this.reinsComp.reinsuranceForm.form.markAsDirty();
   }
 
   createNewPolicyLayer(): PolicyLayerData {
