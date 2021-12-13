@@ -95,10 +95,12 @@ export class ReinsuranceComponent implements OnInit {
   isValid(): boolean {
     let totalPrem: number = 0;
     let totalLimit: number = 0;
+    let subAttachmentpoints = false;
 
     if (this.canEditPolicy) {
       this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium?.toString() == "" ? 0 : layer.reinsCededPremium ?? 0 }) });
       this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0 }) });
+      subAttachmentpoints = this.checkSubAttachmentPoints()
 
       if (this.components != null) {
         for (let child of this.components) {
@@ -108,7 +110,7 @@ export class ReinsuranceComponent implements OnInit {
         }
       }
       return this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
-       this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint ;
+        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints;
     }
     return true;
   }
@@ -130,11 +132,11 @@ export class ReinsuranceComponent implements OnInit {
     this.showInvalid = false;
 
     // Loop through each child component to see it any of them have invalid controls
-    if (this.components != null) {
-      for (let child of this.components) {
-        for (let name in child.reinsComp.reinsuranceForm.controls) {
-          if (child.reinsComp.reinsuranceForm.controls[name].invalid) {
-            invalid.push(name + " - Policy Layer: # " + child.reinsComp.reinsuranceLayer.policyLayerNo + " is Invalid");
+    for (let groups of this.components!) {
+      for (let child of groups.components) {
+        for (let name in child.reinsuranceForm.controls) {
+          if (child.reinsuranceForm.controls[name].invalid) {
+            invalid.push(name + " - Policy Layer: #" + child.policyLayerData.policyLayerNo.toString());
           }
         }
       }
@@ -162,6 +164,11 @@ export class ReinsuranceComponent implements OnInit {
       this.invalidMessage += "<br><li>Policy Layer 1 attachment point does not eqaul total Policy Attachment point";
     }
 
+    if (!this.checkSubAttachmentPoints()) {
+      this.showInvalid = true;
+      this.invalidMessage += "<br><li>Please review attachment points";
+    }
+
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
     }
@@ -170,9 +177,27 @@ export class ReinsuranceComponent implements OnInit {
     }
   }
 
-  checkAttachmentPoint():boolean{
+  checkAttachmentPoint(): boolean {
     return this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint
   }
+
+  checkSubAttachmentPoints(): boolean {
+    let total: number = this.headerComp.endorsement.attachmentPoint;
+    let failed: boolean = false;
+
+    this.policyLayerData.forEach(group => {
+      group.reinsuranceData.forEach((layer) => {
+        if (layer.attachmentPoint != total && layer.reinsLayerNo == 1) {
+          failed = true
+        } else {
+          total += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0
+            + (layer.attachmentPoint?.toString() == "" ? 0 : layer.attachmentPoint ?? 0);
+        }
+      })
+    });
+    return !failed;
+  }
+
   checkPremiumMatches(): boolean {
     let total: number = 0;
     this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsCededPremium?.toString() == "" ? 0 : layer.reinsCededPremium ?? 0 }) });
