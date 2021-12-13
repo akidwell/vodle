@@ -38,7 +38,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   @Input() policyLayerData!: PolicyLayerData;
   @Output() existingPl: EventEmitter<number> = new EventEmitter();
   @ViewChild(ReinsuranceLayerComponent) reinsComp!: ReinsuranceLayerComponent;
-  @ViewChildren(ReinsuranceLayerComponent) components: QueryList<ReinsuranceLayerComponent> | undefined;
+  @ViewChildren(ReinsuranceLayerComponent) components!: QueryList<ReinsuranceLayerComponent>;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private datePipe: DatePipe, private notification: NotificationService, private policyService: PolicyService ){
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -141,6 +141,7 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.existingPl.emit(this.policyLayerData.policyLayerNo)
     this.reinsuranceLayerNo = this.getNextReinsuranceLayerSequence();
     this.newReinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayerNo);
+    this.reinsComp.reinsuranceForm.form.markAsDirty();
     this.policyLayerData.reinsuranceData.push(this.newReinsuranceLayer)
   }
 
@@ -148,6 +149,7 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.newPolicyLayer = this.createNewPolicyLayer();
     this.newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerNo, 1);
     this.newPolicyLayer.reinsuranceData.push(this.newReinsurance)
+    this.reinsComp.reinsuranceForm.form.markAsDirty();
     this.policyLayer.push(this.newPolicyLayer);
   }
 
