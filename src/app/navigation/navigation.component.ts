@@ -29,8 +29,8 @@ export class NavigationComponent implements OnInit {
   authSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
-
-  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private router: Router, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService) {
+  
+  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
@@ -42,8 +42,7 @@ export class NavigationComponent implements OnInit {
     this.policySub = this.currentPolicy.policyHistory$.subscribe({
       next: results => {
         this.policyHistory = results;
-      },
-      // error: err => this.errorMessage = err
+      }
     });
   }
 
@@ -60,7 +59,7 @@ export class NavigationComponent implements OnInit {
     this.applicationNavbarOpen = !this.applicationNavbarOpen;
   }
 
-  openPolicy(policy: PolicyHistory): void {
+  openPolicy(): void {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');

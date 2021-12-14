@@ -199,10 +199,11 @@ export class InvoiceGroupComponent implements OnInit {
     return await this.policyService.addPolicyInvoice(this.invoice).toPromise<boolean>()
       .then(result => {
         if (result == null) {
-          this.invoice.isNew = false;
+          this.markPristine();
           if (refresh) {
             this.refresh();
           }
+          this.policyStatusService.refresh();
           this.showInvoiceSaved();
           return true;
         }
@@ -218,9 +219,11 @@ export class InvoiceGroupComponent implements OnInit {
       .toPromise<boolean>()
       .then(result => {
         if (result == null) {
+          this.markPristine();
           if (refresh) {
             this.refresh();
           }
+          this.policyStatusService.refresh();
           this.showInvoiceSaved();
           return true;
         }
@@ -229,6 +232,18 @@ export class InvoiceGroupComponent implements OnInit {
           return false;
         }
       });
+  }
+
+  private markPristine() {
+    this.invoice.isNew = false;
+    this.invoice.isUpdated = false;
+    this.invoice.invoiceDetail.forEach(c => { c.isUpdated = false; c.isNew = false; })
+    this.header.invoiceMasterForm.form.markAsPristine();
+    if (this.components != null) {
+      for (let child of this.components) {
+        child.invoiceDetailForm.form.markAsPristine();
+      }
+    }
   }
 
   private showInvoiceSaved(): void {
@@ -240,13 +255,6 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   private refresh() {
-    this.header.invoiceMasterForm.form.markAsPristine();
-    if (this.components != null) {
-      for (let child of this.components) {
-        child.invoiceDetailForm.form.markAsPristine();
-      }
-    }
-    this.policyStatusService.refreshPolicyStatus(this.invoice.policyId, this.invoice.endorsementNumber);
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate([this.router.url])
   }

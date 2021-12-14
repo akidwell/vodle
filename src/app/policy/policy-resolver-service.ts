@@ -4,9 +4,10 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PolicyHistoryService } from '../navigation/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
-import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
+import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
 import { UnderlyingCoveragesResolved } from './schedules/schedules';
+import { PolicyStatusService } from './services/policy-status.service';
 import { InvoiceResolved } from './summary/invoice';
 
 @Injectable({
@@ -14,7 +15,7 @@ import { InvoiceResolved } from './summary/invoice';
 })
 export class AccountInformationResolver implements Resolve<AccountInformationResolved> {
 
-    constructor(private router: Router, private policyService: PolicyService) { }
+    constructor(private router: Router, private policyService: PolicyService, private policyStatusService: PolicyStatusService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<AccountInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
@@ -29,7 +30,6 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ accountInfo: null, error: message });
         }
-
         return this.policyService.getPolicyAccountInfo(Number(id))
             .pipe(
                 map(accountInfo => ({ accountInfo })),
@@ -285,22 +285,55 @@ export class InvoiceResolver implements Resolve<InvoiceResolved> {
         if (isNaN(+id)) {
             const message = `Policy id was not a number: ${id}`;
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-            return of({ invoices: null, error: message });
+            return of({ invoicesData: null, error: message });
         }
         if (isNaN(+end)) {
             const message = `Endorsement was not a number: ${end}`;
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-            return of({ invoices: null, error: message });
+            return of({ invoicesData: null, error: message });
         }
 
+        console.log("invoice get");
         return this.policyService.getPolicyInvoices(Number(id), Number(end))
             .pipe(
-                map(invoices => ({ invoices })),
+                map(invoicesData => ({ invoicesData })),
                 catchError((error) => {
                     this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
-                    return of({ invoices: null, error: error });
+                    return of({ invoicesData: null, error: error });
                 })
             );
     }
 }
 
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class EndorsementStatusResolver implements Resolve<EndorsementStatusResolved> {
+
+    constructor(private router: Router, private policyStatusService: PolicyStatusService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EndorsementStatusResolved> {
+        const id = route.paramMap.get('id') ?? "";
+        const end = route.paramMap.get('end') ?? 0;
+        if (isNaN(+id)) {
+            const message = `Policy id was not a number: ${id}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ status: null, error: message });
+        }
+        if (isNaN(+end)) {
+            const message = `Endorsement was not a number: ${end}`;
+            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+            return of({ status: null, error: message });
+        }
+        return this.policyStatusService.getEndorsementStatus(Number(id), Number(end))
+            .pipe(
+                map(status => ({ status })),
+                catchError((error) => {
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    return of({ status: null, error: error });
+                })
+            );
+    }
+}

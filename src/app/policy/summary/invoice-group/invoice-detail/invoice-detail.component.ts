@@ -31,7 +31,7 @@ export class InvoiceDetailComponent implements OnInit {
   @Input() index!: number;
   @ViewChild('modalConfirmation') modalConfirmation: any;
   @ViewChild(NgForm, { static: false }) invoiceDetailForm!: NgForm;
-  
+
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private lineItemDescriptionsService: LineItemDescriptionsService, private modalService: NgbModal, private policyService: PolicyService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -53,8 +53,8 @@ export class InvoiceDetailComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      // Don't make diry if readonly will still populate invoice but just not save it for readonly
-      if (this.invoiceDetail.isNew && this.canEditPolicy) {
+      // Don't make dirty if readonly will still populate invoice but just not save it for readonly
+      if ((this.invoiceDetail.isNew || this.invoiceDetail.isUpdated) && this.canEditPolicy) {
         this.invoiceDetailForm.form.markAsDirty();
       }
     });
