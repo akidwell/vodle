@@ -7,6 +7,7 @@ import { ReinsuranceLookupService } from '../../reinsurance-lookup/reinsurance-l
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { NgForm } from '@angular/forms';
+import { UserAuth } from 'src/app/authorization/user-auth';
 
 
 @Component({
@@ -30,6 +31,8 @@ export class ReinsuranceLayerComponent implements OnInit {
   isDirty: boolean = false;
   treatyNo!: number;
   commRate!: number;
+  canEditPolicy: boolean = false;
+  authSub: Subscription;
 
   @Input() policyLayerData!: PolicyLayerData;
   @ViewChild('modalConfirmation') modalConfirmation: any;
@@ -41,7 +44,11 @@ export class ReinsuranceLayerComponent implements OnInit {
   @Input() reinsuranceLayer!: ReinsuranceLayerData;
   @Input() index!: number;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal) { }
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth,) { 
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+  }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
