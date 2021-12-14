@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { UserAuth } from 'src/app/authorization/user-auth';
 import { ConfigService } from 'src/app/config/config.service';
 import { EndorsementStatusData } from '../policy';
 
@@ -10,6 +11,8 @@ import { EndorsementStatusData } from '../policy';
 })
 export class PolicyStatusService {
   private _status!: EndorsementStatusData;
+  authSub: Subscription;
+  canEditPolicy: boolean = false;
 
   status = new BehaviorSubject<string>("");
   readonly = new BehaviorSubject<boolean>(false);
@@ -18,30 +21,40 @@ export class PolicyStatusService {
   policyInfoValidated$ = this._policyInfoValidated.asObservable();
   get policyInfoValidated(): boolean { return this._policyInfoValidated.getValue(); }
   set policyInfoValidated(value: boolean) {
-    this._status.isPolicyValidated = value;
-    this.updateEndorsementStatus(this._status).toPromise();
-    this._policyInfoValidated.next(value);
+    if (this.canEditPolicy) {
+      this._status.isPolicyValidated = value;
+      this.updateEndorsementStatus(this._status).toPromise();
+      this._policyInfoValidated.next(value);
+    }
   }
 
   private _coverageValidated = new BehaviorSubject<boolean>(false);
   coverageValidated$ = this._coverageValidated.asObservable();
   get coverageValidated(): boolean { return this._coverageValidated.getValue(); }
   set coverageValidated(value: boolean) {
-    this._status.isCoverageValidated = value;
-    this.updateEndorsementStatus(this._status).toPromise();
-    this._coverageValidated.next(value);
+    if (this.canEditPolicy) {
+      this._status.isCoverageValidated = value;
+      this.updateEndorsementStatus(this._status).toPromise();
+      this._coverageValidated.next(value);
+    }
   }
 
   private _reinsuranceValidated = new BehaviorSubject<boolean>(false);
   reinsuranceValidated$ = this._reinsuranceValidated.asObservable();
   get reinsuranceValidated(): boolean { return this._reinsuranceValidated.getValue(); }
-  set reinsuranceValidated(value: boolean) { 
-     this._status.isReinsuranceValidated = value;
-    this.updateEndorsementStatus(this._status).toPromise();
-    this._reinsuranceValidated.next(value); 
+  set reinsuranceValidated(value: boolean) {
+    if (this.canEditPolicy) {
+      this._status.isReinsuranceValidated = value;
+      this.updateEndorsementStatus(this._status).toPromise();
+      this._reinsuranceValidated.next(value);
+    }
   }
 
-  constructor(private http: HttpClient, private config: ConfigService) { }
+  constructor(private userAuth: UserAuth, private http: HttpClient, private config: ConfigService) {
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+  }
 
   getEndorsementStatus(policyId: number, endorsementNo: number): Observable<EndorsementStatusData> {
     return this.http.get<EndorsementStatusData>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/status')
@@ -59,16 +72,16 @@ export class PolicyStatusService {
   }
 
   refresh(): void {
-    this.getEndorsementStatus(this._status.policyId,this._status.endorsementNumber).toPromise();
+    this.getEndorsementStatus(this._status.policyId, this._status.endorsementNumber).toPromise();
   }
 
   private updateEndorsementStatus(invoice: EndorsementStatusData): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/status/', invoice)
-    .pipe(
-      catchError(() => {
-        return of(false);
-      })
-    );
+      .pipe(
+        catchError(() => {
+          return of(false);
+        })
+      );
   }
 
 }
