@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { NotificationService } from 'src/app/notification/notification-service';
 import { PolicySave } from '../policy-save';
+import { PolicyStatusService } from '../services/policy-status.service';
 import { AccountInformationComponent } from './account-information/account-information.component';
 import { PolicyInformationComponent } from './policy-information/policy-information.component';
 
@@ -19,26 +20,16 @@ export class InformationComponent implements OnInit, PolicySave {
   invalidMessage: string = "";
   showInvalid: boolean = false;
 
-  constructor(private notification: NotificationService) { }
+  constructor(private policyStatusService: PolicyStatusService) { }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
 
-  // @Output() status: EventEmitter<any> = new EventEmitter();
-
-  // checkFormStatus() {
-  //   //emit data to parent component
-  //   if (this.policyInfoComp != null)
-  //     this.policyInfoComp.policyInfoForm?.statusChanges?.subscribe(res => {
-  //       this.formStatus = res; // Return VALID or INVALID
-  //       this.status.emit(res);
-  //     })
-  // }
-
-  ngOnInit(): void {  }
+  ngOnInit(): void { }
 
   isValid(): boolean {
-    return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID'
+    this.policyStatusService.policyInfoValidated = this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
+    return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
   }
 
   isDirty(): boolean {

@@ -96,7 +96,7 @@
             <div class="col-lg-2">
               <label for="riskState">Policy State</label>
               <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
-                [clearable]="false" placeholder="Select State" [readonly]="!canEdit" name="riskState"
+                [clearable]="false" [readonly]="!canEdit" name="riskState"
                 [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
               </ng-select>
             </div>
@@ -109,7 +109,7 @@
             <div class="col-lg-1">
               <label for="pacCode">PAC</label>
               <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
-                bindValue="code" [clearable]="false" [readonly]="!canEdit">
+                bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.riskLocation.state" #pacCode="ngModel">
                 <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
                 </ng-template>

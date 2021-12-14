@@ -18,6 +18,7 @@ export interface InvoiceData {
   comment: string;
   invoiceDetail: InvoiceDetail[];
   isNew: boolean;
+  isUpdated: boolean;
 }
 
 export const newInvoice = (): InvoiceData => ({
@@ -39,7 +40,8 @@ export const newInvoice = (): InvoiceData => ({
   reason: '',
   comment: '',
   invoiceDetail: [],
-  isNew: true
+  isNew: true,
+  isUpdated: true
 });
 
 export interface InvoiceDetail {
@@ -54,6 +56,7 @@ export interface InvoiceDetail {
   netAmount: number;
   percentCharge?: number;
   isNew: boolean;
+  isUpdated: boolean;
 }
 
 export const newInvoiceDetail = (): InvoiceDetail => ({
@@ -67,17 +70,11 @@ export const newInvoiceDetail = (): InvoiceDetail => ({
   commissionAmount: 0,
   netAmount: 0,
   percentCharge: 0,
-  isNew: true
+  isNew: true,
+  isUpdated: true
 });
 
 export interface InvoiceResolved {
-  invoices: InvoiceData[] | null;
+  invoicesData: InvoiceData[] | null;
   error?: any;
-}
-
-export interface InvoiceStatusData {
-  invoiceNumber?: number | null;
-  invoiceStatus: string;
-  invoiceStatusDescription: string;
-  proFlag?: number | null;
 }

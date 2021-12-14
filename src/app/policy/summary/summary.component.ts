@@ -1,10 +1,11 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { EndorsementCoveragesGroup } from '../coverages/coverages';
 import { AccountInformation, Endorsement, PolicyInformation } from '../policy';
+import { PolicyStatusService } from '../services/policy-status.service';
 import { InvoiceData, newInvoice, newInvoiceDetail } from './invoice';
 import { InvoiceGroupComponent } from './invoice-group/invoice-group.component';
 
@@ -23,10 +24,8 @@ export class SummaryComponent implements OnInit {
   policyInfo!: PolicyInformation;
   accountInfo!: AccountInformation;
   endorsement!: Endorsement;
-  endorsementNumber!: number;
-  policyId!: number;
 
-  constructor(private route: ActivatedRoute, private router: Router, private userAuth: UserAuth, private dropDownService: DropDownsService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private policyStatusService: PolicyStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -34,63 +33,108 @@ export class SummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(response => {
-      this.invoices = response.invoices.invoices;
-      this.loadInvoice();
-    });
-
-    // Sub to when the tab is reentered in case changes that affect the invoice were made
-    this.router.events.subscribe((event: any) => {
-      if (event instanceof ActivationEnd &&
-        Object.is(event?.snapshot?.component, SummaryComponent)) {
-        this.reloadInvoice();
-      }
+      this.invoices = response.invoices.invoicesData;
+      this.route.parent?.data.subscribe(async data => {
+        this.endorsement = data['endorsementData'].endorsement;
+        this.policyInfo = data['policyInfoData'].policyInfo;
+        this.accountInfo = data['accountData'].accountInfo;
+        this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
+        this.loadInvoice();
+      });
     });
   }
 
   async loadInvoice() {
-    this.route.parent?.data.subscribe(async data => {
-      this.endorsement = data['endorsementData'].endorsement;
-      this.policyInfo = data['policyInfoData'].policyInfo;
-      this.accountInfo = data['accountData'].accountInfo;
-      this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
-      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
-      if (this.invoices.length == 0 || this.invoices[0].isNew) {
-        let invoice = newInvoice();
-        invoice.policyId = this.policyInfo.policyId;
-        invoice.PolicySymbol = this.policyInfo.policySymbol;
-        invoice.FullPolicyNumber = this.policyInfo.fullPolicyNo;
-        invoice.endorsementNumber = this.endorsementNumber;
-        invoice.effectiveDate = this.endorsement.transactionEffectiveDate;
-        invoice.expirationDate = this.endorsement.transactionExpirationDate;
-        invoice.transactionTypeCode = this.endorsement.transactionTypeCode;
-        const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
-        const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
-        invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
-        let invoiceDetail = newInvoiceDetail();
-        invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
-        invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
-        invoiceDetail.feeAmount = this.endorsement.premium;
-        invoiceDetail.commissionRate = this.accountInfo.commissionRate;
-        invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
-        invoiceDetail.netAmount = invoiceDetail.feeAmount - invoiceDetail.commissionAmount;
-        invoice.invoiceDetail.push(invoiceDetail);
-        this.invoices.push(invoice);
-      }
-    });
+    const isValid = this.checkValidation();
+    if (isValid && this.invoices.length == 0) {
+      await this.createInvoice();
+    }
+    else if (this.invoices.length > 0 && (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0))) {
+      await this.updateInvoice();
+    }
   }
 
-  async reloadInvoice() {
-    if (this.invoices.length > 0 && (this.invoices[0].isNew || (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0)))) {
+  private checkValidation(): boolean {
+    const policyInfoValidated = this.policyStatusService.policyInfoValidated;
+    const coveragesValidated = this.policyStatusService.coverageValidated;
+    const reinsuranceValidated = this.policyStatusService.reinsuranceValidated;
+    if (this.invoices.length == 0 && (!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
+      this.showInvalid = true;
+      this.invalidMessage = "Unable to create invoice at this time";
+      if (!policyInfoValidated) {
+        this.invalidMessage += "<br><li> Policy Info needs to be validated";
+      }
+      if (!coveragesValidated) {
+        this.invalidMessage += "<br><li> Coverages needs to be validated";
+      }
+      if (!reinsuranceValidated) {
+        this.invalidMessage += "<br><li>Reinsurance needs to be validated";
+      }
+      return false;
+    }
+    return true;
+  }
+
+  private async createInvoice() {
+    let invoice = newInvoice();
+    invoice.policyId = this.policyInfo.policyId;
+    invoice.PolicySymbol = this.policyInfo.policySymbol;
+    invoice.FullPolicyNumber = this.policyInfo.fullPolicyNo;
+    invoice.endorsementNumber = this.endorsement.endorsementNumber;
+    invoice.effectiveDate = this.endorsement.transactionEffectiveDate;
+    invoice.expirationDate = this.endorsement.transactionExpirationDate;
+    invoice.transactionTypeCode = this.endorsement.transactionTypeCode;
+    const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
+    const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
+    invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
+    let invoiceDetail = newInvoiceDetail();
+    invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
+    invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
+    invoiceDetail.feeAmount = this.endorsement.premium;
+    invoiceDetail.commissionRate = this.accountInfo.commissionRate;
+    invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
+    invoiceDetail.netAmount = invoiceDetail.feeAmount - invoiceDetail.commissionAmount;
+    invoice.invoiceDetail.push(invoiceDetail);
+    this.invoices.push(invoice);
+  }
+
+  private async updateInvoice() {
+    if (this.invoices[0].effectiveDate != this.policyInfo.policyEffectiveDate) {
+      this.invoices[0].isUpdated = true;
       this.invoices[0].effectiveDate = this.policyInfo.policyEffectiveDate;
+    }
+    if (this.invoices[0].expirationDate != (this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate)) {
+      this.invoices[0].isUpdated = true;
       this.invoices[0].expirationDate = this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate;
-      this.invoices[0].invoiceDetail[0].lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
+    }
+    let invoiceDetail: any;
+    if (this.invoices[0].invoiceDetail.length > 0) {
+      invoiceDetail = this.invoices[0].invoiceDetail[0];
+    }
+    else {
+      invoiceDetail = newInvoiceDetail();
+    }
+    if (invoiceDetail.lineItemCode != this.endorsementCoveragesGroups[0].coverages[0].coverageCode.trim()) {
+      invoiceDetail.isUpdated = true;
       const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
-      let invoiceDetail = this.invoices[0].invoiceDetail[0];
       invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
       invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
+    }
+    if (invoiceDetail.feeAmount != this.endorsement.premium) {
+      invoiceDetail.isUpdated = true;
       invoiceDetail.feeAmount = this.endorsement.premium;
+    }
+    if (invoiceDetail.commissionRate != this.accountInfo.commissionRate) {
+      invoiceDetail.isUpdated = true;
       invoiceDetail.commissionRate = this.accountInfo.commissionRate;
-      invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
+    }
+    const commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
+    if (invoiceDetail.commissionAmount != commissionAmount) {
+      invoiceDetail.isUpdated = true;
+      invoiceDetail.commissionAmount = commissionAmount;
+    }
+    if (invoiceDetail.netAmount != invoiceDetail.feeAmount - invoiceDetail.commissionAmount) {
+      invoiceDetail.isUpdated = true;
       invoiceDetail.netAmount = invoiceDetail.feeAmount - invoiceDetail.commissionAmount;
     }
   }

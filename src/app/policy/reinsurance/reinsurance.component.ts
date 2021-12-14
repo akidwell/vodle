@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { newReinsuranceLayer, PolicyLayerData, ReinsuranceLayerData } from '../policy';
+import { PolicyStatusService } from '../services/policy-status.service';
 import { PolicyLayerGroupComponent } from './policy-layer-group/policy-layer-group.component';
 import { ReinsuranceLayerComponent } from './policy-layer-group/reinsurance-layer/reinsurance-layer.component';
 import { PolicyLayerHeaderComponent } from './policy-layer-header/policy-layer-header.component';
@@ -35,7 +36,7 @@ export class ReinsuranceComponent implements OnInit {
   @ViewChildren(PolicyLayerGroupComponent) components: QueryList<PolicyLayerGroupComponent> | undefined;
 
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth,private policyStatusService: PolicyStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -105,13 +106,18 @@ export class ReinsuranceComponent implements OnInit {
       if (this.components != null) {
         for (let child of this.components) {
           if (!child.isValid()) {
+            this.policyStatusService.reinsuranceValidated = false;
             return false;
           }
         }
       }
-      return this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
-        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints;
+      const totalMatches =  this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
+      this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints;
+
+      this.policyStatusService.reinsuranceValidated = totalMatches;
+      return totalMatches;
     }
+    this.policyStatusService.reinsuranceValidated = true;
     return true;
   }
 

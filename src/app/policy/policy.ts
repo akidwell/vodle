@@ -1,3 +1,5 @@
+import { BooleanLiteral } from "typescript";
+
 export interface AccountInformation {
   policyId: number;
   insuredCode: string;
@@ -234,4 +236,20 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     attachmentPoint: undefined,
     isNew: true
     }
+}
+
+export interface EndorsementStatusData {
+  policyId: number;
+  endorsementNumber: number;
+  invoiceStatus: string;
+  invoiceStatusDescription: string;
+  proFlag?: number | null;
+  isPolicyValidated: boolean;
+  isCoverageValidated: boolean;
+  isReinsuranceValidated: boolean;
+}
+
+export interface EndorsementStatusResolved {
+  status: EndorsementStatusData | null;
+  error?: any;
 }
