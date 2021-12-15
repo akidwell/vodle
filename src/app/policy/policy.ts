@@ -171,19 +171,19 @@ export interface ReinsuranceLayerData{
   endorsementNumber: number;
   policyLayerNo: number;
   reinsLayerNo: number;
-  reinsLimit: number| null;
-  reinsCededPremium: number| null;
-  reinsCededCommRate: number| null;
-  treatyType: number| null;
+  reinsLimit: number;
+  reinsCededPremium: number;
+  reinsCededCommRate: number;
+  treatyType: string | null;
   treatyNo?: number| null;
   subTreatyNo: number| null;
   reinsurerCode: number| null;
-  reinsCertificateNo?: number| null;
+  reinsCertificateNo?: string| null;
   proflag: number| null;
-  enteredDate: number| null;
+  enteredDate: Date | null;
   invoiceNo: number| null;
   payableNo: number| null;
-  intermediaryNo: number| null;
+  intermediaryNo?: number| null;
   facBalance: number| null;
   cededPremium: number| undefined;
   cededCommission: number| null;
@@ -211,7 +211,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     reinsLayerNo!: reinsLayerNo,
     reinsLimit: 0,
     reinsCededPremium: 0,
-    reinsCededCommRate: null,
+    reinsCededCommRate: 0,
     treatyType: null,
     treatyNo: undefined,
     subTreatyNo: null,
