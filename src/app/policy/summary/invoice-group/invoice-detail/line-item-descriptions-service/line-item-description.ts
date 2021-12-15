@@ -2,5 +2,6 @@ export interface LineItemDescription {
     code: string,
     description: string,
     state: string,
-    percentCharge?: number
+    transType: number,
+    percentCharge: number | null
 }

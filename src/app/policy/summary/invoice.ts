@@ -3,15 +3,15 @@ export interface InvoiceData {
   PolicySymbol: string;
   FullPolicyNumber: string;
   endorsementNumber: number;
-  invoiceNumber?: number | null;
+  invoiceNumber: number | null;
   invoiceStatus: string;
   invoiceStatusDescription: string;
-  proFlag?: number | null;
+  proFlag: number | null;
   invoiceDate?: Date | null;
-  dueDate?: Date | null;
-  effectiveDate?: Date | null;
+  dueDate: Date | null;
+  effectiveDate: Date | null;
   expirationDate?: Date | null;
-  voidDate?: Date | null;
+  voidDate: Date | null;
   transactionTypeCode: number;
   transctionTypeDescription: string;
   reason: string;
@@ -45,7 +45,7 @@ export const newInvoice = (): InvoiceData => ({
 });
 
 export interface InvoiceDetail {
-  invoiceNumber?: number | null;
+  invoiceNumber: number | null;
   lineNumber: number;
   lineItemCode: string;
   lineItemDescription: string;
@@ -54,22 +54,22 @@ export interface InvoiceDetail {
   commissionRate: number;
   commissionAmount: number;
   netAmount: number;
-  percentCharge?: number;
+  percentCharge: number | null;
   isNew: boolean;
   isUpdated: boolean;
 }
 
 export const newInvoiceDetail = (): InvoiceDetail => ({
-  invoiceNumber: 0,
+  invoiceNumber: null,
   lineNumber: 1,
   lineItemCode: '',
   lineItemDescription: '',
-  transactionType: 0,
+  transactionType: 1,
   feeAmount: 0,
   commissionRate: 0,
   commissionAmount: 0,
   netAmount: 0,
-  percentCharge: 0,
+  percentCharge: null,
   isNew: true,
   isUpdated: true
 });

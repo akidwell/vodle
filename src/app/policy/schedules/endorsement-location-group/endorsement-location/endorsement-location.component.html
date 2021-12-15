@@ -24,7 +24,7 @@
         <div class="col-lg-6">
           <label for="street2">Address Street 2</label>
           <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy"
-            maxlength="40" name="street2" [(ngModel)]="location.street2">
+            maxlength="40" name="street2" [(ngModel)]="location.street2" nullValue>
         </div>
       </div>
       <div class="row">
@@ -68,7 +68,7 @@
             <div *ngIf="counties.length <= 1">
               <input type="text" class="form-control" id="locationCounty"
                 [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
-                maxlength="100" #locationCounty="ngModel">
+                maxlength="100" #locationCounty="ngModel" nullValue>
             </div>
             <div *ngIf="counties.length > 1">
               <ng-select id="locationCounty" [items]="counties" [clearable]="false"
