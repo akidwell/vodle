@@ -118,8 +118,8 @@
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
             <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code"
-              [required]="canEditPolicy && isDeductibleRequired && endorsement.sir == 0" name="deductibleType"
-              [readonly]="!canEditPolicy || !showDeductible ||  endorsement.sir > 0" [(ngModel)]="coverage.deductibleType">
+              [required]="canEditPolicy && isDeductibleRequired " name="deductibleType"
+              [readonly]="!canEditPolicy || !showDeductible" [(ngModel)]="coverage.deductibleType">
             </ng-select>
           </div>
           <div class="col-lg-1">
