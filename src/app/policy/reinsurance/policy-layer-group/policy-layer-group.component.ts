@@ -61,8 +61,9 @@ export class PolicyLayerGroupComponent implements OnInit {
     if (reinsuranceindex > 0 || (reinsuranceindex == 0 && this.policyLayerData.reinsuranceData.length > 0)) {
       this.policyLayerData.reinsuranceData.splice(reinsuranceindex, 1);
       this.policyLayer.forEach(x=> x.reinsuranceData.forEach((value, index)=>{  value.reinsLayerNo = index + 1}));
-      window.location.reload
-      this.notification.show('Reinsurance Layer deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      if (!existingReinsuranceLayer.isNew) {
+        this.notification.show('Reinsurance Layer deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      }
     }
     if (reinsuranceindex == 0 && this.policyLayerData.reinsuranceData.length < 1){
       const polLayerNo = existingReinsuranceLayer.policyLayerNo
@@ -75,7 +76,6 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.policyLayer.splice(existingPolicyLayer, 1);
     this.policyLayer.forEach((value, index) =>{  value.policyLayerNo = index + 1 });
     this.policyLayer.forEach(x=> x.reinsuranceData.forEach((value)=>{  value.policyLayerNo = x.policyLayerNo}));
-    window.location.reload
     this.notification.show('Policy and Reinsurance Layers deleted.', { classname: 'bg-success text-light', delay: 5000 });
   }
 
@@ -102,27 +102,31 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   async savePolicyLayers(): Promise<boolean> {
-
     if (this.canEditPolicy) {
       let saveCount: number = 0;
-            let result = await this.reinsComp.save(this.policyLayer);
-            if (result === false) {
-              this.notification.show('Reinsurance Layer ' + this.reinsComp.reinsuranceLayer.reinsLayerNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-            }
-            else {
-              saveCount++;
-            }
-
-        if (saveCount > 0) {
-          this.notification.show('Reinsurance Layers successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        }
-    
+      let result = await this.reinsComp.save(this.policyLayer);
+      if (result === false) {
+        this.notification.show('Reinsurance Layer ' + this.reinsComp.reinsuranceLayer.reinsLayerNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+      }
+      else {
+        this.markPristine();
+        saveCount++
+      }
+      if (saveCount > 0) {
+        this.notification.show('Reinsurance Layers successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+      }
       if (!this.isValid()) {
         this.notification.show('Reinsurance Layers not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
     }
     return false;
+  }
+
+  private markPristine(): void {
+    this.components.forEach(c => c.reinsuranceForm.form.markAsPristine());
+    this.policyLayer.forEach(c => c.isNew = false);
+    this.policyLayer.forEach(c => c.reinsuranceData.forEach(x => x.isNew = false));
   }
 
   calcTotalPolicyLayerLimit(): number {

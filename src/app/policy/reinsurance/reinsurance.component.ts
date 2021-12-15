@@ -184,7 +184,7 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   checkAttachmentPoint(): boolean {
-    return this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint
+    return (this.policyLayerData[0]?.reinsuranceData[0]?.attachmentPoint) == this.headerComp.endorsement.attachmentPoint
   }
 
   checkSubAttachmentPoints(): boolean {
