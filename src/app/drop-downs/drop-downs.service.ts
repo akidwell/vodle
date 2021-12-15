@@ -14,10 +14,92 @@ export class DropDownsService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  getPACCodes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/pac-codes');
+  // Non static drop downs
+  getLimitBasisDescriptions(coverageCode: number,programId: number, limitsPatternGroupCode: number){
+    let params = new HttpParams().append('primaryCoverageCode', coverageCode).append('limitsPatternGroupCode', limitsPatternGroupCode).append('programId', programId);
+    return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
   }
 
+  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageId?: number | null): Observable<Code[]> {
+    let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
+    if (coverageId != null) {
+      params = params.append('coverageId', coverageId);
+    }
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
+  }
+
+  // Policy specific drop downs
+  clearPolicyDropDowns() {
+    this.clearClassCodes();
+  }
+
+  getRiskGrades(programId?: number): Observable<Code[]> {
+    if (programId) {
+      const params = new HttpParams().append('programId', programId);
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades', { params })
+    }
+    else {
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades')
+    }
+  }
+
+  
+  ////////////////////////////////////////
+  // Class Codes 
+  private cacheClassCodes: any;
+  private cacheClassCodes$!: Observable<any> | null;
+
+  getClassCodes(programId: number, coverageCode: string): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheClassCodes) {
+      observable = of(this.cacheClassCodes);
+    } else if (this.cacheClassCodes$) {
+      observable = this.cacheClassCodes$;
+    } else {
+      let params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
+      this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
+        .pipe(
+          tap(res => this.cacheClassCodes = res),
+          share(),
+          finalize(() => this.cacheClassCodes$ = null)
+        );
+      observable = this.cacheClassCodes$;
+    }
+    return observable;
+  }
+
+  clearClassCodes() {
+    this.cacheClassCodes = null;
+    this.cacheClassCodes$ == null;
+  }
+
+  // Static Drop Downs
+
+  ////////////////////////////////////////
+  // PAC Codes 
+  private cachePACCodes: any;
+  private cachePACCodes$!: Observable<any> | null;
+
+  getPACCodes(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cachePACCodes) {
+      observable = of(this.cachePACCodes);
+    } else if (this.cachePACCodes$) {
+      observable = this.cachePACCodes$;
+    } else {
+      this.cachePACCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/pac-codes')
+        .pipe(
+          tap(res => this.cachePACCodes = res),
+          share(),
+          finalize(() => this.cachePACCodes$ = null)
+        );
+      observable = this.cachePACCodes$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // CoverageCodes 
   private cacheCoverageCodes: any;
   private cacheCoverageCodes$!: Observable<any> | null;
 
@@ -39,106 +121,261 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
+  // States 
+  private cacheStates: any;
+  private cacheStates$!: Observable<any> | null;
+
   getStates(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/states');
-  }
-  getLimitsPatterns(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns');
-  }
-  getLimitsBasis(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-basis');
-  }
-  getCarrierCodes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/carrier-codes');
-  }
-
-  getRiskGrades(programId?: number): Observable<Code[]> {
-    if (programId) {
-      const params = new HttpParams().append('programId', programId);
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades', { params })
-    }
-    else {
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades')
-    }
-  }
-
-  getAuditCodes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/audit-codes')
-  }
-
-  getAssumedCarriers(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/assumed-carriers')
-  }
-
-  getNYFreeTradeZones(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/ny-free-trade-zones')
-  }
-
-  getDeregulationIndicators(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/deregulation-indicators')
-  }
-
-  getPaymentFrequencies(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/payment-frequencies')
-  }
-
-  getRiskTypes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
-  }
-  clearPolicyDropDowns() {
-    this.clearClassCodes();
-  }
-
-  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageId?: number | null): Observable<Code[]> {
-    let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
-    if (coverageId != null) {
-      params = params.append('coverageId', coverageId);
-    }
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
-  }
-
-  getUnderlyingCoverageDescriptions(){
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/underlying-coverage-descriptions');
-  }
-  getLimitBasisDescriptions(coverageCode: number,programId: number, limitsPatternGroupCode: number){
-    let params = new HttpParams().append('primaryCoverageCode', coverageCode).append('limitsPatternGroupCode', limitsPatternGroupCode).append('programId', programId);
-    console.log('happens', params)
-    return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
-  }
-
-  private cacheClassCodes: any;
-  private cacheClassCodes$!: Observable<any> | null;
-
-  getClassCodes(programId: number, coverageCode: string): Observable<Code[]> {
     let observable: Observable<any>;
-    if (this.cacheClassCodes) {
-      observable = of(this.cacheClassCodes);
-    } else if (this.cacheClassCodes$) {
-      observable = this.cacheClassCodes$;
+    if (this.cacheStates) {
+      observable = of(this.cacheStates);
+    } else if (this.cacheStates$) {
+      observable = this.cacheStates$;
     } else {
-      console.log("codetable/deducttype");
-      let params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
-      this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
+      this.cacheStates$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/states')
         .pipe(
-          tap(res => this.cacheClassCodes = res),
+          tap(res => this.cacheStates = res),
           share(),
-          finalize(() => this.cacheClassCodes$ = null)
+          finalize(() => this.cacheStates$ = null)
         );
-      observable = this.cacheClassCodes$;
+      observable = this.cacheStates$;
     }
     return observable;
   }
 
-  clearClassCodes() {
-    this.cacheClassCodes = null;
-    this.cacheClassCodes$ == null;
+  ////////////////////////////////////////
+  // Limits Pattern 
+  private cacheLimitsPattern: any;
+  private cacheLimitsPattern$!: Observable<any> | null;
+
+  getLimitsPatterns(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheLimitsPattern) {
+      observable = of(this.cacheLimitsPattern);
+    } else if (this.cacheLimitsPattern$) {
+      observable = this.cacheLimitsPattern$;
+    } else {
+      this.cacheLimitsPattern$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
+        .pipe(
+          tap(res => this.cacheLimitsPattern = res),
+          share(),
+          finalize(() => this.cacheLimitsPattern$ = null)
+        );
+      observable = this.cacheLimitsPattern$;
+    }
+    return observable;
   }
 
-  // getClassCodes(coverageCode: string): Observable<Code[]> {
-  //   const params = new HttpParams().append('coverageCode', coverageCode);
-  //   return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
-  // }
+  ////////////////////////////////////////
+  // Limits Basis 
+  private cacheLimitsBasis: any;
+  private cacheLimitsBasis$!: Observable<any> | null;
 
+  getLimitsBasis(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheLimitsBasis) {
+      observable = of(this.cacheLimitsBasis);
+    } else if (this.cacheLimitsBasis$) {
+      observable = this.cacheLimitsBasis$;
+    } else {
+      this.cacheLimitsBasis$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-basis')
+        .pipe(
+          tap(res => this.cacheLimitsBasis = res),
+          share(),
+          finalize(() => this.cacheLimitsBasis$ = null)
+        );
+      observable = this.cacheLimitsBasis$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Carrier Codes 
+  private cacheCarrierCodes: any;
+  private cacheCarrierCodes$!: Observable<any> | null;
+
+  getCarrierCodes(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheCarrierCodes) {
+      observable = of(this.cacheCarrierCodes);
+    } else if (this.cacheCarrierCodes$) {
+      observable = this.cacheCarrierCodes$;
+    } else {
+      this.cacheCarrierCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/carrier-codes')
+        .pipe(
+          tap(res => this.cacheCarrierCodes = res),
+          share(),
+          finalize(() => this.cacheCarrierCodes$ = null)
+        );
+      observable = this.cacheCarrierCodes$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Audigtg Codes 
+  private cacheAuditCodes: any;
+  private cacheAuditCodes$!: Observable<any> | null;
+
+getAuditCodes(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheAuditCodes) {
+      observable = of(this.cacheAuditCodes);
+    } else if (this.cacheAuditCodes$) {
+      observable = this.cacheAuditCodes$;
+    } else {
+      this.cacheAuditCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/audit-codes')
+        .pipe(
+          tap(res => this.cacheAuditCodes = res),
+          share(),
+          finalize(() => this.cacheAuditCodes$ = null)
+        );
+      observable = this.cacheAuditCodes$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Assumed Carriers 
+  private cacheAssumedCarriers: any;
+  private cacheAssumedCarriers$!: Observable<any> | null;
+
+  getAssumedCarriers(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheAssumedCarriers) {
+      observable = of(this.cacheAssumedCarriers);
+    } else if (this.cacheAssumedCarriers$) {
+      observable = this.cacheAssumedCarriers$;
+    } else {
+      this.cacheAssumedCarriers$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/assumed-carriers')
+        .pipe(
+          tap(res => this.cacheAssumedCarriers = res),
+          share(),
+          finalize(() => this.cacheAssumedCarriers$ = null)
+        );
+      observable = this.cacheAssumedCarriers$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // NY Free Trade Zone 
+  private cacheNyFreeTradeZones: any;
+  private cacheNyFreeTradeZones$!: Observable<any> | null;
+
+  getNYFreeTradeZones(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheNyFreeTradeZones) {
+      observable = of(this.cacheNyFreeTradeZones);
+    } else if (this.cacheNyFreeTradeZones$) {
+      observable = this.cacheNyFreeTradeZones$;
+    } else {
+      this.cacheNyFreeTradeZones$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/ny-free-trade-zones')
+        .pipe(
+          tap(res => this.cacheNyFreeTradeZones = res),
+          share(),
+          finalize(() => this.cacheNyFreeTradeZones$ = null)
+        );
+      observable = this.cacheNyFreeTradeZones$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Deregulation Indicators 
+  private cacheDeregulationIndicators: any;
+  private cacheDeregulationIndicators$!: Observable<any> | null;
+
+  getDeregulationIndicators(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheDeregulationIndicators) {
+      observable = of(this.cacheDeregulationIndicators);
+    } else if (this.cacheDeregulationIndicators$) {
+      observable = this.cacheDeregulationIndicators$;
+    } else {
+      this.cacheDeregulationIndicators$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/deregulation-indicators')
+        .pipe(
+          tap(res => this.cacheDeregulationIndicators = res),
+          share(),
+          finalize(() => this.cacheDeregulationIndicators$ = null)
+        );
+      observable = this.cacheDeregulationIndicators$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Payment Frequencies 
+  private cachePaymentFrequencies: any;
+  private cachePaymentFrequencies$!: Observable<any> | null;
+
+  getPaymentFrequencies(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cachePaymentFrequencies) {
+      observable = of(this.cachePaymentFrequencies);
+    } else if (this.cachePaymentFrequencies$) {
+      observable = this.cachePaymentFrequencies$;
+    } else {
+      this.cachePaymentFrequencies$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/payment-frequencies')
+        .pipe(
+          tap(res => this.cachePaymentFrequencies = res),
+          share(),
+          finalize(() => this.cachePaymentFrequencies$ = null)
+        );
+      observable = this.cachePaymentFrequencies$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Risk Types 
+  private cacheRiskTypes: any;
+  private cacheRiskTypes$!: Observable<any> | null;
+
+  getRiskTypes(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheRiskTypes) {
+      observable = of(this.cacheRiskTypes);
+    } else if (this.cacheRiskTypes$) {
+      observable = this.cacheRiskTypes$;
+    } else {
+      this.cacheRiskTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
+        .pipe(
+          tap(res => this.cacheRiskTypes = res),
+          share(),
+          finalize(() => this.cacheRiskTypes$ = null)
+        );
+      observable = this.cacheRiskTypes$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Underlying Coverage Descriptions 
+  private cacheUnderlyingCoverageDescriptions: any;
+  private cacheUnderlyingCoverageDescriptions$!: Observable<any> | null;
+
+  getUnderlyingCoverageDescriptions(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheStates) {
+      observable = of(this.cacheUnderlyingCoverageDescriptions);
+    } else if (this.cacheUnderlyingCoverageDescriptions$) {
+      observable = this.cacheUnderlyingCoverageDescriptions$;
+    } else {
+      this.cacheUnderlyingCoverageDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/underlying-coverage-descriptions')
+        .pipe(
+          tap(res => this.cacheUnderlyingCoverageDescriptions = res),
+          share(),
+          finalize(() => this.cacheUnderlyingCoverageDescriptions$ = null)
+        );
+      observable = this.cacheUnderlyingCoverageDescriptions$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Transation Types 
   private cacheTransationTypes: any;
   private cacheTransationTypes$!: Observable<any> | null;
 
@@ -148,7 +385,7 @@ export class DropDownsService {
       observable = of(this.cacheTransationTypes);
     } else if (this.cacheTransationTypes$) {
       observable = this.cacheTransationTypes$;
-    } else {
+    }else {
       this.cacheTransationTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/transaction-types')
         .pipe(
           tap(res => this.cacheTransationTypes = res),
@@ -160,10 +397,31 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Terrorism Codes 
+  private cacheTerrorismCodes: any;
+  private cacheTerrorismCodes$!: Observable<any> | null;
+
   getTerrorismCodes(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/terrorism_code')
+    let observable: Observable<any>;
+    if (this.cacheTerrorismCodes) {
+      observable = of(this.cacheTerrorismCodes);
+    } else if (this.cacheTerrorismCodes$) {
+      observable = this.cacheTerrorismCodes$;
+    } else {
+      this.cacheTerrorismCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/terrorism_code')
+        .pipe(
+          tap(res => this.cacheTerrorismCodes = res),
+          share(),
+          finalize(() => this.cacheTerrorismCodes$ = null)
+        );
+      observable = this.cacheTerrorismCodes$;
+    }
+    return observable;
   }
 
+  ////////////////////////////////////////
+  // Actions 
   private cacheActions: any;
   private cacheActions$!: Observable<any> | null;
 
@@ -174,7 +432,6 @@ export class DropDownsService {
     } else if (this.cacheActions$) {
       observable = this.cacheActions$;
     } else {
-      console.log("action");
       this.cacheActions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/coverage_action')
         .pipe(
           tap(res => this.cacheActions = res),
@@ -186,6 +443,7 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
   //ClaimsMade
   private cacheClaimsMade: any;
   private cacheClaimsMade$!: Observable<any> | null;
@@ -197,7 +455,6 @@ export class DropDownsService {
     } else if (this.cacheClaimsMade$) {
       observable = this.cacheClaimsMade$;
     } else {
-      console.log("claimsmade");
       this.cacheClaimsMade$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/claimsmade')
         .pipe(
           tap(res => this.cacheClaimsMade = res),
@@ -209,6 +466,7 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
   // Deductibe Type
   private cacheDeductibleType: any;
   private cacheDeductibleType$!: Observable<any> | null;
@@ -220,7 +478,6 @@ export class DropDownsService {
     } else if (this.cacheDeductibleType$) {
       observable = this.cacheDeductibleType$;
     } else {
-      console.log("codetable/deducttype");
       this.cacheDeductibleType$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
         .pipe(
           tap(res => this.cacheDeductibleType = res),
@@ -232,8 +489,8 @@ export class DropDownsService {
     return observable;
   }
 
-
-//Exposure Codes
+  ////////////////////////////////////////
+  //Exposure Codes
   private cacheExposureCodes: any;
   private cacheExposureCodes$!: Observable<any> | null;
 
@@ -244,7 +501,6 @@ export class DropDownsService {
     } else if (this.cacheExposureCodes$) {
       observable = this.cacheExposureCodes$;
     } else {
-      console.log("exposure-codes");
       this.cacheExposureCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/exposure-codes')
         .pipe(
           tap(res => this.cacheExposureCodes = res),
@@ -256,6 +512,7 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
   // Premium Type
   private cachePremTypes: any;
   private cachePremTypes$!: Observable<any> | null;
@@ -267,7 +524,6 @@ export class DropDownsService {
     } else if (this.cachePremTypes$) {
       observable = this.cachePremTypes$;
     } else {
-      console.log("premtype");
       this.cachePremTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
         .pipe(
           tap(res => this.cachePremTypes = res),
@@ -278,30 +534,50 @@ export class DropDownsService {
     }
     return observable;
   }
-   //Limits Pattern Descriptions
-   private cacheLimitsPatternDescriptions: any;
-   private cacheLimitsPatternDescriptions$!: Observable<any> | null;
 
-   getLimitsPatternDescriptions(): Observable<Code[]> {
-     let observable: Observable<any>;
-     if (this.cacheDeductibleType) {
-       observable = of(this.cacheLimitsPatternDescriptions);
-     } else if (this.cacheLimitsPatternDescriptions$) {
-       observable = this.cacheLimitsPatternDescriptions$;
-     } else {
-       console.log("api/dropdowns/limits-patterns");
-       this.cacheLimitsPatternDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
-         .pipe(
-           tap(res => this.cacheLimitsPatternDescriptions = res),
-           share(),
-           finalize(() => this.cacheLimitsPatternDescriptions$ = null)
-         );
-       observable = this.cacheLimitsPatternDescriptions$;
-     }
-     return observable;
-   }
+  ////////////////////////////////////////
+  //Limits Pattern Descriptions
+  private cacheLimitsPatternDescriptions: any;
+  private cacheLimitsPatternDescriptions$!: Observable<any> | null;
+
+  getLimitsPatternDescriptions(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheDeductibleType) {
+      observable = of(this.cacheLimitsPatternDescriptions);
+    } else if (this.cacheLimitsPatternDescriptions$) {
+      observable = this.cacheLimitsPatternDescriptions$;
+    } else {
+      this.cacheLimitsPatternDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
+        .pipe(
+          tap(res => this.cacheLimitsPatternDescriptions = res),
+          share(),
+          finalize(() => this.cacheLimitsPatternDescriptions$ = null)
+        );
+      observable = this.cacheLimitsPatternDescriptions$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // ANI Roles
+  private cacheAdditonalNamedInsuredsRoles: any;
+  private cacheAdditonalNamedInsuredsRoles$!: Observable<any> | null;
 
   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ANI_ROLE')
+    let observable: Observable<any>;
+    if (this.cacheDeductibleType) {
+      observable = of(this.cacheAdditonalNamedInsuredsRoles);
+    } else if (this.cacheAdditonalNamedInsuredsRoles$) {
+      observable = this.cacheAdditonalNamedInsuredsRoles$;
+    } else {
+      this.cacheAdditonalNamedInsuredsRoles$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ani_role')
+        .pipe(
+          tap(res => this.cacheAdditonalNamedInsuredsRoles = res),
+          share(),
+          finalize(() => this.cacheAdditonalNamedInsuredsRoles$ = null)
+        );
+      observable = this.cacheAdditonalNamedInsuredsRoles$;
+    }
+    return observable;
   }
 }

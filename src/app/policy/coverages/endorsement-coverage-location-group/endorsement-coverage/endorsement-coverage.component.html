@@ -111,7 +111,7 @@
           </div>
           <div class="col-lg-1">
             <label for="deductible">Deductible</label>
-            <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible"
+            <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible" nullValue
               [required]="canEditPolicy && isDeductibleRequired" [(ngModel)]="coverage.deductible" name="deductible"
               #deductible="ngModel" mask="separator.0" thousandSeparator=",">
           </div>
@@ -124,7 +124,7 @@
           </div>
           <div class="col-lg-1">
             <label for="rate">Rate</label>
-            <input type="text" class="form-control" id="rate" [readonly]="!canEditPolicy"
+            <input type="text" class="form-control" id="rate" [readonly]="!canEditPolicy" nullValue
               [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel" mask="separator.5" thousandSeparator=",">
           </div>
           <div class="col-lg-3">
@@ -164,13 +164,13 @@
           </div>
           <div class="col-lg-1">
             <label for="rateBasis">Rate Basis</label>
-            <input type="text" class="form-control" id="rateBasis" [readonly]="!canEditPolicy"
+            <input type="text" class="form-control" id="rateBasis" [readonly]="!canEditPolicy" nullValue
               [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel" mask="separator.0"
               thousandSeparator=",">
           </div>
           <div class="col-lg-2">
             <label for="exposureBase">Exposure</label>
-            <input type="text" class="form-control" id="exposureBase" [readonly]="!canEditPolicy"
+            <input type="text" class="form-control" id="exposureBase" [readonly]="!canEditPolicy" nullValue
               [(ngModel)]="coverage.exposureBase" name="exposureBase" #sir="ngModel" mask="separator.0"
               thousandSeparator=",">
           </div>

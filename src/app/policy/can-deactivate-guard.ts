@@ -24,7 +24,6 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
       component.hideInvalid();
       return true;
     }
-    console.log(nextState.url);
     component.showInvalidControls()
     return false;
   }
