@@ -47,6 +47,7 @@ export class EndorsementCoverageComponent implements OnInit {
   originalAction!: string;
   saveEventSubscription!: Subscription;
   collapsePanelSubscription!: Subscription;
+  showClaimsMade: boolean = false;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
@@ -134,6 +135,7 @@ export class EndorsementCoverageComponent implements OnInit {
       next: subCodeDefaults => {
         this.subCodeDefaults = subCodeDefaults;
         this.showDeductible = subCodeDefaults.deductible;
+        this.showClaimsMade = subCodeDefaults.occurrenceOrClaimsMade;
         this.showIncludeExlude = subCodeDefaults.coverageIncluded || subCodeDefaults.coverageExcluded;
         if (event != "open") {
           if (!this.showDeductible) {
@@ -142,6 +144,9 @@ export class EndorsementCoverageComponent implements OnInit {
           }
           if (!this.showIncludeExlude) {
             this.coverage.includeExclude = null;
+          }
+            if (!this.showClaimsMade) {
+            this.coverage.claimsMadeOrOccurrence = null;
           }
         }
         this.populateExcludeInclude();
