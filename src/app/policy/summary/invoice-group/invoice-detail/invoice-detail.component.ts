@@ -103,7 +103,15 @@ export class InvoiceDetailComponent implements OnInit {
 
   changedDescription(event: any): void {
     let match = this.lineitemDescriptions.find(c => c.code == event);
-    this.invoiceDetail.lineItemDescription = match?.description ?? "";
-    this.invoiceDetail.percentCharge = match?.percentCharge;
+    if (match != null) {
+      this.invoiceDetail.lineItemDescription = match.description;
+      this.invoiceDetail.transactionType = match.transType;
+      this.invoiceDetail.percentCharge = match.percentCharge;
+    }
+    else {
+      this.invoiceDetail.lineItemDescription = "";
+      this.invoiceDetail.transactionType = 1;
+      this.invoiceDetail.percentCharge = null;
+    }
   }
 }

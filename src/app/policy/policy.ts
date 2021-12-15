@@ -129,10 +129,10 @@ export interface EndorsementLocation {
   endorsementNumber: number;
   sequence: number;
   street1: string;
-  street2? : string | null;
+  street2 : string | null;
   city: string;
-  state? : string | null;
-  county? : string | null;
+  state : string | null;
+  county : string | null;
   zip: string;
   isNew: boolean;
 }
@@ -185,7 +185,7 @@ export interface ReinsuranceLayerData{
   enteredDate: Date | null;
   invoiceNo: number| null;
   payableNo: number| null;
-  intermediaryNo?: number| null;
+  intermediaryNo: number| null;
   facBalance: number| null;
   cededPremium: number| undefined;
   cededCommission: number| null;

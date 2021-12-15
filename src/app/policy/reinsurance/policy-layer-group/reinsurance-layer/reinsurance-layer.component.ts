@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
-import { PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from 'src/app/policy/policy';
+import { Endorsement, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from 'src/app/policy/policy';
 import { ReinsuranceLookup } from '../../reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from '../../reinsurance-lookup/reinsurance-lookup.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -33,6 +33,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   commRate!: number;
   canEditPolicy: boolean = false;
   authSub: Subscription;
+  endorsement!: Endorsement;
 
   @Input() policyLayerData!: PolicyLayerData;
   @ViewChild('modalConfirmation') modalConfirmation: any;
@@ -51,13 +52,27 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
+    this.route.parent?.data.subscribe(async data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.policyLayer = data['policyLayerData'].policyLayer;
-      this.populateReinsuranceCodes();
+      this.endorsement = data['endorsementData'].endorsement;
+      await this.populateReinsuranceCodes();
       this.populateReinsuranceFacCodes();
+
+      if (this.reinsuranceLayer.isNew) {
+        if (this.reinsuranceLayer.policyLayerNo == 1 && this.reinsuranceLayer.reinsLayerNo == 1) {
+          this.reinsuranceLayer.attachmentPoint = this.endorsement.attachmentPoint;
+        }
+        let match: any = null;
+        if (this.reinsuranceLayer.reinsLayerNo == 1) {
+          match = this.reinsuranceCodes.find(c => c.layerNumber == this.reinsuranceLayer.policyLayerNo && c.isDefault);
+          if (match != null) {
+            this.reinsuranceLayer.treatyNo = match?.treatyNumber;
+            this.reinsuranceLayer.reinsCededCommRate = match?.cededCommissionRate ?? 0;
+          }
+        }
+      }
     });
-    var test = this.reinsuranceLayer.reinsCededPremium;
   }
 
   ngAfterViewInit(): void {
@@ -73,15 +88,13 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.reinsuranceSub?.unsubscribe();
   }
 
-  populateReinsuranceCodes(): void {
-    this.reinsuranceSub = this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).subscribe({
-      next: reisuranceCodes => {
+   async populateReinsuranceCodes(): Promise<void> {
+    await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
+       reisuranceCodes => {
         this.reinsuranceCodes = reisuranceCodes;
         this.reinsuranceCodes$ = of(reisuranceCodes);
-        this.treatyNo = this.reinsuranceCodes[0].treatyNumber
-        this.commRate = this.reinsuranceCodes[0].cededCommissionRate
       }
-    });
+    );
   }
 
   populateReinsuranceFacCodes(): void {
@@ -95,12 +108,9 @@ export class ReinsuranceLayerComponent implements OnInit {
 
   async save(policyLayerData: PolicyLayerData[]): Promise<boolean> {
     return new Promise((resolve) => {
-
       this.updateSub = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData).subscribe(result => {
-
         resolve(result);
       });
-
     })
   }
 
