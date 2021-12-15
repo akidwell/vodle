@@ -27,7 +27,7 @@ import { AdditionalNamedInsuredsComponent } from './schedules/additional-named-i
 import { AdditionalNamedInsuredsGroupComponent } from './schedules/additional-named-insureds-group/additional-named-insureds-group.component';
 import { EndorsementLocationComponent } from './schedules/endorsement-location-group/endorsement-location/endorsement-location.component';
 import { EndorsementLocationGroupComponent } from './schedules/endorsement-location-group/endorsement-location-group.component';
-import { UpdatePolicyChild} from './services/update-child.service';
+import { UpdatePolicyChild } from './services/update-child.service';
 import { EndorsementCoverageDirective } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.directive';
 import { ReinsuranceLayerComponent } from './reinsurance/policy-layer-group/reinsurance-layer/reinsurance-layer.component';
 import { PolicyLayerHeaderComponent } from './reinsurance/policy-layer-header/policy-layer-header.component';
@@ -42,6 +42,7 @@ import { InvoiceDetailComponent } from './summary/invoice-group/invoice-detail/i
 import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.component';
 import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
 import { BusyModule } from '../busy/busy.module';
+import { NullValueDirective } from '../directives/null-value.directive';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { BusyModule } from '../busy/busy.module';
     UnderlyingCoverageLimitBasisComponent,
     InvoiceGroupComponent,
     InvoiceDetailComponent,
-    InvoiceMasterComponent
+    InvoiceMasterComponent,
+    NullValueDirective
   ],
   imports: [
     CommonModule,

@@ -18,11 +18,11 @@
 }
 
 .insured {
-  width: 38%;
+  width: 35%;
 }
 
 .policyNumber {
-  width: 15%;
+  width: 12%;
 }
 
 .endorsement {
@@ -42,5 +42,5 @@
 }
 
 .status {
-  width: 12%;
+  width: 18%;
 }
