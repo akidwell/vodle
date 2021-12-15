@@ -32,29 +32,29 @@
   </div>
   <div class="row container">
     <div class="reinsuranceLayer">
-      <input type="text" class="form-control" id="layerNumber" #layerNumber="ngModel" [readonly]="false" [required]="true"
+      <input type="text" class="form-control" id="layerNumber" #layerNumber="ngModel" [readonly]="true" [required]="canEditPolicy"
         name="layerNumber" [(ngModel)]="reinsuranceLayer.reinsLayerNo" [readOnly]="true">
     </div>
     <div class="attachmentPoint">
       <input type="text" style="text-align: right" class="form-control" id="attachmentPoint" #attachmentPoint="ngModel" name="attachmentPoint"  [ngStyle]="{'color': (index !== 0) ? 'transparent' : 'black'}"
-        [(ngModel)]="reinsuranceLayer.attachmentPoint" mask="separator.0" thousandSeparator="," [readonly]="index !== 0 || !canEditPolicy"  [required]="index == 0" >
+        [(ngModel)]="reinsuranceLayer.attachmentPoint" mask="separator.0" thousandSeparator="," [readonly]="index !== 0 || !canEditPolicy"  [required]="index == 0 && canEditPolicy" >
     </div>
     <div class="reinsuranceLimits">
-      <input type="text"  class="form-control" id="reinsuranceLimits" #reinsuranceLimit="ngModel" [readonly]="!canEditPolicy" [required]="true"
+      <input type="text"  class="form-control" id="reinsuranceLimits" #reinsuranceLimit="ngModel" [readonly]="!canEditPolicy" [required]="canEditPolicy"
         name="reinsuranceLimits" [(ngModel)]="reinsuranceLayer.reinsLimit" mask="separator.0" thousandSeparator=",">
     </div>
     <div class="cededPremium">
-      <input type="text" style="text-align: right" class="form-control" id="cededPremium" #cededPremium="ngModel" [readonly]="!canEditPolicy" [required]="true"
+      <input type="text" style="text-align: right" class="form-control" id="cededPremium" #cededPremium="ngModel" [readonly]="!canEditPolicy" [required]="canEditPolicy"
         name="cededPremium" [(ngModel)]="reinsuranceLayer.reinsCededPremium" mask="separator.0" thousandSeparator=",">
     </div>
     <div class="commissionRate">
-      <input type="text" style="text-align: right" class="form-control" id="commissionRate" #commissionRate="ngModel" [readonly]="reinsuranceLayer.treatyNo == 1 || !canEditPolicy" [required]="true"
+      <input type="text" style="text-align: right" class="form-control" id="commissionRate" #commissionRate="ngModel" [readonly]="reinsuranceLayer.treatyNo == 1 || !canEditPolicy" [required]="canEditPolicy"
         name="commissionRate" [(ngModel)]="reinsuranceLayer.reinsCededCommRate" mask="percent" suffix="%">
     </div>
     <div class="reinsuranceCode">
       <div *ngIf="!reinsuranceLayer.isFaculative">
         <ng-select id="reinsuranceCode" [items]="reinsuranceCodes$ | async" bindLabel="treatyName"  [readonly]="!canEditPolicy" 
-          bindValue="treatyNumber" [required]="true" [clearable]="false" name="reinsuranceCode"
+          bindValue="treatyNumber" [required]="canEditPolicy" [clearable]="false" name="reinsuranceCode"
           [(ngModel)]="reinsuranceLayer.treatyNo" #locationState="ngModel" [searchFn]="dropDownSearchReinsurance"
           (change)="changeReinsurerCode()">
           <ng-template ng-label-tmp let-item="item">
@@ -67,7 +67,7 @@
       </div>
       <div *ngIf="reinsuranceLayer.isFaculative">
         <ng-select id="reinsuranceFacCode" [items]="reinsuranceFacCodes$ | async" bindLabel="treatyName" [readonly]="!canEditPolicy" 
-          bindValue="treatyNumber" [required]="true" [clearable]="false" name="reinsuranceFacCode"
+          bindValue="treatyNumber" [required]="canEditPolicy" [clearable]="false" name="reinsuranceFacCode"
           [(ngModel)]="reinsuranceLayer.treatyNo" #locationState="ngModel" [searchFn]="dropDownSearchReinsurance"
           (change)="changeReinsurerCode()">
           <ng-template ng-label-tmp let-item="item">

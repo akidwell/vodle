@@ -7,7 +7,7 @@ export interface EndorsementCoverage {
   subCode: number;
   limitsPattern: string;
   includeExclude?: string | null;
-  claimsMadeOrOccurrence: string;
+  claimsMadeOrOccurrence: string | null;
   retroDate?: Date | null;
   locationId: number;
   premiumType: string;

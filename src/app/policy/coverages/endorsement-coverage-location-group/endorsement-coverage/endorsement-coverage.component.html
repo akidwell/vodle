@@ -59,8 +59,8 @@
           <div class="col-lg-1">
             <label class='hidden-label' for="claimsMadeOrOccurrence">CLM/OCC</label>
             <ng-select id="claimsMadeOrOccurrence" [items]="claimsMadeOrOccurrence$ | async" bindValue="code"
-              bindLabel="description" name="claimsMadeOrOccurrence" [required]="canEditPolicy" [clearable]="false"
-              [searchFn]="dropDownSearch" [readonly]="!canEditPolicy"
+              bindLabel="description" name="claimsMadeOrOccurrence" [required]="canEditPolicy && showClaimsMade" [clearable]="false"
+               [searchFn]="dropDownSearch" [readonly]="!canEditPolicy || !showClaimsMade"
               [(ngModel)]="coverage.claimsMadeOrOccurrence" (change)="changeClaimsMadeOccurrence()">
               <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
@@ -118,8 +118,8 @@
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
             <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code"
-              [required]="canEditPolicy && isDeductibleRequired" name="deductibleType"
-              [readonly]="!canEditPolicy || !showDeductible" [(ngModel)]="coverage.deductibleType">
+              [required]="canEditPolicy && isDeductibleRequired && endorsement.sir == 0" name="deductibleType"
+              [readonly]="!canEditPolicy || !showDeductible ||  endorsement.sir > 0" [(ngModel)]="coverage.deductibleType">
             </ng-select>
           </div>
           <div class="col-lg-1">
