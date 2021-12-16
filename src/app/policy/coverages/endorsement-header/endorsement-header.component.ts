@@ -68,7 +68,6 @@ export class EndorsementHeaderComponent implements OnInit {
 
   checkAttachmentPointValid(): boolean {
     if ((this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol == 'PRC')) {
-      this.endorsement.attachmentPoint = 0;
       this.isAttachmentPointValid = true;
       return this.isAttachmentPointValid;
     } else {
