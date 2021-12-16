@@ -7,6 +7,7 @@ import { AdditionalNamedInsureds, Endorsement, PolicyInformation } from '../../p
 import { PolicyService } from '../../policy.service';
 import { AdditionalNamedInsuredsComponent } from './additional-named-insureds/additional-named-insureds.component';
 import { NotificationService } from 'src/app/notification/notification-service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-additional-named-insureds-group',
@@ -27,11 +28,13 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   deletedAni!: AdditionalNamedInsureds;
   endorsementNumber!: number;
   policyId!: number;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
   @ViewChildren(AdditionalNamedInsuredsComponent) components: QueryList<AdditionalNamedInsuredsComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -44,8 +47,21 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       this.aniCollapsed = false;
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
   }
 
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
+  }
+
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
 
   isValid(): boolean {
     if (this.components != null) {

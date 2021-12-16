@@ -84,9 +84,9 @@
        (change)="changeFaculative()" [checked]="reinsuranceLayer.reinsCertificateNo !== null">
     </div>
     <div class="intermediary">
-      <input type="text" class="form-control" id="intermediary" #intermediary="ngModel" [readonly]="!canEditPolicy" nullValue
-        name="intermediary" [(ngModel)]="reinsuranceLayer.intermediaryNo"
-        mask="separator.0" thousandSeparator="">
+      <input type="text" class="form-control" id="intermediary" #intermediary="ngModel" [readonly]="!canEditPolicy" 
+        name="intermediary" [(ngModel)]="reinsuranceLayer.intermediaryNo" maxInt
+        nullValue mask="separator.0" thousandSeparator=""> 
     </div>
     <div class="certificatNumber">
       <input type="text" class="form-control" id="certificatNumber" #certificatNumber="ngModel" [readonly]="!canEditPolicy" 

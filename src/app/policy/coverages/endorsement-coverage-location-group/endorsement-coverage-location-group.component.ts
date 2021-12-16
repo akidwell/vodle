@@ -170,9 +170,18 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
       for (let coverage of this.endorsementCoveragesGroup.coverages) {
         this.addComponent(coverage, false);
+        // coverage.ecCollapsed = action;
       }
       this.loaded = true;
     }
+    // else
+    // {
+    //   if (this.components != null) {
+    //     for (let child of this.components) {
+    //      child.collapseExpand(action);
+    //     }
+    //   }
+    // }
     this.locationCollapsed = action;
   }
   

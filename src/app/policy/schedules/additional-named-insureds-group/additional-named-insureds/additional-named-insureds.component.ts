@@ -9,6 +9,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { NotificationService } from 'src/app/notification/notification-service';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { AdditionalNamedInsureds } from '../../../policy';
 import { PolicyService } from '../../../policy.service';
 
@@ -34,6 +35,8 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   nameRoleArray: string[] = new Array;
   nameRoleDuplicates: string[] = new Array;
   isNameRoleValid: boolean = true;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsureds;
@@ -42,7 +45,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService, private modalService: NgbModal) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService, private modalService: NgbModal, private endorsementStatusService: EndorsementStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -54,6 +57,11 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
       this.ani = data['aniData'].additionalNamedInsureds;
     });
     this.aniRoles$ = this.dropdowns.getAdditonalNamedInsuredsRoles();
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -70,6 +78,10 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
     this.addSub?.unsubscribe();
   }
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+  
   copyAni(): void {
     this.copyExistingAni.emit(this.aniData);
     this.aniForm.form.markAsDirty();

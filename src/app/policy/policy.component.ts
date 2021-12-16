@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from '../authorization/user-auth';
-import { PolicyStatusService } from './services/policy-status.service';
+import { EndorsementStatusService } from './services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-policy',
@@ -18,17 +18,17 @@ export class PolicyComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy: boolean = false;
 
-  constructor(private userAuth: UserAuth, private policyStatusService: PolicyStatusService) {
+  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
-    this.policyTabvalidatedSub = this.policyStatusService.policyInfoValidated$.subscribe((isValidated: boolean) => {
+    this.policyTabvalidatedSub = this.endorsementStatusService.policyInfoValidated$.subscribe((isValidated: boolean) => {
       this.isPolicyValidated = isValidated;
     });
-    this.coverageTabvalidatedSub = this.policyStatusService.coverageValidated$.subscribe((isValidated: boolean) => {
+    this.coverageTabvalidatedSub = this.endorsementStatusService.coverageValidated$.subscribe((isValidated: boolean) => {
       this.isCoveragesValidated = isValidated;
     });
-    this.reinsuranceTabvalidatedSub = this.policyStatusService.reinsuranceValidated$.subscribe((isValidated: boolean) => {
+    this.reinsuranceTabvalidatedSub = this.endorsementStatusService.reinsuranceValidated$.subscribe((isValidated: boolean) => {
       this.isReinsuranceValidated = isValidated;
     });
   }
