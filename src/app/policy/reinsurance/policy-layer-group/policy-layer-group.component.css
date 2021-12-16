@@ -1,6 +1,7 @@
 .card-header {
     color: white;
     background-color: #00274e;
+    margin-top: 10px;
 }
 
 .ng-valid[required], .ng-valid.required  {
