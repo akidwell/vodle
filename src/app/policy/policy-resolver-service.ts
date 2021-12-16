@@ -7,7 +7,7 @@ import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
 import { UnderlyingCoveragesResolved } from './schedules/schedules';
-import { PolicyStatusService } from './services/policy-status.service';
+import { EndorsementStatusService } from './services/endorsement-status.service';
 import { InvoiceResolved } from './summary/invoice';
 
 @Injectable({
@@ -15,7 +15,7 @@ import { InvoiceResolved } from './summary/invoice';
 })
 export class AccountInformationResolver implements Resolve<AccountInformationResolved> {
 
-    constructor(private router: Router, private policyService: PolicyService, private policyStatusService: PolicyStatusService) { }
+    constructor(private router: Router, private policyService: PolicyService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<AccountInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
@@ -312,7 +312,7 @@ export class InvoiceResolver implements Resolve<InvoiceResolved> {
 })
 export class EndorsementStatusResolver implements Resolve<EndorsementStatusResolved> {
 
-    constructor(private router: Router, private policyStatusService: PolicyStatusService) { }
+    constructor(private router: Router, private endorsementStatusService: EndorsementStatusService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EndorsementStatusResolved> {
         const id = route.paramMap.get('id') ?? "";
@@ -327,7 +327,7 @@ export class EndorsementStatusResolver implements Resolve<EndorsementStatusResol
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ status: null, error: message });
         }
-        return this.policyStatusService.getEndorsementStatus(Number(id), Number(end))
+        return this.endorsementStatusService.getEndorsementStatus(Number(id), Number(end))
             .pipe(
                 map(status => ({ status })),
                 catchError((error) => {

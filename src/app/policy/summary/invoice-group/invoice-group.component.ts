@@ -8,7 +8,7 @@ import { NotificationService } from 'src/app/notification/notification-service';
 import { DatePipe } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PolicyStatusService } from '../../services/policy-status.service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { InvoiceMasterComponent } from './invoice-master/invoice-master.component';
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
 import { PolicyIssuanceRequest } from '../policy-issuance-service/policy-issuance-request';
@@ -43,7 +43,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
   @ViewChild('modalPipe') modalPipe: any;
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private policyStatusService: PolicyStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -203,7 +203,7 @@ export class InvoiceGroupComponent implements OnInit {
           if (refresh) {
             this.refresh();
           }
-          this.policyStatusService.refresh();
+          this.endorsementStatusService.refresh();
           this.showInvoiceSaved();
           return true;
         }
@@ -223,7 +223,7 @@ export class InvoiceGroupComponent implements OnInit {
           if (refresh) {
             this.refresh();
           }
-          this.policyStatusService.refresh();
+          this.endorsementStatusService.refresh();
           this.showInvoiceSaved();
           return true;
         }

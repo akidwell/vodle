@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { PolicySave } from '../policy-save';
-import { PolicyStatusService } from '../services/policy-status.service';
+import { EndorsementStatusService } from '../services/endorsement-status.service';
 import { AccountInformationComponent } from './account-information/account-information.component';
 import { PolicyInformationComponent } from './policy-information/policy-information.component';
 
@@ -20,7 +19,7 @@ export class InformationComponent implements OnInit, PolicySave {
   invalidMessage: string = "";
   showInvalid: boolean = false;
 
-  constructor(private policyStatusService: PolicyStatusService) { }
+  constructor(private endorsementStatusService: EndorsementStatusService) { }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
@@ -28,7 +27,7 @@ export class InformationComponent implements OnInit, PolicySave {
   ngOnInit(): void { }
 
   isValid(): boolean {
-    this.policyStatusService.policyInfoValidated = this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
+    this.endorsementStatusService.policyInfoValidated = this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
     return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
   }
 

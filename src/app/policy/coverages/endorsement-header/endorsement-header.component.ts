@@ -9,7 +9,7 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { Endorsement, PolicyInformation } from '../../policy';
 import { PolicyService } from '../../policy.service';
-import { PolicyStatusService } from '../../services/policy-status.service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-endorsement-header',
@@ -28,9 +28,10 @@ export class EndorsementHeaderComponent implements OnInit {
   isTransactionEffectiveDateValid: boolean = true;
   isTransactionExpirationDateValid: boolean = true;
   canEditTransactionType: boolean = false;
-  readonlyStatus: boolean = true;
+  canEditEndorsement: boolean = false;
+  statusSub!: Subscription;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService, private datePipe: DatePipe, private notification: NotificationService, private policyStatusService: PolicyStatusService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService, private datePipe: DatePipe, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -44,9 +45,9 @@ export class EndorsementHeaderComponent implements OnInit {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
     });
-    this.policyStatusService.readonly.subscribe({
-      next: readonly => {
-        this.readonlyStatus = readonly;
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
       }
     });
     this.transactionTypes$ = this.dropdowns.getTransactionTypes();
@@ -55,6 +56,7 @@ export class EndorsementHeaderComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   dropDownSearch(term: string, item: Code) {
@@ -104,6 +106,6 @@ export class EndorsementHeaderComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return !this.readonlyStatus && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy
   }
 }

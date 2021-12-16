@@ -363,7 +363,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheUnderlyingCoverageDescriptions$) {
       observable = this.cacheUnderlyingCoverageDescriptions$;
     } else {
-      this.cacheUnderlyingCoverageDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/underlying-coverage-descriptions')
+      this.cacheUnderlyingCoverageDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/underlying-coverage-descriptions')
         .pipe(
           tap(res => this.cacheUnderlyingCoverageDescriptions = res),
           share(),

@@ -9,7 +9,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from '../../policy.service';
-import { PolicyStatusService } from '../../services/policy-status.service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -43,12 +43,12 @@ export class PolicyInformationComponent implements OnInit {
   dereg!: boolean;
   assumed!: boolean;
   status: string = "";
-  readonlyStatus: boolean = false;
+  canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private policyStatusService: PolicyStatusService) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -73,9 +73,9 @@ export class PolicyInformationComponent implements OnInit {
       this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
       this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
     });
-    this.statusSub = this.policyStatusService.readonly.subscribe({
-      next: readonly => {
-        this.readonlyStatus = readonly;  
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
       }
     });
   }
@@ -110,6 +110,6 @@ export class PolicyInformationComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return !this.readonlyStatus && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy
   }
 }

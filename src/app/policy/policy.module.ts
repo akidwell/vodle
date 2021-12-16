@@ -43,6 +43,7 @@ import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.com
 import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
 import { BusyModule } from '../busy/busy.module';
 import { NullValueDirective } from '../directives/null-value.directive';
+import { MaxIntegerValidator } from '../directives/max-integer.directive';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { NullValueDirective } from '../directives/null-value.directive';
     InvoiceGroupComponent,
     InvoiceDetailComponent,
     InvoiceMasterComponent,
-    NullValueDirective
+    NullValueDirective,
+    MaxIntegerValidator
   ],
   imports: [
     CommonModule,

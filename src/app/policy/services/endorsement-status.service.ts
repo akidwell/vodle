@@ -9,13 +9,13 @@ import { EndorsementStatusData } from '../policy';
 @Injectable({
   providedIn: 'root'
 })
-export class PolicyStatusService {
+export class EndorsementStatusService {
   private _status!: EndorsementStatusData;
   authSub: Subscription;
   canEditPolicy: boolean = false;
 
   status = new BehaviorSubject<string>("");
-  readonly = new BehaviorSubject<boolean>(false);
+  canEditEndorsement = new BehaviorSubject<boolean>(false);
 
   private _policyInfoValidated = new BehaviorSubject<boolean>(false);
   policyInfoValidated$ = this._policyInfoValidated.asObservable();
@@ -66,7 +66,7 @@ export class PolicyStatusService {
           this._reinsuranceValidated.next(data?.isReinsuranceValidated ?? false);
           this.status.next(data?.invoiceStatusDescription ?? "");
           const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
-          this.readonly.next(!editFlag);
+          this.canEditEndorsement.next(editFlag);
         })
       );
   }

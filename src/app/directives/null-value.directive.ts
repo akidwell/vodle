@@ -2,7 +2,6 @@ import { NgControl } from "@angular/forms";
 
  import {
     Directive,
-    ElementRef,
     HostListener
  } from "@angular/core";
  
@@ -10,7 +9,7 @@ import { NgControl } from "@angular/forms";
     selector: 'input[nullValue]'
  })
  export class NullValueDirective {
-    constructor(private el: ElementRef, private control: NgControl) {}
+    constructor(private control: NgControl) {}
  
     @HostListener('input', ['$event.target'])
     onEvent(target: HTMLInputElement) {
