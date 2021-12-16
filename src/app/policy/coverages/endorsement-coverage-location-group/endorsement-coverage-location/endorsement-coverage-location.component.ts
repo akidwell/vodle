@@ -9,6 +9,7 @@ import { AddressLookupService } from '../../../address-lookup/address-lookup.ser
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../../coverages';
 import { EndorsementCoverageLocationGroupComponent } from '../endorsement-coverage-location-group.component';
 import { PolicyService } from '../../../policy.service';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-endorsement-coverage-location',
@@ -32,10 +33,12 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   counties: string[] = [];
   coverage!: EndorsementCoveragesGroup;
   parent!: EndorsementCoverageLocationGroupComponent;
+  canEditEndorsement: boolean = false;
+  statusSub!: Subscription;
 
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
 
-  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService) {
+  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -43,6 +46,11 @@ export class EndorsementCoverageLocationComponent implements OnInit {
 
   ngOnInit(): void {
     this.states$ = this.dropdowns.getStates();
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -50,6 +58,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
     this.locationSub?.unsubscribe();
     this.dirtySub?.unsubscribe();
     this.addressSub?.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -61,6 +70,10 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
   private modalRef!: NgbModalRef
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+  
   open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementCoverageLocationGroupComponent): Promise<LocationResult> {
     return new Promise<LocationResult>(resolve => {
       this.coverage = locationInfo;

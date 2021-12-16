@@ -29,6 +29,8 @@
           (click)="addNewInvoiceDetail();">Add Line Item</button>
         <span class="float-center">Total: {{totalNetAmount | currency}}
         </span>
+        <div style="float:right;">Invoice Details: {{invoice.invoiceDetail.length}}
+        </div>
       </div>
     </div>
   </div>

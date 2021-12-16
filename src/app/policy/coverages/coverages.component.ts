@@ -29,6 +29,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
   coveragesSub!: Subscription;
   notification: any;
   endorsementNumber!: number;
+  canEditEndorsement: boolean = false;
+  statusSub!: Subscription;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -45,8 +47,17 @@ export class CoveragesComponent implements OnInit, PolicySave {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
   }
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+  
   onIncrement(newSeq : number) {
     this.coveragesSequence = newSeq;
   }
@@ -69,6 +80,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
+    this.coveragesSub?.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;

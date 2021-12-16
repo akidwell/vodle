@@ -27,14 +27,14 @@ export class ReinsuranceComponent implements OnInit {
   newReinsurance!: ReinsuranceLayerData;
   showInvalid: boolean = false;
   invalidMessage: string = "";
-
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @Output() addNewPolicyLayers: EventEmitter<string> = new EventEmitter();
   @ViewChild(PolicyLayerGroupComponent) policyLayerGroup!: PolicyLayerGroupComponent;
   @ViewChild(ReinsuranceLayerComponent) reinsLayerComp!: ReinsuranceLayerComponent;
   @ViewChild(PolicyLayerHeaderComponent) headerComp!: PolicyLayerHeaderComponent;
   @ViewChildren(PolicyLayerGroupComponent) components: QueryList<PolicyLayerGroupComponent> | undefined;
-
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth,private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -50,6 +50,20 @@ export class ReinsuranceComponent implements OnInit {
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
+  }
+
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
   }
 
   async addPolicyLayer() {
