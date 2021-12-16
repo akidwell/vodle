@@ -10,6 +10,7 @@ import { AddressLookupService } from 'src/app/policy/address-lookup/address-look
 import { PolicyService } from 'src/app/policy/policy.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdatePolicyChild } from 'src/app/policy/services/update-child.service';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-endorsement-location',
@@ -34,6 +35,8 @@ export class EndorsementLocationComponent implements OnInit {
   anchorId!: string;
   saveSub!: Subscription;
   collapsePanelSubscription!: Subscription;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
@@ -42,7 +45,7 @@ export class EndorsementLocationComponent implements OnInit {
   @Output() deleteThisLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private modalService: NgbModal, private updatePolicyChild: UpdatePolicyChild) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private modalService: NgbModal, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -55,9 +58,13 @@ export class EndorsementLocationComponent implements OnInit {
       this.collapseExpand(false);
       this.focus();
     }
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
   }
 
-  
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.dirtySub?.unsubscribe();
@@ -66,6 +73,7 @@ export class EndorsementLocationComponent implements OnInit {
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
     this.collapsePanelSubscription?.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -83,6 +91,10 @@ export class EndorsementLocationComponent implements OnInit {
     });
   }
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+  
   changeZipCode(): void {
     if (this.locationForm.controls["zipCode"].valid) {
       this.isLoadingAddress = true;

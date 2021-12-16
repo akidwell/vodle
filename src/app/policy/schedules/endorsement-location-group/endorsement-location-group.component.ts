@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../policy';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { EndorsementLocationComponent } from './endorsement-location/endorsement-location.component';
 
 @Component({
@@ -21,10 +22,12 @@ export class EndorsementLocationGroupComponent implements OnInit {
   endorsementNumber!: number;
   authSub!: Subscription;
   canEditPolicy: boolean = false;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @ViewChildren(EndorsementLocationComponent) components: QueryList<EndorsementLocationComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService) { 
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) { 
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -36,6 +39,20 @@ export class EndorsementLocationGroupComponent implements OnInit {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
+  }
+
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
   }
 
   addNewEndorsementLocation(): void {

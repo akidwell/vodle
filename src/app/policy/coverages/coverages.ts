@@ -1,34 +1,34 @@
 export interface EndorsementCoverage {
-  coverageId?: number | null;
+  coverageId: number | null;
   policyId: number;
   endorsementNumber: number;
   programId: number;
   premium: number;
   subCode: number;
   limitsPattern: string;
-  includeExclude?: string | null;
+  includeExclude: string | null;
   claimsMadeOrOccurrence: string | null;
-  retroDate?: Date | null;
+  retroDate: Date | null;
   locationId: number;
   premiumType: string;
   action: string;
   policySymbol: string;
-  deductible?: number | null;
-  deductibleType?: string | null;
+  deductible: number | null;
+  deductibleType: string | null;
   rateAmount: number;
   limitsPatternGroupCode: number;
   limit: number;
   coverageType: string;
   coverageCode: string;
   sequence: number;
-  glClassCode?: number | null;
+  glClassCode: number | null;
   classDescription: string;
   exposureCode: string;
-  rateBasis?: number | null;
-  exposureBase?: number | null;
+  rateBasis: number | null;
+  exposureBase: number | null;
   ecCollapsed: boolean;
   isFirst: boolean;
-  isNew?: boolean;
+  isNew: boolean;
 }
 
 

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AccountInformation, PolicyInformation } from '../policy';
-import { PolicyStatusService } from '../services/policy-status.service';
+import { EndorsementStatusService } from '../services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-policy-header',
@@ -16,7 +16,7 @@ export class PolicyHeaderComponent implements OnInit {
   statusSub!: Subscription;
   status: string = "";
 
-  constructor(private route: ActivatedRoute, private policyStatusService: PolicyStatusService) { }
+  constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -25,7 +25,7 @@ export class PolicyHeaderComponent implements OnInit {
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
 
-    this.statusSub = this.policyStatusService.status.subscribe({
+    this.statusSub = this.endorsementStatusService.status.subscribe({
       next: status => {
         this.status = status;
       }

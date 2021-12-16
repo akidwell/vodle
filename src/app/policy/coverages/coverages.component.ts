@@ -10,7 +10,7 @@ import { PolicySave } from '../policy-save';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup, newEndorsementCoverage } from './coverages';
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
 import { UpdatePolicyChild } from '../services/update-child.service';
-import { PolicyStatusService } from '../services/policy-status.service';
+import { EndorsementStatusService } from '../services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-coverages',
@@ -30,7 +30,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   notification: any;
   endorsementNumber!: number;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private policyStatusService: PolicyStatusService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -108,13 +108,13 @@ export class CoveragesComponent implements OnInit, PolicySave {
     if (this.components != null) {
       for (let child of this.components) {
         if (!child.isValid()) {
-          this.policyStatusService.coverageValidated = false;
+          this.endorsementStatusService.coverageValidated = false;
           return false;
         }
       }
     }
 
-    this.policyStatusService.coverageValidated =  this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
+    this.endorsementStatusService.coverageValidated =  this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
     return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
   }
 

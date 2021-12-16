@@ -5,7 +5,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { EndorsementCoveragesGroup } from '../coverages/coverages';
 import { AccountInformation, Endorsement, PolicyInformation } from '../policy';
-import { PolicyStatusService } from '../services/policy-status.service';
+import { EndorsementStatusService } from '../services/endorsement-status.service';
 import { InvoiceData, newInvoice, newInvoiceDetail } from './invoice';
 import { InvoiceGroupComponent } from './invoice-group/invoice-group.component';
 
@@ -25,7 +25,7 @@ export class SummaryComponent implements OnInit {
   accountInfo!: AccountInformation;
   endorsement!: Endorsement;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private policyStatusService: PolicyStatusService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -55,9 +55,9 @@ export class SummaryComponent implements OnInit {
   }
 
   private checkValidation(): boolean {
-    const policyInfoValidated = this.policyStatusService.policyInfoValidated;
-    const coveragesValidated = this.policyStatusService.coverageValidated;
-    const reinsuranceValidated = this.policyStatusService.reinsuranceValidated;
+    const policyInfoValidated = this.endorsementStatusService.policyInfoValidated;
+    const coveragesValidated = this.endorsementStatusService.coverageValidated;
+    const reinsuranceValidated = this.endorsementStatusService.reinsuranceValidated;
     if (this.canEditPolicy && this.invoices.length == 0 && (!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
       this.showInvalid = true;
       this.invalidMessage = "Unable to create invoice at this time";
