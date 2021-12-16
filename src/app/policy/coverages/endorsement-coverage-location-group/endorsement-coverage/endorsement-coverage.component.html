@@ -111,14 +111,14 @@
           </div>
           <div class="col-lg-1">
             <label for="deductible">Deductible</label>
-            <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible" nullValue
-              [required]="canEditPolicy && isDeductibleRequired" [(ngModel)]="coverage.deductible" name="deductible"
+            <input type="text" class="form-control" id="deductible" [readonly]="!canEditPolicy || !showDeductible" 
+              [required]="canEditPolicy && isDeductibleRequired && showDeductible" [(ngModel)]="coverage.deductible" name="deductible"
               #deductible="ngModel" mask="separator.0" thousandSeparator=",">
           </div>
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
             <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code"
-              [required]="canEditPolicy && isDeductibleRequired " name="deductibleType"
+              [required]="canEditPolicy && isDeductibleRequired && showDeductible " name="deductibleType"
               [readonly]="!canEditPolicy || !showDeductible" [(ngModel)]="coverage.deductibleType">
             </ng-select>
           </div>
