@@ -5,9 +5,9 @@
     "ng": "ng",
     "start": "ng serve -o",
     "build": "ng build",
-    "build:dev": "ng build --watch --deploy-url /rsps/ --base-href /rsps/",
+    "build:dev": "ng build --watch --deploy-url /rsps/ --base-href /rsps/ --outputHashing=all",
     "watch": "ng build --watch --configuration development",
-    "build:server": "ng build --deploy-url /rsps/ --base-href /rsps/",
+    "build:server": "ng build --deploy-url /rsps/ --base-href /rsps/ --outputHashing=all",
     "test": "ng test"
   },
   "private": true,
