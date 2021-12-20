@@ -15,7 +15,7 @@
       </div>
       <div class="card-footer">
         <div id="locationTotal">
-          <button *ngIf="canEditPolicy" style="float:left; background:none; border:none;" class="underline"
+          <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
             (click)="addNewCoverage();">Add Coverage</button>
           <span class="float-center">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}
           </span>

@@ -13,6 +13,7 @@ import { PolicyInformation } from '../../../policy';
 import { PolicyService } from '../../../policy.service';
 import { UpdatePolicyChild } from '../../../services/update-child.service';
 import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 
 @Component({
   templateUrl: './endorsement-coverage.component.html',
@@ -48,10 +49,12 @@ export class EndorsementCoverageComponent implements OnInit {
   saveEventSubscription!: Subscription;
   collapsePanelSubscription!: Subscription;
   showClaimsMade: boolean = false;
-
+  canEditEndorsement: boolean = false;
+  statusSub!: Subscription;
+  
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
-    private limitsPatternHelper: LimitsPatternHelperService) {
+    private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -62,7 +65,11 @@ export class EndorsementCoverageComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
     });
-
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
     if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
       this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode);
     }
@@ -100,6 +107,11 @@ export class EndorsementCoverageComponent implements OnInit {
     this.deleteSub?.unsubscribe();
     this.saveEventSubscription?.unsubscribe();
     this.collapsePanelSubscription?.unsubscribe();
+    this.statusSub?.unsubscribe();
+  }
+
+    get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
   }
 
   copyCoverage(): void {

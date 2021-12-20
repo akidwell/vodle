@@ -37,7 +37,7 @@
                 [(ngModel)]="policyInfo.quoteData.quoteNumber" name="quoteNumber" #quoteNo="ngModel">
             </div>
             <div class="col-lg-1">
-              <label for="packageInd">Package Policy</label><br>
+              <label for="packageInd">Package Policy</label>
               <input type="text" class="form-control" id="packageInd" style="width:37px;" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.packageInd" name="packageInd" #packageInd="ngModel">
             </div>
@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-          <br>
+          <div class="paddedRow"></div>
           <div class="row">
             <div class="col-lg-2">
               <label for="riskCity">Policy City</label>
@@ -147,17 +147,18 @@
                   [ngModel]="policyInfo.policyCancelDate | date:'MM/dd/yyyy'" name="policyCancelDateReadonly">
               </div>
             </div>
-          </div><br>
+          </div>
+          <div class="paddedRow"></div>
           <div class="row">
             <div class="col-lg-4">
-              <label for="carrierCode">Carrier</label><br>
+              <label for="carrierCode">Carrier</label>
               <ng-select id="carrierCode" [items]="carrierCodes$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.quoteData.carrierCode" name="carrierCode">
               </ng-select>
             </div>
             <div class="col-lg-4">
-              <label for="coverageCode">Coverage Code </label><br>
+              <label for="coverageCode">Coverage Code </label>
               <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Coverage"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
@@ -170,7 +171,7 @@
               </ng-select>
             </div>
             <div class="col-lg-4">
-              <label for="programId">Program ID</label><br>
+              <label for="programId">Program ID</label>
               <input type="text" class="form-control" id="programId" name="programName"
                 value="{{policyInfo.programId}} - {{policyInfo.programName}}" [readonly]="isReadOnly"
                 name="programName">
@@ -180,59 +181,59 @@
         <div class="card-body">
           <div class="row">
             <div class="col-lg-1">
-              <label for="riskGradeCode">Risk Grade</label><br>
+              <label for="riskGradeCode">Risk Grade</label>
               <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Risk Grade"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
               </ng-select>
             </div>
             <div class="col-lg-2">
-              <label for="auditCode">Audit Code</label><br>
+              <label for="auditCode">Audit Code</label>
               <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
                 [required]="canEdit" [clearable]="false" placeholder="Select Audit Code" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.auditCode" name="auditCode">
               </ng-select>
             </div>
             <div class="col-lg-2">
-              <label for="paymentFrequency">Payment Frequency</label><br>
+              <label for="paymentFrequency">Payment Frequency</label>
               <ng-select id="paymentFrequency" [items]="paymentFrequencies$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Payment Freq."
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
               </ng-select>
             </div>
             <div class="col-lg-1">
-              <label for="creditDays">Credit Days</label><br>
+              <label for="creditDays">Credit Days</label>
               <input type="number" class="form-control" id="creditDays" [required]="canEdit" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
             </div>
             <div class="col-lg-3">
-              <label for="deregulationIndicator">Deregulation Indictor</label><br>
+              <label for="deregulationIndicator">Deregulation Indictor</label>
               <ng-select id="deregulationIndicator" [items]="deregulationIndicators$ | async" bindLabel="description"
                 bindValue="code" [clearable]="false" placeholder="Select Indicator" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.deregulationIndicator" name="deregulationIndicator">
               </ng-select>
             </div>
             <div class="col-lg-3">
-              <label for="riskType">Risk Type</label><br>
+              <label for="riskType">Risk Type</label>
               <ng-select id="riskType" [items]="riskTypes$ | async" bindLabel="description" bindValue="code"
                 [required]="canEdit" [clearable]="false" placeholder="Select Risk Type" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.riskType" name="riskType">
               </ng-select>
             </div>
           </div>
-          <br>
-          <div class="row">
+          <div class="paddedRow"*ngIf="checkAssumed() || checkDereg()"></div>
+          <div class="row" *ngIf="checkAssumed() || checkDereg()">
             <div class="col-lg-6"></div>
             <div class="col-lg-3" *ngIf="checkAssumed() || checkDereg()"
               [style.visibility]="checkDereg() ? 'visible' : 'hidden'">
-              <label for="NYFTZ">NY Free Trade Zone</label><br>
+              <label for="NYFTZ">NY Free Trade Zone</label>
               <ng-select id="NYFTZ" [items]="nyFreeTradeZones$ | async" bindLabel="description"
                 [required]="checkDereg() && canEditPolicy" bindValue="code" [clearable]="false"
                 placeholder="Select NYFTZ" [readonly]="!canEdit" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
               </ng-select>
             </div>
             <div class="col-lg-3" *ngIf="checkAssumed()">
-              <label for="assumedCarrier">Assumed Carrier</label><br>
+              <label for="assumedCarrier">Assumed Carrier</label>
               <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
                 [required]="checkAssumed() && canEditPolicy" bindValue="code" [clearable]="false" appendTo="body"
                 placeholder="Select Carrier" [readonly]="!canEdit" [(ngModel)]="policyInfo.assumedCarrier"
@@ -247,27 +248,25 @@
             </div>
           </div>
         </div>
-        <br>
         <div class="card-body" *ngIf="productRecallCovCodes.includes(policyInfo.quoteData.coverageCode)">
           <div class="row">
-            <div class="col-lg">
-              <label for="productRecall">Product Recall</label>
+            <div class="col-lg-12">
+              <h5>Product Recall</h5>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg">
+            <div class="col-lg-1">
               <label for="coinsurancePercentage">Coinsurance %</label>
-              <input type="text" class="form-control" id="coinsurancePercentage"
+              <input type="text" class="form-control" id="coinsurancePercentage" mask="percent" suffix="%"
                 [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
                 #coinsurancePercentage="ngModel">
             </div>
-            <div class="col-lg">
-              <label for="productManufactureDate">Product Manufacture Date</label><br>
+            <div class="col-lg-2">
+              <label for="productManufactureDate">Product Manufacture Date</label>
               <input type="date" class="form-control" id="productManufactureDate"
                 [ngModel]="policyInfo.productManufactureDate  | date:'yyyy-MM-dd'"
                 (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"
                 #productManufactureDate="ngModel">
-
             </div>
             <div class="col-lg"></div>
             <div class="col-lg"></div>
@@ -276,5 +275,6 @@
         </div>
       </div>
     </div>
+    <br>
   </div>
 </form>

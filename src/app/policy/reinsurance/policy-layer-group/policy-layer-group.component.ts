@@ -1,12 +1,11 @@
-import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import {   Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { Endorsement, newReinsuranceLayer,  PolicyLayerData, ReinsuranceLayerData } from '../../policy';
-import { PolicyService } from '../../policy.service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { ReinsuranceLayerComponent } from './reinsurance-layer/reinsurance-layer.component';
 
 @Component({
@@ -33,6 +32,8 @@ export class PolicyLayerGroupComponent implements OnInit {
   updateSub!: Subscription;
   newPolicyLayer!: PolicyLayerData;
   newReinsurance!: ReinsuranceLayerData;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @Input() index!: number;
   @Input() policyLayerData!: PolicyLayerData;
@@ -40,7 +41,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   @ViewChild(ReinsuranceLayerComponent) reinsComp!: ReinsuranceLayerComponent;
   @ViewChildren(ReinsuranceLayerComponent) components!: QueryList<ReinsuranceLayerComponent>;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private datePipe: DatePipe, private notification: NotificationService, private policyService: PolicyService ){
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService){
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -54,6 +55,20 @@ export class PolicyLayerGroupComponent implements OnInit {
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
+  }
+
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
   }
 
   deleteExistingReinsuranceLayer(existingReinsuranceLayer: ReinsuranceLayerData) {

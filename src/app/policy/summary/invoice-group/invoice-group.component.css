@@ -33,15 +33,3 @@ a:hover {
 .btn {
  margin: 3px;
 }
-
-.float-center {
-  float: right;
-  position: relative;
-  left: -50%; /* or right 50% */
-  text-align: left;
-}
-.float-center > .child {
-  position: relative;
-  left: 50%;
-}
-

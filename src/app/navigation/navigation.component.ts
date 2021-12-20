@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
-import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder , faStar} from '@fortawesome/free-solid-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
 import { PolicyHistory, PolicyHistoryService } from './policy-history.service';
-import { Router, RouteReuseStrategy } from '@angular/router';
+import { RouteReuseStrategy } from '@angular/router';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
 
@@ -26,6 +26,7 @@ export class NavigationComponent implements OnInit {
   faAngleUp = faAngleUp;
   faFolderOpen = faFolderOpen;
   faFolder = faFolder;
+  faStar = faStar;
   authSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;

@@ -4,6 +4,7 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../../policy.service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { UnderlyingCoverage } from '../schedules';
 
 @Component({
@@ -20,7 +21,10 @@ export class UnderlyingCoveragesComponent implements OnInit {
   ucCollapsed = false;
   endorsementNumber!: number;
   policyId!: number;
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService) {
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
+
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -30,9 +34,24 @@ export class UnderlyingCoveragesComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.underlyingCoverages = data['underlyingCoverages'].underlyingCoverages;
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
     this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
     this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
   }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
+  }
+
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+
   addNewUnderlyingCoverage(): void {
     var newUnderlyingCoverage = this.createNewUnderlyingCoverage();
     this.underlyingCoverages.push(newUnderlyingCoverage);

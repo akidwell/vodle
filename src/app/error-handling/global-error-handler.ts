@@ -2,9 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ErrorService } from './error.service';
-import { JobLoggerParameter } from './job-logger-parameter';
-import { JobLoggerService } from './job-logger.service';
-import { JobLoggerResponse } from './job-logger-response';
+import { JobLoggerParameter } from './job-logger-service/job-logger-parameter';
+import { JobLoggerService } from './job-logger-service/job-logger.service';
+import { JobLoggerResponse } from './job-logger-service/job-logger-response';
+import { ErrorDialogService } from './error-dialog-service/error-dialog-service';
 
 
 @Injectable()
@@ -18,6 +19,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleError(error: Error | HttpErrorResponse) {
     const errorService = this.injector.get(ErrorService)
     const jobLoggerService = this.injector.get(JobLoggerService)
+    const errorDialogService = this.injector.get(ErrorDialogService);
 
     let errorMessage;
     let stackTrace;
@@ -34,9 +36,10 @@ export class GlobalErrorHandler implements ErrorHandler {
         }
       })
       console.log(errorMessage);
-      window.alert(errorMessage);
+      errorDialogService.open(errorMessage);
+
     }
-    else if (error.message.includes("AuthApiError")) {
+    else if (error.message?.includes("AuthApiError")) {
       console.log("Ignored AuthApiError");
       // Do nothing for now
     } else {
@@ -50,7 +53,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         }
       })
       console.log(errorMessage);
-      window.alert(errorMessage)
+      errorDialogService.open(errorMessage);
     }
   }
 }

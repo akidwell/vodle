@@ -2,7 +2,7 @@
   <div class="col-lg-4">
     <div>Basis</div>
     <ng-select id="limitBasisCode" [items]="UCService.limitBasisDescriptions" bindLabel="description" bindValue="key" placeholder=""
-    [clearable]="false" [readonly]="!canEditPolicy || !ucLimit.isUserAdded" [required]="canEditPolicy" name="limitBasisCode"
+    [clearable]="false" [readonly]="!canEdit || !ucLimit.isUserAdded" [required]="canEdit" name="limitBasisCode"
     [(ngModel)]="ucLimit.limitBasisCode" #limitsPattern="ngModel" >
   </ng-select>
     <!-- <div *ngIf="this.policyInfo.programId != 84 && this.policyInfo.programId != 85"><input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
@@ -12,13 +12,13 @@
 
   <div class="col-lg-4">
     <div>Limit</div>
-    <input  type="text" class="form-control" id="limit" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-      [required]="canEditPolicy" name="
+    <input  type="text" class="form-control" id="limit" #limitsPattern="ngModel" [readonly]="!canEdit" maxlength="79"
+      [required]="canEdit" name="
       limitsPattern" [(ngModel)]="ucLimit.limit" (change)="limitChange()" >
 
   </div>
   <div class="col-lg-4">
-   <button style="margin-top:25px;" *ngIf="this.ucLimit.isUserAdded"  (click)="deleteLimit()">Delete</button>
+   <button style="margin-top:25px;" *ngIf="this.ucLimit.isUserAdded && canEdit"  (click)="deleteLimit()">Delete</button>
   </div>
   <!-- <div class="col-lg-4">
     <div>Limits Pattern</div>

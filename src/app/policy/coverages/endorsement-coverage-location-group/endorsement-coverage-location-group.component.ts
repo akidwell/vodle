@@ -10,6 +10,7 @@ import { EndorsementCoverageComponent } from './endorsement-coverage/endorsement
 import { EndorsementCoverageDirective } from './endorsement-coverage/endorsement-coverage.directive';
 import { PolicyInformation } from '../../policy';
 import { UpdatePolicyChild } from '../../services/update-child.service';
+import { EndorsementStatusService } from '../../services/endorsement-status.service';
 
 @Component({
   selector: 'rsps-endorsement-coverage-location-group',
@@ -32,6 +33,8 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
   components: EndorsementCoverageComponent[] = [];
+  canEditEndorsement: boolean = false;
+  statusSub!: Subscription;
 
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;
@@ -43,7 +46,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth, private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(private userAuth: UserAuth, private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver, private endorsementStatusService: EndorsementStatusService) {
     // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -89,6 +92,11 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
+    });
     if (this.locationIndex == 0) {
       this.collapsePanel(false);
     }
@@ -109,8 +117,15 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   ngOnDestroy() {
     this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
+    this.collapsePanelSubscription?.unsubscribe();
+    this.expandPanelSubscription?.unsubscribe();
   }
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+  
   async openLocation(location: EndorsementCoveragesGroup) {
     if (this.locationComponent != null) {
       var result = await this.locationComponent.open(location, this);
@@ -170,18 +185,9 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
       for (let coverage of this.endorsementCoveragesGroup.coverages) {
         this.addComponent(coverage, false);
-        // coverage.ecCollapsed = action;
       }
       this.loaded = true;
     }
-    // else
-    // {
-    //   if (this.components != null) {
-    //     for (let child of this.components) {
-    //      child.collapseExpand(action);
-    //     }
-    //   }
-    // }
     this.locationCollapsed = action;
   }
   

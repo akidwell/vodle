@@ -42,7 +42,6 @@ export class PolicyInformationComponent implements OnInit {
   policySub!: Subscription;
   dereg!: boolean;
   assumed!: boolean;
-  status: string = "";
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 

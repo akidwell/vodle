@@ -1,4 +1,5 @@
 <div class='sidebar' *ngIf="isAuthenticated">
+  <!-- <img src="./assets/images/risk-solutions-logo.jpg"> -->
   <a class='nav-link' routerLinkActive='active' routerLink='/home'>
     <fa-icon [icon]="faHome"></fa-icon>
     Home
@@ -14,7 +15,7 @@
       <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
       <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
       {{ policy.policyNumber + ":" + policy.endorsementNumber}}
-    </a>
+    </a>  
   </div>
   <hr class="rounded mt-1 mb-1">
   <a class='nav-link' (click)="toggleApplicationNavbar()">
