@@ -109,7 +109,7 @@
             <div class="col-lg-1">
               <label for="pacCode">PAC</label>
               <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
-                bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.riskLocation.state" #pacCode="ngModel">
+                bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
                 <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
                 </ng-template>
