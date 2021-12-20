@@ -1,28 +1,27 @@
-<div class="card-header" (click)="collapse.toggle()">Policy Layer {{policyLayerData.policyLayerNo}}:
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">Policy Layer {{policyLayerData.policyLayerNo}}:
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyLayerCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyLayerCollapsed"></fa-icon>
-</div>
-<div #collapse="ngbCollapse" [(ngbCollapse)]="policyLayerCollapsed">
-    <div *ngFor="let item of policyLayerData.reinsuranceData; let i = index">
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="policyLayerCollapsed">
+    <div class="card-body">
+      <div *ngFor="let item of policyLayerData.reinsuranceData; let i = index">
         <rsps-reinsurance-layer [reinsuranceLayer]=item [index]=i [policyLayerData]="policyLayerData"
-            (deleteExistingReinsuranceLayer)=deleteExistingReinsuranceLayer($event)></rsps-reinsurance-layer>
+          (deleteExistingReinsuranceLayer)=deleteExistingReinsuranceLayer($event)></rsps-reinsurance-layer>
+      </div>
     </div>
+  </div>
+  <div class="card-footer">
+    <div id="reinsuranceFooter">
+      <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
+        (click)="addNewReinsuranceLayer();">Add Reinsurance Layer</button>
+      <span class="float-center">
+        Policy Layer Limit: {{calcTotalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
+        &nbsp;
+        Policy Layer Premium: {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' }}
+      </span>
+      <div style="float:right;">Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}
+      </div>
+    </div>
+  </div>
 </div>
-    <div class="card-footer">
-        <div class="aniFooter">
-            <div class="row">
-                <div style="padding-left: 10px" class="col-lg-3">
-                    <button class="btn btn-sm btn-primary pull-right" style="float:left; background:none; border:none;" [hidden]="!canEditPolicy"
-                        class="underline" (click)="addNewReinsuranceLayer()">Add Reinsurance Layer</button> &nbsp;
-                </div>
-                <div class="col-lg-2">
-                    <b>Policy Layer Limit:</b> {{calcTotalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
-                </div>
-                <div class="col-lg-2">
-                    <b>Policy Layer Premium:</b>  {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' }}
-                </div>
-                <div class="col-lg-3"></div>
-                <div class="col-lg-2" style="text-align:right"><b>Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}</b></div>
-            </div>
-        </div>
-    </div>

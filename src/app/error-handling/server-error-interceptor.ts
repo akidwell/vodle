@@ -25,7 +25,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
             errorMsg = `Error Code: ${error.status}, Message: ${error.message.slice(0,75)}` ;
           }
           console.log(errorMsg);
-          return throwError(errorMsg);
+          return throwError(error);
         })
       )
   }

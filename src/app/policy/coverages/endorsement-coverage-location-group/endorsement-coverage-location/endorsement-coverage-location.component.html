@@ -1,10 +1,9 @@
 <form #locationForm="ngForm">
-
-  <ng-template #modal let-modal>
-    <div class="modal-header">
+  <ng-template #modal let-modal >
+    <div class="modal-header" [ngClass]="confirmation">
       <h4 class="modal-title" id="modal-basic-title">Location</h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" [ngClass]="confirmation"> 
       <div class="col-md" [hidden]="!showLocationId">
         <label for="street">Location Id:</label>
         <input type="text" class="form-control" id="locationId" [readonly]="true" [(ngModel)]="location.locationId"
@@ -12,17 +11,17 @@
       </div>
       <div class="col-md">
         <label for="street">Address Street 1</label>
-        <input type="text" class="form-control" id="street" [readonly]="!canEditPolicy" [required]="canEditPolicy"
+        <input type="text" class="form-control" id="street" [readonly]="!canEdit" [required]="canEdit"
           maxlength="40" [(ngModel)]="location.street" name="street" #street="ngModel">
       </div>
       <div class="col-md">
         <label for="street2">Addres Street 2</label>
-        <input type="text" class="form-control" id="street2" [readonly]="!canEditPolicy" [(ngModel)]="location.street2"
+        <input type="text" class="form-control" id="street2" [readonly]="!canEdit" [(ngModel)]="location.street2"
           maxlength="40" name="street2" #street2="ngModel">
       </div>
       <div class="col-md">
         <label for="zipCode">Zip Code</label>
-        <input type="text" class="form-control" id="zipCode" [readonly]="!canEditPolicy" [required]="canEditPolicy"
+        <input type="text" class="form-control" id="zipCode" [readonly]="!canEdit" [required]="canEdit"
           mask="00000||00000-0000" [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
           (ngModelChange)="changeZipCode()">
       </div>
@@ -33,8 +32,8 @@
           </div>
         </div>
         <div *ngIf="!isLoadingAddress">
-          <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
-            maxlength="25" [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
+          <input type="text" class="form-control" id="city" [readonly]="!canEdit || isLoadingAddress"
+            maxlength="25" [required]="canEdit" [(ngModel)]="location.city" name="city" #city="ngModel">
         </div>
       </div>
       <div class="col-md">
@@ -45,8 +44,8 @@
         </div>
         <div *ngIf="!isLoadingAddress">
           <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
-            [clearable]="false" placeholder="Select State" [readonly]="!canEditPolicy || isLoadingAddress"
-            name="locationState" [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
+            [clearable]="false" [readonly]="!canEdit || isLoadingAddress"
+            name="locationState" [required]="canEdit" [(ngModel)]="location.state" #locationState="ngModel">
           </ng-select>
         </div>
       </div>
@@ -58,28 +57,27 @@
         </div>
         <div *ngIf="!isLoadingAddress">
           <div *ngIf="counties.length <= 1">
-            <input type="text" class="form-control" id="locationCounty" [readonly]="!canEditPolicy || isLoadingAddress"
+            <input type="text" class="form-control" id="locationCounty" [readonly]="!canEdit || isLoadingAddress"
               maxlength="100" [(ngModel)]="location.county" name="locationCounty" #locationCounty="ngModel">
           </div>
           <div *ngIf="counties.length > 1">
             <ng-select id="locationCounty" [items]="counties" [clearable]="false"
-              [readonly]="!canEditPolicy || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
+              [readonly]="!canEdit || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
               #locationCounty="ngModel">
             </ng-select>
           </div>
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" [hidden]="!canEditPolicy"
+    <div class="modal-footer" [ngClass]="confirmation">
+      <button type="button" class="btn btn-primary" [hidden]="!canEdit"
         [disabled]="!locationForm.valid || !isDirty" (click)="save()">Save</button>
-      <button type="button" class="btn btn-danger" [hidden]="!canEditPolicy || !canDeleteLocation"
+      <button type="button" class="btn btn-danger" [hidden]="!canEdit || !canDeleteLocation"
         (click)="openDeleteConfirmation()">Delete</button>
-      <button type="button" class="btn btn-secondary" [hidden]="!canEditPolicy" (click)="cancel()">Cancel</button>
-      <button type="button" class="btn btn-secondary" [hidden]="canEditPolicy" (click)="cancel()">Close</button>
+      <button type="button" class="btn btn-secondary" [hidden]="!canEdit" (click)="cancel()">Cancel</button>
+      <button type="button" class="btn btn-secondary" [hidden]="canEdit" (click)="cancel()">Close</button>
     </div>
   </ng-template>
-
 
 
   <ng-template #modalConfirmation let-modal>

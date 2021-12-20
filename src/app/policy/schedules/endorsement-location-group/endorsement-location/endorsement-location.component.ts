@@ -123,7 +123,7 @@ export class EndorsementLocationComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+    this.modalService.open(this.modalConfirmation, { backdrop: 'static' }).result.then((result) => {
       if (result == 'Yes') {
         this.deleteLocation();
       }

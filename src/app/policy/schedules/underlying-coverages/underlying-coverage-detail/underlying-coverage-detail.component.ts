@@ -7,6 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { PolicyInformation } from 'src/app/policy/policy';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 import { UnderlyingCoverage, UnderlyingLimitBasis, UnderlyingCoverageLimit } from '../../schedules';
 import { UnderlyingCoverageService } from '../../services/underlying-coverage.service';
@@ -37,9 +38,12 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   policyId!: number;
   isAPPolicy: boolean = false;
   isLimitsPatternValid: boolean = true;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
   @Input() ucData!: UnderlyingCoverage;
+
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth,
-    public UCService: UnderlyingCoverageService, private limitsPatternHelperService: LimitsPatternHelperService) {
+    public UCService: UnderlyingCoverageService, private limitsPatternHelperService: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -49,6 +53,11 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
+    });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;  
+      }
     });
     this.dropdowns.getLimitsPatternDescriptions().subscribe((limitsPattern) =>
     {
@@ -71,6 +80,10 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
         );
       }
     });
+  }
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
   //This drives PAUL policies
   updateLimitsPatternGroupCode():void {
@@ -346,5 +359,8 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     //   this.endorsementCoveragesForm.controls['limits'].setErrors({ 'incorrect': !isValid });
     // }
     return isValid;
+  }
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
   }
 }

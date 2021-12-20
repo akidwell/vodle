@@ -30,6 +30,7 @@ export class EndorsementHeaderComponent implements OnInit {
   canEditTransactionType: boolean = false;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
+  isAttachmentPointValid: boolean = false;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService, private datePipe: DatePipe, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -52,6 +53,7 @@ export class EndorsementHeaderComponent implements OnInit {
     });
     this.transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
+    this.isAttachmentPointValid = this.checkAttachmentPointValid();
   }
 
   ngOnDestroy(): void {
@@ -62,6 +64,21 @@ export class EndorsementHeaderComponent implements OnInit {
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
+
+  checkAttachmentPointValid(): boolean {
+    if ((this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol == 'PRC')) {
+      this.isAttachmentPointValid = true;
+      return this.isAttachmentPointValid;
+    } else {
+      if (this.endorsement.attachmentPoint >= this.endorsement.underlyingLimit) {
+        this.isAttachmentPointValid = true;
+      } else {
+        this.isAttachmentPointValid = false;
+        this.endorsementHeaderForm.controls['attachmentPoint'].setErrors({ 'incorrect': this.isAttachmentPointValid });
+      }
+      return this.isAttachmentPointValid;
+    }
   }
 
   changeEffectiveDate() {
@@ -108,4 +125,8 @@ export class EndorsementHeaderComponent implements OnInit {
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
+
+  get isPrimaryPolicy(): boolean{
+    return  (this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol =='PRC')
+}
 }

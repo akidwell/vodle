@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { NgForm } from '@angular/forms';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 
 
 @Component({
@@ -34,6 +35,8 @@ export class ReinsuranceLayerComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   endorsement!: Endorsement;
+  statusSub!: Subscription;
+  canEditEndorsement: boolean = false;
 
   @Input() policyLayerData!: PolicyLayerData;
   @ViewChild('modalConfirmation') modalConfirmation: any;
@@ -45,13 +48,18 @@ export class ReinsuranceLayerComponent implements OnInit {
   @Input() reinsuranceLayer!: ReinsuranceLayerData;
   @Input() index!: number;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth,) { 
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService) { 
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
   ngOnInit(): void {
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;
+      }
+    });
     this.route.parent?.data.subscribe(async data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.policyLayer = data['policyLayerData'].policyLayer;
@@ -79,6 +87,7 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.dirtySub = this.reinsuranceForm.statusChanges?.subscribe(() => {
       this.isDirty = this.reinsuranceForm.form.dirty ?? false;
     });
+
   }
 
   ngOnDestroy(): void {
@@ -86,11 +95,16 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.reinsuranceSub?.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
-   async populateReinsuranceCodes(): Promise<void> {
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy
+  }
+
+  async populateReinsuranceCodes(): Promise<void> {
     await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
-       reisuranceCodes => {
+      reisuranceCodes => {
         this.reinsuranceCodes = reisuranceCodes;
         this.reinsuranceCodes$ = of(reisuranceCodes);
       }
