@@ -35,6 +35,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   parent!: EndorsementCoverageLocationGroupComponent;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
+  confirmation: string = "";
 
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
 
@@ -179,7 +180,10 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
   openDeleteConfirmation() {
+  
+    this.confirmation = "overlay"
     this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+      this.confirmation = ""
       if (result == 'Yes') {
         this.delete();
       }

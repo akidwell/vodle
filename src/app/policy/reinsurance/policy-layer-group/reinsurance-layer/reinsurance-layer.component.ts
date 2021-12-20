@@ -55,6 +55,11 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;
+      }
+    });
     this.route.parent?.data.subscribe(async data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.policyLayer = data['policyLayerData'].policyLayer;
@@ -82,11 +87,7 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.dirtySub = this.reinsuranceForm.statusChanges?.subscribe(() => {
       this.isDirty = this.reinsuranceForm.form.dirty ?? false;
     });
-    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
-      next: canEdit => {
-        this.canEditEndorsement = canEdit;
-      }
-    });
+
   }
 
   ngOnDestroy(): void {

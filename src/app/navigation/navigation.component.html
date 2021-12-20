@@ -15,7 +15,7 @@
       <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
       <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
       {{ policy.policyNumber + ":" + policy.endorsementNumber}}
-    </a>
+    </a>  
   </div>
   <hr class="rounded mt-1 mb-1">
   <a class='nav-link' (click)="toggleApplicationNavbar()">

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { ConfigService } from '../config/config.service';
+import { ConfigService } from 'src/app/config/config.service';
 import { JobLoggerParameter } from './job-logger-parameter';
 import { JobLoggerResponse } from './job-logger-response';
 
