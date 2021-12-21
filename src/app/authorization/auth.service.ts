@@ -38,7 +38,6 @@ export class AuthService {
       .set('OKTA-Authorization', 'Bearer ' + this.oktaAuth.getAccessToken())
   }
 
-  // GAM - TEMP - Header test
   private _headers = new HttpHeaders();
 
   login() {
@@ -53,7 +52,6 @@ export class AuthService {
       next: token => {
         if (token != null && token != "") {
           this.userAuth.bearerToken = JSON.parse(JSON.stringify(token)).data;
-          // GAM - TEMP - New observable 
           this.userAuth.ApiBearerToken = JSON.parse(JSON.stringify(token)).data;
           console.log(token)
           localStorage.setItem('jwt_token', this.userAuth.bearerToken);
@@ -91,17 +89,15 @@ export class AuthService {
   processAuthClaims(token: IAuthObject) {
     console.log(token);
     this.userAuth.userName = token.name;
-    this.userAuth.isAuthenticated = token.valid;
-    this.userAuth.canExecuteImport = token.CanExecuteImport;
-
-    // GAM - TEMP - New observables 
-    this.userAuth.canExecuteImport2 = token.CanExecuteImport == 'True';
+    this.userAuth.isAuthenticated = token.valid == 'True';
+    this.userAuth.canExecuteImport = token.CanExecuteImport == 'True';
     this.userAuth.isApiAuthenticated = token.valid == 'True';
     this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
     this.userAuth.userRole = token.userRole;
+    this.userAuth.loaded();
 
     console.log(this.userAuth);
-    if (this.userAuth.isAuthenticated == 'False') {
+    if (!this.userAuth.isAuthenticated) {
       this.router.navigate(['/access-denied']);
     }
     else if (this.router.url == '/access-denied') {

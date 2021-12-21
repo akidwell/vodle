@@ -150,7 +150,6 @@ export const newEndorsementLocation = (): EndorsementLocation => ({
 });
 
 export interface PolicyLayerData {
-
   policyId: number;
   endorsementNo: number;
   policyLayerNo: number
@@ -168,7 +167,6 @@ export interface PolicyLayerData {
 }
 
 export interface ReinsuranceLayerData{
-
   policyId: number;
   endorsementNumber: number;
   policyLayerNo: number;

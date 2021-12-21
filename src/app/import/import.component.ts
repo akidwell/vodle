@@ -98,10 +98,8 @@ export class ImportComponent implements OnInit {
     });
 
     this._search$.next();
-
-    // GAM - TEMP -Subscribe
-    this.authSub = this.userAuth.canExecuteImport2$.subscribe(
-      (canExecuteImport2: boolean) => this.canExecuteImport = canExecuteImport2
+    this.authSub = this.userAuth.canExecuteImport$.subscribe(
+      (canExecuteImport: boolean) => this.canExecuteImport = canExecuteImport
     );
   }
 
@@ -120,11 +118,6 @@ export class ImportComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  // GAM - TEMP - commented for now
-  // canExecuteImport(): boolean {
-  //   return this.userAuth.canExecuteImport == "True" ? true : false;
-  // }
-
   async import(selectedRow: any): Promise<void> {
     const parm: ImportRequest = { submissionNumber: selectedRow.submissionNumber };
     this.showBusy = true;
@@ -140,8 +133,7 @@ export class ImportComponent implements OnInit {
   // Decide to either show errors or if succesful open up the policy
   routeImport() {
     this.showBusy = false;
-    if (this.importPolicyResponse?.isPolicyImported) {
-      
+    if (this.importPolicyResponse?.isPolicyImported) {  
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
