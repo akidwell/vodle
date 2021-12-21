@@ -46,5 +46,7 @@ export class ConfigService {
   get oktaRedirectUri(): string {
     return this.appConfig.oktaRedirectUri;
   }
-
+  get preventForcedRedirect(): string {
+    return this.appConfig.preventForcedRedirect;
+  }
 }

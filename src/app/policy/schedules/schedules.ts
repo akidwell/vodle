@@ -14,6 +14,7 @@ export interface UnderlyingCoverage {
   label?: String;
   excessOfLimitsPattern?: String;
   underlyingScheduleLimitData: UnderlyingCoverageLimit[];
+  isNew: boolean;
 }
 
 export interface UnderlyingCoverageLimit {

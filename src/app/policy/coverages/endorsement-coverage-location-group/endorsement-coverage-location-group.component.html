@@ -1,8 +1,8 @@
 <form #endorsementCoveragesForm="ngForm">
   <div class="content">
     <div class="card">
-      <div class="card-header" (click)="collapsePanel(!locationCollapsed)">
-        <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup);$event.stopPropagation()">ID #:
+      <div class="card-header" click-stop-propagation (click)="collapsePanel(!locationCollapsed)">
+        <a [routerLink]="" (click)="openLocation(endorsementCoveragesGroup);">ID #:
           {{endorsementCoveragesGroup.location.locationId}}</a>
         <span *ngIf="groupCount > 1"
           style="margin-left: 5px;">{{endorsementCoveragesGroup.location.street ? (endorsementCoveragesGroup.location.street + ' '): ('') }}

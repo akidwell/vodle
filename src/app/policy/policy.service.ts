@@ -54,11 +54,14 @@ export class PolicyService {
     );;
   }
   updateUnderlyingCoverages(underlyingCoverages: UnderlyingCoverage[]): Observable<boolean> {
-    console.log('save')
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/underlying-schedule', underlyingCoverages)
     .pipe(
       tap(data => console.log(JSON.stringify(data)))
     );
+  }
+  deleteUnderlyingCoverage(coverage: UnderlyingCoverage): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
+    + '/endorsements/' + coverage.endorsementNo.toString() + '/underlying-schedule/' + coverage.sequence.toString() )
   }
   updateEndorsement(endorsement: Endorsement): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements', endorsement)
