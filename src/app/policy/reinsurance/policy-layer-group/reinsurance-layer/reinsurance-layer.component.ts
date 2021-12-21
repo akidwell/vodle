@@ -87,7 +87,11 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.dirtySub = this.reinsuranceForm.statusChanges?.subscribe(() => {
       this.isDirty = this.reinsuranceForm.form.dirty ?? false;
     });
-
+    setTimeout(() => {
+      if (this.reinsuranceLayer.isNew && this.canEditPolicy) {
+        this.reinsuranceForm.form.markAsDirty();
+      }
+    });
   }
 
   ngOnDestroy(): void {
