@@ -87,7 +87,7 @@ export class PolicyService {
   }
 
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
-    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/PolicyInfo', policyInfo);
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/policyinfo', policyInfo);
   }
 
   updateAccountInfo(accountInfo: AccountInformation):Observable<boolean> {
