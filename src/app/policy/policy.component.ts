@@ -43,7 +43,7 @@ export class PolicyComponent implements OnInit {
   doRedirect() {
     var urlString = this.router.url.split('/').slice(0,-1).join('/')+'/information'
     setTimeout(()=> {
-      this.router.navigate([urlString])
+      this.router.navigate([urlString], { state: { bypassFormGuard: true } })
     })
   }
 

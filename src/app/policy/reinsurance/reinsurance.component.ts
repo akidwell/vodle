@@ -29,7 +29,8 @@ export class ReinsuranceComponent implements OnInit {
   invalidMessage: string = "";
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
-
+  authLoadedSub!: Subscription;
+  
   @Output() addNewPolicyLayers: EventEmitter<string> = new EventEmitter();
   @ViewChild(PolicyLayerGroupComponent) policyLayerGroup!: PolicyLayerGroupComponent;
   @ViewChild(ReinsuranceLayerComponent) reinsLayerComp!: ReinsuranceLayerComponent;
@@ -49,6 +50,19 @@ export class ReinsuranceComponent implements OnInit {
       this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
+
+      // Added new policy layer or reinsurance layer if not added yet on coming in first time
+      this.authLoadedSub = this.userAuth.loaded$.subscribe((loaded) => {
+        if (loaded && this.canEditPolicy && this.endorsementStatusService.canEditEndorsement.value) {
+          if (this.policyLayerData.length == 0) {
+            this.addNewPolicyLayer();
+          }
+          else if (this.policyLayerData.length == 1 && this.policyLayerData[0].reinsuranceData.length == 0) {
+            const newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, 1, 1);
+            this.policyLayerData[0].reinsuranceData.push(newReinsurance)
+          }
+        }
+      });
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
@@ -60,6 +74,7 @@ export class ReinsuranceComponent implements OnInit {
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.authLoadedSub?.unsubscribe();
   }
 
   get canEdit(): boolean {
@@ -103,7 +118,7 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   save(): void {
-    if (this.canEditPolicy)
+    if (this.canEdit)
       this.policyLayerGroup.savePolicyLayers();
   }
 
@@ -112,7 +127,7 @@ export class ReinsuranceComponent implements OnInit {
     let totalLimit: number = 0;
     let subAttachmentpoints = false;
 
-    if (this.canEditPolicy) {
+    if (this.canEdit) {
       this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium?.toString() == "" ? 0 : layer.reinsCededPremium ?? 0 }) });
       this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0 }) });
       subAttachmentpoints = this.checkSubAttachmentPoints()

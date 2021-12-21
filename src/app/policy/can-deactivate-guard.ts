@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { InformationComponent } from './information/information.component';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { SchedulesComponent } from './schedules/schedules.component';
@@ -10,7 +10,7 @@ import { NavigationConfirmationService } from '../navigation/navigation-confirma
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
 
-  constructor(private navigationConfirmationService: NavigationConfirmationService) { }
+  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService) { }
 
   canDeactivate(
     component: InformationComponent | CoveragesComponent | SchedulesComponent | SummaryComponent,
@@ -18,6 +18,10 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ): Observable<boolean> | boolean | Promise<boolean> {
+    // Skip checks if bypassFormGuard is set
+    if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
+      return true
+    }
     if (component.isValid()) {
       if (component.isDirty()) {
         component.save();
