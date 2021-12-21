@@ -160,7 +160,7 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.existingPl.emit(this.policyLayerData.policyLayerNo)
     this.reinsuranceLayerNo = this.getNextReinsuranceLayerSequence();
     this.newReinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayerNo);
-   //this.reinsComp.reinsuranceForm.form.markAsDirty();
+   this.reinsComp.reinsuranceForm.form.markAsDirty();
     this.policyLayerData.reinsuranceData.push(this.newReinsuranceLayer)
   }
 
@@ -168,7 +168,7 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.newPolicyLayer = this.createNewPolicyLayer();
     this.newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerNo, 1);
     this.newPolicyLayer.reinsuranceData.push(this.newReinsurance)
-   //this.reinsComp.reinsuranceForm.form.markAsDirty();
+    this.reinsComp.reinsuranceForm.form.markAsDirty();
     this.policyLayer.push(this.newPolicyLayer);
   }
 

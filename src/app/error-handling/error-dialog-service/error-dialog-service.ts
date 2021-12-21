@@ -10,7 +10,7 @@ export class ErrorDialogService {
   constructor(private modalService: NgbModal) { }
 
   public async open(message: string) {
-    const modalRef = this.modalService.open(ErrorDialogComponent, { scrollable: true, size: 'l', backdrop: 'static' });
+    const modalRef = this.modalService.open(ErrorDialogComponent, { scrollable: true, size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.errorMessage = message;
   }
 }

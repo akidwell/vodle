@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrorHandler, Injectable, Injector } from '@angular/core';
+import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ErrorService } from './error.service';
 import { JobLoggerParameter } from './job-logger-service/job-logger-parameter';
@@ -12,7 +12,7 @@ import { ErrorDialogService } from './error-dialog-service/error-dialog-service'
 export class GlobalErrorHandler implements ErrorHandler {
   response!: JobLoggerResponse;
 
-  constructor(private injector: Injector) { }
+  constructor(private injector: Injector, private ngZone: NgZone) { }
 
   sub!: Subscription;
 
@@ -21,7 +21,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const jobLoggerService = this.injector.get(JobLoggerService)
     const errorDialogService = this.injector.get(ErrorDialogService);
 
-    let errorMessage;
+    let errorMessage: string;
     let stackTrace;
     let parm: JobLoggerParameter = { source: "", message: "", data: "" };
 
@@ -37,10 +37,9 @@ export class GlobalErrorHandler implements ErrorHandler {
       })
       console.log(errorMessage);
       errorDialogService.open(errorMessage);
-
     }
     else if (error.message?.includes("AuthApiError")) {
-      console.log("Ignored AuthApiError");
+      console.log("Ignored AuthApiError: " + error.message);
       // Do nothing for now
     } else {
       // Client Error
@@ -53,7 +52,9 @@ export class GlobalErrorHandler implements ErrorHandler {
         }
       })
       console.log(errorMessage);
-      errorDialogService.open(errorMessage);
+      this.ngZone.run(() => {
+        errorDialogService.open(errorMessage);
+      });
     }
   }
 }
