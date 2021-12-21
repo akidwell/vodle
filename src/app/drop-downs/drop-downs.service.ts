@@ -358,7 +358,7 @@ getAuditCodes(): Observable<Code[]> {
 
   getUnderlyingCoverageDescriptions(): Observable<Code[]> {
     let observable: Observable<any>;
-    if (this.cacheStates) {
+    if (this.cacheUnderlyingCoverageDescriptions) {
       observable = of(this.cacheUnderlyingCoverageDescriptions);
     } else if (this.cacheUnderlyingCoverageDescriptions$) {
       observable = this.cacheUnderlyingCoverageDescriptions$;
@@ -542,7 +542,7 @@ getAuditCodes(): Observable<Code[]> {
 
   getLimitsPatternDescriptions(): Observable<Code[]> {
     let observable: Observable<any>;
-    if (this.cacheDeductibleType) {
+    if (this.cacheLimitsPatternDescriptions) {
       observable = of(this.cacheLimitsPatternDescriptions);
     } else if (this.cacheLimitsPatternDescriptions$) {
       observable = this.cacheLimitsPatternDescriptions$;
@@ -565,7 +565,7 @@ getAuditCodes(): Observable<Code[]> {
 
   getAdditonalNamedInsuredsRoles(): Observable<Code[]> {
     let observable: Observable<any>;
-    if (this.cacheDeductibleType) {
+    if (this.cacheAdditonalNamedInsuredsRoles) {
       observable = of(this.cacheAdditonalNamedInsuredsRoles);
     } else if (this.cacheAdditonalNamedInsuredsRoles$) {
       observable = this.cacheAdditonalNamedInsuredsRoles$;

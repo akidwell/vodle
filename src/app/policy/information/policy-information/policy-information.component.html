@@ -203,7 +203,7 @@
             </div>
             <div class="col-lg-1">
               <label for="creditDays">Credit Days</label>
-              <input type="number" class="form-control" id="creditDays" [required]="canEdit" [readonly]="!canEdit"
+              <input type="number" class="form-control" id="creditDays" [required]="canEdit" [readonly]="!canEdit" maxInt
                 [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
             </div>
             <div class="col-lg-3">
