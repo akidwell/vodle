@@ -15,9 +15,12 @@
       <label for="createDate">Create Date</label>
     </div>
   </div> -->
-  <button (click)="onSave()">Save</button>
+  <button (click)="save()">Save</button>
     <div *ngFor="let item of underlyingCoverages; let i = index">
-        <rsps-underlying-coverage-detail [ucData]=item></rsps-underlying-coverage-detail>
+        <rsps-underlying-coverage-detail
+        [ucData]=item
+        (deleteThisCoverage)=deleteCoverage($event)
+        ></rsps-underlying-coverage-detail>
     </div>
   </div>
   <div class="card-footer" >

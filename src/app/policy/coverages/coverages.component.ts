@@ -70,6 +70,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     return firstGroup.coverages[0].programId;
   }
   @Output() status: EventEmitter<any> = new EventEmitter();
+
   saveEndorsementCoverages(): any {
     console.log(this.endorsementCoveragesGroups)
     this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
@@ -144,7 +145,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   save(): void {
     this.headerComp.save();
-    //this.groupComp.save();
+    this.saveEndorsementCoverages();
   }
 
   deleteGroup(existingGroup: EndorsementCoveragesGroup){

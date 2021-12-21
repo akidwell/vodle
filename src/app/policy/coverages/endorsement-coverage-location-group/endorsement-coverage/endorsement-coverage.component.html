@@ -27,7 +27,7 @@
         <div class="row container">
           <div class="col-lg-4">
             <label class='hidden-label' for="coverageDescription">Coverage Description</label>
-            <ng-select id="coverageDescription" name="coverageDescription" [items]="coverageDescriptions$ | async"
+            <ng-select id="coverageDescription" click-stop-propagation name="coverageDescription" [items]="coverageDescriptions$ | async"
               bindLabel="description" bindValue="key" [clearable]="false"
               [readonly]="!canEdit" [required]="canEdit" [(ngModel)]="coverage.coverageId"
               (change)="changeCoverageDescription($event)" #coverageDescription="ngModel">
@@ -35,13 +35,13 @@
           </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="premium">Premium</label>
-            <input type="text" class="form-control" id="premium" [(ngModel)]="coverage.premium"
+            <input type="text" click-stop-propagation class="form-control" id="premium" [(ngModel)]="coverage.premium"
               [readonly]="!canEdit" [required]="canEdit" name="premium" #premium="ngModel"
               mask="separator.0" thousandSeparator=",">
           </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="limits">Limits</label>
-            <input type="text" class="form-control" id="limits" [readonly]="!canEdit || !canEditLimitPattern"
+            <input type="text" click-stop-propagation class="form-control" id="limits" [readonly]="!canEdit || !canEditLimitPattern"
               [required]="canEdit && canEditLimitPattern" [(ngModel)]="coverage.limitsPattern" name="limits"
               #limits="ngModel" [mask]="setLimitsPatternMask()" (change)="changeLimitsPattern()"
               [dropSpecialCharacters]="false">
@@ -58,7 +58,7 @@
           </div>
           <div class="col-lg-1">
             <label class='hidden-label' for="claimsMadeOrOccurrence">CLM/OCC</label>
-            <ng-select id="claimsMadeOrOccurrence" [items]="claimsMadeOrOccurrence$ | async" bindValue="code"
+            <ng-select click-stop-propagation id="claimsMadeOrOccurrence" [items]="claimsMadeOrOccurrence$ | async" bindValue="code"
               bindLabel="description" name="claimsMadeOrOccurrence" [required]="canEdit && showClaimsMade" [clearable]="false"
                [searchFn]="dropDownSearch" [readonly]="!canEdit || !showClaimsMade"
               [(ngModel)]="coverage.claimsMadeOrOccurrence" (change)="changeClaimsMadeOccurrence()">
@@ -111,7 +111,7 @@
           </div>
           <div class="col-lg-1">
             <label for="deductible">Deductible</label>
-            <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible" 
+            <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible"
               [required]="canEdit && isDeductibleRequired && showDeductible" [(ngModel)]="coverage.deductible" name="deductible"
               #deductible="ngModel" mask="separator.0" thousandSeparator=",">
           </div>

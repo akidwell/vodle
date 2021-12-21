@@ -1,7 +1,9 @@
 import { sequence } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Observable, Subscription } from 'rxjs';
 
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
@@ -31,17 +33,21 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   limitBasisDescriptions: UnderlyingLimitBasis[] | undefined;
   limitBasisSubscription!: Subscription;
   limitsPatternSubscription?: Subscription;
+  coverageTypes$: Observable<Code[]> | undefined;
   allLimitsPatternDescription: Code[] = [];
   policyInfo!: PolicyInformation;
   authSub: Subscription;
   endorsementNumber!: number;
   policyId!: number;
+  faArrowUp = faAngleUp;
   isAPPolicy: boolean = false;
   isLimitsPatternValid: boolean = true;
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
   @Input() ucData!: UnderlyingCoverage;
 
+  @Output() deleteThisCoverage: EventEmitter<UnderlyingCoverage> = new EventEmitter();
+  @ViewChild(NgForm, { static: false }) ucForm!: NgForm;
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth,
     public UCService: UnderlyingCoverageService, private limitsPatternHelperService: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -56,9 +62,10 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
+    this.coverageTypes$ = this.dropdowns.getUnderlyingCoverageDescriptions();
     this.dropdowns.getLimitsPatternDescriptions().subscribe((limitsPattern) =>
     {
       this.allLimitsPatternDescription = limitsPattern;
@@ -283,7 +290,6 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       element.isUserAdded = element.order == 999 ? true : false;
     }
 
-
     if(this.isAPPolicy) {
       this.updateAPLimitsPatternBasisCodes();
       this.updateAPLimitsPattern();
@@ -348,6 +354,9 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       this.getUserAddedCount();
     }
   }
+  deleteThisUnderlyingCoverage(): void{
+    this.deleteThisCoverage.emit(this.ucData)
+  }
   checkLimitsPatternValid(): boolean {
     let isValid = this.ucData.limitsPattern?.split('/').length == this.limitedLimitsBasis.length;
     for (let x of this.ucData.limitsPattern?.split("/") || []) {
@@ -355,12 +364,19 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
         isValid = false;
       }
     }
-    // if (!isValid) {
-    //   this.endorsementCoveragesForm.controls['limits'].setErrors({ 'incorrect': !isValid });
-    // }
+
+    if (!isValid) {
+      this.ucForm.controls['limitsPattern'].markAsTouched();
+      this.ucForm.controls['limitsPattern'].setErrors({'incorrect': true});
+    } else {
+      this.ucForm.controls['limitsPattern'].setErrors(null);
+    }
     return isValid;
   }
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
+  }
+  collapseExpand(event: boolean) {
+    this.ucdCollapsed = event;
   }
 }
