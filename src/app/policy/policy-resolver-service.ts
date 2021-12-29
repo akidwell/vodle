@@ -292,8 +292,6 @@ export class InvoiceResolver implements Resolve<InvoiceResolved> {
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ invoicesData: null, error: message });
         }
-
-        console.log("invoice get");
         return this.policyService.getPolicyInvoices(Number(id), Number(end))
             .pipe(
                 map(invoicesData => ({ invoicesData })),

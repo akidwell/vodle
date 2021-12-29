@@ -47,7 +47,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -69,7 +68,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     newCoverage.isNew = true;
     newCoverage.isFirst = false;
     this.incrementSequence.emit(this.currentSequence + 1);
-    console.log('new: ', newCoverage, 'existing: ', existingCoverage)
     this.endorsementCoveragesGroup.coverages.push(newCoverage);
     this.addComponent(newCoverage, true);
   }

@@ -46,7 +46,6 @@ export class ReinsuranceComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.policyLayerData = data['policyLayerData'].policyLayer;
-      console.log(this.policyLayerData)
       this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);

@@ -25,7 +25,7 @@ export class DropDownsService {
     if (coverageId != null) {
       params = params.append('coverageId', coverageId);
     }
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-descriptions', { params })
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params })
   }
 
   // Policy specific drop downs
@@ -36,10 +36,10 @@ export class DropDownsService {
   getRiskGrades(programId?: number): Observable<Code[]> {
     if (programId) {
       const params = new HttpParams().append('programId', programId);
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades', { params })
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades', { params })
     }
     else {
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-grades')
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades')
     }
   }
 
@@ -57,7 +57,7 @@ export class DropDownsService {
       observable = this.cacheClassCodes$;
     } else {
       let params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
-      this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/class-codes', { params })
+      this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/class-codes', { params })
         .pipe(
           tap(res => this.cacheClassCodes = res),
           share(),
@@ -87,7 +87,7 @@ export class DropDownsService {
     } else if (this.cachePACCodes$) {
       observable = this.cachePACCodes$;
     } else {
-      this.cachePACCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/pac-codes')
+      this.cachePACCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/pac-codes')
         .pipe(
           tap(res => this.cachePACCodes = res),
           share(),
@@ -110,7 +110,7 @@ export class DropDownsService {
     } else if (this.cacheCoverageCodes$) {
       observable = this.cacheCoverageCodes$;
     } else {
-      this.cacheCoverageCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/coverage-codes')
+      this.cacheCoverageCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-codes')
         .pipe(
           tap(res => this.cacheCoverageCodes = res),
           share(),
@@ -133,7 +133,7 @@ export class DropDownsService {
     } else if (this.cacheStates$) {
       observable = this.cacheStates$;
     } else {
-      this.cacheStates$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/states')
+      this.cacheStates$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/states')
         .pipe(
           tap(res => this.cacheStates = res),
           share(),
@@ -202,7 +202,7 @@ export class DropDownsService {
     } else if (this.cacheCarrierCodes$) {
       observable = this.cacheCarrierCodes$;
     } else {
-      this.cacheCarrierCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/carrier-codes')
+      this.cacheCarrierCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/carrier-codes')
         .pipe(
           tap(res => this.cacheCarrierCodes = res),
           share(),
@@ -225,7 +225,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheAuditCodes$) {
       observable = this.cacheAuditCodes$;
     } else {
-      this.cacheAuditCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/audit-codes')
+      this.cacheAuditCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/audit-codes')
         .pipe(
           tap(res => this.cacheAuditCodes = res),
           share(),
@@ -248,7 +248,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheAssumedCarriers$) {
       observable = this.cacheAssumedCarriers$;
     } else {
-      this.cacheAssumedCarriers$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/assumed-carriers')
+      this.cacheAssumedCarriers$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/assumed-carriers')
         .pipe(
           tap(res => this.cacheAssumedCarriers = res),
           share(),
@@ -271,7 +271,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheNyFreeTradeZones$) {
       observable = this.cacheNyFreeTradeZones$;
     } else {
-      this.cacheNyFreeTradeZones$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/ny-free-trade-zones')
+      this.cacheNyFreeTradeZones$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/ny-free-trade-zones')
         .pipe(
           tap(res => this.cacheNyFreeTradeZones = res),
           share(),
@@ -294,7 +294,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheDeregulationIndicators$) {
       observable = this.cacheDeregulationIndicators$;
     } else {
-      this.cacheDeregulationIndicators$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/deregulation-indicators')
+      this.cacheDeregulationIndicators$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/deregulation-indicators')
         .pipe(
           tap(res => this.cacheDeregulationIndicators = res),
           share(),
@@ -317,7 +317,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cachePaymentFrequencies$) {
       observable = this.cachePaymentFrequencies$;
     } else {
-      this.cachePaymentFrequencies$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/payment-frequencies')
+      this.cachePaymentFrequencies$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/payment-frequencies')
         .pipe(
           tap(res => this.cachePaymentFrequencies = res),
           share(),
@@ -340,7 +340,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheRiskTypes$) {
       observable = this.cacheRiskTypes$;
     } else {
-      this.cacheRiskTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/risk-types')
+      this.cacheRiskTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-types')
         .pipe(
           tap(res => this.cacheRiskTypes = res),
           share(),
@@ -386,7 +386,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheTransationTypes$) {
       observable = this.cacheTransationTypes$;
     }else {
-      this.cacheTransationTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/transaction-types')
+      this.cacheTransationTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/transaction-types')
         .pipe(
           tap(res => this.cacheTransationTypes = res),
           share(),
@@ -501,7 +501,7 @@ getAuditCodes(): Observable<Code[]> {
     } else if (this.cacheExposureCodes$) {
       observable = this.cacheExposureCodes$;
     } else {
-      this.cacheExposureCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/exposure-codes')
+      this.cacheExposureCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/exposure-codes')
         .pipe(
           tap(res => this.cacheExposureCodes = res),
           share(),

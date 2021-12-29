@@ -55,7 +55,6 @@ export class EndorsementCoverageComponent implements OnInit {
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
     private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
