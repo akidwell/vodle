@@ -14,7 +14,7 @@ export class JobLoggerService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   postJobLogger(parm: JobLoggerParameter): Observable<JobLoggerResponse> {
-    return this.http.post<JobLoggerResponse>(this.config.apiBaseUrl + 'api/job-logger',parm)
+    return this.http.post<JobLoggerResponse>(this.config.apiBaseUrl + 'api/monitoring/job-logger',parm)
       .pipe(
         tap(data => console.log(JSON.stringify(data)))
       );

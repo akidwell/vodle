@@ -13,7 +13,7 @@ export class SubCodeDefaultsService {
 
   getSubCodeDefaults(programId: number, coverageDescriptionId: number): Observable<SubCodeDefaults> {
     const params = new HttpParams().append('programId', programId).append('coverageDescriptionId', coverageDescriptionId);
-    return this.http.get<SubCodeDefaults>(this.config.apiBaseUrl + 'api/sub-code-defaults', { params })
+    return this.http.get<SubCodeDefaults>(this.config.apiBaseUrl + 'api/lookups/sub-code-defaults', { params })
   }
 
 }
