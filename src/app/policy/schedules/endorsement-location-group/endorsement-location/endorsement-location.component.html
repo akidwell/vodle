@@ -53,7 +53,7 @@
           </div>
           <div *ngIf="!isLoadingAddress">
             <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
-              [clearable]="false" placeholder="Select State" [readonly]="!canEdit || isLoadingAddress"
+              [clearable]="false" [readonly]="!canEdit || isLoadingAddress"
               name="locationState" [required]="canEdit" [(ngModel)]="location.state" #locationState="ngModel">
             </ng-select>
           </div>
