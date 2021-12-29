@@ -6,5 +6,6 @@
     "oktaScopes": ["openid", "profile", "email"],
     "oktaRedirectUri" : "http://localhost:4200/callback",
     "oktaPostLogoutRedirectUri" : "http://localhost:4200/logged-out",
-    "preventForcedRedirect" : false
+    "preventForcedRedirect" : false,
+    "maxPolicyHistorySize" : 5
 }

@@ -11,11 +11,16 @@
   <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1">
   <div *ngFor="let policy of policyHistory">
     <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
-      [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]" (click)="openPolicy()" #policyActive="routerLinkActive">
+      [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]" (mouseover)="hoverFavorite(policy)" (mouseleave)="unhoverFavorite(policy)" (click)="openPolicy()" #policyActive="routerLinkActive">
       <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
       <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
       {{ policy.policyNumber + ":" + policy.endorsementNumber}}
-    </a>  
+      <fa-icon *ngIf="policy.favorite" style="float:right;" title="Unfavorite" [icon]="faSolidStar"
+        (click)="$event.stopPropagation();$event.preventDefault();unfavorite(policy)"></fa-icon>
+      <fa-icon *ngIf="!policy.favorite && policy.hover" style="float:right;" title="Favorite" [icon]="faStar"
+        (click)="$event.stopPropagation();$event.preventDefault();favorite(policy)"></fa-icon>
+      </a>
+
   </div>
   <hr class="rounded mt-1 mb-1">
   <a class='nav-link' (click)="toggleApplicationNavbar()">

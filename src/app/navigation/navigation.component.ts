@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
-import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder , faStar} from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder, faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
-import { PolicyHistory, PolicyHistoryService } from './policy-history.service';
+import { PolicyHistoryService } from './policy-history.service';
 import { RouteReuseStrategy } from '@angular/router';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
+import { PolicyHistory } from './policy-history';
 
 @Component({
   selector: 'rsps-navigation',
@@ -26,13 +28,14 @@ export class NavigationComponent implements OnInit {
   faAngleUp = faAngleUp;
   faFolderOpen = faFolderOpen;
   faFolder = faFolder;
+  faSolidStar = faSolidStar;
   faStar = faStar;
   authSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
-  
+  showFav: boolean = false;
+
   constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
     );
@@ -67,5 +70,19 @@ export class NavigationComponent implements OnInit {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
     this.dropDownService.clearPolicyDropDowns();
+  }
+
+  favorite(policy: PolicyHistory) {
+    policy.favorite = this.currentPolicy.favoritePolicyHistory(policy.policyId, policy.endorsementNumber, true)
+  }
+  unfavorite(policy: PolicyHistory) {
+    policy.favorite = this.currentPolicy.favoritePolicyHistory(policy.policyId, policy.endorsementNumber, false)
+  }
+
+  hoverFavorite(policy: PolicyHistory) {
+    policy.hover = true;
+  }
+  unhoverFavorite(policy: PolicyHistory) {
+    policy.hover = false;
   }
 }
