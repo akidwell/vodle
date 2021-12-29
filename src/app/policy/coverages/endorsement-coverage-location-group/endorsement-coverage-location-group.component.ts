@@ -47,7 +47,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
