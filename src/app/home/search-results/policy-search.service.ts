@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { ConfigService } from 'src/app/config/config.service';
 import { PolicySearchResults } from './policy-search-results';
 
@@ -22,7 +22,11 @@ export class PolicySearchService {
     return this.http.get<PolicySearchResults[]>(this.config.apiBaseUrl + 'api/policies/search', { params })
       .pipe(
         tap(result => this.searchResults.next(result)),
-        tap(() => this._loading$.next(false))
+        tap(() => this._loading$.next(false)),
+        catchError((error) => {
+          this._loading$.next(false);
+          throw (error);
+        })
       );
   }
 }

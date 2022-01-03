@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { PolicyHistoryService } from '../navigation/policy-history.service';
+import { PolicyHistoryService } from '../navigation/policy-history/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';

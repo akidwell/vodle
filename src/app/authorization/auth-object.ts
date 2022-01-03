@@ -5,7 +5,7 @@ export interface IAuthObject {
   aud: string,
   exp: number,
   iss: string,
-  name: string,
-  userid: string,
+  userName: string,
+  id: string,
   valid: string
 }

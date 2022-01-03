@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 
 export class UserAuth {
+  userId: string = "";
   userName: string = "";
   bearerToken: string = "";
   isAuthenticated: boolean = false;
