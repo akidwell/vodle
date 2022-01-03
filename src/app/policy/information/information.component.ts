@@ -27,8 +27,8 @@ export class InformationComponent implements OnInit, PolicySave {
   ngOnInit(): void { }
 
   isValid(): boolean {
-    this.endorsementStatusService.policyInfoValidated = this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
-    return this.policyInfoComp.policyInfoForm.status == 'VALID' && this.accountInfoComp.accountInfoForm.status == 'VALID';
+    this.endorsementStatusService.policyInfoValidated =  this.policyInfoComp.isValid() && this.accountInfoComp.accountInfoForm.status == 'VALID';
+    return this.policyInfoComp.isValid() && this.accountInfoComp.accountInfoForm.status == 'VALID';
   }
 
   isDirty(): boolean {
@@ -65,6 +65,12 @@ export class InformationComponent implements OnInit, PolicySave {
       for (let error of invalid) {
         this.invalidMessage += "<br><li>" + error;
       }
+    }
+    if (this.policyInfoComp.ErrorMessages().length > 0) {
+      this.showInvalid = true;
+      this.policyInfoComp.ErrorMessages().forEach(error => {
+        this.invalidMessage += "<br><li>" + error;
+      }); 
     }
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;

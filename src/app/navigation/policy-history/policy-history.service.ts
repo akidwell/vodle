@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ConfigService } from '../config/config.service';
+import { ConfigService } from '../../config/config.service';
 import { newPolicyHistory, PolicyHistory } from './policy-history';
 
 @Injectable({
@@ -61,7 +61,7 @@ export class PolicyHistoryService {
             const data: PolicyHistory[] = JSON.parse(currentPolicy);
             if (data != null) {
                 this._policyHistory.next(data.sort((a, b) =>
-                    Number(b.favorite) - Number(a.favorite) || new Date(b.openDate).getTime() - new Date(a.openDate).getTime()
+                    Number(b.favorite ?? 0) - Number(a.favorite ?? 0) || new Date(b.openDate).getTime() - new Date(a.openDate).getTime()
                 ));
             }
         }

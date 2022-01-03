@@ -4,11 +4,11 @@ import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faF
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
-import { PolicyHistoryService } from './policy-history.service';
+import { PolicyHistoryService } from './policy-history/policy-history.service';
 import { RouteReuseStrategy } from '@angular/router';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
-import { PolicyHistory } from './policy-history';
+import { PolicyHistory } from './policy-history/policy-history';
 
 @Component({
   selector: 'rsps-navigation',
@@ -19,7 +19,6 @@ export class NavigationComponent implements OnInit {
   reportNavbarOpen = false;
   applicationNavbarOpen = false;
   isAuthenticated: boolean = false;
-  userName: string | undefined;
   faFileAlt = faFileAlt;
   faFileImport = faFileImport;
   faHome = faHome;

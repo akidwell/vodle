@@ -88,7 +88,8 @@ export class AuthService {
 
   processAuthClaims(token: IAuthObject) {
     console.log(token);
-    this.userAuth.userName = token.name;
+    this.userAuth.userId = token.id;
+    this.userAuth.userName = token.userName;
     this.userAuth.isAuthenticated = token.valid == 'True';
     this.userAuth.canExecuteImport = token.CanExecuteImport == 'True';
     this.userAuth.isApiAuthenticated = token.valid == 'True';

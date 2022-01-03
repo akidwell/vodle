@@ -5,7 +5,7 @@ import { CustomReuseStrategy } from 'src/app/app-reuse-strategy';
 import { PolicySearchResults } from './policy-search-results';
 import { PolicySearchService } from './policy-search.service';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { PolicyHistoryService } from 'src/app/navigation/policy-history.service';
+import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 
 @Component({
@@ -32,8 +32,7 @@ export class SearchResultsComponent implements OnInit {
     this.loadingSub = this.policySearchService.loading$.subscribe({
       next: results => {
         this.loading = results;
-      },
-      // error: err => this.errorMessage = err
+      }
     });
 
     this.searchSub = this.policySearchService.searchResults.subscribe({
