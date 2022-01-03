@@ -108,7 +108,7 @@
             </div>
             <div class="col-lg-1">
               <label for="pacCode">PAC</label>
-              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
+              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac" [searchFn]="dropDownSearch"
                 bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
                 <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
@@ -160,7 +160,7 @@
             <div class="col-lg-4">
               <label for="coverageCode">Coverage Code </label>
               <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
-                [required]="canEdit" bindValue="code" [clearable]="false"
+                [required]="canEdit" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.code}} - {{item.description}}
@@ -236,7 +236,7 @@
               <label for="assumedCarrier">Assumed Carrier</label>
               <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
                 [required]="checkAssumed() && canEditPolicy" bindValue="code" [clearable]="false" appendTo="body"
-                [readonly]="!canEdit" [(ngModel)]="policyInfo.assumedCarrier"
+                [readonly]="!canEdit" [(ngModel)]="policyInfo.assumedCarrier" [searchFn]="dropDownSearch"
                 name="assumedCarrier">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.description}}
