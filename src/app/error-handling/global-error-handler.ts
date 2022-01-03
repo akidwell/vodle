@@ -83,8 +83,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     xml += "<UserName>" + userName + "</UserName>";
     xml += "<Role>" + userRole + "</Role>";
     if (errorResponse != null) {
-      xml += "<RequestUrl>" + errorResponse.url + "</RequestUrl>";
       xml += "<Code>" + errorResponse.status + "</Code>";
+      xml += "<RequestUrl>" + errorResponse.url + "</RequestUrl>";
       xml += "<ErrorTitle>" + errorResponse.error.title + "</ErrorTitle>";
       for (const property in errorResponse.error.errors) {
         if (errorResponse.error.errors.hasOwnProperty(property)) {
