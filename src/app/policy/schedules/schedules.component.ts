@@ -108,12 +108,6 @@ export class SchedulesComponent implements OnInit, PolicySave {
 
   collapseAllLocations(): void {
     this.updatePolicyChild.collapseEndorsementLocations();
-    console.log('collapse')
-  }
-
-  expandAllLocations(): void {
-    // Not sure if we need this
-    console.log('expand')
   }
 
 }

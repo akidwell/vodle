@@ -12,7 +12,7 @@ export class ReportsService {
     constructor(private http: HttpClient, private config: ConfigService) { }
 
     getReports(): Observable<IReport[]> {
-        return this.http.get<IReport[]>(this.config.apiBaseUrl + 'api/reports');
+        return this.http.get<IReport[]>(this.config.apiBaseUrl + 'api/lookups/reports');
     }
 
 }

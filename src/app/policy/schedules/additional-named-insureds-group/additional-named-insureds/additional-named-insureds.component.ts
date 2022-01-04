@@ -46,7 +46,6 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService, private policyService: PolicyService, private modalService: NgbModal, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );

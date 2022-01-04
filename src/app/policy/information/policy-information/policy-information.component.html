@@ -108,7 +108,7 @@
             </div>
             <div class="col-lg-1">
               <label for="pacCode">PAC</label>
-              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac"
+              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac" [searchFn]="dropDownSearch"
                 bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
                 <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
@@ -160,7 +160,7 @@
             <div class="col-lg-4">
               <label for="coverageCode">Coverage Code </label>
               <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
-                [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Coverage"
+                [required]="canEdit" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.code}} - {{item.description}}
@@ -183,21 +183,21 @@
             <div class="col-lg-1">
               <label for="riskGradeCode">Risk Grade</label>
               <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
-                [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Risk Grade"
+                [required]="canEdit" bindValue="code" [clearable]="false"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
               </ng-select>
             </div>
             <div class="col-lg-2">
               <label for="auditCode">Audit Code</label>
               <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
-                [required]="canEdit" [clearable]="false" placeholder="Select Audit Code" [readonly]="!canEdit"
+                [required]="canEdit" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.auditCode" name="auditCode">
               </ng-select>
             </div>
             <div class="col-lg-2">
               <label for="paymentFrequency">Payment Frequency</label>
               <ng-select id="paymentFrequency" [items]="paymentFrequencies$ | async" bindLabel="description"
-                [required]="canEdit" bindValue="code" [clearable]="false" placeholder="Select Payment Freq."
+                [required]="canEdit" bindValue="code" [clearable]="false"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
               </ng-select>
             </div>
@@ -209,14 +209,14 @@
             <div class="col-lg-3">
               <label for="deregulationIndicator">Deregulation Indictor</label>
               <ng-select id="deregulationIndicator" [items]="deregulationIndicators$ | async" bindLabel="description"
-                bindValue="code" [clearable]="false" placeholder="Select Indicator" [readonly]="!canEdit"
+                bindValue="code" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.deregulationIndicator" name="deregulationIndicator">
               </ng-select>
             </div>
             <div class="col-lg-3">
               <label for="riskType">Risk Type</label>
               <ng-select id="riskType" [items]="riskTypes$ | async" bindLabel="description" bindValue="code"
-                [required]="canEdit" [clearable]="false" placeholder="Select Risk Type" [readonly]="!canEdit"
+                [required]="canEdit" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.riskType" name="riskType">
               </ng-select>
             </div>
@@ -229,14 +229,14 @@
               <label for="NYFTZ">NY Free Trade Zone</label>
               <ng-select id="NYFTZ" [items]="nyFreeTradeZones$ | async" bindLabel="description"
                 [required]="checkDereg() && canEditPolicy" bindValue="code" [clearable]="false"
-                placeholder="Select NYFTZ" [readonly]="!canEdit" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
+                [readonly]="!canEdit" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
               </ng-select>
             </div>
             <div class="col-lg-3" *ngIf="checkAssumed()">
               <label for="assumedCarrier">Assumed Carrier</label>
               <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
                 [required]="checkAssumed() && canEditPolicy" bindValue="code" [clearable]="false" appendTo="body"
-                placeholder="Select Carrier" [readonly]="!canEdit" [(ngModel)]="policyInfo.assumedCarrier"
+                [readonly]="!canEdit" [(ngModel)]="policyInfo.assumedCarrier" [searchFn]="dropDownSearch"
                 name="assumedCarrier">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.description}}

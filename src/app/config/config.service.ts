@@ -49,4 +49,7 @@ export class ConfigService {
   get preventForcedRedirect(): string {
     return this.appConfig.preventForcedRedirect;
   }
+  get maxPolicyHistorySize(): number {
+    return this.appConfig.maxPolicyHistorySize;
+  }
 }
