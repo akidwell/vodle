@@ -5,5 +5,6 @@ export interface ReinsuranceLookup {
     treatyName: string,
     cededCommissionRate: number,
     layerNumber: number,
-    isDefault: boolean
+    isDefault: boolean, 
+    maxLayerLimit: number
 }
