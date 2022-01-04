@@ -29,7 +29,6 @@ export class AccountInformationComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );

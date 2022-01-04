@@ -24,7 +24,7 @@
     <div class="col-lg-2">
       <label for="transactionType">Transaction Type</label><br>
       <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="key"
-        [required]="canEdit && canEditTransactionType" [clearable]="false" placeholder="Select Transaction Type" [searchFn]="dropDownSearch"
+        [required]="canEdit && canEditTransactionType" [clearable]="false" [searchFn]="dropDownSearch"
         [readonly]="!canEdit || !canEditTransactionType" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
         <ng-template ng-label-tmp let-item="item">
           {{item.key}} - {{item.description}}
@@ -61,7 +61,7 @@
     <div class="col-lg-1">
       <label for="terrorism">Terrorism</label>
       <ng-select id="terrorism" [items]="terrorismCodes$ | async" bindLabel="description" bindValue="code"
-        [required]="canEdit" [clearable]="false" placeholder="Select Terrorism" [searchFn]="dropDownSearch"
+        [required]="canEdit" [clearable]="false" [searchFn]="dropDownSearch"
         [readonly]="!canEdit" [(ngModel)]="endorsement.terrorismCode" name = "terrorism">
         <ng-template ng-label-tmp let-item="item">
           {{item.code}}

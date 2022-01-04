@@ -13,6 +13,6 @@ export class LineItemDescriptionsService {
 
   getLineItemDescriptions(state: string, effectiveDate: Date): Observable<LineItemDescription[]> {
     const params = new HttpParams().append('state', state).append('effectiveDate', effectiveDate.toString());
-    return this.http.get<LineItemDescription[]>(this.config.apiBaseUrl + 'api/line-item-descriptions', { params })
+    return this.http.get<LineItemDescription[]>(this.config.apiBaseUrl + 'api/lookups/line-item-descriptions', { params })
   }
 }

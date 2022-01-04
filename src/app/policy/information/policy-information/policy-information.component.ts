@@ -10,6 +10,7 @@ import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from '../../policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -45,10 +46,14 @@ export class PolicyInformationComponent implements OnInit {
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 
+  isPolicyEffectiveDateInvalid: boolean = false;
+  PolicyEffectiveDateError: string = "";
+  isPolicyExpirationDateInvalid: boolean = false;
+  PolicyExpirationDateError: string = "";
+
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -82,6 +87,29 @@ export class PolicyInformationComponent implements OnInit {
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.statusSub?.unsubscribe();
+  }
+
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
+  
+  isValid(): boolean {
+    const effectiveDate = Number(this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd'));
+    const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
+
+    return effectiveDate < expirationDate && this.policyInfoForm.status == 'VALID';
+  }
+
+  ErrorMessages(): string[] {
+    const effectiveDate = Number(this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd'));
+    const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
+    const errorMessages: string[] = [];
+
+    if (effectiveDate >= expirationDate) {
+      errorMessages.push("Expiration Date must be after the Effective Date");
+    }
+    return errorMessages;
   }
 
   save(): boolean {

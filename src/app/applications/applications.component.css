@@ -1,14 +1,18 @@
 .nav-link {
   cursor: pointer;
-  font-size: 90%;
   color: white;
   width: 200px;
   background-color: #335271;
   text-decoration: none;
+  padding-right: 0;
+  padding-left: 10px;
+  margin: 2px;
+  border-radius: 16px;
 }
 
 .sidebar a:hover {
   text-decoration: none;
   color: black;
-  background-color: #ccd4dc;
+  background-color: white; 
+  font-weight: bold;
 }

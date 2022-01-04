@@ -196,7 +196,6 @@ export class PolicyLayerGroupComponent implements OnInit {
     }
     else {
       this.reinsuranceLayerNo = Math.max(...this.policyLayerData.reinsuranceData.map(o => o.reinsLayerNo)) + 1;
-      console.log(this.policyLayerData.reinsuranceData)
       return this.reinsuranceLayerNo;
     }
   }
