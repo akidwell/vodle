@@ -12,13 +12,13 @@
 }
 
 body {
-  width: calc(100% - 200px);
-  margin-left: 200px;
+  width: calc(100% - 205px);
+  margin-left: 205px;
   padding-top: 48px;
   font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
     sans-serif;
   background-color: #f2f4f6;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .content-fluid {

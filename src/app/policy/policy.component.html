@@ -1,5 +1,5 @@
 <rsps-policy-header></rsps-policy-header>
-<div class='content-fluid'>
+<div class="navToolbar">
   <ul class="nav nav-tabs nav-fill">
     <li class="nav-item">
       <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Policy Info{{isPolicyValidated || !canEditPolicy ? '' : '*'}}</a>
@@ -17,6 +17,8 @@
       <a class="nav-link" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
     </li>
   </ul>
+</div>
+<div class='content-fluid'>
   <router-outlet></router-outlet>
 </div>
 <app-notification aria-live="polite" aria-atomic="true"></app-notification>

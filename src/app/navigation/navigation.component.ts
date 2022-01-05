@@ -9,6 +9,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
 import { PolicyHistory } from './policy-history/policy-history';
+import { ReinsuranceLookupService } from '../policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 
 @Component({
   selector: 'rsps-navigation',
@@ -34,7 +35,7 @@ export class NavigationComponent implements OnInit {
   policySub!: Subscription;
   showFav: boolean = false;
 
-  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService) {
+  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
     );
@@ -69,6 +70,7 @@ export class NavigationComponent implements OnInit {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
     this.dropDownService.clearPolicyDropDowns();
+    this.reinsuranceLookupService.clearReinsuranceCodes();
   }
 
   favorite(policy: PolicyHistory) {

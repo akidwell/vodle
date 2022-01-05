@@ -14,6 +14,7 @@ import { State } from './interfaces/state';
 import { SearchResult } from './interfaces/search-result';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
+import { ReinsuranceLookupService } from '../policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 
 
 function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
@@ -87,7 +88,7 @@ export class ImportComponent implements OnInit {
     return of({policies, total});
   }
 
-  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe,private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService) { 
+  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe,private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) { 
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       switchMap(() => this._search()),
@@ -140,6 +141,7 @@ export class ImportComponent implements OnInit {
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
       (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
       this.dropDownService.clearPolicyDropDowns();
+      this.reinsuranceLookupService.clearReinsuranceCodes();
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {
