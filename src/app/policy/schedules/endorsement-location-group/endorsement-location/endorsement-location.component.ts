@@ -46,7 +46,6 @@ export class EndorsementLocationComponent implements OnInit {
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private modalService: NgbModal, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
-    // GAM - TEMP -Subscribe
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );

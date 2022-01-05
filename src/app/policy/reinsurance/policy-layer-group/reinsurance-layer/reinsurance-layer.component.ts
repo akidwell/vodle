@@ -164,7 +164,6 @@ export class ReinsuranceLayerComponent implements OnInit {
     });
   }
   async deleteReinsuranceLayer() {
-    console.log(this.policyLayerData)
     if (this.reinsuranceLayer.isNew) {
       this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
     } else if (this.index !== 0 || (this.index == 0 && this.policyLayerData.reinsuranceData.length > 1)) {

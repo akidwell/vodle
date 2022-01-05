@@ -14,6 +14,7 @@ import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.componen
 import { PolicyIssuanceRequest } from '../policy-issuance-service/policy-issuance-request';
 import { PolicyIssuanceService } from '../policy-issuance-service/policy-issuance.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -43,7 +44,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
   @ViewChild('modalPipe') modalPipe: any;
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal,private errorDialogService: ErrorDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -228,7 +229,13 @@ export class InvoiceGroupComponent implements OnInit {
           this.showInvoiceNotSaved();
           return false;
         }
-      });
+      },
+      (error) => {
+        console.log(error.message);
+        this.showInvoiceNotSaved();
+        this.errorDialogService.open("Invoice Save Error", error.error.Message);
+        return false;
+    });
   }
 
   private markPristine() {
@@ -248,7 +255,7 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   private showInvoiceNotSaved(): void {
-    this.notification.show('Invoice Saved.', { classname: 'bg-success text-light', delay: 5000 });
+    this.notification.show('Invoice Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   private refresh() {

@@ -8,6 +8,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ErrorDialogComponent implements OnInit {
   public errorMessage: string = "";
+  public title: string = "Error!";
   
   constructor(public activeModal: NgbActiveModal) { }
 

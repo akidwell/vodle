@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ConfigService } from 'src/app/config/config.service';
 import { ReinsuranceLookup } from './reinsurance-lookup';
 
@@ -14,21 +13,11 @@ export class ReinsuranceLookupService {
 
   getReinsurance(programId: number,effectiveDate: Date): Observable<ReinsuranceLookup[]> {
     const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDate.toString());;
-    return this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/reinsurance-lookup', { params })
-      // .pipe(
-      //   catchError(() => {
-      //     return of(null);
-      //   }))
-      ;
+    return this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/lookups/reinsurance-agreements', { params });
   }
 
   getFaculativeReinsurance(effectiveDate: Date): Observable<ReinsuranceLookup[]> {
     const params = new HttpParams().append('effectiveDate', effectiveDate.toString());;
-    return this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/reinsurance-lookup/faculative', { params })
-      // .pipe(
-      //   catchError(() => {
-      //     return of(null);
-      //   }))
-      ;
+    return this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/lookups/faculative-agreements', { params });
   }
 }

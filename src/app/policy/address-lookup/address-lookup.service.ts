@@ -14,7 +14,7 @@ export class AddressLookupService {
 
   getAddress(zipCode: string): Observable<AddressLookup | null> {
     const params = new HttpParams().append('zipCode', zipCode);
-    return this.http.get<AddressLookup>(this.config.apiBaseUrl + 'api/address-lookup', { params })
+    return this.http.get<AddressLookup>(this.config.apiBaseUrl + 'api/lookups/address-lookup', { params })
       .pipe(
         catchError(() => {
           return of(null);

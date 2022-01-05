@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { PolicyHistoryService } from '../navigation/policy-history.service';
+import { PolicyHistoryService } from '../navigation/policy-history/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
@@ -292,8 +292,6 @@ export class InvoiceResolver implements Resolve<InvoiceResolved> {
             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
             return of({ invoicesData: null, error: message });
         }
-
-        console.log("invoice get");
         return this.policyService.getPolicyInvoices(Number(id), Number(end))
             .pipe(
                 map(invoicesData => ({ invoicesData })),
