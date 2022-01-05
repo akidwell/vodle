@@ -24,6 +24,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   faAngleUp = faAngleUp;
   authSub: Subscription;
   canEditPolicy: boolean = false;
+  setLocationOnInit: boolean = false;
   formStatus!: string;
   anchorId!: string;
   locationCollapsed: boolean = true;
@@ -92,7 +93,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
     if (this.locationIndex == 0) {
@@ -102,6 +103,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     if (this.endorsementCoveragesGroup.coverages[0]?.isNew) {
       this.collapsePanel(false);
     }
+    this.checkIfLocationEmptyAddFromRiskLocation(this.endorsementCoveragesGroup);
   }
 
   ngAfterViewInit() {
@@ -123,7 +125,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
-  
+
   async openLocation(location: EndorsementCoveragesGroup) {
     if (this.locationComponent != null) {
       var result = await this.locationComponent.open(location, this);
@@ -133,7 +135,14 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     }
     return false;
   }
-
+  checkIfLocationEmptyAddFromRiskLocation(group: EndorsementCoveragesGroup){
+    if (!group.location.city && !group.location.state && !group.location.zip) {
+      group.location.city = this.policyInfo.riskLocation.city;
+      group.location.state = this.policyInfo.riskLocation.state;
+      group.location.zip = this.policyInfo.riskLocation.zip;
+      this.setLocationOnInit = true;
+    }
+  }
   isValid(): boolean {
     if (this.components != null) {
       for (let child of this.components) {
@@ -148,7 +157,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   isDirty() {
     if (this.components != null) {
       for (let child of this.components) {
-        if (child.endorsementCoveragesForm.dirty) {
+        if (child.endorsementCoveragesForm.dirty || this.setLocationOnInit) {
           return true;
         }
       }
@@ -188,7 +197,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     }
     this.locationCollapsed = action;
   }
-  
+
   async addComponent(coverage: any, focus: boolean) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(EndorsementCoverageComponent);
     const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
