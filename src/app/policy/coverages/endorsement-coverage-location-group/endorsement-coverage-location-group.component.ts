@@ -158,6 +158,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     if (this.components != null) {
       for (let child of this.components) {
         if (child.endorsementCoveragesForm.dirty || this.setLocationOnInit) {
+          this.setLocationOnInit = false;
           return true;
         }
       }
