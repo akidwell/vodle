@@ -81,23 +81,23 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
   get canSave(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   get canPost(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   get canVoid(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   get canExport(): boolean {
-    return this.invoice != null && ((this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == "P") && this.canEditPolicy
+    return this.invoice != null && ((this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == "P") && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   get canAddDetail(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   get showFooter(): boolean {
@@ -332,7 +332,7 @@ export class InvoiceGroupComponent implements OnInit {
       }
     }
     this.invalidMessage = "";
-    // Compile all invalide controls in a list
+    // Compile all invalid controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
       for (let error of invalid) {

@@ -11,7 +11,7 @@
       </div>
       <div class="col-md">
         <label for="street">Address Street 1</label>
-        <input type="text" class="form-control" id="street" [readonly]="!canEdit" [required]="canEdit"
+        <input type="text" class="form-control" id="street" [readonly]="!canEdit"
           maxlength="40" [(ngModel)]="location.street" name="street" #street="ngModel">
       </div>
       <div class="col-md">

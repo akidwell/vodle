@@ -58,9 +58,9 @@ export class SummaryComponent implements OnInit {
     const policyInfoValidated = this.endorsementStatusService.policyInfoValidated;
     const coveragesValidated = this.endorsementStatusService.coverageValidated;
     const reinsuranceValidated = this.endorsementStatusService.reinsuranceValidated;
-    if (this.canEditPolicy && this.invoices.length == 0 && (!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
+    if (this.canEditPolicy && (!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
       this.showInvalid = true;
-      this.invalidMessage = "Unable to create invoice at this time";
+      this.invalidMessage = "Unable to create/edit invoice at this time";
       if (!policyInfoValidated) {
         this.invalidMessage += "<br><li> Policy Info needs to be validated";
       }

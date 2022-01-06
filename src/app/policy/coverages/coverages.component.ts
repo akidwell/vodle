@@ -11,6 +11,7 @@ import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesG
 import { EndorsementHeaderComponent } from './endorsement-header/endorsement-header.component';
 import { UpdatePolicyChild } from '../services/update-child.service';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
+import { NotificationService } from 'src/app/notification/notification-service';
 
 @Component({
   selector: 'rsps-coverages',
@@ -27,12 +28,11 @@ export class CoveragesComponent implements OnInit, PolicySave {
   showInvalid: boolean = false;
   coveragesSequence!: number;
   coveragesSub!: Subscription;
-  notification: any;
   endorsementNumber!: number;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
