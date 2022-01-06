@@ -169,11 +169,12 @@ export class ReinsuranceComponent implements OnInit {
     let totalPrem: number = 0;
     let totalLimit: number = 0;
     let subAttachmentpoints = false;
-
+    let insuringAgreements = false;
     if (this.canEdit) {
       this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium?.toString() == "" ? 0 : layer.reinsCededPremium ?? 0 }) });
       this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0 }) });
       subAttachmentpoints = this.checkSubAttachmentPoints()
+      insuringAgreements = this.checkAgreementLimits()
 
       if (this.components != null) {
         for (let child of this.components) {
@@ -184,7 +185,7 @@ export class ReinsuranceComponent implements OnInit {
         }
       }
       const totalMatches =  this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
-      this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints;
+      this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements;
 
       this.endorsementStatusService.reinsuranceValidated = totalMatches;
       return totalMatches;
