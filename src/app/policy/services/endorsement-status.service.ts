@@ -50,6 +50,10 @@ export class EndorsementStatusService {
     }
   }
 
+  isValidated(): boolean {
+    return this.policyInfoValidated && this.reinsuranceValidated && this.coverageValidated;
+  }
+
   constructor(private userAuth: UserAuth, private http: HttpClient, private config: ConfigService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy

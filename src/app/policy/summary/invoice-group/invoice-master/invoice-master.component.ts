@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { InvoiceData } from '../../invoice';
 
 @Component({
@@ -16,7 +17,7 @@ export class InvoiceMasterComponent implements OnInit {
   @Input() public invoice!: InvoiceData;
   @ViewChild(NgForm, { static: false }) invoiceMasterForm!: NgForm;
 
-  constructor(private userAuth: UserAuth) {
+  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -30,7 +31,7 @@ export class InvoiceMasterComponent implements OnInit {
   }
 
   get canEditComment(): boolean {
-    return (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+    return (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
 }

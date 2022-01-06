@@ -4,7 +4,7 @@ import { faAngleDown, faAngleUp, faTrashAlt } from '@fortawesome/free-solid-svg-
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
-import { Endorsement, newReinsuranceLayer,  PolicyLayerData, ReinsuranceLayerData } from '../../policy';
+import { Endorsement, PolicyLayerData, ReinsuranceLayerData } from '../../policy';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { ReinsuranceLayerComponent } from './reinsurance-layer/reinsurance-layer.component';
 
@@ -18,26 +18,20 @@ export class PolicyLayerGroupComponent implements OnInit {
   isReadOnly: boolean = true;
   canEditPolicy: boolean = false;
   authSub: Subscription;
-  canEditTransactionType: boolean = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   policyLayerCollapsed = false;
   policyLayer!: PolicyLayerData[];
-  newReinsuranceLayer!: ReinsuranceLayerData;
   endorsementNumber!: number;
   policyId!: number;
-  policyLayerNo!: number;
-  reinsuranceLayerNo!: number;
   faTrashcan = faTrashAlt;
   updateSub!: Subscription;
-  newPolicyLayer!: PolicyLayerData;
-  newReinsurance!: ReinsuranceLayerData;
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
 
   @Input() index!: number;
   @Input() policyLayerData!: PolicyLayerData;
-  @Output() existingPl: EventEmitter<number> = new EventEmitter();
+  @Output() addReinsurance: EventEmitter<PolicyLayerData> = new EventEmitter();
   @ViewChild(ReinsuranceLayerComponent) reinsComp!: ReinsuranceLayerComponent;
   @ViewChildren(ReinsuranceLayerComponent) components!: QueryList<ReinsuranceLayerComponent>;
 
@@ -51,7 +45,7 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.endorsement = data['endorsementData'].endorsement;
       this.policyLayer = data['policyLayerData'].policyLayer;
-      this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
+      // this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
     });
@@ -77,6 +71,7 @@ export class PolicyLayerGroupComponent implements OnInit {
       this.policyLayerData.reinsuranceData.splice(reinsuranceindex, 1);
       this.policyLayer.forEach(x=> x.reinsuranceData.forEach((value, index)=>{  value.reinsLayerNo = index + 1}));
       if (!existingReinsuranceLayer.isNew) {
+        this.endorsementStatusService.reinsuranceValidated = false;
         this.notification.show('Reinsurance Layer deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
     }
@@ -88,10 +83,13 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   deleteExistingPolicyLayer(existingPolicyLayer: number){
+    if (!this.policyLayer[existingPolicyLayer].isNew) {
+      this.endorsementStatusService.reinsuranceValidated = false;
+      this.notification.show('Policy and Reinsurance Layers deleted.', { classname: 'bg-success text-light', delay: 5000 });
+    }
     this.policyLayer.splice(existingPolicyLayer, 1);
     this.policyLayer.forEach((value, index) =>{  value.policyLayerNo = index + 1 });
     this.policyLayer.forEach(x=> x.reinsuranceData.forEach((value)=>{  value.policyLayerNo = x.policyLayerNo}));
-    this.notification.show('Policy and Reinsurance Layers deleted.', { classname: 'bg-success text-light', delay: 5000 });
   }
 
   isValid(): boolean {
@@ -157,57 +155,6 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   addNewReinsuranceLayer(): void {
-    this.existingPl.emit(this.policyLayerData.policyLayerNo)
-    this.reinsuranceLayerNo = this.getNextReinsuranceLayerSequence();
-    this.newReinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayerNo);
-    this.policyLayerData.reinsuranceData.push(this.newReinsuranceLayer)
-  }
-
-  addNewPolicyLayer(): void {
-    this.newPolicyLayer = this.createNewPolicyLayer();
-    this.newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerNo, 1);
-    this.newPolicyLayer.reinsuranceData.push(this.newReinsurance)
-    this.policyLayer.push(this.newPolicyLayer);
-  }
-
-  createNewPolicyLayer(): PolicyLayerData {
-    return {
-      policyId: this.policyId,
-      endorsementNo: this.endorsementNumber,
-      policyLayerNo: this.getNextPolicyLayerSequence(),
-      policyLayerAttachmentPoint: undefined,
-      policyLayerLimit: undefined,
-      policyLayerPremium: undefined,
-      invoiceNo: null,
-      copyEndorsementNo: null,
-      endType: null,
-      transCode: null,
-      transEffectiveDate: null,
-      transExpirationDate: null,
-      reinsuranceData: [],
-      isNew: true
-    }
-  }
-  
-  getNextReinsuranceLayerSequence(): number {
-    if (this.policyLayerData.reinsuranceData.length == 0) {
-      this.reinsuranceLayerNo = 1
-      return this.reinsuranceLayerNo;
-    }
-    else {
-      this.reinsuranceLayerNo = Math.max(...this.policyLayerData.reinsuranceData.map(o => o.reinsLayerNo)) + 1;
-      return this.reinsuranceLayerNo;
-    }
-  }
-
-  getNextPolicyLayerSequence(): number {
-    if (this.policyLayer.length == 0) {
-      this.policyLayerNo = 1
-      return this.policyLayerNo;
-    }
-    else {
-      this.policyLayerNo = Math.max(...this.policyLayer.map(o => o.policyLayerNo)) + 1;
-      return this.policyLayerNo;
-    }
+    this.addReinsurance.emit(this.policyLayerData)
   }
 }

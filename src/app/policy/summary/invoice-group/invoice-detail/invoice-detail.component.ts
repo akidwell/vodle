@@ -7,6 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { PolicyInformation } from 'src/app/policy/policy';
 import { PolicyService } from 'src/app/policy/policy.service';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { InvoiceData, InvoiceDetail } from '../../invoice';
 import { LineItemDescription } from '../invoice-detail/line-item-descriptions-service/line-item-description';
 import { LineItemDescriptionsService } from '../invoice-detail/line-item-descriptions-service/line-item-descriptions.service';
@@ -32,7 +33,7 @@ export class InvoiceDetailComponent implements OnInit {
   @ViewChild('modalConfirmation') modalConfirmation: any;
   @ViewChild(NgForm, { static: false }) invoiceDetailForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private lineItemDescriptionsService: LineItemDescriptionsService, private modalService: NgbModal, private policyService: PolicyService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private lineItemDescriptionsService: LineItemDescriptionsService, private modalService: NgbModal, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -94,7 +95,7 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   get canEditDetail(): boolean {
-    return this.invoiceDetail != null && this.invoiceDetail.lineNumber > 1 && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.canEditPolicy
+    return this.invoiceDetail != null && this.invoiceDetail.lineNumber > 1 && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   changeFeeAmount(event: any): void {

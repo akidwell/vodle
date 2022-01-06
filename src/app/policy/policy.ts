@@ -166,13 +166,32 @@ export interface PolicyLayerData {
   reinsuranceData: ReinsuranceLayerData[];
 }
 
+export const newPolicyLayer = (policyId: number, endorsementNumber: number, policyLayerNo: number): PolicyLayerData => {
+  return {
+    policyId: policyId,
+    endorsementNo: endorsementNumber,
+    policyLayerNo: policyLayerNo,
+    policyLayerAttachmentPoint: undefined,
+    policyLayerLimit: undefined,
+    policyLayerPremium: undefined,
+    invoiceNo: null,
+    copyEndorsementNo: null,
+    endType: null,
+    transCode: null,
+    transEffectiveDate: null,
+    transExpirationDate: null,
+    reinsuranceData: [],
+    isNew: true
+  }
+}
+
 export interface ReinsuranceLayerData{
   policyId: number;
   endorsementNumber: number;
   policyLayerNo: number;
   reinsLayerNo: number;
   reinsLimit: number;
-  reinsCededPremium: number;
+  reinsCededPremium: number | null;
   reinsCededCommRate: number;
   treatyType: string | null;
   treatyNo?: number| null;
@@ -210,7 +229,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     policyLayerNo: policyLayerNo,
     reinsLayerNo!: reinsLayerNo,
     reinsLimit: 0,
-    reinsCededPremium: 0,
+    reinsCededPremium: null,
     reinsCededCommRate: 0,
     treatyType: null,
     treatyNo: undefined,

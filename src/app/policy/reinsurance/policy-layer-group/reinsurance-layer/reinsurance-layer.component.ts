@@ -66,20 +66,6 @@ export class ReinsuranceLayerComponent implements OnInit {
       this.endorsement = data['endorsementData'].endorsement;
       await this.populateReinsuranceCodes();
       this.populateReinsuranceFacCodes();
-
-      if (this.reinsuranceLayer.isNew) {
-        if (this.reinsuranceLayer.policyLayerNo == 1 && this.reinsuranceLayer.reinsLayerNo == 1) {
-          this.reinsuranceLayer.attachmentPoint = this.endorsement.attachmentPoint;
-        }
-        let match: any = null;
-        if (this.reinsuranceLayer.reinsLayerNo == 1) {
-          match = this.reinsuranceCodes.find(c => c.layerNumber == this.reinsuranceLayer.policyLayerNo && c.isDefault);
-          if (match != null) {
-            this.reinsuranceLayer.treatyNo = match?.treatyNumber;
-            this.reinsuranceLayer.reinsCededCommRate = match?.cededCommissionRate ?? 0;
-          }
-        }
-      }
     });
   }
 

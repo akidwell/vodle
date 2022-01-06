@@ -1,11 +1,10 @@
-import { Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
-import { newReinsuranceLayer, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../policy';
+import { Endorsement, newPolicyLayer, newReinsuranceLayer, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../policy';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
 import { PolicyLayerGroupComponent } from './policy-layer-group/policy-layer-group.component';
-import { ReinsuranceLayerComponent } from './policy-layer-group/reinsurance-layer/reinsurance-layer.component';
 import { PolicyLayerHeaderComponent } from './policy-layer-header/policy-layer-header.component';
 import { ReinsuranceLookup } from './reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from './reinsurance-lookup/reinsurance-lookup.service';
@@ -20,13 +19,9 @@ export class ReinsuranceComponent implements OnInit {
   policyLayerData!: PolicyLayerData[];
   canEditPolicy: boolean = false;
   authSub: Subscription;
-  canEditTransactionType: boolean = false;
   updateSub!: Subscription;
-  policyLayer!: PolicyLayerData[];
   endorsementNumber!: number;
   policyId!: number;
-  newPolicyLayer!: PolicyLayerData;
-  newReinsurance!: ReinsuranceLayerData;
   showInvalid: boolean = false;
   invalidMessage: string = "";
   statusSub!: Subscription;
@@ -38,11 +33,9 @@ export class ReinsuranceComponent implements OnInit {
   reinsuranceFacCodes$: Observable<ReinsuranceLookup[]> | undefined;
   reinsuranceFacCodes!: ReinsuranceLookup[];
   policyInfo!: PolicyInformation;
-
+  endorsement!: Endorsement;
   
-  @Output() addNewPolicyLayers: EventEmitter<string> = new EventEmitter();
   @ViewChild(PolicyLayerGroupComponent) policyLayerGroup!: PolicyLayerGroupComponent;
-  @ViewChild(ReinsuranceLayerComponent) reinsLayerComp!: ReinsuranceLayerComponent;
   @ViewChild(PolicyLayerHeaderComponent) headerComp!: PolicyLayerHeaderComponent;
   @ViewChildren(PolicyLayerGroupComponent) components: QueryList<PolicyLayerGroupComponent> | undefined;
 
@@ -56,8 +49,8 @@ export class ReinsuranceComponent implements OnInit {
     this.route.parent?.data.subscribe(async data => {
       this.policyLayerData = data['policyLayerData'].policyLayer;
       this.policyInfo = data['policyInfoData'].policyInfo;
+      this.endorsement = data['endorsementData'].endorsement;
       console.log(this.policyLayerData)
-      this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       await this.populateReinsuranceCodes();
@@ -67,14 +60,17 @@ export class ReinsuranceComponent implements OnInit {
       this.authLoadedSub = this.userAuth.loaded$.subscribe((loaded) => {
         if (loaded && this.canEditPolicy && this.endorsementStatusService.canEditEndorsement.value) {
           if (this.policyLayerData.length == 0) {
-            this.addNewPolicyLayer();
+            this.addPolicyLayer();
           }
-          else if (this.policyLayerData.length == 1 && this.policyLayerData[0].reinsuranceData.length == 0) {
-            const newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, 1, 1);
-            this.policyLayerData[0].reinsuranceData.push(newReinsurance)
+          else {
+            this.policyLayerData.forEach(policyLayer => {
+              if (policyLayer.reinsuranceData.length == 0) {
+                this.addReinsurance(policyLayer);
+              }
+            });
           }
         }
-      });
+      });  
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
@@ -82,7 +78,7 @@ export class ReinsuranceComponent implements OnInit {
       }
     });
   }
-  
+
   async populateReinsuranceCodes(): Promise<void> {
     await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
       reisuranceCodes => {
@@ -111,39 +107,56 @@ export class ReinsuranceComponent implements OnInit {
     return this.canEditEndorsement && this.canEditPolicy
   }
 
-  async addPolicyLayer() {
-    if (this.policyLayerData.length > 0) {
-      this.addNewPolicyLayers.emit();
-      this.policyLayerGroup.addNewPolicyLayer()
+  addPolicyLayer(): void {
+    let policyLayer = newPolicyLayer(this.policyId, this.endorsementNumber,this.getNextPolicyLayerSequence());
+    this.addReinsurance(policyLayer);
+    this.policyLayerData.push(policyLayer);
+  }
+
+  addReinsurance(policyLayerData: PolicyLayerData) {
+    let reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, policyLayerData.policyLayerNo, this.getNextReinsuranceLayerSequence(policyLayerData));
+    policyLayerData.reinsuranceData.push(reinsuranceLayer)
+
+    // For first layer copy attachment point and limit
+    if (reinsuranceLayer.policyLayerNo == 1 && reinsuranceLayer.reinsLayerNo == 1) {
+      reinsuranceLayer.attachmentPoint = this.endorsement.attachmentPoint;
+      reinsuranceLayer.reinsLimit = this.endorsement.limit;
+    }
+    // If Policy layer data is set when there is no reinsurance and the amount does not match the full premium then we can assume it was populated during import and should be used
+    if ((policyLayerData.policyLayerPremium ?? 0) > 0 && (policyLayerData.policyLayerPremium ?? 0) != this.endorsement.premium && policyLayerData.reinsuranceData.length == 1) {
+      reinsuranceLayer.reinsCededPremium = policyLayerData.policyLayerPremium ?? 0;
+    }
+    if ((policyLayerData.policyLayerLimit ?? 0) > 0 && policyLayerData.reinsuranceData.length == 1) {
+      reinsuranceLayer.reinsLimit = policyLayerData.policyLayerLimit ?? 0;
+    }
+
+    let match: any = null;
+    if (reinsuranceLayer.reinsLayerNo == 1) {
+      match = this.reinsuranceCodes.find(c => c.layerNumber == reinsuranceLayer.policyLayerNo && c.isDefault);
+      if (match != null) {
+        reinsuranceLayer.treatyNo = match?.treatyNumber;
+        reinsuranceLayer.reinsCededCommRate = match?.cededCommissionRate ?? 0;
+      }
+    }
+  }
+
+  getNextPolicyLayerSequence(): number {
+    if (this.policyLayerData.length == 0) {
+      return 1;
     }
     else {
-      this.addNewPolicyLayer();
+      let policyLayerNo = Math.max(...this.policyLayerData.map(o => o.policyLayerNo)) + 1;
+      return policyLayerNo;
     }
   }
 
-  addNewPolicyLayer(): void {
-    this.newPolicyLayer = this.createNewPolicyLayer();
-    this.newReinsurance = newReinsuranceLayer(this.policyId, this.endorsementNumber, 1, 1);
-    this.newPolicyLayer.reinsuranceData.push(this.newReinsurance)
-    this.policyLayerData.push(this.newPolicyLayer);
-  }
-
-  createNewPolicyLayer(): PolicyLayerData {
-    return {
-      policyId: this.policyId,
-      endorsementNo: this.endorsementNumber,
-      policyLayerNo: 1,
-      policyLayerAttachmentPoint: undefined,
-      policyLayerLimit: undefined,
-      policyLayerPremium: undefined,
-      invoiceNo: null,
-      copyEndorsementNo: null,
-      endType: null,
-      transCode: null,
-      transEffectiveDate: null,
-      transExpirationDate: null,
-      reinsuranceData: [],
-      isNew: true
+  getNextReinsuranceLayerSequence(policyLayerData: PolicyLayerData): number {
+    if (policyLayerData.reinsuranceData.length == 0) {
+      return 1;
+    }
+    else {
+      let reinsuranceLayerNo = Math.max(...policyLayerData.reinsuranceData.map(o => o.reinsLayerNo)) + 1;
+      return reinsuranceLayerNo;
     }
   }
 
@@ -301,7 +314,6 @@ export class ReinsuranceComponent implements OnInit {
             }
         }
       })
-
     });
     return !failed;
   }
