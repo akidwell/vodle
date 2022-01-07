@@ -72,11 +72,13 @@ export class CoveragesComponent implements OnInit, PolicySave {
   @Output() status: EventEmitter<any> = new EventEmitter();
 
   saveEndorsementCoverages(): any {
-    console.log(this.endorsementCoveragesGroups)
-    this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
+    if (this.isCoveragesDirty()) {
+      console.log(this.endorsementCoveragesGroups)
+      this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
         this.updatePolicyChild.notifyEndorsementCoverages();
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-    });
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -132,7 +134,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
   }
 
-  isDirty(): boolean {
+  isCoveragesDirty(): boolean {
     if (this.components != null) {
       for (let child of this.components) {
         if (child.isDirty()) {
@@ -140,7 +142,11 @@ export class CoveragesComponent implements OnInit, PolicySave {
         }
       }
     }
-    return (this.headerComp.endorsementHeaderForm.dirty ?? false); //|| this.groupComp.isDirty();
+    return false;
+  }
+  
+  isDirty(): boolean {
+    return this.isCoveragesDirty() || (this.headerComp.endorsementHeaderForm.dirty ?? false); //|| this.groupComp.isDirty();
   }
 
   save(): void {

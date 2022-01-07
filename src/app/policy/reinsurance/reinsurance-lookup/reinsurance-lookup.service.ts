@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, pipe } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { finalize, share, tap } from 'rxjs/operators';
 import { ConfigService } from 'src/app/config/config.service';
 import { ReinsuranceLookup } from './reinsurance-lookup';
@@ -9,7 +9,10 @@ import { ReinsuranceLookup } from './reinsurance-lookup';
   providedIn: 'root'
 })
 export class ReinsuranceLookupService {
+  private refreshed = new Subject<any>();
 
+  refreshed$ = this.refreshed.asObservable();
+  
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   ////////////////////////////////////////
@@ -39,9 +42,9 @@ export class ReinsuranceLookupService {
   clearReinsuranceCodes() {
     this.cacheReinsuranceCodes = null;
     this.cacheReinsuranceCodes$ == null;
-
     this.cacheFaculativeReinsuranceCodes = null;
     this.cacheFaculativeReinsuranceCodes$ == null;
+    this.refreshed.next();
   }
 
   ////////////////////////////////////////

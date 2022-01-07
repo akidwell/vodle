@@ -28,9 +28,9 @@ export class ReinsuranceComponent implements OnInit {
   canEditEndorsement: boolean = false;
   authLoadedSub!: Subscription;
   reinsuranceSub!: Subscription;
-  reinsuranceCodes$: Observable<ReinsuranceLookup[]> | undefined;
+  // reinsuranceCodes$: Observable<ReinsuranceLookup[]> | undefined;
   reinsuranceCodes!: ReinsuranceLookup[];
-  reinsuranceFacCodes$: Observable<ReinsuranceLookup[]> | undefined;
+  // reinsuranceFacCodes$: Observable<ReinsuranceLookup[]> | undefined;
   reinsuranceFacCodes!: ReinsuranceLookup[];
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
@@ -83,7 +83,7 @@ export class ReinsuranceComponent implements OnInit {
     await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
       reisuranceCodes => {
         this.reinsuranceCodes = reisuranceCodes;
-        this.reinsuranceCodes$ = of(reisuranceCodes);
+        //this.reinsuranceCodes$ = of(reisuranceCodes);
       }
     );
   }
@@ -92,7 +92,7 @@ export class ReinsuranceComponent implements OnInit {
     this.reinsuranceSub = this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).subscribe({
       next: reisuranceCodes => {
         this.reinsuranceFacCodes = reisuranceCodes;
-        this.reinsuranceFacCodes$ = of(reisuranceCodes);
+       // this.reinsuranceFacCodes$ = of(reisuranceCodes);
       }
     });
   }
