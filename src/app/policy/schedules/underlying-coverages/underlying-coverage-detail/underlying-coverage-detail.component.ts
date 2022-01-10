@@ -185,13 +185,15 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
 
       this.ucData.underlyingScheduleLimitData.forEach(element => {
         if(!element.isUserAdded && element.limitBasisCode == basis) {
-          if(element.limit && (element.limit.toString().toLowerCase() == 'e'
+          if((element.limit && (element.limit.toString().toLowerCase() == 'e'
           || element.limit.toString().toLowerCase() == 'exclude'
-          || element.limit.toString().toLowerCase() == 'excluded')) {
+          || element.limit.toString().toLowerCase() == 'excluded'))
+          || (element.includeExclude != null && element.includeExclude.toLowerCase() == 'e')) {
             this.ucData.limitsPattern += 'Excluded'
-          } else if (element.limit && (element.limit.toString().toLowerCase() == 'i'
+          } else if ((element.limit && (element.limit.toString().toLowerCase() == 'i'
           || element.limit.toString().toLowerCase() == 'include'
-          || element.limit.toString().toLowerCase() == 'included')) {
+          || element.limit.toString().toLowerCase() == 'included'))
+          || (element.includeExclude != null && element.includeExclude.toLowerCase() == 'i')) {
             this.ucData.limitsPattern += 'Included'
           } else if (!parseInt(element.limit)){
             element.limit = '0';
