@@ -43,10 +43,13 @@ export class ReinsuranceLookupService {
     this.cacheReinsuranceCodes = null;
     this.cacheReinsuranceCodes$ == null;
     this.cacheFaculativeReinsuranceCodes = null;
-    this.cacheFaculativeReinsuranceCodes$ == null;
-    this.refreshed.next();
+    this.cacheFaculativeReinsuranceCodes$ == null; 
   }
 
+  refreshReinsuranceCodes() {
+    this.refreshed.next();
+  }
+    
   ////////////////////////////////////////
   // Faculative Reinsurance Codes
   private cacheFaculativeReinsuranceCodes: any;

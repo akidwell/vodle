@@ -127,6 +127,7 @@ export class PolicyInformationComponent implements OnInit {
       if (this.endorsementChanged) {
         this.endorsementSub = this.policyService.updateEndorsement(this.endorsement).subscribe(() => {
             this.reinsuranceLookupService.clearReinsuranceCodes();
+            this.reinsuranceLookupService.refreshReinsuranceCodes();
             this.endorsementChanged = false;
         });
       }

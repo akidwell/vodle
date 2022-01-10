@@ -1,3 +1,4 @@
+import { NullVisitor } from "@angular/compiler/src/render3/r3_ast";
 import { BooleanLiteral } from "typescript";
 
 export interface AccountInformation {
@@ -185,7 +186,7 @@ export const newPolicyLayer = (policyId: number, endorsementNumber: number, poli
   }
 }
 
-export interface ReinsuranceLayerData{
+export interface ReinsuranceLayerData {
   policyId: number;
   endorsementNumber: number;
   policyLayerNo: number;
@@ -194,26 +195,26 @@ export interface ReinsuranceLayerData{
   reinsCededPremium: number | null;
   reinsCededCommRate: number;
   treatyType: string | null;
-  treatyNo?: number| null;
-  subTreatyNo: number| null;
-  reinsurerCode: number| null;
-  reinsCertificateNo?: string| null;
-  proflag: number| null;
+  treatyNo?: number | null;
+  subTreatyNo: number | null;
+  reinsurerCode: number | null;
+  reinsCertificateNo?: string | null;
+  proflag: number | null;
   enteredDate: Date | null;
-  invoiceNo: number| null;
-  payableNo: number| null;
-  intermediaryNo: number| null;
-  facBalance: number| null;
-  cededPremium: number| undefined;
-  cededCommission: number| null;
-  sumIuscededPrmByTreatyInv: number| null;
-  sumProcededPrmByTreatyInv: number| null;
-  expirationDate: Date| null;
-  cededCommissionRat: number| null;
-  effectiveDate: Date| null;
-  isFaculative: boolean| null;
+  invoiceNo: number | null;
+  payableNo: number | null;
+  intermediaryNo: number | null;
+  facBalance: number | null;
+  cededPremium: number | undefined;
+  cededCommission: number | null;
+  sumIuscededPrmByTreatyInv: number | null;
+  sumProcededPrmByTreatyInv: number | null;
+  expirationDate: Date | null;
+  cededCommissionRat: number | null;
+  effectiveDate: Date | null;
+  isFaculative: boolean | null;
   maxLayerLimit?: number | null;
-  attachmentPoint?: number| null;
+  attachmentPoint?: number | null;
   isNew: Boolean;
 }
 

@@ -70,6 +70,7 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
       await this.populateReinsuranceCodes();
       this.populateReinsuranceFacCodes();
+      this.reinsuranceForm.form.markAsDirty();
     });
   }
 
