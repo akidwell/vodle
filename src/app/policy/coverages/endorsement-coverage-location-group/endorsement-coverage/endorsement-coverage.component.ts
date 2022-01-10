@@ -93,6 +93,7 @@ export class EndorsementCoverageComponent implements OnInit {
     this.saveEventSubscription = this.updatePolicyChild.endorsementCoveragesObservable$.subscribe(() => {
       this.coverage.isNew = false;
       this.originalAction = this.coverage.action;
+      this.endorsementCoveragesForm.form.markAsPristine();
     });
     this.collapsePanelSubscription = this.updatePolicyChild.collapseLocationsObservable$.subscribe(() => {
       this.ecCollapsed = true;

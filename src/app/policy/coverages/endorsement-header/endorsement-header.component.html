@@ -3,8 +3,8 @@
   <div class="row">
     <div class="col-lg">
       <label for="endorsementEffectiveDate">Trans Eff Date</label>
-      <input type="date" class="form-control" id="endorsementEffectiveDate" [readonly]="!canEdit"
-        [required]="canEdit" [ngModel]="endorsement.transactionEffectiveDate | date:'yyyy-MM-dd'"
+      <input type="date" class="form-control" id="endorsementEffectiveDate" [readonly]="!canEditTransactionDates"
+        [required]="canEditTransactionDates" [ngModel]="endorsement.transactionEffectiveDate | date:'yyyy-MM-dd'"
         (ngModelChange)="endorsement.transactionEffectiveDate=$event" name="endorsementEffectiveDate"
         #endorsementEffectiveDate="ngModel" (change)="changeEffectiveDate()">
         <div [hidden]="isTransactionEffectiveDateValid" class="alert alert-danger">
@@ -13,8 +13,8 @@
     </div>
     <div class="col-lg">
       <label for="endorsementExpirationDate">Trans Exp Date</label>
-      <input type="date" class="form-control" id="endorsementExpirationDate" [readonly]="!canEdit"
-        [required]="canEdit" [ngModel]="endorsement.transactionExpirationDate | date:'yyyy-MM-dd'"
+      <input type="date" class="form-control" id="endorsementExpirationDate" [readonly]="!canEditTransactionDates"
+        [required]="canEditTransactionDates" [ngModel]="endorsement.transactionExpirationDate | date:'yyyy-MM-dd'"
         (ngModelChange)="endorsement.transactionExpirationDate=$event" name="endorsementExpirationDate"
         #endorsementExpirationDate="ngModel" (change)="changeExpirationDate()">
         <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
@@ -24,8 +24,8 @@
     <div class="col-lg-2">
       <label for="transactionType">Transaction Type</label><br>
       <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="key"
-        [required]="canEdit && canEditTransactionType" [clearable]="false" [searchFn]="dropDownSearch"
-        [readonly]="!canEdit || !canEditTransactionType" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
+        [required]="canEditTransactionType" [clearable]="false" [searchFn]="dropDownSearch"
+        [readonly]="!canEditTransactionType" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
         <ng-template ng-label-tmp let-item="item">
           {{item.key}} - {{item.description}}
         </ng-template>

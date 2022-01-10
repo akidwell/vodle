@@ -124,14 +124,14 @@
                 <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
                   [required]="canEdit" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
                   (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
-                  #policyEffectiveDate="ngModel">
+                  #policyEffectiveDate="ngModel" (change)="changeEffectiveDate()">
               </div>
               <div style='width: 47%; display: inline-block; margin-left: 6%;'>
                 <label for="policyExpirationDate">Expiration Date</label>
                 <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
                   [required]="canEdit" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
                   (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
-                  #policyExpirationDate="ngModel">
+                  #policyExpirationDate="ngModel" (change)="changeExpirationDate()">
               </div>
           </div>
             <div class="col-lg-2">
