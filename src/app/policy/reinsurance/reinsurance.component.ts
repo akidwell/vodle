@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Endorsement, newPolicyLayer, newReinsuranceLayer, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../policy';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
@@ -28,13 +28,13 @@ export class ReinsuranceComponent implements OnInit {
   canEditEndorsement: boolean = false;
   authLoadedSub!: Subscription;
   reinsuranceSub!: Subscription;
-  reinsuranceCodes$: Observable<ReinsuranceLookup[]> | undefined;
   reinsuranceCodes!: ReinsuranceLookup[];
-  reinsuranceFacCodes$: Observable<ReinsuranceLookup[]> | undefined;
   reinsuranceFacCodes!: ReinsuranceLookup[];
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
-  
+  reinsuranceRefreshedSub!: Subscription;
+  loading: boolean = true;
+
   @ViewChild(PolicyLayerGroupComponent) policyLayerGroup!: PolicyLayerGroupComponent;
   @ViewChild(PolicyLayerHeaderComponent) headerComp!: PolicyLayerHeaderComponent;
   @ViewChildren(PolicyLayerGroupComponent) components: QueryList<PolicyLayerGroupComponent> | undefined;
@@ -54,7 +54,7 @@ export class ReinsuranceComponent implements OnInit {
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       await this.populateReinsuranceCodes();
-      this.populateReinsuranceFacCodes();
+      await this.populateReinsuranceFacCodes();
 
       // Added new policy layer or reinsurance layer if not added yet on coming in first time
       this.authLoadedSub = this.userAuth.loaded$.subscribe((loaded) => {
@@ -70,6 +70,8 @@ export class ReinsuranceComponent implements OnInit {
             });
           }
         }
+        // This prevent the add button being visible will still loading, can be slow whne first opening
+        this.loading = false;
       });  
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
@@ -77,30 +79,34 @@ export class ReinsuranceComponent implements OnInit {
         this.canEditEndorsement = canEdit;
       }
     });
+
+    this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
+      await this.populateReinsuranceCodes();
+      await this.populateReinsuranceFacCodes();
+    });
   }
 
   async populateReinsuranceCodes(): Promise<void> {
     await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
       reisuranceCodes => {
         this.reinsuranceCodes = reisuranceCodes;
-        this.reinsuranceCodes$ = of(reisuranceCodes);
       }
     );
   }
 
-  populateReinsuranceFacCodes(): void {
-    this.reinsuranceSub = this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).subscribe({
-      next: reisuranceCodes => {
+  async populateReinsuranceFacCodes(): Promise<void> {
+    await this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).toPromise().then(
+      reisuranceCodes => {
         this.reinsuranceFacCodes = reisuranceCodes;
-        this.reinsuranceFacCodes$ = of(reisuranceCodes);
       }
-    });
+    );
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.statusSub?.unsubscribe();
     this.authLoadedSub?.unsubscribe();
+    this.reinsuranceRefreshedSub?.unsubscribe();
   }
 
   get canEdit(): boolean {
@@ -184,8 +190,8 @@ export class ReinsuranceComponent implements OnInit {
           }
         }
       }
-      const totalMatches =  this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
-      this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements;
+      const totalMatches = this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
+        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements && this.checkAgreements();
 
       this.endorsementStatusService.reinsuranceValidated = totalMatches;
       return totalMatches;
@@ -232,17 +238,14 @@ export class ReinsuranceComponent implements OnInit {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Premium totals do not match";
     }
-
     if (!this.checkLimitMatches()) {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Limit totals do not match";
     }
-
     if (!this.checkAttachmentPoint()) {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Policy Layer 1 attachment point does not eqaul total Policy Attachment point";
     }
-
     if (!this.checkSubAttachmentPoints()) {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Please review attachment points";
@@ -250,7 +253,9 @@ export class ReinsuranceComponent implements OnInit {
     if(!this.checkAgreementLimits()){
       this.showInvalid = true;
     }
-
+    if(!this.checkAgreements()){
+      this.showInvalid = true;
+    }
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
     }
@@ -290,6 +295,25 @@ export class ReinsuranceComponent implements OnInit {
     let total: number = 0;
     this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0 }) });
     return this.headerComp.endorsement.limit == total
+  }
+
+  checkAgreements(): boolean {
+    let failed: boolean = false;
+    let filteredList: ReinsuranceLookup[];
+    let comboList = [];
+
+    this.policyLayerData.forEach(group => {
+      group.reinsuranceData.forEach(layer => {
+        this.reinsuranceLookupService.getReinsurance
+        comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes)
+        filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo)
+        if (filteredList.length == 0) {
+          this.invalidMessage += "<br><li>Agreement is no longer valid for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo;
+          failed = true;
+        }
+      })
+    });
+    return !failed;
   }
 
   checkAgreementLimits(): boolean {

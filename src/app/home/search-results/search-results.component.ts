@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouteReuseStrategy } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CustomReuseStrategy } from 'src/app/app-reuse-strategy';
-import { PolicySearchResults } from './policy-search-results';
+import { EndorsementAction, PolicySearchResults } from './policy-search-results';
 import { PolicySearchService } from './policy-search.service';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ReinsuranceLookupService } from 'src/app/policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
+import { ActionComponent } from './action/action.component';
 
 @Component({
   selector: 'rsps-search-results',
@@ -26,7 +27,7 @@ export class SearchResultsComponent implements OnInit {
   insuredName: string = "";
   status: string = "";
 
-  constructor(private router: Router, private route: ActivatedRoute, private policySearchService: PolicySearchService, private routeReuseStrategy: RouteReuseStrategy, private policyHistoryService: PolicyHistoryService, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) {
+  constructor(private router: Router, private route: ActivatedRoute,  private policySearchService: PolicySearchService, private routeReuseStrategy: RouteReuseStrategy, private policyHistoryService: PolicyHistoryService, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) {
   }
 
   ngOnInit(): void {
@@ -35,7 +36,6 @@ export class SearchResultsComponent implements OnInit {
         this.loading = results;
       }
     });
-
     this.searchSub = this.policySearchService.searchResults.subscribe({
       next: results => {
         // Flag for every new policy number
@@ -84,8 +84,16 @@ export class SearchResultsComponent implements OnInit {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
     this.dropDownService.clearPolicyDropDowns();
     this.reinsuranceLookupService.clearReinsuranceCodes();
-    this.policyHistoryService.updatePolicyHistory(policy.policyId,policy.policyNumber,policy.endorsementNumber);
+    this.policyHistoryService.updatePolicyHistory(policy.policyId, policy.policyNumber, policy.endorsementNumber);
     this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
   }
+  @ViewChild('modal') private actionComponent: ActionComponent | undefined
 
+  async newEndorsement(policy: PolicySearchResults) {
+    if (this.actionComponent != null) {
+      let endorsementAction: EndorsementAction = ({} as any) as EndorsementAction;
+      console.log(policy)
+      await this.actionComponent.endorsementPopup(endorsementAction, policy);
+    }
+  }
 }

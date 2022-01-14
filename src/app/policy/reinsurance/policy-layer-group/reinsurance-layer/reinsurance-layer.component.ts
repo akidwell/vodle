@@ -37,16 +37,15 @@ export class ReinsuranceLayerComponent implements OnInit {
   endorsement!: Endorsement;
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
+  reinsuranceRefreshedSub!: Subscription;
 
   @Input() policyLayerData!: PolicyLayerData;
+  @Input() reinsuranceLayer!: ReinsuranceLayerData;
+  @Input() index!: number;
   @ViewChild('modalConfirmation') modalConfirmation: any;
   @Output() deleteExistingReinsuranceLayer: EventEmitter<ReinsuranceLayerData> = new EventEmitter();
   @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
-
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
-
-  @Input() reinsuranceLayer!: ReinsuranceLayerData;
-  @Input() index!: number;
 
   constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService) { 
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -67,6 +66,12 @@ export class ReinsuranceLayerComponent implements OnInit {
       await this.populateReinsuranceCodes();
       this.populateReinsuranceFacCodes();
     });
+
+    this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
+      await this.populateReinsuranceCodes();
+      this.populateReinsuranceFacCodes();
+      this.reinsuranceForm.form.markAsDirty();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -86,6 +91,7 @@ export class ReinsuranceLayerComponent implements OnInit {
     this.updateSub?.unsubscribe();
     this.reinsuranceSub?.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.reinsuranceRefreshedSub?.unsubscribe();
   }
 
   get canEdit(): boolean {

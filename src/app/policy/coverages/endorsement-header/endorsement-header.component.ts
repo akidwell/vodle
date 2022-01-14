@@ -27,7 +27,6 @@ export class EndorsementHeaderComponent implements OnInit {
   endSub: Subscription | undefined;
   isTransactionEffectiveDateValid: boolean = true;
   isTransactionExpirationDateValid: boolean = true;
-  canEditTransactionType: boolean = false;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
   isAttachmentPointValid: boolean = false;
@@ -44,7 +43,6 @@ export class EndorsementHeaderComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.endorsement = data['endorsementData'].endorsement;
       this.policyInfo = data['policyInfoData'].policyInfo;
-      this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
@@ -124,6 +122,14 @@ export class EndorsementHeaderComponent implements OnInit {
 
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
+  }
+
+  get canEditTransactionType(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
+  }
+
+  get canEditTransactionDates(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
   }
 
   get isPrimaryPolicy(): boolean{

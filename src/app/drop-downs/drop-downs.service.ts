@@ -397,6 +397,29 @@ getAuditCodes(): Observable<Code[]> {
     return observable;
   }
 
+  /////////////////////////////////
+  ///Endorsement Reasons
+  private cacheEndorsementReasons: any;
+  private cacheEndorsementReasons$!: Observable<any> | null;
+  getEndorsementReasons(): Observable<Code[]>{
+
+    let observable: Observable<any>;
+    if (this.cacheEndorsementReasons) {
+      observable = of(this.cacheEndorsementReasons);
+    } else if (this.cacheEndorsementReasons$) {
+      observable = this.cacheEndorsementReasons$;
+    } else {
+      this.cacheEndorsementReasons$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/pro_reason_code')
+        .pipe(
+          tap(res => this.cacheEndorsementReasons = res),
+          share(),
+          finalize(() => this.cacheEndorsementReasons$ = null)
+        );
+      observable = this.cacheEndorsementReasons$;
+    }
+    return observable;
+  }
+
   ////////////////////////////////////////
   // Terrorism Codes 
   private cacheTerrorismCodes: any;
