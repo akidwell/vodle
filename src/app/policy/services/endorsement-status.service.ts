@@ -50,6 +50,10 @@ export class EndorsementStatusService {
     }
   }
 
+  private _directQuote = new BehaviorSubject<boolean>(false);
+  directQuote$ = this._directQuote.asObservable();
+  get directQuote(): boolean { return this._directQuote.getValue(); }
+
   isValidated(): boolean {
     return this.policyInfoValidated && this.reinsuranceValidated && this.coverageValidated;
   }
@@ -68,6 +72,7 @@ export class EndorsementStatusService {
           this._policyInfoValidated.next(data?.isPolicyValidated ?? false);
           this._coverageValidated.next(data?.isCoverageValidated ?? false);
           this._reinsuranceValidated.next(data?.isReinsuranceValidated ?? false);
+          this._directQuote.next(data?.isDirectQuote ?? false);
           this.status.next(data?.invoiceStatusDescription ?? "");
           const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
           this.canEditEndorsement.next(editFlag);

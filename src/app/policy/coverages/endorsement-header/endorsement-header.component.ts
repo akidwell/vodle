@@ -57,6 +57,7 @@ export class EndorsementHeaderComponent implements OnInit {
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.endSub?.unsubscribe();
   }
 
   dropDownSearch(term: string, item: Code) {
@@ -123,16 +124,19 @@ export class EndorsementHeaderComponent implements OnInit {
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
-
   get canEditTransactionType(): boolean {
     return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
   }
-
   get canEditTransactionDates(): boolean {
     return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
   }
-
-  get isPrimaryPolicy(): boolean{
-    return  (this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol =='PRC')
-}
+  get canEditAttachmentPoint(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy && (this.endorsementStatusService.directQuote && !this.isPrimaryPolicy);
+  }
+  get canEditUnderlyingLimits(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy && (this.endorsementStatusService.directQuote && !this.isPrimaryPolicy);
+  }
+  private get isPrimaryPolicy(): boolean {
+    return (this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol == 'PRC')
+  }
 }

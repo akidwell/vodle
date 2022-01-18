@@ -104,6 +104,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
         let group: EndorsementCoveragesGroup = { coverages: [], location: location }
         coverage = newEndorsementCoverage();
 
+        coverage.sequence = this.coveragesSequence;
+        this.coveragesSequence++;
         coverage.locationId = location.locationId;
         coverage.endorsementNumber =  this.endorsementNumber,
         coverage.programId = this.policyInfo.programId;

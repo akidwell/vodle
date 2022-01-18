@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { QuoteCreateComponent } from './quote/quote-create/quote-create.component';
 
 @Component({
   templateUrl: './home.component.html',
@@ -11,4 +12,9 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  @ViewChild('modal') private locationComponent!: QuoteCreateComponent
+
+  createQuote() {
+    var result = this.locationComponent.open();
+  }
 }

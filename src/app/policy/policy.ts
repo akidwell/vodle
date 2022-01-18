@@ -17,7 +17,7 @@ export interface AccountInformation {
   producerCity: string;
   producerState: string;
   producerZip: string;
-  commissionRate: number;
+  commissionRate: number | null;
   producerName: string;
 }
 
@@ -265,9 +265,32 @@ export interface EndorsementStatusData {
   isPolicyValidated: boolean;
   isCoverageValidated: boolean;
   isReinsuranceValidated: boolean;
+  isDirectQuote: boolean;
 }
 
 export interface EndorsementStatusResolved {
   status: EndorsementStatusData | null;
   error?: any;
+}
+
+export interface PolicyData {
+  policySymbol: string;
+  policyNumber: string;
+  submissionNumber: number | null;
+  policyEffectiveDate: Date | null;
+  policyExpirationDate: Date | null;
+}
+
+export const newPolicyData = (): PolicyData => {
+  return {
+    policySymbol: "",
+    policyNumber: "",
+    submissionNumber: null,
+    policyEffectiveDate: null,
+    policyExpirationDate: null
+  }
+}
+
+export interface PolicyResponse {
+  policyId: number;
 }

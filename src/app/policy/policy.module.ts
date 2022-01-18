@@ -42,8 +42,7 @@ import { InvoiceDetailComponent } from './summary/invoice-group/invoice-detail/i
 import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.component';
 import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
 import { BusyModule } from '../busy/busy.module';
-import { NullValueDirective } from '../directives/null-value.directive';
-import { MaxIntegerValidator } from '../directives/max-integer.directive';
+import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -56,8 +55,8 @@ import { MaxIntegerValidator } from '../directives/max-integer.directive';
     CoveragesComponent,
     ZipCodePipe,
     EndorsementCoverageComponent,
-    HoverClassDirective,
     ClickStopPropagation,
+    HoverClassDirective,
     EndorsementHeaderComponent,
     NotificationComponent,
     EndorsementCoverageLocationComponent,
@@ -77,9 +76,7 @@ import { MaxIntegerValidator } from '../directives/max-integer.directive';
     UnderlyingCoverageLimitBasisComponent,
     InvoiceGroupComponent,
     InvoiceDetailComponent,
-    InvoiceMasterComponent,
-    NullValueDirective,
-    MaxIntegerValidator
+    InvoiceMasterComponent
   ],
   imports: [
     CommonModule,
@@ -89,6 +86,7 @@ import { MaxIntegerValidator } from '../directives/max-integer.directive';
     NgbModule,
     NgSelectModule,
     BusyModule,
+    DirectivesModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

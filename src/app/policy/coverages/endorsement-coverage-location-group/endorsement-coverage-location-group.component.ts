@@ -100,7 +100,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
       this.collapsePanel(false);
     }
     // If adding a new location then the coverage will be new them expand and focus
-    if (this.endorsementCoveragesGroup.coverages[0]?.isNew) {
+    else if (this.endorsementCoveragesGroup.coverages[0]?.isNew) {
       this.collapsePanel(false);
     }
     this.checkIfLocationEmptyAddFromRiskLocation(this.endorsementCoveragesGroup);
@@ -126,15 +126,15 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     return this.canEditEndorsement && this.canEditPolicy
   }
 
-  async openLocation(location: EndorsementCoveragesGroup) {
+  async openLocation(group: EndorsementCoveragesGroup) {
     if (this.locationComponent != null) {
-      var result = await this.locationComponent.open(location, this);
+      var result = await this.locationComponent.open(group, this);
       if (result == LocationResult.delete) {
         this.deleteThisGroup.emit(this.endorsementCoveragesGroup);
       }
     }
-    return false;
   }
+
   checkIfLocationEmptyAddFromRiskLocation(group: EndorsementCoveragesGroup){
     if (!group.location.city && !group.location.state && !group.location.zip) {
       group.location.city = this.policyInfo.riskLocation.city;

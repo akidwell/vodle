@@ -99,6 +99,29 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
+  // Programs 
+  private cachePrograms: any;
+  private cachePrograms$!: Observable<any> | null;
+
+  getPrograms(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cachePrograms) {
+      observable = of(this.cachePrograms);
+    } else if (this.cachePrograms$) {
+      observable = this.cachePrograms$;
+    } else {
+      this.cachePrograms$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/programs')
+        .pipe(
+          tap(res => this.cachePrograms = res),
+          share(),
+          finalize(() => this.cachePrograms$ = null)
+        );
+      observable = this.cachePrograms$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
   // CoverageCodes 
   private cacheCoverageCodes: any;
   private cacheCoverageCodes$!: Observable<any> | null;
@@ -120,6 +143,30 @@ export class DropDownsService {
     }
     return observable;
   }
+
+  ////////////////////////////////////////
+  // Policy Symbols 
+  private cachePolicySymbolsCodes: any;
+  private cachePolicySymbolsCodes$!: Observable<any> | null;
+
+  getPolicySymbols(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cachePolicySymbolsCodes) {
+      observable = of(this.cachePolicySymbolsCodes);
+    } else if (this.cachePolicySymbolsCodes$) {
+      observable = this.cachePolicySymbolsCodes$;
+    } else {
+      this.cachePolicySymbolsCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/policy-symbols')
+        .pipe(
+          tap(res => this.cachePolicySymbolsCodes = res),
+          share(),
+          finalize(() => this.cachePolicySymbolsCodes$ = null)
+        );
+      observable = this.cachePolicySymbolsCodes$;
+    }
+    return observable;
+  }
+
 
   ////////////////////////////////////////
   // States 

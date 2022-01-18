@@ -49,15 +49,12 @@
             <div class="col-lg-1">
               <label for="policyNumber">Sym</label>
               <input type="text" class="form-control" id="policySymbol" [(ngModel)]="policyInfo.policySymbol"
-                name="policySymbol" [readonly]="isReadOnly" #policySymbol="ngModel">
-              <div [hidden]="policySymbol.valid || policySymbol.pristine" class="alert alert-danger">
-                Policy Symbol is required
-              </div>
+                name="policySymbol" [readonly]="!canEditPolicySymbol" [required]="canEditPolicySymbol" #policySymbol="ngModel">
             </div>
             <div class="col-lg-2">
               <label for="policyNo">Policy No.</label>
               <input type="text" class="form-control" id="policyNo" [(ngModel)]="policyInfo.policyNo" name="policyNo"
-                #policyNo="ngModel" [readonly]="isReadOnly">
+                #policyNo="ngModel" [readonly]="!canEditPolicyNumber" [required]="canEditPolicyNumber">
               <div [hidden]="policyNo.valid || policyNo.pristine" class="alert alert-danger">
                 Policy Number is required
               </div>
@@ -122,7 +119,7 @@
               <div style='width: 47%; display: inline-block;'>
                 <label for="policyEffectiveDate">Effective Date</label>
                 <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
-                  [required]="canEdit" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
+                  [required]="canEdit" [ngModel]="policyInfo.policyEffectiveDate | date:'yyyy-MM-dd'"
                   (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
                   #policyEffectiveDate="ngModel" (change)="changeEffectiveDate()">
               </div>
@@ -172,9 +169,16 @@
             </div>
             <div class="col-lg-4">
               <label for="programId">Program ID</label>
-              <input type="text" class="form-control" id="programId" name="programName"
-                value="{{policyInfo.programId}} - {{policyInfo.programName}}" [readonly]="isReadOnly"
-                name="programName">
+              <ng-select id="programId" [items]="programs$ | async" bindLabel="description"
+                [required]="canEditProgramId" bindValue="key" [clearable]="false" [searchFn]="dropDownSearch"
+                [readonly]="!canEditProgramId" [(ngModel)]="policyInfo.programId" name="programId">
+                <ng-template ng-label-tmp let-item="item">
+                  {{item.key}} - {{item.description}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.key}} - {{item.description}}
+                </ng-template>
+              </ng-select>
             </div>
           </div>
         </div>
@@ -183,7 +187,7 @@
             <div class="col-lg-1">
               <label for="riskGradeCode">Risk Grade</label>
               <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
-                [required]="canEdit" bindValue="code" [clearable]="false"
+                 bindValue="code" [clearable]="false"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
               </ng-select>
             </div>
@@ -207,7 +211,7 @@
                 [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
             </div>
             <div class="col-lg-3">
-              <label for="deregulationIndicator">Deregulation Indictor</label>
+              <label for="deregulationIndicator">Deregulation Indicator</label>
               <ng-select id="deregulationIndicator" [items]="deregulationIndicators$ | async" bindLabel="description"
                 bindValue="code" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.deregulationIndicator" name="deregulationIndicator">
