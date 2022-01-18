@@ -16,4 +16,14 @@ export interface PolicySearchResults {
     transactionType: string;
     action: string;
     firstPolicyRow : boolean;
+    masterPolicy: string;
+  }
+
+  export interface EndorsementAction {
+    endorsementNumber: number;
+    transactionType: string;
+    endorsementReason: string;
+    transEffectiveDate: Date;
+    transExpirationDate: Date;
+    premium: number;
   }

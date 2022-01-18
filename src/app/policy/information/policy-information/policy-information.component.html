@@ -1,7 +1,7 @@
 <form #policyInfoForm="ngForm">
   <div class="content">
     <div class="card">
-      <div class="card-header" (click)="collapse.toggle()">
+      <div class="card-header" title="Policy Information" (click)="collapse.toggle()">
         Policy Information
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyCollapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyCollapsed"></fa-icon>
@@ -9,14 +9,14 @@
       <div #collapse="ngbCollapse" [(ngbCollapse)]="policyCollapsed">
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-2">
-              <label for="policyEventCode">Status</label>
+            <div class="col-lg-2 col-md-5">
+              <label for="policyEventCode"  class="form-label" title="Status">Status</label>
               <input type="text" class="form-control" id="policyEventCode" [readonly]="isReadOnly"
                 value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
             </div>
-            <div class="col-lg-4"></div>
-            <div class="col-lg-2">
-              <label for="enteredDate">Policy Entered Date</label>
+            <div class="col-lg-4 col-md-2"></div>
+            <div class="col-lg-2 col-md-5">
+              <label for="enteredDate"  class="form-label" title="Policy Entered Date">Policy Entered Date</label>
               <input type="date" class="form-control" id="enteredDate" [readonly]="isReadOnly"
                 [ngModel]="policyInfo.enteredDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.enteredDate=$event"
                 name="enteredDate" #enteredDate="ngModel">
@@ -26,51 +26,89 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-2">
-              <label for="submissionNumber">Submission No.</label>
+            <div class="col-lg-2 col-md-8">
+              <label for="submissionNumber"  class="form-label" title="Submission Number">Submission No.</label>
               <input type="text" class="form-control" id="submissionNumber" [readonly]="isReadOnly"
                 [(ngModel)]="policyInfo.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
             </div>
-            <div class="col-lg-1">
-              <label for="quoteNumber">Quote No.</label>
+            <div class="col-lg-1 col-md-4">
+              <label for="quoteNumber"  class="form-label" title="Quote Number">Quote No.</label>
               <input type="text" class="form-control" id="quoteNumber" [readonly]="isReadOnly"
                 [(ngModel)]="policyInfo.quoteData.quoteNumber" name="quoteNumber" #quoteNo="ngModel">
             </div>
-            <div class="col-lg-1">
-              <label for="packageInd">Package Policy</label>
+            <div class="col-lg-1 col-md-4">
+              <label for="packageInd" class="form-label" title="Package Policy">Package Policy</label>
               <input type="text" class="form-control" id="packageInd" style="width:37px;" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.packageInd" name="packageInd" #packageInd="ngModel">
             </div>
-            <div class="col-lg-1">
-              <label for="policyType">Master Policy</label><br>
-              <input type="checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
+            <div class="col-lg-1 col-md-4">
+              <label for="policyType"  class="form-label" title="Master Policy">Master Policy</label><br>
+              <input type="checkbox" class="form-checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
                 [readonly]="!canEdit" (ngModelChange)="policyInfo.policyType=$event?'1': null">
             </div>
-            <div class="col-lg-1">
-              <label for="policyNumber">Sym</label>
+            <div class="col-lg-1 col-md-4">
+              <label for="policyNumber"  class="form-label" title="Symbol">Sym</label>
               <input type="text" class="form-control" id="policySymbol" [(ngModel)]="policyInfo.policySymbol"
                 name="policySymbol" [readonly]="!canEditPolicySymbol" [required]="canEditPolicySymbol" #policySymbol="ngModel">
             </div>
-            <div class="col-lg-2">
-              <label for="policyNo">Policy No.</label>
+            <div class="col-lg-2 col-md-6">
+              <label for="policyNo" class="form-label" title="Policy Number">Policy No.</label>
               <input type="text" class="form-control" id="policyNo" [(ngModel)]="policyInfo.policyNo" name="policyNo"
                 #policyNo="ngModel" [readonly]="!canEditPolicyNumber" [required]="canEditPolicyNumber">
               <div [hidden]="policyNo.valid || policyNo.pristine" class="alert alert-danger">
                 Policy Number is required
               </div>
             </div>
-            <div class="col-lg-1">
-              <label for="policyModNo">Mod</label>
+            <div class="col-lg-1 col-md-2">
+              <label for="policyModNo"  class="form-label" title="Policy Mod">Mod</label>
               <input type="text" class="form-control" id="policyModNo" [(ngModel)]="policyInfo.policyModNo"
                 name="policyModNo" #policyModNo="ngModel" [readonly]="isReadOnly">
             </div>
-            <div class="col-lg-1">
-              <label for="policyId">Policy Id</label>
+            <div class="col-lg-2 col-md-4">
+              <label for="policyId"  class="form-label" title="Policy ID">Policy Id</label>
               <input type="text" class="form-control" id="policyId" [(ngModel)]="policyInfo.policyId" name="policyId"
                 #policyNumber="ngModel" [readonly]="isReadOnly">
             </div>
-            <div class="col-lg-2">
-              <label for="policyExtendedExpDate">Extension Date</label>
+          </div>
+          <div class="paddedRow"></div>
+          <div class="row">
+            <div class="col-lg-3 col-md-4">
+              <label for="riskCity"  class="form-label"  title="Policy City">Policy City</label>
+              <input id="riskCity" class="form-control" [readonly]="!canEdit" name="riskCity"
+                [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
+              <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
+                [clearable]="false" [readonly]="!canEdit" name="riskState"
+                [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="riskZipCode"  class="form-label" title="Policy Zip Code">Policy Zip Code</label>
+              <input type="text" class="form-control" id="riskZipCode" [required]="canEdit" minlength="5"
+                [readonly]="!canEdit" [(ngModel)]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
+                #riskZipCode="ngModel" name="riskZipCode">
+            </div>
+          </div>
+          <div class="paddedRow"></div>
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <label for="policyEffectiveDate"  class="form-label" title="Effective Date">Effective Date</label>
+              <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
+                  [required]="canEdit" [ngModel]="policyInfo.policyEffectiveDate   | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
+                  #policyEffectiveDate="ngModel" (change)="changeEffectiveDate()">
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <label for="policyExpirationDate"  class="form-label" title="Expiration Date">Expiration Date</label>
+              <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
+                  [required]="canEdit" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
+                  (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
+                  #policyExpirationDate="ngModel" (change)="changeExpirationDate()">
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <label for="policyExtendedExpDate"  class="form-label" title="Extension Date">Extension Date</label>
               <div *ngIf="!isReadOnly">
                 <input type="date" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
                   [ngModel]="policyInfo.policyExtendedExpDate | date:'yyyy-MM-dd'"
@@ -82,57 +120,8 @@
                   [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
               </div>
             </div>
-          </div>
-          <div class="paddedRow"></div>
-          <div class="row">
-            <div class="col-lg-2">
-              <label for="riskCity">Policy City</label>
-              <input id="riskCity" class="form-control" [readonly]="!canEdit" name="riskCity"
-                [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
-            </div>
-            <div class="col-lg-2">
-              <label for="riskState">Policy State</label>
-              <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
-                [clearable]="false" [readonly]="!canEdit" name="riskState"
-                [required]="canEdit" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
-              </ng-select>
-            </div>
-            <div class="col-lg-2">
-              <label for="riskZipCode">Policy Zip Code</label>
-              <input type="text" class="form-control" id="riskZipCode" [required]="canEdit" minlength="5"
-                [readonly]="!canEdit" [(ngModel)]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
-                #riskZipCode="ngModel" name="riskZipCode">
-            </div>
-            <div class="col-lg-1">
-              <label for="pacCode">PAC</label>
-              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac" [searchFn]="dropDownSearch"
-                bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
-                <ng-template ng-label-tmp let-item="item">
-                {{item.code}}
-                </ng-template>
-                <ng-template ng-option-tmp let-item="item">
-                  {{item.code}} - {{item.description}}
-                </ng-template>
-              </ng-select>
-            </div>
-            <div class="col-lg-3">
-              <div style='width: 47%; display: inline-block;'>
-                <label for="policyEffectiveDate">Effective Date</label>
-                <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!canEdit"
-                  [required]="canEdit" [ngModel]="policyInfo.policyEffectiveDate | date:'yyyy-MM-dd'"
-                  (ngModelChange)="policyInfo.policyEffectiveDate=$event" name="policyEffectiveDate"
-                  #policyEffectiveDate="ngModel" (change)="changeEffectiveDate()">
-              </div>
-              <div style='width: 47%; display: inline-block; margin-left: 6%;'>
-                <label for="policyExpirationDate">Expiration Date</label>
-                <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!canEdit"
-                  [required]="canEdit" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'"
-                  (ngModelChange)="policyInfo.policyExpirationDate = $event" name="policyExpirationDate"
-                  #policyExpirationDate="ngModel" (change)="changeExpirationDate()">
-              </div>
-          </div>
-            <div class="col-lg-2">
-              <label for="policyCancelDate">Cancel Date</label>
+            <div class="col-lg-3 col-md-6">
+              <label for="policyCancelDate"  class="form-label" title="Cancel Date">Cancel Date</label>
               <div *ngIf="!isReadOnly">
                 <input type="date" class="form-control" id="policyCancelDate" [readonly]="isReadOnly"
                   [ngModel]="policyInfo.policyCancelDate | date:'yyyy-MM-dd'"
@@ -147,15 +136,15 @@
           </div>
           <div class="paddedRow"></div>
           <div class="row">
-            <div class="col-lg-4">
-              <label for="carrierCode">Carrier</label>
+            <div class="col-lg-3 col-md-12">
+              <label for="carrierCode"  class="form-label" title="Carrier">Carrier</label>
               <ng-select id="carrierCode" [items]="carrierCodes$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.quoteData.carrierCode" name="carrierCode">
               </ng-select>
             </div>
-            <div class="col-lg-4">
-              <label for="coverageCode">Coverage Code </label>
+            <div class="col-lg-3 col-md-12">
+              <label for="coverageCode"  class="form-label" title="Coverage Code">Coverage Code </label>
               <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
@@ -167,8 +156,20 @@
                 </ng-template>
               </ng-select>
             </div>
-            <div class="col-lg-4">
-              <label for="programId">Program ID</label>
+            <div class="col-lg-3 col-md-8">
+              <label for="pacCode"  class="form-label" title="PAC Code">PAC</label>
+              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac" [searchFn]="dropDownSearch"
+                bindValue="code" [clearable]="false" [required]="canEdit" [readonly]="!canEdit" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
+                <ng-template ng-label-tmp let-item="item">
+                {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <label for="programId"  class="form-label" title="Program ID">Program ID</label>
               <ng-select id="programId" [items]="programs$ | async" bindLabel="description"
                 [required]="canEditProgramId" bindValue="key" [clearable]="false" [searchFn]="dropDownSearch"
                 [readonly]="!canEditProgramId" [(ngModel)]="policyInfo.programId" name="programId">
@@ -184,41 +185,41 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-1">
-              <label for="riskGradeCode">Risk Grade</label>
+            <div class="col-lg-1 col-md-4">
+              <label for="riskGradeCode"  class="form-label" title="Risk Grade">Risk Grade</label>
               <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
                  bindValue="code" [clearable]="false"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
               </ng-select>
             </div>
-            <div class="col-lg-2">
-              <label for="auditCode">Audit Code</label>
+            <div class="col-lg-2 col-md-4">
+              <label for="auditCode" class="form-label" title="Audit Code">Audit Code</label>
               <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
                 [required]="canEdit" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.auditCode" name="auditCode">
               </ng-select>
             </div>
-            <div class="col-lg-2">
-              <label for="paymentFrequency">Payment Frequency</label>
+            <div class="col-lg-2 col-md-4">
+              <label for="paymentFrequency" class="form-label" title="Payment Frequency">Payment Frequency</label>
               <ng-select id="paymentFrequency" [items]="paymentFrequencies$ | async" bindLabel="description"
                 [required]="canEdit" bindValue="code" [clearable]="false"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
               </ng-select>
             </div>
-            <div class="col-lg-1">
-              <label for="creditDays">Credit Days</label>
+            <div class="col-lg-1 col-md-4">
+              <label for="creditDays" class="form-label" title="Credit Days">Credit Days</label>
               <input type="number" class="form-control" id="creditDays" [required]="canEdit" [readonly]="!canEdit" maxInt
                 [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
             </div>
-            <div class="col-lg-3">
-              <label for="deregulationIndicator">Deregulation Indicator</label>
+            <div class="col-lg-3 col-md-4">
+              <label for="deregulationIndicator" class="form-label" title="Deregulation Indictor">Deregulation Indicator</label>
               <ng-select id="deregulationIndicator" [items]="deregulationIndicators$ | async" bindLabel="description"
                 bindValue="code" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.deregulationIndicator" name="deregulationIndicator">
               </ng-select>
             </div>
-            <div class="col-lg-3">
-              <label for="riskType">Risk Type</label>
+            <div class="col-lg-3 col-md-4">
+              <label for="riskType" class="form-label" title="Risk Type">Risk Type</label>
               <ng-select id="riskType" [items]="riskTypes$ | async" bindLabel="description" bindValue="code"
                 [required]="canEdit" [clearable]="false" [readonly]="!canEdit"
                 [(ngModel)]="policyInfo.riskType" name="riskType">
@@ -230,14 +231,14 @@
             <div class="col-lg-6"></div>
             <div class="col-lg-3" *ngIf="checkAssumed() || checkDereg()"
               [style.visibility]="checkDereg() ? 'visible' : 'hidden'">
-              <label for="NYFTZ">NY Free Trade Zone</label>
+              <label for="NYFTZ" class="form-label"  title="NY Free Trade Zone">NY Free Trade Zone</label>
               <ng-select id="NYFTZ" [items]="nyFreeTradeZones$ | async" bindLabel="description"
                 [required]="checkDereg() && canEditPolicy" bindValue="code" [clearable]="false"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
               </ng-select>
             </div>
             <div class="col-lg-3" *ngIf="checkAssumed()">
-              <label for="assumedCarrier">Assumed Carrier</label>
+              <label for="assumedCarrier" class="form-label" title="Assumed Carrier">Assumed Carrier</label>
               <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
                 [required]="checkAssumed() && canEditPolicy" bindValue="code" [clearable]="false" appendTo="body"
                 [readonly]="!canEdit" [(ngModel)]="policyInfo.assumedCarrier" [searchFn]="dropDownSearch"
@@ -260,13 +261,13 @@
           </div>
           <div class="row">
             <div class="col-lg-1">
-              <label for="coinsurancePercentage">Coinsurance %</label>
+              <label for="coinsurancePercentage" class="form-label" title="Coinsurance %">Coinsurance %</label>
               <input type="text" class="form-control" id="coinsurancePercentage" mask="percent" suffix="%"
                 [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
                 #coinsurancePercentage="ngModel">
             </div>
             <div class="col-lg-2">
-              <label for="productManufactureDate">Product Manufacture Date</label>
+              <label for="productManufactureDate" class="form-label" title="Product Manufacture Date">Product Manufacture Date</label>
               <input type="date" class="form-control" id="productManufactureDate"
                 [ngModel]="policyInfo.productManufactureDate  | date:'yyyy-MM-dd'"
                 (ngModelChange)="policyInfo.productManufactureDate=$event" name="productManufactureDate"

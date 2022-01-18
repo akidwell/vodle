@@ -1,0 +1,60 @@
+<form #actionForm="ngForm">
+    <ng-template #modal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Policy Change</h4>
+            <div class="col-lg-5"></div>
+            <br>
+        </div>
+        <div class="modal-body">
+            <div>
+                <label for="endorsementNumber">Endorsement Number</label>
+                <input type="text" class="form-control" id="endorsementNumber" [required]="canEdit"
+                    [readonly]="!canEdit" name="endorsementNumber" [(ngModel)]="endorsementActionInfo.endorsementNumber"
+                    max="999" maxlength="3" (keyup)="checkEndorsementNumber()">
+            </div>
+            <div [hidden]="isEndorsementNumberValid" class="alert alert-danger">
+                This Endorsement Number has already been used.
+            </div>
+            <div>
+                <label for="transactionType">Transaction Type</label>
+                <ng-select id="transactionType" [required]="canEdit" [items]="transactionTypes$ | async"
+                    bindLabel="description" bindValue="key" [clearable]="false" [readonly]="!canEdit"
+                    name="transactionType" [(ngModel)]="endorsementActionInfo.transactionType">
+                </ng-select>
+            </div>
+            <div>
+                <label for="endtReason">Endorsement Reason</label>
+                <ng-select id="endtReason" [required]="canEdit" [items]="endorsementReasons$ | async"
+                    bindLabel="description" bindValue="code" [clearable]="false" [readonly]="!canEdit" name="endtReason"
+                    [(ngModel)]="endorsementActionInfo.endorsementReason">
+                </ng-select>
+            </div>
+            <label for="transEffectiveDate">Transaction Effective Date</label>
+            <input type="date" class="form-control" id="transEffectiveDate" [required]="canEdit" [readonly]="!canEdit"
+                name="transEffectiveDate" [ngModel]="endorsementActionInfo.transEffectiveDate   | date:'yyyy-MM-dd'"
+                (change)="checkTransEffectiveDate()" (ngModelChange)="endorsementActionInfo.transEffectiveDate=$event"
+                #transEffectiveDate="ngModel">
+            <div [hidden]="isTransEffectiveValid" class="alert alert-danger">
+                Invalid Transactive Effective Date. Must be within policy period.
+            </div>
+            <label for="transExpirationDate">Transaction Expiration Date</label>
+            <input type="date" class="form-control" id="transExpirationDate" [required]="canEdit" [readonly]="!canEdit"
+                name="transExpirationDate" [ngModel]="endorsementActionInfo.transExpirationDate   | date:'yyyy-MM-dd'"
+                (ngModelChange)="endorsementActionInfo.transExpirationDate=$event" #transEffectiveDate="ngModel"
+                (change)="checkPolicyExtenstionExpirationDate()">
+            <div [hidden]="isTransExpirationValid" class="alert alert-danger">
+                Invalid Transactive Expiration Date. Date must be greater than Policy Expiration Date for a Policy
+                Extension.
+            </div>
+            <div>
+                <label for="premium">Premium</label>
+                <input type="text" class="form-control" id="premium" [required]="canEdit" [readonly]="!canEdit"
+                    name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" mask="separator.0"
+                    thousandSeparator=",">
+            </div>
+        </div>
+        <div class="modal-footer">           
+             <button type="button" class="btn btn-danger" (click)="modal.close('Yes')" [disabled]="!isEndorsementNumberValid">Submit</button>
+                <button type="button" class="btn btn-secondary" (click)="modal.close()" >Cancel</button>
+        </div>
+    </ng-template>

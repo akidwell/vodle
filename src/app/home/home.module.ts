@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { FormsModule } from '@angular/forms';
@@ -9,14 +9,16 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SearchModule } from '../search-bar/search-bar.module';
 import { QuoteCreateComponent } from './quote/quote-create/quote-create.component';
-import { NgxMaskModule } from 'ngx-mask';
 import { DirectivesModule } from '../directives/directives.module';
+import { ActionComponent } from './search-results/action/action.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [
     HomeComponent,
     SearchResultsComponent,
-    QuoteCreateComponent
+    QuoteCreateComponent,
+    ActionComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +30,9 @@ import { DirectivesModule } from '../directives/directives.module';
     SearchModule,
     DirectivesModule,
     NgxMaskModule.forRoot()
+  ],
+  providers: [
+    DatePipe
   ]
 })
 export class HomeModule { }
