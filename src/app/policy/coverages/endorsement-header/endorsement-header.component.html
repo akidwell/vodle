@@ -41,8 +41,8 @@
     </div>
     <div class="col-lg">
       <label for="attachmentPoint">Attachment Point</label>
-      <input type="text" class="form-control" id="attachmentPoint" [required]="canEdit && !isPrimaryPolicy"
-        [readonly]="!canEdit || isPrimaryPolicy" [(ngModel)]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator=","
+      <input type="text" class="form-control" id="attachmentPoint" [required]="canEditAttachmentPoint"
+        [readonly]="!canEditAttachmentPoint" [(ngModel)]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator=","
         name="attachmentPoint" #attachmentPoint="ngModel" name="attachmentPoint" (change)="checkAttachmentPointValid()">
         <div [hidden]="isAttachmentPointValid" class="alert alert-danger">
           Invalid Attachment Point
@@ -50,7 +50,7 @@
     </div>
     <div class="col-lg">
       <label for="underlyingLimit">Underlying Limits</label>
-      <input type="text" class="form-control" id="underlyingLimit" [required]="canEdit && !isPrimaryPolicy" [readonly]="!canEdit || isPrimaryPolicy" 
+      <input type="text" class="form-control" id="underlyingLimit" [required]="canEditUnderlyingLimits" [readonly]="!canEditUnderlyingLimits" 
       (change)="checkAttachmentPointValid()" [(ngModel)]="endorsement.underlyingLimit" mask="separator.0" thousandSeparator="," name="underlyingLimit" #underlyingLimit="ngModel">
     </div>
     <div class="col-lg">

@@ -162,8 +162,8 @@ export class EndorsementCoverageLocationComponent implements OnInit {
 
   async delete(): Promise<void> {
     if (this.parent.components != null) {
-      for (let coverageComponent of this.parent.components) {
-        await coverageComponent.deleteCoverage();
+      for (let i = this.parent.components.length - 1; i >= 0; i--) {
+        await this.parent.components[i].deleteCoverage();
       }
     }
     this.locationSub = this.policyService.deleteEndorsementCoverageLocation(this.location)

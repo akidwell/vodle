@@ -91,7 +91,7 @@ export class SummaryComponent implements OnInit {
     invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
     invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
     invoiceDetail.feeAmount = this.endorsement.premium;
-    invoiceDetail.commissionRate = this.accountInfo.commissionRate;
+    invoiceDetail.commissionRate = this.accountInfo.commissionRate ?? 0;
     invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
     invoiceDetail.netAmount = invoiceDetail.feeAmount - invoiceDetail.commissionAmount;
     invoice.invoiceDetail.push(invoiceDetail);

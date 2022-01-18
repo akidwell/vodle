@@ -38,6 +38,7 @@ export class PolicyInformationComponent implements OnInit {
   riskTypes$: Observable<Code[]> | undefined;
   nyFreeTradeZones$: Observable<Code[]> | undefined;
   assumedCarriers$: Observable<Code[]> | undefined;
+  programs$: Observable<Code[]> | undefined;
   canEditPolicy: boolean = false;
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
@@ -81,6 +82,7 @@ export class PolicyInformationComponent implements OnInit {
       this.riskTypes$ = this.dropdowns.getRiskTypes();
       this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
       this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
+      this.programs$ = this.dropdowns.getPrograms();
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
@@ -163,5 +165,14 @@ export class PolicyInformationComponent implements OnInit {
   }
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
+  }
+  get canEditProgramId(): boolean {
+    return this.canEdit && this.endorsementStatusService.directQuote;
+  }
+  get canEditPolicySymbol(): boolean {
+    return this.canEdit && this.endorsementStatusService.directQuote;
+  }
+  get canEditPolicyNumber(): boolean {
+    return this.canEdit && this.endorsementStatusService.directQuote;
   }
 }

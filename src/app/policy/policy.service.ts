@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
+import { PolicyAddResponse } from '../home/quote/quote-create/quote-create.component';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
-import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
+import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
 import { UnderlyingCoverage } from './schedules/schedules';
 import { InvoiceData } from './summary/invoice';
 
@@ -15,6 +16,9 @@ export class PolicyService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
+  addPolicy(policy: PolicyData): Observable<PolicyAddResponse> {
+    return this.http.post<PolicyAddResponse>(this.config.apiBaseUrl + 'api/policies', policy);
+  }
   getPolicyAccountInfo(id: number): Observable<AccountInformation> {
     return this.http.get<AccountInformation>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/accountinfo');
   }

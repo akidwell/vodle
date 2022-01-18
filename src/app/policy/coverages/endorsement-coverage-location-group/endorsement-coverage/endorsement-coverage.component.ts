@@ -102,7 +102,6 @@ export class EndorsementCoverageComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.defaultsSub?.unsubscribe();
-    this.saveEventSubscription.unsubscribe();
     this.authSub.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.saveEventSubscription?.unsubscribe();
@@ -262,10 +261,8 @@ export class EndorsementCoverageComponent implements OnInit {
     if (this.coverage.isNew) {
       this.deleteThisCoverage.emit(this.coverage);
     } else {
-      this.deleteSub = this.policyService.deleteEndorsementCoverage(this.coverage).subscribe(result => {
+        return await this.policyService.deleteEndorsementCoverage(this.coverage).toPromise().then(() => {
         this.deleteThisCoverage.emit(this.coverage);
-        //this.notification.show('Account Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        return result;
       });
     }
   }

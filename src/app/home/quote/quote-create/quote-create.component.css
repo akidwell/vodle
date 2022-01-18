@@ -1,0 +1,26 @@
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+}
+
+.faCheckCircle {
+  color: #42A948;
+}
+
+.faTimesCircle {
+  color: #a94442;
+}
+
+.inputImage {
+  position: relative;
+}
+
+.inputImage fa-icon {
+  position: absolute;
+  right: 5px;
+  top: 30px;
+}
