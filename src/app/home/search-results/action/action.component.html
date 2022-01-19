@@ -55,6 +55,6 @@
         </div>
         <div class="modal-footer">           
              <button type="button" class="btn btn-danger" (click)="modal.close('Yes')" [disabled]="!isEndorsementNumberValid">Submit</button>
-                <button type="button" class="btn btn-secondary" (click)="modal.close()" >Cancel</button>
+                <button type="button" class="btn btn-secondary" (click)="clearAndClose()" >Cancel</button>
         </div>
     </ng-template>
