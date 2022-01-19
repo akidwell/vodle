@@ -87,9 +87,13 @@ export class QuoteCreateComponent implements OnInit {
   }
 
   checkDates() {
-    if (this.policyData.policyEffectiveDate != null && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate()) && this.policyData.policyExpirationDate == null) {
-      this.policyData.policyExpirationDate = new Date(this.policyData.policyEffectiveDate + ' 00:00:00');
-      this.policyData.policyExpirationDate.setFullYear(this.policyData.policyExpirationDate.getFullYear() + 1)
+    if (this.policyData.policyEffectiveDate != null && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate())) {
+      var date = this.policyData.policyEffectiveDate.toString().split('-');
+      var newYear = parseInt(date[0]) + 1; //Add year
+      var month = parseInt(date[1]) - 1; //Need to subtract one as Jan = 0 for creating new date
+      var day = parseInt(date[2]);
+
+      this.policyData.policyExpirationDate = new Date(newYear, month, day, 0,0,0,0) //year, month, day, hours, min, sec, time zone offset
     }
     if (this.policyData.policyEffectiveDate != null && this.policyData.policyExpirationDate != null) {
       this.showExpirationDateInvalid = this.policyData.policyEffectiveDate >= this.policyData.policyExpirationDate;
