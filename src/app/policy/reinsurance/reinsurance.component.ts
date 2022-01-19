@@ -304,9 +304,8 @@ export class ReinsuranceComponent implements OnInit {
 
     this.policyLayerData.forEach(group => {
       group.reinsuranceData.forEach(layer => {
-        this.reinsuranceLookupService.getReinsurance
-        comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes)
-        filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo)
+        comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
+        filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo);
         if (filteredList.length == 0) {
           this.invalidMessage += "<br><li>Agreement is no longer valid for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo;
           failed = true;
