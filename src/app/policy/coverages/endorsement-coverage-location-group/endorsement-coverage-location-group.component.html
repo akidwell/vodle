@@ -2,7 +2,7 @@
   <div class="content">
     <div class="card">
       <div class="card-header" (click)="collapsePanel(!locationCollapsed)">
-        <a [routerLink]="" click-stop-propagation (click)="openLocation(endorsementCoveragesGroup);">ID #:
+        <a [routerLink]="[]" click-stop-propagation (click)="openLocation(endorsementCoveragesGroup);">ID #:
           {{endorsementCoveragesGroup.location.locationId}}</a>
         <span *ngIf="groupCount > 1"
           style="margin-left: 5px;">{{endorsementCoveragesGroup.location.street ? (endorsementCoveragesGroup.location.street + ' '): ('') }}

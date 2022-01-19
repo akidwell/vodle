@@ -32,7 +32,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let importPolicy of policies$ | async">
-          <td *ngIf="canExecuteImport;else noExecute"><a [routerLink]="" (click)="import(importPolicy)">
+          <td *ngIf="canExecuteImport;else noExecute"><a [routerLink]="[]" (click)="import(importPolicy)">
           <td>
             <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm"
               [highlightClass]="'highlight'"></ngb-highlight>
