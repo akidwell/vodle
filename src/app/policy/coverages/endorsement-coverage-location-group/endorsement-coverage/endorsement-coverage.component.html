@@ -111,7 +111,7 @@
           </div>
           <div class="col-lg-1">
             <label for="deductible">Deductible</label>
-            <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible"
+            <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible" nullValue
               [required]="canEdit && isDeductibleRequired && showDeductible" [(ngModel)]="coverage.deductible" name="deductible"
               #deductible="ngModel" mask="separator.0" thousandSeparator=",">
           </div>

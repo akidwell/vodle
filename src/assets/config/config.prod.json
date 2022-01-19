@@ -1,0 +1,11 @@
+{
+    "apiBaseUrl": "https://garsdev.td.afg/rsps-service/",
+    "buildVersion" : "1.0.0.0",
+    "oktaClientId": "0oa13ty5ui2LT2Osn1d7",
+    "oktaIssuer": "https://logindev.gaig.com",
+    "oktaScopes": ["openid", "profile", "email"],
+    "oktaRedirectUri" : "https://garsdev.td.afg/rsps/callback",
+    "oktaPostLogoutRedirectUri" : "https://garsdev.td.afg/rsps/logged-out",
+    "preventForcedRedirect" : false,
+    "maxPolicyHistorySize" : 5
+}
