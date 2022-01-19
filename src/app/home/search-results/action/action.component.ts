@@ -67,7 +67,16 @@ export class ActionComponent implements OnInit {
   }
 
   checkTransEffectiveDate(): boolean {
-    if (this.endorsementActionInfo.transEffectiveDate < this.policyInfo.policyEffectiveDate || this.endorsementActionInfo.transEffectiveDate > this.policyInfo.policyExpirationDate) {
+    var test = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
+    let transEffDate = new Date((parseInt(test[0])), parseInt(test[1]) - 1, parseInt(test[2]), 0,0,0,0)
+
+    var test2 = this.policyInfo.policyEffectiveDate.toString().split('-');
+    let polEffDate = new Date((parseInt(test2[0])), parseInt(test2[1]) - 1, parseInt(test2[2]), 0,0,0,0)
+
+    var test3 = this.policyInfo.policyExpirationDate.toString().split('-');
+    let polExpDate = new Date((parseInt(test3[0])), parseInt(test3[1]) - 1, parseInt(test3[2]), 0,0,0,0)
+
+    if (transEffDate < polEffDate || transEffDate > polExpDate) {
       this.endorsementActionForm.controls['transEffectiveDate'].setErrors({ 'incorrect': true });
       this.isTransEffectiveValid = false;
       return false;
@@ -80,11 +89,11 @@ export class ActionComponent implements OnInit {
   checkMasterPolicy(): void {
     if (this.policyInfo.masterPolicy == '1') {
       if (this.endorsementActionInfo.transEffectiveDate !== undefined) {
-        let transEffectivePlus1 = new Date(this.endorsementActionInfo.transEffectiveDate)
-        transEffectivePlus1.setFullYear(transEffectivePlus1.getFullYear() + 1)
-
-        let polExpirationPlus1 = new Date(this.policyInfo.policyExpirationDate)
-        polExpirationPlus1.setFullYear(polExpirationPlus1.getFullYear() +1)
+        var test = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
+        let transEffectivePlus1 = new Date((parseInt(test[0]) + 1), parseInt(test[1]) - 1, parseInt(test[2]), 0,0,0,0)
+    
+        var test2 = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
+        let polExpirationPlus1 = new Date((parseInt(test2[0]) + 1), parseInt(test2[1]) - 1, parseInt(test2[2]), 0,0,0,0)
 
         if (transEffectivePlus1 < polExpirationPlus1) {
           this.endorsementActionInfo.transExpirationDate = transEffectivePlus1;
@@ -124,5 +133,13 @@ export class ActionComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  clearAndClose(): void {
+this.isTransEffectiveValid = true
+this.isTransExpirationValid = true;
+this.isEndorsementNumberValid = true;
+    this.modalRef.close();
+
   }
 }
