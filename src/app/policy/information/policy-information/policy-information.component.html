@@ -172,7 +172,7 @@
               <label for="programId"  class="form-label" title="Program ID">Program ID</label>
               <ng-select id="programId" [items]="programs$ | async" bindLabel="description"
                 [required]="canEditProgramId" bindValue="key" [clearable]="false" [searchFn]="dropDownSearch"
-                [readonly]="!canEditProgramId" [(ngModel)]="policyInfo.programId" name="programId">
+                [readonly]="!canEditProgramId" [(ngModel)]="policyInfo.programId" name="programId" (change)="changeProgramId()">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.key}} - {{item.description}}
                 </ng-template>

@@ -35,7 +35,6 @@ import { PolicyLayerGroupComponent } from './reinsurance/policy-layer-group/poli
 import { UnderlyingCoveragesComponent } from './schedules/underlying-coverages/underlying-coverages.component';
 import { UnderlyingCoverageDetailComponent } from './schedules/underlying-coverages/underlying-coverage-detail/underlying-coverage-detail.component';
 import { UnderlyingCoverageLimitBasisComponent } from './schedules/underlying-coverages/underlying-coverage-limit-basis/underlying-coverage-limit-basis.component';
-import { ClickStopPropagation } from '../directives/click-stop-propagation.directive';
 import { UnderlyingCoverageService } from './schedules/services/underlying-coverage.service';
 import { LimitsPatternHelperService } from './services/limits-pattern-helper.service';
 import { InvoiceDetailComponent } from './summary/invoice-group/invoice-detail/invoice-detail.component';
@@ -55,7 +54,6 @@ import { DirectivesModule } from '../directives/directives.module';
     CoveragesComponent,
     ZipCodePipe,
     EndorsementCoverageComponent,
-    ClickStopPropagation,
     HoverClassDirective,
     EndorsementHeaderComponent,
     NotificationComponent,
