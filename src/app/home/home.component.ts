@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
 
 
   ngOnDestroy(): void {
-    this.collapsePanelSubscription.unsubscribe();
+   // this.collapsePanelSubscription.unsubscribe();
   }
 
   @ViewChild('modal') private directPolicyComponent!: DirectPolicyCreateComponent
