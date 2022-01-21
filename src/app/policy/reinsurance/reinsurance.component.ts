@@ -332,7 +332,7 @@ export class ReinsuranceComponent implements OnInit {
           comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes)
           filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit
           if (filteredList != null)
-            if (layer.reinsLimit ?? 0 > filteredList) {
+            if ((layer.reinsLimit ?? 0) > filteredList) {
               this.invalidMessage += "<br><li>Please check Insuring Agreement for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + filteredList.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
               failed = true;
             }
