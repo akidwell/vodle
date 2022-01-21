@@ -12,6 +12,7 @@ import { DirectPolicyCreateComponent } from './direct-policy/direct-policy-creat
 import { DirectivesModule } from '../directives/directives.module';
 import { ActionComponent } from './search-results/action/action.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { BusyModule } from '../busy/busy.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { NgxMaskModule } from 'ngx-mask';
     NgbModule,
     SearchModule,
     DirectivesModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    BusyModule
   ],
   providers: [
     DatePipe

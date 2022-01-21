@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { PolicyAddResponse } from '../home/direct-policy/direct-policy-create/direct-policy-create.component';
+import { NewEndorsementData } from '../home/search-results/policy-search-results';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
 import { UnderlyingCoverage } from './schedules/schedules';
@@ -122,4 +123,10 @@ export class PolicyService {
   deletePolicyInvoiceDetails(policyId: number, endorsementNo: number, invoiceNumber: number, lineNumber: number): Observable<InvoiceData[]> {
     return this.http.delete<InvoiceData[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/invoices/' + invoiceNumber + '/details/' + lineNumber);
   }
+
+  createNewEndorsement(data: NewEndorsementData): Observable<NewEndorsementData>{
+    return this.http.post<NewEndorsementData>(this.config.apiBaseUrl + 'api/policies/endorsements', data);
+
+  }
+
 }

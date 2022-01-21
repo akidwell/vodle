@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouteReuseStrategy } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CustomReuseStrategy } from 'src/app/app-reuse-strategy';
-import { EndorsementAction, PolicySearchResults } from './policy-search-results';
+import { NewEndorsementData, PolicySearchResults } from './policy-search-results';
 import { PolicySearchService } from './policy-search.service';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
@@ -91,7 +91,7 @@ export class SearchResultsComponent implements OnInit {
 
   async newEndorsement(policy: PolicySearchResults) {
     if (this.actionComponent != null) {
-      let endorsementAction: EndorsementAction = ({} as any) as EndorsementAction;
+      let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
       console.log(policy)
       await this.actionComponent.endorsementPopup(endorsementAction, policy);
     }
