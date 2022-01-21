@@ -154,9 +154,9 @@ export interface PolicyLayerData {
   policyId: number;
   endorsementNo: number;
   policyLayerNo: number
-  policyLayerAttachmentPoint?: number | null;
-  policyLayerLimit?: number| null;
-  policyLayerPremium?: number| null;
+  policyLayerAttachmentPoint?: number;
+  policyLayerLimit?: number;
+  policyLayerPremium?: number;
   invoiceNo: number| null;
   copyEndorsementNo: number| null;
   endType: number| null;
@@ -191,7 +191,7 @@ export interface ReinsuranceLayerData {
   endorsementNumber: number;
   policyLayerNo: number;
   reinsLayerNo: number;
-  reinsLimit: number;
+  reinsLimit: number | null;
   reinsCededPremium: number | null;
   reinsCededCommRate: number;
   treatyType: string | null;
@@ -229,7 +229,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     endorsementNumber: endorsementNumber,
     policyLayerNo: policyLayerNo,
     reinsLayerNo!: reinsLayerNo,
-    reinsLimit: 0,
+    reinsLimit: null,
     reinsCededPremium: null,
     reinsCededCommRate: 0,
     treatyType: null,

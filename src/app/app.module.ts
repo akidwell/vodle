@@ -21,6 +21,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './app-reuse-strategy';
 import { BusyModule } from './busy/busy.module';
+import { DirectivesModule } from './directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { BusyModule } from './busy/busy.module';
     NgbAlertModule,
     FormsModule,
     NgSelectModule,
-    BusyModule
+    BusyModule,
+    DirectivesModule
   ],
   providers: [
     {

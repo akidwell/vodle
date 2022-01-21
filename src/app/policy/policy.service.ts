@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { PolicyAddResponse } from '../home/quote/quote-create/quote-create.component';
+import { PolicyAddResponse } from '../home/direct-policy/direct-policy-create/direct-policy-create.component';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
 import { UnderlyingCoverage } from './schedules/schedules';

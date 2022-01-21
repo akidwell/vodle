@@ -77,6 +77,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   
   open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementCoverageLocationGroupComponent): Promise<LocationResult> {
     return new Promise<LocationResult>(resolve => {
+      this.isLoadingAddress = false;
       this.coverage = locationInfo;
       this.parent = parent;
       this.locationForm.form.markAsPristine();

@@ -40,11 +40,11 @@
         [(ngModel)]="reinsuranceLayer.attachmentPoint" mask="separator.0" thousandSeparator="," [readonly]="index !== 0 || !canEdit"  [required]="index == 0 && canEdit" >
     </div>
     <div class="reinsuranceLimits">
-      <input type="text"  class="form-control" id="reinsuranceLimits" #reinsuranceLimit="ngModel" [readonly]="!canEdit" [required]="canEdit"
+      <input type="text" class="form-control" id="reinsuranceLimits" #reinsuranceLimit="ngModel" [readonly]="!canEdit" [required]="canEdit" string-to-currency
         name="reinsuranceLimits" [(ngModel)]="reinsuranceLayer.reinsLimit" mask="separator.0" thousandSeparator=",">
     </div>
     <div class="cededPremium">
-      <input type="text" style="text-align: right" class="form-control" id="cededPremium" #cededPremium="ngModel" [readonly]="!canEdit" [required]="canEdit"
+      <input type="text" style="text-align: right" class="form-control" id="cededPremium" #cededPremium="ngModel" [readonly]="!canEdit" [required]="canEdit" string-to-currency
         name="cededPremium" [(ngModel)]="reinsuranceLayer.reinsCededPremium" mask="separator.0" thousandSeparator=",">
     </div>
     <div class="commissionRate">
