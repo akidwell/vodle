@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
-import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder, faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder, faStar as faSolidStar, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
 import { PolicyHistoryService } from './policy-history/policy-history.service';
-import { RouteReuseStrategy } from '@angular/router';
+import { Router, RouteReuseStrategy } from '@angular/router';
 import { DropDownsService } from '../drop-downs/drop-downs.service';
 import { CustomReuseStrategy } from '../app-reuse-strategy';
 import { PolicyHistory } from './policy-history/policy-history';
 import { ReinsuranceLookupService } from '../policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
+import { DirectPolicyServiceService } from '../home/direct-policy/direct-policy-service/direct-policy-service.service';
 
 @Component({
   selector: 'rsps-navigation',
@@ -30,12 +31,13 @@ export class NavigationComponent implements OnInit {
   faFolder = faFolder;
   faSolidStar = faSolidStar;
   faStar = faStar;
+  faFolderPlus = faFolderPlus;
   authSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
   showFav: boolean = false;
 
-  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) {
+  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService,  private router: Router, private directPolicyServiceService: DirectPolicyServiceService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
     );
@@ -85,5 +87,14 @@ export class NavigationComponent implements OnInit {
   }
   unhoverFavorite(policy: PolicyHistory) {
     policy.hover = false;
+  }
+
+  refresh() {
+    // this.router.onSameUrlNavigation = 'reload';
+    //this.router.navigateByUrl('/home/directpolicy');
+    //this.router.navigate(['/home'],{ skipLocationChange: true });
+
+    this.directPolicyServiceService.collapseEndorsementLocations();
+
   }
 }

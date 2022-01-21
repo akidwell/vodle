@@ -13,11 +13,11 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ReinsuranceLookupService } from 'src/app/policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 
 @Component({
-  selector: 'rsps-quote-create',
-  templateUrl: './quote-create.component.html',
-  styleUrls: ['./quote-create.component.css']
+  selector: 'rsps-direct-policy-create',
+  templateUrl: './direct-policy-create.component.html',
+  styleUrls: ['./direct-policy-create.component.css']
 })
-export class QuoteCreateComponent implements OnInit {
+export class DirectPolicyCreateComponent implements OnInit {
   faCheckCircle = faCheckCircle;
   faTimesCircle = faTimesCircle;
   policyData!: PolicyData;
@@ -29,13 +29,18 @@ export class QuoteCreateComponent implements OnInit {
   policySymbols$: Observable<Code[]> | undefined;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
-  @ViewChild('modal') private modalContent!: TemplateRef<QuoteCreateComponent>
+  @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
   private modalRef!: NgbModalRef
 
-  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) { }
+  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) {
+    this.policyData = newPolicyData();
+   }
 
   ngOnInit(): void {
+
     this.policySymbols$ = this.dropDownsService.getPolicySymbols();
+  
+    //this.open();
   }
 
   ngOnDestroy(): void {
