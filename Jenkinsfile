@@ -49,7 +49,24 @@ pipeline {
 				script {
 					def jsonfile = readJSON file: './src/assets/config/config.dev.json'
 					jsonfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
 					writeJSON file: './src/assets/config/config.json', json: jsonfile
+
+					def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
+					jsonIntfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.int.json', json: jsonIntfile
+
+					def jsonUATfile = readJSON file: './src/assets/config/config.uat.json'
+					jsonUATfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.uat.json', json: jsonUATfile
+
+					def jsonCertfile = readJSON file: './src/assets/config/config.cert.json'
+					jsonCertfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.cert.json', json: jsonCertfile
+
+					def jsonProdfile = readJSON file: './src/assets/config/config.prod.json'
+					jsonProdfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.prod.json', json: jsonProdfile
 				}
 			}
 		}
