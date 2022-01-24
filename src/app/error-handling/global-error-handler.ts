@@ -30,7 +30,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       // Server Error
       errorMessage = errorService.getServerMessage(error);
       formattedErrorMessage = "<b>Message:</b>" + "<br>" + errorMessage;
-      let serviceErrorMessage = error.error.Message;
+      let serviceErrorMessage = error.error?.Message;
       if (serviceErrorMessage != null) {
         formattedErrorMessage += "<br>" + "<b>Details:</b>" + "<br>" + serviceErrorMessage;
       }
@@ -85,8 +85,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     if (errorResponse != null) {
       xml += "<Code>" + errorResponse.status + "</Code>";
       xml += "<RequestUrl>" + errorResponse.url + "</RequestUrl>";
-      xml += "<ErrorTitle>" + errorResponse.error.title + "</ErrorTitle>";
-      for (const property in errorResponse.error.errors) {
+      xml += "<ErrorTitle>" + errorResponse.error?.title + "</ErrorTitle>";
+      for (const property in errorResponse.error?.errors) {
         if (errorResponse.error.errors.hasOwnProperty(property)) {
           const propertyErrors: Array<string> = errorResponse.error.errors[property];
           xml += "<Messages>";
