@@ -1,6 +1,6 @@
 import { FactoryProvider } from '@angular/core';
 
-import { OKTA_CONFIG, OktaAuthService } from '@okta/okta-angular';
+import { OKTA_CONFIG } from '@okta/okta-angular';
 import { ConfigService } from '../config/config.service';
 
 export function oktaConfigFactory(configService: ConfigService) {
