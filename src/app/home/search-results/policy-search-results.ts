@@ -19,9 +19,11 @@ export interface PolicySearchResults {
     masterPolicy: string;
   }
 
-  export interface EndorsementAction {
+  export interface NewEndorsementData {
     endorsementNumber: number;
-    transactionType: string;
+    policyId: number;
+    newEndorsementNumber: number;
+    transactionType: number;
     endorsementReason: string;
     transEffectiveDate: Date;
     transExpirationDate: Date;

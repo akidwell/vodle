@@ -61,7 +61,7 @@
             <td>{{ policy.invoiceStatus}}</td>
             <td>{{ policy.transactionType}}</td>
             <td id="actionCell">
-                  <div ngbDropdown>
+                  <div ngbDropdown style="margin-top: 6%">
                     <button  id="action" ngbDropdownToggle>Actions</button>
                     <div ngbDropdownMenu aria-labelledby="action">
                       <button ngbDropdownItem (click)="newEndorsement(policy)" value="endorsement">Endorsement</button>
