@@ -8,10 +8,10 @@
     <fa-icon [icon]="faFileImport"></fa-icon>
     Import
   </a>
-  <!-- <a class='nav-link' (click)="refresh()" routerLink='/home'>
+  <a class='nav-link' (click)="createDirectPolicy()" *ngIf="canEditPolicy">
     <fa-icon [icon]="faFolderPlus"></fa-icon>
     New Direct Policy
-  </a> -->
+  </a>
   <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1">
   <div *ngFor="let policy of policyHistory">
     <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
