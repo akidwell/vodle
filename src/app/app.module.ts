@@ -1,5 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +21,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './app-reuse-strategy';
 import { BusyModule } from './busy/busy.module';
+import { PreInitService, preInitServiceFactory } from './config/preInit.service';
+import { OktaConfigProvider } from './authorization/okta-config.provider';
 
 @NgModule({
   declarations: [
@@ -51,31 +53,20 @@ import { BusyModule } from './busy/busy.module';
     BusyModule
   ],
   providers: [
+    PreInitService,
     {
       provide: APP_INITIALIZER,
       multi: true,
-      deps: [ConfigService],
-      useFactory: (configService: ConfigService) => () => configService.loadAppConfig()
+      deps: [PreInitService, Injector],
+      useFactory: preInitServiceFactory
+
     },
+    OktaConfigProvider,
     {
       provide: HTTP_INTERCEPTORS,
       multi: true,
       useClass: AuthInterceptor
     },
-    {
-      provide: OKTA_CONFIG, deps: [ConfigService], useFactory: (configService: ConfigService) => {
-        let okta_config = {
-          clientId: configService.oktaClientId,
-          issuer: configService.oktaIssuer,
-          redirectUri: configService.oktaRedirectUri,
-          scopes: ['openid', 'profile', 'email'],
-          pkce: true,
-          postLogoutRedirectUri: configService.oktaPostLogoutRedirectUri,
-        };
-        return okta_config;
-      }
-    },
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
@@ -83,3 +74,4 @@ import { BusyModule } from './busy/busy.module';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

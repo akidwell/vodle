@@ -18,11 +18,7 @@ export class AuthService {
   constructor(private userAuth: UserAuth, private http: HttpClient, private config: ConfigService, private jwtHelper: JwtHelperService, private oktaAuth: OktaAuthService, private router: Router) {
     // Subscribe to authentication state changes
     this.oktaAuth.$authenticationState.subscribe(isAuthenticated => {
-      console.log('first ', isAuthenticated)
       if (isAuthenticated) {
-        this.login2();
-      } else {
-        console.log('okta login', isAuthenticated)
         this.login();
       }
     });
@@ -41,12 +37,6 @@ export class AuthService {
   private _headers = new HttpHeaders();
 
   login() {
-    this.oktaAuth.signInWithRedirect({
-      originalUri: '/home'
-    });
-  }
-
-  login2() {
     this.userAuth.init();
     this.getAuthToken().subscribe({
       next: token => {
@@ -57,7 +47,7 @@ export class AuthService {
           localStorage.setItem('jwt_token', this.userAuth.bearerToken);
         }
       },
-      error: err => console.log("!!! " + err) 
+      error: err => console.log("!!! " + err)
     });
   }
 
