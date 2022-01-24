@@ -6,11 +6,10 @@ import { SubmissionSearchService } from '../submission-search/submission-search.
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from 'src/app/policy/policy.service';
-import { CustomReuseStrategy } from 'src/app/app-reuse-strategy';
-import { Router, RouteReuseStrategy } from '@angular/router';
+import { Router } from '@angular/router';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { ReinsuranceLookupService } from 'src/app/policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
+import { NavigationService } from 'src/app/policy/services/navigation.service';
 
 @Component({
   selector: 'rsps-direct-policy-create',
@@ -28,19 +27,20 @@ export class DirectPolicyCreateComponent implements OnInit {
   showExpirationDateInvalid: boolean = false;
   policySymbols$: Observable<Code[]> | undefined;
 
+  // minDate: string = '2016-08-28';
+  minDate: Date = new Date(2020, 0, 1);
+  maxDate: Date = new Date(2023, 0, 1);
+
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
   private modalRef!: NgbModalRef
 
-  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) {
+  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService) {
     this.policyData = newPolicyData();
    }
 
   ngOnInit(): void {
-
     this.policySymbols$ = this.dropDownsService.getPolicySymbols();
-  
-    //this.open();
   }
 
   ngOnDestroy(): void {
@@ -91,20 +91,28 @@ export class DirectPolicyCreateComponent implements OnInit {
     return this.policyData.policyNumber.length == 7;
   }
 
-  checkDates() {
-    if (this.policyData.policyEffectiveDate != null && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate())) {
-      var date = this.policyData.policyEffectiveDate.toString().split('-');
-      var newYear = parseInt(date[0]) + 1; //Add year
-      var month = parseInt(date[1]) - 1; //Need to subtract one as Jan = 0 for creating new date
-      var day = parseInt(date[2]);
+  setExpirationDate() {
+    console.log(this.policyData.policyExpirationDate);
+    if (this.policyData.policyEffectiveDate != null && (this.policyData.policyExpirationDate == null || this.policyData.policyExpirationDate.toString() === '' ) && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate())) {
+      // var date = this.policyData.policyEffectiveDate.toString().split('-');
+      // var newYear = parseInt(date[0]) + 1; //Add year
+      // var month = parseInt(date[1]) - 1; //Need to subtract one as Jan = 0 for creating new date
+      // var day = parseInt(date[2]);
+      // this.policyData.policyExpirationDate = new Date(newYear, month, day, 0,0,0,0) //year, month, day, hours, min, sec, time zone offset
 
-      this.policyData.policyExpirationDate = new Date(newYear, month, day, 0,0,0,0) //year, month, day, hours, min, sec, time zone offset
+      let newDate = new Date(this.policyData.policyEffectiveDate);
+      newDate.setFullYear(newDate.getFullYear() + 1);
+      this.policyData.policyExpirationDate = newDate;
+      this.checkDates();
     }
+  }
+
+  checkDates() {
     if (this.policyData.policyEffectiveDate != null && this.policyData.policyExpirationDate != null) {
       this.showExpirationDateInvalid = this.policyData.policyEffectiveDate >= this.policyData.policyExpirationDate;
     }
   }
-
+  
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1;
@@ -114,13 +122,7 @@ export class DirectPolicyCreateComponent implements OnInit {
     const response: PolicyAddResponse = await this.policyService.addPolicy(this.policyData).toPromise();
     if (response.isPolicyCreated) {
     this.modalRef.close();
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
-    this.dropDownService.clearPolicyDropDowns();
-    this.reinsuranceLookupService.clearReinsuranceCodes();
+    this.navigationService.resetPolicy();
     this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
     }
   }
