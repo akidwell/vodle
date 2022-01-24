@@ -1,13 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router, RouteReuseStrategy } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { CustomReuseStrategy } from 'src/app/app-reuse-strategy';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { PolicyService } from 'src/app/policy/policy.service';
+import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { NewEndorsementData, PolicySearchResults } from '../policy-search-results';
 import { ActionService } from './action.service';
 
@@ -39,7 +39,7 @@ export class ActionComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
 
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, private routeReuseStrategy: RouteReuseStrategy, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -180,12 +180,7 @@ export class ActionComponent implements OnInit {
   routeImport() {
     this.showBusy = false;
     if (this.NewEndorsementResponse !== null) {
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
-
+      this.navigationService.resetPolicy();
       this.router.navigate(['/policy/' + this.NewEndorsementResponse.policyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
     }
     else {

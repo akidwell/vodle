@@ -5,12 +5,9 @@ import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
 import { Subscription } from 'rxjs';
 import { PolicyHistoryService } from './policy-history/policy-history.service';
-import { Router, RouteReuseStrategy } from '@angular/router';
-import { DropDownsService } from '../drop-downs/drop-downs.service';
-import { CustomReuseStrategy } from '../app-reuse-strategy';
+import { Router } from '@angular/router';
 import { PolicyHistory } from './policy-history/policy-history';
-import { ReinsuranceLookupService } from '../policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
-import { DirectPolicyServiceService } from '../home/direct-policy/direct-policy-service/direct-policy-service.service';
+import { NavigationService } from '../policy/services/navigation.service';
 
 @Component({
   selector: 'rsps-navigation',
@@ -33,13 +30,18 @@ export class NavigationComponent implements OnInit {
   faStar = faStar;
   faFolderPlus = faFolderPlus;
   authSub: Subscription;
+  editSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
   showFav: boolean = false;
+  canEditPolicy: boolean = false;
 
-  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService,  private router: Router, private directPolicyServiceService: DirectPolicyServiceService) {
+  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
+    );
+    this.editSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
     currentPolicy.loadInfo();
   }
@@ -54,6 +56,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnDestroy() {
     this.authSub.unsubscribe();
+    this.editSub.unsubscribe();
     this.policySub?.unsubscribe();
   }
 
@@ -66,13 +69,7 @@ export class NavigationComponent implements OnInit {
   }
 
   openPolicy(): void {
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
-    (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
-    this.dropDownService.clearPolicyDropDowns();
-    this.reinsuranceLookupService.clearReinsuranceCodes();
+    this.navigationService.resetPolicy();
   }
 
   favorite(policy: PolicyHistory) {
@@ -89,12 +86,11 @@ export class NavigationComponent implements OnInit {
     policy.hover = false;
   }
 
-  refresh() {
-    // this.router.onSameUrlNavigation = 'reload';
-    //this.router.navigateByUrl('/home/directpolicy');
-    //this.router.navigate(['/home'],{ skipLocationChange: true });
-
-    this.directPolicyServiceService.collapseEndorsementLocations();
-
+  createDirectPolicy() {
+    this.router.navigate(['/home']).then(() => {
+      setTimeout(() => { 
+        this.navigationService.create(); 
+      });
+    });
   }
 }
