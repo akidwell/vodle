@@ -58,6 +58,7 @@ export class AuthService {
         tap(async token => {
           if (token == null) {
             console.log("No token");
+            this.router.navigate(['/access-denied']);
           }
           else {
             const tokenString = JSON.parse(JSON.stringify(token));
