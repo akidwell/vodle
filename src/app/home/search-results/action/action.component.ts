@@ -33,6 +33,7 @@ export class ActionComponent implements OnInit {
   errorMessage = '';
   pipeMessage: string = "";
   showBusy: boolean = false;
+  cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel']
 
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
@@ -45,8 +46,8 @@ export class ActionComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
-    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+    // this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
+    // this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
   }
 
   ngOnDestroy(): void {
@@ -60,6 +61,8 @@ export class ActionComponent implements OnInit {
   async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults): Promise<void> {
     this.policyInfo = policy;
     this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
+    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
+    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
@@ -67,13 +70,23 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
       this.endorsementActionInfo.policyId = this.policyInfo.policyId
 
+      if(this.cancelTypes.includes(policy.transactionType)){
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
+        this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
+
+      }
+      else if(!this.cancelTypes.includes(policy.transactionType)){
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
+        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
+      }
+
       if (policy.masterPolicy !== '1') {
         this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
       }
       this.modalRef = this.modalService.open(this.endorsementModal, { backdrop: 'static', centered: true })
       this.modalRef.result.then(resolve, resolve)
     })
-  }
+  } 
 
   checkTransEffectiveDate(): boolean {
     var test = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
