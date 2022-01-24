@@ -7,24 +7,24 @@
         </div>
         <div class="modal-body">
             <div>
-                <label for="endorsementNumber">Endorsement Number</label>
-                <input type="text" class="form-control" id="endorsementNumber" [required]="canEdit"
-                    [readonly]="!canEdit" name="endorsementNumber" [(ngModel)]="endorsementActionInfo.endorsementNumber"
+                <label for="newEndorsementNumber">Endorsement Number</label>
+                <input type="text" class="form-control" id="newEndorsementNumber" [required]="canEdit"
+                    [readonly]="!canEdit" name="newEndorsementNumber" [(ngModel)]="endorsementActionInfo.newEndorsementNumber"
                     max="999" maxlength="3" (keyup)="checkEndorsementNumber()">
             </div>
-            <div [hidden]="isEndorsementNumberValid" class="alert alert-danger">
+            <div [hidden]="isNewEndorsementNumberValid" class="alert alert-danger">
                 This Endorsement Number has already been used.
             </div>
             <div>
                 <label for="transactionType">Transaction Type</label>
-                <ng-select id="transactionType" [required]="canEdit" [items]="transactionTypes$ | async"
+                <ng-select id="transactionType" [required]="canEdit" [items]="transactionTypes"
                     bindLabel="description" bindValue="key" [clearable]="false" [readonly]="!canEdit"
                     name="transactionType" [(ngModel)]="endorsementActionInfo.transactionType">
                 </ng-select>
             </div>
             <div>
                 <label for="endtReason">Endorsement Reason</label>
-                <ng-select id="endtReason" [required]="canEdit" [items]="endorsementReasons$ | async"
+                <ng-select id="endtReason" [required]="canEdit" [items]="endorsementReasons"
                     bindLabel="description" bindValue="code" [clearable]="false" [readonly]="!canEdit" name="endtReason"
                     [(ngModel)]="endorsementActionInfo.endorsementReason">
                 </ng-select>
@@ -54,7 +54,22 @@
             </div>
         </div>
         <div class="modal-footer">           
-             <button type="button" class="btn btn-danger" (click)="modal.close('Yes')" [disabled]="!isEndorsementNumberValid">Submit</button>
+             <button type="button" class="btn btn-danger" (click)="submit()" [disabled]="!isNewEndorsementNumberValid">Submit</button>
                 <button type="button" class="btn btn-secondary" (click)="clearAndClose()" >Cancel</button>
         </div>
     </ng-template>
+    <div *ngIf="showBusy">
+        <rsps-busy></rsps-busy>
+      </div>
+      
+      <ng-template #modalPipe let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Error Creating Endorsement</h4>
+        </div>
+        <div class="modal-body">
+          <p>{{pipeMessage}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+        </div>
+      </ng-template>

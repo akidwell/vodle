@@ -129,11 +129,11 @@ export class ReinsuranceComponent implements OnInit {
       reinsuranceLayer.reinsLimit = this.endorsement.limit;
     }
     // If Policy layer data is set when there is no reinsurance and the amount does not match the full premium then we can assume it was populated during import and should be used
-    if ((policyLayerData.policyLayerPremium ?? 0) > 0 && (policyLayerData.policyLayerPremium ?? 0) != this.endorsement.premium && policyLayerData.reinsuranceData.length == 1) {
-      reinsuranceLayer.reinsCededPremium = policyLayerData.policyLayerPremium ?? 0;
+    if (policyLayerData.policyLayerPremium !== undefined && policyLayerData.policyLayerPremium > 0 && (policyLayerData.policyLayerPremium ?? 0) != this.endorsement.premium && policyLayerData.reinsuranceData.length == 1) {
+      reinsuranceLayer.reinsCededPremium = policyLayerData.policyLayerPremium;
     }
-    if ((policyLayerData.policyLayerLimit ?? 0) > 0 && policyLayerData.reinsuranceData.length == 1) {
-      reinsuranceLayer.reinsLimit = policyLayerData.policyLayerLimit ?? 0;
+    if (policyLayerData.policyLayerLimit !== undefined && policyLayerData.policyLayerLimit > 0 && policyLayerData.reinsuranceData.length == 1) {
+      reinsuranceLayer.reinsLimit = policyLayerData.policyLayerLimit;
     }
 
     let match: any = null;
@@ -177,8 +177,8 @@ export class ReinsuranceComponent implements OnInit {
     let subAttachmentpoints = false;
     let insuringAgreements = false;
     if (this.canEdit) {
-      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium?.toString() == "" ? 0 : layer.reinsCededPremium ?? 0 }) });
-      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0 }) });
+      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium ?? 0 }) });
+      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit ?? 0 }) });
       subAttachmentpoints = this.checkSubAttachmentPoints()
       insuringAgreements = this.checkAgreementLimits()
 
@@ -287,13 +287,13 @@ export class ReinsuranceComponent implements OnInit {
 
   checkPremiumMatches(): boolean {
     let total: number = 0;
-    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsCededPremium?.toString() == "" ? 0 : layer.reinsCededPremium ?? 0 }) });
+    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsCededPremium ?? 0 }) });
     return this.headerComp.endorsement.premium == total
   }
 
   checkLimitMatches(): boolean {
     let total: number = 0;
-    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0 }) });
+    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsLimit ?? 0 }) });
     return this.headerComp.endorsement.limit == total
   }
 
@@ -323,8 +323,8 @@ export class ReinsuranceComponent implements OnInit {
     this.policyLayerData.forEach(group => {
       group.reinsuranceData.forEach(layer => {
         if (layer.treatyNo == 1) {
-          if (layer.reinsLimit > this.headerComp.endorsement.limit) {
-            this.invalidMessage += "<br><li>Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + this.headerComp.endorsement.limit.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          if ((layer.reinsLimit ?? 0) > (this.headerComp.endorsement.limit ?? 0)) {
+            this.invalidMessage += "<br><li>Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + this.headerComp.endorsement.limit?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             failed = true;
           }
         }
@@ -332,7 +332,7 @@ export class ReinsuranceComponent implements OnInit {
           comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes)
           filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit
           if (filteredList != null)
-            if (layer.reinsLimit > filteredList) {
+            if ((layer.reinsLimit ?? 0) > filteredList) {
               this.invalidMessage += "<br><li>Please check Insuring Agreement for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + filteredList.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
               failed = true;
             }

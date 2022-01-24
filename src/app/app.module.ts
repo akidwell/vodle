@@ -23,6 +23,7 @@ import { CustomReuseStrategy } from './app-reuse-strategy';
 import { BusyModule } from './busy/busy.module';
 import { PreInitService, preInitServiceFactory } from './config/preInit.service';
 import { OktaConfigProvider } from './authorization/okta-config.provider';
+import { DirectivesModule } from './directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { OktaConfigProvider } from './authorization/okta-config.provider';
     NgbAlertModule,
     FormsModule,
     NgSelectModule,
-    BusyModule
+    BusyModule,
+    DirectivesModule
   ],
   providers: [
     PreInitService,

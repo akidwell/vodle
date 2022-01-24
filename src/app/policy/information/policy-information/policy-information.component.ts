@@ -163,6 +163,12 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsement.transactionExpirationDate = this.policyInfo.policyExpirationDate;
     }
   }
+  changeProgramId() {
+    if (this.endorsement.endorsementNumber == 0) {
+      this.endorsementChanged = true;
+      this.endorsementStatusService.reinsuranceValidated = false;
+    }
+  }
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }

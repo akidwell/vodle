@@ -20,21 +20,26 @@ export class ReinsuranceLookupService {
   private cacheReinsuranceCodes: any;
   private cacheReinsuranceCodes$!: Observable<any> | null;
 
-  getReinsurance(programId: number,effectiveDate: Date): Observable<ReinsuranceLookup[]> {
+  getReinsurance(programId: number, effectiveDate: Date): Observable<ReinsuranceLookup[]> {
     let observable: Observable<any>;
     if (this.cacheReinsuranceCodes) {
       observable = of(this.cacheReinsuranceCodes);
     } else if (this.cacheReinsuranceCodes$) {
       observable = this.cacheReinsuranceCodes$;
     } else {
-      const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDate.toString());
-      this.cacheReinsuranceCodes$ = this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/lookups/reinsurance-agreements', { params })
-        .pipe(
-          tap(res => this.cacheReinsuranceCodes = res),
-          share(),
-          finalize(() => this.cacheReinsuranceCodes$ = null)
-        );
-      observable = this.cacheReinsuranceCodes$;
+      if (programId == null || isNaN(programId) || effectiveDate == null) {
+        return of(<ReinsuranceLookup[]>[]);
+      }
+      else {
+        const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDate.toString());
+        this.cacheReinsuranceCodes$ = this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/lookups/reinsurance-agreements', { params })
+          .pipe(
+            tap(res => this.cacheReinsuranceCodes = res),
+            share(),
+            finalize(() => this.cacheReinsuranceCodes$ = null)
+          );
+        observable = this.cacheReinsuranceCodes$;       
+      } 
     }
     return observable;
   }

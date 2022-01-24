@@ -7,14 +7,12 @@ import { ImportRequest } from './interfaces/import-request';
 import { ImportResult } from './interfaces/import-response';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Router, RouteReuseStrategy } from "@angular/router";
+import { Router } from "@angular/router";
 import { DecimalPipe } from '@angular/common';
 import { switchMap, tap } from 'rxjs/operators';
 import { State } from './interfaces/state';
 import { SearchResult } from './interfaces/search-result';
-import { CustomReuseStrategy } from '../app-reuse-strategy';
-import { DropDownsService } from '../drop-downs/drop-downs.service';
-import { ReinsuranceLookupService } from '../policy/reinsurance/reinsurance-lookup/reinsurance-lookup.service';
+import { NavigationService } from '../policy/services/navigation.service';
 
 
 function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
@@ -88,7 +86,7 @@ export class ImportComponent implements OnInit {
     return of({policies, total});
   }
 
-  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe,private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService) { 
+  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe, private navigationService: NavigationService) { 
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       switchMap(() => this._search()),
@@ -135,13 +133,7 @@ export class ImportComponent implements OnInit {
   routeImport() {
     this.showBusy = false;
     if (this.importPolicyResponse?.isPolicyImported) {  
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
-      (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
-      this.dropDownService.clearPolicyDropDowns();
-      this.reinsuranceLookupService.clearReinsuranceCodes();
+      this.navigationService.resetPolicy();
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {

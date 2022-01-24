@@ -8,28 +8,30 @@ import { SearchResultsComponent } from './search-results/search-results.componen
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SearchModule } from '../search-bar/search-bar.module';
-import { QuoteCreateComponent } from './quote/quote-create/quote-create.component';
+import { DirectPolicyCreateComponent } from './direct-policy/direct-policy-create/direct-policy-create.component';
 import { DirectivesModule } from '../directives/directives.module';
 import { ActionComponent } from './search-results/action/action.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { BusyModule } from '../busy/busy.module';
 
 @NgModule({
   declarations: [
     HomeComponent,
     SearchResultsComponent,
-    QuoteCreateComponent,
+    DirectPolicyCreateComponent,
     ActionComponent
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule, 
+    HomeRoutingModule,
     FormsModule,
     FontAwesomeModule,
     NgSelectModule,
     NgbModule,
     SearchModule,
     DirectivesModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    BusyModule
   ],
   providers: [
     DatePipe

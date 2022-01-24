@@ -20,9 +20,9 @@
       </div>
       <div class="col-lg-6">
         <label for="policyEffectiveDate">Effective Date</label>
-        <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="false"
-          [required]="true" [ngModel]="policyData.policyEffectiveDate  | date:'yyyy-MM-dd'"
-          (ngModelChange)="policyData.policyEffectiveDate=$event" (change)="checkDates()" name="policyEffectiveDate"
+        <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="false" string-to-date [min]="minDate | date:'yyyy-MM-dd'" [max]="maxDate | date:'yyyy-MM-dd'" dateRange [minDate]="minDate" [maxDate]="maxDate" 
+          [required]="true" [ngModel]="policyData.policyEffectiveDate"
+          (ngModelChange)="policyData.policyEffectiveDate=$event" (blur)="setExpirationDate()" (change)="checkDates()" name="policyEffectiveDate"
           #policyEffectiveDate="ngModel">
       </div>
       <div class="col-lg-6">
@@ -35,7 +35,7 @@
             Expiration Date must be after Effective Date
           </div>
       </div>
-      <div class="col-lg-3">
+      <div class="col-lg-4">
         <label for="policySymbol">Symbol</label>
         <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description"
         [required]="true" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch"
@@ -47,8 +47,6 @@
             {{item.code}} - {{item.description}}
           </ng-template>
       </ng-select>
-        <!-- <input type="text" class="form-control" id="policySymbol" maxlength="3" [readonly]="false"
-          [required]="true" [(ngModel)]="policyData.policySymbol" (ngModelChange)="policyData.policySymbol = $event.toUpperCase()" name="policySymbol" #policySymbol="ngModel"> -->
       </div>
       <div class="col-lg-4">
         <label for="policyNumber">Policy Number</label>

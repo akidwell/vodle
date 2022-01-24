@@ -8,6 +8,10 @@
     <fa-icon [icon]="faFileImport"></fa-icon>
     Import
   </a>
+  <a class='nav-link' (click)="createDirectPolicy()" *ngIf="canEditPolicy">
+    <fa-icon [icon]="faFolderPlus"></fa-icon>
+    New Direct Policy
+  </a>
   <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1">
   <div *ngFor="let policy of policyHistory">
     <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
@@ -16,11 +20,10 @@
       <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
       {{ policy.policyNumber + ":" + policy.endorsementNumber}}
       <fa-icon *ngIf="policy.favorite" style="float:right;" title="Unfavorite" [icon]="faSolidStar"
-        (click)="$event.stopPropagation();$event.preventDefault();unfavorite(policy)"></fa-icon>
+        (click)="$event.preventDefault();unfavorite(policy)" click-stop-propagation></fa-icon>
       <fa-icon *ngIf="!policy.favorite && policy.hover" style="float:right;" title="Favorite" [icon]="faStar"
-        (click)="$event.stopPropagation();$event.preventDefault();favorite(policy)"></fa-icon>
+        (click)="$event.preventDefault();favorite(policy)" click-stop-propagation></fa-icon>
       </a>
-
   </div>
   <hr class="rounded mt-1 mb-1">
   <a class='nav-link' (click)="toggleApplicationNavbar()">
