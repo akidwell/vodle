@@ -1,7 +1,7 @@
 {
     "apiBaseUrl": "https://garsint.td.afg/rsps-service/",
     "buildVersion" : "1.0.0.0",
-    "oktaClientId": "0oa2cnxfe5iOCVhc41d7",
+    "oktaClientId": "0oa2co1ikayArihHr1d7",
     "oktaIssuer": "https://logindev.gaig.com",
     "oktaScopes": ["openid", "profile", "email"],
     "oktaRedirectUri" : "https://garsint.td.afg/rsps/callback",
