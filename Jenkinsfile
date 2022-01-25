@@ -70,10 +70,22 @@ pipeline {
 				}
 			}
 		}
-		stage("Builds"){
+		stage("Build Dev"){
+			when {
+	      		expression { params.Environment == "DEV"}
+	    	}
 			steps{
-				sh 'chmod +x ./build.sh'
-				sh './build.sh'
+				sh 'chmod +x ./build-dev.sh'
+				sh './build-dev.sh'
+			} 
+		}
+		stage("Build Release"){
+			when {
+	      		expression { params.Environment == "RELEASE"}
+	    	}
+			steps{
+				sh 'chmod +x ./build-release.sh'
+				sh './build-release.sh'
 			} 
 		}
 		stage('Zip') {	
@@ -87,6 +99,9 @@ pipeline {
 			}
 		}
 		stage('Deploy to DEV') {	
+			when {
+		  		expression { params.Environment == "DEV"}
+			}
 			steps{
 				script {
 					sh """
