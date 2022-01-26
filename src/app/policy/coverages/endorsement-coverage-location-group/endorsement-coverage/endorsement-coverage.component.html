@@ -59,7 +59,7 @@
           <div class="col-lg-1">
             <label class='hidden-label' for="claimsMadeOrOccurrence">CLM/OCC</label>
             <ng-select click-stop-propagation id="claimsMadeOrOccurrence" [items]="claimsMadeOrOccurrence$ | async" bindValue="code"
-              bindLabel="description" name="claimsMadeOrOccurrence" [required]="canEdit && showClaimsMade" [clearable]="false"
+              bindLabel="description" name="claimsMadeOrOccurrence" [required]="canEdit && showClaimsMade" *ngIf="showClaimsMade" [clearable]="false"
                [searchFn]="dropDownSearch" [readonly]="!canEdit || !showClaimsMade"
               [(ngModel)]="coverage.claimsMadeOrOccurrence" (change)="changeClaimsMadeOccurrence()">
               <ng-template ng-label-tmp let-item="item">
@@ -69,6 +69,7 @@
                 {{item.code}} - {{item.description}}
               </ng-template>
             </ng-select>
+            <input type="text" click-stop-propagation *ngIf="!showClaimsMade" class="form-control" [readonly]="true">
           </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="retroDate">Retro Date</label>

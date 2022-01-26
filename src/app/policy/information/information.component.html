@@ -1,5 +1,5 @@
 <div class="content">
     <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage"></ngb-alert>
-    <rsps-account-information></rsps-account-information>
-    <rsps-policy-information></rsps-policy-information>
+    <rsps-account-information [accountInfo]="accountInfo"></rsps-account-information>
+    <rsps-policy-information [endorsement]="endorsement" [policyInfo]="policyInfo" [accountInfo]="accountInfo"></rsps-policy-information>
 </div>

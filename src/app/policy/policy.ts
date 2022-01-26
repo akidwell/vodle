@@ -69,7 +69,7 @@ export interface QuoteData {
   carrierCode: string;
   coverageCode: string;
   creditDays: string;
-
+  claimsMadeOrOccurrence: string;
 }
 export interface RiskLocation {
 

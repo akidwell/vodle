@@ -1,6 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Data } from '@angular/router';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { Observable, of, Subject } from 'rxjs';
+import { deepClone } from 'src/app/helper/deep-clone';
+import { NotificationService } from 'src/app/notification/notification-service';
+import { AccountInformation, Endorsement, PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
+import { PolicyService } from '../policy.service';
+import { ReinsuranceLookupService } from '../reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
 import { AccountInformationComponent } from './account-information/account-information.component';
 import { PolicyInformationComponent } from './policy-information/policy-information.component';
@@ -18,13 +25,26 @@ export class InformationComponent implements OnInit, PolicySave {
   formStatus: boolean | null = false;
   invalidMessage: string = "";
   showInvalid: boolean = false;
+  data!: Data;
+  accountInfo!: AccountInformation;
+  policyInfo!: PolicyInformation;
+  endorsement!: Endorsement;
 
-  constructor(private endorsementStatusService: EndorsementStatusService) { }
+  constructor(private endorsementStatusService: EndorsementStatusService, private route: ActivatedRoute, private notification: NotificationService,
+    private policyService: PolicyService, private reinsuranceLookupService: ReinsuranceLookupService) { }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log(this.route)
+    this.route.parent?.data.subscribe(data => {
+      this.data = deepClone(data);
+      this.accountInfo = data['accountData'].accountInfo;
+      this.policyInfo = data['policyInfoData'].policyInfo;
+      this.endorsement = data['endorsementData'].endorsement;
+    });
+  }
 
   isValid(): boolean {
     this.endorsementStatusService.policyInfoValidated =  this.policyInfoComp.isValid() && this.accountInfoComp.accountInfoForm.status == 'VALID';
@@ -32,12 +52,56 @@ export class InformationComponent implements OnInit, PolicySave {
   }
 
   isDirty(): boolean {
-    return (this.policyInfoComp.policyInfoForm.dirty ?? false) || (this.accountInfoComp.accountInfoForm.dirty ?? false);
+    return ((this.policyInfoComp.policyInfoForm.dirty == true || this.accountInfoComp.accountInfoForm.dirty == true) ? true : false);
   }
 
   save(): void {
-    this.accountInfoComp.save();
-    this.policyInfoComp.save();
+    this.saveEndorsementInfo().subscribe(() => {
+          this.savePolicyInfo().subscribe(() => {
+              this.saveAccountInfo().subscribe(() => {
+                });
+            });
+      });
+  }
+
+  saveEndorsementInfo(): Observable<boolean> {
+    var subject = new Subject<boolean>();
+    if (this.policyInfoComp.allowEndorsementSave()) {
+        this.policyService.updateEndorsement(this.endorsement).subscribe(() => {
+          subject.next(true)
+        });
+    } else {
+      setTimeout(() => subject.next(true), 0)
+    }
+    return subject.asObservable();
+  }
+
+  savePolicyInfo(): Observable<boolean> {
+    var subject = new Subject<boolean>();
+    if (this.policyInfoComp.allowSave()) {
+      this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
+          this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
+          this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          subject.next(true)
+        })
+    } else {
+      setTimeout(() => subject.next(true), 0)
+    }
+    return subject.asObservable();
+  }
+
+  saveAccountInfo(): Observable<boolean> {
+    var subject = new Subject<boolean>();
+    if (this.accountInfoComp.allowSave()) {
+      this.policyService.updateAccountInfo(this.accountInfo).subscribe(() => {
+          this.data['accountData'].accountInfo = deepClone(this.accountInfo);
+          this.notification.show('Account Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          subject.next(true)
+        });
+    } else {
+      setTimeout(() => subject.next(true), 0)
+    }
+    return subject.asObservable();
   }
 
   showInvalidControls(): void {
@@ -70,7 +134,7 @@ export class InformationComponent implements OnInit, PolicySave {
       this.showInvalid = true;
       this.policyInfoComp.ErrorMessages().forEach(error => {
         this.invalidMessage += "<br><li>" + error;
-      }); 
+      });
     }
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;

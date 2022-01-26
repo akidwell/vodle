@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { AccountInformation } from '../../policy';
@@ -15,7 +15,6 @@ import { EndorsementStatusService } from '../../services/endorsement-status.serv
   styleUrls: ['./account-information.component.css']
 })
 export class AccountInformationComponent implements OnInit {
-  accountInfo!: AccountInformation;
   isReadOnly: boolean = true;
   accountCollapsed = false;
   canEditPolicy: boolean = false;
@@ -26,21 +25,19 @@ export class AccountInformationComponent implements OnInit {
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 
+  @Input() public accountInfo!: AccountInformation;
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private userAuth: UserAuth, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
-      this.accountInfo = data['accountData'].accountInfo;
-    });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -50,19 +47,15 @@ export class AccountInformationComponent implements OnInit {
     this.statusSub?.unsubscribe();
   }
 
-  save(): boolean {
+  allowSave(): boolean {
     if (this.canEditPolicy && this.accountInfoForm.dirty) {
       if (this.accountInfoForm.status != "VALID") {
         this.notification.show('Account Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
-
-      this.accountSub = this.policyService.updateAccountInfo(this.accountInfo).subscribe(result => {
-        this.accountInfoForm.form.markAsPristine();
-        this.accountInfoForm.form.markAsUntouched();
-        this.notification.show('Account Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        return result;
-      });
+      this.accountInfoForm.form.markAsPristine();
+      this.accountInfoForm.form.markAsUntouched();
+      return true;
     }
     return false;
   }

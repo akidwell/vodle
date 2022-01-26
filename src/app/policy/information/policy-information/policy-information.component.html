@@ -9,19 +9,23 @@
       <div #collapse="ngbCollapse" [(ngbCollapse)]="policyCollapsed">
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-2 col-md-5">
+            <div class="col-lg-2 col-md-4">
               <label for="policyEventCode"  class="form-label" title="Status">Status</label>
               <input type="text" class="form-control" id="policyEventCode" [readonly]="isReadOnly"
                 value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
             </div>
-            <div class="col-lg-4 col-md-2"></div>
-            <div class="col-lg-2 col-md-5">
+            <div class="col-lg-2 col-md-4">
+              <label for="claimsMadeOrOccurrence"  class="form-label" title="Status">CLM/OCC</label>
+              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="isReadOnly"
+                id="claimsMadeOrOccurrence" [(ngModel)]="policyInfo.quoteData.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence" #claimsMadeOrOccurrence="ngModel">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
               <label for="enteredDate"  class="form-label" title="Policy Entered Date">Policy Entered Date</label>
               <input type="date" class="form-control" id="enteredDate" [readonly]="isReadOnly"
                 [ngModel]="policyInfo.enteredDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.enteredDate=$event"
                 name="enteredDate" #enteredDate="ngModel">
             </div>
-            <div class="col-lg-4"></div>
           </div>
         </div>
         <div class="card-body">

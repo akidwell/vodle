@@ -1,17 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AccountInformation, Endorsement, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute } from '@angular/router';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
-import { PolicyService } from '../../policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { DatePipe } from '@angular/common';
-import { ReinsuranceLookupService } from '../../reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -23,10 +20,6 @@ export class PolicyInformationComponent implements OnInit {
   policyCollapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  accountInfo!: AccountInformation;
-  policyInfo!: PolicyInformation;
-  quoteData!: QuoteData;
-  riskLocation!: RiskLocation;
   pacCodes$: Observable<Code[]> | undefined;
   riskGrades$: Observable<Code[]> | undefined;
   states$: Observable<Code[]> | undefined;
@@ -40,6 +33,7 @@ export class PolicyInformationComponent implements OnInit {
   assumedCarriers$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
   canEditPolicy: boolean = false;
+  claimsMadeOrOccurrence$: Code[] = [];
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
   policySub!: Subscription;
@@ -47,7 +41,6 @@ export class PolicyInformationComponent implements OnInit {
   assumed!: boolean;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
-  endorsement!: Endorsement;
   endorsementChanged: boolean = false;
   endorsementSub!: Subscription;
 
@@ -57,36 +50,36 @@ export class PolicyInformationComponent implements OnInit {
   PolicyExpirationDateError: string = "";
 
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
+  @ViewChild(NgForm) form: NgForm | undefined;
+  @Input() public endorsement!: Endorsement;
+  @Input() public policyInfo!: PolicyInformation;
+  @Input() public accountInfo!: AccountInformation;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe, private reinsuranceLookupService: ReinsuranceLookupService) {
+  constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService,
+    private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
-  @ViewChild(NgForm) form: NgForm | undefined;
-
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
-      this.accountInfo = data['accountData'].accountInfo;
-      this.policyInfo = data['policyInfoData'].policyInfo;
-      this.endorsement = data['endorsementData'].endorsement;
-      this.pacCodes$ = this.dropdowns.getPACCodes();
-      this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
-      this.states$ = this.dropdowns.getStates();
-      this.carrierCodes$ = this.dropdowns.getCarrierCodes();
-      this.coverageCodes$ = this.dropdowns.getCoverageCodes();
-      this.auditCodes$ = this.dropdowns.getAuditCodes();
-      this.paymentFrequencies$ = this.dropdowns.getPaymentFrequencies();
-      this.deregulationIndicators$ = this.dropdowns.getDeregulationIndicators();
-      this.riskTypes$ = this.dropdowns.getRiskTypes();
-      this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
-      this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
-      this.programs$ = this.dropdowns.getPrograms();
-    });
+    this.pacCodes$ = this.dropdowns.getPACCodes();
+    this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
+    this.states$ = this.dropdowns.getStates();
+    this.carrierCodes$ = this.dropdowns.getCarrierCodes();
+    this.coverageCodes$ = this.dropdowns.getCoverageCodes();
+    this.auditCodes$ = this.dropdowns.getAuditCodes();
+    this.paymentFrequencies$ = this.dropdowns.getPaymentFrequencies();
+    this.deregulationIndicators$ = this.dropdowns.getDeregulationIndicators();
+    this.riskTypes$ = this.dropdowns.getRiskTypes();
+    this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
+    this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
+    this.programs$ = this.dropdowns.getPrograms();
+    this.populateClaimsMadeOccurrence();
+
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -101,7 +94,7 @@ export class PolicyInformationComponent implements OnInit {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
   }
-  
+
   isValid(): boolean {
     const effectiveDate = Number(this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd'));
     const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
@@ -119,26 +112,23 @@ export class PolicyInformationComponent implements OnInit {
     }
     return errorMessages;
   }
-
-  save(): boolean {
+  allowEndorsementSave(): boolean {
+    if (this.endorsementChanged) {
+      this.endorsementChanged = false;
+      return true;
+    }
+    return false;
+  }
+  allowSave(): boolean {
     if (this.canEditPolicy && this.policyInfoForm.dirty) {
       if (this.policyInfoForm.status != "VALID") {
         this.notification.show('Policy Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
-      if (this.endorsementChanged) {
-        this.endorsementSub = this.policyService.updateEndorsement(this.endorsement).subscribe(() => {
-            this.reinsuranceLookupService.clearReinsuranceCodes();
-            this.reinsuranceLookupService.refreshReinsuranceCodes();
-            this.endorsementChanged = false;
-        });
-      }
-      this.policySub = this.policyService.updatePolicyInfo(this.policyInfo).subscribe(result => {
-        this.policyInfoForm.form.markAsPristine();
-        this.policyInfoForm.form.markAsUntouched();
-        this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        return result;
-      });
+
+      this.policyInfoForm.form.markAsPristine();
+      this.policyInfoForm.form.markAsUntouched();
+      return true;
     }
     return false;
   }
@@ -169,6 +159,13 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsementStatusService.reinsuranceValidated = false;
     }
   }
+
+  populateClaimsMadeOccurrence() {
+    this.claimsMadeOrOccurrence$ = [];
+    this.claimsMadeOrOccurrence$.push({ code: "C", key: 0, description: "Claims-Made" });
+    this.claimsMadeOrOccurrence$.push({ code: "O", key: 1, description: "Occurrence" });
+  }
+
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
