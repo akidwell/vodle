@@ -49,14 +49,43 @@ pipeline {
 				script {
 					def jsonfile = readJSON file: './src/assets/config/config.dev.json'
 					jsonfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.dev.json', json: jsonfile
 					writeJSON file: './src/assets/config/config.json', json: jsonfile
+
+					def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
+					jsonIntfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.int.json', json: jsonIntfile
+
+					def jsonUATfile = readJSON file: './src/assets/config/config.uat.json'
+					jsonUATfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.uat.json', json: jsonUATfile
+
+					def jsonCertfile = readJSON file: './src/assets/config/config.cert.json'
+					jsonCertfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.cert.json', json: jsonCertfile
+
+					def jsonProdfile = readJSON file: './src/assets/config/config.prod.json'
+					jsonProdfile['buildVersion'] = "${fileVersion}".toString()
+					writeJSON file: './src/assets/config/config.prod.json', json: jsonProdfile
 				}
 			}
 		}
-		stage("Builds"){
+		stage("Build Dev"){
+			when {
+	      		expression { params.Environment == "DEV"}
+	    	}
 			steps{
-				sh 'chmod +x ./build.sh'
-				sh './build.sh'
+				sh 'chmod +x ./build-dev.sh'
+				sh './build-dev.sh'
+			} 
+		}
+		stage("Build Release"){
+			when {
+	      		expression { params.Environment == "RELEASE"}
+	    	}
+			steps{
+				sh 'chmod +x ./build-release.sh'
+				sh './build-release.sh'
 			} 
 		}
 		stage('Zip') {	
@@ -70,6 +99,9 @@ pipeline {
 			}
 		}
 		stage('Deploy to DEV') {	
+			when {
+		  		expression { params.Environment == "DEV"}
+			}
 			steps{
 				script {
 					sh """
