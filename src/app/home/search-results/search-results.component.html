@@ -37,7 +37,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let policy of searchResults; let i = index" [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0}">
+          <tr *ngFor="let policy of searchResults; let i = index" [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0}" [ngStyle]="{'background-color': (policy.invoiceStatus == null) ? '#fdfd96' : null}">
             <td>
               <span *ngIf="policy.firstPolicyRow">{{ policy.policyId }}</span>
             </td>
@@ -80,3 +80,14 @@
   </div>
 </div>
 <rsps-action #modal></rsps-action>
+<ng-template #modalPipe let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Error Creating Endorsement</h4>
+  </div>
+  <div class="modal-body">
+    <p>Please process or void the active endorsements before starting a new endorsement</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>

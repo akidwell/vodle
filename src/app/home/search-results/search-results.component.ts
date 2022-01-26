@@ -7,6 +7,7 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { ActionComponent } from './action/action.component';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'rsps-search-results',
@@ -25,7 +26,7 @@ export class SearchResultsComponent implements OnInit {
   insuredName: string = "";
   status: string = "";
 
-  constructor(private router: Router, private route: ActivatedRoute,  private policySearchService: PolicySearchService, private policyHistoryService: PolicyHistoryService, private navigationService: NavigationService) {
+  constructor(private router: Router, private route: ActivatedRoute,  public modalService: NgbModal,  private policySearchService: PolicySearchService, private policyHistoryService: PolicyHistoryService, private navigationService: NavigationService) {
   }
 
   ngOnInit(): void {
@@ -79,8 +80,15 @@ export class SearchResultsComponent implements OnInit {
     this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
   }
   @ViewChild('modal') private actionComponent: ActionComponent | undefined
+  @ViewChild('modalPipe') modalPipe: any;
+
 
   async newEndorsement(policy: PolicySearchResults) {
+    let filtered = this.searchResults.filter(x => x.invoiceStatus == null)
+    if (filtered.length > 0){
+      this.modalService.open(this.modalPipe)
+      return;
+    }
     if (this.actionComponent != null) {
       let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
       console.log(policy)
