@@ -51,7 +51,7 @@ export class EndorsementCoverageComponent implements OnInit {
   showClaimsMade: boolean = false;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
-  
+
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
     private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
@@ -66,7 +66,7 @@ export class EndorsementCoverageComponent implements OnInit {
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
     if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
@@ -85,6 +85,7 @@ export class EndorsementCoverageComponent implements OnInit {
       this.changeCoverageDescription("open");
     }
     this.originalAction = this.coverage.action;
+    this.isRetroDateRequired = this.checkRetroDateRequired();
 
     if (this.coverage.isNew) {
       this.focus();
