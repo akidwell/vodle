@@ -96,7 +96,7 @@ export interface Endorsement {
   transactionExpirationDate: Date;
   terrorismCode: string;
   sir: number;
-  premium: number;
+  premium: number| null;
   limit: number;
   underlyingLimit: number;
   attachmentPoint: number;

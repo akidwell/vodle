@@ -36,7 +36,7 @@
           <div class="col-lg-2">
             <label class='hidden-label' for="premium">Premium</label>
             <input type="text" click-stop-propagation class="form-control" id="premium" [(ngModel)]="coverage.premium"
-              [readonly]="!canEdit" [required]="canEdit" name="premium" #premium="ngModel"
+              [readonly]="!canEdit" [required]="canEdit" name="premium" #premium="ngModel" string-to-currency
               mask="separator.0" thousandSeparator=",">
           </div>
           <div class="col-lg-2">

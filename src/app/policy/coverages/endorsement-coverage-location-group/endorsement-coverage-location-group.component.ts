@@ -223,7 +223,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   calcTotal(): number {
     let total: number = 0;
-    this.endorsementCoveragesGroup.coverages.forEach(group => { total += (group.premium.toString() == "" ? 0 : group.premium ?? 0) });
+    this.endorsementCoveragesGroup.coverages.forEach(coverage => { total += coverage.premium ?? 0 });
     return total;
   }
 }
