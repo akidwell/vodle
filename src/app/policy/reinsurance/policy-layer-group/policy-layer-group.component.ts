@@ -144,13 +144,13 @@ export class PolicyLayerGroupComponent implements OnInit {
 
   calcTotalPolicyLayerLimit(): number {
     let total: number = 0;
-    this.policyLayerData.reinsuranceData.forEach(layer => total += layer.reinsLimit ?? 0);
+    this.policyLayerData.reinsuranceData.forEach(layer => total += Number(layer.reinsLimit) ?? 0);
     return total;
   }
 
   calcTotalPolicyLayerPremium(): number {
     let total: number = 0;
-    this.policyLayerData.reinsuranceData.forEach(layer => total += layer.reinsCededPremium ?? 0);
+    this.policyLayerData.reinsuranceData.forEach(layer => total += Number(layer.reinsCededPremium) ?? 0);
     return total;
   }
 

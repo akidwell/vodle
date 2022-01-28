@@ -210,7 +210,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   checkPremiumMatches() : boolean {
     let total:number = 0;
-    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage =>  total +=coverage.premium ?? 0 )});
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage =>  total += Number(coverage.premium) ?? 0 )});
     return this.headerComp.endorsement.premium == total
   }
 
