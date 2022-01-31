@@ -42,7 +42,7 @@
               <span *ngIf="policy.firstPolicyRow">{{ policy.policyId }}</span>
             </td>
             <td><a [routerLink]="[]" (click)="openPolicy(policy)">
-            <td nowrap="nowrap">{{policy.policyNumber}}</td></a></td>
+            <td nowrap>{{policy.policyNumber}}</td></a></td>
             <td>{{ policy.endorsementNumber }}</td>
             <td>
               <span *ngIf="policy.firstPolicyRow">{{ policy.policyEffectiveDate | date: 'MM/dd/yyyy'}}</span>

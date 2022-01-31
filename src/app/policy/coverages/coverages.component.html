@@ -9,7 +9,6 @@
         (click)="expandAllLocations()">Expand All</button>
       <button class="btn btn-sm btn-primary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
         (click)="collapseAllLocations()">Collapse All</button>
-      <button class="btn btn-sm btn-primary pull-right" (click)="this.saveEndorsementCoverages()">Save</button>
     </div>
     <div *ngFor="let item of endorsementCoveragesGroups; index as i">
       <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event)

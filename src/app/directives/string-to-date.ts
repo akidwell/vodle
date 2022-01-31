@@ -23,6 +23,7 @@ export class StringToDateDirective {
                 this.control.viewToModelUpdate(new Date(newYear, month, day, 0, 0, 0, 0));
             }
         }
+        
     }
 
     @HostListener('blur', ['$event.target'])
@@ -41,5 +42,4 @@ export class StringToDateDirective {
             }
         }
     }
-
 }

@@ -181,7 +181,6 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
   openDeleteConfirmation() {
-  
     this.confirmation = "overlay"
     this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
       this.confirmation = ""

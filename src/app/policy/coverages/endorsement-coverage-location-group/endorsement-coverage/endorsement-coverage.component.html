@@ -9,16 +9,16 @@
           <label for="premium" *ngIf="coverage.isFirst">Premium</label>
         </div>
         <div class="col-lg-2">
-          <label for="premium" *ngIf="coverage.isFirst">Limits</label>
+          <label for="limits" *ngIf="coverage.isFirst">Limits</label>
         </div>
         <div class="col-lg-1">
-          <label for="premium" *ngIf="coverage.isFirst">Incl/Excl</label>
+          <label for="includeExclude" *ngIf="coverage.isFirst">Incl/Excl</label>
         </div>
         <div class="col-lg-1">
-          <label for="premium" *ngIf="coverage.isFirst">CLM/OCC</label>
+          <label for="claimsMadeOrOccurrence" *ngIf="coverage.isFirst">CLM/OCC</label>
         </div>
         <div class="col-lg-2">
-          <label for="premium" *ngIf="coverage.isFirst">Retro Date</label>
+          <label for="retroDate" *ngIf="coverage.isFirst">Retro Date</label>
         </div>
       </div>
     </div>
@@ -31,12 +31,18 @@
               bindLabel="description" bindValue="key" [clearable]="false"
               [readonly]="!canEdit" [required]="canEdit" [(ngModel)]="coverage.coverageId"
               (change)="changeCoverageDescription($event)" #coverageDescription="ngModel">
+              <!-- <ng-template ng-label-tmp let-item="item">
+                {{coverage.premiumType == 'T' ? 'Terrorism Coverage' : item.description}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{item.description}}
+              </ng-template> -->
             </ng-select>
           </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="premium">Premium</label>
             <input type="text" click-stop-propagation class="form-control" id="premium" [(ngModel)]="coverage.premium"
-              [readonly]="!canEdit" [required]="canEdit" name="premium" #premium="ngModel"
+              [readonly]="!canEdit" [required]="canEdit" name="premium" #premium="ngModel" string-to-currency
               mask="separator.0" thousandSeparator=",">
           </div>
           <div class="col-lg-2">

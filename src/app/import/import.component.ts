@@ -78,7 +78,7 @@ export class ImportComponent implements OnInit {
     let policies = this.importPolicies;
 
     // 2. filter
-    policies = policies.filter(policy => matches(policy, searchTerm.toLowerCase(), this.pipe));
+    policies = policies.filter(policy => matches(policy, searchTerm.trim().toLowerCase(), this.pipe));
     const total = policies.length;
 
     // 3. paginate

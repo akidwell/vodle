@@ -34,14 +34,14 @@
         <tr *ngFor="let importPolicy of policies$ | async">
           <td *ngIf="canExecuteImport;else noExecute"><a [routerLink]="[]" (click)="import(importPolicy)">
           <td>
-            <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm"
+            <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm.trim()"
               [highlightClass]="'highlight'"></ngb-highlight>
           </td>
           </a>
           </td>
           <ng-template #noExecute>
             <td>
-              <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm"
+              <ngb-highlight [result]="importPolicy.submissionNumber | number | removeComma" [term]="searchTerm.trim()"
                 [highlightClass]="'highlight'"></ngb-highlight>
             </td>
           </ng-template>

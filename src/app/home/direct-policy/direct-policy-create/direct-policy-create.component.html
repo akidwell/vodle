@@ -1,65 +1,79 @@
 <form #quoteForm="ngForm">
   <ng-template #modal let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Quote</h4>
+      <h4 class="modal-title" id="modal-basic-title">Direct Policy</h4>
     </div>
     <div class="modal-body">
       <div class="col-lg-6">
         <div class="inputImage">
           <label for="submissionNumber">Submission Number</label>
-          <input type="text" class="form-control" maxlength="10" id="submissionNumber"
-            [readonly]="false" autocomplete="off" nullValue maxInt mask="separator.0" thousandSeparator=""
+          <input type="text" class="form-control" maxlength="10" id="submissionNumber" [readonly]="false"
+            autocomplete="off" nullValue maxInt mask="separator.0" thousandSeparator=""
             [(ngModel)]="policyData.submissionNumber" (change)="leaveSubmissionNumber()" name="submissionNumber"
-            #submissionNumber="ngModel" (keyup)="submissionLookup($event)">
-          <fa-icon class="faCheckCircle" title="Valid Submission" [icon]="faCheckCircle" *ngIf="isSubmissionNumberValid"></fa-icon>
-          <fa-icon class="faTimesCircle" title="Invalid Submission" [icon]="faTimesCircle" *ngIf="!isSubmissionNumberValid"></fa-icon>
-          <div *ngIf="showSubmissionNumberInvalid" class="alert alert-danger">
-            Could not find Submission
-          </div>
+            #submissionNumber="ngModel" (keyup)="searchThrottle.next()" [ngClass]="submissionError">
+          <fa-icon class="faCheckCircle" title="Valid Submission" [icon]="faCheckCircle"
+            *ngIf="isSubmissionNumberValid && !isSearching"></fa-icon>
+          <fa-icon class="faTimesCircle" title="Invalid Submission" [icon]="faTimesCircle"
+            *ngIf="!isSubmissionNumberValid && !isSearching"></fa-icon>
+          <div *ngIf="isSearching" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+        </div>
+        <div *ngIf="showSubmissionNumberInvalid" class="alert alert-danger">
+          Could not find Submission
         </div>
       </div>
       <div class="col-lg-6">
         <label for="policyEffectiveDate">Effective Date</label>
-        <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="false" string-to-date [min]="minDate | date:'yyyy-MM-dd'" [max]="maxDate | date:'yyyy-MM-dd'" dateRange [minDate]="minDate" [maxDate]="maxDate" 
-          [required]="true" [ngModel]="policyData.policyEffectiveDate"
-          (ngModelChange)="policyData.policyEffectiveDate=$event" (blur)="setExpirationDate()" (change)="checkDates()" name="policyEffectiveDate"
-          #policyEffectiveDate="ngModel">
+        <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!isSubmissionNumberValid"
+          string-to-date [min]="minEffectiveDate | date:'yyyy-MM-dd'" [max]="maxEffectiveDate | date:'yyyy-MM-dd'"
+          dateRange [minDate]="minEffectiveDate" [maxDate]="maxEffectiveDate" [required]="true"
+          [ngModel]="policyData.policyEffectiveDate | date:'yyyy-MM-dd'"
+          (ngModelChange)="policyData.policyEffectiveDate=$event" (blur)="setExpirationDate()" (change)="checkDates()"
+          name="policyEffectiveDate" #policyEffectiveDate="ngModel">
       </div>
       <div class="col-lg-6">
         <label for="policyExpirationDate">Expiration Date</label>
-        <input type="date" class="form-control" id="policyExpirationDate" [readonly]="false"
-          [required]="true" [ngModel]="policyData.policyExpirationDate | date:'yyyy-MM-dd'"
-          (ngModelChange)="policyData.policyExpirationDate = $event" (change)="checkDates()" name="policyExpirationDate"
+        <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!isSubmissionNumberValid"
+          string-to-date [min]="minExpirationDate | date:'yyyy-MM-dd'" [max]="maxExpirationDate | date:'yyyy-MM-dd'"
+          dateRange [minDate]="minExpirationDate" [maxDate]="maxExpirationDate" [required]="true"
+          [ngModel]="policyData.policyExpirationDate | date:'yyyy-MM-dd'"
+          (ngModelChange)="policyData.policyExpirationDate=$event" (change)="checkDates()" name="policyExpirationDate"
           #policyExpirationDate="ngModel">
-          <div *ngIf="showExpirationDateInvalid" class="alert alert-danger">
-            Expiration Date must be after Effective Date
-          </div>
+        <div *ngIf="showExpirationDateInvalid" class="alert alert-danger">
+          Expiration Date must be after Effective Date
+        </div>
       </div>
       <div class="col-lg-4">
         <label for="policySymbol">Symbol</label>
         <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description"
-        [required]="true" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch"
-        [(ngModel)]="policyData.policySymbol" name="policySymbol">
-        <ng-template ng-label-tmp let-item="item">
+          [readonly]="!isSubmissionNumberValid" [required]="true" bindValue="code" [clearable]="false"
+          [searchFn]="dropDownSearch" [(ngModel)]="policyData.policySymbol" name="policySymbol">
+          <ng-template ng-label-tmp let-item="item">
             {{item.code}}
           </ng-template>
           <ng-template ng-option-tmp let-item="item">
             {{item.code}} - {{item.description}}
           </ng-template>
-      </ng-select>
+        </ng-select>
       </div>
       <div class="col-lg-4">
         <label for="policyNumber">Policy Number</label>
-        <input type="text" class="form-control" id="policyNumber" minlength="7" maxlength="7" [readonly]="false" [required]="true" (change)="leavePolicyNumber()"
-          [ngModel]="policyData.policyNumber" (ngModelChange)="policyData.policyNumber = $event.toUpperCase();changePolicyNumber()" name="policyNumber" #policyNumber="ngModel">
-          <div *ngIf="showPolicyNumberInvalid" class="alert alert-danger">
-            Must be 7 chars
-          </div>
+        <input type="text" class="form-control" id="policyNumber" minlength="7" maxlength="7"
+          [readonly]="!isSubmissionNumberValid" [required]="true" (change)="leavePolicyNumber()"
+          [ngModel]="policyData.policyNumber"
+          (ngModelChange)="policyData.policyNumber = $event.toUpperCase();changePolicyNumber()" name="policyNumber"
+          #policyNumber="ngModel">
+        <div *ngIf="showPolicyNumberInvalid" class="alert alert-danger">
+          Must be 7 chars
+        </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" [hidden]="false" [disabled]="!quoteForm.valid || !isSubmissionNumberValid || showPolicyNumberInvalid" (click)="create()">OK</button>
+      <button type="button" class="btn btn-primary" [hidden]="false"
+        [disabled]="!quoteForm.valid || !isSubmissionNumberValid" (click)="create()">OK</button>
       <button type="button" class="btn btn-secondary" [hidden]="false" (click)="modal.dismiss()">Cancel</button>
     </div>
   </ng-template>
+  <div *ngIf="showBusy">
+    <rsps-busy></rsps-busy>
+  </div>
 </form>

@@ -122,7 +122,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   isValid(): boolean {
     let total:number = 0;
-    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0})});
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium ?? 0})});
     if (this.components != null) {
       for (let child of this.components) {
         if (!child.isValid()) {
@@ -210,7 +210,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   checkPremiumMatches() : boolean {
     let total:number = 0;
-    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage => { total += coverage.premium.toString() == "" ? 0 : coverage.premium ?? 0 })});
+    this.endorsementCoveragesGroups.forEach( group => { group.coverages.forEach(coverage =>  total += Number(coverage.premium) ?? 0 )});
     return this.headerComp.endorsement.premium == total
   }
 
