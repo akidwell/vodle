@@ -91,7 +91,7 @@ export class ActionComponent implements OnInit {
   checkTransEffectiveDate(): boolean {
     var test = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
     let transEffDate = new Date((parseInt(test[0])), parseInt(test[1]) - 1, parseInt(test[2]), 0, 0, 0, 0)
-
+    
     var test2 = this.policyInfo.policyEffectiveDate.toString().split('-');
     let polEffDate = new Date((parseInt(test2[0])), parseInt(test2[1]) - 1, parseInt(test2[2]), 0, 0, 0, 0)
 
@@ -126,7 +126,8 @@ export class ActionComponent implements OnInit {
     }
   }
 
-  checkPolicyExtenstionExpirationDate(): boolean {
+  checkExpirationDate(): boolean {
+    //checking for policy extenstions and that the transExpDate is after the policyExpDate
     if (this.endorsementActionInfo.transactionType !== undefined) {
       if (this.endorsementActionInfo.transactionType.toString() == '20') {
         if (this.endorsementActionInfo.transExpirationDate < this.policyInfo.policyExpirationDate) {
@@ -135,9 +136,16 @@ export class ActionComponent implements OnInit {
           return false;
         }
       }
-      this.isTransExpirationValid = true;
-      return true;
     }
+    // checking that all expirations date come after the transEffDate
+    if (this.endorsementActionInfo.transEffectiveDate != undefined){
+      if (this.endorsementActionInfo.transExpirationDate < this.endorsementActionInfo.transEffectiveDate) {
+        this.endorsementActionForm.controls['transExpirationDate'].setErrors({ 'incorrect': true });
+        this.isTransExpirationValid = false;
+        return false;
+      }
+    }
+    this.isTransExpirationValid = true;
     return true;
   }
 
@@ -169,15 +177,16 @@ export class ActionComponent implements OnInit {
     await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
       endResponse => {
         this.NewEndorsementResponse = endResponse;
-        this.routeImport();
+        this.routeEndorsement();
         this.modalRef.close()
       }).catch(x => {
         this.pipeMessage = x.error.Message;
+        this.showBusy = false;
         this.triggerModal();
       })
   }
 
-  routeImport() {
+  routeEndorsement() {
     this.showBusy = false;
     if (this.NewEndorsementResponse !== null) {
       this.navigationService.resetPolicy();

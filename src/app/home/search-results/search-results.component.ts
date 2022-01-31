@@ -84,7 +84,7 @@ export class SearchResultsComponent implements OnInit {
 
 
   async newEndorsement(policy: PolicySearchResults) {
-    let filtered = this.searchResults.filter(x => x.invoiceStatus == null)
+    let filtered = this.searchResults.filter(x => x.policyId == policy.policyId).filter(y => y.invoiceStatus == null)
     if (filtered.length > 0){
       this.modalService.open(this.modalPipe)
       return;
