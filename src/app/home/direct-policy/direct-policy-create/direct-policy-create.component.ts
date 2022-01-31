@@ -1,15 +1,17 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { newPolicyData, PolicyData } from 'src/app/policy/policy';
 import { SubmissionSearchService } from '../submission-search/submission-search.service';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faGlasses, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { Router } from '@angular/router';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
+import { debounceTime, tap } from 'rxjs/operators';
+import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 
 @Component({
   selector: 'rsps-direct-policy-create',
@@ -26,25 +28,40 @@ export class DirectPolicyCreateComponent implements OnInit {
   showPolicyNumberInvalid: boolean = false;
   showExpirationDateInvalid: boolean = false;
   policySymbols$: Observable<Code[]> | undefined;
-
-  // minDate: string = '2016-08-28';
-  minDate: Date = new Date(2020, 0, 1);
-  maxDate: Date = new Date(2023, 0, 1);
+  submissionError: string = "invalid";
+  isSearching: boolean = false;
+  searchThrottle = new Subject<string>();
+  minEffectiveDate: Date = new Date();
+  maxEffectiveDate: Date = new Date();
+  minExpirationDate: Date = new Date();
+  maxExpirationDate: Date = new Date();
+  searchSub!: Subscription;
+  showBusy: boolean = false;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
   private modalRef!: NgbModalRef
 
-  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService) {
+  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
     this.policyData = newPolicyData();
+    this.minEffectiveDate.setFullYear(this.minEffectiveDate.getFullYear() - 1); 
+    this.maxEffectiveDate.setFullYear(this.maxEffectiveDate.getFullYear() + 1); 
+    this.minExpirationDate.setFullYear(this.minExpirationDate.getFullYear() - 1); 
+    this.maxExpirationDate.setFullYear(this.maxExpirationDate.getFullYear() + 2); 
    }
 
   ngOnInit(): void {
+  
     this.policySymbols$ = this.dropDownsService.getPolicySymbols();
+
+    this.searchSub = this.searchThrottle.pipe(tap(() => this.isSearching = true), debounceTime(500)).subscribe(() => {
+      this.submissionLookup();
+    });
   }
 
   ngOnDestroy(): void {
     this.submissionSub?.unsubscribe();
+    this.searchSub?.unsubscribe();
   }
 
   open(): Promise<boolean> {
@@ -59,16 +76,33 @@ export class DirectPolicyCreateComponent implements OnInit {
     })
   }
 
-  submissionLookup(event: any) {
+  submissionLookup() {
     if (this.policyData.submissionNumber != null && this.policyData.submissionNumber > 0 && this.policyData.submissionNumber < Math.pow(2, 31)) {
-      this.submissionSub = this.submissionSearchService.getPolicySearch(this.policyData.submissionNumber).subscribe({
+      this.isSubmissionNumberValid = false;
+      this.submissionSub = this.submissionSearchService.getSubmissionSearch(this.policyData.submissionNumber).subscribe({
         next: match => {
-          this.isSubmissionNumberValid = match;
-          if (match) {
+          this.isSearching = false;
+          this.isSubmissionNumberValid = match.isMatch;
+          if (match.isMatch) {
+            this.submissionError = "valid";
             this.showSubmissionNumberInvalid = false;
+            this.policyData.policyEffectiveDate = match.effectiveDate;
+            this.policyData.policyExpirationDate = match.expirationDate;
+          }
+          else {
+            this.submissionError = "invalid";
+            this.policyData.policyEffectiveDate = null;
+            this.policyData.policyExpirationDate = null;
+            this.policyData.policySymbol = "";
+            this.policyData.policyNumber = "";
           }
         }
       });
+    }
+    else {
+      this.isSearching = false;
+      this.submissionError = "invalid";
+      this.isSubmissionNumberValid = false;
     }
   }
 
@@ -94,12 +128,6 @@ export class DirectPolicyCreateComponent implements OnInit {
   setExpirationDate() {
     console.log(this.policyData.policyExpirationDate);
     if (this.policyData.policyEffectiveDate != null && (this.policyData.policyExpirationDate == null || this.policyData.policyExpirationDate.toString() === '' ) && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate())) {
-      // var date = this.policyData.policyEffectiveDate.toString().split('-');
-      // var newYear = parseInt(date[0]) + 1; //Add year
-      // var month = parseInt(date[1]) - 1; //Need to subtract one as Jan = 0 for creating new date
-      // var day = parseInt(date[2]);
-      // this.policyData.policyExpirationDate = new Date(newYear, month, day, 0,0,0,0) //year, month, day, hours, min, sec, time zone offset
-
       let newDate = new Date(this.policyData.policyEffectiveDate);
       newDate.setFullYear(newDate.getFullYear() + 1);
       this.policyData.policyExpirationDate = newDate;
@@ -119,18 +147,22 @@ export class DirectPolicyCreateComponent implements OnInit {
   }
 
   async create() {
-    const response: PolicyAddResponse = await this.policyService.addPolicy(this.policyData).toPromise();
-    if (response.isPolicyCreated) {
+    this.showBusy = true;
     this.modalRef.close();
-    this.navigationService.resetPolicy();
-    this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
-    }
+
+     await this.policyService.addPolicy(this.policyData).toPromise().then(
+      response => {
+        this.showBusy = false;
+      if (response.policyId != null) {
+        this.modalRef.close();
+        this.navigationService.resetPolicy();
+        this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
+        }
+      },
+      (error) => {
+        this.showBusy = false;
+        this.errorDialogService.open("Direct Policy Error", error.error.Message)
+        .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));     
+    });
   }
-}
-
-
-export interface PolicyAddResponse {
-  isPolicyCreated: boolean;
-  policyId: number;
-  errorMessage: string;
 }

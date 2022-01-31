@@ -61,7 +61,6 @@ import { DirectivesModule } from './directives/directives.module';
       multi: true,
       deps: [PreInitService, Injector],
       useFactory: preInitServiceFactory
-
     },
     OktaConfigProvider,
     {

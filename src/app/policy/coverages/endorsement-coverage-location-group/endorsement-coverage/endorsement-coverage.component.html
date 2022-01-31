@@ -31,6 +31,12 @@
               bindLabel="description" bindValue="key" [clearable]="false"
               [readonly]="!canEdit" [required]="canEdit" [(ngModel)]="coverage.coverageId"
               (change)="changeCoverageDescription($event)" #coverageDescription="ngModel">
+              <!-- <ng-template ng-label-tmp let-item="item">
+                {{coverage.premiumType == 'T' ? 'Terrorism Coverage' : item.description}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{item.description}}
+              </ng-template> -->
             </ng-select>
           </div>
           <div class="col-lg-2">

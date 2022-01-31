@@ -16,7 +16,7 @@ export class ErrorDialogComponent implements OnInit {
   }
 
   close() { 
-    this.activeModal.close();
+    this.activeModal.close(true);
   }
 
 }

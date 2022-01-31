@@ -291,6 +291,11 @@ export const newPolicyData = (): PolicyData => {
   }
 }
 
-export interface PolicyResponse {
+// export interface PolicyResponse {
+//   policyId: number;
+// }
+
+export interface PolicyAddResponse {
+  isPolicyCreated: boolean;
   policyId: number;
 }
