@@ -66,6 +66,7 @@ export class DirectPolicyCreateComponent implements OnInit {
 
   open(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
+      this.submissionError = "invalid";
       this.showSubmissionNumberInvalid = false;
       this.isSubmissionNumberValid = false;
       this.showPolicyNumberInvalid = false;
