@@ -9,6 +9,7 @@ import { NotificationService } from 'src/app/notification/notification-service';
 import { NgForm } from '@angular/forms';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { DatePipe } from '@angular/common';
+import { TransactionTypes } from '../../transaction-types';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -164,6 +165,14 @@ export class PolicyInformationComponent implements OnInit {
     this.claimsMadeOrOccurrence$ = [];
     this.claimsMadeOrOccurrence$.push({ code: "C", key: 0, description: "Claims-Made" });
     this.claimsMadeOrOccurrence$.push({ code: "O", key: 1, description: "Occurrence" });
+  }
+
+  isExtensionDateActive(): boolean {
+    if (this.canEdit && this.endorsement.transactionTypeCode === TransactionTypes.PolicyExtensionByEndt) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   get canEdit(): boolean {
