@@ -10,7 +10,6 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>,
               next: HttpHandler): Observable<HttpEvent<any>> {
         const idToken = localStorage.getItem("jwt_token");
-        console.log(this.isTokenValid(idToken))
         if (idToken && this.isTokenValid(idToken)) {
             const cloned = req.clone({
                 headers: req.headers.set("Authorization",
@@ -20,8 +19,10 @@ export class AuthInterceptor implements HttpInterceptor {
             return next.handle(cloned);
         }
         else {
-            console.log(req)
-            return next.handle(req);
+          const cloned = req.clone({
+            headers: req.headers.delete("Authorization")
+              });
+            return next.handle(cloned);
         }
     }
 
@@ -30,6 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
         return false;
       }
       const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
+      console.log('expirationDate: ', expirationDate, 'now: ', new Date())
       if (expirationDate != null && expirationDate > new Date()) {
         return true;
       } else {
