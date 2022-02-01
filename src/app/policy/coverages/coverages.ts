@@ -3,7 +3,7 @@ export interface EndorsementCoverage {
   policyId: number;
   endorsementNumber: number;
   programId: number;
-  premium: number;
+  premium: number | null;
   subCode: number;
   limitsPattern: string;
   includeExclude: string | null;

@@ -209,7 +209,13 @@ export class InvoiceGroupComponent implements OnInit {
           this.showInvoiceNotSaved();
           return false;
         }
-      });
+      },
+      (error) => {
+        console.log(error.message);
+        this.showInvoiceNotSaved();
+        this.errorDialogService.open("Invoice Save Error", error.error.Message);
+        return false;
+    });
   }
 
   private async updateInvoice(refresh: boolean = false): Promise<boolean> {

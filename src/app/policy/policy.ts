@@ -96,7 +96,7 @@ export interface Endorsement {
   transactionExpirationDate: Date;
   terrorismCode: string;
   sir: number;
-  premium: number;
+  premium: number| null;
   limit: number;
   underlyingLimit: number;
   attachmentPoint: number;
@@ -291,6 +291,11 @@ export const newPolicyData = (): PolicyData => {
   }
 }
 
-export interface PolicyResponse {
+// export interface PolicyResponse {
+//   policyId: number;
+// }
+
+export interface PolicyAddResponse {
+  isPolicyCreated: boolean;
   policyId: number;
 }

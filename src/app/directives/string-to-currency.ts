@@ -13,6 +13,6 @@ import { NgControl } from "@angular/forms";
  
     @HostListener('input', ['$event.target'])
     onEvent(target: HTMLInputElement) {
-      this.control.viewToModelUpdate((target.value === '') ? null : isNaN(Number(target.value)) ? Number(target.value.replace(/[^0-9.-]+/g,"")) : target.value);
+      this.control.viewToModelUpdate((target.value === '') ? null : isNaN(Number(target.value)) ? Number(target.value.replace(/[^0-9.-]+/g,"")) : Number(target.value));
     }
  }

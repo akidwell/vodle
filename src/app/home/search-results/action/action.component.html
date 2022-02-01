@@ -31,8 +31,8 @@
             </div>
             <label for="transEffectiveDate">Transaction Effective Date</label>
             <input type="date" class="form-control" id="transEffectiveDate" [required]="canEdit" [readonly]="!canEdit"
-                name="transEffectiveDate" [ngModel]="endorsementActionInfo.transEffectiveDate   | date:'yyyy-MM-dd'"
-                (change)="checkTransEffectiveDate()" (ngModelChange)="endorsementActionInfo.transEffectiveDate=$event"
+                name="transEffectiveDate"  [ngModel]="endorsementActionInfo.transEffectiveDate   | date:'yyyy-MM-dd'"
+                (blur)="checkTransEffectiveDate()" (ngModelChange)="endorsementActionInfo.transEffectiveDate=$event"
                 #transEffectiveDate="ngModel">
             <div [hidden]="isTransEffectiveValid" class="alert alert-danger">
                 Invalid Transactive Effective Date. Must be within policy period.
@@ -41,10 +41,9 @@
             <input type="date" class="form-control" id="transExpirationDate" [required]="canEdit" [readonly]="!canEdit"
                 name="transExpirationDate" [ngModel]="endorsementActionInfo.transExpirationDate   | date:'yyyy-MM-dd'"
                 (ngModelChange)="endorsementActionInfo.transExpirationDate=$event" #transEffectiveDate="ngModel"
-                (change)="checkPolicyExtenstionExpirationDate()">
+                (change)="checkExpirationDate()">
             <div [hidden]="isTransExpirationValid" class="alert alert-danger">
-                Invalid Transactive Expiration Date. Date must be greater than Policy Expiration Date for a Policy
-                Extension.
+                Invalid Transactive Expiration Date. 
             </div>
             <div>
                 <label for="premium">Premium</label>
@@ -54,7 +53,7 @@
             </div>
         </div>
         <div class="modal-footer">           
-             <button type="button" class="btn btn-danger" (click)="submit()" [disabled]="!isNewEndorsementNumberValid">Submit</button>
+             <button type="button" class="btn btn-danger" (click)="submit()" [disabled]="!actionForm.form.valid">Submit</button>
                 <button type="button" class="btn btn-secondary" (click)="clearAndClose()" >Cancel</button>
         </div>
     </ng-template>

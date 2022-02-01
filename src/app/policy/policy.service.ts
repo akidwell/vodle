@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
-import { PolicyAddResponse } from '../home/direct-policy/direct-policy-create/direct-policy-create.component';
 import { NewEndorsementData } from '../home/search-results/policy-search-results';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
-import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
+import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
 import { UnderlyingCoverage } from './schedules/schedules';
 import { InvoiceData } from './summary/invoice';
 
