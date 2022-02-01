@@ -10,14 +10,17 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>,
               next: HttpHandler): Observable<HttpEvent<any>> {
         const idToken = localStorage.getItem("jwt_token");
+        console.log(this.isTokenValid(idToken))
         if (idToken && this.isTokenValid(idToken)) {
             const cloned = req.clone({
                 headers: req.headers.set("Authorization",
                     "Bearer " + idToken)
             });
+            console.log(cloned)
             return next.handle(cloned);
         }
         else {
+            console.log(req)
             return next.handle(req);
         }
     }
