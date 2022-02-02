@@ -9,35 +9,35 @@
           <label for="submissionNumber">Submission Number</label>
           <input type="text" class="form-control" maxlength="10" id="submissionNumber" [readonly]="false"
             autocomplete="off" nullValue maxInt mask="separator.0" thousandSeparator=""
-            [(ngModel)]="policyData.submissionNumber" (change)="leaveSubmissionNumber()" name="submissionNumber"
-            #submissionNumber="ngModel" (keyup)="searchThrottle.next()" [ngClass]="submissionError">
+            [(ngModel)]="policyData.submissionNumber" name="submissionNumber"
+            #submissionNumber="ngModel" (input)="searchThrottle.next()" [ngClass]="submissionError">
           <fa-icon class="faCheckCircle" title="Valid Submission" [icon]="faCheckCircle"
             *ngIf="isSubmissionNumberValid && !isSearching"></fa-icon>
           <fa-icon class="faTimesCircle" title="Invalid Submission" [icon]="faTimesCircle"
             *ngIf="!isSubmissionNumberValid && !isSearching"></fa-icon>
           <div *ngIf="isSearching" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
         </div>
-        <div *ngIf="showSubmissionNumberInvalid" class="alert alert-danger">
-          Could not find Submission
-        </div>
       </div>
       <div class="col-lg-6">
         <label for="policyEffectiveDate">Effective Date</label>
-        <input type="date" class="form-control" id="policyEffectiveDate" [readonly]="!isSubmissionNumberValid"
-          string-to-date [min]="minEffectiveDate | date:'yyyy-MM-dd'" [max]="maxEffectiveDate | date:'yyyy-MM-dd'"
-          dateRange [minDate]="minEffectiveDate" [maxDate]="maxEffectiveDate" [required]="true"
-          [ngModel]="policyData.policyEffectiveDate | date:'yyyy-MM-dd'"
-          (ngModelChange)="policyData.policyEffectiveDate=$event" (blur)="setExpirationDate()" (change)="checkDates()"
+        <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyEffectiveDateCalendar"
+          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minEffectiveDate"
+          [max]="maxEffectiveDate" [ngModel]="policyData.policyEffectiveDate"
+          (ngModelChange)="policyData.policyEffectiveDate=$event" (blur)="setExpirationDate()" (dateChange)="checkDates()"
           name="policyEffectiveDate" #policyEffectiveDate="ngModel">
+        <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyEffectiveDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #policyEffectiveDateCalendar></mat-datepicker>
       </div>
       <div class="col-lg-6">
         <label for="policyExpirationDate">Expiration Date</label>
-        <input type="date" class="form-control" id="policyExpirationDate" [readonly]="!isSubmissionNumberValid"
-          string-to-date [min]="minExpirationDate | date:'yyyy-MM-dd'" [max]="maxExpirationDate | date:'yyyy-MM-dd'"
-          dateRange [minDate]="minExpirationDate" [maxDate]="maxExpirationDate" [required]="true"
-          [ngModel]="policyData.policyExpirationDate | date:'yyyy-MM-dd'"
-          (ngModelChange)="policyData.policyExpirationDate=$event" (change)="checkDates()" name="policyExpirationDate"
+        <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyExpirationDateCalendar"
+          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minExpirationDate"
+          [max]="maxExpirationDate" [ngModel]="policyData.policyExpirationDate"
+          (ngModelChange)="policyData.policyExpirationDate=$event" (dateChange)="checkDates()" name="policyExpirationDate"
           #policyExpirationDate="ngModel">
+        <mat-datepicker-toggle matSuffix [for]="policyExpirationDateCalendar"></mat-datepicker-toggle>
+        <mat-datepicker #policyExpirationDateCalendar></mat-datepicker>
         <div *ngIf="showExpirationDateInvalid" class="alert alert-danger">
           Expiration Date must be after Effective Date
         </div>
@@ -45,7 +45,7 @@
       <div class="col-lg-4">
         <label for="policySymbol">Symbol</label>
         <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description"
-          [readonly]="!isSubmissionNumberValid" [required]="true" bindValue="code" [clearable]="false"
+          [disabled]="!isSubmissionNumberValid || isSearching" [required]="isSubmissionNumberValid" bindValue="code" [clearable]="false"
           [searchFn]="dropDownSearch" [(ngModel)]="policyData.policySymbol" name="policySymbol">
           <ng-template ng-label-tmp let-item="item">
             {{item.code}}
@@ -58,7 +58,7 @@
       <div class="col-lg-4">
         <label for="policyNumber">Policy Number</label>
         <input type="text" class="form-control" id="policyNumber" minlength="7" maxlength="7"
-          [readonly]="!isSubmissionNumberValid" [required]="true" (change)="leavePolicyNumber()"
+          [disabled]="!isSubmissionNumberValid || isSearching" required (change)="leavePolicyNumber()"
           [ngModel]="policyData.policyNumber"
           (ngModelChange)="policyData.policyNumber = $event.toUpperCase();changePolicyNumber()" name="policyNumber"
           #policyNumber="ngModel">

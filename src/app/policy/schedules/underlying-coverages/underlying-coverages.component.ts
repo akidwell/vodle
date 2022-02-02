@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { NotificationService } from 'src/app/notification/notification-service';
 import { PolicyService } from '../../policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { UnderlyingCoverage } from '../schedules';
@@ -28,7 +29,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
 
   @ViewChildren(UnderlyingCoverageDetailComponent) components: QueryList<UnderlyingCoverageDetailComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -97,9 +98,19 @@ export class UnderlyingCoveragesComponent implements OnInit {
     return false;
   }
   save(): void {
-    this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(result => {
-      console.log(result)
-    });;
+    if (this.canEditPolicy) {
+      this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(result => {
+        this.notification.show('Underlying Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        if (this.components != null) {
+          for (let child of this.components) {
+            if (child.ucForm.dirty) {
+              child.ucForm.form.markAsPristine();
+              child.ucForm.form.markAsUntouched();
+            }
+          }
+        }
+      });
+    }
   }
   async deleteComponent(index: any, existingCoverage: UnderlyingCoverage) {
 

@@ -80,9 +80,13 @@
           <div class="col-lg-2">
             <label class='hidden-label' for="retroDate">Retro Date</label>
             <div *ngIf="isRetroDateRequired">
-              <input type="date" class="form-control" id="retroDate" [required]="canEdit && isRetroDateRequired"
-                [ngModel]="coverage.retroDate  | date:'yyyy-MM-dd'" (ngModelChange)="coverage.retroDate=$event"
-                name="retroDate" #retroDate="ngModel" (change)="changeRetroDate()">
+              <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="retroDateCalendar"
+                class="form-control" [required]="canEdit && isRetroDateRequired" [ngModel]="coverage.retroDate"
+                (ngModelChange)="coverage.retroDate=$event" (dateChange)="changeRetroDate()" name="retroDate"
+                #retroDate="ngModel">
+              <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="retroDateCalendar">
+              </mat-datepicker-toggle>
+              <mat-datepicker #retroDateCalendar></mat-datepicker>
             </div>
             <div *ngIf="!isRetroDateRequired">
               <input type="text" class="form-control" id="retroDateReadonly" [readonly]="true"
