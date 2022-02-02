@@ -30,6 +30,3 @@ ng-select .ng-dropdown-panel {
 .ng-select.ng-select-disabled .ng-arrow-wrapper {
   display: none;
 }
-/* Material */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
