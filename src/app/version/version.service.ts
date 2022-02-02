@@ -1,38 +1,30 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable, throwError } from "rxjs";
-import { catchError, map, tap } from 'rxjs/operators';
+import { Injectable} from "@angular/core";
+import { Observable, of } from "rxjs";
+import { catchError, tap } from 'rxjs/operators';
 import { ConfigService } from "../config/config.service";
-import { IVersion } from "./version";
+import { ErrorDialogService } from "../error-handling/error-dialog-service/error-dialog-service";
+import { Version, newVersion } from "./version";
 
 @Injectable({
     providedIn: 'root'
   })
   export class VersionService {
 
-    constructor(private http: HttpClient, private config: ConfigService) { }
+    constructor(private http: HttpClient, private config: ConfigService, private errorDialogService: ErrorDialogService) { }
 
-    getVersion(): Observable<IVersion> {
+    getVersion(): Observable<Version> {
         const options = {responseType: 'text'};
 
-        return this.http.get<IVersion>(this.config.apiBaseUrl + 'api/monitoring/version')
+        return this.http.get<Version>(this.config.apiBaseUrl + 'api/monitoring/version')
           .pipe(
             tap(data => console.log('All: ', JSON.stringify(data))),
-            catchError(this.handleError)
+            catchError((error) => this.handleError(error))
          );
       }
 
-      private handleError(err: HttpErrorResponse): Observable<never> {
-        let errorMessage = '';
-        if (err.error instanceof ErrorEvent) {
-          // A client-side or network error occurred. Handle it accordingly.
-          errorMessage = `An error occurred: ${err.error.message}`;
-        } else {
-          // The backend returned an unsuccessful response code.
-          // The response body may contain clues as to what went wrong,
-          errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
-        }
-        console.error(errorMessage);
-        return throwError(errorMessage);
+      handleError(err: HttpErrorResponse): Observable<Version>  {
+        this.errorDialogService.open("Service Error","Cannot connect to the Backend Api. Message: " + err.message);
+        return of(newVersion());
       }
   }

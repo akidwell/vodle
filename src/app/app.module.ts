@@ -24,6 +24,7 @@ import { BusyModule } from './busy/busy.module';
 import { PreInitService, preInitServiceFactory } from './config/preInit.service';
 import { OktaConfigProvider } from './authorization/okta-config.provider';
 import { DirectivesModule } from './directives/directives.module';
+import { ErrorDialogService } from './error-handling/error-dialog-service/error-dialog-service';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { DirectivesModule } from './directives/directives.module';
   ],
   providers: [
     PreInitService,
+    ErrorDialogService,
     {
       provide: APP_INITIALIZER,
       multi: true,
