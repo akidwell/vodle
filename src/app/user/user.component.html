@@ -1,6 +1,6 @@
 <div ngbDropdown class="d-inline-block" style="float: right;">
   <button *ngIf='isAuthenticated && userName' class="btn" id="dropdownUser" ngbDropdownToggle>
-    <fa-icon [icon]="faUser"  *ngIf="!isReadOnly"></fa-icon>
+    <fa-icon [icon]="faUser" *ngIf="!isReadOnly"></fa-icon>
     <fa-icon [icon]="faUserLock" *ngIf="isReadOnly"></fa-icon>
     {{userName.toUpperCase()}}
   </button>
