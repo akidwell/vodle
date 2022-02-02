@@ -52,35 +52,34 @@
 
       <div class="col-lg-2">
         <label for="effectiveDate">Policy Effective Date</label>
-        <input type="date" class="form-control" id="effectiveDate" [readonly]="!canEdit"
-          [ngModel]="ucData.effectiveDate| date:'yyyy-MM-dd'"
-          name="effectiveDate"
-          #endorsementExpirationDate="ngModel" >
-          <!-- <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
-            Invalid date
-          </div> -->
+
+        <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="effectiveDateCalendar"
+          class="form-control" [disabled]="!canEdit" [ngModel]="ucData.effectiveDate"
+          (ngModelChange)="ucData.effectiveDate=$event" name="effectiveDate" #effectiveDate="ngModel">
+        <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="effectiveDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #effectiveDateCalendar></mat-datepicker>
       </div>
       <div class="col-lg-2">
         <label for="expirationDate">Policy Expiration Date</label>
-        <input type="date" class="form-control" id="expirationDate" [readonly]="!canEdit"
-           [ngModel]="ucData.expirationDate| date:'yyyy-MM-dd'"
-          name="expirationDate"
-          #endorsementExpirationDate="ngModel" >
-          <!-- <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
-            Invalid date
-          </div> -->
+
+        <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="expirationDateCalendar"
+          class="form-control" [disabled]="!canEdit" [ngModel]="ucData.expirationDate"
+          (ngModelChange)="ucData.expirationDate=$event" name="expirationDate" #expirationDate="ngModel">
+        <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="expirationDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #expirationDateCalendar></mat-datepicker>
       </div>
       <div class="col-lg-2">
-        <label for="expirationDate">Retro Date</label>
-        <input type="date" class="form-control" id="expirationDate" [readonly]="!canEdit"
-           [ngModel]="ucData.expirationDate| date:'yyyy-MM-dd'"
-          name="expirationDate"
-          #endorsementExpirationDate="ngModel" >
-          <!-- <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
-            Invalid date
-          </div> -->
-      </div>
+        <label for="retroDate">Retro Date</label>
 
+        <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="retroDateCalendar"
+          class="form-control" [disabled]="!canEdit" [ngModel]="ucData.retroDate"
+          (ngModelChange)="ucData.retroDate=$event" name="retroDate" #retroDate="ngModel">
+        <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="retroDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #retroDateCalendar></mat-datepicker>
+      </div>
     </div>
     <div><button style="background:none; border:none;" class="underline" (click)="ucbCollapsed = !ucbCollapsed;">{{ucbCollapsed == true ? 'Show Limit Basis Detail' : 'Hide Limit Basis Detail'}}</button></div>
     <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ucbCollapsed">

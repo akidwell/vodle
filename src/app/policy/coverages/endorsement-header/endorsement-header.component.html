@@ -2,24 +2,30 @@
 <div class="endorsement-header">
   <div class="row">
     <div class="col-lg">
-      <label for="endorsementEffectiveDate">Trans Eff Date</label>
-      <input type="date" class="form-control" id="endorsementEffectiveDate" [readonly]="!canEditTransactionDates"
-        [required]="canEditTransactionDates" [ngModel]="endorsement.transactionEffectiveDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="endorsement.transactionEffectiveDate=$event" name="endorsementEffectiveDate"
-        #endorsementEffectiveDate="ngModel" (change)="changeEffectiveDate()">
-        <div [hidden]="isTransactionEffectiveDateValid" class="alert alert-danger">
-          Invalid date
-        </div>
+      <label for="transactionEffectiveDate">Trans Eff Date</label>
+      <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="endorsementEffectiveDateCalendar"
+        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
+        [ngModel]="endorsement.transactionEffectiveDate" (ngModelChange)="endorsement.transactionEffectiveDate=$event"
+        (dateChange)="changeEffectiveDate()" name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
+      <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="endorsementEffectiveDateCalendar">
+      </mat-datepicker-toggle>
+      <mat-datepicker #endorsementEffectiveDateCalendar></mat-datepicker>
+      <div *ngIf="!isTransactionEffectiveDateValid" class="alert alert-danger">
+        Invalid date
+      </div>
     </div>
     <div class="col-lg">
       <label for="endorsementExpirationDate">Trans Exp Date</label>
-      <input type="date" class="form-control" id="endorsementExpirationDate" [readonly]="!canEditTransactionDates"
-        [required]="canEditTransactionDates" [ngModel]="endorsement.transactionExpirationDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="endorsement.transactionExpirationDate=$event" name="endorsementExpirationDate"
-        #endorsementExpirationDate="ngModel" (change)="changeExpirationDate()">
-        <div [hidden]="isTransactionExpirationDateValid" class="alert alert-danger">
-          Invalid date
-        </div>
+      <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="transactionExpirationDateCalendar"
+        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
+        [ngModel]="endorsement.transactionExpirationDate" (ngModelChange)="endorsement.transactionExpirationDate=$event"
+        (dateChange)="changeExpirationDate()" name="transactionExpirationDate" #transactionExpirationDate="ngModel">
+      <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="transactionExpirationDateCalendar">
+      </mat-datepicker-toggle>
+      <mat-datepicker #transactionExpirationDateCalendar></mat-datepicker>
+      <div *ngIf="!isTransactionExpirationDateValid" class="alert alert-danger">
+        Invalid date
+      </div>
     </div>
     <div class="col-lg-2">
       <label for="transactionType">Transaction Type</label><br>

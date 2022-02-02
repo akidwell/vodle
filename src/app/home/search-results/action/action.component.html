@@ -30,18 +30,24 @@
                 </ng-select>
             </div>
             <label for="transEffectiveDate">Transaction Effective Date</label>
-            <input type="date" class="form-control" id="transEffectiveDate" [required]="canEdit" [readonly]="!canEdit"
-                name="transEffectiveDate"  [ngModel]="endorsementActionInfo.transEffectiveDate   | date:'yyyy-MM-dd'"
-                (blur)="checkTransEffectiveDate()" (ngModelChange)="endorsementActionInfo.transEffectiveDate=$event"
-                #transEffectiveDate="ngModel">
+            <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="transEffectiveDateCalendar"
+              class="form-control" required [disabled]="!canEdit" [ngModel]="endorsementActionInfo.transEffectiveDate"
+              (ngModelChange)="endorsementActionInfo.transEffectiveDate=$event" (blur)="checkTransEffectiveDate()"
+              name="transEffectiveDate" #transEffectiveDate="ngModel">
+            <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="transEffectiveDateCalendar">
+            </mat-datepicker-toggle>
+            <mat-datepicker #transEffectiveDateCalendar></mat-datepicker>
             <div [hidden]="isTransEffectiveValid" class="alert alert-danger">
                 Invalid Transactive Effective Date. Must be within policy period.
             </div>
             <label for="transExpirationDate">Transaction Expiration Date</label>
-            <input type="date" class="form-control" id="transExpirationDate" [required]="canEdit" [readonly]="!canEdit"
-                name="transExpirationDate" [ngModel]="endorsementActionInfo.transExpirationDate   | date:'yyyy-MM-dd'"
-                (ngModelChange)="endorsementActionInfo.transExpirationDate=$event" #transEffectiveDate="ngModel"
-                (change)="checkExpirationDate()">
+            <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="transExpirationDateCalendar"
+              class="form-control" required [disabled]="!canEdit" [ngModel]="endorsementActionInfo.transExpirationDate"
+              (ngModelChange)="endorsementActionInfo.transExpirationDate=$event" (blur)="checkExpirationDate()"
+              name="transExpirationDate" #transExpirationDate="ngModel">
+            <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="transExpirationDateCalendar">
+            </mat-datepicker-toggle>
+            <mat-datepicker #transExpirationDateCalendar></mat-datepicker>
             <div [hidden]="isTransExpirationValid" class="alert alert-danger">
                 Invalid Transactive Expiration Date. 
             </div>
