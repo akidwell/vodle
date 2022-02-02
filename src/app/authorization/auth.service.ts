@@ -77,7 +77,6 @@ export class AuthService {
   }
 
   processAuthClaims(token: IAuthObject) {
-    console.log(token);
     this.userAuth.userId = token.id;
     this.userAuth.userName = token.userName;
     this.userAuth.isAuthenticated = token.valid == 'True';
@@ -87,7 +86,6 @@ export class AuthService {
     this.userAuth.userRole = token.userRole;
     this.userAuth.loaded();
 
-    console.log(this.userAuth);
     if (!this.userAuth.isAuthenticated) {
       this.router.navigate(['/access-denied']);
     }

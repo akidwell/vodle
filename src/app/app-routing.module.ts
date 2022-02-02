@@ -28,7 +28,9 @@ const routes: Routes = [
     onAuthRequired
   } },
   { path: 'access-denied', component: AccessDeniedComponent },
-  { path: 'logged-out', component: AccessDeniedComponent },
+  { path: 'logged-out', component: AccessDeniedComponent , canActivate: [OktaAuthGuard], data: {
+    onAuthRequired
+  } },
   { path: '**', component: PageNotFoundComponent }
 ];
 

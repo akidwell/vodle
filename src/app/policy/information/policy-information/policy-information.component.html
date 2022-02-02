@@ -113,13 +113,13 @@
             </div>
             <div class="col-lg-3 col-md-6">
               <label for="policyExtendedExpDate"  class="form-label" title="Extension Date">Extension Date</label>
-              <div *ngIf="!isReadOnly">
-                <input type="date" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
+              <div *ngIf="this.isExtensionDateActive()">
+                <input type="date" class="form-control" id="policyExtendedExpDate"
                   [ngModel]="policyInfo.policyExtendedExpDate | date:'yyyy-MM-dd'"
-                  (ngModelChange)="policyInfo.policyExtendedExpDate=$event" name="policyExtendedExpDate"
+                  (ngModelChange)="policyInfo.policyExtendedExpDate = $event" name="policyExtendedExpDate"
                   #policyExtendedExpDate="ngModel">
               </div>
-              <div *ngIf="isReadOnly">
+              <div *ngIf="!this.isExtensionDateActive()">
                 <input type="text" class="form-control" id="policyExtendedExpDate" [readonly]="isReadOnly"
                   [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
               </div>
