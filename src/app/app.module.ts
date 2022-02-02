@@ -25,6 +25,8 @@ import { PreInitService, preInitServiceFactory } from './config/preInit.service'
 import { OktaConfigProvider } from './authorization/okta-config.provider';
 import { DirectivesModule } from './directives/directives.module';
 import { ErrorDialogService } from './error-handling/error-dialog-service/error-dialog-service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDatepickerModule } from '@angular/material/datepicker'
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { ErrorDialogService } from './error-handling/error-dialog-service/error-
     FormsModule,
     NgSelectModule,
     BusyModule,
-    DirectivesModule
+    DirectivesModule,
+    NoopAnimationsModule,
+    MatDatepickerModule
   ],
   providers: [
     PreInitService,

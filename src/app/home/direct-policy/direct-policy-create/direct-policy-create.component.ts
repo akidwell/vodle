@@ -3,7 +3,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { newPolicyData, PolicyData } from 'src/app/policy/policy';
 import { SubmissionSearchService } from '../submission-search/submission-search.service';
-import { faCheckCircle, faGlasses, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { Router } from '@angular/router';
@@ -24,7 +24,6 @@ export class DirectPolicyCreateComponent implements OnInit {
   policyData!: PolicyData;
   submissionSub!: Subscription;
   isSubmissionNumberValid: boolean = false;
-  showSubmissionNumberInvalid: boolean = false;
   showPolicyNumberInvalid: boolean = false;
   showExpirationDateInvalid: boolean = false;
   policySymbols$: Observable<Code[]> | undefined;
@@ -67,7 +66,6 @@ export class DirectPolicyCreateComponent implements OnInit {
   open(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       this.submissionError = "invalid";
-      this.showSubmissionNumberInvalid = false;
       this.isSubmissionNumberValid = false;
       this.showPolicyNumberInvalid = false;
       this.showExpirationDateInvalid = false;
@@ -86,7 +84,6 @@ export class DirectPolicyCreateComponent implements OnInit {
           this.isSubmissionNumberValid = match.isMatch;
           if (match.isMatch) {
             this.submissionError = "valid";
-            this.showSubmissionNumberInvalid = false;
             this.policyData.policyEffectiveDate = match.effectiveDate;
             this.policyData.policyExpirationDate = match.expirationDate;
           }
@@ -105,10 +102,6 @@ export class DirectPolicyCreateComponent implements OnInit {
       this.submissionError = "invalid";
       this.isSubmissionNumberValid = false;
     }
-  }
-
-  leaveSubmissionNumber() {
-    this.showSubmissionNumberInvalid = !this.isSubmissionNumberValid;
   }
 
   leavePolicyNumber() {

@@ -42,6 +42,7 @@ import { InvoiceGroupComponent } from './summary/invoice-group/invoice-group.com
 import { InvoiceMasterComponent } from './summary/invoice-group/invoice-master/invoice-master.component';
 import { BusyModule } from '../busy/busy.module';
 import { DirectivesModule } from '../directives/directives.module';
+import { MatDatepickerModule } from '@angular/material/datepicker'
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { DirectivesModule } from '../directives/directives.module';
     NgSelectModule,
     BusyModule,
     DirectivesModule,
+    MatDatepickerModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

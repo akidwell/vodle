@@ -13,6 +13,9 @@ import { DirectivesModule } from '../directives/directives.module';
 import { ActionComponent } from './search-results/action/action.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { BusyModule } from '../busy/busy.module';
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,10 @@ import { BusyModule } from '../busy/busy.module';
     SearchModule,
     DirectivesModule,
     NgxMaskModule.forRoot(),
-    BusyModule
+    BusyModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule
   ],
   providers: [
     DatePipe
