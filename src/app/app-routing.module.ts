@@ -14,7 +14,9 @@ export function onAuthRequired(_oktaAuth: OktaAuthService) {
   });
 }
 const routes: Routes = [
-  { path: CALLBACK_PATH, component: OktaCallbackComponent },
+  { path: CALLBACK_PATH, component: OktaCallbackComponent , canActivate: [OktaAuthGuard, AuthGuard] , data: {
+    onAuthRequired
+  }  },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) , canActivate: [OktaAuthGuard, AuthGuard] , data: {
     onAuthRequired
   }  },

@@ -5,7 +5,7 @@
     "oktaIssuer": "https://logincert.gaig.com",
     "oktaScopes": ["openid", "profile", "email"],
     "oktaRedirectUri" : "https://garscert.td.afg/rsps/callback",
-    "oktaPostLogoutRedirectUri" : "https://garscert.td.afg/rsps/",
+    "oktaPostLogoutRedirectUri" : "https://garscert.td.afg/rsps/logged-out",
     "preventForcedRedirect" : false,
     "maxPolicyHistorySize" : 5
 }
