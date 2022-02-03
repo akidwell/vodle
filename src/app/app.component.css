@@ -41,6 +41,11 @@ body {
   z-index: 2;
 }
 
+.banner-label {
+  color: white;
+  text-decoration: none;
+}
+
 .sidebar a {
   display: block;
   color: white;
