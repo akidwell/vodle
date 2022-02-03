@@ -110,7 +110,7 @@ export class EndorsementCoverageComponent implements OnInit {
     this.statusSub?.unsubscribe();
   }
 
-    get canEdit(): boolean {
+  get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
 
