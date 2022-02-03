@@ -28,8 +28,8 @@ export class ReinsuranceComponent implements OnInit {
   canEditEndorsement: boolean = false;
   authLoadedSub!: Subscription;
   reinsuranceSub!: Subscription;
-  reinsuranceCodes!: ReinsuranceLookup[];
-  reinsuranceFacCodes!: ReinsuranceLookup[];
+  reinsuranceCodes: ReinsuranceLookup[] | null = null;
+  reinsuranceFacCodes: ReinsuranceLookup[] | null = null;
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
   reinsuranceRefreshedSub!: Subscription;
@@ -55,6 +55,7 @@ export class ReinsuranceComponent implements OnInit {
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       await this.populateReinsuranceCodes();
       await this.populateReinsuranceFacCodes();
+      // console.log("Init Load");
 
       // Added new policy layer or reinsurance layer if not added yet on coming in first time
       this.authLoadedSub = this.userAuth.loaded$.subscribe((loaded) => {
@@ -81,10 +82,25 @@ export class ReinsuranceComponent implements OnInit {
     });
 
     this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
-      await this.populateReinsuranceCodes();
-      await this.populateReinsuranceFacCodes();
+       console.log("Refresh Load");
+       this.reinsuranceCodes = null;
+       this.reinsuranceFacCodes = null;
     });
   }
+
+
+  async getReinsuranceCodes(): Promise<ReinsuranceLookup[]> {
+    if (this.reinsuranceCodes == null) {
+      console.log("Refresh reinsurance");
+      await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
+        reisuranceCodes => {
+          this.reinsuranceCodes = reisuranceCodes;
+        }
+      );
+    }
+      return this.reinsuranceCodes  ?? [];
+  }
+
 
   async populateReinsuranceCodes(): Promise<void> {
     await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
@@ -92,6 +108,19 @@ export class ReinsuranceComponent implements OnInit {
         this.reinsuranceCodes = reisuranceCodes;
       }
     );
+  }
+
+
+  async getReinsuranceFacCodes(): Promise<ReinsuranceLookup[]> {
+    if (this.reinsuranceFacCodes == null) {
+      console.log("Refresh reinsuranceFac");
+      await this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).toPromise().then(
+        reisuranceCodes => {
+          this.reinsuranceFacCodes = reisuranceCodes;
+        }
+      );
+    }
+    return this.reinsuranceFacCodes ?? [];
   }
 
   async populateReinsuranceFacCodes(): Promise<void> {
@@ -119,7 +148,7 @@ export class ReinsuranceComponent implements OnInit {
     this.policyLayerData.push(policyLayer);
   }
 
-  addReinsurance(policyLayerData: PolicyLayerData) {
+  async addReinsurance(policyLayerData: PolicyLayerData) {
     let reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, policyLayerData.policyLayerNo, this.getNextReinsuranceLayerSequence(policyLayerData));
     policyLayerData.reinsuranceData.push(reinsuranceLayer)
 
@@ -138,7 +167,7 @@ export class ReinsuranceComponent implements OnInit {
 
     let match: any = null;
     if (reinsuranceLayer.reinsLayerNo == 1) {
-      match = this.reinsuranceCodes.find(c => c.layerNumber == reinsuranceLayer.policyLayerNo && c.isDefault);
+      match = (await this.getReinsuranceCodes()).find(c => c.layerNumber == reinsuranceLayer.policyLayerNo && c.isDefault);
       if (match != null) {
         reinsuranceLayer.treatyNo = match?.treatyNumber;
         reinsuranceLayer.reinsCededCommRate = match?.cededCommissionRate ?? 0;
@@ -303,8 +332,8 @@ export class ReinsuranceComponent implements OnInit {
     let comboList = [];
 
     this.policyLayerData.forEach(group => {
-      group.reinsuranceData.forEach(layer => {
-        comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
+      group.reinsuranceData.forEach(async layer => {
+        comboList = (await this.getReinsuranceCodes()).concat(await this.getReinsuranceFacCodes());
         filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo);
         if (filteredList.length == 0) {
           this.invalidMessage += "<br><li>Agreement is no longer valid for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo;
@@ -321,7 +350,7 @@ export class ReinsuranceComponent implements OnInit {
     let comboList = [];
 
     this.policyLayerData.forEach(group => {
-      group.reinsuranceData.forEach(layer => {
+      group.reinsuranceData.forEach(async layer => {
         if (layer.treatyNo == 1) {
           if ((layer.reinsLimit ?? 0) > (this.headerComp.endorsement.limit ?? 0)) {
             this.invalidMessage += "<br><li>Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + this.headerComp.endorsement.limit?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -329,7 +358,7 @@ export class ReinsuranceComponent implements OnInit {
           }
         }
         else if (layer.treatyNo !== 1) {
-          comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes)
+          comboList = (await this.getReinsuranceCodes()).concat(await this.getReinsuranceFacCodes())
           filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit
           if (filteredList != null)
             if ((layer.reinsLimit ?? 0) > filteredList) {

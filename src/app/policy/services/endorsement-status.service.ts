@@ -21,7 +21,7 @@ export class EndorsementStatusService {
   policyInfoValidated$ = this._policyInfoValidated.asObservable();
   get policyInfoValidated(): boolean { return this._policyInfoValidated.getValue(); }
   set policyInfoValidated(value: boolean) {
-    if (this.canEditPolicy) {
+    if (this.canEditPolicy && this._status.isPolicyValidated != value) {
       this._status.isPolicyValidated = value;
       this.updateEndorsementStatus(this._status).toPromise();
       this._policyInfoValidated.next(value);
@@ -32,7 +32,7 @@ export class EndorsementStatusService {
   coverageValidated$ = this._coverageValidated.asObservable();
   get coverageValidated(): boolean { return this._coverageValidated.getValue(); }
   set coverageValidated(value: boolean) {
-    if (this.canEditPolicy) {
+    if (this.canEditPolicy && this._status.isCoverageValidated != value) {
       this._status.isCoverageValidated = value;
       this.updateEndorsementStatus(this._status).toPromise();
       this._coverageValidated.next(value);
@@ -43,7 +43,7 @@ export class EndorsementStatusService {
   reinsuranceValidated$ = this._reinsuranceValidated.asObservable();
   get reinsuranceValidated(): boolean { return this._reinsuranceValidated.getValue(); }
   set reinsuranceValidated(value: boolean) {
-    if (this.canEditPolicy) {
+    if (this.canEditPolicy && this._status.isReinsuranceValidated != value) {
       this._status.isReinsuranceValidated = value;
       this.updateEndorsementStatus(this._status).toPromise();
       this._reinsuranceValidated.next(value);
