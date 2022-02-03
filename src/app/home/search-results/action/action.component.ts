@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
+import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { NewEndorsementData, PolicySearchResults } from '../policy-search-results';
@@ -31,23 +32,22 @@ export class ActionComponent implements OnInit {
   usedEndorsementNumbers!: Code[];
   NewEndorsementResponse!: NewEndorsementData;
   errorMessage = '';
-  pipeMessage: string = "";
   showBusy: boolean = false;
   cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel']
 
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
+  @ViewChild('modal') private modalContent!: TemplateRef<ActionComponent>
 
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
   }
 
   async ngOnInit(): Promise<void> {
-    // this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
-    // this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+
   }
 
   ngOnDestroy(): void {
@@ -89,16 +89,8 @@ export class ActionComponent implements OnInit {
   } 
 
   checkTransEffectiveDate(): boolean {
-    var test = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
-    let transEffDate = new Date((parseInt(test[0])), parseInt(test[1]) - 1, parseInt(test[2]), 0, 0, 0, 0)
-    
-    var test2 = this.policyInfo.policyEffectiveDate.toString().split('-');
-    let polEffDate = new Date((parseInt(test2[0])), parseInt(test2[1]) - 1, parseInt(test2[2]), 0, 0, 0, 0)
 
-    var test3 = this.policyInfo.policyExpirationDate.toString().split('-');
-    let polExpDate = new Date((parseInt(test3[0])), parseInt(test3[1]) - 1, parseInt(test3[2]), 0, 0, 0, 0)
-
-    if (transEffDate < polEffDate || transEffDate > polExpDate) {
+    if (this.endorsementActionInfo.transEffectiveDate < this.policyInfo.policyEffectiveDate || this.endorsementActionInfo.transEffectiveDate  > this.policyInfo.policyExpirationDate) {
       this.endorsementActionForm.controls['transEffectiveDate'].setErrors({ 'incorrect': true });
       this.isTransEffectiveValid = false;
       return false;
@@ -111,11 +103,12 @@ export class ActionComponent implements OnInit {
   checkMasterPolicy(): void {
     if (this.policyInfo.masterPolicy == '1') {
       if (this.endorsementActionInfo.transEffectiveDate !== undefined) {
-        var test = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
-        let transEffectivePlus1 = new Date((parseInt(test[0]) + 1), parseInt(test[1]) - 1, parseInt(test[2]), 0, 0, 0, 0)
 
-        var test2 = this.endorsementActionInfo.transEffectiveDate.toString().split('-');
-        let polExpirationPlus1 = new Date((parseInt(test2[0]) + 1), parseInt(test2[1]) - 1, parseInt(test2[2]), 0, 0, 0, 0)
+        let transEffectivePlus1 = new Date(this.endorsementActionInfo.transEffectiveDate);
+        transEffectivePlus1.setFullYear(transEffectivePlus1.getFullYear() + 1);
+
+        let polExpirationPlus1 = new Date(this.policyInfo.policyEffectiveDate);
+        polExpirationPlus1.setFullYear(polExpirationPlus1.getFullYear() + 1);
 
         if (transEffectivePlus1 < polExpirationPlus1) {
           this.endorsementActionInfo.transExpirationDate = transEffectivePlus1;
@@ -174,16 +167,17 @@ export class ActionComponent implements OnInit {
 
   async submit(): Promise<void> {
     this.showBusy = true;
+    this.modalRef.close();
     await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
       endResponse => {
+                this.modalRef.close()
         this.NewEndorsementResponse = endResponse;
         this.routeEndorsement();
-        this.modalRef.close()
       }).catch(x => {
-        this.pipeMessage = x.error.Message;
+        this.modalRef.close()
         this.showBusy = false;
-        this.triggerModal();
-      })
+        this.errorDialogService.open("Endorsement Error", x.error.Message)
+        .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));          })
   }
 
   routeEndorsement() {
@@ -193,15 +187,10 @@ export class ActionComponent implements OnInit {
       this.router.navigate(['/policy/' + this.NewEndorsementResponse.policyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
     }
     else {
-      this.pipeMessage = this.errorMessage;
-      this.triggerModal();
+      this.showBusy = false;
+      this.errorDialogService.open("Endorsement Error", this.errorMessage)
+      .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));    
     }
   }
 
-  @ViewChild('modalPipe') modalPipe: any;
-
-  // Modal is used to show import errors
-  triggerModal() {
-    this.modalService.open(this.modalPipe, { scrollable: true });
-  }
 }
