@@ -8,6 +8,7 @@ import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-h
 import { ActionComponent } from './action/action.component';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserAuth } from 'src/app/authorization/user-auth';
 
 @Component({
   selector: 'rsps-search-results',
@@ -25,9 +26,13 @@ export class SearchResultsComponent implements OnInit {
   collapsed: boolean = false;
   insuredName: string = "";
   status: string = "";
+  authSub: Subscription;
+  canEdit: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute,  public modalService: NgbModal,  private policySearchService: PolicySearchService, private policyHistoryService: PolicyHistoryService, private navigationService: NavigationService) {
-  }
+  constructor(private router: Router, private userAuth: UserAuth, private route: ActivatedRoute,  public modalService: NgbModal,  private policySearchService: PolicySearchService, private policyHistoryService: PolicyHistoryService, private navigationService: NavigationService) {
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEdit: boolean) => this.canEdit = canEdit
+    );}
 
   ngOnInit(): void {
     this.loadingSub = this.policySearchService.loading$.subscribe({
