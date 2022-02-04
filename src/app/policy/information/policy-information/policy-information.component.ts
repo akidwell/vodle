@@ -160,6 +160,9 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsementStatusService.reinsuranceValidated = false;
     }
   }
+  clearRetroDate() {
+    this.policyInfo.quoteData.retroDate = null;
+  }
 
   populateClaimsMadeOccurrence() {
     this.claimsMadeOrOccurrence$ = [];
@@ -169,6 +172,13 @@ export class PolicyInformationComponent implements OnInit {
 
   isExtensionDateActive(): boolean {
     if (this.canEdit && this.endorsement.transactionTypeCode === TransactionTypes.PolicyExtensionByEndt) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isRetroDateActive(): boolean {
+    if (this.canEdit && this.policyInfo.quoteData.claimsMadeOrOccurrence === 'C') {
       return true;
     } else {
       return false;
