@@ -69,7 +69,7 @@ export class ReinsuranceLayerComponent implements OnInit {
 
     this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
       await this.populateReinsuranceCodes();
-      this.populateReinsuranceFacCodes();
+      await this.populateReinsuranceFacCodes();
       this.reinsuranceForm.form.markAsDirty();
     });
   }
@@ -107,7 +107,7 @@ export class ReinsuranceLayerComponent implements OnInit {
     );
   }
 
-  populateReinsuranceFacCodes(): void {
+  async populateReinsuranceFacCodes(): Promise<void> {
     this.reinsuranceSub = this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).subscribe({
       next: reisuranceCodes => {
         this.reinsuranceFacCodes = reisuranceCodes;

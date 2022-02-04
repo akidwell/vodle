@@ -28,8 +28,8 @@ export class ReinsuranceComponent implements OnInit {
   canEditEndorsement: boolean = false;
   authLoadedSub!: Subscription;
   reinsuranceSub!: Subscription;
-  reinsuranceCodes!: ReinsuranceLookup[];
-  reinsuranceFacCodes!: ReinsuranceLookup[];
+  reinsuranceCodes: ReinsuranceLookup[] = [];
+  reinsuranceFacCodes: ReinsuranceLookup[] = [];
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
   reinsuranceRefreshedSub!: Subscription;
@@ -50,7 +50,6 @@ export class ReinsuranceComponent implements OnInit {
       this.policyLayerData = data['policyLayerData'].policyLayer;
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsement = data['endorsementData'].endorsement;
-      console.log(this.policyLayerData)
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       await this.populateReinsuranceCodes();
@@ -81,8 +80,8 @@ export class ReinsuranceComponent implements OnInit {
     });
 
     this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
-      await this.populateReinsuranceCodes();
-      await this.populateReinsuranceFacCodes();
+       await this.populateReinsuranceCodes();
+       await this.populateReinsuranceFacCodes();
     });
   }
 
@@ -119,7 +118,7 @@ export class ReinsuranceComponent implements OnInit {
     this.policyLayerData.push(policyLayer);
   }
 
-  addReinsurance(policyLayerData: PolicyLayerData) {
+  async addReinsurance(policyLayerData: PolicyLayerData) {
     let reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, policyLayerData.policyLayerNo, this.getNextReinsuranceLayerSequence(policyLayerData));
     policyLayerData.reinsuranceData.push(reinsuranceLayer)
 
@@ -190,8 +189,9 @@ export class ReinsuranceComponent implements OnInit {
           }
         }
       }
+      const validAgreements = this.checkAgreements();
       const totalMatches = this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
-        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements && this.checkAgreements();
+        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements && validAgreements;
 
       this.endorsementStatusService.reinsuranceValidated = totalMatches;
       return totalMatches;
@@ -302,8 +302,8 @@ export class ReinsuranceComponent implements OnInit {
     let filteredList: ReinsuranceLookup[];
     let comboList = [];
 
-    this.policyLayerData.forEach(group => {
-      group.reinsuranceData.forEach(layer => {
+   this.policyLayerData.forEach(group => {
+     group.reinsuranceData.forEach(layer => {
         comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
         filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo);
         if (filteredList.length == 0) {
@@ -321,7 +321,7 @@ export class ReinsuranceComponent implements OnInit {
     let comboList = [];
 
     this.policyLayerData.forEach(group => {
-      group.reinsuranceData.forEach(layer => {
+      group.reinsuranceData.forEach(async layer => {
         if (layer.treatyNo == 1) {
           if ((layer.reinsLimit ?? 0) > (this.headerComp.endorsement.limit ?? 0)) {
             this.invalidMessage += "<br><li>Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + this.headerComp.endorsement.limit?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -329,7 +329,7 @@ export class ReinsuranceComponent implements OnInit {
           }
         }
         else if (layer.treatyNo !== 1) {
-          comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes)
+          comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
           filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit
           if (filteredList != null)
             if ((layer.reinsLimit ?? 0) > filteredList) {

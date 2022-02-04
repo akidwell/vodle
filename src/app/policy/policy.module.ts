@@ -98,7 +98,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     DatePipe,
     UpdatePolicyChild,
     UnderlyingCoverageService,
-    LimitsPatternHelperService
+    LimitsPatternHelperService,
   ]
 })
 export class PolicyModule { }
