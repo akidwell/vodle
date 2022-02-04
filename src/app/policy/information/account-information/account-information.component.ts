@@ -53,8 +53,6 @@ export class AccountInformationComponent implements OnInit {
         this.notification.show('Account Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
-      this.accountInfoForm.form.markAsPristine();
-      this.accountInfoForm.form.markAsUntouched();
       return true;
     }
     return false;
