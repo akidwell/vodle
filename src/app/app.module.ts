@@ -27,6 +27,7 @@ import { DirectivesModule } from './directives/directives.module';
 import { ErrorDialogService } from './error-handling/error-dialog-service/error-dialog-service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
       deps: [PreInitService, Injector],
       useFactory: preInitServiceFactory
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     OktaConfigProvider,
     {
       provide: HTTP_INTERCEPTORS,
