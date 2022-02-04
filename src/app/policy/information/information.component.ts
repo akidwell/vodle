@@ -68,6 +68,9 @@ export class InformationComponent implements OnInit, PolicySave {
     var subject = new Subject<boolean>();
     if (this.policyInfoComp.allowEndorsementSave()) {
         this.policyService.updateEndorsement(this.endorsement).subscribe(() => {
+          // Force Reinsurance drop downs to refresh
+          this.reinsuranceLookupService.clearReinsuranceCodes();
+          this.reinsuranceLookupService.refreshReinsuranceCodes();
           subject.next(true)
         });
     } else {

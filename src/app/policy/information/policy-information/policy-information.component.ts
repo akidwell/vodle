@@ -156,7 +156,6 @@ export class PolicyInformationComponent implements OnInit {
   }
   changeProgramId() {
     if (this.endorsement.endorsementNumber == 0) {
-      this.endorsementChanged = true;
       this.endorsementStatusService.reinsuranceValidated = false;
     }
   }

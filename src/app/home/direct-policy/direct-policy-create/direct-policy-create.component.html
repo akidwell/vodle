@@ -22,9 +22,8 @@
         <label for="policyEffectiveDate">Effective Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyEffectiveDateCalendar"
           class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minEffectiveDate"
-          [max]="maxEffectiveDate" [ngModel]="policyData.policyEffectiveDate"
-          (ngModelChange)="policyData.policyEffectiveDate=$event" (blur)="setExpirationDate()" (dateChange)="checkDates()"
-          name="policyEffectiveDate" #policyEffectiveDate="ngModel">
+          [max]="maxEffectiveDate" [(ngModel)]="policyData.policyEffectiveDate" (blur)="setExpirationDate()"
+          (dateChange)="checkDates()" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
         <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyEffectiveDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #policyEffectiveDateCalendar></mat-datepicker>
@@ -33,8 +32,8 @@
         <label for="policyExpirationDate">Expiration Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyExpirationDateCalendar"
           class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minExpirationDate"
-          [max]="maxExpirationDate" [ngModel]="policyData.policyExpirationDate"
-          (ngModelChange)="policyData.policyExpirationDate=$event" (dateChange)="checkDates()" name="policyExpirationDate"
+          [max]="maxExpirationDate" [(ngModel)]="policyData.policyExpirationDate" (dateChange)="checkDates()"
+          name="policyExpirationDate"
           #policyExpirationDate="ngModel">
         <mat-datepicker-toggle matSuffix [for]="policyExpirationDateCalendar"></mat-datepicker-toggle>
         <mat-datepicker #policyExpirationDateCalendar></mat-datepicker>

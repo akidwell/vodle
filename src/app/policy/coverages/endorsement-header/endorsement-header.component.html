@@ -18,8 +18,8 @@
       <label for="endorsementExpirationDate">Trans Exp Date</label>
       <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="transactionExpirationDateCalendar"
         class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
-        [ngModel]="endorsement.transactionExpirationDate" (ngModelChange)="endorsement.transactionExpirationDate=$event"
-        (dateChange)="changeExpirationDate()" name="transactionExpirationDate" #transactionExpirationDate="ngModel">
+        [(ngModel)]="endorsement.transactionExpirationDate" (dateChange)="changeExpirationDate()"
+        name="transactionExpirationDate" #transactionExpirationDate="ngModel">
       <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="transactionExpirationDateCalendar">
       </mat-datepicker-toggle>
       <mat-datepicker #transactionExpirationDateCalendar></mat-datepicker>
