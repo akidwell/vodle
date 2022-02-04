@@ -126,9 +126,6 @@ export class PolicyInformationComponent implements OnInit {
         this.notification.show('Policy Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
-
-      this.policyInfoForm.form.markAsPristine();
-      this.policyInfoForm.form.markAsUntouched();
       return true;
     }
     return false;

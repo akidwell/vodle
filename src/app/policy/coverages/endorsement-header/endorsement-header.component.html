@@ -67,7 +67,7 @@
     <div class="col-lg-1">
       <label for="terrorism">Terrorism</label>
       <ng-select id="terrorism" [items]="terrorismCodes$ | async" bindLabel="description" bindValue="code"
-        [required]="canEdit" [clearable]="false" [searchFn]="dropDownSearch"
+        [required]="canEdit" [clearable]="false" [searchFn]="dropDownSearch" (change)="changeTerrorism()"
         [readonly]="!canEdit" [(ngModel)]="endorsement.terrorismCode" name = "terrorism">
         <ng-template ng-label-tmp let-item="item">
           {{item.code}}

@@ -2,7 +2,7 @@
   <div class="content">
     <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true"
       [innerHTML]="invalidMessage"></ngb-alert>
-    <rsps-endorsement-header></rsps-endorsement-header>
+    <rsps-endorsement-header [policyInfo]="policyInfo" [endorsement]="endorsement"></rsps-endorsement-header>
     <div>
       <button class="btn btn-sm btn-primary pull-right" *ngIf="canEdit" (click)="newLocation()">Add Location</button>
       <button class="btn btn-sm btn-primary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
@@ -13,7 +13,7 @@
     <div *ngFor="let item of endorsementCoveragesGroups; index as i">
       <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event)
         (deleteThisGroup)=deleteGroup($event) [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
-        [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length"></rsps-endorsement-coverage-location-group>
+        [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length" [endorsement]="endorsement" [policyInfo]="policyInfo"></rsps-endorsement-coverage-location-group>
     </div>
   </div>
 </form>

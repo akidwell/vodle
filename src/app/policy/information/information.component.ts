@@ -84,6 +84,8 @@ export class InformationComponent implements OnInit, PolicySave {
     if (this.policyInfoComp.allowSave()) {
       this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
           this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
+          this.policyInfoComp.policyInfoForm.form.markAsPristine();
+          this.policyInfoComp.policyInfoForm.form.markAsUntouched();
           this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
           subject.next(true)
         })
@@ -98,6 +100,8 @@ export class InformationComponent implements OnInit, PolicySave {
     if (this.accountInfoComp.allowSave()) {
       this.policyService.updateAccountInfo(this.accountInfo).subscribe(() => {
           this.data['accountData'].accountInfo = deepClone(this.accountInfo);
+          this.accountInfoComp.accountInfoForm.form.markAsPristine();
+          this.accountInfoComp.accountInfoForm.form.markAsUntouched();
           this.notification.show('Account Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
           subject.next(true)
         });

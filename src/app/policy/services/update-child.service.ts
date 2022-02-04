@@ -6,11 +6,13 @@ export class UpdatePolicyChild {
   private collapseLocations = new Subject<any>();
   private expandLocations = new Subject<any>();
   private collapseEndorsementLocationsSubject = new Subject<any>();
+  private terrorismChange = new Subject<any>();
 
   endorsementCoveragesObservable$ = this.endorsementCoverages.asObservable();
   collapseLocationsObservable$ = this.collapseLocations.asObservable();
   expandLocationsObservable$ = this.expandLocations.asObservable();
   collapseEndorsementLocationsObservable$ = this.collapseEndorsementLocationsSubject.asObservable();
+  terrorismChange$ = this.terrorismChange.asObservable();
 
   constructor(){}
 
@@ -25,5 +27,8 @@ export class UpdatePolicyChild {
   }
   public collapseEndorsementLocations() {
     this.collapseEndorsementLocationsSubject.next();
+  }
+  public terrorismChanged() {
+    this.terrorismChange.next();
   }
 }
