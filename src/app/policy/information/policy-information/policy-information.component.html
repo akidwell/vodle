@@ -102,8 +102,7 @@
               <div *ngIf="canEdit">
                 <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="policyEffectiveDateCalendar" class="form-control" [required]="canEdit"
-                  [ngModel]="policyInfo.policyEffectiveDate"
-                  (ngModelChange)="policyInfo.policyEffectiveDate=$event" (dateChange)="changeEffectiveDate()"
+                  [(ngModel)]="policyInfo.policyEffectiveDate" (dateChange)="changeEffectiveDate()"
                   name="policyEffectiveDate" #policyEffectiveDate="ngModel">
                 <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyEffectiveDateCalendar">
                 </mat-datepicker-toggle>
@@ -119,9 +118,8 @@
               <div *ngIf="canEdit">
                 <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="policyExpirationDateCalendar" class="form-control" [required]="canEdit"
-                  [disabled]="!canEdit" [ngModel]="policyInfo.policyExpirationDate"
-                  (ngModelChange)="policyInfo.policyExpirationDate=$event" (dateChange)="changeExpirationDate()"
-                  name="policyExpirationDate" #policyExpirationDate="ngModel">
+                  [disabled]="!canEdit" [(ngModel)]="policyInfo.policyExpirationDate"
+                  (dateChange)="changeExpirationDate()" name="policyExpirationDate" #policyExpirationDate="ngModel">
                 <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyExpirationDateCalendar">
                 </mat-datepicker-toggle>
                 <mat-datepicker #policyExpirationDateCalendar></mat-datepicker>
@@ -136,8 +134,8 @@
               <div *ngIf="this.isExtensionDateActive()">
                 <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="policyExtendedExpDateCalendar" class="form-control"
-                  [ngModel]="policyInfo.policyExtendedExpDate" (ngModelChange)="policyInfo.policyExtendedExpDate=$event"
-                  name="policyExtendedExpDate" #policyExtendedExpDate="ngModel">
+                  [(ngModel)]="policyInfo.policyExtendedExpDate" name="policyExtendedExpDate"
+                  #policyExtendedExpDate="ngModel">
                 <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyExtendedExpDateCalendar">
                 </mat-datepicker-toggle>
                 <mat-datepicker #policyExtendedExpDateCalendar></mat-datepicker>
@@ -152,8 +150,7 @@
               <div *ngIf="!isReadOnly">
                 <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="policyCancelDateCalendar" class="form-control"
-                  [ngModel]="policyInfo.policyCancelDate" (ngModelChange)="policyInfo.policyCancelDate=$event"
-                  name="policyCancelDate" #policyCancelDate="ngModel">
+                  [(ngModel)]="policyInfo.policyCancelDate" name="policyCancelDate" #policyCancelDate="ngModel">
                 <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyCancelDateCalendar">
                 </mat-datepicker-toggle>
                 <mat-datepicker #policyCancelDateCalendar></mat-datepicker>
@@ -300,8 +297,8 @@
               <label for="productManufactureDate" class="form-label" title="Product Manufacture Date">Product Manufacture Date</label>
               <input style="display: inline-block; max-width: 80%;" matInput
                 [matDatepicker]="productManufactureDateCalendar" class="form-control" [disabled]="!canEdit"
-                [ngModel]="policyInfo.productManufactureDate" (ngModelChange)="policyInfo.productManufactureDate=$event"
-                name="productManufactureDate" #productManufactureDate="ngModel">
+                [(ngModel)]="policyInfo.productManufactureDate" name="productManufactureDate"
+                #productManufactureDate="ngModel">
               <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="productManufactureDateCalendar">
               </mat-datepicker-toggle>
               <mat-datepicker #productManufactureDateCalendar></mat-datepicker>

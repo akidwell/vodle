@@ -31,7 +31,8 @@ export class ReinsuranceLookupService {
         return of(<ReinsuranceLookup[]>[]);
       }
       else {
-        const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDate.toString());
+        const effectiveDateString = new Date(effectiveDate);
+        const params = new HttpParams().append('programId', programId).append('effectiveDate', effectiveDateString.toISOString().slice(0, 10));
         this.cacheReinsuranceCodes$ = this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/lookups/reinsurance-agreements', { params })
           .pipe(
             tap(res => this.cacheReinsuranceCodes = res),
@@ -67,7 +68,8 @@ export class ReinsuranceLookupService {
     } else if (this.cacheFaculativeReinsuranceCodes$) {
       observable = this.cacheFaculativeReinsuranceCodes$;
     } else {
-      const params = new HttpParams().append('effectiveDate', effectiveDate.toString());
+      const effectiveDateString = new Date(effectiveDate);
+      const params = new HttpParams().append('effectiveDate', effectiveDateString.toISOString().slice(0, 10));
       this.cacheFaculativeReinsuranceCodes$ =  this.http.get<ReinsuranceLookup[]>(this.config.apiBaseUrl + 'api/lookups/faculative-agreements', { params })
         .pipe(
           tap(res => this.cacheFaculativeReinsuranceCodes = res),

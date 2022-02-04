@@ -28,8 +28,8 @@ export class ReinsuranceComponent implements OnInit {
   canEditEndorsement: boolean = false;
   authLoadedSub!: Subscription;
   reinsuranceSub!: Subscription;
-  reinsuranceCodes: ReinsuranceLookup[] | null = null;
-  reinsuranceFacCodes: ReinsuranceLookup[] | null = null;
+  reinsuranceCodes: ReinsuranceLookup[] = [];
+  reinsuranceFacCodes: ReinsuranceLookup[] = [];
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
   reinsuranceRefreshedSub!: Subscription;
@@ -50,12 +50,10 @@ export class ReinsuranceComponent implements OnInit {
       this.policyLayerData = data['policyLayerData'].policyLayer;
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsement = data['endorsementData'].endorsement;
-      console.log(this.policyLayerData)
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       await this.populateReinsuranceCodes();
       await this.populateReinsuranceFacCodes();
-      // console.log("Init Load");
 
       // Added new policy layer or reinsurance layer if not added yet on coming in first time
       this.authLoadedSub = this.userAuth.loaded$.subscribe((loaded) => {
@@ -82,25 +80,10 @@ export class ReinsuranceComponent implements OnInit {
     });
 
     this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
-       console.log("Refresh Load");
-       this.reinsuranceCodes = null;
-       this.reinsuranceFacCodes = null;
+       await this.populateReinsuranceCodes();
+       await this.populateReinsuranceFacCodes();
     });
   }
-
-
-  async getReinsuranceCodes(): Promise<ReinsuranceLookup[]> {
-    if (this.reinsuranceCodes == null) {
-      console.log("Refresh reinsurance");
-      await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
-        reisuranceCodes => {
-          this.reinsuranceCodes = reisuranceCodes;
-        }
-      );
-    }
-      return this.reinsuranceCodes  ?? [];
-  }
-
 
   async populateReinsuranceCodes(): Promise<void> {
     await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
@@ -108,19 +91,6 @@ export class ReinsuranceComponent implements OnInit {
         this.reinsuranceCodes = reisuranceCodes;
       }
     );
-  }
-
-
-  async getReinsuranceFacCodes(): Promise<ReinsuranceLookup[]> {
-    if (this.reinsuranceFacCodes == null) {
-      console.log("Refresh reinsuranceFac");
-      await this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).toPromise().then(
-        reisuranceCodes => {
-          this.reinsuranceFacCodes = reisuranceCodes;
-        }
-      );
-    }
-    return this.reinsuranceFacCodes ?? [];
   }
 
   async populateReinsuranceFacCodes(): Promise<void> {
@@ -167,7 +137,7 @@ export class ReinsuranceComponent implements OnInit {
 
     let match: any = null;
     if (reinsuranceLayer.reinsLayerNo == 1) {
-      match = (await this.getReinsuranceCodes()).find(c => c.layerNumber == reinsuranceLayer.policyLayerNo && c.isDefault);
+      match = this.reinsuranceCodes.find(c => c.layerNumber == reinsuranceLayer.policyLayerNo && c.isDefault);
       if (match != null) {
         reinsuranceLayer.treatyNo = match?.treatyNumber;
         reinsuranceLayer.reinsCededCommRate = match?.cededCommissionRate ?? 0;
@@ -219,8 +189,9 @@ export class ReinsuranceComponent implements OnInit {
           }
         }
       }
+      const validAgreements = this.checkAgreements();
       const totalMatches = this.headerComp.endorsement.premium == totalPrem && this.headerComp.endorsement.limit == totalLimit &&
-        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements && this.checkAgreements();
+        this.policyLayerData[0].reinsuranceData[0].attachmentPoint == this.headerComp.endorsement.attachmentPoint && subAttachmentpoints && insuringAgreements && validAgreements;
 
       this.endorsementStatusService.reinsuranceValidated = totalMatches;
       return totalMatches;
@@ -331,9 +302,9 @@ export class ReinsuranceComponent implements OnInit {
     let filteredList: ReinsuranceLookup[];
     let comboList = [];
 
-    this.policyLayerData.forEach(group => {
-      group.reinsuranceData.forEach(async layer => {
-        comboList = (await this.getReinsuranceCodes()).concat(await this.getReinsuranceFacCodes());
+   this.policyLayerData.forEach(group => {
+     group.reinsuranceData.forEach(layer => {
+        comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
         filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo);
         if (filteredList.length == 0) {
           this.invalidMessage += "<br><li>Agreement is no longer valid for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo;
@@ -358,7 +329,7 @@ export class ReinsuranceComponent implements OnInit {
           }
         }
         else if (layer.treatyNo !== 1) {
-          comboList = (await this.getReinsuranceCodes()).concat(await this.getReinsuranceFacCodes())
+          comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
           filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit
           if (filteredList != null)
             if ((layer.reinsLimit ?? 0) > filteredList) {
