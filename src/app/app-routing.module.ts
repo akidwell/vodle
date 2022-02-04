@@ -14,7 +14,7 @@ export function onAuthRequired(_oktaAuth: OktaAuthService) {
   });
 }
 const routes: Routes = [
-  { path: CALLBACK_PATH, component: OktaCallbackComponent },
+  { path: CALLBACK_PATH, component: OktaCallbackComponent  },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) , canActivate: [OktaAuthGuard, AuthGuard] , data: {
     onAuthRequired
   }  },
@@ -28,9 +28,7 @@ const routes: Routes = [
     onAuthRequired
   } },
   { path: 'access-denied', component: AccessDeniedComponent },
-  { path: 'logged-out', component: AccessDeniedComponent , canActivate: [OktaAuthGuard], data: {
-    onAuthRequired
-  } },
+  { path: 'logged-out', redirectTo: 'home', pathMatch: 'full'},
   { path: '**', component: PageNotFoundComponent }
 ];
 

@@ -1,4 +1,7 @@
-<div class="container-fluid" id="header">{{title}}
+<div class="container-fluid" id="header">
+  <a class="banner-label" routerLinkActive='active' routerLink='/home'>
+    {{title}}
+  </a>
   <rsps-user></rsps-user>
 </div>
 <ngb-alert *ngIf="errorMessage"> <strong>Warning!</strong> {{errorMessage | json}}</ngb-alert>

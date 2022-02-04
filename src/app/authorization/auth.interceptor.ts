@@ -10,12 +10,14 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>,
               next: HttpHandler): Observable<HttpEvent<any>> {
         const idToken = localStorage.getItem("jwt_token");
-        if (idToken && this.isTokenValid(idToken)) {
+        const tokenRegEx = /\/userauth\/gettoken/gi;
+        const versionRegEx = /\monitoring\/version/gi;
+        //need to make sure /gettoken and /version are unsecured calls
+        if (req.url.search(tokenRegEx) === -1 && req.url.search(versionRegEx) === -1 ) {
             const cloned = req.clone({
                 headers: req.headers.set("Authorization",
                     "Bearer " + idToken)
             });
-            console.log(cloned)
             return next.handle(cloned);
         }
         else {
@@ -24,18 +26,5 @@ export class AuthInterceptor implements HttpInterceptor {
               });
             return next.handle(cloned);
         }
-    }
-
-    isTokenValid(token : string | null): boolean {
-      if (token == null) {
-        return false;
-      }
-      const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
-      console.log('expirationDate: ', expirationDate, 'now: ', new Date())
-      if (expirationDate != null && expirationDate > new Date()) {
-        return true;
-      } else {
-        return false;
-      }
     }
 }

@@ -33,7 +33,7 @@
             <th>Void Date</th>
             <th>Status</th>
             <th>Trans Type</th>
-            <th>Actions</th>
+            <th *ngIf="canEdit">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -60,11 +60,11 @@
             <td>{{ policy.voidDate | date: 'MM/dd/yyyy'}}</td>
             <td>{{ policy.invoiceStatus}}</td>
             <td>{{ policy.transactionType}}</td>
-            <td id="actionCell">
-                  <div ngbDropdown style="margin-top: 6%">
-                    <button  id="action" ngbDropdownToggle>Actions</button>
+            <td *ngIf="canEdit" id="actionCell">
+                  <div ngbDropdown class="d-inline-block" >
+                    <button class="btn btn-outline-primary"  id="action" ngbDropdownToggle>Actions</button>
                     <div ngbDropdownMenu aria-labelledby="action">
-                      <button ngbDropdownItem (click)="newEndorsement(policy)" value="endorsement">Endorsement</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy)" value="endorsement">Endorsement</button>
                     </div>
                   </div>
             </td>

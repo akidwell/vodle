@@ -43,7 +43,6 @@ export class AuthService {
         if (token != null && token != "") {
           this.userAuth.bearerToken = JSON.parse(JSON.stringify(token)).data;
           this.userAuth.ApiBearerToken = JSON.parse(JSON.stringify(token)).data;
-          console.log(token)
           localStorage.setItem('jwt_token', this.userAuth.bearerToken);
         }
       },
