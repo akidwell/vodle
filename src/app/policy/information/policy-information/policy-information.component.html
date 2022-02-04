@@ -15,17 +15,35 @@
                 value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
             </div>
             <div class="col-lg-2 col-md-4">
-              <label for="claimsMadeOrOccurrence"  class="form-label" title="Status">CLM/OCC</label>
-              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="isReadOnly"
-                id="claimsMadeOrOccurrence" [(ngModel)]="policyInfo.quoteData.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence" #claimsMadeOrOccurrence="ngModel">
-              </ng-select>
-            </div>
-            <div class="col-lg-2 col-md-4">
               <label for="enteredDate"  class="form-label" title="Policy Entered Date">Policy Entered Date</label>
               <input type="date" class="form-control" id="enteredDate" [readonly]="isReadOnly"
                 [ngModel]="policyInfo.enteredDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.enteredDate=$event"
                 name="enteredDate" #enteredDate="ngModel">
             </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="claimsMadeOrOccurrence"  class="form-label" title="Status">CLM/OCC</label>
+              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="isReadOnly"
+                id="claimsMadeOrOccurrence" [(ngModel)]="policyInfo.quoteData.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence"
+                #claimsMadeOrOccurrence="ngModel" (change)="clearRetroDate()">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="retroDate" class="form-label" title="Retro Date">Retro Date</label>
+              <div *ngIf="this.isRetroDateActive()">
+                <input style="display: inline-block; max-width: 80%;" matInput
+                  [matDatepicker]="retroDateCalendar" class="form-control"
+                  [ngModel]="policyInfo.quoteData.retroDate" (ngModelChange)="policyInfo.quoteData.retroDate=$event"
+                  name="retroDate" #retroDate="ngModel">
+                <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="retroDateCalendar">
+                </mat-datepicker-toggle>
+                <mat-datepicker #retroDateCalendar></mat-datepicker>
+              </div>
+              <div *ngIf="!this.isRetroDateActive()">
+                <input type="text" class="form-control" id="retroDate" readonly
+                  [ngModel]="policyInfo.quoteData.retroDate | date:'MM/dd/yyyy'" name="retroDate">
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="card-body">

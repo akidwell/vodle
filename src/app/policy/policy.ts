@@ -70,6 +70,7 @@ export interface QuoteData {
   coverageCode: string;
   creditDays: string;
   claimsMadeOrOccurrence: string;
+  retroDate: Date | null;
 }
 export interface RiskLocation {
 
