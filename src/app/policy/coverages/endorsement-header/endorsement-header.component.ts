@@ -1,15 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { NotificationService } from 'src/app/notification/notification-service';
 import { Endorsement, PolicyInformation } from '../../policy';
-import { PolicyService } from '../../policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
+import { UpdatePolicyChild } from '../../services/update-child.service';
 
 @Component({
   selector: 'rsps-endorsement-header',
@@ -17,8 +15,6 @@ import { EndorsementStatusService } from '../../services/endorsement-status.serv
   styleUrls: ['./endorsement-header.component.css']
 })
 export class EndorsementHeaderComponent implements OnInit {
-  endorsement!: Endorsement;
-  policyInfo!: PolicyInformation;
   isReadOnly: boolean = true;
   canEditPolicy: boolean = false;
   authSub: Subscription;
@@ -31,7 +27,10 @@ export class EndorsementHeaderComponent implements OnInit {
   statusSub!: Subscription;
   isAttachmentPointValid: boolean = false;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropdowns: DropDownsService, private policyService: PolicyService, private datePipe: DatePipe, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
+  @Input() public endorsement!: Endorsement;
+  @Input() public policyInfo!: PolicyInformation;
+  
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private datePipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -40,13 +39,9 @@ export class EndorsementHeaderComponent implements OnInit {
   @ViewChild('endorsementHeaderForm', { static: false }) endorsementHeaderForm!: NgForm;
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
-      this.endorsement = data['endorsementData'].endorsement;
-      this.policyInfo = data['policyInfoData'].policyInfo;
-    });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
     this.transactionTypes$ = this.dropdowns.getTransactionTypes();
@@ -104,19 +99,13 @@ export class EndorsementHeaderComponent implements OnInit {
     }
   }
 
-  save(): boolean {
-    if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
-      if (this.endorsementHeaderForm.status != "VALID") {
-        this.notification.show('Endorsesement Header not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        return false;
-      }
+  changeTerrorism() {
+    this.updatePolicyChild.terrorismChanged();
+  }
 
-      this.endSub = this.policyService.updateEndorsement(this.endorsement).subscribe(result => {
-        this.endorsementHeaderForm.form.markAsPristine();
-        this.endorsementHeaderForm.form.markAsUntouched();
-        this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        return result;
-      });
+  canSave(): boolean {
+    if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
+      return this.endorsementHeaderForm.status == "VALID";
     }
     return false;
   }

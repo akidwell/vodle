@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { faPlus, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
@@ -34,7 +33,6 @@ export class EndorsementCoverageComponent implements OnInit {
   subCodeDefaults!: SubCodeDefaults;
   defaultsSub!: Subscription;
   deleteSub!: Subscription;
-  policyInfo!: PolicyInformation;
   showDeductible: boolean = false;
   showIncludeExlude: boolean = false;
   canEditPolicy: boolean = false;
@@ -48,11 +46,19 @@ export class EndorsementCoverageComponent implements OnInit {
   originalAction!: string;
   saveEventSubscription!: Subscription;
   collapsePanelSubscription!: Subscription;
+  terrorismSubscription!: Subscription;
   showClaimsMade: boolean = false;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
+  @Input() public policyInfo!: PolicyInformation;
+  @Input() public coverage!: EndorsementCoverage;
+  @Output() status: EventEmitter<any> = new EventEmitter();
+  @Output() copyExistingCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
+  @Output() deleteThisCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
+  @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
+
+  constructor(private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
     private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -61,9 +67,6 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
-      this.policyInfo = data['policyInfoData'].policyInfo;
-    });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
         this.canEditEndorsement = canEdit;
@@ -99,6 +102,11 @@ export class EndorsementCoverageComponent implements OnInit {
     this.collapsePanelSubscription = this.updatePolicyChild.collapseLocationsObservable$.subscribe(() => {
       this.ecCollapsed = true;
     });
+    this.terrorismSubscription = this.updatePolicyChild.terrorismChange$.subscribe(() => {
+      if (this.coverage.premiumType == "T") {
+        this.endorsementCoveragesForm.form.markAsDirty();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -108,6 +116,7 @@ export class EndorsementCoverageComponent implements OnInit {
     this.saveEventSubscription?.unsubscribe();
     this.collapsePanelSubscription?.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.terrorismSubscription?.unsubscribe();
   }
 
   get canEdit(): boolean {
@@ -267,11 +276,5 @@ export class EndorsementCoverageComponent implements OnInit {
       });
     }
   }
-
-  @Input() public coverage!: EndorsementCoverage;
-  @Output() status: EventEmitter<any> = new EventEmitter();
-  @Output() copyExistingCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
-  @Output() deleteThisCoverage: EventEmitter<EndorsementCoverage> = new EventEmitter();
-  @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
 }
 

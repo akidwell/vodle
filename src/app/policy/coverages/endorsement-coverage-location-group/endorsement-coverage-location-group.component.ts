@@ -1,6 +1,5 @@
 import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output,  ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
@@ -8,7 +7,7 @@ import { newEndorsementCoverage, EndorsementCoverage, EndorsementCoveragesGroup 
 import { EndorsementCoverageLocationComponent, LocationResult } from './endorsement-coverage-location/endorsement-coverage-location.component';
 import { EndorsementCoverageComponent } from './endorsement-coverage/endorsement-coverage.component';
 import { EndorsementCoverageDirective } from './endorsement-coverage/endorsement-coverage.directive';
-import { PolicyInformation } from '../../policy';
+import { Endorsement, PolicyInformation } from '../../policy';
 import { UpdatePolicyChild } from '../../services/update-child.service';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 
@@ -31,12 +30,12 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   collapsePanelSubscription!: Subscription;
   expandPanelSubscription!: Subscription;
   loaded: boolean = false;
-  policyInfo!: PolicyInformation;
-  endorsementNumber!: number;
   components: EndorsementCoverageComponent[] = [];
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 
+  @Input() public endorsement!: Endorsement;
+  @Input() public policyInfo!: PolicyInformation;
   @Input() public endorsementCoveragesGroup!: EndorsementCoveragesGroup;
   @Input() public currentSequence!: number;
   @Input() public locationIndex!: number;
@@ -47,7 +46,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth, private route: ActivatedRoute, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private userAuth: UserAuth, private updatePolicyChild: UpdatePolicyChild, private componentFactoryResolver: ComponentFactoryResolver, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -86,11 +85,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.anchorId = 'focusHere' + this.endorsementCoveragesGroup.location.locationId;
-
-    this.route.parent?.data.subscribe(data => {
-      this.policyInfo = data['policyInfoData'].policyInfo;
-      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
-    });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
         this.canEditEndorsement = canEdit;
@@ -170,7 +164,8 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     let newCoverage = newEndorsementCoverage();
     newCoverage.sequence = this.currentSequence;
     newCoverage.locationId = this.endorsementCoveragesGroup.location.locationId;
-    newCoverage.endorsementNumber = this.endorsementNumber;
+    newCoverage.endorsementNumber = this.endorsement.endorsementNumber;
+    // newCoverage.endorsementNumber = this.endorsementNumber;
     newCoverage.programId = this.policyInfo.programId;
     newCoverage.coverageCode = this.policyInfo.quoteData.coverageCode;
     newCoverage.policySymbol = this.policyInfo.policySymbol;
