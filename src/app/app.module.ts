@@ -69,7 +69,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
       deps: [PreInitService, Injector],
       useFactory: preInitServiceFactory
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
     OktaConfigProvider,
     {
       provide: HTTP_INTERCEPTORS,
