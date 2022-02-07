@@ -50,9 +50,6 @@
       <input type="text" class="form-control" id="attachmentPoint" [required]="canEditAttachmentPoint"
         [readonly]="!canEditAttachmentPoint" [(ngModel)]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator=","
         name="attachmentPoint" #attachmentPoint="ngModel" name="attachmentPoint" (change)="checkAttachmentPointValid()">
-        <div [hidden]="isAttachmentPointValid" class="alert alert-danger">
-          Invalid Attachment Point
-        </div>
     </div>
     <div class="col-lg">
       <label for="underlyingLimit">Underlying Limits</label>
