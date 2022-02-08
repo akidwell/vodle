@@ -3,11 +3,12 @@
   <div class="row">
     <div class="col-lg">
       <label for="transactionEffectiveDate">Trans Eff Date</label>
-      <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="endorsementEffectiveDateCalendar"
+      <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="endorsementEffectiveDateCalendar"
         class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
-        [ngModel]="endorsement.transactionEffectiveDate" (ngModelChange)="endorsement.transactionEffectiveDate=$event"
-        (dateChange)="changeEffectiveDate()" name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
-      <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="endorsementEffectiveDateCalendar">
+        [(ngModel)]="endorsement.transactionEffectiveDate" (dateChange)="changeEffectiveDate()"
+        name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
+      <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
+        [for]="endorsementEffectiveDateCalendar">
       </mat-datepicker-toggle>
       <mat-datepicker #endorsementEffectiveDateCalendar></mat-datepicker>
       <div *ngIf="!isTransactionEffectiveDateValid" class="alert alert-danger">
@@ -16,11 +17,12 @@
     </div>
     <div class="col-lg">
       <label for="endorsementExpirationDate">Trans Exp Date</label>
-      <input style="display: inline-block; max-width: 75%;" matInput [matDatepicker]="transactionExpirationDateCalendar"
+      <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transactionExpirationDateCalendar"
         class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
         [(ngModel)]="endorsement.transactionExpirationDate" (dateChange)="changeExpirationDate()"
         name="transactionExpirationDate" #transactionExpirationDate="ngModel">
-      <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="transactionExpirationDateCalendar">
+      <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
+        [for]="transactionExpirationDateCalendar">
       </mat-datepicker-toggle>
       <mat-datepicker #transactionExpirationDateCalendar></mat-datepicker>
       <div *ngIf="!isTransactionExpirationDateValid" class="alert alert-danger">
@@ -32,12 +34,6 @@
       <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="key"
         [required]="canEditTransactionType" [clearable]="false" [searchFn]="dropDownSearch"
         [readonly]="!canEditTransactionType" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
-        <ng-template ng-label-tmp let-item="item">
-          {{item.key}} - {{item.description}}
-        </ng-template>
-        <ng-template ng-option-tmp let-item="item">
-          {{item.key}} - {{item.description}}
-        </ng-template>
       </ng-select>
     </div>
     <div class="col-lg">

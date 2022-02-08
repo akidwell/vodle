@@ -109,8 +109,6 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   isValid(): boolean {
-    let total: number = 0;
-    this.endorsementCoveragesGroups.forEach(group => { group.coverages.forEach(coverage => { total += coverage.premium ?? 0 }) });
     if (this.components != null) {
       for (let child of this.components) {
         if (!child.isValid()) {
@@ -119,8 +117,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
         }
       }
     }
-    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
-    return this.headerComp.endorsementHeaderForm.status == 'VALID' && this.headerComp.endorsement.premium == total;
+    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' && this.checkPremiumMatches() && this.checkTerrorismMessage() == "";
+    return this.endorsementStatusService.coverageValidated;
   }
 
   isCoveragesDirty(): boolean {
@@ -210,6 +208,11 @@ export class CoveragesComponent implements OnInit, PolicySave {
         this.invalidMessage += "<br><li>" + error;
       }
     }
+    const terrorismMessage = this.checkTerrorismMessage();
+    if (terrorismMessage != "") {
+      this.showInvalid = true;
+      this.invalidMessage += "<br><li>" + terrorismMessage;
+    }
     if (!this.checkPremiumMatches()) {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Premium totals do not match";
@@ -220,6 +223,24 @@ export class CoveragesComponent implements OnInit, PolicySave {
     else {
       this.hideInvalid();
     }
+  }
+
+  checkTerrorismMessage(): string {
+    let terrorCoverageCount = 0;
+    this.endorsementCoveragesGroups.forEach(group => {
+      group.coverages.forEach(coverage => {
+        if (coverage.premiumType == "T" && coverage.action != "D") {
+          terrorCoverageCount++;
+        }
+      })
+    })
+    if (this.endorsement.terrorismCode == "D" && terrorCoverageCount > 0) {
+      return "There should be no Terrorism Coverages when Terorism Code is D"
+    }
+    else if (this.endorsement.terrorismCode == "F" && terrorCoverageCount == 0) {
+      return "There should be at least one Terrorism Coverage when Terorism Code is F"
+    }
+    return "";
   }
 
   checkPremiumMatches(): boolean {
