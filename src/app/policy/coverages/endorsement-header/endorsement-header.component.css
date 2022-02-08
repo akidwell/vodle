@@ -17,3 +17,7 @@
 #sir {
   text-align: right;
 }
+
+#terrorism ::ng-deep .ng-dropdown-panel.ng-select-bottom {
+  left: calc(100% - 444px)!important; 
+}
