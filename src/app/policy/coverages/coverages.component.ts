@@ -117,7 +117,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
         }
       }
     }
-    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' && this.checkPremiumMatches() && this.checkTerrorismMessage() == "";
+    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' && this.checkPremiumMatches() && this.headerComp.checkAttachmentPointValid() && this.checkTerrorismMessage() == "";
     return this.endorsementStatusService.coverageValidated;
   }
 
@@ -216,6 +216,10 @@ export class CoveragesComponent implements OnInit, PolicySave {
     if (!this.checkPremiumMatches()) {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Premium totals do not match";
+    }
+    if(this.headerComp.checkAttachmentPointValid() == false){
+      this.showInvalid = true;
+      this.invalidMessage += "<br><li>Attachment Point must be greater than the underlying limits."
     }
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;

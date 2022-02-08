@@ -46,7 +46,6 @@ export class EndorsementHeaderComponent implements OnInit {
     });
     this.transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
-    this.isAttachmentPointValid = this.checkAttachmentPointValid();
   }
 
   ngOnDestroy(): void {
