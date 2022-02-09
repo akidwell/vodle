@@ -93,4 +93,12 @@ export class EndorsementStatusService {
       );
   }
 
+  public addEndorsementStatus(endorsementInfo: EndorsementStatusData): Observable<boolean> {
+    return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/status/', endorsementInfo)
+      .pipe(
+        catchError(() => {
+          return of(false);
+        })
+      );
+  }
 }

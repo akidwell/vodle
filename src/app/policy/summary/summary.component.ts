@@ -87,6 +87,7 @@ export class SummaryComponent implements OnInit {
     const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
     const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
     invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
+    invoice.reason = (await this.endorsementStatusService.getEndorsementStatus( this.policyInfo.policyId, this.endorsement.endorsementNumber).toPromise()).endorsementReason ?? "";
     let invoiceDetail = newInvoiceDetail();
     invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
     invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";

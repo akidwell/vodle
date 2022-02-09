@@ -2,6 +2,8 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { Code } from 'src/app/drop-downs/code';
+import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { InvoiceData } from '../../invoice';
 
@@ -13,17 +15,19 @@ import { InvoiceData } from '../../invoice';
 export class InvoiceMasterComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy: boolean = false;
+  endorsementReasons!: Code[];
 
   @Input() public invoice!: InvoiceData;
   @ViewChild(NgForm, { static: false }) invoiceMasterForm!: NgForm;
 
-  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private dropdowns: DropDownsService,) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
   }
 
   ngOnDestroy(): void {

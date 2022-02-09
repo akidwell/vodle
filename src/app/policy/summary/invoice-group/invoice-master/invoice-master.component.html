@@ -14,8 +14,10 @@
       </div>
       <div class="col-lg-3">
         <label for="invoiceReason">Reason</label>
-        <input type="text" class="form-control" id="invoiceReason" [readonly]="true" [ngModel]="invoice.reason"
-          name="invoiceReason" #invoiceReason="ngModel">
+        <ng-select id="invoiceReason"  [items]="endorsementReasons" [readonly]="!canEditComment"
+        bindLabel="description" bindValue="code" [clearable]="false"  name="invoiceReason"
+        [(ngModel)]="invoice.reason">
+    </ng-select>
       </div>
     </div>
   </div>
