@@ -233,7 +233,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     let terrorCoverageCount = 0;
     this.endorsementCoveragesGroups.forEach(group => {
       group.coverages.forEach(coverage => {
-        if (coverage.premiumType == "T" && coverage.action != "D") {
+        if (coverage.premiumType == "T") {
           terrorCoverageCount++;
         }
       })
