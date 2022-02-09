@@ -267,7 +267,23 @@ export interface EndorsementStatusData {
   isCoverageValidated: boolean;
   isReinsuranceValidated: boolean;
   isDirectQuote: boolean;
+  endorsementReason: string | null;
 }
+
+export const newEndorsementStatusData = (policyId: number, endorsementNumber: number, endorsementReason: string): EndorsementStatusData => {
+  return {
+  policyId: policyId,
+  endorsementNumber: endorsementNumber,
+  invoiceStatus: "null",
+  invoiceStatusDescription: "null",
+  isPolicyValidated: false,
+  isCoverageValidated: false,
+  isReinsuranceValidated: false,
+  isDirectQuote: false,
+  endorsementReason: endorsementReason
+}
+};
+
 
 export interface EndorsementStatusResolved {
   status: EndorsementStatusData | null;

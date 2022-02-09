@@ -7,7 +7,9 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
+import {  EndorsementStatusData, newEndorsementStatusData } from 'src/app/policy/policy';
 import { PolicyService } from 'src/app/policy/policy.service';
+import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { NewEndorsementData, PolicySearchResults } from '../policy-search-results';
 import { ActionService } from './action.service';
@@ -33,14 +35,13 @@ export class ActionComponent implements OnInit {
   NewEndorsementResponse!: NewEndorsementData;
   errorMessage = '';
   showBusy: boolean = false;
-  cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel']
-
+  cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel'];
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<ActionComponent>
 
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private endorsementStatusService: EndorsementStatusService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -168,6 +169,9 @@ export class ActionComponent implements OnInit {
   async submit(): Promise<void> {
     this.showBusy = true;
     this.modalRef.close();
+
+    let data = newEndorsementStatusData(this.endorsementActionInfo.policyId, this.endorsementActionInfo.newEndorsementNumber, this.endorsementActionInfo.endorsementReason)
+    await this.endorsementStatusService.addEndorsementStatus(data).toPromise();
     await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
       endResponse => {
                 this.modalRef.close()
