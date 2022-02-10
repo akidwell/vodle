@@ -39,12 +39,12 @@
     <div class="col-lg">
       <label for="premium">Premium</label>
       <input type="text" class="form-control" id="premium" [required]="canEdit" [readonly]="!canEdit"
-        [(ngModel)]="endorsement.premium" mask="separator.0" thousandSeparator="," name="premium" #premium="ngModel">
+        [(ngModel)]="endorsement.premium" string-to-currency name="premium" #premium="ngModel">
     </div>
     <div class="col-lg">
       <label for="attachmentPoint">Attachment Point</label>
       <input type="text" class="form-control" id="attachmentPoint" [required]="canEditAttachmentPoint"
-        [readonly]="!canEditAttachmentPoint" [(ngModel)]="endorsement.attachmentPoint" mask="separator.0" thousandSeparator=","
+        [readonly]="!canEditAttachmentPoint" [(ngModel)]="endorsement.attachmentPoint" string-to-currency [allowNegative]="false"
         name="attachmentPoint" #attachmentPoint="ngModel" name="attachmentPoint" (change)="checkAttachmentPointValid()">
     </div>
     <div class="col-lg">

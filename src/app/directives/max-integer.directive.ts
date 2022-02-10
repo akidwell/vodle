@@ -12,7 +12,11 @@ export class MaxIntegerValidator {
     constructor() { }
 
     validate(c: FormControl) {
-        return c.value <= 2147483647 && c.value >= -2147483647 ? null : {
+        const value = Number(c.value?.toString().replace(/[^0-9.-]+/g, ""));
+        if (Number.isNaN(value)){
+            return  null;
+        }
+        return value <= 2147483647 && value >= -2147483647 ? null : {
             validateMaxInteger: {
                 valid: false
             }

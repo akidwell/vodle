@@ -106,7 +106,9 @@ export class InvoiceGroupComponent implements OnInit {
 
   get totalNetAmount(): number {
     let total: number = 0;
-    this.invoice.invoiceDetail.forEach(element => { total += element.netAmount });
+    this.invoice.invoiceDetail.forEach(element => {
+      total += Number.isNaN(Number(element.netAmount)) ? 0 : Number(element.netAmount)
+    });
     return total;
   }
 
