@@ -54,14 +54,14 @@ export class StringToCurrencyDirective {
 
    @HostListener('keydown', ['$event'])
    onKeyDown(event: any) {
-      if (event.keyCode === 190) { // Handle deciamal place
+      if (event.keyCode === 110 || event.keyCode === 190) { // Handle decimal place
          if (this.decimalPlaces > 0 && !this.control.value.toString().includes(".")) {
             return true;
          }
          event.preventDefault();
          return false;
       }
-      else if (event.keyCode === 189) {  // Handle minus sign
+      else if (event.keyCode === 109 || event.keyCode === 189) {  // Handle minus sign
          if (this.allowNegative && !this.control.value.toString().includes("-")) {
             return true;
          }
@@ -71,17 +71,18 @@ export class StringToCurrencyDirective {
       else if (event.ctrlKey && (event.keyCode === 67 || event.keyCode === 86)) {
          return true;
       }
-      else if ((event.keyCode < 48 || event.keyCode > 57) // Prevent anything but numbers
-         && event.keyCode !== 9   // Tab
-         && event.keyCode !== 8   // BackSpace
-         && event.keyCode !== 37  // Left Arrow
-         && event.keyCode !== 39  // Right Arrow
-         && event.keyCode !== 46  // Delete
+      else if ((event.keyCode >= 48 && event.keyCode <= 57) // Numbers
+         || (event.keyCode >= 96 && event.keyCode <= 105)  // KeyPad
+         || event.keyCode === 9   // Tab
+         || event.keyCode === 8   // BackSpace
+         || event.keyCode === 37  // Left Arrow
+         || event.keyCode === 39  // Right Arrow
+         || event.keyCode === 46  // Delete
       ) {
+         return true;
+      } else {5
          event.preventDefault();
          return false;
-      } else {
-         return true;
       }
    }
 
