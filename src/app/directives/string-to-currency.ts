@@ -92,7 +92,7 @@ export class StringToCurrencyDirective {
       // Clean up value to removes anything not a number or decimal or minus sign
       let value: string = input.slice(0, 1).replace(/[^0-9.-]+/g, "") + input.slice(1).replace(/[^0-9.]+/g, "");
       // If only contains a minus or decimal just clear it out to prevent errors
-      if (value === "-" || value === ".") {
+      if (value.replace("-","").replace(".","")  === "") {
          value = "";
       }
       if (!this.allowNegative) {
@@ -113,8 +113,7 @@ export class StringToCurrencyDirective {
          const format = "1." + decimalLen.toString() + "-" + decimalLen.toString();
          const currency = currencyPipe.transform(value, "USD", "", format);
          formattedValue = minusPipe.transform(currency);
-      }
-     
+      }  
       // Display first with parenthesis if negative
       this.control.reset(formattedValue);
       return (value === '') ? null : isNaN(Number(value)) ? Number(value.replace(/[^0-9.-]+/g, "")) : Number(value);
