@@ -17,7 +17,7 @@
         <div id="locationTotal">
           <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
             (click)="addNewCoverage();">Add Coverage</button>
-          <span class="float-center">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}
+          <span class="float-center">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
           </span>
           <div style="float:right;">Coverages: {{endorsementCoveragesGroup.coverages.length}}</div>
         </div>

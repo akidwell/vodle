@@ -11,7 +11,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { InformationComponent } from './information/information.component';
-import { ZipCodePipe } from './information/account-information/zip-code.pipe';
 import { CoveragesComponent } from './coverages/coverages.component';
 import { EndorsementCoverageComponent } from './coverages/endorsement-coverage-location-group/endorsement-coverage/endorsement-coverage.component';
 import { HoverClassDirective } from '../directives/hover-class.directive';
@@ -45,6 +44,8 @@ import { DirectivesModule } from '../directives/directives.module';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MinusSignToParens } from '../pipes/minus-sign.pipe';
+import { ZipCodePipe } from '../pipes/zip-code.pipe';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     UnderlyingCoverageLimitBasisComponent,
     InvoiceGroupComponent,
     InvoiceDetailComponent,
-    InvoiceMasterComponent
+    InvoiceMasterComponent,
+    MinusSignToParens
   ],
   imports: [
     CommonModule,

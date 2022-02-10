@@ -31,20 +31,20 @@
               bindLabel="description" bindValue="key" [clearable]="false"
               [readonly]="!canEdit" [required]="canEdit" [(ngModel)]="coverage.coverageId"
               (change)="changeCoverageDescription($event)" #coverageDescription="ngModel">
-              <!-- <ng-template ng-label-tmp let-item="item">
+              <ng-template ng-label-tmp let-item="item">
                 {{coverage.premiumType == 'T' ? 'Terrorism Coverage' : item.description}}
               </ng-template>
               <ng-template ng-option-tmp let-item="item">
                 {{item.description}}
-              </ng-template> -->
+              </ng-template>
             </ng-select>
           </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="premium">Premium</label>
-            <input type="text" click-stop-propagation class="form-control" id="premium" [(ngModel)]="coverage.premium"
-              [readonly]="!canEdit" [required]="canEdit" name="premium" #premium="ngModel" string-to-currency
-              mask="separator.0" thousandSeparator=",">
-          </div>
+            <input type="text" click-stop-propagation class="form-control" id="premium" name="premium"
+              string-to-currency maxInt [readonly]="!canEdit" [required]="canEdit"
+              [(ngModel)]="coverage.premium" #premium="ngModel">
+            </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="limits">Limits</label>
             <input type="text" click-stop-propagation class="form-control" id="limits" [readonly]="!canEdit || !canEditLimitPattern"
@@ -123,7 +123,7 @@
             <label for="deductible">Deductible</label>
             <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible" nullValue
               [required]="canEdit && isDeductibleRequired && showDeductible" [(ngModel)]="coverage.deductible" name="deductible"
-              #deductible="ngModel" mask="separator.0" thousandSeparator=",">
+              #deductible="ngModel" string-to-currency [allowNegative]="false">
           </div>
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
@@ -134,8 +134,8 @@
           </div>
           <div class="col-lg-1">
             <label for="rate">Rate</label>
-            <input type="text" class="form-control" id="rate" [readonly]="!canEdit" nullValue
-              [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel" mask="separator.5" thousandSeparator=",">
+            <input type="text" class="form-control" id="rate" [readonly]="!canEdit" string-to-currency [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" nullValue
+              [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel">
           </div>
           <div class="col-lg-3">
             <label for="limitsPattern">Limits Pattern</label>
@@ -175,14 +175,12 @@
           <div class="col-lg-1">
             <label for="rateBasis">Rate Basis</label>
             <input type="text" class="form-control" id="rateBasis" [readonly]="!canEdit" nullValue
-              [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel" mask="separator.0"
-              thousandSeparator=",">
+              [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel" string-to-currency [allowNegative]="false">
           </div>
           <div class="col-lg-2">
             <label for="exposureBase">Exposure</label>
             <input type="text" class="form-control" id="exposureBase" [readonly]="!canEdit" nullValue
-              [(ngModel)]="coverage.exposureBase" name="exposureBase" #sir="ngModel" mask="separator.0"
-              thousandSeparator=",">
+              [(ngModel)]="coverage.exposureBase" name="exposureBase" #sir="ngModel" string-to-currency [allowNegative]="false">
           </div>
         </div>
         <div class="empty-space"></div>

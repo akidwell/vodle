@@ -53,8 +53,7 @@
             <div>
                 <label for="premium">Premium</label>
                 <input type="text" class="form-control" id="premium" [required]="canEdit" [readonly]="!canEdit"
-                    name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" mask="separator.0"
-                    thousandSeparator=",">
+                    name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" string-to-currency>
             </div>
         </div>
         <div class="modal-footer">           

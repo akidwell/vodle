@@ -219,7 +219,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   calcTotal(): number {
     let total: number = 0
     this.endorsementCoveragesGroup.coverages.forEach(coverage => { 
-      total += Number(coverage.premium) ?? 0
+      total += Number.isNaN(Number(coverage.premium)) ? 0 : Number(coverage.premium)
      });
     return total;
   }
