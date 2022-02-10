@@ -50,12 +50,12 @@
     <div class="col-lg">
       <label for="underlyingLimit">Underlying Limits</label>
       <input type="text" class="form-control" id="underlyingLimit" [required]="canEditUnderlyingLimits" [readonly]="!canEditUnderlyingLimits" 
-      (change)="checkAttachmentPointValid()" [(ngModel)]="endorsement.underlyingLimit" mask="separator.0" thousandSeparator="," name="underlyingLimit" #underlyingLimit="ngModel">
+      (change)="checkAttachmentPointValid()" [(ngModel)]="endorsement.underlyingLimit" string-to-currency [allowNegative]="false" name="underlyingLimit" #underlyingLimit="ngModel">
     </div>
     <div class="col-lg">
       <label for="sir">SIR</label>
       <input type="text" class="form-control" id="sir" [readonly]="!canEdit"
-        [(ngModel)]="endorsement.sir" mask="separator.0" thousandSeparator="," name="sir" #sir="ngModel">
+        [(ngModel)]="endorsement.sir" string-to-currency [allowNegative]="false" name="sir" #sir="ngModel">
     </div>
     <div class="col-lg-1">
       <label for="terrorism">Terrorism</label>
