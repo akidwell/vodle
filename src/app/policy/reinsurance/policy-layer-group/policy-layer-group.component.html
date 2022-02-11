@@ -18,7 +18,7 @@
       <span class="float-center">
         Policy Layer Limit: {{calcTotalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
         &nbsp;
-        Policy Layer Premium: {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' }}
+        Policy Layer Premium: {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
       </span>
       <div style="float:right;">Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}
       </div>

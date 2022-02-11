@@ -27,7 +27,7 @@
       <div id="invoiceFooter">
         <button *ngIf="canAddDetail" style="float:left; background:none; border:none;" class="underline"
           (click)="addNewInvoiceDetail();">Add Line Item</button>
-        <span class="float-center">Total: {{totalNetAmount | currency}}
+        <span class="float-center">Total: {{totalNetAmount | currency: 'USD' : 'symbol':'1.2-2' | minusSignToParens}}
         </span>
         <div style="float:right;">Invoice Details: {{invoice.invoiceDetail.length}}
         </div>
