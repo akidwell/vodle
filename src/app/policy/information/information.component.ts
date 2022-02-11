@@ -29,6 +29,7 @@ export class InformationComponent implements OnInit, PolicySave {
   accountInfo!: AccountInformation;
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
+  lockEndorsementFields: boolean = false;
 
   constructor(private endorsementStatusService: EndorsementStatusService, private route: ActivatedRoute, private notification: NotificationService,
     private policyService: PolicyService, private reinsuranceLookupService: ReinsuranceLookupService) { }
@@ -37,12 +38,12 @@ export class InformationComponent implements OnInit, PolicySave {
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
 
   ngOnInit(): void {
-    console.log(this.route)
     this.route.parent?.data.subscribe(data => {
       this.data = deepClone(data);
       this.accountInfo = data['accountData'].accountInfo;
       this.policyInfo = data['policyInfoData'].policyInfo;
       this.endorsement = data['endorsementData'].endorsement;
+      this.lockEndorsementFields = this.setEndorsementFieldStatus();
     });
   }
 
@@ -154,5 +155,11 @@ export class InformationComponent implements OnInit, PolicySave {
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
+  setEndorsementFieldStatus(): boolean {
+    if (this.endorsement.endorsementNumber > 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
