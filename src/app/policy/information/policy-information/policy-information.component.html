@@ -22,7 +22,7 @@
             </div>
             <div class="col-lg-2 col-md-4">
               <label for="claimsMadeOrOccurrence"  class="form-label" title="Status">CLM/OCC</label>
-              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="isReadOnly"
+              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="isFieldReadOnly(true)"
                 id="claimsMadeOrOccurrence" [(ngModel)]="policyInfo.quoteData.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence"
                 #claimsMadeOrOccurrence="ngModel" (change)="clearRetroDate()">
               </ng-select>
