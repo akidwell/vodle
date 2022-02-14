@@ -156,7 +156,7 @@ export class InformationComponent implements OnInit, PolicySave {
     this.showInvalid = false;
   }
   setEndorsementFieldStatus(): boolean {
-    if (this.endorsement.endorsementNumber > 1) {
+    if (this.endorsement.endorsementNumber > 0) {
       return true;
     } else {
       return false;
