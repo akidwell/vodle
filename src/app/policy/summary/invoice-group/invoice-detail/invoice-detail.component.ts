@@ -99,7 +99,7 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   changeFeeAmount(event: any): void {
-    this.invoiceDetail.netAmount = this.invoiceDetail.feeAmount;
+    this.invoiceDetail.netAmount =  this.invoiceDetail.feeAmount - this.invoiceDetail.commissionAmount;
   }
 
   changedDescription(event: any): void {

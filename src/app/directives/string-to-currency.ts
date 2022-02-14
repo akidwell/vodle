@@ -23,14 +23,16 @@ export class StringToCurrencyDirective {
    ngAfterViewInit(): void {
       setTimeout(() => {
          if (this.control.value != null) {
-         this.control.viewToModelUpdate(this.formatToCurrency(this.control.value.toString()));
+            this.control.viewToModelUpdate(this.formatToCurrency(this.control.value.toString()));
          }
       });
    }
 
    @HostListener('input', ['$event.target'])
    onEvent(target: HTMLInputElement) {
-      this.control.viewToModelUpdate((target.value === '') ? null : isNaN(Number(target.value)) ? Number(target.value.replace(/[^0-9.-]+/g, "")) : Number(target.value));
+      if (this.currentValue != target.value) {
+         this.control.viewToModelUpdate((target.value === '') ? null : isNaN(Number(target.value)) ? Number(target.value.replace(/[^0-9.-]+/g, "")) : Number(target.value));
+      }
    }
 
    @HostListener('blur', ['$event.target'])

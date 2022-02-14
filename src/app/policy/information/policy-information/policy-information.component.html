@@ -266,7 +266,7 @@
             <div class="col-lg-3 col-md-4">
               <label for="riskType" class="form-label" title="Risk Type">Risk Type</label>
               <ng-select id="riskType" [items]="riskTypes$ | async" bindLabel="description" bindValue="code"
-                [required]="isFieldReadOnly(true)" (change)="clearAssumed()" [clearable]="false" [readonly]="isFieldReadOnly(true)"
+                [required]="!isFieldReadOnly(true)" (change)="clearAssumed()" [clearable]="false" [readonly]="isFieldReadOnly(true)"
                 [(ngModel)]="policyInfo.riskType" name="riskType">
               </ng-select>
             </div>
