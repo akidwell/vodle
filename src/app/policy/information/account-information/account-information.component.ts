@@ -1,11 +1,9 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute } from '@angular/router';
 import { AccountInformation } from '../../policy';
 import { NgForm } from '@angular/forms';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Subscription } from 'rxjs';
-import { PolicyService } from '../../policy.service';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 
@@ -26,6 +24,8 @@ export class AccountInformationComponent implements OnInit {
   statusSub!: Subscription;
 
   @Input() public accountInfo!: AccountInformation;
+  @Input() public lockEndorsementFields!: boolean;
+
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
 
   constructor(private userAuth: UserAuth, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) {
@@ -57,7 +57,17 @@ export class AccountInformationComponent implements OnInit {
     }
     return false;
   }
-
+  isFieldReadOnly(checkEndorsementLockStatus: boolean): boolean {
+    if(!checkEndorsementLockStatus) {
+      return !this.canEdit;
+    } else {
+      if (this.lockEndorsementFields) {
+        return true;
+      } else {
+        return !this.canEdit;
+      }
+    }
+  }
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }

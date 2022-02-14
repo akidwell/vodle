@@ -33,14 +33,16 @@ export class PolicyInformationComponent implements OnInit {
   nyFreeTradeZones$: Observable<Code[]> | undefined;
   assumedCarriers$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
-  canEditPolicy: boolean = false;
   claimsMadeOrOccurrence$: Code[] = [];
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
   policySub!: Subscription;
   dereg!: boolean;
   assumed!: boolean;
+  //canEditEndorsement is a check to see if the endorsement is able to be edited
   canEditEndorsement: boolean = false;
+  //canEditPolicy is a check to see if the user is able to edit
+  canEditPolicy: boolean = false;
   statusSub!: Subscription;
   endorsementChanged: boolean = false;
   endorsementSub!: Subscription;
@@ -55,6 +57,7 @@ export class PolicyInformationComponent implements OnInit {
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
   @Input() public accountInfo!: AccountInformation;
+  @Input() public lockEndorsementFields!: boolean;
 
   constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService,
     private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe) {
@@ -159,7 +162,12 @@ export class PolicyInformationComponent implements OnInit {
   clearRetroDate() {
     this.policyInfo.quoteData.retroDate = null;
   }
-
+  clearNYFTZ() {
+    this.policyInfo.nyftz = null;
+  }
+  clearAssumed() {
+    this.policyInfo.assumedCarrier = null;
+  }
   populateClaimsMadeOccurrence() {
     this.claimsMadeOrOccurrence$ = [];
     this.claimsMadeOrOccurrence$.push({ code: "C", key: 0, description: "Claims-Made" });
@@ -167,30 +175,53 @@ export class PolicyInformationComponent implements OnInit {
   }
 
   isExtensionDateActive(): boolean {
-    if (this.canEdit && this.endorsement.transactionTypeCode === TransactionTypes.PolicyExtensionByEndt) {
+    if (this.canEdit && this.lockEndorsementFields && this.endorsement.transactionTypeCode === TransactionTypes.PolicyExtensionByEndt) {
       return true;
     } else {
       return false;
     }
   }
   isRetroDateActive(): boolean {
-    if (this.canEdit && this.policyInfo.quoteData.claimsMadeOrOccurrence === 'C') {
+    if (this.policyInfo.quoteData.claimsMadeOrOccurrence === 'C' && !this.isFieldReadOnly(true)) {
       return true;
     } else {
       return false;
     }
   }
-
+  isCancelDateActive(): boolean {
+    if (this.canEdit && this.lockEndorsementFields && this.isCancelEndorsement(this.endorsement.transactionTypeCode)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isFieldReadOnly(checkEndorsementLockStatus: boolean): boolean {
+    if(!checkEndorsementLockStatus) {
+      return !this.canEdit;
+    } else {
+      if (this.lockEndorsementFields) {
+        return true;
+      } else {
+        return !this.canEdit;
+      }
+    }
+  }
+  isDirectQuoteFieldReadOnly(): boolean{
+    if(this.canEdit && this.endorsementStatusService.directQuote) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
-  get canEditProgramId(): boolean {
-    return this.canEdit && this.endorsementStatusService.directQuote;
-  }
-  get canEditPolicySymbol(): boolean {
-    return this.canEdit && this.endorsementStatusService.directQuote;
-  }
-  get canEditPolicyNumber(): boolean {
-    return this.canEdit && this.endorsementStatusService.directQuote;
+  isCancelEndorsement(transType: number):boolean {
+    if (transType === TransactionTypes.FlatCancel || transType === TransactionTypes.CancellationOfPolicyExtension
+      || transType === TransactionTypes.ProRataCancel || transType === TransactionTypes.ShortRateCancel) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

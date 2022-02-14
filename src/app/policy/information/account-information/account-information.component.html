@@ -21,7 +21,7 @@
           </div>
           <div class="col-lg-1">
             <label for="commissionRate">Comm Rate</label>
-            <input type="text" class="form-control" id="commissionRate" [readonly]="!canEdit" [required]="canEdit" mask="percent"
+            <input type="text" class="form-control" id="commissionRate" [readonly]="isFieldReadOnly(false)" [required]="!isFieldReadOnly(false)" mask="percent"
               suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="accountInfo.commissionRate" name="commissionRate"
               #commissionRate="ngModel">
           </div>

@@ -50,9 +50,9 @@ export interface PolicyInformation {
   auditCode: string;
   paymentFrequency: string;
   deregulationIndicator: string;
-  nyftz: string;
+  nyftz: string | null;
   riskType: string;
-  assumedCarrier: string;
+  assumedCarrier: string | null;
   coinsurancePercentage: number;
   productManufactureDate: Date;
   submissionNumber: number;
