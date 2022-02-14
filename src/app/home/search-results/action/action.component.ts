@@ -69,7 +69,8 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo = endorsementAction;
       this.endorsementActionInfo.premium = 0;
       this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
-      this.endorsementActionInfo.policyId = this.policyInfo.policyId
+      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
 
       if(this.cancelTypes.includes(policy.transactionType)){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
@@ -170,25 +171,26 @@ export class ActionComponent implements OnInit {
     this.showBusy = true;
     this.modalRef.close();
 
-    let data = newEndorsementStatusData(this.endorsementActionInfo.policyId, this.endorsementActionInfo.newEndorsementNumber, this.endorsementActionInfo.endorsementReason)
+    let data = newEndorsementStatusData(this.endorsementActionInfo.sourcePolicyId, this.endorsementActionInfo.newEndorsementNumber, this.endorsementActionInfo.endorsementReason)
     await this.endorsementStatusService.addEndorsementStatus(data).toPromise();
     await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
       endResponse => {
-                this.modalRef.close()
+        this.modalRef.close()
         this.NewEndorsementResponse = endResponse;
         this.routeEndorsement();
       }).catch(x => {
         this.modalRef.close()
         this.showBusy = false;
         this.errorDialogService.open("Endorsement Error", x.error.Message)
-        .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));          })
+          .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));
+      })
   }
 
   routeEndorsement() {
     this.showBusy = false;
     if (this.NewEndorsementResponse !== null) {
       this.navigationService.resetPolicy();
-      this.router.navigate(['/policy/' + this.NewEndorsementResponse.policyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
+      this.router.navigate(['/policy/' + this.NewEndorsementResponse.destinationPolicyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
     }
     else {
       this.showBusy = false;
