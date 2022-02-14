@@ -296,6 +296,7 @@ export interface PolicyData {
   submissionNumber: number | null;
   policyEffectiveDate: Date | null;
   policyExpirationDate: Date | null;
+  endorsementNumber: number | null;
 }
 
 export const newPolicyData = (): PolicyData => {
@@ -304,15 +305,19 @@ export const newPolicyData = (): PolicyData => {
     policyNumber: "",
     submissionNumber: null,
     policyEffectiveDate: null,
-    policyExpirationDate: null
+    policyExpirationDate: null,
+    endorsementNumber: null
   }
 }
-
-// export interface PolicyResponse {
-//   policyId: number;
-// }
 
 export interface PolicyAddResponse {
   isPolicyCreated: boolean;
   policyId: number;
+}
+
+export interface EndorsementNumberResponse {
+  endorsementNumber: Number;
+  premium: Number;
+  limit: Number;
+  transactionType: string
 }

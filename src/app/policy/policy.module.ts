@@ -44,8 +44,7 @@ import { DirectivesModule } from '../directives/directives.module';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MinusSignToParens } from '../pipes/minus-sign.pipe';
-import { ZipCodePipe } from '../pipes/zip-code.pipe';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -56,7 +55,6 @@ import { ZipCodePipe } from '../pipes/zip-code.pipe';
     InformationComponent,
     PolicyInformationComponent,
     CoveragesComponent,
-    ZipCodePipe,
     EndorsementCoverageComponent,
     HoverClassDirective,
     EndorsementHeaderComponent,
@@ -79,7 +77,6 @@ import { ZipCodePipe } from '../pipes/zip-code.pipe';
     InvoiceGroupComponent,
     InvoiceDetailComponent,
     InvoiceMasterComponent,
-    MinusSignToParens
   ],
   imports: [
     CommonModule,
@@ -93,6 +90,7 @@ import { ZipCodePipe } from '../pipes/zip-code.pipe';
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    PipesModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

@@ -65,11 +65,24 @@
           Must be 7 chars
         </div>
       </div>
+      <div class="col-lg-4" *ngIf="isRenewal">
+        <label for="endorsementNumber">Endorsement</label>
+        <ng-select id="endorsementNumber" [items]="reinsuranceCodes$ | async" bindLabel="endorsementNumber"  [readonly]="!isRenewal || isSearching" 
+          bindValue="endorsementNumber" [required]="isRenewal" [clearable]="false" name="endorsementNumber"
+          [(ngModel)]="policyData.endorsementNumber" #endorsementNumber="ngModel">
+          <ng-template ng-label-tmp let-item="item">
+            {{item.endorsementNumber}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.endorsementNumber}} - Premium: {{item.premium | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}} Limit: {{item.limit | currency: 'USD' : 'symbol':'1.0-0'}} Type: {{item.transactionType}}
+          </ng-template>
+        </ng-select>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" [hidden]="false"
-        [disabled]="!quoteForm.valid || !isSubmissionNumberValid" (click)="create()">OK</button>
-      <button type="button" class="btn btn-secondary" [hidden]="false" (click)="modal.dismiss()">Cancel</button>
+        [disabled]="!quoteForm.valid || !isSubmissionNumberValid" (click)="create()">{{ saveLabel }}</button>
+        <button type="button" class="btn btn-secondary" [hidden]="false" (click)="modal.dismiss()">Cancel</button>
     </div>
   </ng-template>
   <div *ngIf="showBusy">

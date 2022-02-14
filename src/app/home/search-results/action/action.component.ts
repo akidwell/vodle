@@ -7,7 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
-import {  EndorsementStatusData, newEndorsementStatusData } from 'src/app/policy/policy';
+import { EndorsementNumberResponse, newEndorsementStatusData } from 'src/app/policy/policy';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
@@ -31,7 +31,7 @@ export class ActionComponent implements OnInit {
   isTransEffectiveValid: boolean = true;
   isTransExpirationValid: boolean = true;
   isNewEndorsementNumberValid: boolean = true;
-  usedEndorsementNumbers!: Code[];
+  usedEndorsementNumbers!: EndorsementNumberResponse[];
   NewEndorsementResponse!: NewEndorsementData;
   errorMessage = '';
   showBusy: boolean = false;
@@ -146,7 +146,7 @@ export class ActionComponent implements OnInit {
   checkEndorsementNumber(): boolean {
     this.isNewEndorsementNumberValid = true;
     if (this.endorsementActionInfo.newEndorsementNumber != undefined) {
-      let filteredList = this.usedEndorsementNumbers.filter(x => x.key == this.endorsementActionInfo.newEndorsementNumber);
+      let filteredList = this.usedEndorsementNumbers.filter(x => x.endorsementNumber == this.endorsementActionInfo.newEndorsementNumber);
       if (filteredList.length !== 0) {
         this.endorsementActionForm.controls['newEndorsementNumber'].setErrors({ 'incorrect': true });
         this.isNewEndorsementNumberValid = false;
