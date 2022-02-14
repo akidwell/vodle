@@ -29,7 +29,7 @@ export class EndorsementHeaderComponent implements OnInit {
 
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
-  
+
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private datePipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -101,7 +101,9 @@ export class EndorsementHeaderComponent implements OnInit {
   changeTerrorism() {
     this.updatePolicyChild.terrorismChanged();
   }
-
+  triggerPolicyInfoValidation() {
+    this.endorsementStatusService.policyInfoValidated = false;
+  }
   canSave(): boolean {
     if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
       return this.endorsementHeaderForm.status == "VALID";

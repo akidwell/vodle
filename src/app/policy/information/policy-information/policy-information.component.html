@@ -151,6 +151,7 @@
               <label for="policyExtendedExpDate" class="form-label" title="Extension Date">Extension Date</label>
               <div *ngIf="isExtensionDateActive()">
                 <input style="display: inline-block; max-width: 80%;" matInput
+                  [required]="isExtensionDateActive()"
                   [matDatepicker]="policyExtendedExpDateCalendar" class="form-control"
                   [(ngModel)]="policyInfo.policyExtendedExpDate" name="policyExtendedExpDate"
                   #policyExtendedExpDate="ngModel">
@@ -167,6 +168,7 @@
               <label for="policyCancelDate" class="form-label" title="Cancel Date">Cancel Date</label>
               <div *ngIf="isCancelDateActive()">
                 <input style="display: inline-block; max-width: 80%;" matInput
+                  [required]="isCancelDateActive()"
                   [matDatepicker]="policyCancelDateCalendar" class="form-control"
                   [(ngModel)]="policyInfo.policyCancelDate" name="policyCancelDate" #policyCancelDate="ngModel">
                 <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="policyCancelDateCalendar">
@@ -240,7 +242,7 @@
             <div class="col-lg-2 col-md-4">
               <label for="auditCode" class="form-label" title="Audit Code">Audit Code</label>
               <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
-                [required]="!isFieldReadOnly(true)" [clearable]="false" [readonly]="isFieldReadOnly(true)"
+                [required]="!isFieldReadOnly(false)" [clearable]="false" [readonly]="isFieldReadOnly(false)"
                 [(ngModel)]="policyInfo.auditCode" name="auditCode">
               </ng-select>
             </div>
