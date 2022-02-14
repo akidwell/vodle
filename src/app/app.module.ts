@@ -3,12 +3,11 @@ import { APP_INITIALIZER, ErrorHandler, Injector, NgModule } from '@angular/core
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfigService } from './config/config.service';
 import { VersionComponent } from './version/version.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ReportsComponent } from './reports/reports.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { OKTA_CONFIG, OktaAuthModule } from '@okta/okta-angular';
+import { OktaAuthModule } from '@okta/okta-angular';
 import { AuthInterceptor } from './authorization/auth.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { UserComponent } from './user/user.component';
@@ -28,6 +27,7 @@ import { ErrorDialogService } from './error-handling/error-dialog-service/error-
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -58,7 +58,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     BusyModule,
     DirectivesModule,
     NoopAnimationsModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    PipesModule
   ],
   providers: [
     PreInitService,

@@ -21,7 +21,8 @@ export interface PolicySearchResults {
 
   export interface NewEndorsementData {
     endorsementNumber: number;
-    policyId: number;
+    sourcePolicyId: number;
+    destinationPolicyId: number;
     newEndorsementNumber: number;
     transactionType: number;
     endorsementReason: string;

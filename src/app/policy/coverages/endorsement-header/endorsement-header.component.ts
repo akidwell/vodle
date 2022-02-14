@@ -121,10 +121,10 @@ export class EndorsementHeaderComponent implements OnInit {
     return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
   }
   get canEditAttachmentPoint(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && (this.endorsementStatusService.directQuote || !this.isPrimaryPolicy);
+    return this.canEditEndorsement && this.canEditPolicy && (!this.isPrimaryPolicy);
   }
   get canEditUnderlyingLimits(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && (this.endorsementStatusService.directQuote || !this.isPrimaryPolicy);
+    return this.canEditEndorsement && this.canEditPolicy && (!this.isPrimaryPolicy);
   }
   private get isPrimaryPolicy(): boolean {
     return (this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol == 'PRC')

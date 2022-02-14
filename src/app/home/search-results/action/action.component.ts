@@ -7,7 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
-import {  EndorsementStatusData, newEndorsementStatusData } from 'src/app/policy/policy';
+import { EndorsementNumberResponse, newEndorsementStatusData } from 'src/app/policy/policy';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
@@ -31,7 +31,7 @@ export class ActionComponent implements OnInit {
   isTransEffectiveValid: boolean = true;
   isTransExpirationValid: boolean = true;
   isNewEndorsementNumberValid: boolean = true;
-  usedEndorsementNumbers!: Code[];
+  usedEndorsementNumbers!: EndorsementNumberResponse[];
   NewEndorsementResponse!: NewEndorsementData;
   errorMessage = '';
   showBusy: boolean = false;
@@ -69,7 +69,8 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo = endorsementAction;
       this.endorsementActionInfo.premium = 0;
       this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
-      this.endorsementActionInfo.policyId = this.policyInfo.policyId
+      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
 
       if(this.cancelTypes.includes(policy.transactionType)){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
@@ -146,7 +147,7 @@ export class ActionComponent implements OnInit {
   checkEndorsementNumber(): boolean {
     this.isNewEndorsementNumberValid = true;
     if (this.endorsementActionInfo.newEndorsementNumber != undefined) {
-      let filteredList = this.usedEndorsementNumbers.filter(x => x.key == this.endorsementActionInfo.newEndorsementNumber);
+      let filteredList = this.usedEndorsementNumbers.filter(x => x.endorsementNumber == this.endorsementActionInfo.newEndorsementNumber);
       if (filteredList.length !== 0) {
         this.endorsementActionForm.controls['newEndorsementNumber'].setErrors({ 'incorrect': true });
         this.isNewEndorsementNumberValid = false;
@@ -170,25 +171,26 @@ export class ActionComponent implements OnInit {
     this.showBusy = true;
     this.modalRef.close();
 
-    let data = newEndorsementStatusData(this.endorsementActionInfo.policyId, this.endorsementActionInfo.newEndorsementNumber, this.endorsementActionInfo.endorsementReason)
+    let data = newEndorsementStatusData(this.endorsementActionInfo.sourcePolicyId, this.endorsementActionInfo.newEndorsementNumber, this.endorsementActionInfo.endorsementReason)
     await this.endorsementStatusService.addEndorsementStatus(data).toPromise();
     await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
       endResponse => {
-                this.modalRef.close()
+        this.modalRef.close()
         this.NewEndorsementResponse = endResponse;
         this.routeEndorsement();
       }).catch(x => {
         this.modalRef.close()
         this.showBusy = false;
         this.errorDialogService.open("Endorsement Error", x.error.Message)
-        .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));          })
+          .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));
+      })
   }
 
   routeEndorsement() {
     this.showBusy = false;
     if (this.NewEndorsementResponse !== null) {
       this.navigationService.resetPolicy();
-      this.router.navigate(['/policy/' + this.NewEndorsementResponse.policyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
+      this.router.navigate(['/policy/' + this.NewEndorsementResponse.destinationPolicyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
     }
     else {
       this.showBusy = false;

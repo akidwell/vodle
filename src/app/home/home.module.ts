@@ -16,6 +16,7 @@ import { BusyModule } from '../busy/busy.module';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     BusyModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    PipesModule
   ],
   providers: [
     DatePipe
