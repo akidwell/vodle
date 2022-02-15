@@ -31,8 +31,8 @@
       <div class="col-lg-6">
         <label for="policyExpirationDate">Expiration Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyExpirationDateCalendar"
-          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minExpirationDate"
-          [max]="maxExpirationDate" [(ngModel)]="policyData.policyExpirationDate" (dateChange)="checkDates()"
+          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching"
+          [(ngModel)]="policyData.policyExpirationDate" (dateChange)="checkDates()"
           name="policyExpirationDate"
           #policyExpirationDate="ngModel">
         <mat-datepicker-toggle matSuffix [for]="policyExpirationDateCalendar"></mat-datepicker-toggle>

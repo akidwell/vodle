@@ -93,7 +93,7 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   get canExport(): boolean {
-    return this.invoice != null && ((this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == "P") && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return this.invoice != null && ((this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == "P") && this.endorsementStatusService.isValidated() && !this.endorsementStatusService.directQuote && this.invoice.endorsementNumber == 0 && this.canEditPolicy
   }
 
   get canAddDetail(): boolean {
@@ -146,7 +146,9 @@ export class InvoiceGroupComponent implements OnInit {
         }
         const saved = await this.save(false);
         if (saved) {
-          await this.export();
+          if (this.canExport) {
+            await this.export();
+          }
           this.refresh();
         }
       }
