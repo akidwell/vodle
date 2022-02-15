@@ -81,18 +81,3 @@
 <div *ngIf="showBusy">
   <rsps-busy></rsps-busy>
 </div>
-
-<ng-template #modalPipe let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Import Error</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">×</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p>{{pipeMessage}}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
-  </div>
-</ng-template>
