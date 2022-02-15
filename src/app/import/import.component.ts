@@ -13,6 +13,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { State } from './interfaces/state';
 import { SearchResult } from './interfaces/search-result';
 import { NavigationService } from '../policy/services/navigation.service';
+import { ErrorDialogService } from '../error-handling/error-dialog-service/error-dialog-service';
 
 
 function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
@@ -32,7 +33,6 @@ export class ImportComponent implements OnInit {
   importPolicies: ImportPolicy[] = []
   openModal: boolean = false;
   importPolicyResponse!: ImportResult;
-  pipeMessage: string = "";
   faSearch = faSearch;
   showBusy: boolean = false;
   authSub: Subscription;
@@ -86,7 +86,7 @@ export class ImportComponent implements OnInit {
     return of({policies, total});
   }
 
-  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe, private navigationService: NavigationService) { 
+  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) { 
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       switchMap(() => this._search()),
@@ -125,7 +125,11 @@ export class ImportComponent implements OnInit {
         this.importPolicyResponse = importPolicyResponse;
         this.routeImport();
       },
-      error: err => { this.errorMessage = err; this.showBusy = false;}
+      error: err => { 
+        this.errorMessage = err; 
+        this.showBusy = false;
+        this.errorDialogService.open("Import Error", err.error.Message)
+      }
     });
   }
 
@@ -137,16 +141,7 @@ export class ImportComponent implements OnInit {
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {
-      this.pipeMessage = this.importPolicyResponse.errorMessage;
-      this.triggerModal();
+      this.errorDialogService.open("Import Error",  this.importPolicyResponse.errorMessage)
     }
   }
-
-  @ViewChild('modalPipe') modalPipe: any;
-
-  // Modal is used to show import errors
-  triggerModal() {
-    this.modalService.open(this.modalPipe, { scrollable: true });
-  }
-
 }
