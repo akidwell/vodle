@@ -104,6 +104,7 @@ export class DirectPolicyCreateComponent implements OnInit {
             this.policyData.policySymbol = match.policySymbol;
             this.policyData.policyNumber = match.policyNumber;
             this.policyData.endorsementNumber = null;
+            this.policyData.premium = null;
           }
           else {
             this.clear();
@@ -124,6 +125,7 @@ export class DirectPolicyCreateComponent implements OnInit {
     this.policyData.policyEffectiveDate = null;
     this.policyData.policyExpirationDate = null;
     this.policyData.endorsementNumber = null;
+    this.policyData.premium = null;
     this.policyData.policySymbol = "";
     this.policyData.policyNumber = "";
     this.saveLabel = "OK";

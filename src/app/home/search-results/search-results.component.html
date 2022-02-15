@@ -8,7 +8,7 @@
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-    <div id="searchHeader" class="card-header" *ngIf="searchResults && searchResults.length">
+    <div id="policyHeader" class="card-header" *ngIf="searchResults && searchResults.length">
       <div class="row container" *ngIf="searchResults && searchResults.length">
         <div class="col-lg-7">Named Insured: <b>{{insuredName}}</b></div>
         <div class="col-lg-5">Status:
@@ -18,7 +18,7 @@
     </div>
     <div >
       <table class="table table-striped table-bordered" *ngIf="searchResults && searchResults.length">
-        <thead>
+        <thead id="searchHeader">
           <tr>
             <th>PolicyId</th>
             <th>Policy No</th>
@@ -32,6 +32,7 @@
             <th>Trans Exp Date</th>
             <th>Void Date</th>
             <th>Status</th>
+            <th>Amount</th>
             <th>Trans Type</th>
             <th *ngIf="canEdit">Actions</th>
           </tr>
@@ -59,6 +60,7 @@
             <td>{{ policy.transactionExpirationDate | date: 'MM/dd/yyyy'}}</td>
             <td>{{ policy.voidDate | date: 'MM/dd/yyyy'}}</td>
             <td>{{ policy.invoiceStatus}}</td>
+            <td align="right">{{ policy.amount | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}</td>
             <td>{{ policy.transactionType}}</td>
             <td *ngIf="canEdit" id="actionCell">
                   <div ngbDropdown class="d-inline-block" >

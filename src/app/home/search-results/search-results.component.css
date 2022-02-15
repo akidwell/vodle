@@ -2,8 +2,18 @@
   color: white;
   background-color: #00274e;
 }
+
+#policyHeader{
+  color: black;
+  background-color: #e6e9ed;
+}
+
 .card {
   overflow: hidden;
+}
+
+.Cancelled {
+  color: #ed0139;
 }
 
 .Expired {

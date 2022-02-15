@@ -1,6 +1,6 @@
 <form #invoiceDetailForm="ngForm">
   <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-5">
       <label for="lineItemDescription" *ngIf="index==0">Coverage Description</label>
     </div>
     <div class="col-lg-2">
@@ -17,11 +17,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-4" *ngIf="index == 0">
+    <div class="col-lg-5" *ngIf="index == 0">
       <input type="text" class="form-control" id="lineItemDescription" [readonly]="true"
         [ngModel]="invoiceDetail.lineItemDescription" name="lineItemDescription" #lineItemDescription="ngModel">
     </div>
-    <div class="col-lg-4" *ngIf="index > 0">
+    <div class="col-lg-5" *ngIf="index > 0">
       <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description"
         bindValue="code" [required]="canEditDetail" [clearable]="false" name="lineItemDescription"
         [(ngModel)]="invoiceDetail.lineItemCode" [readonly]="!canEditDetail" #lineItemDescription="ngModel"
