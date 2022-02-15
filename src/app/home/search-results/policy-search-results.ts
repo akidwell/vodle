@@ -7,6 +7,7 @@ export interface PolicySearchResults {
     policyEffectiveDate: Date;
     policyExpirationDate: Date;
     policyExtendedDate: Date;
+    policyCancelDate: Date;
     invoiceNumber:number;
     invoiceDate?: Date;
     transactionEffectiveDate: Date;
@@ -14,6 +15,7 @@ export interface PolicySearchResults {
     voidDate?: Date;
     invoiceStatus: string;
     transactionType: string;
+    amount: number;
     action: string;
     firstPolicyRow : boolean;
     masterPolicy: string;

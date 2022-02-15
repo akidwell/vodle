@@ -55,16 +55,23 @@ export class SearchResultsComponent implements OnInit {
 
         if (results.length > 0) {
           this.insuredName = results[0].insuredName;
-          let date = new Date();
-          let date2 = new Date();
-          if (results[0].policyExtendedDate != null) {
-            date2 = new Date(results[0].policyExtendedDate);
+          let today = new Date();
+          let expirationDate = new Date();
+          if (results[0].policyCancelDate != null)
+          {
+            expirationDate = new Date(results[0].policyCancelDate);
+          }
+          else if (results[0].policyExtendedDate != null) {
+            expirationDate = new Date(results[0].policyExtendedDate);
           }
           else {
-            date2 = new Date(results[0].policyExpirationDate);
+            expirationDate = new Date(results[0].policyExpirationDate);
           }
-          if (date <= date2) {
+          if (today <= expirationDate) {
             this.status = "InForce";
+          }
+          else if (results[0].policyCancelDate != null)  {
+            this.status = "Cancelled";
           }
           else {
             this.status = "Expired";

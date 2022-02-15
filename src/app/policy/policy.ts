@@ -297,6 +297,7 @@ export interface PolicyData {
   policyEffectiveDate: Date | null;
   policyExpirationDate: Date | null;
   endorsementNumber: number | null;
+  premium: number | null;
 }
 
 export const newPolicyData = (): PolicyData => {
@@ -306,7 +307,8 @@ export const newPolicyData = (): PolicyData => {
     submissionNumber: null,
     policyEffectiveDate: null,
     policyExpirationDate: null,
-    endorsementNumber: null
+    endorsementNumber: null,
+    premium: null
   }
 }
 
