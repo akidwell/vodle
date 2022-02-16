@@ -7,7 +7,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
-import { EndorsementNumberResponse, newEndorsementStatusData } from 'src/app/policy/policy';
+import { EndorsementNumberResponse } from 'src/app/policy/policy';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
@@ -59,7 +59,7 @@ export class ActionComponent implements OnInit {
   @ViewChild('modal') endorsementModal!: TemplateRef<ActionComponent>;
   private modalRef!: NgbModalRef
 
-  async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults): Promise<void> {
+  async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.policyInfo = policy;
     this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
     this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
@@ -72,12 +72,12 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
 
-      if(this.cancelTypes.includes(policy.transactionType)){
+      if(status == 'Cancelled'){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
-      else if(!this.cancelTypes.includes(policy.transactionType)){
+      else if(status !== 'Cancelled'){
         this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
@@ -171,9 +171,7 @@ export class ActionComponent implements OnInit {
     this.showBusy = true;
     this.modalRef.close();
 
-    let data = newEndorsementStatusData(this.endorsementActionInfo.sourcePolicyId, this.endorsementActionInfo.newEndorsementNumber, this.endorsementActionInfo.endorsementReason)
-    await this.endorsementStatusService.addEndorsementStatus(data).toPromise();
-    await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
+  await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
       endResponse => {
         this.modalRef.close()
         this.NewEndorsementResponse = endResponse;

@@ -104,7 +104,7 @@ export class SearchResultsComponent implements OnInit {
     if (this.actionComponent != null) {
       let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
       console.log(policy)
-      await this.actionComponent.endorsementPopup(endorsementAction, policy);
+      await this.actionComponent.endorsementPopup(endorsementAction, policy, this.status);
     }
   }
 }

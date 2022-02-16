@@ -108,6 +108,12 @@ export class SummaryComponent implements OnInit {
       this.invoices[0].isUpdated = true;
       this.invoices[0].expirationDate = this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate;
     }
+    if (this.invoices[0].transactionTypeCode != this.endorsement.transactionTypeCode) {
+      this.invoices[0].isUpdated = true;
+      this.invoices[0].transactionTypeCode = this.endorsement.transactionTypeCode;
+      const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
+      this.invoices[0].transctionTypeDescription = transactionTypes.find(x => x.key == this.invoices[0].transactionTypeCode)?.description ?? ""
+    }
     let invoiceDetail: any;
     if (this.invoices[0].invoiceDetail.length > 0) {
       invoiceDetail = this.invoices[0].invoiceDetail[0];

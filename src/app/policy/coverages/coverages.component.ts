@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../policy.service';
@@ -13,6 +13,8 @@ import { UpdatePolicyChild } from '../services/update-child.service';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { deepClone } from 'src/app/helper/deep-clone';
+import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'rsps-coverages',
@@ -33,12 +35,14 @@ export class CoveragesComponent implements OnInit, PolicySave {
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
   data!: Data;
+  private modalRef!: NgbModalRef
+  @ViewChild('modal') private modalContent!: TemplateRef<EndorsementHeaderComponent>
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
   @ViewChildren(EndorsementCoverageLocationGroupComponent) components: QueryList<EndorsementCoverageLocationGroupComponent> | undefined;
   @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private router: Router, private userAuth: UserAuth,public modalService: NgbModal, private errorDialogService: ErrorDialogService, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -146,12 +150,15 @@ export class CoveragesComponent implements OnInit, PolicySave {
   saveEndorsementInfo(): Observable<boolean> {
     var subject = new Subject<boolean>();
     if (this.headerComp.canSave()) {
-      this.policyService.updateEndorsement(this.endorsement).subscribe(() => {
+      this.policyService.updateEndorsement(this.endorsement).toPromise().then(x => {
         this.data['endorsementData'].endorsement = deepClone(this.endorsement);
         this.headerComp.endorsementHeaderForm.form.markAsPristine();
         this.headerComp.endorsementHeaderForm.form.markAsUntouched();
         this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         subject.next(true)
+      }).catch(x => {
+        this.errorDialogService.open("Endorsement Header Error", x.error.Message)
+        this.endorsementStatusService.coverageValidated = false;
       });
     } else {
       setTimeout(() => subject.next(true), 0)

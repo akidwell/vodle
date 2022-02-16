@@ -270,21 +270,6 @@ export interface EndorsementStatusData {
   endorsementReason: string | null;
 }
 
-export const newEndorsementStatusData = (policyId: number, endorsementNumber: number, endorsementReason: string): EndorsementStatusData => {
-  return {
-  policyId: policyId,
-  endorsementNumber: endorsementNumber,
-  invoiceStatus: "null",
-  invoiceStatusDescription: "null",
-  isPolicyValidated: false,
-  isCoverageValidated: false,
-  isReinsuranceValidated: false,
-  isDirectQuote: false,
-  endorsementReason: endorsementReason
-}
-};
-
-
 export interface EndorsementStatusResolved {
   status: EndorsementStatusData | null;
   error?: any;
