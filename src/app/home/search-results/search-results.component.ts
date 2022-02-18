@@ -28,6 +28,7 @@ export class SearchResultsComponent implements OnInit {
   status: string = "";
   authSub: Subscription;
   canEdit: boolean = false;
+  backout: boolean = false;
 
   constructor(private router: Router, private userAuth: UserAuth, private route: ActivatedRoute,  public modalService: NgbModal,  private policySearchService: PolicySearchService, private policyHistoryService: PolicyHistoryService, private navigationService: NavigationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -50,8 +51,18 @@ export class SearchResultsComponent implements OnInit {
             policyNumber = x.policyNumber;
           }
         }
+        //flag for if policy endorsement can be backedout/backedin
+        for (let y of results) {
+          if ((y.endorsementNumber != 0) && (y.transactionType != 'Endorsement' && y.transactionType != 'Reinstatment' && y.transactionType != 'Flat Cancel'
+           && y.transactionType != 'Pro-Rata Cancel' && y.transactionType != 'Short Rate Cancel' && y.transactionType != 'Policy Extension By Endt')) {
+            y.canBackOut = true;
+          } else {
+            y.canBackOut = false;
+          }
+        }
 
         this.searchResults = results;
+        console.log(this.searchResults)
 
         if (results.length > 0) {
           this.insuredName = results[0].insuredName;
@@ -95,16 +106,18 @@ export class SearchResultsComponent implements OnInit {
   @ViewChild('modalPipe') modalPipe: any;
 
 
-  async newEndorsement(policy: PolicySearchResults) {
+  async newEndorsement(policy: PolicySearchResults, event: any) {
     let filtered = this.searchResults.filter(x => x.policyId == policy.policyId).filter(y => y.invoiceStatus == null)
     if (filtered.length > 0){
       this.modalService.open(this.modalPipe)
       return;
     }
-    if (this.actionComponent != null) {
+    if (this.actionComponent != null && event.target.value == "endorsement") {
       let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
-      console.log(policy)
       await this.actionComponent.endorsementPopup(endorsementAction, policy, this.status);
+    } else if (this.actionComponent != null && event.target.value == "backout") {
+      let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
+      await this.actionComponent.backoutPopup(endorsementAction, policy, this.status);
     }
   }
 }
