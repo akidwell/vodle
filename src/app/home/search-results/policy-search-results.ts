@@ -19,6 +19,7 @@ export interface PolicySearchResults {
     action: string;
     firstPolicyRow : boolean;
     masterPolicy: string;
+    canBackOut:  boolean;
   }
 
   export interface NewEndorsementData {
@@ -31,4 +32,5 @@ export interface PolicySearchResults {
     transEffectiveDate: Date;
     transExpirationDate: Date;
     premium: number;
+    backout: boolean;
   }
