@@ -137,7 +137,7 @@
             <input type="text" class="form-control" id="rate" [readonly]="!canEdit" string-to-currency [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" nullValue
               [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel">
           </div>
-          <div class="col-lg-3">
+          <div class="col-lg-4">
             <label for="limitsPattern">Limits Pattern</label>
             <div *ngIf="canEditLimitPattern">
               <input *ngIf="subCodeDefaults" type="text" class="form-control" id="limitsPattern" [readonly]="true"

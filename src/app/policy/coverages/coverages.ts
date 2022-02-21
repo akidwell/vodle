@@ -17,7 +17,6 @@ export interface EndorsementCoverage {
   deductibleType: string | null;
   rateAmount: number;
   limitsPatternGroupCode: number;
-  limit: number;
   coverageType: string;
   coverageCode: string;
   sequence: number;
@@ -72,7 +71,6 @@ export const newEndorsementCoverage = (): EndorsementCoverage => ({
   exposureCode: '',
   glClassCode: null,
   includeExclude: '',
-  limit: 0,
   limitsPattern: '',
   limitsPatternGroupCode: 0,
   locationId: 0,
