@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col-lg-2">
     <label for="limit">Limit</label><br>
-    <input type="text" class="form-control" id="limit" [required]="canEditPremium" [readonly]="!canEditPremium"
-    [(ngModel)]="endorsement.limit" string-to-currency maxInt name="limit" #limit="ngModel">
+    <input type="text" style="text-align: right" class="form-control"
+    value="{{endorsement.limit  | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}" readonly>
   </div>
   <div class="col-lg-2">
     <label for="premium">Premium</label><br>
     <input type="text" style="text-align: right" class="form-control"
-      value="{{endorsement.premium  | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}" [readonly]="true">
+      value="{{endorsement.premium  | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}" readonly>
   </div>
 </div>
 <br>

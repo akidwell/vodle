@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
@@ -162,15 +162,32 @@ export class CoveragesComponent implements OnInit, PolicySave {
   saveEndorsementCoverages(): Observable<boolean> {
     var subject = new Subject<boolean>();
     if (this.isCoveragesDirty()) {
+
+      var startTime = performance.now();
+
       this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
         this.data['endorsementCoveragesGroups'].endorsementCoveragesGroups = deepClone(this.endorsementCoveragesGroups);
         this.updatePolicyChild.notifyEndorsementCoverages();
+
+        this.refreshEndorsement();
+        var endTime = performance.now();
+        console.log(`Coverage Save took ${endTime - startTime} milliseconds`);
+       
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
       });
     } else {
       setTimeout(() => subject.next(true), 0)
     }
     return subject.asObservable();
+  }
+
+  refreshEndorsement() {
+    this.coveragesSub = this.policyService.getEndorsement(this.endorsement.policyId, this.endorsement.endorsementNumber).subscribe(endorsement => {
+      if (this.endorsement.limit !== endorsement.limit) {
+        this.endorsementStatusService.reinsuranceValidated = false;
+        this.endorsement.limit = endorsement.limit;
+      }
+    });
   }
 
   deleteGroup(existingGroup: EndorsementCoveragesGroup) {
