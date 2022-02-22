@@ -42,6 +42,7 @@ export class EndorsementCoverageComponent implements OnInit {
   isLimitsPatternValid: boolean = true;
   isRetroDateValid: boolean = true;
   canEditLimitPattern: boolean = false;
+  canEditPremium: boolean = false;
   anchorId!: string;
   originalAction!: string;
   saveEventSubscription!: Subscription;
@@ -173,8 +174,10 @@ export class EndorsementCoverageComponent implements OnInit {
         this.populateExcludeInclude();
         this.isLimitsPatternValid = this.checkLimitsPatternValid();
         this.canEditLimitPattern = this.isNotExcluded();
-        if (!this.canEditLimitPattern) {
+        this.canEditPremium = this.isNotExcluded();
+        if (!this.isNotExcluded()) {
           this.coverage.limitsPattern = '';
+          this.coverage.premium = null;
         }
         this.coverage.limitsPatternGroupCode = subCodeDefaults.defaultLimitPatternGroupCode;
         this.isDeductibleRequired = this.checkDeductibleRequired();
@@ -200,8 +203,10 @@ export class EndorsementCoverageComponent implements OnInit {
   changeIncludeExclude(event: any) {
     if (event?.code == 'E') {
       this.coverage.limitsPattern = '';
+      this.coverage.premium = null;
     }
     this.canEditLimitPattern = this.isNotExcluded();
+    this.canEditPremium = this.isNotExcluded();
   }
 
   changeLimitsPattern() {

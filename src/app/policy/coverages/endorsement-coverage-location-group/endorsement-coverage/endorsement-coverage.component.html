@@ -42,7 +42,7 @@
           <div class="col-lg-2">
             <label class='hidden-label' for="premium">Premium</label>
             <input type="text" click-stop-propagation class="form-control" id="premium" name="premium"
-              string-to-currency maxInt [readonly]="!canEdit" [required]="canEdit"
+              string-to-currency maxInt [readonly]="!canEdit || !canEditPremium" [required]="canEdit && canEditPremium"
               [(ngModel)]="coverage.premium" #premium="ngModel">
             </div>
           <div class="col-lg-2">
