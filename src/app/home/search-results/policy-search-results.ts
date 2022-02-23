@@ -33,4 +33,6 @@ export interface PolicySearchResults {
     transExpirationDate: Date;
     premium: number;
     backout: boolean;
+    isRewrite: boolean;
+    preEndorsementStatus: string | null;
   }

@@ -18,7 +18,7 @@
             <div>
                 <label for="transactionType">Transaction Type</label>
                 <ng-select id="transactionType" [required]="canEdit" [items]="transactionTypes"
-                    bindLabel="description" bindValue="key" [clearable]="false" [readonly]="!canEdit"
+                    bindLabel="description" bindValue="key" [clearable]="false" [readonly]="!canEdit || isRewrite"
                     name="transactionType" [(ngModel)]="endorsementActionInfo.transactionType">
                 </ng-select>
             </div>
@@ -31,7 +31,7 @@
             </div>
             <label for="transEffectiveDate">Transaction Effective Date</label>
             <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transEffectiveDateCalendar"
-              class="form-control" required [disabled]="!canEdit" [(ngModel)]="endorsementActionInfo.transEffectiveDate"
+              class="form-control" required [disabled]="!canEdit" [(ngModel)]="endorsementActionInfo.transEffectiveDate" [readonly]="!canEdit || isRewrite"
               (blur)="checkTransEffectiveDate()" name="transEffectiveDate" #transEffectiveDate="ngModel">
             <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="transEffectiveDateCalendar">
             </mat-datepicker-toggle>
@@ -41,7 +41,7 @@
             </div>
             <label for="transExpirationDate">Transaction Expiration Date</label>
             <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transExpirationDateCalendar"
-              class="form-control" required [disabled]="!canEdit"
+              class="form-control" required [disabled]="!canEdit" [readonly]="!canEdit || isRewrite"
               [(ngModel)]="endorsementActionInfo.transExpirationDate" (blur)="checkExpirationDate()"
               name="transExpirationDate" #transExpirationDate="ngModel">
             <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="transExpirationDateCalendar">
@@ -52,7 +52,7 @@
             </div>
             <div>
                 <label for="premium">Premium</label>
-                <input type="text" class="form-control" id="premium" [required]="canEdit" [readonly]="!canEdit"
+                <input [readonly]="!canEdit || isRewrite" type="text" class="form-control" id="premium" [required]="canEdit"
                     name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" string-to-currency>
             </div>
         </div>

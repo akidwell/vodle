@@ -18,7 +18,7 @@ export class EndorsementHeaderComponent implements OnInit {
   isReadOnly: boolean = true;
   canEditPolicy: boolean = false;
   authSub: Subscription;
-  transactionTypes$: Observable<Code[]> | undefined;
+  transactionTypes!: Code[];
   terrorismCodes$: Observable<Code[]> | undefined;
   endSub: Subscription | undefined;
   isTransactionEffectiveDateValid: boolean = true;
@@ -38,13 +38,20 @@ export class EndorsementHeaderComponent implements OnInit {
 
   @ViewChild('endorsementHeaderForm', { static: false }) endorsementHeaderForm!: NgForm;
 
-  ngOnInit(): void {
+  async ngOnInit():  Promise<void> {
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
         this.canEditEndorsement = canEdit;
       }
     });
-    this.transactionTypes$ = this.dropdowns.getTransactionTypes();
+    let status = await this.endorsementStatusService.getEndorsementStatus( this.policyInfo.policyId, this.endorsement.endorsementNumber).toPromise();
+    console.log(status)
+    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+    if (status.preEndorsementStatus !== "Cancelled"){
+      this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
+    } else {
+      this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
+    }
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
   }
 

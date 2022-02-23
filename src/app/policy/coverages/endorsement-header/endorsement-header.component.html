@@ -31,7 +31,7 @@
     </div>
     <div class="col-lg-2">
       <label for="transactionType">Transaction Type</label><br>
-      <ng-select id="transactionType" [items]="transactionTypes$ | async" bindLabel="description" bindValue="key"
+      <ng-select id="transactionType" [items]="transactionTypes" bindLabel="description" bindValue="key"
         [required]="canEditTransactionType" [clearable]="false" [searchFn]="dropDownSearch" (change)="triggerPolicyInfoValidation()"
         [readonly]="!canEditTransactionType" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
       </ng-select>
