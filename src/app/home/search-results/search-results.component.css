@@ -9,7 +9,8 @@
 }
 
 .card {
-  overflow: hidden;
+  overflow-y:inherit ;
+  overflow-x: hidden;
 }
 
 .Cancelled {

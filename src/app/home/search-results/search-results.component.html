@@ -17,7 +17,7 @@
       </div>
     </div>
     <div >
-      <table class="table table-striped table-bordered" *ngIf="searchResults && searchResults.length">
+      <table class="table table-striped table-bordered"  *ngIf="searchResults && searchResults.length">
         <thead id="searchHeader">
           <tr>
             <th>PolicyId</th>
@@ -68,6 +68,7 @@
                     <div ngbDropdownMenu aria-labelledby="action">
                       <button ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="endorsement">Endorsement</button>
                       <button *ngIf="policy.canBackOut" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="backout">Back Out/Back In</button>
+                      <button *ngIf="canRewrite" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="cancelRewrite">Cancel/rewrite</button>
                     </div>
                   </div>
             </td>
