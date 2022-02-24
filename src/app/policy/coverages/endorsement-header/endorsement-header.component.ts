@@ -109,7 +109,7 @@ export class EndorsementHeaderComponent implements OnInit {
     this.updatePolicyChild.terrorismChanged();
   }
   triggerPolicyInfoValidation() {
-    this.endorsementStatusService.policyInfoValidated = false;
+    // this.endorsementStatusService.policyInfoValidated = false;
   }
   canSave(): boolean {
     if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
