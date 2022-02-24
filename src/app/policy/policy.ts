@@ -268,6 +268,7 @@ export interface EndorsementStatusData {
   isReinsuranceValidated: boolean;
   isDirectQuote: boolean;
   endorsementReason: string | null;
+  preEndorsementStatus: string | null;
 }
 
 export interface EndorsementStatusResolved {

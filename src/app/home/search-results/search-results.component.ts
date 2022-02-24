@@ -118,6 +118,16 @@ export class SearchResultsComponent implements OnInit {
     } else if (this.actionComponent != null && event.target.value == "backout") {
       let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
       await this.actionComponent.backoutPopup(endorsementAction, policy, this.status);
+    } else if(this.actionComponent != null && event.target.value == "cancelRewrite"){
+      let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
+      let premium: number = this.searchResults.filter(x => x.invoiceStatus != 'V').reduce((premium, current)=> premium += current.amount, 0)
+      endorsementAction.premium = -premium;
+      await this.actionComponent.cancelRewritePopup(endorsementAction, policy, this.status);
+ 
     }
+  }
+
+  get canRewrite(): boolean {
+    return this.status != 'Cancelled'
   }
 }

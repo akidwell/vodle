@@ -21,7 +21,6 @@ import { ActionService } from './action.service';
   styleUrls: ['./action.component.css']
 })
 export class ActionComponent implements OnInit {
-
   endorsementReasons!: Code[];
   transactionTypes!: Code[];
   authSub: Subscription;
@@ -36,6 +35,7 @@ export class ActionComponent implements OnInit {
   errorMessage = '';
   showBusy: boolean = false;
   cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel'];
+  isRewrite!: boolean;
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<ActionComponent>
@@ -60,6 +60,7 @@ export class ActionComponent implements OnInit {
   private modalRef!: NgbModalRef
 
   async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
+    this.isRewrite = false;
     this.policyInfo = policy;
     this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
     this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
@@ -71,6 +72,7 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.preEndorsementStatus = status
 
       if(status == 'Cancelled'){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
@@ -101,6 +103,7 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.backout = true;
+      this.endorsementActionInfo.preEndorsementStatus = status
 
       if (this.policyInfo.amount > 0){
         this.endorsementActionInfo.premium = -this.policyInfo.amount
@@ -128,6 +131,40 @@ export class ActionComponent implements OnInit {
       this.modalRef.result.then(resolve, resolve)
     })
   } 
+
+  async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string) {
+    this.isRewrite = true;
+    this.policyInfo = policy;
+    this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
+    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
+    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+
+    return new Promise<void>(resolve => {
+      this.endorsementActionInfo = endorsementAction;
+      this.endorsementActionInfo.preEndorsementStatus = status
+      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
+      this.endorsementActionInfo.isRewrite = true;
+      this.endorsementActionInfo.transactionType = 4;
+      this.endorsementActionInfo.transEffectiveDate = this.policyInfo.policyEffectiveDate;
+      this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
+      this.endorsementActionInfo.endorsementReason = "PCR";
+      ///////check this
+      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
+
+      if(status == 'Cancelled'){
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
+        this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
+
+      }
+      else if(status !== 'Cancelled'){
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
+        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
+      }
+
+      this.modalRef = this.modalService.open(this.endorsementModal, { backdrop: 'static', centered: true })
+      this.modalRef.result.then(resolve, resolve)
+    })  }
 
   checkTransEffectiveDate(): boolean {
 
