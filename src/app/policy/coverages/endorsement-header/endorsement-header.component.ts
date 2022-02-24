@@ -44,10 +44,9 @@ export class EndorsementHeaderComponent implements OnInit {
         this.canEditEndorsement = canEdit;
       }
     });
-    let status = await this.endorsementStatusService.getEndorsementStatus( this.policyInfo.policyId, this.endorsement.endorsementNumber).toPromise();
-    console.log(status)
+    let preEndorsementStatus =  this.endorsementStatusService.preEndorsementStatus;
     this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
-    if (status.preEndorsementStatus !== "Cancelled"){
+    if (preEndorsementStatus !== "Cancelled"){
       this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
     } else {
       this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
