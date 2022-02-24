@@ -45,6 +45,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PipesModule } from '../pipes/pipes.module';
+import { ConfirmationDialogService } from './services/confirmation-dialog-service/confirmation-dialog.service';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import { PipesModule } from '../pipes/pipes.module';
     UpdatePolicyChild,
     UnderlyingCoverageService,
     LimitsPatternHelperService,
+    ConfirmationDialogService
   ]
 })
 export class PolicyModule { }
