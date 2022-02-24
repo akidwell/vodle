@@ -174,9 +174,11 @@ export class EndorsementCoverageComponent implements OnInit {
         this.populateExcludeInclude();
         this.isLimitsPatternValid = this.checkLimitsPatternValid();
         this.canEditLimitPattern = this.isNotExcluded();
-        this.canEditPremium = this.isNotExcluded();
+        this.canEditPremium = this.coverage.includeExclude != 'E';
         if (!this.isNotExcluded()) {
           this.coverage.limitsPattern = '';
+        }
+        if (this.coverage.includeExclude == 'E') {
           this.coverage.premium = null;
         }
         this.coverage.limitsPatternGroupCode = subCodeDefaults.defaultLimitPatternGroupCode;
@@ -206,7 +208,7 @@ export class EndorsementCoverageComponent implements OnInit {
       this.coverage.premium = null;
     }
     this.canEditLimitPattern = this.isNotExcluded();
-    this.canEditPremium = this.isNotExcluded();
+    this.canEditPremium = this.coverage.includeExclude != 'E';
   }
 
   changeLimitsPattern() {

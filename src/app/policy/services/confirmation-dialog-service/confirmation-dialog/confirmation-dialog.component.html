@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{title}}</h4>
+  </div>
+  <div class="modal-body">
+    <div [innerHtml]="message"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="close('Yes')">Yes</button>
+  <button type="button" class="btn btn-secondary" (click)="close('No')">No</button>
+  </div>

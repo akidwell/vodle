@@ -13,8 +13,8 @@ import { InvoiceMasterComponent } from './invoice-master/invoice-master.componen
 import { InvoiceDetailComponent } from './invoice-detail/invoice-detail.component';
 import { PolicyIssuanceRequest } from '../policy-issuance-service/policy-issuance-request';
 import { PolicyIssuanceService } from '../policy-issuance-service/policy-issuance.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
+import { ConfirmationDialogService } from '../../services/confirmation-dialog-service/confirmation-dialog.service';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -33,8 +33,6 @@ export class InvoiceGroupComponent implements OnInit {
   showInvalid: boolean = false;
   invalidMessage: string = "";
   showBusy: boolean = false;
-  issuanceTitle: string = "";
-  issuanceMessage: string = "";
   issuanceSub!: Subscription;
 
   @Input() public invoice!: InvoiceData;
@@ -42,9 +40,8 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
-  @ViewChild('modalPipe') modalPipe: any;
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private modalService: NgbModal,private errorDialogService: ErrorDialogService) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService,private errorDialogService: ErrorDialogService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -166,24 +163,18 @@ export class InvoiceGroupComponent implements OnInit {
       importPolicyResponse => {
         this.showBusy = false;
         if (importPolicyResponse.isPolicyIssued) {
-          this.issuanceTitle = "Export to Issuance";
-          this.issuanceMessage = "Successful";
+          this.errorDialogService.open("Export to Issuance", "Successful");
         }
         else if (importPolicyResponse.errorMessage.indexOf("already exist") > 0) {
-          this.issuanceTitle = "Export to Issuance";
-          this.issuanceMessage = "Policy already imported";
+          this.errorDialogService.open("Export to Issuance", "Policy already imported");
         }
         else {
-          this.issuanceTitle = "Export to Issuance failed";
-          this.issuanceMessage = "Error Message: " + importPolicyResponse.errorMessage;
+          this.errorDialogService.open("Export to Issuance failed", "Error Message: " + importPolicyResponse.errorMessage);
         }
-        this.openIssuanceModal();
       },
       err => {
-        this.issuanceTitle = "Export to Issuance failed";
-        this.issuanceMessage = "Error Message: " + err;
         this.showBusy = false;
-        this.openIssuanceModal();
+        this.errorDialogService.open("Export to Issuance failed", "Error Message: " + err);
       }
     );
   }
@@ -273,14 +264,17 @@ export class InvoiceGroupComponent implements OnInit {
     this.router.navigate([this.router.url])
   }
 
-  confirmVoid(): void {
-    this.issuanceTitle = "Void Confirmation";
-    this.issuanceMessage = "Are you sure you want to void this invoice?";
-    this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true }).result.then((result) => {
-      if (result == 'Void') {
+  async confirmVoid(): Promise<void> {
+    const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to void this invoice?");
+    if (voidConfirm) {
         this.voidInvoice();
-      }
-    });
+      this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
+        .then(deleteEndorsement => {
+          if (deleteEndorsement) {
+
+          }
+        });
+    }
   }
 
   private voidInvoice(): void {
@@ -362,8 +356,8 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   // Modal is used to show errors
-  private openIssuanceModal(): void {
-    this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true, scrollable: true });
-  }
+  // private openIssuanceModal(): void {
+  //   this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true, scrollable: true });
+  // }
 
 }
