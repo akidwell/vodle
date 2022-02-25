@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -62,9 +62,12 @@ export class ActionComponent implements OnInit {
   async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.isRewrite = false;
     this.policyInfo = policy;
-    this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
-    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
-    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+    const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
+    this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
+    const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
+    const transactionTypes$ =  this.dropdowns.getTransactionTypes();
+    this.transactionTypes =  await lastValueFrom(transactionTypes$);
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
@@ -93,9 +96,12 @@ export class ActionComponent implements OnInit {
   } 
   async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.policyInfo = policy;
-    this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
-    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
-    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+    const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
+    this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
+    const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
+    const transactionTypes$ =  this.dropdowns.getTransactionTypes();
+    this.transactionTypes =  await lastValueFrom(transactionTypes$);
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
@@ -135,9 +141,12 @@ export class ActionComponent implements OnInit {
   async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string) {
     this.isRewrite = true;
     this.policyInfo = policy;
-    this.usedEndorsementNumbers = await this.actionService.getEndorsementNumbers(policy.policyId).toPromise();
-    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
-    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+    const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
+    this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
+    const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
+    const transactionTypes$ =  this.dropdowns.getTransactionTypes();
+    this.transactionTypes =  await lastValueFrom(transactionTypes$);
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
@@ -247,17 +256,19 @@ export class ActionComponent implements OnInit {
     this.showBusy = true;
     this.modalRef.close();
 
-  await this.policyService.createNewEndorsement(this.endorsementActionInfo).toPromise().then(
-      endResponse => {
+    const response$ = this.policyService.createNewEndorsement(this.endorsementActionInfo);
+    await lastValueFrom(response$)
+      .then((endResponse) => {
         this.modalRef.close()
         this.NewEndorsementResponse = endResponse;
         this.routeEndorsement();
-      }).catch(x => {
+      })
+      .catch((error) => {
         this.modalRef.close()
         this.showBusy = false;
-        this.errorDialogService.open("Endorsement Error", x.error.Message)
+        this.errorDialogService.open("Endorsement Error", error.error.Message)
           .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));
-      })
+      });
   }
 
   routeEndorsement() {

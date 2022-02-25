@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Endorsement, newPolicyLayer, newReinsuranceLayer, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../policy';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
@@ -86,7 +86,8 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   async populateReinsuranceCodes(): Promise<void> {
-    await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
+    const results$ = this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate);
+    await lastValueFrom(results$).then(
       reisuranceCodes => {
         this.reinsuranceCodes = reisuranceCodes;
       }
@@ -94,7 +95,8 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   async populateReinsuranceFacCodes(): Promise<void> {
-    await this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).toPromise().then(
+    const results$ = this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate);
+    await lastValueFrom(results$).then(
       reisuranceCodes => {
         this.reinsuranceFacCodes = reisuranceCodes;
       }

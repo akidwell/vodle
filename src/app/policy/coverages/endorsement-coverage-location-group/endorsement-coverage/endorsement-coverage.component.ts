@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faPlus, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -154,7 +154,7 @@ export class EndorsementCoverageComponent implements OnInit {
 
   changeCoverageDescription(event: any) {
     this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0).subscribe({
-      next: subCodeDefaults => {
+      next: (subCodeDefaults: SubCodeDefaults) => {
         this.subCodeDefaults = subCodeDefaults;
         this.showDeductible = subCodeDefaults.deductible;
         this.showClaimsMade = subCodeDefaults.occurrenceOrClaimsMade;
@@ -278,7 +278,8 @@ export class EndorsementCoverageComponent implements OnInit {
     if (this.coverage.isNew) {
       this.deleteThisCoverage.emit(this.coverage);
     } else {
-        return await this.policyService.deleteEndorsementCoverage(this.coverage).toPromise().then(() => {
+      const results$ = this.policyService.deleteEndorsementCoverage(this.coverage);
+      return await lastValueFrom(results$).then(() => {
         this.deleteThisCoverage.emit(this.coverage);
       });
     }

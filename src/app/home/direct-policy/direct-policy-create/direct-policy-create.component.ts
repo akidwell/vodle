@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, Subject, Subscription } from 'rxjs';
-import { EndorsementNumberResponse, newPolicyData, PolicyData } from 'src/app/policy/policy';
+import { lastValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
+import { EndorsementNumberResponse, newPolicyData, PolicyAddResponse, PolicyData } from 'src/app/policy/policy';
 import { SubmissionSearchService } from '../submission-search/submission-search.service';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
@@ -13,6 +13,7 @@ import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { debounceTime, tap } from 'rxjs/operators';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 import { ActionService } from '../../search-results/action/action.service';
+import { SubmissionResponse } from '../submission-search/submissionResponse';
 
 @Component({
   selector: 'rsps-direct-policy-create',
@@ -30,7 +31,7 @@ export class DirectPolicyCreateComponent implements OnInit {
   policySymbols$: Observable<Code[]> | undefined;
   submissionError: string = "invalid";
   isSearching: boolean = false;
-  searchThrottle = new Subject<string>();
+  searchThrottle = new Subject<void>();
   minEffectiveDate: Date = new Date();
   maxEffectiveDate: Date = new Date();
   minExpirationDate: Date = new Date();
@@ -39,7 +40,7 @@ export class DirectPolicyCreateComponent implements OnInit {
   showBusy: boolean = false;
   isRenewal: boolean = false;
   saveLabel: string = "OK";
-  reinsuranceCodes$: Observable<EndorsementNumberResponse[]> | undefined;
+  endorsementNumbers$: Observable<EndorsementNumberResponse[]> | undefined;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
@@ -84,18 +85,15 @@ export class DirectPolicyCreateComponent implements OnInit {
     if (this.policyData.submissionNumber != null && this.policyData.submissionNumber > 0 && this.policyData.submissionNumber < Math.pow(2, 31)) {
       this.isSubmissionNumberValid = false;
       this.submissionSub = this.submissionSearchService.getSubmissionSearch(this.policyData.submissionNumber).subscribe({
-        next: async match => {
+        next: async (match: SubmissionResponse) => {
           this.isSearching = false;
           this.isSubmissionNumberValid = match.isMatch;
           this.isRenewal =  match.expiringPolicyId != null ? true : false;
           this.saveLabel = match.expiringPolicyId != null ? "Renewal" : "OK";
 
           if (match.expiringPolicyId != null) {
-            await this.actionService.getEndorsementNumbers(match.expiringPolicyId).toPromise().then(
-              reisuranceCodes => {
-                this.reinsuranceCodes$ = of(reisuranceCodes);
-              }
-            );
+            const endorsementNumbers$ = this.actionService.getEndorsementNumbers(match.expiringPolicyId);
+            this.endorsementNumbers$ = of(await lastValueFrom(endorsementNumbers$));
           }
           if (match.isMatch) {
             this.submissionError = "valid";
@@ -170,21 +168,22 @@ export class DirectPolicyCreateComponent implements OnInit {
   async create() {
     this.showBusy = true;
     this.modalRef.close();
-
-     await this.policyService.addPolicy(this.policyData).toPromise().then(
-      response => {
-        this.showBusy = false;
-      if (response.policyId != null) {
-        this.modalRef.close();
-        this.navigationService.resetPolicy();
-        this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
+    const response$ = this.policyService.addPolicy(this.policyData);
+    await lastValueFrom(response$)
+      .then((response) => {
+        if (response.policyId != null) {
+          this.modalRef.close();
+          this.navigationService.resetPolicy();
+          this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
         }
-      },
-      (error) => {
+      })
+      .catch((error) => {
         this.showBusy = false;
         this.errorDialogService.open("Direct Policy Error", error.error.Message)
-        .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));     
-    });
+          .then(() =>
+            this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
+          );
+      });
   }
 
 }

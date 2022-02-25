@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { EndorsementCoveragesGroup } from '../coverages/coverages';
@@ -84,8 +84,10 @@ export class SummaryComponent implements OnInit {
     invoice.effectiveDate = this.endorsement.transactionEffectiveDate;
     invoice.expirationDate = this.endorsement.transactionExpirationDate;
     invoice.transactionTypeCode = this.endorsement.transactionTypeCode;
-    const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
-    const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
+    const transactionTypes$ = this.dropDownService.getTransactionTypes();
+    const transactionTypes = await lastValueFrom(transactionTypes$);
+    const coverageCodes$ = this.dropDownService.getCoverageCodes();
+    const coverageCodes =  await lastValueFrom(coverageCodes$);
     invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
     invoice.reason = this.endorsementStatusService.endorsementReason;
     let invoiceDetail = newInvoiceDetail();
@@ -111,7 +113,9 @@ export class SummaryComponent implements OnInit {
     if (this.invoices[0].transactionTypeCode != this.endorsement.transactionTypeCode) {
       this.invoices[0].isUpdated = true;
       this.invoices[0].transactionTypeCode = this.endorsement.transactionTypeCode;
-      const transactionTypes = await this.dropDownService.getTransactionTypes().toPromise();
+
+      const transactionTypes$ = this.dropDownService.getTransactionTypes();
+      const transactionTypes = await lastValueFrom(transactionTypes$);
       this.invoices[0].transctionTypeDescription = transactionTypes.find(x => x.key == this.invoices[0].transactionTypeCode)?.description ?? ""
     }
     let invoiceDetail: any;
@@ -123,7 +127,8 @@ export class SummaryComponent implements OnInit {
     }
     if (invoiceDetail.lineItemCode != this.endorsementCoveragesGroups[0].coverages[0].coverageCode.trim()) {
       invoiceDetail.isUpdated = true;
-      const coverageCodes = await this.dropDownService.getCoverageCodes().toPromise();
+      const coverageCodes$ = this.dropDownService.getCoverageCodes();
+      const coverageCodes = await lastValueFrom(coverageCodes$);
       invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
       invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
     }
