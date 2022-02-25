@@ -9,7 +9,7 @@ import { ReinsuranceLookup } from './reinsurance-lookup';
   providedIn: 'root'
 })
 export class ReinsuranceLookupService {
-  private refreshed = new Subject<any>();
+  private refreshed = new Subject<void>();
 
   refreshed$ = this.refreshed.asObservable();
   

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -27,7 +27,8 @@ export class InvoiceMasterComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.endorsementReasons = await this.dropdowns.getEndorsementReasons().toPromise();
+    const endorsementReasons$ = this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons = await lastValueFrom(endorsementReasons$);
   }
 
   ngOnDestroy(): void {

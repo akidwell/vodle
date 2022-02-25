@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { InvoiceData, newInvoiceDetail } from '../invoice';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../../policy.service';
 import { NotificationService } from 'src/app/notification/notification-service';
@@ -159,7 +159,8 @@ export class InvoiceGroupComponent implements OnInit {
     const parm: PolicyIssuanceRequest = { policyId: this.invoice.policyId, endorsementNumber: this.invoice.endorsementNumber };
     this.showBusy = true;
 
-    await this.policyIssuanceService.postPolicyIssuance(parm).toPromise().then(
+    const results$ = this.policyIssuanceService.postPolicyIssuance(parm);
+    await lastValueFrom(results$).then(
       importPolicyResponse => {
         this.showBusy = false;
         if (importPolicyResponse.isPolicyIssued) {
@@ -189,7 +190,8 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   private async addInvoice(refresh: boolean = false): Promise<boolean> {
-    return await this.policyService.addPolicyInvoice(this.invoice).toPromise<boolean>()
+    const results$ = this.policyService.addPolicyInvoice(this.invoice);
+    return await lastValueFrom(results$)
       .then(result => {
         if (result == null) {
           this.markPristine();
@@ -214,29 +216,30 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   private async updateInvoice(refresh: boolean = false): Promise<boolean> {
-    return await this.policyService.updatePolicyInvoice(this.invoice)
-      .toPromise<boolean>()
-      .then(result => {
-        if (result == null) {
-          this.markPristine();
-          if (refresh) {
-            this.refresh();
-          }
-          this.endorsementStatusService.refresh();
-          this.showInvoiceSaved();
-          return true;
+    const results$ =  this.policyService.updatePolicyInvoice(this.invoice);
+    
+    return await lastValueFrom(results$)
+    .then(result => {
+      if (result == null) {
+        this.markPristine();
+        if (refresh) {
+          this.refresh();
         }
-        else {
-          this.showInvoiceNotSaved();
-          return false;
-        }
-      },
-      (error) => {
-        console.log(error.message);
+        this.endorsementStatusService.refresh();
+        this.showInvoiceSaved();
+        return true;
+      }
+      else {
         this.showInvoiceNotSaved();
-        this.errorDialogService.open("Invoice Save Error", error.error.Message);
         return false;
-    });
+      }
+    },
+    (error) => {
+      console.log(error.message);
+      this.showInvoiceNotSaved();
+      this.errorDialogService.open("Invoice Save Error", error.error.Message);
+      return false;
+  });
   }
 
   private markPristine() {

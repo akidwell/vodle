@@ -10,7 +10,7 @@ import { ReinsuranceLookupService } from '../reinsurance/reinsurance-lookup/rein
 })
 export class NavigationService {
 
-  private createDirectPolicy = new Subject<any>();
+  private createDirectPolicy = new Subject<void>();
   createDirectPolicy$ = this.createDirectPolicy.asObservable();
 
   constructor(private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService){ }

@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subject, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { PolicyService } from '../policy.service';
 import { EndorsementCoverageLocationComponent, LocationResult } from './endorsement-coverage-location-group/endorsement-coverage-location/endorsement-coverage-location.component';
@@ -147,15 +147,18 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   saveEndorsementInfo(): Observable<boolean> {
     var subject = new Subject<boolean>();
+
     if (this.headerComp.canSave()) {
-      this.policyService.updateEndorsement(this.endorsement).toPromise().then(x => {
+      const results$ = this.policyService.updateEndorsement(this.endorsement);
+      lastValueFrom(results$)
+      .then(x => {
         this.data['endorsementData'].endorsement = deepClone(this.endorsement);
         this.headerComp.endorsementHeaderForm.form.markAsPristine();
         this.headerComp.endorsementHeaderForm.form.markAsUntouched();
         this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         subject.next(true)
-      }).catch(x => {
-        this.errorDialogService.open("Endorsement Header Error", x.error.Message)
+      }).catch((error) => {
+        this.errorDialogService.open("Endorsement Header Error", error.error.Message)
         this.endorsementStatusService.coverageValidated = false;
       });
     } else {
