@@ -86,7 +86,7 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   get canVoid(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && (this.invoice.proFlag == 0 || this.invoice.proFlag == 3))) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
   get canExport(): boolean {
@@ -270,11 +270,11 @@ export class InvoiceGroupComponent implements OnInit {
   async confirmVoid(): Promise<void> {
     const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to void this invoice?");
     if (voidConfirm) {
-        this.voidInvoice();
+      this.voidInvoice();
       this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
         .then(deleteEndorsement => {
           if (deleteEndorsement) {
-
+            // TODO
           }
         });
     }
@@ -357,10 +357,5 @@ export class InvoiceGroupComponent implements OnInit {
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
-  // Modal is used to show errors
-  // private openIssuanceModal(): void {
-  //   this.modalService.open(this.modalPipe, { backdrop: 'static', centered: true, scrollable: true });
-  // }
 
 }
