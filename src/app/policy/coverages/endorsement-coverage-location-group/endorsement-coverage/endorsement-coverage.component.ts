@@ -153,7 +153,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   changeCoverageDescription(event: any) {
-    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0).subscribe({
+    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol).subscribe({
       next: (subCodeDefaults: SubCodeDefaults) => {
         this.subCodeDefaults = subCodeDefaults;
         this.showDeductible = subCodeDefaults.deductible;

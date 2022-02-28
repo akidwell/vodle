@@ -7,5 +7,5 @@
     "oktaRedirectUri" : "http://localhost:4200/callback",
     "oktaPostLogoutRedirectUri" : "http://localhost:4200/logged-out",
     "preventForcedRedirect" : false,
-    "maxPolicyHistorySize" : 5
+    "defaultPolicyHistorySize" : 5
 }

@@ -98,7 +98,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
     return false;
   }
   save(): void {
-    if (this.canEditPolicy) {
+    if (this.canEditPolicy && this.isDirty()) {
       this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(result => {
         this.notification.show('Underlying Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         if (this.components != null) {
@@ -113,7 +113,6 @@ export class UnderlyingCoveragesComponent implements OnInit {
     }
   }
   async deleteComponent(index: any, existingCoverage: UnderlyingCoverage) {
-
     this.deleteSub = this.policyService.deleteUnderlyingCoverage(existingCoverage).subscribe(result => {
       this.underlyingCoverages.splice(index,1);
     });

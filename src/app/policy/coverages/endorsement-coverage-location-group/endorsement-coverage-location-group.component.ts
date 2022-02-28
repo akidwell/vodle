@@ -199,6 +199,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
     const componentRef = viewContainerRef.createComponent<EndorsementCoverageComponent>(componentFactory);
     componentRef.instance.coverage = coverage;
+    componentRef.instance.policyInfo = this.policyInfo;
     componentRef.instance.copyExistingCoverage.subscribe(evt => this.copyExistingCoverage(evt));
     componentRef.instance.deleteThisCoverage.subscribe(evt => this.deleteCoverage(evt));
     this.components.push(componentRef.instance);

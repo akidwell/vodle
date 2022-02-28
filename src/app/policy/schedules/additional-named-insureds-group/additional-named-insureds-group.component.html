@@ -13,7 +13,7 @@
   </div>
   <div class="card-footer">
     <div id="aniFooter">
-      <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
+      <button *ngIf="canEditPolicy" style="float:left; background:none; border:none;" class="underline"
         (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
       <div style="float:right;">Additional Named Insureds: {{aniData.length}}</div>
     </div>

@@ -83,6 +83,7 @@ export class AuthService {
     this.userAuth.isApiAuthenticated = token.valid == 'True';
     this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
     this.userAuth.userRole = token.userRole;
+    this.userAuth.environment = token.environment;
     this.userAuth.loaded();
 
     if (!this.userAuth.isAuthenticated) {

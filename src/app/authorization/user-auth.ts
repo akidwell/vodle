@@ -36,6 +36,11 @@ export class UserAuth {
   get userRole(): string { return this._userRole.getValue(); }
   set userRole(value: string) { this._userRole.next(value); }
 
+  private _environment = new BehaviorSubject<string>("");
+  environment$ = this._environment.asObservable();
+  get environment(): string { return this._environment.getValue(); }
+  set environment(value: string) { this._environment.next(value); }
+
   private _loaded$ = new BehaviorSubject<boolean>(false);
   get loaded$() { return this._loaded$.asObservable(); }
   loaded() {
