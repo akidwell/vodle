@@ -7,5 +7,5 @@
     "oktaRedirectUri" : "https://garsuat.td.afg/rsps/callback",
     "oktaPostLogoutRedirectUri" : "https://garsuat.td.afg/rsps/logged-out",
     "preventForcedRedirect" : false,
-    "maxPolicyHistorySize" : 5
+    "defaultPolicyHistorySize" : 5
 }

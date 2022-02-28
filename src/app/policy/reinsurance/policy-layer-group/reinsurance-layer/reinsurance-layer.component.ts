@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, of, Subscription } from 'rxjs';
 import { Endorsement, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from 'src/app/policy/policy';
 import { ReinsuranceLookup } from '../../reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from '../../reinsurance-lookup/reinsurance-lookup.service';
@@ -99,7 +99,8 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   async populateReinsuranceCodes(): Promise<void> {
-    await this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).toPromise().then(
+    const results$ = this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate);
+    await lastValueFrom(results$).then(
       reisuranceCodes => {
         this.reinsuranceCodes = reisuranceCodes;
         this.reinsuranceCodes$ = of(reisuranceCodes);

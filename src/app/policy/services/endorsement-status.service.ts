@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Observable, of, Subscription } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { ConfigService } from 'src/app/config/config.service';
@@ -23,8 +23,8 @@ export class EndorsementStatusService {
   set policyInfoValidated(value: boolean) {
     if (this.canEditPolicy && this._status.isPolicyValidated != value) {
       this._status.isPolicyValidated = value;
-      this.updateEndorsementStatus(this._status).toPromise();
       this._policyInfoValidated.next(value);
+      this.updateEndorsementStatus(this._status).subscribe();
     }
   }
 
@@ -34,8 +34,8 @@ export class EndorsementStatusService {
   set coverageValidated(value: boolean) {
     if (this.canEditPolicy && this._status.isCoverageValidated != value) {
       this._status.isCoverageValidated = value;
-      this.updateEndorsementStatus(this._status).toPromise();
       this._coverageValidated.next(value);
+      this.updateEndorsementStatus(this._status).subscribe();
     }
   }
 
@@ -45,11 +45,10 @@ export class EndorsementStatusService {
   set reinsuranceValidated(value: boolean) {
     if (this.canEditPolicy && this._status.isReinsuranceValidated != value) {
       this._status.isReinsuranceValidated = value;
-      this.updateEndorsementStatus(this._status).toPromise();
-      this._reinsuranceValidated.next(value);
+      this._reinsuranceValidated.next(value)
+      this.updateEndorsementStatus(this._status).subscribe();
     }
   }
-
   
   private _directQuote = new BehaviorSubject<boolean>(false);
   directQuote$ = this._directQuote.asObservable();
@@ -92,7 +91,7 @@ export class EndorsementStatusService {
   }
 
   refresh(): void {
-    this.getEndorsementStatus(this._status.policyId, this._status.endorsementNumber).toPromise();
+    this.getEndorsementStatus(this._status.policyId, this._status.endorsementNumber);
   }
 
   private updateEndorsementStatus(invoice: EndorsementStatusData): Observable<boolean> {

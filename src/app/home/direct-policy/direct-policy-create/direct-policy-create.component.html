@@ -67,7 +67,7 @@
       </div>
       <div class="col-lg-4" *ngIf="isRenewal">
         <label for="endorsementNumber">Copy Endorsement</label>
-        <ng-select id="endorsementNumber" [items]="reinsuranceCodes$ | async" bindLabel="endorsementNumber"  [readonly]="!isRenewal || isSearching" 
+        <ng-select id="endorsementNumber" [items]="endorsementNumbers$ | async" bindLabel="endorsementNumber" [readonly]="!isRenewal || isSearching" 
           bindValue="endorsementNumber" [required]="isRenewal" [clearable]="false" name="endorsementNumber"
           [(ngModel)]="policyData.endorsementNumber" #endorsementNumber="ngModel">
           <ng-template ng-label-tmp let-item="item">

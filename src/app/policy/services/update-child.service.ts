@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 @Injectable()
 export class UpdatePolicyChild {
-  private endorsementCoverages = new Subject<any>();
-  private collapseLocations = new Subject<any>();
-  private expandLocations = new Subject<any>();
-  private collapseEndorsementLocationsSubject = new Subject<any>();
-  private terrorismChange = new Subject<any>();
+  private endorsementCoverages = new Subject<void>();
+  private collapseLocations = new Subject<void>();
+  private expandLocations = new Subject<void>();
+  private collapseEndorsementLocationsSubject = new Subject<void>();
+  private terrorismChange = new Subject<void>();
 
   endorsementCoveragesObservable$ = this.endorsementCoverages.asObservable();
   collapseLocationsObservable$ = this.collapseLocations.asObservable();

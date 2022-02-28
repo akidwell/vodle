@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
@@ -47,7 +47,8 @@ export class EndorsementHeaderComponent implements OnInit {
       }
     });
     let preEndorsementStatus =  this.endorsementStatusService.preEndorsementStatus;
-    this.transactionTypes = await this.dropdowns.getTransactionTypes().toPromise();
+    const transactionTypes$ = this.dropdowns.getTransactionTypes();
+    this.transactionTypes = await lastValueFrom(transactionTypes$);
     if (preEndorsementStatus !== "Cancelled"){
       this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
     } else {

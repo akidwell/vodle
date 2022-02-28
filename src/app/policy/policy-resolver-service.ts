@@ -64,7 +64,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
 
         return this.policyService.getPolicyInfo(Number(id))
             .pipe(
-                tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol + res.formattedPolicyNo, Number(end))),
+                tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + " " + res.formattedPolicyNo, Number(end))),
                 map(policyInfo => ({ policyInfo })),
                 catchError((error) => {
                     this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
@@ -73,7 +73,6 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
             );
     }
 }
-
 
 @Injectable({
     providedIn: 'root'
