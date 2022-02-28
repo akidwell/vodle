@@ -13,26 +13,26 @@
   <div class="row">
     <div class="col-lg-3">
       <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key"
-        [clearable]="false" [readonly]="!canEdit" [required]="canEdit" name="role"
+        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="role"
         (change)="checkDuplicateNameRoleCombo()" [(ngModel)]="aniData.role" #role="ngModel">
       </ng-select>
     </div>
     <div class="col-lg-5">
-      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEdit" maxlength="80"
-        [required]="canEdit" name="name" [(ngModel)]="aniData.name" (change)="checkDuplicateNameRoleCombo()">
+      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="80"
+        [required]="canEditPolicy" name="name" [(ngModel)]="aniData.name" (change)="checkDuplicateNameRoleCombo()">
     </div>
     <div class="col-lg-2">
       <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" name="createDate"
         [ngModel]="aniData.createdDate | date:'MM/dd/yyyy'" (ngModelChange)="aniData.createdDate=$event">
     </div>
     <div class="col-lg-2">
-      <span class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary" *ngIf="canEdit">Copy
+      <span class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary" *ngIf="canEditPolicy">Copy
       </span>
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-        *ngIf="!aniData.isNew && canEdit">
+        *ngIf="!aniData.isNew && canEditPolicy">
         Delete</span>
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-        *ngIf="aniData.isNew && canEdit">Remove</span>
+        *ngIf="aniData.isNew && canEditPolicy">Remove</span>
     </div>
     <div [hidden]="isNameRoleValid" class="alert alert-danger">
       Invalid Name/Role Combination
