@@ -42,8 +42,8 @@ export interface PolicyInformation {
   policyInsuredState: string;
   policyEffectiveDate: Date;
   policyExpirationDate: Date;
-  policyExtendedExpDate: Date;
-  policyCancelDate: Date;
+  policyExtendedExpDate: Date | null;
+  policyCancelDate: Date | null;
   programId: number;
   programName: string;
   riskGradeCode: string;

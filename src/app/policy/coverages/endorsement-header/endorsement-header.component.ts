@@ -8,6 +8,7 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Endorsement, PolicyInformation } from '../../policy';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { UpdatePolicyChild } from '../../services/update-child.service';
+import { TransactionTypes } from '../../transaction-types';
 
 @Component({
   selector: 'rsps-endorsement-header',
@@ -26,6 +27,7 @@ export class EndorsementHeaderComponent implements OnInit {
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
   isAttachmentPointValid: boolean = false;
+  isPolicyCancelled: boolean = false;
 
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
@@ -50,6 +52,7 @@ export class EndorsementHeaderComponent implements OnInit {
     if (preEndorsementStatus !== "Cancelled"){
       this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
     } else {
+      this.isPolicyCancelled = true;
       this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
     }
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
@@ -61,6 +64,21 @@ export class EndorsementHeaderComponent implements OnInit {
     this.endSub?.unsubscribe();
   }
 
+  isExtensionDateSelected(): boolean {
+    if (this.endorsement.transactionTypeCode == TransactionTypes.PolicyExtensionByEndt) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isCancelSelected(): boolean {
+    if (this.endorsement.transactionTypeCode == TransactionTypes.ProRataCancel || this.endorsement.transactionTypeCode == TransactionTypes.FlatCancel ||
+      this.endorsement.transactionTypeCode == TransactionTypes.ShortRateCancel || this.endorsement.transactionTypeCode == TransactionTypes.CancellationOfPolicyExtension) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
@@ -108,8 +126,21 @@ export class EndorsementHeaderComponent implements OnInit {
   changeTerrorism() {
     this.updatePolicyChild.terrorismChanged();
   }
-  triggerPolicyInfoValidation() {
-    // this.endorsementStatusService.policyInfoValidated = false;
+  clearAllTransactionTypeSpecificData(event: any) {
+    this.clearOrSetCancelDate(event);
+    this.clearExtensionDate();
+  }
+  clearOrSetCancelDate(event: any) {
+    // if (event.key == TransactionTypes.ProRataCancel || event.key == TransactionTypes.FlatCancel ||
+    //   event.key == TransactionTypes.ShortRateCancel || event.key == TransactionTypes.CancellationOfPolicyExtension) {
+    //     this.policyInfo.policyCancelDate = this.endorsement.transactionEffectiveDate;
+    //   } else
+      if (!this.isPolicyCancelled) {
+      this.policyInfo.policyCancelDate = null;
+    }
+  }
+  clearExtensionDate() {
+    this.policyInfo.policyExtendedExpDate = null;
   }
   canSave(): boolean {
     if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
