@@ -20,6 +20,7 @@ export interface PolicySearchResults {
     firstPolicyRow : boolean;
     masterPolicy: string;
     canBackOut:  boolean;
+    isRewrite: boolean;
   }
 
   export interface NewEndorsementData {

@@ -68,7 +68,9 @@
                     <div ngbDropdownMenu aria-labelledby="action">
                       <button ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="endorsement">Endorsement</button>
                       <button *ngIf="policy.canBackOut" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="backout">Back Out/Back In</button>
-                      <button *ngIf="canRewrite" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="cancelRewrite">Cancel/rewrite</button>
+                      <button *ngIf="canRewrite && !policy.isRewrite" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="cancelRewrite">Cancel/Rewrite</button>
+                      <button *ngIf="policy.isRewrite" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="rewrite">Rewrite</button>
+
                     </div>
                   </div>
             </td>
