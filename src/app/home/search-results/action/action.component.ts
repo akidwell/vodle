@@ -9,7 +9,6 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 import { EndorsementNumberResponse } from 'src/app/policy/policy';
 import { PolicyService } from 'src/app/policy/policy.service';
-import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { NewEndorsementData, PolicySearchResults } from '../policy-search-results';
 import { ActionService } from './action.service';
@@ -41,7 +40,7 @@ export class ActionComponent implements OnInit {
   @ViewChild('modal') private modalContent!: TemplateRef<ActionComponent>
 
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private endorsementStatusService: EndorsementStatusService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -96,6 +95,7 @@ export class ActionComponent implements OnInit {
   } 
   async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.policyInfo = policy;
+    this.isRewrite = false;
     const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
     const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();

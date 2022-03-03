@@ -53,7 +53,7 @@ export class SearchResultsComponent implements OnInit {
         }
         //flag for if policy endorsement can be backedout/backedin
         for (let y of results) {
-          if ((y.endorsementNumber != 0) && (y.transactionType != 'Endorsement' && y.transactionType != 'Reinstatment' && y.transactionType != 'Flat Cancel'
+          if ((y.transactionType != 'Endorsement' && y.transactionType != 'Reinstatement' && y.transactionType != 'Flat Cancel'
            && y.transactionType != 'Pro-Rata Cancel' && y.transactionType != 'Short Rate Cancel' && y.transactionType != 'Policy Extension By Endt')) {
             y.canBackOut = true;
           } else {
@@ -120,11 +120,13 @@ export class SearchResultsComponent implements OnInit {
       await this.actionComponent.backoutPopup(endorsementAction, policy, this.status);
     } else if(this.actionComponent != null && event.target.value == "cancelRewrite"){
       let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
-      let premium: number = this.searchResults.filter(x => x.invoiceStatus != 'V').reduce((premium, current)=> premium += current.amount, 0)
+      let premium: number = this.searchResults.filter(x => x.invoiceStatus != 'V' && x.policyId == policy.policyId).reduce((premium, current)=> premium += current.amount, 0)
       endorsementAction.premium = -premium;
       await this.actionComponent.cancelRewritePopup(endorsementAction, policy, this.status);
- 
-    }
+     } else if (this.navigationService != null && event.target.value == "rewrite"){
+       
+      this.navigationService.create()  
+      }
   }
 
   get canRewrite(): boolean {

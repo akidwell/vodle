@@ -269,6 +269,7 @@ export interface EndorsementStatusData {
   isDirectQuote: boolean;
   endorsementReason: string | null;
   preEndorsementStatus: string | null;
+  isRewrite: boolean;
 }
 
 export interface EndorsementStatusResolved {
