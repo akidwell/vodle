@@ -44,6 +44,10 @@ export class PolicyService {
   updateEndorsement(endorsement: Endorsement): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements', endorsement);
   }
+  deleteEndorsement(policyId: number, endorsementNo: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString()
+      + '/endorsements/' + endorsementNo.toString());
+  }
   updateEndorsementGroups(endorsementCoveragesGroups: EndorsementCoveragesGroup[]): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/coveragesgroups', endorsementCoveragesGroups);
   }

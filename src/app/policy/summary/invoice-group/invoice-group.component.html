@@ -9,7 +9,7 @@
       <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canExport"
         (click)="export()">Export</button>
     </div>
-    <div class="card-header" (click)="collapse.toggle()">{{title}}
+    <div class="card-header" (click)="collapsePanel(!invoiceCollapsed)">{{title}}
       <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="invoiceCollapsed"></fa-icon>
       <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!invoiceCollapsed"></fa-icon>
     </div>

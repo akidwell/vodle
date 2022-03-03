@@ -33,6 +33,7 @@ export class PolicyInformationComponent implements OnInit {
   nyFreeTradeZones$: Observable<Code[]> | undefined;
   assumedCarriers$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
+  policySymbols$: Observable<Code[]> | undefined;
   claimsMadeOrOccurrence$: Code[] = [];
   authSub: Subscription;
   productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
@@ -79,6 +80,7 @@ export class PolicyInformationComponent implements OnInit {
     this.nyFreeTradeZones$ = this.dropdowns.getNYFreeTradeZones();
     this.assumedCarriers$ = this.dropdowns.getAssumedCarriers();
     this.programs$ = this.dropdowns.getPrograms();
+    this.policySymbols$ = this.dropdowns.getPolicySymbols();
     this.populateClaimsMadeOccurrence();
 
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
