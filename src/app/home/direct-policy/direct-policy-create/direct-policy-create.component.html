@@ -1,7 +1,7 @@
 <form #quoteForm="ngForm">
   <ng-template #modal let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Direct Policy</h4>
+      <h4 class="modal-title" id="modal-basic-title">{{title}}</h4>
     </div>
     <div class="modal-body">
       <div class="col-lg-6">
@@ -67,7 +67,7 @@
       </div>
       <div class="col-lg-4" *ngIf="isRenewal">
         <label for="endorsementNumber">Copy Endorsement</label>
-        <ng-select id="endorsementNumber" [items]="endorsementNumbers$ | async" bindLabel="endorsementNumber" [readonly]="!isRenewal || isSearching" 
+        <ng-select id="endorsementNumber" [items]="endorsementNumbers$ | async" bindLabel="endorsementNumber" [readonly]="!isRenewal || isSearching || isRewrite" 
           bindValue="endorsementNumber" [required]="isRenewal" [clearable]="false" name="endorsementNumber"
           [(ngModel)]="policyData.endorsementNumber" #endorsementNumber="ngModel">
           <ng-template ng-label-tmp let-item="item">
@@ -84,7 +84,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" [hidden]="false"
-        [disabled]="!quoteForm.valid || !isSubmissionNumberValid" (click)="create()">{{ saveLabel }}</button>
+        [disabled]="!quoteForm.valid || !isSubmissionNumberValid" (click)="create()">Submit</button>
         <button type="button" class="btn btn-secondary" [hidden]="false" (click)="modal.dismiss()">Cancel</button>
     </div>
   </ng-template>

@@ -4,7 +4,7 @@
     <div class="col-lg-2">
       <label for="transactionEffectiveDate">Trans Eff Date</label>
       <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="endorsementEffectiveDateCalendar"
-        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
+        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
         [(ngModel)]="endorsement.transactionEffectiveDate" (dateChange)="changeEffectiveDate()"
         name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
       <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
@@ -18,7 +18,7 @@
     <div class="col-lg-2">
       <label for="endorsementExpirationDate">Trans Exp Date</label>
       <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transactionExpirationDateCalendar"
-        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates"
+        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
         [(ngModel)]="endorsement.transactionExpirationDate" (dateChange)="changeExpirationDate()"
         name="transactionExpirationDate" #transactionExpirationDate="ngModel">
       <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"

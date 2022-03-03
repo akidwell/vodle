@@ -124,8 +124,8 @@ export class SearchResultsComponent implements OnInit {
       endorsementAction.premium = -premium;
       await this.actionComponent.cancelRewritePopup(endorsementAction, policy, this.status);
      } else if (this.navigationService != null && event.target.value == "rewrite"){
-       
-      this.navigationService.create()  
+
+      this.navigationService.createRewrite(policy)  
       }
   }
 

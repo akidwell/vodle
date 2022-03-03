@@ -9,7 +9,7 @@ import { DirectPolicyCreateComponent } from './direct-policy/direct-policy-creat
 })
 export class HomeComponent implements OnInit {
   directPolicySubscription!: Subscription;
-
+  cancelRewriteSubscription!: Subscription;
   
   @ViewChild('modal') private directPolicyComponent!: DirectPolicyCreateComponent
 
@@ -20,10 +20,16 @@ export class HomeComponent implements OnInit {
       console.log("Direct");
       this.directPolicyComponent.open();
     });
+    this.cancelRewriteSubscription = this.navigationService.createCancelRewrite$.subscribe(() => {
+      console.log("Rewrite");
+      this.directPolicyComponent.openRewrite(this.navigationService.rewriteInfo);
+    });
   }
 
   ngOnDestroy(): void {
     this.directPolicySubscription.unsubscribe();
+    this.cancelRewriteSubscription.unsubscribe();
+
   }
 
 }

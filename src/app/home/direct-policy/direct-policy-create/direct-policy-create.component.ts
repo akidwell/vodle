@@ -14,6 +14,7 @@ import { debounceTime, tap } from 'rxjs/operators';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 import { ActionService } from '../../search-results/action/action.service';
 import { SubmissionResponse } from '../submission-search/submissionResponse';
+import { PolicySearchResults } from '../../search-results/policy-search-results';
 
 @Component({
   selector: 'rsps-direct-policy-create',
@@ -39,8 +40,9 @@ export class DirectPolicyCreateComponent implements OnInit {
   searchSub!: Subscription;
   showBusy: boolean = false;
   isRenewal: boolean = false;
-  saveLabel: string = "OK";
+  isRewrite: boolean = false;
   endorsementNumbers$: Observable<EndorsementNumberResponse[]> | undefined;
+  title: string = "Direct Policy"
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
@@ -81,6 +83,26 @@ export class DirectPolicyCreateComponent implements OnInit {
     })
   }
 
+  
+  async openRewrite(policy: PolicySearchResults): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      console.log(policy)
+      this.isSearching = false;
+      this.submissionError = "invalid";
+      this.isSubmissionNumberValid = false;
+      this.showPolicyNumberInvalid = false;
+      this.showExpirationDateInvalid = false;
+      this.policyData = newPolicyData();
+      this.policyData.endorsementNumber = policy.endorsementNumber;
+      console.log(this.policyData.endorsementNumber)
+      console.log(policy.endorsementNumber)
+      this.title = "Cancel/Rewrite"
+      this.isRewrite = true;
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
+      this.modalRef.result.then(resolve, resolve)
+    })
+  }
+
   submissionLookup() {
     if (this.policyData.submissionNumber != null && this.policyData.submissionNumber > 0 && this.policyData.submissionNumber < Math.pow(2, 31)) {
       this.isSubmissionNumberValid = false;
@@ -89,7 +111,6 @@ export class DirectPolicyCreateComponent implements OnInit {
           this.isSearching = false;
           this.isSubmissionNumberValid = match.isMatch;
           this.isRenewal =  match.expiringPolicyId != null ? true : false;
-          this.saveLabel = match.expiringPolicyId != null ? "Renewal" : "OK";
 
           if (match.expiringPolicyId != null) {
             const endorsementNumbers$ = this.actionService.getEndorsementNumbers(match.expiringPolicyId);
@@ -101,7 +122,7 @@ export class DirectPolicyCreateComponent implements OnInit {
             this.policyData.policyExpirationDate = match.expirationDate;
             this.policyData.policySymbol = match.policySymbol;
             this.policyData.policyNumber = match.policyNumber;
-            this.policyData.endorsementNumber = null;
+            this.policyData.endorsementNumber = this.policyData.endorsementNumber? this.policyData.endorsementNumber : null;
             this.policyData.premium = null;
           }
           else {
@@ -126,7 +147,6 @@ export class DirectPolicyCreateComponent implements OnInit {
     this.policyData.premium = null;
     this.policyData.policySymbol = "";
     this.policyData.policyNumber = "";
-    this.saveLabel = "OK";
   }
 
   leavePolicyNumber() {
@@ -180,6 +200,27 @@ export class DirectPolicyCreateComponent implements OnInit {
       .catch((error) => {
         this.showBusy = false;
         this.errorDialogService.open("Direct Policy Error", error.error.Message)
+          .then(() =>
+            this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
+          );
+      });
+  }
+
+  async createRewrite(policy: PolicySearchResults) {
+    this.showBusy = true;
+    this.modalRef.close();
+    const response$ = this.policyService.addPolicy(this.policyData);
+    await lastValueFrom(response$)
+      .then((response) => {
+        if (response.policyId != null) {
+          this.modalRef.close();
+          this.navigationService.resetPolicy();
+          this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
+        }
+      })
+      .catch((error) => {
+        this.showBusy = false;
+        this.errorDialogService.open("Cancel/Rewrite Error", error.error.Message)
           .then(() =>
             this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
           );

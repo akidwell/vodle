@@ -28,6 +28,7 @@ export class EndorsementHeaderComponent implements OnInit {
   statusSub!: Subscription;
   isAttachmentPointValid: boolean = false;
   isPolicyCancelled: boolean = false;
+  isRewrite: boolean = false;
 
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
@@ -47,6 +48,7 @@ export class EndorsementHeaderComponent implements OnInit {
       }
     });
     let preEndorsementStatus =  this.endorsementStatusService.preEndorsementStatus;
+    this.isRewrite = this.endorsementStatusService.isRewrite;
     const transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.transactionTypes = await lastValueFrom(transactionTypes$);
     if (preEndorsementStatus !== "Cancelled"){
@@ -153,7 +155,7 @@ export class EndorsementHeaderComponent implements OnInit {
     return this.canEditEndorsement && this.canEditPolicy
   }
   get canEditTransactionType(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
+    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0 && !this.isRewrite
   }
   get canEditTransactionDates(): boolean {
     return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0

@@ -35,6 +35,7 @@ export class ActionComponent implements OnInit {
   showBusy: boolean = false;
   cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel'];
   isRewrite!: boolean;
+  isBackout!: boolean;
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<ActionComponent>
@@ -60,6 +61,8 @@ export class ActionComponent implements OnInit {
 
   async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.isRewrite = false;
+    this.isBackout = false;
+
     this.policyInfo = policy;
     const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
@@ -96,6 +99,7 @@ export class ActionComponent implements OnInit {
   async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.policyInfo = policy;
     this.isRewrite = false;
+    this.isBackout = true;
     const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
     const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
@@ -140,6 +144,8 @@ export class ActionComponent implements OnInit {
 
   async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string) {
     this.isRewrite = true;
+    this.isBackout = false;
+
     this.policyInfo = policy;
     const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
