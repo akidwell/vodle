@@ -267,6 +267,7 @@ export interface EndorsementStatusData {
   isCoverageValidated: boolean;
   isReinsuranceValidated: boolean;
   isDirectQuote: boolean;
+  isInvoiced: boolean;
   endorsementReason: string | null;
   preEndorsementStatus: string | null;
 }

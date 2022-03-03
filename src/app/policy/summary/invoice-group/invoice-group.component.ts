@@ -15,6 +15,7 @@ import { PolicyIssuanceRequest } from '../policy-issuance-service/policy-issuanc
 import { PolicyIssuanceService } from '../policy-issuance-service/policy-issuance.service';
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 import { ConfirmationDialogService } from '../../services/confirmation-dialog-service/confirmation-dialog.service';
+import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -41,7 +42,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService,private errorDialogService: ErrorDialogService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService,private messageDialogService: ErrorDialogService, private confirmationDialogService: ConfirmationDialogService, private policyHistoryService: PolicyHistoryService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -49,8 +50,7 @@ export class InvoiceGroupComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.index > 0) {
-      this.invoiceCollapsed = true;
-      this.title += " - " + this.invoice.invoiceNumber + " - " + this.datepipe.transform(this.invoice.invoiceDate, 'M/dd/yyyy') + " - " + this.invoice.invoiceStatusDescription;
+      this.collapsePanel(true);
     }
   }
 
@@ -66,7 +66,18 @@ export class InvoiceGroupComponent implements OnInit {
     newDetail.invoiceNumber = this.invoice.invoiceNumber;
     newDetail.lineNumber = this.getNextSequence();
     this.invoice.invoiceDetail.push(newDetail);
-    this.invoiceCollapsed = false;
+    this.collapsePanel(false);
+  }
+
+  collapsePanel(isCollapsed: boolean) {
+    this.invoiceCollapsed  = isCollapsed;
+    if (isCollapsed)
+    {
+      this.title = "Transaction Summary - " + this.invoice.invoiceNumber + " - " + this.datepipe.transform(this.invoice.invoiceDate, 'MM/dd/yyyy') + " - " + this.invoice.invoiceStatusDescription;
+    }
+    else {
+      this.title = "Transaction Summary";
+    }
   }
 
   getNextSequence(): number {
@@ -164,18 +175,18 @@ export class InvoiceGroupComponent implements OnInit {
       importPolicyResponse => {
         this.showBusy = false;
         if (importPolicyResponse.isPolicyIssued) {
-          this.errorDialogService.open("Export to Issuance", "Successful");
+          this.messageDialogService.open("Export to Issuance", "Successful");
         }
         else if (importPolicyResponse.errorMessage.indexOf("already exist") > 0) {
-          this.errorDialogService.open("Export to Issuance", "Policy already imported");
+          this.messageDialogService.open("Export to Issuance", "Policy already imported");
         }
         else {
-          this.errorDialogService.open("Export to Issuance failed", "Error Message: " + importPolicyResponse.errorMessage);
+          this.messageDialogService.open("Export to Issuance failed", "Error Message: " + importPolicyResponse.errorMessage);
         }
       },
       err => {
         this.showBusy = false;
-        this.errorDialogService.open("Export to Issuance failed", "Error Message: " + err);
+        this.messageDialogService.open("Export to Issuance failed", "Error Message: " + err);
       }
     );
   }
@@ -192,13 +203,13 @@ export class InvoiceGroupComponent implements OnInit {
   private async addInvoice(refresh: boolean = false): Promise<boolean> {
     const results$ = this.policyService.addPolicyInvoice(this.invoice);
     return await lastValueFrom(results$)
-      .then(result => {
+      .then(async result => {
         if (result == null) {
           this.markPristine();
+          await this.endorsementStatusService.refresh();
           if (refresh) {
             this.refresh();
-          }
-          this.endorsementStatusService.refresh();
+          }     
           this.showInvoiceSaved();
           return true;
         }
@@ -210,7 +221,7 @@ export class InvoiceGroupComponent implements OnInit {
       (error) => {
         console.log(error.message);
         this.showInvoiceNotSaved();
-        this.errorDialogService.open("Invoice Save Error", error.error.Message);
+        this.messageDialogService.open("Invoice Save Error", error.error.Message);
         return false;
     });
   }
@@ -237,7 +248,7 @@ export class InvoiceGroupComponent implements OnInit {
     (error) => {
       console.log(error.message);
       this.showInvoiceNotSaved();
-      this.errorDialogService.open("Invoice Save Error", error.error.Message);
+      this.messageDialogService.open("Invoice Save Error", error.error.Message);
       return false;
   });
   }
@@ -270,24 +281,36 @@ export class InvoiceGroupComponent implements OnInit {
   async confirmVoid(): Promise<void> {
     const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to void this invoice?");
     if (voidConfirm) {
-      this.voidInvoice();
+      this.showBusy = true;
+      await this.voidInvoice();
+      this.showBusy = false;
       this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
-        .then(deleteEndorsement => {
+        .then(async deleteEndorsement => {
           if (deleteEndorsement) {
-            // TODO
+            this.router.navigate(['/home']);
+            this.showBusy = true;
+            const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
+            await lastValueFrom(results$).then(() => {
+              this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
+              this.showBusy = false;
+              this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
+            },
+              err => {
+                this.showBusy = false;
+                this.messageDialogService.open("Invoice Void failed", "Error Message: " + err);
+              }
+            );
           }
         });
     }
   }
 
-  private voidInvoice(): void {
+  private async voidInvoice(): Promise<void> {
     if (this.isValid()) {
-      if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
         this.invoice.invoiceStatus = "V";
         this.invoice.proFlag = 0;
         this.invoice.voidDate = new Date();
-        this.save(true);
-      }
+        await this.save(true);
     }
     else {
       this.showInvalidControls();

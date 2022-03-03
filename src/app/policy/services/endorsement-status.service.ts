@@ -50,6 +50,15 @@ export class EndorsementStatusService {
     }
   }
   
+  private _invoiced = new BehaviorSubject<boolean>(false);
+  invoiced$ = this._invoiced.asObservable();
+  get invoiced(): boolean { return this._invoiced.getValue(); }
+  set invoiced(value: boolean) {
+      this._status.isInvoiced = value;
+      this._invoiced.next(value);
+      this.updateEndorsementStatus(this._status).subscribe();
+  }
+
   private _directQuote = new BehaviorSubject<boolean>(false);
   directQuote$ = this._directQuote.asObservable();
   get directQuote(): boolean { return this._directQuote.getValue(); }
@@ -83,6 +92,7 @@ export class EndorsementStatusService {
           this._directQuote.next(data?.isDirectQuote ?? false);
           this._preEndorsementStatus.next(data?.preEndorsementStatus ?? "");
           this._endorsementReason.next(data?.endorsementReason ?? "");
+          this._invoiced.next(data?.isInvoiced ?? false);
           this.status.next(data?.invoiceStatusDescription ?? "");
           const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
           this.canEditEndorsement.next(editFlag);
@@ -90,8 +100,9 @@ export class EndorsementStatusService {
       );
   }
 
-  refresh(): void {
-    this.getEndorsementStatus(this._status.policyId, this._status.endorsementNumber);
+  async refresh(): Promise<void> {
+    const results$ = this.getEndorsementStatus(this._status.policyId, this._status.endorsementNumber);
+    await lastValueFrom(results$);
   }
 
   private updateEndorsementStatus(invoice: EndorsementStatusData): Observable<boolean> {

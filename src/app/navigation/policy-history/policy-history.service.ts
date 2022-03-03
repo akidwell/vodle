@@ -48,6 +48,16 @@ export class PolicyHistoryService {
         this._policyHistory.next(previousPolicies);
     }
 
+    removePolicy(policyId: number, endorsementNumber: number)
+    {
+        let previousPolicies = this._policyHistory.getValue();
+        let matchIndex = previousPolicies.findIndex(x => x.policyId == policyId && x.endorsementNumber == endorsementNumber);
+        if (matchIndex > 0) {
+            previousPolicies.splice(matchIndex,1);
+            localStorage.setItem('policy-history', JSON.stringify(previousPolicies, replacer));
+        }     
+    }
+
     favoritePolicyHistory(policyId: number, endorsementNumber: number, favorite: boolean): boolean {
         let favCount: number = 0;
         let previousPolicies = this._policyHistory.getValue();

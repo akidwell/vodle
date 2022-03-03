@@ -54,7 +54,7 @@
                 [(ngModel)]="policyInfo.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
             </div>
             <div class="col-lg-1 col-md-4">
-              <label for="quoteNumber"  class="form-label" title="Quote Number">Quote No.</label>
+              <label for="quoteNumber" class="form-label" title="Quote Number">Quote No.</label>
               <input type="text" class="form-control" id="quoteNumber" [readonly]="isReadOnly"
                 [(ngModel)]="policyInfo.quoteData.quoteNumber" name="quoteNumber" #quoteNo="ngModel">
             </div>
@@ -64,14 +64,28 @@
                 [(ngModel)]="policyInfo.packageInd" name="packageInd" #packageInd="ngModel">
             </div>
             <div class="col-lg-1 col-md-4">
-              <label for="policyType"  class="form-label" title="Master Policy">Master Policy</label><br>
+              <label for="policyType" class="form-label" title="Master Policy">Master Policy</label><br>
               <input type="checkbox" class="form-checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
                 [readonly]="isFieldReadOnly(true)" (ngModelChange)="policyInfo.policyType=$event?'1': null">
             </div>
-            <div class="col-lg-1 col-md-4">
-              <label for="policyNumber"  class="form-label" title="Symbol">Sym</label>
+            <div class="col-lg-1 col-md-4" *ngIf="isDirectQuoteFieldReadOnly()">
+              <label for="policySymbol" class="form-label" title="Symbol">Sym</label>
               <input type="text" class="form-control" id="policySymbol" [(ngModel)]="policyInfo.policySymbol"
                 name="policySymbol" [readonly]="isDirectQuoteFieldReadOnly()" [required]="!isDirectQuoteFieldReadOnly()" #policySymbol="ngModel">
+            </div>
+            <div class="col-lg-1 col-md-4" *ngIf="!isDirectQuoteFieldReadOnly()">
+              <label for="policySymbol" class="form-label" title="Symbol">Sym</label>
+              <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description"
+                [required]="!isDirectQuoteFieldReadOnly()"
+                bindValue="code" [clearable]="false" [searchFn]="dropDownSearch" [(ngModel)]="policyInfo.policySymbol"
+                name="policySymbol">
+                <ng-template ng-label-tmp let-item="item">
+                  {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
             </div>
             <div class="col-lg-2 col-md-6">
               <label for="policyNo" class="form-label" title="Policy Number">Policy No.</label>
