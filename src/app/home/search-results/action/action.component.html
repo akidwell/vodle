@@ -52,12 +52,12 @@
             </div>
             <div>
                 <label for="premium">Premium</label>
-                <input [readonly]="!canEdit || isRewrite" type="text" class="form-control" id="premium" [required]="canEdit"
+                <input [readonly]="!canEdit || isRewrite || isBackout" type="text" class="form-control" id="premium" [required]="canEdit"
                     name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" string-to-currency>
             </div>
         </div>
         <div class="modal-footer">           
-             <button type="button" class="btn btn-danger" (click)="submit()" [disabled]="!actionForm.form.valid">Submit</button>
+             <button type="button"  class="btn btn-primary" (click)="submit()" [disabled]="!actionForm.form.valid">Submit</button>
                 <button type="button" class="btn btn-secondary" (click)="clearAndClose()" >Cancel</button>
         </div>
     </ng-template>

@@ -49,6 +49,11 @@ export class EndorsementStatusService {
       this.updateEndorsementStatus(this._status).subscribe();
     }
   }
+
+  private _isRewrite = new BehaviorSubject<boolean>(false);
+  _isRewrite$ = this._isRewrite.asObservable();
+  get isRewrite(): boolean { return this._isRewrite.getValue(); 
+  }
   
   private _directQuote = new BehaviorSubject<boolean>(false);
   directQuote$ = this._directQuote.asObservable();
@@ -83,6 +88,7 @@ export class EndorsementStatusService {
           this._directQuote.next(data?.isDirectQuote ?? false);
           this._preEndorsementStatus.next(data?.preEndorsementStatus ?? "");
           this._endorsementReason.next(data?.endorsementReason ?? "");
+          this._isRewrite.next(data?.isRewrite ?? false)
           this.status.next(data?.invoiceStatusDescription ?? "");
           const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
           this.canEditEndorsement.next(editFlag);
