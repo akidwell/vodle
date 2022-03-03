@@ -284,24 +284,24 @@ export class InvoiceGroupComponent implements OnInit {
       this.showBusy = true;
       await this.voidInvoice();
       this.showBusy = false;
-      // this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
-      //   .then(async deleteEndorsement => {
-      //     if (deleteEndorsement) {
-      //       this.router.navigate(['/home']);
-      //       this.showBusy = true;
-      //       const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
-      //       await lastValueFrom(results$).then(() => {
-      //         this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
-      //         this.showBusy = false;
-      //         this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
-      //       },
-      //         err => {
-      //           this.showBusy = false;
-      //           this.messageDialogService.open("Invoice Void failed", "Error Message: " + err);
-      //         }
-      //       );
-      //     }
-      //   });
+      this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
+        .then(async deleteEndorsement => {
+          if (deleteEndorsement) {
+            this.router.navigate(['/home']);
+            this.showBusy = true;
+            const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
+            await lastValueFrom(results$).then(() => {
+              this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
+              this.showBusy = false;
+              this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
+            },
+              err => {
+                this.showBusy = false;
+                this.messageDialogService.open("Invoice Void failed", "Error Message: " + err);
+              }
+            );
+          }
+        });
     }
   }
 
