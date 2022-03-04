@@ -7,7 +7,7 @@ import { VersionComponent } from './version/version.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ReportsComponent } from './reports/reports.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { OktaAuthModule } from '@okta/okta-angular';
+import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
 import { AuthInterceptor } from './authorization/auth.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { UserComponent } from './user/user.component';
@@ -21,12 +21,9 @@ import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './app-reuse-strategy';
 import { BusyModule } from './busy/busy.module';
 import { PreInitService, preInitServiceFactory } from './config/preInit.service';
-import { OktaConfigProvider } from './authorization/okta-config.provider';
 import { DirectivesModule } from './directives/directives.module';
 import { ErrorDialogService } from './error-handling/error-dialog-service/error-dialog-service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDatepickerModule } from '@angular/material/datepicker'
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
@@ -39,10 +36,10 @@ import { PipesModule } from './pipes/pipes.module';
     UserComponent
   ],
   imports: [
-    OktaAuthModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    OktaAuthModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: function tokenGetter() {
@@ -58,7 +55,6 @@ import { PipesModule } from './pipes/pipes.module';
     BusyModule,
     DirectivesModule,
     NoopAnimationsModule,
-    MatDatepickerModule,
     PipesModule
   ],
   providers: [
@@ -70,8 +66,6 @@ import { PipesModule } from './pipes/pipes.module';
       deps: [PreInitService, Injector],
       useFactory: preInitServiceFactory
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
-    OktaConfigProvider,
     {
       provide: HTTP_INTERCEPTORS,
       multi: true,
@@ -81,7 +75,7 @@ import { PipesModule } from './pipes/pipes.module';
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
-  ],
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

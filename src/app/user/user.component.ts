@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OktaAuthService } from '@okta/okta-angular';
 import { AuthService } from '../authorization/auth.service';
 import { UserAuth } from '../authorization/user-auth';
 import { faUser, faPowerOff, faKey, faIdBadge, faUserLock, faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { PolicyHistoryService } from '../navigation/policy-history/policy-history.service';
 import { ConfirmationDialogService } from '../policy/services/confirmation-dialog-service/confirmation-dialog.service';
+import { OktaAuth } from '@okta/okta-auth-js';
+import { OKTA_AUTH } from '@okta/okta-angular';
 
 @Component({
   selector: 'rsps-user',
@@ -38,8 +39,8 @@ export class UserComponent implements OnInit {
   isReadOnly: boolean = false;
   historySize: number = 1;
 
-  constructor(private userAuth: UserAuth, public oktaAuth: OktaAuthService, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
-    this.oktaAuth.$authenticationState.subscribe(
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
+    this.authService.$authenticationState.subscribe(
       async (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated;
         if (isAuthenticated) {

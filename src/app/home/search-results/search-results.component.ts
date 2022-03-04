@@ -63,7 +63,6 @@ export class SearchResultsComponent implements OnInit {
         }
 
         this.searchResults = results;
-        console.log(this.searchResults)
 
         if (results.length > 0) {
           this.insuredName = results[0].insuredName;

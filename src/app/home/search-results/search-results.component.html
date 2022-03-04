@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div >
+    <div style="overflow-x: scroll">
       <table class="table table-striped table-bordered"  *ngIf="searchResults && searchResults.length">
         <thead id="searchHeader">
           <tr>
@@ -81,7 +81,7 @@
   </div>
   <div class="card-footer" >
     <div id="searchFooter">
-      <div style="float:right;">Results: {{searchResults.length}}</div> 
+      <div style="float:right;">Results: {{searchResults.length}}</div>
     </div>
   </div>
 </div>
@@ -97,4 +97,4 @@
     <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
   </div>
 </ng-template>
-<rsps-direct-policy-create #modal></rsps-direct-policy-create>
+<rsps-direct-policy-create #modal></rsps-direct-policy-create

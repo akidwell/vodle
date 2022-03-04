@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { Observable, Observer } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UserAuth } from './user-auth';
 import { ConfigService } from '../config/config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { OktaAuth } from '@okta/okta-auth-js';
 import { IAuthObject } from './auth-object';
-import { OktaAuthService } from '@okta/okta-angular';
 import { Router } from '@angular/router';
+import { OKTA_AUTH } from '@okta/okta-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,17 @@ import { Router } from '@angular/router';
 
 export class AuthService {
   tokenJSON: IAuthObject | undefined;
-  constructor(private userAuth: UserAuth, private http: HttpClient, private config: ConfigService, private jwtHelper: JwtHelperService, private oktaAuth: OktaAuthService, private router: Router) {
+  public $authenticationState: Observable<any>;
+
+  constructor(private userAuth: UserAuth, private http: HttpClient,  private jwtHelper: JwtHelperService,
+    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, private router: Router, private config: ConfigService) {
     // Subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe(isAuthenticated => {
+    this.$authenticationState = new Observable((observer: Observer<boolean>) => {
+      this.isAuthenticated().then(val => {
+        observer.next(val);
+      });
+    });
+    this.$authenticationState.subscribe((isAuthenticated: boolean) => {
       if (isAuthenticated) {
         this.login();
       }

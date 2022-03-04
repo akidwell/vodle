@@ -14,9 +14,11 @@ import { ActionComponent } from './search-results/action/action.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { BusyModule } from '../busy/busy.module';
 import { MatDatepickerModule } from '@angular/material/datepicker'
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PipesModule } from '../pipes/pipes.module';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DATE_FORMATS } from '../config/date-format';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,13 @@ import { PipesModule } from '../pipes/pipes.module';
     PipesModule
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
   ]
 })
 export class HomeModule { }
