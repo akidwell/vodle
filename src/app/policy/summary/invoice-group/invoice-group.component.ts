@@ -126,10 +126,10 @@ export class InvoiceGroupComponent implements OnInit {
         if (this.invoice.invoiceStatus == "N") {
           this.invoice.invoiceStatus = "T";
           this.invoice.proFlag = 0;
-          this.save(refresh);
+          const isSaved = this.save(refresh);
         }
         else if (this.isDirty()) {
-          this.save(refresh);
+          const isSaved = this.save(refresh);
         }
       }
     }
@@ -141,6 +141,7 @@ export class InvoiceGroupComponent implements OnInit {
   async post(): Promise<void> {
     if (this.isValid()) {
       if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
+        this.showBusy = true;
         this.invoice.invoiceStatus = "T";
         this.invoice.proFlag = 3;
         this.invoice.invoiceDate = new Date();
@@ -152,13 +153,14 @@ export class InvoiceGroupComponent implements OnInit {
         if (effectiveDate < this.invoice.invoiceDate) {
           this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
         }
-        const saved = await this.save(false);
-        if (saved) {
+        const isSaved = await this.save(false);
+        if (isSaved) {
           if (this.canExport) {
             await this.export();
-          }
-          this.refresh();
+          } 
         }
+        this.refresh();
+        this.showBusy = false;
       }
     }
     else {
