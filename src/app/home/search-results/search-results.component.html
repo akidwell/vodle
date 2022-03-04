@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div style="overflow-x: scroll">
+    <div >
       <table class="table table-striped table-bordered"  *ngIf="searchResults && searchResults.length">
         <thead id="searchHeader">
           <tr>
@@ -38,7 +38,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let policy of searchResults; let i = index" [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0}" [ngStyle]="{'background-color': (policy.invoiceStatus == null) ? '#fdfd96' : null}">
+          <tr *ngFor="let policy of searchResults; let i = index" [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0}" 
+          [ngStyle]="{'background-color': (policy.invoiceStatus == null) ? '#fdfd96' : null, 'font-style' :(policy.invoiceStatus == 'V') ? 'italic' : null}" >
             <td>
               <span *ngIf="policy.firstPolicyRow">{{ policy.policyId }}</span>
             </td>
