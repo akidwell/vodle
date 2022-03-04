@@ -13,6 +13,7 @@ import { PolicyService } from '../../../policy.service';
 import { UpdatePolicyChild } from '../../../services/update-child.service';
 import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   templateUrl: './endorsement-coverage.component.html',
@@ -61,7 +62,7 @@ export class EndorsementCoverageComponent implements OnInit {
 
   constructor(private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
     private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
-    private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
+    private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -230,7 +231,10 @@ export class EndorsementCoverageComponent implements OnInit {
 
   checkRetroDateValid(): boolean {
     if (this.coverage.retroDate != null && this.isRetroDateRequired) {
-      let isValid = (this.coverage?.retroDate <= this.policyInfo.policyExpirationDate);
+      const retroDate = Number(this.datePipe.transform(this.coverage.retroDate, 'yyyyMMdd'));
+      const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
+
+      let isValid = (retroDate <= expirationDate);
       if (!isValid) {
         this.endorsementCoveragesForm.controls['retroDate'].setErrors({ 'incorrect': !isValid });
       }

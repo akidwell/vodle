@@ -23,34 +23,30 @@ export class StringToCurrencyDirective {
    ngAfterViewInit(): void {
       setTimeout(() => {
          if (this.control.value != null) {
-            this.control.viewToModelUpdate(this.formatToCurrency(this.control.value.toString()));
+            const controlValue = this.control.value.toString();
+            this.control.reset(this.formatToCurrency(this.control.value.toString()));
+            this.control.viewToModelUpdate((controlValue === '') ? null : isNaN(Number(controlValue)) ? Number(controlValue.replace(/[^0-9.-]+/g, "")) : Number(controlValue));
          }
       });
    }
 
    @HostListener('input', ['$event.target'])
    onEvent(target: HTMLInputElement) {
-      if (this.currentValue != target.value) {
-         this.control.viewToModelUpdate((target.value === '') ? null : isNaN(Number(target.value)) ? Number(target.value.replace(/[^0-9.-]+/g, "")) : Number(target.value));
-      }
+      this.control.viewToModelUpdate((target.value === '') ? null : isNaN(Number(target.value)) ? Number(target.value.replace(/[^0-9.-]+/g, "")) : Number(target.value));
    }
 
    @HostListener('blur', ['$event.target'])
    onLeaveEvent(target: HTMLInputElement) {
-      this.control.viewToModelUpdate(this.formatToCurrency(target.value.toString()));
-      if (this.currentValue != target.value) {
-         this.control.control?.parent?.markAsDirty();
-         this.control.control?.parent?.markAsTouched();   
-      }
-      this.currentValue = "";
+      const controlValue = target.value;
+      target.value = this.formatToCurrency(target.value.toString());
+      this.control.viewToModelUpdate((controlValue === '') ? null : isNaN(Number(controlValue)) ? Number(controlValue.replace(/[^0-9.-]+/g, "")) : Number(controlValue));
    }
 
    @HostListener('focus', ['$event.target'])
    onEnterEvent(target: HTMLInputElement) {
-      this.currentValue = target.value;
       // Convert Parenthesis to minus sign
       if (target.value.charAt(0) === '(') {
-         this.control.reset('-' + target.value.replace(/[^0-9.-]+/g, ""));
+         target.value = '-' + target.value.replace(/[^0-9.-]+/g, "");
       }
    }
 
@@ -82,20 +78,20 @@ export class StringToCurrencyDirective {
          || event.keyCode === 46  // Delete
       ) {
          return true;
-      } else {5
+      } else {
          event.preventDefault();
          return false;
       }
    }
 
-   private formatToCurrency(input: string): number | null {
+   private formatToCurrency(input: string): string {
       const currencyPipe = new CurrencyPipe('en-US');
       const minusPipe = new MinusSignToParens();
       let formattedValue = "";
       // Clean up value to removes anything not a number or decimal or minus sign
       let value: string = input.slice(0, 1).replace(/[^0-9.-]+/g, "") + input.slice(1).replace(/[^0-9.]+/g, "");
       // If only contains a minus or decimal just clear it out to prevent errors
-      if (value.replace("-","").replace(".","")  === "") {
+      if (value.replace("-", "").replace(".", "") === "") {
          value = "";
       }
       if (!this.allowNegative) {
@@ -116,10 +112,8 @@ export class StringToCurrencyDirective {
          const format = "1." + decimalLen.toString() + "-" + decimalLen.toString();
          const currency = currencyPipe.transform(value, "USD", "", format);
          formattedValue = minusPipe.transform(currency);
-      }  
-      // Display first with parenthesis if negative
-      this.control.reset(formattedValue);
-      return (value === '') ? null : isNaN(Number(value)) ? Number(value.replace(/[^0-9.-]+/g, "")) : Number(value);
+      }
+      return formattedValue;
    }
 
 }

@@ -46,8 +46,13 @@ export class SummaryComponent implements OnInit {
 
   async loadInvoice() {
     const isValid = this.checkValidation();
-    if (isValid && this.invoices.length == 0) {
+    if (isValid && !this.endorsementStatusService.invoiced && this.invoices.filter(i => i.invoiceStatus != "V").length == 0) {
       await this.createInvoice();
+      this.invoiceGroupComp?.forEach(element => {
+        if (element.invoice.invoiceStatus == "V") {
+          element.collapsePanel(true);
+        }
+      });
     }
     else if (this.invoices.length > 0 && (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0))) {
       await this.updateInvoice();
@@ -98,7 +103,7 @@ export class SummaryComponent implements OnInit {
     invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
     invoiceDetail.netAmount = invoiceDetail.feeAmount - invoiceDetail.commissionAmount;
     invoice.invoiceDetail.push(invoiceDetail);
-    this.invoices.push(invoice);
+    this.invoices.unshift(invoice);
   }
 
   private async updateInvoice() {
