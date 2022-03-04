@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
-import { OktaAuthService } from '@okta/okta-angular';
+import { AuthService } from './authorization/auth.service'
+
 
 @Component({
   selector: 'rsps-root',
@@ -14,15 +15,15 @@ export class AppComponent {
   errorMessage = '';
   loading: boolean = false;
 
-  constructor(public oktaAuth: OktaAuthService, private router: Router) {
+  constructor(private oktaAuth: AuthService, private router: Router) {
     // Subscribe to authentication state changes
     this.oktaAuth.$authenticationState.subscribe({
       next: (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated
       },
-      error: err => this.errorMessage = err
+      error: (err: string) => this.errorMessage = err
     });
-    
+
     this.router.events.subscribe(event => {
       switch (true) {
         case event instanceof NavigationStart: {

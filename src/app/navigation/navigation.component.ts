@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { OktaAuthService } from '@okta/okta-angular';
 import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder, faStar as faSolidStar, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { UserAuth } from '../authorization/user-auth';
@@ -36,7 +35,7 @@ export class NavigationComponent implements OnInit {
   showFav: boolean = false;
   canEditPolicy: boolean = false;
 
-  constructor(public oktaAuth: OktaAuthService, private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router) {
+  constructor(private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
     );
@@ -88,8 +87,8 @@ export class NavigationComponent implements OnInit {
 
   createDirectPolicy() {
     this.router.navigate(['/home']).then(() => {
-      setTimeout(() => { 
-        this.navigationService.create(); 
+      setTimeout(() => {
+        this.navigationService.create();
       });
     });
   }

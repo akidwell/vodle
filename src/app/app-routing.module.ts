@@ -3,12 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { ApplicationsComponent } from './applications/applications.component';
 import { PageNotFoundComponent } from './page-not-found-component';
 import { ReportsComponent } from './reports/reports.component';
-import { OktaAuthGuard, OktaAuthService, OktaCallbackComponent } from '@okta/okta-angular';
+import { OktaAuthGuard, OktaCallbackComponent } from '@okta/okta-angular';
 import { AuthGuard } from './authorization/auth.guard';
 import { AccessDeniedComponent } from './access-denied.component';
+import { OktaAuth } from '@okta/okta-auth-js';
 const CALLBACK_PATH = 'callback';
 
-export function onAuthRequired(_oktaAuth: OktaAuthService) {
+export function onAuthRequired(_oktaAuth: OktaAuth) {
   _oktaAuth.signInWithRedirect({
     originalUri: '/home'
   });
