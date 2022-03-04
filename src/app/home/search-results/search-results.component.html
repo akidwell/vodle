@@ -84,7 +84,7 @@
     </div>
   </div>
 </div>
-<rsps-action #modal></rsps-action>
+<rsps-action #actionModal></rsps-action>
 <ng-template #modalPipe let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Error Creating Endorsement</h4>
@@ -96,3 +96,4 @@
     <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
   </div>
 </ng-template>
+<rsps-direct-policy-create #modal></rsps-direct-policy-create>
