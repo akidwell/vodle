@@ -38,8 +38,8 @@ export class ActionComponent implements OnInit {
   isBackout!: boolean;
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
-  @ViewChild('modal') private modalContent!: TemplateRef<ActionComponent>
-
+  @ViewChild('actionModal') private modalContent!: TemplateRef<ActionComponent>
+  private modalRef!: NgbModalRef
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -54,10 +54,6 @@ export class ActionComponent implements OnInit {
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
-
-
-  @ViewChild('modal') endorsementModal!: TemplateRef<ActionComponent>;
-  private modalRef!: NgbModalRef
 
   async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
     this.isRewrite = false;
@@ -92,7 +88,7 @@ export class ActionComponent implements OnInit {
       if (policy.masterPolicy !== '1') {
         this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
       }
-      this.modalRef = this.modalService.open(this.endorsementModal, { backdrop: 'static', centered: true })
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
       this.modalRef.result.then(resolve, resolve)
     })
   } 
@@ -137,7 +133,7 @@ export class ActionComponent implements OnInit {
       if (policy.masterPolicy !== '1') {
         this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
       }
-      this.modalRef = this.modalService.open(this.endorsementModal, { backdrop: 'static', centered: true })
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
       this.modalRef.result.then(resolve, resolve)
     })
   } 
@@ -177,7 +173,7 @@ export class ActionComponent implements OnInit {
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
 
-      this.modalRef = this.modalService.open(this.endorsementModal, { backdrop: 'static', centered: true })
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
       this.modalRef.result.then(resolve, resolve)
     })  }
 

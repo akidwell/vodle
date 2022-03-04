@@ -14,21 +14,12 @@ export class NavigationService {
   private createDirectPolicy = new Subject<void>();
   createDirectPolicy$ = this.createDirectPolicy.asObservable();
 
-  private createCancelRewrite = new Subject<void>();
-  createCancelRewrite$ = this.createCancelRewrite.asObservable();
-
-  rewriteInfo!: PolicySearchResults;
-
   constructor(private routeReuseStrategy: RouteReuseStrategy, private dropDownService: DropDownsService, private reinsuranceLookupService: ReinsuranceLookupService){ }
 
   public create() {
     this.createDirectPolicy.next();
   }
 
-  public createRewrite(policy: PolicySearchResults) {
-    this.rewriteInfo = policy;
-    this.createCancelRewrite.next();
-  }
 
   public resetPolicy() {
     (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
