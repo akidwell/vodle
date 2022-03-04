@@ -43,6 +43,7 @@ export class DirectPolicyCreateComponent implements OnInit {
   isRewrite: boolean = false;
   endorsementNumbers$: Observable<EndorsementNumberResponse[]> | undefined;
   title: string = "Direct Policy"
+  policyInfo!: PolicySearchResults;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
@@ -93,6 +94,7 @@ export class DirectPolicyCreateComponent implements OnInit {
       this.showPolicyNumberInvalid = false;
       this.showExpirationDateInvalid = false;
       this.policyData = newPolicyData();
+      this.policyInfo = policy;
       this.policyData.endorsementNumber = policy.endorsementNumber;
       console.log(this.policyData.endorsementNumber)
       console.log(policy.endorsementNumber)
@@ -122,7 +124,7 @@ export class DirectPolicyCreateComponent implements OnInit {
             this.policyData.policyExpirationDate = match.expirationDate;
             this.policyData.policySymbol = match.policySymbol;
             this.policyData.policyNumber = match.policyNumber;
-            this.policyData.endorsementNumber = this.policyData.endorsementNumber? this.policyData.endorsementNumber : null;
+            this.policyData.endorsementNumber = this.policyInfo.endorsementNumber?  this.policyInfo.endorsementNumber : null;
             this.policyData.premium = null;
           }
           else {
@@ -147,6 +149,9 @@ export class DirectPolicyCreateComponent implements OnInit {
     this.policyData.premium = null;
     this.policyData.policySymbol = "";
     this.policyData.policyNumber = "";
+    if(this.isRewrite){
+      this.policyData.endorsementNumber = this.policyInfo.endorsementNumber
+    }
   }
 
   leavePolicyNumber() {
