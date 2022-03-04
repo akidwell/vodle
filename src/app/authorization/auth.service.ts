@@ -5,10 +5,10 @@ import { UserAuth } from './user-auth';
 import { ConfigService } from '../config/config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { AuthState, OktaAuth } from '@okta/okta-auth-js';
 import { IAuthObject } from './auth-object';
 import { Router } from '@angular/router';
-import { OKTA_AUTH } from '@okta/okta-angular';
+import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +19,21 @@ export class AuthService {
   public $authenticationState: Observable<any>;
 
   constructor(private userAuth: UserAuth, private http: HttpClient,  private jwtHelper: JwtHelperService,
-    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, private router: Router, private config: ConfigService) {
+    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, private router: Router, private config: ConfigService, private oktaAuthState: OktaAuthStateService) {
     // Subscribe to authentication state changes
+    // this.authStateManager.subscribe((authState: AuthState) => {
+    //   console.log(authState)
+    //   // handle the latest evaluated authState, like integrate with client framework's state management store
+    // });
+    this.oktaAuthState.authState$.subscribe((isAuthenticated: AuthState) => {
+      console.log(isAuthenticated)
+      if (isAuthenticated) {
+        this.login();
+      }
+    });
     this.$authenticationState = new Observable((observer: Observer<boolean>) => {
       this.isAuthenticated().then(val => {
+        console.log(val, observer)
         observer.next(val);
       });
     });
@@ -35,7 +46,11 @@ export class AuthService {
 
   async isAuthenticated() {
     // Checks if there is a current accessToken in the TokenManger.
-    return !!(await this.oktaAuth.tokenManager.get('accessToken'));
+    console.log(await this.oktaAuth.isAuthenticated())
+    const accessToken = await this.oktaAuth.getAccessToken();
+    const idToken = await this.oktaAuth.getIdToken();
+    console.log(accessToken, idToken)
+    return !!(accessToken || idToken);
   }
 
   header = {

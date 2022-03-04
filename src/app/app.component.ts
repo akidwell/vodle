@@ -15,10 +15,12 @@ export class AppComponent {
   errorMessage = '';
   loading: boolean = false;
 
-  constructor(private oktaAuth: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     // Subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe({
+    console.log('happens')
+    this.authService.$authenticationState.subscribe({
       next: (isAuthenticated: boolean) => {
+        console.log(isAuthenticated)
         this.isAuthenticated = isAuthenticated
       },
       error: (err: string) => this.errorMessage = err
