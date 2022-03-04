@@ -9,6 +9,7 @@ import { ActionComponent } from './action/action.component';
 import { NavigationService } from 'src/app/policy/services/navigation.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { DirectPolicyCreateComponent } from '../direct-policy/direct-policy-create/direct-policy-create.component';
 
 @Component({
   selector: 'rsps-search-results',
@@ -102,9 +103,9 @@ export class SearchResultsComponent implements OnInit {
     this.navigationService.resetPolicy();
     this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
   }
-  @ViewChild('modal') private actionComponent: ActionComponent | undefined
+  @ViewChild('actionModal') private actionComponent: ActionComponent | undefined
   @ViewChild('modalPipe') modalPipe: any;
-
+  @ViewChild('modal') private directPolicyComponent!: DirectPolicyCreateComponent
 
   async newEndorsement(policy: PolicySearchResults, event: any) {
     let filtered = this.searchResults.filter(x => x.policyId == policy.policyId).filter(y => y.invoiceStatus == null)
@@ -123,9 +124,8 @@ export class SearchResultsComponent implements OnInit {
       let premium: number = this.searchResults.filter(x => x.invoiceStatus != 'V' && x.policyId == policy.policyId).reduce((premium, current)=> premium += current.amount, 0)
       endorsementAction.premium = -premium;
       await this.actionComponent.cancelRewritePopup(endorsementAction, policy, this.status);
-     } else if (this.navigationService != null && event.target.value == "rewrite"){
-
-      this.navigationService.createRewrite(policy)  
+     } else if (this.directPolicyComponent != null && event.target.value == "rewrite"){
+       this.directPolicyComponent.openRewrite(policy)
       }
   }
 
