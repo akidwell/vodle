@@ -24,8 +24,6 @@ import { PreInitService, preInitServiceFactory } from './config/preInit.service'
 import { DirectivesModule } from './directives/directives.module';
 import { ErrorDialogService } from './error-handling/error-dialog-service/error-dialog-service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDatepickerModule } from '@angular/material/datepicker'
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
@@ -57,7 +55,6 @@ import { PipesModule } from './pipes/pipes.module';
     BusyModule,
     DirectivesModule,
     NoopAnimationsModule,
-    MatDatepickerModule,
     PipesModule
   ],
   providers: [
@@ -69,7 +66,6 @@ import { PipesModule } from './pipes/pipes.module';
       deps: [PreInitService, Injector],
       useFactory: preInitServiceFactory
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
     {
       provide: HTTP_INTERCEPTORS,
       multi: true,

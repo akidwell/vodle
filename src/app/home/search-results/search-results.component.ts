@@ -62,7 +62,6 @@ export class SearchResultsComponent implements OnInit {
         }
 
         this.searchResults = results;
-        console.log(this.searchResults)
 
         if (results.length > 0) {
           this.insuredName = results[0].insuredName;
@@ -125,7 +124,7 @@ export class SearchResultsComponent implements OnInit {
       await this.actionComponent.cancelRewritePopup(endorsementAction, policy, this.status);
      } else if (this.navigationService != null && event.target.value == "rewrite"){
 
-      this.navigationService.createRewrite(policy)  
+      this.navigationService.createRewrite(policy)
       }
   }
 

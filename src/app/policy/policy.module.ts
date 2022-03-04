@@ -43,9 +43,11 @@ import { BusyModule } from '../busy/busy.module';
 import { DirectivesModule } from '../directives/directives.module';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { PipesModule } from '../pipes/pipes.module';
 import { ConfirmationDialogService } from './services/confirmation-dialog-service/confirmation-dialog.service';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DATE_FORMATS } from '../config/date-format';
 
 @NgModule({
   declarations: [
@@ -100,7 +102,13 @@ import { ConfirmationDialogService } from './services/confirmation-dialog-servic
     UpdatePolicyChild,
     UnderlyingCoverageService,
     LimitsPatternHelperService,
-    ConfirmationDialogService
+    ConfirmationDialogService,
+    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
   ]
 })
 export class PolicyModule { }
