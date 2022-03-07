@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.directPolicySubscription = this.navigationService.createDirectPolicy$.subscribe(() => {
-      console.log("Direct");
       this.directPolicyComponent.open();
     });
   }
