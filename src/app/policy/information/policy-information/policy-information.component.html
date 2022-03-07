@@ -290,9 +290,10 @@
           <div class="paddedRow"*ngIf="checkAssumed() || checkDereg()"></div>
           <div class="row" *ngIf="checkAssumed() || checkDereg()">
             <div class="col-lg-6"></div>
+            <div class="col-lg-3" *ngIf="!checkDereg()"></div>
             <div class="col-lg-3" *ngIf="checkDereg()">
               <label for="NYFTZ" class="form-label"  title="NY Free Trade Zone">NY Free Trade Zone</label>
-              <ng-select id="NYFTZ" [items]="nyFreeTradeZones$ | async" bindLabel="description"
+              <ng-select id="NYFTZ"  [items]="nyFreeTradeZones$ | async" bindLabel="description"
                 [required]="!isFieldReadOnly(true)" bindValue="code" [clearable]="false"
                 [readonly]="isFieldReadOnly(true)" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
               </ng-select>
