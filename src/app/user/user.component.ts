@@ -33,37 +33,23 @@ export class UserComponent implements OnInit {
   isAuthenticated: boolean = false;
   role: string = "";
   authSub: Subscription;
-  roleSub: Subscription;
-  environmentSub: Subscription;
   historySub: Subscription;
   isReadOnly: boolean = false;
   historySize: number = 1;
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
-    this.authService.$authenticationState.subscribe(
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {  
+    this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
-        this.isAuthenticated = isAuthenticated;
+        this.isAuthenticated = isAuthenticated
         if (isAuthenticated) {
           const userClaims = await this.oktaAuth.getUser();
           this.userName = userClaims.preferred_username ?? "";
           this.oktaToken = this.oktaAuth.getAccessToken();
+          this.apiToken = userAuth.ApiBearerToken;
+          this.role = userAuth.userRole;
+          this.isReadOnly = this.role == "ReadOnly";
+          this.environment = userAuth.environment;        
         }
-      }
-    );
-    this.authSub = this.userAuth.ApiBearerToken$.subscribe(
-      (ApiBearerToken: string) => { this.apiToken = ApiBearerToken }
-    );
-
-    this.roleSub = this.userAuth.userRole$.subscribe(
-      (userRole: string) => {
-        this.role = userRole;
-        this.isReadOnly = userRole == "ReadOnly";
-      }
-    );
-
-    this.environmentSub = this.userAuth.environment$.subscribe(
-      (environment: string) => {
-        this.environment = environment;
       }
     );
 
@@ -78,8 +64,6 @@ export class UserComponent implements OnInit {
 
   ngOnDestroy() {
     this.authSub.unsubscribe();
-    this.roleSub.unsubscribe();
-    this.environmentSub.unsubscribe();
     this.historySub.unsubscribe();
   }
 
@@ -118,7 +102,7 @@ export class UserComponent implements OnInit {
   }
 
   async clearHistory() {
-    const confirm = await this.confirmationDialogService.open("Confirmation", "ARe you sure you want to clear all Policies in your history? Have to refresh to get changes.");
+    const confirm = await this.confirmationDialogService.open("Confirmation", "Are you sure you want to clear all Policies in your history? Have to refresh to get changes.");
     if (confirm) {
       this.policyHistoryService.clearHistory();
     }
