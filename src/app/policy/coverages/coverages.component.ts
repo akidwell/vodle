@@ -170,17 +170,10 @@ export class CoveragesComponent implements OnInit, PolicySave {
   saveEndorsementCoverages(): Observable<boolean> {
     var subject = new Subject<boolean>();
     if (this.isCoveragesDirty()) {
-
-      var startTime = performance.now();
-
       this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
         this.data['endorsementCoveragesGroups'].endorsementCoveragesGroups = deepClone(this.endorsementCoveragesGroups);
         this.updatePolicyChild.notifyEndorsementCoverages();
-
         this.refreshEndorsement();
-        var endTime = performance.now();
-        console.log(`Coverage Save took ${endTime - startTime} milliseconds`);
-       
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
       });
     } else {

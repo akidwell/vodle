@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { ImportPolicy } from './interfaces/import-policy';
 import { ImportRequest } from './interfaces/import-request';
@@ -19,10 +18,7 @@ export class ImportService {
   }
   
   postImportPolicies(parm: ImportRequest): Observable<ImportResult> {
-    return this.http.post<ImportResult>(this.config.apiBaseUrl + 'api/import-policies',parm)
-      .pipe(
-        tap(data => console.log(JSON.stringify(data)))
-      );
+    return this.http.post<ImportResult>(this.config.apiBaseUrl + 'api/import-policies',parm);
   }
   
 }

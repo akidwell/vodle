@@ -221,7 +221,6 @@ export class InvoiceGroupComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error.message);
         this.showInvoiceNotSaved();
         this.messageDialogService.open("Invoice Save Error", error.error.Message);
         return false;
@@ -248,7 +247,6 @@ export class InvoiceGroupComponent implements OnInit {
       }
     },
     (error) => {
-      console.log(error.message);
       this.showInvoiceNotSaved();
       this.messageDialogService.open("Invoice Save Error", error.error.Message);
       return false;
