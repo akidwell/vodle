@@ -124,8 +124,11 @@ export class DirectPolicyCreateComponent implements OnInit {
             this.policyData.policyExpirationDate = match.expirationDate;
             this.policyData.policySymbol = match.policySymbol;
             this.policyData.policyNumber = match.policyNumber;
-            this.policyData.endorsementNumber = this.policyInfo.endorsementNumber?  this.policyInfo.endorsementNumber : null;
+            this.policyData.endorsementNumber = null;
             this.policyData.premium = null;
+            if(this.isRewrite){
+              this.policyData.endorsementNumber = this.policyInfo.endorsementNumber
+            }
           }
           else {
             this.clear();
@@ -149,9 +152,6 @@ export class DirectPolicyCreateComponent implements OnInit {
     this.policyData.premium = null;
     this.policyData.policySymbol = "";
     this.policyData.policyNumber = "";
-    if(this.isRewrite){
-      this.policyData.endorsementNumber = this.policyInfo.endorsementNumber
-    }
   }
 
   leavePolicyNumber() {
