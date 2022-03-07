@@ -34,7 +34,7 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
             .pipe(
                 map(accountInfo => ({ accountInfo })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ accountInfo: null, error: error });
                 })
             );
@@ -67,7 +67,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
                 tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + " " + res.formattedPolicyNo, Number(end))),
                 map(policyInfo => ({ policyInfo })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ policyInfo: null, error: error });
                 })
             );
@@ -99,7 +99,7 @@ export class EndorsementResolver implements Resolve<EndorsementResolved> {
             .pipe(
                 map(endorsement => ({ endorsement })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ endorsement: null, error: error });
                 })
             );
@@ -130,7 +130,7 @@ export class EndorsementCoveragesResolver implements Resolve<EndorsementCoverage
             .pipe(
                 map(endorsementCoveragesGroups => ({ endorsementCoveragesGroups })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ endorsementCoveragesGroups: null, error: error });
                 })
             );
@@ -161,7 +161,7 @@ export class AdditionalNamedInsuredsResolver implements Resolve<AdditionalNamedI
             .pipe(
                 map(additionalNamedInsureds => ({ additionalNamedInsureds })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/ANI-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/ANI-not-found'], { state: { error: error.message } });
                     return of({ additionalNamedInsureds: null, error: error });
                 })
             );
@@ -193,7 +193,7 @@ export class EndorsementLocationResolver implements Resolve<EndorsementLocationR
             .pipe(
                 map(endorsementLocation => ({ endorsementLocation })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ endorsementLocation: null, error: error });
                 })
             );
@@ -225,7 +225,7 @@ export class PolicyLayerResolver implements Resolve<PolicyLayerDataResolved> {
             .pipe(
                 map(policyLayer => ({ policyLayer })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ policyLayer: null, error: error });
                 })
             );
@@ -256,7 +256,7 @@ export class UnderlyingCoveragesResolver implements Resolve<UnderlyingCoveragesR
             .pipe(
                 map(underlyingCoverages => ({ underlyingCoverages })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ underlyingCoverages: null, error: error });
                 })
             );
@@ -295,7 +295,7 @@ export class InvoiceResolver implements Resolve<InvoiceResolved> {
             .pipe(
                 map(invoicesData => ({ invoicesData })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ invoicesData: null, error: error });
                 })
             );
@@ -328,7 +328,7 @@ export class EndorsementStatusResolver implements Resolve<EndorsementStatusResol
             .pipe(
                 map(status => ({ status })),
                 catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error } });
+                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
                     return of({ status: null, error: error });
                 })
             );

@@ -115,6 +115,9 @@ export class PolicyHistoryService {
 
     clearHistory() {
         localStorage.removeItem('policy-history');
+        let policies = this._policyHistory.getValue();
+        policies = [];
+        this._policyHistory.next(policies);
     }
 
 }
