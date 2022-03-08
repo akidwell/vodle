@@ -52,6 +52,7 @@ export class EndorsementCoverageComponent implements OnInit {
   showClaimsMade: boolean = false;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
+  limitMask: string= "";
 
   @Input() public policyInfo!: PolicyInformation;
   @Input() public coverage!: EndorsementCoverage;
@@ -251,9 +252,6 @@ export class EndorsementCoverageComponent implements OnInit {
           isValid = false;
         }
       }
-      if (!isValid) {
-        this.endorsementCoveragesForm.controls['limits'].setErrors({ 'incorrect': !isValid });
-      }
       return isValid;
     }
     return true;
@@ -267,6 +265,7 @@ export class EndorsementCoverageComponent implements OnInit {
       }
       mask = mask.slice(0, -1);
     }
+   this.limitMask = mask.replace(/0/g, "");
     return mask;
   }
 

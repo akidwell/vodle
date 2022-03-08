@@ -16,6 +16,7 @@ import { PolicyIssuanceService } from '../policy-issuance-service/policy-issuanc
 import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 import { ConfirmationDialogService } from '../../services/confirmation-dialog-service/confirmation-dialog.service';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
+import { deepClone } from 'src/app/helper/deep-clone';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -35,6 +36,7 @@ export class InvoiceGroupComponent implements OnInit {
   invalidMessage: string = "";
   showBusy: boolean = false;
   issuanceSub!: Subscription;
+  invoiceCopy!: InvoiceData;
 
   @Input() public invoice!: InvoiceData;
   @Input() index!: number;
@@ -142,6 +144,7 @@ export class InvoiceGroupComponent implements OnInit {
     if (this.isValid()) {
       if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
         this.showBusy = true;
+        this.invoiceCopy = deepClone(this.invoice);
         this.invoice.invoiceStatus = "T";
         this.invoice.proFlag = 3;
         this.invoice.invoiceDate = new Date();
@@ -154,12 +157,16 @@ export class InvoiceGroupComponent implements OnInit {
           this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
         }
         const isSaved = await this.save(false);
-        if (isSaved) {
+        if (isSaved) {   
           if (this.canExport) {
             await this.export();
           } 
+          this.refresh();
         }
-        this.refresh();
+        else {
+          // Restore before Post changes
+          this.invoice = deepClone(this.invoiceCopy);
+        }
         this.showBusy = false;
       }
     }
@@ -186,9 +193,10 @@ export class InvoiceGroupComponent implements OnInit {
           this.messageDialogService.open("Export to Issuance failed", "Error Message: " + importPolicyResponse.errorMessage);
         }
       },
-      err => {
+      error => {
         this.showBusy = false;
-        this.messageDialogService.open("Export to Issuance failed", "Error Message: " + err);
+        const errorMessage = error.error?.Message ?? error.message;
+        this.messageDialogService.open("Export to Issuance failed", "Error Message: " + errorMessage);
       }
     );
   }
@@ -222,7 +230,8 @@ export class InvoiceGroupComponent implements OnInit {
       },
       (error) => {
         this.showInvoiceNotSaved();
-        this.messageDialogService.open("Invoice Save Error", error.error.Message);
+        const errorMessage = error.error?.Message ?? error.message;
+        this.messageDialogService.open("Invoice Save Error", errorMessage);
         return false;
     });
   }
@@ -248,7 +257,8 @@ export class InvoiceGroupComponent implements OnInit {
     },
     (error) => {
       this.showInvoiceNotSaved();
-      this.messageDialogService.open("Invoice Save Error", error.error.Message);
+      const errorMessage = error.error?.Message ?? error.message;
+      this.messageDialogService.open("Invoice Save Error", errorMessage);
       return false;
   });
   }
@@ -282,38 +292,47 @@ export class InvoiceGroupComponent implements OnInit {
     const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to void this invoice?");
     if (voidConfirm) {
       this.showBusy = true;
-      await this.voidInvoice();
-      this.showBusy = false;
-      this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
-        .then(async deleteEndorsement => {
-          if (deleteEndorsement) {
-            this.router.navigate(['/home']);
-            this.showBusy = true;
-            const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
-            await lastValueFrom(results$).then(() => {
-              this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
-              this.showBusy = false;
-              this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
-            },
-              err => {
+      if (await this.voidInvoice()) {
+        this.showBusy = false;
+        this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
+          .then(async deleteEndorsement => {
+            if (deleteEndorsement) {
+              this.router.navigate(['/home']);
+              this.showBusy = true;
+              const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
+              await lastValueFrom(results$).then(() => {
+                this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
                 this.showBusy = false;
-                this.messageDialogService.open("Invoice Void failed", "Error Message: " + err);
-              }
-            );
-          }
-        });
+                this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
+              },
+                error => {
+                  this.showBusy = false;
+                  const errorMessage = error.error?.Message ?? error.message;
+                  this.messageDialogService.open("Invoice Void failed", "Error Message: " + errorMessage);
+                }
+              );
+            }
+          });
+      }
+      else {
+        // Restore before Void changes
+        this.invoice = deepClone(this.invoiceCopy);
+        this.showBusy = false;
+      }
     }
   }
 
-  private async voidInvoice(): Promise<void> {
+  private async voidInvoice(): Promise<boolean> {
     if (this.isValid()) {
+        this.invoiceCopy = deepClone(this.invoice);
         this.invoice.invoiceStatus = "V";
         this.invoice.proFlag = 0;
         this.invoice.voidDate = new Date();
-        await this.save(true);
+        return await this.save(true);
     }
     else {
       this.showInvalidControls();
+      return false;
     }
   }
 
