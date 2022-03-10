@@ -89,10 +89,10 @@
             </div>
             <div class="col-lg-2 col-md-6">
               <label for="policyNo" class="form-label" title="Policy Number">Policy No.</label>
-              <input type="text" class="form-control" id="policyNo" [(ngModel)]="policyInfo.policyNo" name="policyNo"
+              <input type="text" class="form-control" id="policyNo" [ngModel]="policyInfo.policyNo" minlength="7" maxlength="7" (ngModelChange)="policyInfo.policyNo = $event.toUpperCase()" name="policyNo"
                 #policyNo="ngModel" [readonly]="isDirectQuoteFieldReadOnly()" [required]="!isDirectQuoteFieldReadOnly()">
               <div [hidden]="policyNo.valid || policyNo.pristine" class="alert alert-danger">
-                Policy Number is required
+                Policy Number is invalid
               </div>
             </div>
             <div class="col-lg-1 col-md-2">
@@ -101,10 +101,10 @@
                 name="policyModNo" #policyModNo="ngModel" [readonly]="isReadOnly">
             </div>
             <div class="col-lg-2 col-md-4">
-              <label for="policyId"  class="form-label" title="Policy ID">Policy Id</label>
-              <input type="text" class="form-control" id="policyId" [(ngModel)]="policyInfo.policyId" name="policyId"
-                #policyNumber="ngModel" [readonly]="isReadOnly">
-            </div>
+              <label for="policyId" class="form-label" title="Policy ID">Policy Id</label>
+              <input type="text" class="form-control" id="policyId" minlength="7" maxlength="7"
+                [(ngModel)]="policyInfo.policyId" name="policyId" #policyNumber="ngModel" [readonly]="isReadOnly">
+              </div>
           </div>
           <div class="paddedRow"></div>
           <div class="row">

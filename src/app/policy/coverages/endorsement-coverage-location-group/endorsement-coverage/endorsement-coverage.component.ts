@@ -29,6 +29,7 @@ export class EndorsementCoverageComponent implements OnInit {
   actionCodes$: Observable<Code[]> | undefined;
   premTypes$: Observable<Code[]> | undefined;
   deductibleTypes$: Observable<Code[]> | undefined;
+  eachEmployeeDeductibleTypes$: Observable<Code[]> | undefined;
   classCodes$: Observable<Code[]> | undefined;
   claimsMadeOrOccurrence$: Observable<Code[]> | undefined;
   subCodeDefaults!: SubCodeDefaults;
@@ -53,6 +54,7 @@ export class EndorsementCoverageComponent implements OnInit {
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
   limitMask: string= "";
+  showEachEmployeeDeductible: boolean = false;
 
   @Input() public policyInfo!: PolicyInformation;
   @Input() public coverage!: EndorsementCoverage;
@@ -82,6 +84,7 @@ export class EndorsementCoverageComponent implements OnInit {
     this.actionCodes$ = this.dropdowns.getActionCodes();
     this.premTypes$ = this.dropdowns.getPremTypes();
     this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
+    this.eachEmployeeDeductibleTypes$ = this.dropdowns.getEachEmployeeDeductible();
     this.classCodes$ = this.dropdowns.getClassCodes(this.coverage.programId, this.coverage.coverageCode);
     this.exposureCodes$ = this.dropdowns.getExposureCodes();
     this.claimsMadeOrOccurrence$ = this.dropdowns.getClaimsMadeCodes();
@@ -154,8 +157,8 @@ export class EndorsementCoverageComponent implements OnInit {
     }
   }
 
-  changeCoverageDescription(event: any) {
-    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol).subscribe({
+  changeCoverageDescription(event: any = "") {
+    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol, this.coverage.claimsMadeOrOccurrence == "C").subscribe({
       next: (subCodeDefaults: SubCodeDefaults) => {
         this.subCodeDefaults = subCodeDefaults;
         this.showDeductible = subCodeDefaults.deductible;
@@ -185,6 +188,7 @@ export class EndorsementCoverageComponent implements OnInit {
         }
         this.coverage.limitsPatternGroupCode = subCodeDefaults.defaultLimitPatternGroupCode;
         this.isDeductibleRequired = this.checkDeductibleRequired();
+        this.showEachEmployeeDeductible = this.showEachEmployeeDeductibles();
       }
     });
   }
@@ -194,7 +198,7 @@ export class EndorsementCoverageComponent implements OnInit {
       this.coverage.coverageId = null;
     }
     if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
-      this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode, this.coverage.coverageId);
+      this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode);
     }
   }
 
@@ -202,6 +206,8 @@ export class EndorsementCoverageComponent implements OnInit {
     this.coverage.retroDate = null;
     this.isRetroDateRequired = this.checkRetroDateRequired();
     this.isRetroDateValid = this.checkRetroDateValid();
+    this.showEachEmployeeDeductible = this.showEachEmployeeDeductibles();
+    this.changeCoverageDescription();
   }
 
   changeIncludeExclude(event: any) {
@@ -228,6 +234,11 @@ export class EndorsementCoverageComponent implements OnInit {
 
   private checkDeductibleRequired(): boolean {
     return this.subCodeDefaults.subCode == 336
+  }
+
+  private showEachEmployeeDeductibles(): boolean {
+    // If Employee Benefits and Claims made then need to show the each employee drop down
+    return this.coverage.claimsMadeOrOccurrence == 'C' && this.coverage.coverageId == 2223;
   }
 
   checkRetroDateValid(): boolean {

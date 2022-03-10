@@ -20,11 +20,8 @@ export class DropDownsService {
     return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
   }
 
-  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageId?: number | null): Observable<Code[]> {
+  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null): Observable<Code[]> {
     let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
-    if (coverageId != null) {
-      params = params.append('coverageId', coverageId);
-    }
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params })
   }
 
@@ -555,6 +552,29 @@ getAuditCodes(): Observable<Code[]> {
           finalize(() => this.cacheDeductibleType$ = null)
         );
       observable = this.cacheDeductibleType$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // EachEmployee Deductible
+  private cacheEachEmployee: any;
+  private cacheEachEmployee$!: Observable<any> | null;
+
+  getEachEmployeeDeductible(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheEachEmployee) {
+      observable = of(this.cacheEachEmployee);
+    } else if (this.cacheEachEmployee$) {
+      observable = this.cacheEachEmployee$;
+    } else {
+      this.cacheEachEmployee$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/eachemployee')
+        .pipe(
+          tap(res => this.cacheEachEmployee = res),
+          share(),
+          finalize(() => this.cacheEachEmployee$ = null)
+        );
+      observable = this.cacheEachEmployee$;
     }
     return observable;
   }
