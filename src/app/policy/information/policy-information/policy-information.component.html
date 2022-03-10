@@ -22,9 +22,9 @@
             </div>
             <div class="col-lg-2 col-md-4">
               <label for="claimsMadeOrOccurrence"  class="form-label" title="Status">CLM/OCC</label>
-              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="isFieldReadOnly(true)"
+              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="!this.isClaimsMadeOccurrenceActive()"
                 id="claimsMadeOrOccurrence" [(ngModel)]="policyInfo.quoteData.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence"
-                #claimsMadeOrOccurrence="ngModel" (change)="clearRetroDate()">
+                #claimsMadeOrOccurrence="ngModel" (change)="changeClaimsMadeOccurrence()">
               </ng-select>
             </div>
             <div class="col-lg-2 col-md-4">
@@ -207,7 +207,7 @@
             <div class="col-lg-3 col-md-12">
               <label for="coverageCode"  class="form-label" title="Coverage Code">Coverage Code </label>
               <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
-                [required]="!isFieldReadOnly(true)" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch"
+                [required]="!isFieldReadOnly(true)" bindValue="code" [clearable]="false" [searchFn]="dropDownSearch" (change)="determineClaimsMadeOccurrence()"
                 [readonly]="isFieldReadOnly(true)" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
                 <ng-template ng-label-tmp let-item="item">
                   {{item.code}} - {{item.description}}
@@ -220,7 +220,8 @@
             <div class="col-lg-3 col-md-8">
               <label for="pacCode"  class="form-label" title="PAC Code">PAC</label>
               <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac" [searchFn]="dropDownSearch"
-                bindValue="code" [clearable]="false" [required]="!isFieldReadOnly(true)" [readonly]="isFieldReadOnly(true)" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
+                bindValue="code" [clearable]="false" [required]="!isFieldReadOnly(true)" [readonly]="isFieldReadOnly(true)"
+                [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
                 <ng-template ng-label-tmp let-item="item">
                 {{item.code}}
                 </ng-template>
