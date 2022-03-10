@@ -38,8 +38,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let policy of searchResults; let i = index" [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0}"
-          [ngStyle]="{'background-color': (policy.invoiceStatus == null) ? '#fdfd96' : null, 'font-style' :(policy.invoiceStatus == 'V') ? 'italic' : null}" >
+          <tr *ngFor="let policy of searchResults; let i = index"
+            [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0, 'voidStatus': policy.invoiceStatus == 'V'}"
+            [ngStyle]="{'background-color': (policy.invoiceStatus == null) ? '#fdfd96' : null}">
             <td>
               <span *ngIf="policy.firstPolicyRow">{{ policy.policyId }}</span>
             </td>
