@@ -33,10 +33,6 @@ export class DirectPolicyCreateComponent implements OnInit {
   submissionError: string = "invalid";
   isSearching: boolean = false;
   searchThrottle = new Subject<void>();
-  minEffectiveDate: Date = new Date();
-  maxEffectiveDate: Date = new Date();
-  minExpirationDate: Date = new Date();
-  maxExpirationDate: Date = new Date();
   searchSub!: Subscription;
   showBusy: boolean = false;
   isRenewal: boolean = false;
@@ -51,10 +47,6 @@ export class DirectPolicyCreateComponent implements OnInit {
 
   constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService, private actionService: ActionService) {
     this.policyData = newPolicyData();
-    this.minEffectiveDate.setFullYear(this.minEffectiveDate.getFullYear() - 1); 
-    this.maxEffectiveDate.setFullYear(this.maxEffectiveDate.getFullYear() + 1); 
-    this.minExpirationDate.setFullYear(this.minExpirationDate.getFullYear() - 1); 
-    this.maxExpirationDate.setFullYear(this.maxExpirationDate.getFullYear() + 2); 
    }
 
   ngOnInit(): void {
