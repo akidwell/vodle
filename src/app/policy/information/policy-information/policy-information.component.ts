@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AccountInformation, Endorsement, PolicyInformation, QuoteData, RiskLocation } from 'src/app/policy/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { Code } from 'src/app/drop-downs/code';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { NotificationService } from 'src/app/notification/notification-service';
@@ -45,8 +45,12 @@ export class PolicyInformationComponent implements OnInit {
   //canEditPolicy is a check to see if the user is able to edit
   canEditPolicy: boolean = false;
   statusSub!: Subscription;
+  coveragesSub!: Subscription;
   endorsementChanged: boolean = false;
   endorsementSub!: Subscription;
+  canSetRetroDate: boolean = false;
+  canSetClaimsMadeOccurrence: boolean = false;
+  coverageCodesList: Code[] = [];
 
   isPolicyEffectiveDateInvalid: boolean = false;
   PolicyEffectiveDateError: string = "";
@@ -88,6 +92,12 @@ export class PolicyInformationComponent implements OnInit {
         this.canEditEndorsement = canEdit;
       }
     });
+    this.coveragesSub = this.coverageCodes$.subscribe({
+      next: codes => {
+        this.coverageCodesList = codes;
+        this.determineClaimsMadeOccurrence();
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -161,9 +171,7 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsementStatusService.reinsuranceValidated = false;
     }
   }
-  clearRetroDate() {
-    this.policyInfo.quoteData.retroDate = null;
-  }
+
   clearNYFTZ() {
     this.policyInfo.nyftz = null;
   }
@@ -184,7 +192,14 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
   isRetroDateActive(): boolean {
-    if (this.policyInfo.quoteData.claimsMadeOrOccurrence === 'C' && !this.isFieldReadOnly(true)) {
+    if (this.canSetRetroDate && !this.isFieldReadOnly(true)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isClaimsMadeOccurrenceActive(): boolean{
+    if (this.canSetClaimsMadeOccurrence && !this.isFieldReadOnly(true)) {
       return true;
     } else {
       return false;
@@ -215,6 +230,51 @@ export class PolicyInformationComponent implements OnInit {
       return true;
     }
   }
+  async determineClaimsMadeOccurrence(){
+    var coverageCode = this.policyInfo.quoteData.coverageCode;
+    var coverageDetermined = false;
+    var coverageDescription = this.findCoverageCodeDescription(coverageCode);
+    coverageDetermined = this.isCoverageCodeClaimsMade(coverageDescription) || this.isCoverageCodeOccurrence(coverageDescription);
+    if (!coverageDetermined) {
+      this.canSetClaimsMadeOccurrence = true;
+      this.policyInfo.quoteData.claimsMadeOrOccurrence = 'O';
+    } else {
+      this.canSetClaimsMadeOccurrence = false;
+    }
+  }
+  isCoverageCodeClaimsMade(coverageDescription: string): boolean {
+    if (coverageDescription.includes(' CLM')){
+      this.canSetRetroDate = true;
+      this.policyInfo.quoteData.claimsMadeOrOccurrence = 'C';
+      return true;
+    } else {
+      this.canSetRetroDate = false;
+      this.policyInfo.quoteData.retroDate = null;
+      return false;
+    }
+  }
+
+  isCoverageCodeOccurrence(coverageCode: string): boolean {
+    if (coverageCode.includes(' OCC' || coverageCode.includes('Occurrence Form'))){
+      this.policyInfo.quoteData.claimsMadeOrOccurrence = 'O';
+      this.policyInfo.quoteData.retroDate = null;
+      return true;
+    } else {
+      return false;
+    }
+  }
+  changeClaimsMadeOccurrence() {
+    this.policyInfo.quoteData.retroDate = null;
+    if (this.policyInfo.quoteData.claimsMadeOrOccurrence == 'C') {
+      this.canSetRetroDate = true;
+    } else {
+      this.canSetRetroDate = false;
+    }
+  }
+  findCoverageCodeDescription(coverageCode: string): string {
+    return this.coverageCodesList.find(x => x.code == coverageCode)?.description || ''
+  }
+
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy;
   }
