@@ -1,12 +1,12 @@
 <form #invoiceGroupForm="ngForm">
   <div class="card">
     <div style="display: inline-block;">
-      <button class="btn btn-md btn-primary" style="float:left;" [hidden]="!canSave"
-        [disabled]="!invoiceGroupForm.valid || !isDirty" (click)="this.tempSave(true)">Save</button>
-      <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canPost" (click)="post()">Post</button>
+      <button class="btn btn-md btn-primary" style="float:left;" *ngIf="canSave" [disabled]="showBusy || !isDirty()"
+        appPreventDoubleClick (throttledClick)="clickSave()" [throttleTime]="700">Save</button>
+      <button class="btn btn-md btn-primary" style="float:right;" *ngIf="canPost" (click)="post()">Post</button>
       <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" [hidden]="!canVoid"
         (click)="confirmVoid()">Void</button>
-      <button class="btn btn-md btn-primary" style="float:right;" [hidden]="!canExport"
+      <button class="btn btn-md btn-primary" style="float:right;" *ngIf="canExport"
         (click)="export()">Export</button>
     </div>
     <div class="card-header" (click)="collapsePanel(!invoiceCollapsed)">{{title}}

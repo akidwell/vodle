@@ -17,6 +17,7 @@ import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/
 import { ConfirmationDialogService } from '../../services/confirmation-dialog-service/confirmation-dialog.service';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { deepClone } from 'src/app/helper/deep-clone';
+import { PolicyInformation } from '../../policy';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -38,13 +39,14 @@ export class InvoiceGroupComponent implements OnInit {
   issuanceSub!: Subscription;
   invoiceCopy!: InvoiceData;
 
+  @Input() public policyInfo!: PolicyInformation;
   @Input() public invoice!: InvoiceData;
   @Input() index!: number;
   @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService,private messageDialogService: ErrorDialogService, private confirmationDialogService: ConfirmationDialogService, private policyHistoryService: PolicyHistoryService) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private messageDialogService: ErrorDialogService, private confirmationDialogService: ConfirmationDialogService, private policyHistoryService: PolicyHistoryService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -72,9 +74,8 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   collapsePanel(isCollapsed: boolean) {
-    this.invoiceCollapsed  = isCollapsed;
-    if (isCollapsed)
-    {
+    this.invoiceCollapsed = isCollapsed;
+    if (isCollapsed) {
       this.title = "Transaction Summary - " + this.invoice.invoiceNumber + " - " + this.datepipe.transform(this.invoice.invoiceDate, 'MM/dd/yyyy') + " - " + this.invoice.invoiceStatusDescription;
     }
     else {
@@ -122,22 +123,29 @@ export class InvoiceGroupComponent implements OnInit {
     return total;
   }
 
-  tempSave(refresh: boolean): void {
+  async clickSave() {
+    this.showBusy = true;
+    await this.tempSave(true);
+    this.showBusy = false;
+  }
+
+  async tempSave(refresh: boolean): Promise<void> {
     if (this.isValid()) {
       if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
         if (this.invoice.invoiceStatus == "N") {
           this.invoice.invoiceStatus = "T";
           this.invoice.proFlag = 0;
-          const isSaved = this.save(refresh);
+          const isSaved = await this.save(refresh);
         }
         else if (this.isDirty()) {
-          const isSaved = this.save(refresh);
+          const isSaved = await this.save(refresh);
         }
       }
     }
     else {
       this.showInvalidControls();
     }
+
   }
 
   async post(): Promise<void> {
@@ -157,11 +165,11 @@ export class InvoiceGroupComponent implements OnInit {
           this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
         }
         const isSaved = await this.save(false);
-        if (isSaved) {   
+        if (isSaved) {
           if (this.canExport) {
             await this.export();
-          } 
-          this.refresh();
+          }
+          this.refreshPage();
         }
         else {
           // Restore before Post changes
@@ -178,7 +186,6 @@ export class InvoiceGroupComponent implements OnInit {
   async export(): Promise<void> {
     const parm: PolicyIssuanceRequest = { policyId: this.invoice.policyId, endorsementNumber: this.invoice.endorsementNumber };
     this.showBusy = true;
-
     const results$ = this.policyIssuanceService.postPolicyIssuance(parm);
     await lastValueFrom(results$).then(
       importPolicyResponse => {
@@ -214,53 +221,59 @@ export class InvoiceGroupComponent implements OnInit {
     const results$ = this.policyService.addPolicyInvoice(this.invoice);
     return await lastValueFrom(results$)
       .then(async result => {
-        if (result == null) {
-          this.markPristine();
-          await this.endorsementStatusService.refresh();
-          if (refresh) {
-            this.refresh();
-          }     
-          this.showInvoiceSaved();
-          return true;
-        }
-        else {
-          this.showInvoiceNotSaved();
-          return false;
-        }
+        return this.refresh(result == null, refresh);
       },
-      (error) => {
-        this.showInvoiceNotSaved();
-        const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open("Invoice Save Error", errorMessage);
-        return false;
-    });
+        (error) => {
+          this.showBusy = false;
+          this.showInvoiceNotSaved();
+          const errorMessage = error.error?.Message ?? error.message;
+          this.messageDialogService.open("Invoice Save Error", errorMessage);
+          return false;
+        });
   }
 
   private async updateInvoice(refresh: boolean = false): Promise<boolean> {
-    const results$ =  this.policyService.updatePolicyInvoice(this.invoice);
-    
+    const results$ = this.policyService.updatePolicyInvoice(this.invoice);
     return await lastValueFrom(results$)
-    .then(async result => {
-      if (result == null) {
-        this.markPristine();
-        await this.endorsementStatusService.refresh();
-        if (refresh) {
-          this.refresh();
+      .then(async result => {
+        return this.refresh(result == null, refresh);
+      },
+        (error) => {
+          this.showBusy = false;
+          this.showInvoiceNotSaved();
+          const errorMessage = error.error?.Message ?? error.message;
+          this.messageDialogService.open("Invoice Save Error", errorMessage);
+          return false;
+        });
+  }
+
+  private async refresh(isSuccesful: boolean, refresh: boolean = false): Promise<boolean> {
+    if (isSuccesful) {
+      this.markPristine();
+      await this.endorsementStatusService.refresh();
+      if (refresh) {
+        // If a Void then make sure the policy dates were not affected by a trigger
+        if (this.invoice.invoiceStatus == "V") {
+          const results$ = this.policyService.getPolicyInfo(this.invoice.policyId);
+          await lastValueFrom(results$).then((policy) => {
+            this.policyInfo.policyCancelDate = policy.policyCancelDate;
+            this.policyInfo.policyExtendedExpDate = policy.policyExtendedExpDate;
+          });
         }
-        this.showInvoiceSaved();
-        return true;
+        this.refreshPage();
       }
-      else {
-        this.showInvoiceNotSaved();
-        return false;
-      }
-    },
-    (error) => {
+      this.showInvoiceSaved();
+      return true;
+    }
+    else {
       this.showInvoiceNotSaved();
-      const errorMessage = error.error?.Message ?? error.message;
-      this.messageDialogService.open("Invoice Save Error", errorMessage);
       return false;
-  });
+    }
+  }
+
+  private refreshPage() {
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate([this.router.url])
   }
 
   private markPristine() {
@@ -281,11 +294,6 @@ export class InvoiceGroupComponent implements OnInit {
 
   private showInvoiceNotSaved(): void {
     this.notification.show('Invoice Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-  }
-
-  private refresh() {
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([this.router.url])
   }
 
   async confirmVoid(): Promise<void> {
@@ -324,11 +332,11 @@ export class InvoiceGroupComponent implements OnInit {
 
   private async voidInvoice(): Promise<boolean> {
     if (this.isValid()) {
-        this.invoiceCopy = deepClone(this.invoice);
-        this.invoice.invoiceStatus = "V";
-        this.invoice.proFlag = 0;
-        this.invoice.voidDate = new Date();
-        return await this.save(true);
+      this.invoiceCopy = deepClone(this.invoice);
+      this.invoice.invoiceStatus = "V";
+      this.invoice.proFlag = 0;
+      this.invoice.voidDate = new Date();
+      return await this.save(true);
     }
     else {
       this.showInvalidControls();
