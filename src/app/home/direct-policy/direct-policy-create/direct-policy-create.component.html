@@ -21,8 +21,7 @@
       <div class="col-lg-6">
         <label for="policyEffectiveDate">Effective Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyEffectiveDateCalendar"
-          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minEffectiveDate"
-          [max]="maxEffectiveDate" [(ngModel)]="policyData.policyEffectiveDate" (blur)="setExpirationDate()"
+          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [(ngModel)]="policyData.policyEffectiveDate" (blur)="setExpirationDate()"
           (dateChange)="checkDates()" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
         <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyEffectiveDateCalendar">
         </mat-datepicker-toggle>
