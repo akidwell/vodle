@@ -47,11 +47,10 @@ export class EndorsementHeaderComponent implements OnInit {
         this.canEditEndorsement = canEdit;
       }
     });
-    let preEndorsementStatus =  this.endorsementStatusService.preEndorsementStatus;
     this.isRewrite = this.endorsementStatusService.isRewrite;
     const transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.transactionTypes = await lastValueFrom(transactionTypes$);
-    if (preEndorsementStatus !== "Cancelled"){
+    if (this.policyInfo.policyCancelDate == null){
       this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
     } else {
       this.isPolicyCancelled = true;

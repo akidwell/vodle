@@ -127,7 +127,12 @@
           </div>
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
-            <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description" bindValue="code"
+            <ng-select *ngIf="!showEachEmployeeDeductible" id="deductibleType" [items]="deductibleTypes$ | async"
+              bindLabel="description" bindValue="code" [required]="canEdit && isDeductibleRequired && showDeductible "
+              name="deductibleType" [readonly]="!canEdit || !showDeductible" [(ngModel)]="coverage.deductibleType">
+            </ng-select>
+            <ng-select *ngIf="showEachEmployeeDeductible" id="deductibleType"
+              [items]="eachEmployeeDeductibleTypes$ | async" bindLabel="description" bindValue="code"
               [required]="canEdit && isDeductibleRequired && showDeductible " name="deductibleType"
               [readonly]="!canEdit || !showDeductible" [(ngModel)]="coverage.deductibleType">
             </ng-select>

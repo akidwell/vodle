@@ -75,12 +75,12 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.preEndorsementStatus = status
 
-      if(status == 'Cancelled'){
+      if(this.policyInfo.policyCancelDate != null){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
-      else if(status !== 'Cancelled'){
+      else if(this.policyInfo.policyCancelDate == null){
         this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
@@ -114,18 +114,17 @@ export class ActionComponent implements OnInit {
       if (this.policyInfo.amount > 0){
         this.endorsementActionInfo.premium = -this.policyInfo.amount
         this.endorsementActionInfo.transactionType = 12;
-
       }
       if (this.policyInfo.amount < 0){
         this.endorsementActionInfo.premium = Math.abs(this.policyInfo.amount)
         this.endorsementActionInfo.transactionType = 1
       }
-      if(status == 'Cancelled'){
+      if(this.policyInfo.policyCancelDate != null){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
-      else if(status !== 'Cancelled'){
+      else if(this.policyInfo.policyCancelDate == null){
         this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
@@ -163,12 +162,12 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
 
-      if(status == 'Cancelled'){
+      if(this.policyInfo.policyCancelDate != null){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
-      else if(status !== 'Cancelled'){
+      else if(this.policyInfo.policyCancelDate == null){
         this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
