@@ -152,6 +152,9 @@ export class PolicyInformationComponent implements OnInit {
   checkAssumed(): boolean{
    return this.assumed = this.policyInfo.riskType == 'A'? true : false;
   }
+  ChangePolicyNumber() {
+    this.policyInfo.formattedPolicyNo = this.policyInfo.policyNo + (this.policyInfo.formattedPolicyNo.charAt(this.policyInfo.formattedPolicyNo.length-3) == "-" ? this.policyInfo.formattedPolicyNo.slice(-3) : "");
+  }
   changeEffectiveDate() {
     if (this.endorsement.endorsementNumber == 0) {
       this.endorsementChanged = true;

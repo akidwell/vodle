@@ -3,6 +3,7 @@ import { ActivatedRoute, Data } from '@angular/router';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subject } from 'rxjs';
 import { deepClone } from 'src/app/helper/deep-clone';
+import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { AccountInformation, Endorsement, PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
@@ -32,7 +33,7 @@ export class InformationComponent implements OnInit, PolicySave {
   lockEndorsementFields: boolean = false;
 
   constructor(private endorsementStatusService: EndorsementStatusService, private route: ActivatedRoute, private notification: NotificationService,
-    private policyService: PolicyService, private reinsuranceLookupService: ReinsuranceLookupService) { }
+    private policyService: PolicyService, private reinsuranceLookupService: ReinsuranceLookupService,  private policyHistoryService: PolicyHistoryService) { }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
@@ -85,6 +86,7 @@ export class InformationComponent implements OnInit, PolicySave {
     if (this.policyInfoComp.allowSave()) {
       this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
           this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
+          this.policyHistoryService.updatePolicyHistory(this.policyInfo.policyId, this.policyInfo.policySymbol.trim() + " " + this.policyInfo.formattedPolicyNo, this.endorsement.endorsementNumber)
           this.policyInfoComp.policyInfoForm.form.markAsPristine();
           this.policyInfoComp.policyInfoForm.form.markAsUntouched();
           this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
