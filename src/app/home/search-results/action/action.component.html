@@ -10,7 +10,7 @@
                 <label for="newEndorsementNumber">Endorsement Number</label>
                 <input type="text" class="form-control" id="newEndorsementNumber" [required]="canEdit"
                     [readonly]="!canEdit" name="newEndorsementNumber" [(ngModel)]="endorsementActionInfo.newEndorsementNumber"
-                    max="999" maxlength="3" (keyup)="checkEndorsementNumber()">
+                    max="999" maxlength="3" (keyup)="checkEndorsementNumber()" mask="999" pattern="^[0-9]*$" [specialCharacters]="[]">
             </div>
             <div [hidden]="isNewEndorsementNumberValid" class="alert alert-danger">
                 This Endorsement Number has already been used.

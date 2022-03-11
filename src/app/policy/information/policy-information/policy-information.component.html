@@ -89,8 +89,10 @@
             </div>
             <div class="col-lg-2 col-md-6">
               <label for="policyNo" class="form-label" title="Policy Number">Policy No.</label>
-              <input type="text" class="form-control" id="policyNo" [ngModel]="policyInfo.policyNo" minlength="7" maxlength="7" (ngModelChange)="policyInfo.policyNo = $event.toUpperCase()" name="policyNo"
-                #policyNo="ngModel" [readonly]="isDirectQuoteFieldReadOnly()" [required]="!isDirectQuoteFieldReadOnly()">
+              <input type="text" class="form-control" id="policyNo" [ngModel]="policyInfo.policyNo" minlength="7"
+                maxlength="7" (input)="ChangePolicyNumber()" (ngModelChange)="policyInfo.policyNo = $event.toUpperCase()" name="policyNo"
+                #policyNo="ngModel" [readonly]="isDirectQuoteFieldReadOnly()"
+                [required]="!isDirectQuoteFieldReadOnly()">
               <div [hidden]="policyNo.valid || policyNo.pristine" class="alert alert-danger">
                 Policy Number is invalid
               </div>

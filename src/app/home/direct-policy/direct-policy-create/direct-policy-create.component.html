@@ -21,8 +21,7 @@
       <div class="col-lg-6">
         <label for="policyEffectiveDate">Effective Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyEffectiveDateCalendar"
-          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [min]="minEffectiveDate"
-          [max]="maxEffectiveDate" [(ngModel)]="policyData.policyEffectiveDate" (blur)="setExpirationDate()"
+          class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [(ngModel)]="policyData.policyEffectiveDate" (blur)="setExpirationDate()"
           (dateChange)="checkDates()" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
         <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyEffectiveDateCalendar">
         </mat-datepicker-toggle>
@@ -43,7 +42,7 @@
       </div>
       <div class="col-lg-4">
         <label for="policySymbol">Symbol</label>
-        <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description"
+        <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description" [readonly]="isRewrite"
           [disabled]="!isSubmissionNumberValid || isSearching" [required]="isSubmissionNumberValid" bindValue="code" [clearable]="false"
           [searchFn]="dropDownSearch" [(ngModel)]="policyData.policySymbol" name="policySymbol">
           <ng-template ng-label-tmp let-item="item">
@@ -57,7 +56,7 @@
       <div class="col-lg-4">
         <label for="policyNumber">Policy Number</label>
         <input type="text" class="form-control" id="policyNumber" minlength="7" maxlength="7"
-          [disabled]="!isSubmissionNumberValid || isSearching" required (change)="leavePolicyNumber()"
+          [disabled]="!isSubmissionNumberValid || isSearching" required (change)="leavePolicyNumber()" [readonly]="isRewrite"
           [ngModel]="policyData.policyNumber"
           (ngModelChange)="policyData.policyNumber = $event.toUpperCase();changePolicyNumber()" name="policyNumber"
           #policyNumber="ngModel">
