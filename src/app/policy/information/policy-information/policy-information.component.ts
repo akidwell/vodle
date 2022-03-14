@@ -206,6 +206,7 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
   isRetroDateActive(): boolean {
+    //console.log(this.canSetRetroDate, !this.isFieldReadOnly(true))
     if (this.canSetRetroDate && !this.isFieldReadOnly(true)) {
       return true;
     } else {
@@ -248,7 +249,7 @@ export class PolicyInformationComponent implements OnInit {
     var coverageCode = this.policyInfo.quoteData.coverageCode;
     var coverageDetermined = false;
     var coverageDescription = this.findCoverageCodeDescription(coverageCode);
-    coverageDetermined = this.isCoverageCodeClaimsMade(coverageDescription) || this.isCoverageCodeOccurrence(coverageDescription);
+    coverageDetermined = (this.isCoverageCodeClaimsMade(coverageDescription) || this.isCoverageCodeOccurrence(coverageDescription));
     if (!coverageDetermined) {
       this.canSetClaimsMadeOccurrence = true;
       this.policyInfo.quoteData.claimsMadeOrOccurrence = 'O';
@@ -268,8 +269,8 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
 
-  isCoverageCodeOccurrence(coverageCode: string): boolean {
-    if (coverageCode.includes(' OCC' || coverageCode.includes('Occurrence Form'))){
+  isCoverageCodeOccurrence(coverageDescription: string): boolean {
+    if (coverageDescription.includes(' OCC') || coverageDescription.includes('Occurrence')){
       this.policyInfo.quoteData.claimsMadeOrOccurrence = 'O';
       this.policyInfo.quoteData.retroDate = null;
       return true;

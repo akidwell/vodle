@@ -31,7 +31,7 @@
               <label for="retroDate" class="form-label" title="Retro Date">Retro Date</label>
               <div *ngIf="this.isRetroDateActive()">
                 <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="retroDateCalendar" class="form-control"
+                  [matDatepicker]="retroDateCalendar" class="form-control" [required]="canSetRetroDate"
                   [ngModel]="policyInfo.quoteData.retroDate" (ngModelChange)="policyInfo.quoteData.retroDate=$event"
                   name="retroDate" #retroDate="ngModel">
                 <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
