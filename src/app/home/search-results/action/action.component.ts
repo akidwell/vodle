@@ -86,7 +86,11 @@ export class ActionComponent implements OnInit {
       }
 
       if (policy.masterPolicy !== '1') {
-        this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
+        if (policy.policyExtendedDate != null) {
+          this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate
+        } else {
+          this.endorsementActionInfo.transExpirationDate = policy.policyExpirationDate;
+        }
       }
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
       this.modalRef.result.then(resolve, resolve)
@@ -122,7 +126,6 @@ export class ActionComponent implements OnInit {
       if(this.policyInfo.policyCancelDate != null){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
-
       }
       else if(this.policyInfo.policyCancelDate == null){
         this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
@@ -130,7 +133,11 @@ export class ActionComponent implements OnInit {
       }
 
       if (policy.masterPolicy !== '1') {
-        this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
+        if (policy.policyExtendedDate != null) {
+          this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate
+        } else {
+          this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
+        }
       }
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
       this.modalRef.result.then(resolve, resolve)
@@ -151,12 +158,15 @@ export class ActionComponent implements OnInit {
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
-      this.endorsementActionInfo.preEndorsementStatus = status
       this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
       this.endorsementActionInfo.isRewrite = true;
       this.endorsementActionInfo.transactionType = 4;
       this.endorsementActionInfo.transEffectiveDate = this.policyInfo.policyEffectiveDate;
-      this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
+      if (policy.policyExtendedDate != null) {
+        this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate
+      } else {
+        this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
+      }
       this.endorsementActionInfo.endorsementReason = "PCR";
       ///////check this
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId

@@ -63,7 +63,6 @@ export class SearchResultsComponent implements OnInit {
         }
 
         this.searchResults = results;
-
         if (results.length > 0) {
           this.insuredName = results[0].insuredName;
           let today = new Date();
@@ -128,7 +127,4 @@ export class SearchResultsComponent implements OnInit {
       }
   }
 
-  get canRewrite(): boolean {
-    return this.status != 'Cancelled'
-  }
 }

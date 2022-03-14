@@ -51,7 +51,8 @@ export class EndorsementHeaderComponent implements OnInit {
     this.isRewrite = this.endorsementStatusService.isRewrite;
     const transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.transactionTypes = await lastValueFrom(transactionTypes$);
-    if (this.policyInfo.policyCancelDate == null){
+    let preEndorsementStatus =  this.endorsementStatusService.preEndorsementStatus;
+    if (preEndorsementStatus !== "Cancelled"){
       this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
     } else {
       this.isPolicyCancelled = true;
