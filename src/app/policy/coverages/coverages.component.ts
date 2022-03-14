@@ -119,7 +119,9 @@ export class CoveragesComponent implements OnInit, PolicySave {
         }
       }
     }
-    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' && this.checkPremiumMatches() && this.headerComp.checkAttachmentPointValid() && this.checkTerrorismMessage() == "";
+    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' 
+      && this.checkPremiumMatches() && this.headerComp.checkUnderlyingLimitValid() && this.headerComp.checkAttachmentPointValid() 
+      && this.headerComp.checkAttachmentPointUnderlyingLimitValid() && this.checkTerrorismMessage() == "";
     return this.endorsementStatusService.coverageValidated;
   }
 
@@ -235,9 +237,17 @@ export class CoveragesComponent implements OnInit, PolicySave {
       this.showInvalid = true;
       this.invalidMessage += "<br><li>Premium totals do not match";
     }
-    if(this.headerComp.checkAttachmentPointValid() == false){
+    if (!this.headerComp.checkAttachmentPointValid()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Attachment Point must be greater than the underlying limits."
+      this.invalidMessage += "<br><li>Attachment must be greater than 0 on Excess Policy";
+    }
+    if (!this.headerComp.checkAttachmentPointUnderlyingLimitValid()) {
+      this.showInvalid = true;
+      this.invalidMessage += "<br><li>Attachment Point must be greater than the underlying limits";
+    }
+    if (!this.headerComp.checkUnderlyingLimitValid()) {
+      this.showInvalid = true;
+      this.invalidMessage += "<br><li>Underlying Limit must be greater than 0 for XS policy";
     }
     if (this.showInvalid) {
       this.invalidMessage = "Following fields are invalid" + this.invalidMessage;

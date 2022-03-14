@@ -27,11 +27,8 @@ input[type="checkbox"] {
   display: block;
 }
 .form-checkbox{
-  vertical-align: middle;
-  position: relative;
-  top: -20px;
   height: 25px;
-  width: 25px;
+  width: 25px; 
 }
 
 input[type="checkbox"][readonly] {

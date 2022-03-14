@@ -49,8 +49,10 @@
     </div>
     <div class="col-lg">
       <label for="underlyingLimit">Underlying Limits</label>
-      <input type="text" class="form-control" id="underlyingLimit" [required]="canEditUnderlyingLimits" [readonly]="!canEditUnderlyingLimits"
-      (change)="checkAttachmentPointValid()" [(ngModel)]="endorsement.underlyingLimit" string-to-currency [allowNegative]="false" name="underlyingLimit" #underlyingLimit="ngModel">
+      <input type="text" class="form-control" id="underlyingLimit" [required]="canEditUnderlyingLimits"
+        [readonly]="!canEditUnderlyingLimits" (change)="checkAttachmentPointValid()"
+        [(ngModel)]="endorsement.underlyingLimit" string-to-currency [allowNegative]="false" name="underlyingLimit"
+        #underlyingLimit="ngModel">
     </div>
     <div class="col-lg">
       <label for="sir">SIR</label>

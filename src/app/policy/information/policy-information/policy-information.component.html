@@ -64,7 +64,7 @@
                 [(ngModel)]="policyInfo.packageInd" name="packageInd" #packageInd="ngModel">
             </div>
             <div class="col-lg-1 col-md-4">
-              <label for="policyType" class="form-label" title="Master Policy">Master Policy</label><br>
+              <label for="policyType" class="form-label" title="Master Policy">Master Policy</label>
               <input type="checkbox" class="form-checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
                 [readonly]="isFieldReadOnly(true)" (ngModelChange)="policyInfo.policyType=$event?'1': null">
             </div>
@@ -76,7 +76,7 @@
             <div class="col-lg-1 col-md-4" *ngIf="!isDirectQuoteFieldReadOnly()">
               <label for="policySymbol" class="form-label" title="Symbol">Sym</label>
               <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description"
-                [required]="!isDirectQuoteFieldReadOnly()"
+                [required]="!isDirectQuoteFieldReadOnly()" (change)="changePolicySymbol()"
                 bindValue="code" [clearable]="false" [searchFn]="dropDownSearch" [(ngModel)]="policyInfo.policySymbol"
                 name="policySymbol">
                 <ng-template ng-label-tmp let-item="item">
