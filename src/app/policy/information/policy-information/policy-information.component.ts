@@ -174,6 +174,17 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsementStatusService.reinsuranceValidated = false;
     }
   }
+  changePolicySymbol() {
+    if (this.isPrimaryPolicy) {
+      this.endorsementChanged = true;
+      this.endorsement.attachmentPoint = 0;
+      this.endorsement.underlyingLimit = 0;
+    }
+  }
+
+  private get isPrimaryPolicy(): boolean {
+    return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC')
+  }
 
   clearNYFTZ() {
     this.policyInfo.nyftz = null;

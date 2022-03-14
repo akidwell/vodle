@@ -29,6 +29,7 @@ export class EndorsementHeaderComponent implements OnInit {
   isAttachmentPointValid: boolean = false;
   isPolicyCancelled: boolean = false;
   isRewrite: boolean = false;
+  isUnderlyingLimitValid: boolean = false;
 
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
@@ -57,6 +58,8 @@ export class EndorsementHeaderComponent implements OnInit {
       this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
     }
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
+    this.checkAttachmentPointValid();
+   // this.checkUnderlyingLimitValid();
   }
 
   ngOnDestroy(): void {
@@ -86,18 +89,15 @@ export class EndorsementHeaderComponent implements OnInit {
   }
 
   checkAttachmentPointValid(): boolean {
-    if ((this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol == 'PRC')) {
-      this.isAttachmentPointValid = true;
-      return this.isAttachmentPointValid;
-    } else {
-      if (this.endorsement.attachmentPoint >= this.endorsement.underlyingLimit) {
-        this.isAttachmentPointValid = true;
-      } else {
-        this.isAttachmentPointValid = false;
-        this.endorsementHeaderForm.controls['attachmentPoint'].setErrors({ 'incorrect': this.isAttachmentPointValid });
-      }
-      return this.isAttachmentPointValid;
-    }
+    return this.isPrimaryPolicy || this.endorsement.attachmentPoint > 0;
+  }
+
+  checkAttachmentPointUnderlyingLimitValid(): boolean {
+    return this.isPrimaryPolicy || this.endorsement.attachmentPoint >= this.endorsement.underlyingLimit;
+  }
+
+  checkUnderlyingLimitValid(): boolean {
+    return this.policyInfo.policySymbol.trim().toUpperCase() != 'XS' || this.endorsement.underlyingLimit > 0;
   }
 
   changeEffectiveDate() {
@@ -160,12 +160,15 @@ export class EndorsementHeaderComponent implements OnInit {
     return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
   }
   get canEditAttachmentPoint(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && (!this.isPrimaryPolicy);
+    return this.canEditEndorsement && this.canEditPolicy && (this.isExcessPolicy);
   }
   get canEditUnderlyingLimits(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && (!this.isPrimaryPolicy);
+    return this.canEditEndorsement && this.canEditPolicy && (this.isExcessPolicy);
   }
   private get isPrimaryPolicy(): boolean {
-    return (this.policyInfo.policySymbol == 'PL ') || (this.policyInfo.policySymbol == 'PRC')
+    return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC')
+  }
+  private get isExcessPolicy(): boolean {
+    return !this.isPrimaryPolicy;
   }
 }
