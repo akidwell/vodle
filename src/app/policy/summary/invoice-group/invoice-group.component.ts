@@ -297,36 +297,71 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   async confirmVoid(): Promise<void> {
-    const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to void this invoice?");
-    if (voidConfirm) {
+    let undoPost: boolean = false;
+
+    // If voiding a Endorsement 0 give the user the option to undo and set back to temp save
+    if (this.invoice.endorsementNumber == 0 && this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) {
+      undoPost = await this.confirmationDialogService.open("Void Confirmation", "Do you want to set back to Temp status?");
+    }
+
+    if (undoPost) {
       this.showBusy = true;
-      if (await this.voidInvoice()) {
-        this.showBusy = false;
-        this.confirmationDialogService.open("Delete Confirmation", "Would you also like to delete the related endorsement?")
-          .then(async deleteEndorsement => {
-            if (deleteEndorsement) {
-              this.router.navigate(['/home']);
-              this.showBusy = true;
-              const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
-              await lastValueFrom(results$).then(() => {
-                this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
-                this.showBusy = false;
-                this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
-              },
-                error => {
-                  this.showBusy = false;
-                  const errorMessage = error.error?.Message ?? error.message;
-                  this.messageDialogService.open("Invoice Void failed", "Error Message: " + errorMessage);
+      await this.undoPost();
+      this.showBusy = false;
+    }
+    else {
+      const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to Void this invoice?");
+      if (voidConfirm) {
+        this.showBusy = true;
+        if (await this.voidInvoice()) {
+          this.showBusy = false;
+          if (this.invoice.endorsementNumber > 0) {
+            this.confirmationDialogService.open("Delete Confirmation", "Would you also like to Delete the related endorsement?")
+              .then(async deleteEndorsement => {
+                if (deleteEndorsement) {
+                  this.router.navigate(['/home']);
+                  this.showBusy = true;
+                  const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
+                  await lastValueFrom(results$).then(() => {
+                    this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
+                    this.showBusy = false;
+                    this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
+                  },
+                    error => {
+                      this.showBusy = false;
+                      const errorMessage = error.error?.Message ?? error.message;
+                      this.messageDialogService.open("Invoice Void failed", "Error Message: " + errorMessage);
+                    }
+                  );
                 }
-              );
-            }
-          });
+              });
+          }
+        }
+        else {
+          // Restore before Void changes
+          this.invoice = deepClone(this.invoiceCopy);
+          this.showBusy = false;
+        }
       }
-      else {
-        // Restore before Void changes
+    }
+  }
+
+  private async undoPost(): Promise<boolean> {
+    if (this.isValid()) {     
+      this.invoiceCopy = deepClone(this.invoice);
+      this.invoice.invoiceStatus = "T";
+      this.invoice.proFlag = 0;
+      this.invoice.voidDate = null;
+      if (!(await this.save(true))) {
+        // Restore before Undo
         this.invoice = deepClone(this.invoiceCopy);
-        this.showBusy = false;
+        return false;
       }
+      return true;
+    }
+    else {
+      this.showInvalidControls();
+      return false;
     }
   }
 
