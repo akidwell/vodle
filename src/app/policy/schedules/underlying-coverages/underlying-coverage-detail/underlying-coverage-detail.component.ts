@@ -9,7 +9,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { PolicyInformation } from 'src/app/policy/policy';
-import { ExcessUmbrellaProgramIds } from 'src/app/policy/program-types';
+import { ControllingLayerTypes, ControllingLayerTypeProgramIds, ExcessUmbrellaProgramIds, FirstLayerTypes, FirstLayerTypeProgramIds } from 'src/app/policy/program-types';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 import { UnderlyingCoverage, UnderlyingLimitBasis, UnderlyingCoverageLimit } from '../../schedules';
@@ -46,6 +46,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   isLimitsPatternValid: boolean = true;
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
+  layerTypes: string[] = [];
   @Input() ucData!: UnderlyingCoverage;
 
   @Output() deleteThisCoverage: EventEmitter<UnderlyingCoverage> = new EventEmitter();
@@ -90,6 +91,11 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
         );
       }
     });
+    if (ControllingLayerTypeProgramIds.includes(this.policyInfo.programId)){
+      this.layerTypes = ControllingLayerTypes;
+    } else if (FirstLayerTypeProgramIds.includes(this.policyInfo.programId)){
+      this.layerTypes = FirstLayerTypes;
+    }
   }
   ngOnDestroy(): void {
     this.authSub.unsubscribe();

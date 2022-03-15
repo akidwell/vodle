@@ -12,6 +12,15 @@
   </div> -->
   <div class="card-body" [ngClass]="{'expanded':!ucdCollapsed}">
     <div class="row" style="padding-top: 10px; width: 100%" (click)="collapseExpand(false)">
+      <div *ngIf="isExcessUmbrella" class="col-lg-2">
+        <div>Layer Type</div>
+        <ng-select id="label" click-stop-propagation [items]="layerTypes" placeholder=""
+        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="label"
+        [(ngModel)]="ucData.label" #label="ngModel" >
+      </ng-select>
+        <!-- <input type="text" class="form-control" id="label" #label="ngModel" readonly maxlength="79"
+           name="label" [(ngModel)]="ucData.label" > -->
+      </div>
       <div class="col-lg-2">
         <div>Coverage Type</div>
         <ng-select id="primaryCoverageCode" click-stop-propagation [items]="coverageTypes$ | async" bindLabel="description" bindValue="key" placeholder=""
@@ -24,7 +33,7 @@
         <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79" [title]="ucData.carrierName"
           name="name" [(ngModel)]="ucData.carrierName" >
       </div>
-      <div class="col-lg-3">
+      <div class="col-lg-2">
         <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
         <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
           [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()" [title]="ucData.limitsPattern">
@@ -52,11 +61,7 @@
 
   <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ucdCollapsed">
     <div class="row" style="width: 100%" >
-      <div *ngIf="isExcessUmbrella" class="col-lg-2">
-        <div>Label</div>
-        <input type="text" class="form-control" id="label" #label="ngModel" readonly maxlength="79"
-           name="label" [(ngModel)]="ucData.label" >
-      </div>
+
       <div class="col-lg-2">
         <div>Policy Number</div>
         <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
