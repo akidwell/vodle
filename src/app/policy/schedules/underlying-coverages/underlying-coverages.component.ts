@@ -119,9 +119,10 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
   deleteCoverage(existingCoverage: UnderlyingCoverage) {
     const index = this.underlyingCoverages.indexOf(existingCoverage, 0);
-    console.log(index)
-    if (index > -1) {
+    if (!existingCoverage.isNew) {
       this.deleteComponent(index, existingCoverage);
+    } else {
+      this.underlyingCoverages.splice(index,1);
     }
   }
 }

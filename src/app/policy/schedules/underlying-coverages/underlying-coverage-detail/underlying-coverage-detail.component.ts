@@ -9,6 +9,7 @@ import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { PolicyInformation } from 'src/app/policy/policy';
+import { ExcessUmbrellaProgramIds } from 'src/app/policy/program-types';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 import { UnderlyingCoverage, UnderlyingLimitBasis, UnderlyingCoverageLimit } from '../../schedules';
@@ -41,6 +42,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   policyId!: number;
   faArrowUp = faAngleUp;
   isAPPolicy: boolean = false;
+  isExcessUmbrella: boolean = false;
   isLimitsPatternValid: boolean = true;
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
@@ -72,6 +74,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       this.isAPPolicy = (this.policyInfo.programId == 84 || this.policyInfo.programId == 85) ? true : false;
+      this.isExcessUmbrella = (ExcessUmbrellaProgramIds.includes(this.policyInfo.programId)) ? true : false;
       if ((this.ucData.primaryCoverageCode && this.ucData.primaryCoverageCode > 0) || (this.ucData.limitsPatternGroupCode && this.ucData.limitsPatternGroupCode > 0)) {
         this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
           (limitBasisDescriptions: UnderlyingLimitBasis[]) =>
@@ -272,6 +275,10 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       }
       this.isLimitsPatternValid = this.checkLimitsPatternValid();
     });
+  }
+  //On Limits field change
+  updateExcessOfLimitBasisData(): void {
+    this.ucData.excessOfLimitsPattern = this.limitsPatternHelperService.parseLimitsPattern(this.ucData.excessOfLimitsPattern || '', this.limitedLimitsBasis.length);
   }
   generateLimits(): void {
     this.getUserAddedCount();
