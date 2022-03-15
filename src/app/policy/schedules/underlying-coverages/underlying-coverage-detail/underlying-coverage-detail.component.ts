@@ -119,7 +119,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
 
   //This updates the coverages by primary coverage code (AP) or limits pattern group code (PAUL)
   updateCoverageType():void {
-    if (this.ucData.primaryCoverageCode || this.ucData.limitsPatternGroupCode) {
+    if (this.ucData.primaryCoverageCode && this.ucData.limitsPatternGroupCode) {
       this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
         (limitBasisDescriptions: UnderlyingLimitBasis[]) =>
         {
