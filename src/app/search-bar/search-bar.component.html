@@ -5,7 +5,7 @@
         <fa-icon [icon]="faSearch"></fa-icon>
       </button>
     </div>
-    <input class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
+    <input style="z-index: 0;"  class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
       placeholder="Search Policy Number or PolicyId" autofocus (keydown.enter)="search()" />
   </div>
 </div>
