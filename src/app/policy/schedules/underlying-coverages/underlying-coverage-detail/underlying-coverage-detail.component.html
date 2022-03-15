@@ -43,7 +43,7 @@
       <div class="col-lg-2" *ngIf="isExcessUmbrella">
         <div>Excess Of Limits</div>
         <input click-stop-propagation type="text" class="form-control" id="excessOfLimitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-          [required]="canEdit" name="excessOfLimitsPattern" [(ngModel)]="ucData.excessOfLimitsPattern" (change)="updateExcessOfLimitBasisData()" [title]="ucData.excessOfLimitsPattern">
+          [required]="canEditPolicy" name="excessOfLimitsPattern" [(ngModel)]="ucData.excessOfLimitsPattern" (change)="updateExcessOfLimitBasisData()" [title]="ucData.excessOfLimitsPattern">
           <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
             Invalid Pattern
           </div>
