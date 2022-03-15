@@ -2,38 +2,54 @@
 <div class="endorsement-header">
   <div class="row">
     <div class="col-lg-2">
-      <label for="transactionEffectiveDate">Trans Eff Date</label>
-      <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="endorsementEffectiveDateCalendar"
-        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
-        [(ngModel)]="endorsement.transactionEffectiveDate" (dateChange)="changeEffectiveDate()"
-        name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
-      <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
-        [for]="endorsementEffectiveDateCalendar">
-      </mat-datepicker-toggle>
-      <mat-datepicker #endorsementEffectiveDateCalendar></mat-datepicker>
-      <div *ngIf="!isTransactionEffectiveDateValid" class="alert alert-danger">
-        Invalid date
+      <div *ngIf="transactionEffectiveDateIsEditable()">
+        <label for="transactionEffectiveDate">Trans Eff Date</label>
+        <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="endorsementEffectiveDateCalendar"
+          class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
+          [(ngModel)]="endorsement.transactionEffectiveDate" (dateChange)="changeEffectiveDate()"
+          name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
+        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
+          [for]="endorsementEffectiveDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #endorsementEffectiveDateCalendar></mat-datepicker>
+
+        <div *ngIf="!isTransactionEffectiveDateValid" class="alert alert-danger">
+          Invalid date
+        </div>
+      </div>
+      <div *ngIf="!transactionEffectiveDateIsEditable()">
+        <label for="transactionEffectiveDate">Trans Eff Date</label>
+        <input type="text" class="form-control" id="transactionEffectiveDate" readonly
+        [ngModel]="endorsement.transactionExpirationDate | date:'MM/dd/yyyy'" name="transactionEffectiveDate">
       </div>
     </div>
     <div class="col-lg-2">
-      <label for="endorsementExpirationDate">Trans Exp Date</label>
-      <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transactionExpirationDateCalendar"
-        class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
-        [(ngModel)]="endorsement.transactionExpirationDate" (dateChange)="changeExpirationDate()"
-        name="transactionExpirationDate" #transactionExpirationDate="ngModel">
-      <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
-        [for]="transactionExpirationDateCalendar">
-      </mat-datepicker-toggle>
-      <mat-datepicker #transactionExpirationDateCalendar></mat-datepicker>
-      <div *ngIf="!isTransactionExpirationDateValid" class="alert alert-danger">
-        Invalid date
+      <div *ngIf="transactionExpirationDateIsEditable()">
+        <label for="transactionExpirationDate">Trans Exp Date</label>
+        <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="endorsementExpirationDateCalendar"
+          class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
+          [(ngModel)]="endorsement.transactionExpirationDate" (dateChange)="changeExpirationDate()"
+          name="transactionExpirationDate" #transactionExpirationDate="ngModel">
+        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
+          [for]="endorsementExpirationDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #endorsementExpirationDateCalendar></mat-datepicker>
+
+        <div *ngIf="!isTransactionExpirationDateValid" class="alert alert-danger">
+          Invalid date
+        </div>
+      </div>
+      <div *ngIf="!transactionExpirationDateIsEditable()">
+        <label for="transactionExpirationDate">Trans Exp Date</label>
+        <input type="text" class="form-control" id="transactionExpirationDate" readonly
+        [ngModel]="endorsement.transactionExpirationDate | date:'MM/dd/yyyy'" name="transactionExpirationDate">
       </div>
     </div>
     <div class="col-lg-2">
       <label for="transactionType">Transaction Type</label><br>
       <ng-select id="transactionType" [items]="transactionTypes" bindLabel="description" bindValue="key"
-        [required]="canEditTransactionType" [clearable]="false" [searchFn]="dropDownSearch" (change)="clearAllTransactionTypeSpecificData($event)"
-        [readonly]="!canEditTransactionType" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
+       [clearable]="false" [searchFn]="dropDownSearch"
+        [readonly]="true" [(ngModel)]="endorsement.transactionTypeCode" name = "transactionType">
       </ng-select>
     </div>
     <div class="col-lg">
@@ -73,41 +89,5 @@
       </ng-select>
     </div>
   </div>
-  <div class="row">
 
-    <div class="col-md-4"></div>
-    <div class="col-lg-3" *ngIf="isExtensionDateSelected()">
-      <label for="policyExtendedExpDate" class="form-label" title="Extension Exp Date">Extension Exp Date</label>
-      <div *ngIf="canEdit">
-        <input style="display: inline-block; max-width: 80%;" matInput
-          [required]="isExtensionDateSelected()"
-          [matDatepicker]="policyExtendedExpDateCalendar" class="form-control"
-          [(ngModel)]="policyInfo.policyExtendedExpDate" name="policyExtendedExpDate"
-          #policyExtendedExpDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="policyExtendedExpDateCalendar">
-        </mat-datepicker-toggle>
-        <mat-datepicker #policyExtendedExpDateCalendar></mat-datepicker>
-      </div>
-      <div *ngIf="!canEdit">
-        <input type="text" class="form-control" id="policyExtendedExpDate" readonly
-          [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
-      </div>
-    </div>
-    <div *ngIf="isCancelSelected()" class="col-lg-3">
-      <label for="policyCancelDate" class="form-label" title="Cancel Date">Cancel Date</label>
-      <div *ngIf="canEdit">
-        <input style="display: inline-block; max-width: 80%;" matInput
-          [required]="isCancelSelected()"
-          [matDatepicker]="policyCancelDateCalendar" class="form-control"
-          [(ngModel)]="policyInfo.policyCancelDate" name="policyCancelDate" #policyCancelDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="policyCancelDateCalendar">
-        </mat-datepicker-toggle>
-        <mat-datepicker #policyCancelDateCalendar></mat-datepicker>
-      </div>
-      <div *ngIf="!canEdit">
-        <input type="text" class="form-control" id="policyCancelDateReadonly" [readonly]="isReadOnly"
-          [ngModel]="policyInfo.policyCancelDate | date:'MM/dd/yyyy'" name="policyCancelDateReadonly">
-      </div>
-    </div>
-  </div>
 </div>

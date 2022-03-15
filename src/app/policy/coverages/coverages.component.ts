@@ -119,8 +119,8 @@ export class CoveragesComponent implements OnInit, PolicySave {
         }
       }
     }
-    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID' 
-      && this.checkPremiumMatches() && this.headerComp.checkUnderlyingLimitValid() && this.headerComp.checkAttachmentPointValid() 
+    this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID'
+      && this.checkPremiumMatches() && this.headerComp.checkUnderlyingLimitValid() && this.headerComp.checkAttachmentPointValid()
       && this.headerComp.checkAttachmentPointUnderlyingLimitValid() && this.checkTerrorismMessage() == "";
     return this.endorsementStatusService.coverageValidated;
   }
@@ -141,10 +141,12 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   save(): void {
+    this.savePolicyInfo().subscribe(() => {
     this.saveEndorsementInfo().subscribe(() => {
       this.saveEndorsementCoverages().subscribe(() => {
       });
     });
+    })
   }
 
   saveEndorsementInfo(): Observable<boolean> {
@@ -183,7 +185,19 @@ export class CoveragesComponent implements OnInit, PolicySave {
     }
     return subject.asObservable();
   }
-
+  savePolicyInfo(): Observable<boolean> {
+    var subject = new Subject<boolean>();
+    if (this.headerComp.canSave()) {
+      this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
+          this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
+          this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          subject.next(true)
+        })
+    } else {
+      setTimeout(() => subject.next(true), 0)
+    }
+    return subject.asObservable();
+  }
   refreshEndorsement() {
     this.coveragesSub = this.policyService.getEndorsement(this.endorsement.policyId, this.endorsement.endorsementNumber).subscribe(endorsement => {
       if (this.endorsement.limit !== endorsement.limit) {

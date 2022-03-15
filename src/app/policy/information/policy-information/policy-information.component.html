@@ -165,7 +165,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
               <label for="policyExtendedExpDate" class="form-label" title="Extension Exp Date">Extension Exp Date</label>
-              <div *ngIf="isExtensionDateActive()">
+              <!-- <div *ngIf="isExtensionDateActive()">
                 <input style="display: inline-block; max-width: 80%;" matInput
                   [required]="isExtensionDateActive()"
                   [matDatepicker]="policyExtendedExpDateCalendar" class="form-control"
@@ -174,15 +174,15 @@
                 <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="policyExtendedExpDateCalendar">
                 </mat-datepicker-toggle>
                 <mat-datepicker #policyExtendedExpDateCalendar></mat-datepicker>
-              </div>
-              <div *ngIf="!isExtensionDateActive()">
+              </div> -->
+              <div >
                 <input type="text" class="form-control" id="policyExtendedExpDate" readonly
                   [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
               </div>
             </div>
             <div class="col-lg-3 col-md-6">
               <label for="policyCancelDate" class="form-label" title="Cancel Date">Cancel Date</label>
-              <div *ngIf="isCancelDateActive()">
+              <!-- <div *ngIf="isCancelDateActive()">
                 <input style="display: inline-block; max-width: 80%;" matInput
                   [required]="isCancelDateActive()"
                   [matDatepicker]="policyCancelDateCalendar" class="form-control"
@@ -190,8 +190,8 @@
                 <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="policyCancelDateCalendar">
                 </mat-datepicker-toggle>
                 <mat-datepicker #policyCancelDateCalendar></mat-datepicker>
-              </div>
-              <div *ngIf="!isCancelDateActive()">
+              </div> -->
+              <div>
                 <input type="text" class="form-control" id="policyCancelDateReadonly" [readonly]="isReadOnly"
                   [ngModel]="policyInfo.policyCancelDate | date:'MM/dd/yyyy'" name="policyCancelDateReadonly">
               </div>

@@ -100,7 +100,20 @@ export class EndorsementHeaderComponent implements OnInit {
   checkUnderlyingLimitValid(): boolean {
     return this.policyInfo.policySymbol.trim().toUpperCase() != 'XS' || this.endorsement.underlyingLimit > 0;
   }
-
+  transactionEffectiveDateIsEditable(): boolean {
+    if (this.isCancelSelected() || this.isExtensionDateSelected()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  transactionExpirationDateIsEditable(): boolean {
+    if (this.isCancelSelected()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   changeEffectiveDate() {
     if (this.endorsement.endorsementNumber == 0 && this.endorsement.transactionEffectiveDate) {
       this.isTransactionEffectiveDateValid = this.datePipe.transform(this.endorsement.transactionEffectiveDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd');
@@ -114,8 +127,12 @@ export class EndorsementHeaderComponent implements OnInit {
   }
 
   changeExpirationDate() {
+    if(this.isExtensionDateSelected()) {
+      this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate
+    }
     if (this.endorsement.endorsementNumber == 0 && this.endorsement.transactionExpirationDate) {
       this.isTransactionExpirationDateValid = this.datePipe.transform(this.endorsement.transactionExpirationDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd');
+      //this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate;
       if (this.isTransactionExpirationDateValid) {
         this.endorsementHeaderForm.controls['endorsementExpirationDate'].markAsPristine();
       }
@@ -128,22 +145,28 @@ export class EndorsementHeaderComponent implements OnInit {
   changeTerrorism() {
     this.updatePolicyChild.terrorismChanged();
   }
-  clearAllTransactionTypeSpecificData(event: any) {
-    this.clearOrSetCancelDate(event);
-    this.clearExtensionDate();
-  }
-  clearOrSetCancelDate(event: any) {
-    // if (event.key == TransactionTypes.ProRataCancel || event.key == TransactionTypes.FlatCancel ||
-    //   event.key == TransactionTypes.ShortRateCancel || event.key == TransactionTypes.CancellationOfPolicyExtension) {
-    //     this.policyInfo.policyCancelDate = this.endorsement.transactionEffectiveDate;
-    //   } else
-      if (!this.isPolicyCancelled) {
-      this.policyInfo.policyCancelDate = null;
-    }
-  }
-  clearExtensionDate() {
-    this.policyInfo.policyExtendedExpDate = null;
-  }
+  // clearAllTransactionTypeSpecificData(event: any) {
+  //   this.clearOrSetCancelDate(event);
+  //   this.clearOrSetExtensionDate(event);
+  // }
+  // clearOrSetCancelDate(event: any) {
+  //   if (event.key == TransactionTypes.ProRataCancel || event.key == TransactionTypes.FlatCancel ||
+  //     event.key == TransactionTypes.ShortRateCancel || event.key == TransactionTypes.CancellationOfPolicyExtension) {
+  //       this.policyInfo.policyCancelDate = this.policyInfo.policyExpirationDate;
+  //       this.endorsement.transactionEffectiveDate = this.policyInfo.policyExpirationDate;
+  //       this.endorsement.transactionExpirationDate = this.policyInfo.policyExpirationDate;
+  //     } else if (!this.isPolicyCancelled) {
+  //     this.policyInfo.policyCancelDate = null;
+  //   }
+  // }
+  // clearOrSetExtensionDate(event: any) {
+  //   if (event.key == TransactionTypes.PolicyExtensionByEndt) {
+  //     this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate;
+  //     this.endorsement.transactionEffectiveDate = this.policyInfo.policyExpirationDate;
+  //   } else {
+  //     this.policyInfo.policyExtendedExpDate = null;
+  //   }
+  // }
   canSave(): boolean {
     if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
       return this.endorsementHeaderForm.status == "VALID";
