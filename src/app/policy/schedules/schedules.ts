@@ -12,7 +12,7 @@ export interface UnderlyingCoverage {
   carrierName?: String;
   retroDate?: Date;
   label?: String;
-  excessOfLimitsPattern?: String;
+  excessOfLimitsPattern?: string;
   underlyingScheduleLimitData: UnderlyingCoverageLimit[];
   isNew: boolean;
 }
