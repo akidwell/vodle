@@ -18,7 +18,7 @@
       <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
         [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]"
         (mouseover)="hoverFavorite(policy)" (mouseleave)="unhoverFavorite(policy)" (click)="openPolicy()"
-        #policyActive="routerLinkActive">
+        #policyActive="routerLinkActive" [title]="policy.policyNumber + ':' + policy.endorsementNumber">
         <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
         <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
         {{ policy.policyNumber + ":" + policy.endorsementNumber}}

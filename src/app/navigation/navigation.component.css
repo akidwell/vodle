@@ -20,3 +20,9 @@ img {
   padding-left: 10px;
   cursor: pointer;
 }
+
+.nav-link{
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
