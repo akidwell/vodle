@@ -5,7 +5,7 @@
         <fa-icon [icon]="faSearch"></fa-icon>
       </span>
     </div>
-    <input class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
+    <input style="z-index: 0;" class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
       placeholder="Search Submission or Policy No or Underwriter" autofocus />
     <span class="ml-3" *ngIf="loading$ | async">Loading...</span>
   </div>

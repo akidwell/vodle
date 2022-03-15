@@ -44,3 +44,8 @@
 .status {
   width: 18%;
 }
+
+h6{
+  white-space: nowrap;
+  min-width: 100%;
+}
