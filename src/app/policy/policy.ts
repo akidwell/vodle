@@ -44,6 +44,7 @@ export interface PolicyInformation {
   policyExpirationDate: Date;
   policyExtendedExpDate: Date | null;
   policyCancelDate: Date | null;
+  retroDate: Date | null;
   programId: number;
   programName: string;
   riskGradeCode: string;

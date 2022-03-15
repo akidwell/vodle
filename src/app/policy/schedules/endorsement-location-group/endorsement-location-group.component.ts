@@ -51,10 +51,6 @@ export class EndorsementLocationGroupComponent implements OnInit {
     this.statusSub?.unsubscribe();
   }
 
-  get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
-  }
-
   addNewEndorsementLocation(): void {
     let newLocation = newEndorsementLocation();
     newLocation.policyId = this.policyInfo.policyId;

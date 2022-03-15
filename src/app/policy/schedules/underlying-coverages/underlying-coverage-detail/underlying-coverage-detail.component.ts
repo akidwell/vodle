@@ -382,9 +382,6 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     }
     return isValid;
   }
-  get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
-  }
   collapseExpand(event: boolean) {
     this.ucdCollapsed = event;
   }

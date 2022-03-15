@@ -89,10 +89,6 @@ export class EndorsementLocationComponent implements OnInit {
       }
     });
   }
-
-  get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
-  }
   
   changeZipCode(): void {
     if (this.locationForm.controls["zipCode"].valid) {
