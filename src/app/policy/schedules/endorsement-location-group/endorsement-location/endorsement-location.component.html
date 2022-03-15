@@ -9,7 +9,7 @@
       <div class="row" *ngIf="collapsed">
         <div class="col-lg-6">
           <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address"
-            [required]="canEdit"
+            [required]="canEditPolicy"
             [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
         </div>
       </div>
@@ -18,19 +18,19 @@
       <div class="row">
         <div class="col-lg-6">
           <label for="street1">Address Street 1</label>
-          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEdit"
-            maxlength="40" [required]="canEdit" name="street1" [(ngModel)]="location.street1">
+          <input type="text" class="form-control" id="street1" #street1="ngModel" [readonly]="!canEditPolicy"
+            maxlength="40" [required]="canEditPolicy" name="street1" [(ngModel)]="location.street1">
         </div>
         <div class="col-lg-6">
           <label for="street2">Address Street 2</label>
-          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEdit"
+          <input type="text" class="form-control" id="street2" #street2="ngModel" [readonly]="!canEditPolicy"
             maxlength="40" name="street2" [(ngModel)]="location.street2" nullValue>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-3">
           <label for="zipCode">Zip Code</label>
-          <input type="text" class="form-control" id="zipCode" [readonly]="!canEdit" [required]="canEdit"
+          <input type="text" class="form-control" id="zipCode" [readonly]="!canEditPolicy" [required]="canEditPolicy"
             mask="00000||00000-0000" [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
             (ngModelChange)="changeZipCode()">
         </div>
@@ -41,8 +41,8 @@
             </div>
           </div>
           <div *ngIf="!isLoadingAddress">
-            <input type="text" class="form-control" id="city" [readonly]="!canEdit || isLoadingAddress"
-              maxlength="25" [required]="canEdit" [(ngModel)]="location.city" name="city" #city="ngModel">
+            <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
+              maxlength="25" [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
           </div>
         </div>
         <div class="col-lg-3">
@@ -53,8 +53,8 @@
           </div>
           <div *ngIf="!isLoadingAddress">
             <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
-              [clearable]="false" [readonly]="!canEdit || isLoadingAddress"
-              name="locationState" [required]="canEdit" [(ngModel)]="location.state" #locationState="ngModel">
+              [clearable]="false" [readonly]="!canEditPolicy || isLoadingAddress"
+              name="locationState" [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
             </ng-select>
           </div>
         </div>
@@ -67,12 +67,12 @@
           <div *ngIf="!isLoadingAddress">
             <div *ngIf="counties.length <= 1">
               <input type="text" class="form-control" id="locationCounty"
-                [readonly]="!canEdit || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
+                [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
                 maxlength="100" #locationCounty="ngModel" nullValue>
             </div>
             <div *ngIf="counties.length > 1">
               <ng-select id="locationCounty" [items]="counties" [clearable]="false"
-                [readonly]="!canEdit || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
+                [readonly]="!canEditPolicy || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
                 #locationCounty="ngModel">
               </ng-select>
             </div>
@@ -83,11 +83,11 @@
       <div class="row">
         <div class="col-lg-2">
           <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
-            *ngIf="canEdit">Copy</span>
+            *ngIf="canEditPolicy">Copy</span>
           <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-            *ngIf="!location.isNew && canEdit">Delete</span>
+            *ngIf="!location.isNew && canEditPolicy">Delete</span>
           <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-            *ngIf="location.isNew && canEdit">Remove</span>
+            *ngIf="location.isNew && canEditPolicy">Remove</span>
         </div>
         <div [id]='anchorId'></div>
         <span class='astext' (click)="collapseExpand(true)">

@@ -181,7 +181,9 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsement.underlyingLimit = 0;
     }
   }
-
+  changeRetroDate() {
+    this.policyInfo.quoteData.retroDate = this.policyInfo.retroDate
+  }
   private get isPrimaryPolicy(): boolean {
     return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC')
   }

@@ -54,7 +54,4 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
       this.deleteThisLimit.emit(this.ucLimit);
     };
   }
-  get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
-  }
 }

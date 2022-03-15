@@ -15,19 +15,19 @@
       <div class="col-lg-2">
         <div>Coverage Type</div>
         <ng-select id="primaryCoverageCode" click-stop-propagation [items]="coverageTypes$ | async" bindLabel="description" bindValue="key" placeholder=""
-        [clearable]="false" [readonly]="!canEdit" [required]="canEdit" name="primaryCoverageCode"
+        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="primaryCoverageCode"
         [(ngModel)]="ucData.primaryCoverageCode" #limitsPattern="ngModel"  (change)="updateCoverageType()">
       </ng-select>
       </div>
       <div class="col-lg-2">
         <div>Carrier</div>
-        <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEdit" maxlength="79"
+        <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
           name="name" [(ngModel)]="ucData.carrierName" >
       </div>
       <div class="col-lg-3">
         <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
-        <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEdit" maxlength="79"
-          [required]="canEdit" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()">
+        <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
+          [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()">
           <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
             Invalid Pattern
           </div>
@@ -35,7 +35,7 @@
       <div class="col-lg-4">
         <div>Limits Pattern</div>
         <ng-select click-stop-propagation *ngIf="!isAPPolicy" id="limitsPatternGroupCode" [items]="this.allLimitsPatternDescription" bindLabel="description" bindValue="key" placeholder=""
-          [clearable]="false" [readonly]="!canEditPolicy" [required]="canEdit && !isAPPolicy" name="limitsPatternGroupCode"
+          [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy && !isAPPolicy" name="limitsPatternGroupCode"
           [(ngModel)]="ucData.limitsPatternGroupCode" #limitsPatternGroupCode="ngModel"  (change)="updateLimitsPatternGroupCode()">
         </ng-select>
         <div *ngIf="isAPPolicy">{{this.limitedLimitsPatternString}}</div>
@@ -46,13 +46,13 @@
     <div class="row container" style="width: 100%" >
       <div class="col-lg-2">
         <div>Policy Number</div>
-        <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEdit" maxlength="79"
+        <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
            name="policyNumber" [(ngModel)]="ucData.policyNumber" >
       </div>
       <div class="col-lg-2">
         <label for="effectiveDate">Policy Effective Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="effectiveDateCalendar"
-          class="form-control" [disabled]="!canEdit" [(ngModel)]="ucData.effectiveDate" name="effectiveDate"
+          class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.effectiveDate" name="effectiveDate"
           #effectiveDate="ngModel">
         <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="effectiveDateCalendar">
         </mat-datepicker-toggle>
@@ -61,7 +61,7 @@
       <div class="col-lg-2">
         <label for="expirationDate">Policy Expiration Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="expirationDateCalendar"
-          class="form-control" [disabled]="!canEdit" [(ngModel)]="ucData.expirationDate" name="expirationDate"
+          class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.expirationDate" name="expirationDate"
           #expirationDate="ngModel">
         <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="expirationDateCalendar">
         </mat-datepicker-toggle>
@@ -70,7 +70,7 @@
       <div class="col-lg-2">
         <label for="retroDate">Retro Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="retroDateCalendar"
-          class="form-control" [disabled]="!canEdit" [(ngModel)]="ucData.retroDate" name="retroDate"
+          class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.retroDate" name="retroDate"
           #retroDate="ngModel">
         <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
         </mat-datepicker-toggle>
@@ -88,7 +88,7 @@
           </rsps-underlying-coverage-limit-basis>
         </div>
       </div>
-      <button style="float:left; background:none; border:none;" class="underline" *ngIf="canEdit" (click)="addUserDefinedLimitBasis()">Add Limit</button>
+      <button style="float:left; background:none; border:none;" class="underline" *ngIf="canEditPolicy" (click)="addUserDefinedLimitBasis()">Add Limit</button>
     </div>
     <div class="empty-space"></div>
   <div class="row container">
