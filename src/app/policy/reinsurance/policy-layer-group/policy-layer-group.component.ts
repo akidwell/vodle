@@ -45,7 +45,6 @@ export class PolicyLayerGroupComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.endorsement = data['endorsementData'].endorsement;
       this.policyLayer = data['policyLayerData'].policyLayer;
-      // this.canEditTransactionType = Number(this.route.snapshot.paramMap.get('end') ?? 0) > 0;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
     });
