@@ -37,7 +37,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.locationData = data['endorsementLocationData'].endorsementLocation;
       this.policyInfo = data['policyInfoData'].policyInfo;
-      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
+      this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
