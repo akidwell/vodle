@@ -59,15 +59,21 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
 
   addNewUnderlyingCoverage(): void {
-    var newUnderlyingCoverage = this.createNewUnderlyingCoverage();
+
+    var maxSequence = this.underlyingCoverages.length > 0 ? this.underlyingCoverages.map(x => x.sequence)
+    .reduce((prev,current): number => {
+      return (prev > current) ? prev : current
+    }) : 0;
+
+    var newUnderlyingCoverage = this.createNewUnderlyingCoverage(maxSequence);
     this.underlyingCoverages.push(newUnderlyingCoverage);
   }
   //Will create and return a new underlying coverage
-  createNewUnderlyingCoverage(): UnderlyingCoverage {
+  createNewUnderlyingCoverage(maxSequence: number): UnderlyingCoverage {
     return {
       policyId: this.policyId,
       endorsementNo: this.endorsementNumber,
-      sequence: this.underlyingCoverages.length + 1,
+      sequence: maxSequence + 1,
       primaryCoverageCode: 0,
       limitsPatternGroupCode: 0,
       limitsPattern: '',
