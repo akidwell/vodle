@@ -20,7 +20,7 @@
       <div *ngIf="!transactionEffectiveDateIsEditable()">
         <label for="transactionEffectiveDate">Trans Eff Date</label>
         <input type="text" class="form-control" id="transactionEffectiveDate" readonly
-        [ngModel]="endorsement.transactionExpirationDate | date:'MM/dd/yyyy'" name="transactionEffectiveDate">
+        [ngModel]="endorsement.transactionEffectiveDate | date:'MM/dd/yyyy'" name="transactionEffectiveDate">
       </div>
     </div>
     <div class="col-lg-2">

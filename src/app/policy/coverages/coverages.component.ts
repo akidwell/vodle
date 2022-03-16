@@ -142,10 +142,10 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   save(): void {
     this.savePolicyInfo().subscribe(() => {
-    this.saveEndorsementInfo().subscribe(() => {
-      this.saveEndorsementCoverages().subscribe(() => {
+      this.saveEndorsementInfo().subscribe(() => {
+        this.saveEndorsementCoverages().subscribe(() => {
+        });
       });
-    });
     })
   }
 
@@ -187,10 +187,11 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
   savePolicyInfo(): Observable<boolean> {
     var subject = new Subject<boolean>();
-    if (this.headerComp.canSave()) {
+    if (this.headerComp.savePolicyInfo) {
       this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
           this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
           this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          this.headerComp.savePolicyInfo = false;
           subject.next(true)
         })
     } else {

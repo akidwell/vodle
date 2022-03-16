@@ -30,6 +30,7 @@ export class EndorsementHeaderComponent implements OnInit {
   isPolicyCancelled: boolean = false;
   isRewrite: boolean = false;
   isUnderlyingLimitValid: boolean = false;
+  savePolicyInfo: boolean = false;
 
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
@@ -128,7 +129,8 @@ export class EndorsementHeaderComponent implements OnInit {
 
   changeExpirationDate() {
     if(this.isExtensionDateSelected()) {
-      this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate
+      this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate;
+      this.savePolicyInfo = true;
     }
     if (this.endorsement.endorsementNumber == 0 && this.endorsement.transactionExpirationDate) {
       this.isTransactionExpirationDateValid = this.datePipe.transform(this.endorsement.transactionExpirationDate, 'yyyyMMdd') == this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd');
