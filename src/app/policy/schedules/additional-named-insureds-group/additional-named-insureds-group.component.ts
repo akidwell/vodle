@@ -7,6 +7,7 @@ import { AdditionalNamedInsureds } from '../../policy';
 import { PolicyService } from '../../policy.service';
 import { AdditionalNamedInsuredsComponent } from './additional-named-insureds/additional-named-insureds.component';
 import { NotificationService } from 'src/app/notification/notification-service';
+import { deepClone } from 'src/app/helper/deep-clone';
 
 @Component({
   selector: 'rsps-additional-named-insureds-group',
@@ -76,7 +77,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   copyExistingAni(existingAni: AdditionalNamedInsureds) {
-    this.copyAni = JSON.parse(JSON.stringify(existingAni));
+    this.copyAni = deepClone(existingAni);
     this.copyAni.name = 'CopyOf ' + existingAni.name
     this.copyAni.sequenceNo = this.getNextSequence();
     this.copyAni.createdDate = new Date();
@@ -147,5 +148,4 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
     }
     return false;
   }
-
 }
