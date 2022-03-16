@@ -270,7 +270,6 @@ export interface EndorsementStatusData {
   isDirectQuote: boolean;
   isInvoiced: boolean;
   endorsementReason: string | null;
-  preEndorsementStatus: string | null;
   isRewrite: boolean;
 }
 

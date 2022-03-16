@@ -35,5 +35,4 @@ export interface PolicySearchResults {
     premium: number;
     backout: boolean;
     isRewrite: boolean;
-    preEndorsementStatus: string | null;
   }
