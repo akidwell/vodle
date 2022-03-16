@@ -52,13 +52,6 @@ export class EndorsementHeaderComponent implements OnInit {
     this.isRewrite = this.endorsementStatusService.isRewrite;
     const transactionTypes$ = this.dropdowns.getTransactionTypes();
     this.transactionTypes = await lastValueFrom(transactionTypes$);
-    let preEndorsementStatus =  this.endorsementStatusService.preEndorsementStatus;
-    if (preEndorsementStatus !== "Cancelled"){
-      this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
-    } else {
-      this.isPolicyCancelled = true;
-      this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
-    }
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
     this.checkAttachmentPointValid();
    // this.checkUnderlyingLimitValid();

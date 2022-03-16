@@ -73,7 +73,6 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
-      this.endorsementActionInfo.preEndorsementStatus = status
 
       if(this.policyInfo.policyCancelDate != null){
         this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
@@ -113,7 +112,6 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
       this.endorsementActionInfo.backout = true;
-      this.endorsementActionInfo.preEndorsementStatus = status
 
       if (this.policyInfo.amount > 0){
         this.endorsementActionInfo.premium = -this.policyInfo.amount
