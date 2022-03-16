@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
+import { deepClone } from 'src/app/helper/deep-clone';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../policy';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
@@ -70,7 +71,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
 
   copyExistingLocation(existingLocation: EndorsementLocation) {
-    const newLocation: EndorsementLocation = JSON.parse(JSON.stringify(existingLocation));
+    const newLocation: EndorsementLocation = deepClone(existingLocation);
     newLocation.sequence = this.getNextSequence();
     newLocation.isNew = true;
     this.locationData.push(newLocation);

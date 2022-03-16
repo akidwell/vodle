@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
+import { ConfirmationDialogService } from 'src/app/policy/services/confirmation-dialog-service/confirmation-dialog.service';
 import { AdditionalNamedInsureds } from '../../../policy';
 import { PolicyService } from '../../../policy.service';
 
@@ -19,8 +19,6 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   canEditPolicy: boolean = false;
   aniRoles$: Observable<Code[]> | undefined;
   collapsed: boolean = true;
-  isDirty: boolean = false;
-  dirtySub!: Subscription | undefined;
   deleteSub!: Subscription;
   addSub!: Subscription;
   updateSub!: Subscription;
@@ -38,9 +36,8 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsureds> = new EventEmitter();
-  @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private modalService: NgbModal) {
+  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -54,14 +51,15 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.dirtySub = this.aniForm.statusChanges?.subscribe(() => {
-      this.isDirty = this.aniForm.dirty ?? false;
+    setTimeout(() => {
+      if (this.aniData.isNew) {
+        this.aniForm.form.markAsDirty();
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
-    this.dirtySub?.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
@@ -69,15 +67,14 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   
   copyAni(): void {
     this.copyExistingAni.emit(this.aniData);
-    this.aniForm.form.markAsDirty();
   }
 
   openDeleteConfirmation() {
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
-      if (result == 'Yes') {
-        this.deleteAni();
-      }
-    });
+    this.confirmationDialogService.open("Delete Confirmation","Are you sure you want to delete this Additional Named Insured?").then((result: boolean) => {
+        if (result) {
+          this.deleteAni();
+        }
+      });
   }
 
   async deleteAni() {
@@ -105,16 +102,13 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
           this.aniForm.form.markAsPristine();
           this.aniForm.form.markAsUntouched();
           this.aniData.isNew = false;
-         // return result;
           resolve(result);
         });
       }
     })
-    // return false;
   }
 
   checkDuplicateNameRoleCombo(): void {
-
     if (this.aniForm.controls['role'].errors?.duplicate == true || this.aniForm.controls['name'].errors?.duplicate == true || this.aniForm.controls['name'].value == '') {
       this.aniForm.controls['name'].setErrors(null);
       this.aniForm.controls['role'].setErrors(null);

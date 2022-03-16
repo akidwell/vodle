@@ -8,9 +8,9 @@ import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { NgForm } from '@angular/forms';
 import { AddressLookupService } from 'src/app/policy/address-lookup/address-lookup.service';
 import { PolicyService } from 'src/app/policy/policy.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdatePolicyChild } from 'src/app/policy/services/update-child.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
+import { ConfirmationDialogService } from 'src/app/policy/services/confirmation-dialog-service/confirmation-dialog.service';
 
 @Component({
   selector: 'rsps-endorsement-location',
@@ -43,9 +43,8 @@ export class EndorsementLocationComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
   @Output() copyExistingLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
   @Output() deleteThisLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
-  @ViewChild('modalConfirmation') modalConfirmation: any;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private modalService: NgbModal, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -118,8 +117,8 @@ export class EndorsementLocationComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static' }).result.then((result) => {
-      if (result == 'Yes') {
+    this.confirmationDialogService.open("Delete Confirmation","Are you sure you want to delete this location?").then((result: boolean) => {
+      if (result) {
         this.deleteLocation();
       }
     });
