@@ -66,3 +66,7 @@
 .table-striped>tbody>tr:is(.voidStatus):nth-of-type(odd)>*{
   color: #8e0122 !important;
 }
+
+.table th {
+  vertical-align: top;
+}
