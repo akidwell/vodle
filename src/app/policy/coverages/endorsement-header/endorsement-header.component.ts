@@ -78,6 +78,13 @@ export class EndorsementHeaderComponent implements OnInit {
       return false;
     }
   }
+  isReinstatementSelected(): boolean {
+    if (this.endorsement.transactionTypeCode == TransactionTypes.Reinstatement) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
@@ -95,14 +102,14 @@ export class EndorsementHeaderComponent implements OnInit {
     return this.policyInfo.policySymbol.trim().toUpperCase() != 'XS' || this.endorsement.underlyingLimit > 0;
   }
   transactionEffectiveDateIsEditable(): boolean {
-    if (this.isCancelSelected() || this.isExtensionDateSelected()) {
+    if (this.isCancelSelected() || this.isExtensionDateSelected() || this.isReinstatementSelected()) {
       return false;
     } else {
       return true;
     }
   }
   transactionExpirationDateIsEditable(): boolean {
-    if (this.isCancelSelected()) {
+    if (this.isCancelSelected() || this.isReinstatementSelected()) {
       return false;
     } else {
       return true;
