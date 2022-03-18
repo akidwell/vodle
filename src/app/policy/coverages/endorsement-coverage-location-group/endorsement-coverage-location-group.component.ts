@@ -140,7 +140,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   isValid(): boolean {
     if (this.components != null) {
       for (let child of this.components) {
-        if (child.endorsementCoveragesForm.status != 'VALID') {
+        if (child.endorsementCoveragesForm.status != 'VALID' || !child.isLimitsPatternValid) {
           return false;
         }
       }

@@ -32,6 +32,7 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
     }
     // Show errors
     component.showInvalidControls()
+    window.scroll(0,0);
     // Check to see if trying to leave policy
     if (this.checkLeavePolicy(state.url, nextState.url)) {
       return this.confirmLeave().then(confirm => {

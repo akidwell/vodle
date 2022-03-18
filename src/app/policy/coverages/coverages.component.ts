@@ -228,7 +228,10 @@ export class CoveragesComponent implements OnInit, PolicySave {
     // Loop through each child component to see it any of them have invalid controls
     for (let groups of this.components!) {
       for (let child of groups.components) {
-        for (let name in child.endorsementCoveragesForm.controls) {
+        if (!child.isLimitsPatternValid) {
+          invalid.push("Location: #" + child.coverage.locationId.toString() + " Invalid Limit Pattern");
+        }
+        for (let name in child.endorsementCoveragesForm.controls) {     
           if (child.endorsementCoveragesForm.controls[name].invalid) {
             invalid.push(name + " - Location: #" + child.coverage.locationId.toString());
           }
