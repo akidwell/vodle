@@ -8,7 +8,7 @@
     <div #locationInfo (click)="collapseExpand(false)">
       <div class="row" *ngIf="collapsed">
         <div class="col-lg-6">
-          <input type="address" class="form-control" id="address" #address="ngModel" [readonly]="true" name="address"
+          <input type="address" class="form-control" id="address" readonly [ngClass]="addressReadOnly" #address="ngModel" name="address"
             [required]="canEditPolicy"
             [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
         </div>
