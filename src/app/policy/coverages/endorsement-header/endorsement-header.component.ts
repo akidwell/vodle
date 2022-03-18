@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import * as moment from 'moment';
 import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
@@ -128,6 +129,13 @@ export class EndorsementHeaderComponent implements OnInit {
   }
 
   changeExpirationDate() {
+    if(this.endorsement.transactionExpirationDate && moment(this.endorsement.transactionExpirationDate) < moment(this.endorsement.transactionEffectiveDate)) {
+      this.endorsement.transactionExpirationDate = null;
+      this.isTransactionExpirationDateValid = false;
+      return;
+    } else {
+      this.isTransactionExpirationDateValid = true;
+    }
     if(this.isExtensionDateSelected()) {
       this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate;
       this.savePolicyInfo = true;

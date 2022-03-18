@@ -95,7 +95,7 @@ export interface Endorsement {
   endorsementNumber: number;
   transactionTypeCode: number;
   transactionEffectiveDate: Date;
-  transactionExpirationDate: Date;
+  transactionExpirationDate: Date | null;
   terrorismCode: string;
   sir: number;
   premium: number| null;
