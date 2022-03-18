@@ -9,7 +9,6 @@ import { NgForm } from '@angular/forms';
 import { AddressLookupService } from 'src/app/policy/address-lookup/address-lookup.service';
 import { PolicyService } from 'src/app/policy/policy.service';
 import { UpdatePolicyChild } from 'src/app/policy/services/update-child.service';
-import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { ConfirmationDialogService } from 'src/app/policy/services/confirmation-dialog-service/confirmation-dialog.service';
 
 @Component({
@@ -36,7 +35,7 @@ export class EndorsementLocationComponent implements OnInit {
   saveSub!: Subscription;
   collapsePanelSubscription!: Subscription;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  addressReadOnly: string = ""
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
@@ -44,9 +43,12 @@ export class EndorsementLocationComponent implements OnInit {
   @Output() copyExistingLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
   @Output() deleteThisLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
-      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+      (canEditPolicy: boolean) => {
+        this.canEditPolicy = canEditPolicy
+        this.addressReadOnly = canEditPolicy ? "address" : ""
+      }
     );
   }
 
@@ -56,11 +58,6 @@ export class EndorsementLocationComponent implements OnInit {
       this.collapseExpand(false);
       this.focus();
     }
-    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
-      next: canEdit => {
-        this.canEditEndorsement = canEdit;  
-      }
-    });
   }
 
   ngOnDestroy(): void {
@@ -81,7 +78,6 @@ export class EndorsementLocationComponent implements OnInit {
     this.collapsePanelSubscription = this.updatePolicyChild.collapseEndorsementLocationsObservable$.subscribe(() => {
       this.collapseExpand(true);
     });
-
     setTimeout(() => {
       if (this.location.isNew) {
         this.locationForm.form.markAsDirty();
