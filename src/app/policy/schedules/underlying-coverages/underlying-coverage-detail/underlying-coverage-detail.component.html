@@ -37,7 +37,7 @@
         <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
         <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
           [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()" [title]="ucData.limitsPattern">
-          <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
+          <div [hidden]="isLimitsPatternValid || !canEditPolicy" class="alert alert-danger">
             Invalid Pattern
           </div>
       </div>

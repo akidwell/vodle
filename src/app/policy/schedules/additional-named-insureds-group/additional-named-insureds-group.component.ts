@@ -4,7 +4,6 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { AdditionalNamedInsureds } from '../../policy';
-import { PolicyService } from '../../policy.service';
 import { AdditionalNamedInsuredsComponent } from './additional-named-insureds/additional-named-insureds.component';
 import { NotificationService } from 'src/app/notification/notification-service';
 import { deepClone } from 'src/app/helper/deep-clone';
@@ -32,7 +31,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   @ViewChild(AdditionalNamedInsuredsComponent) aniComp!: AdditionalNamedInsuredsComponent;
   @ViewChildren(AdditionalNamedInsuredsComponent) components: QueryList<AdditionalNamedInsuredsComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
