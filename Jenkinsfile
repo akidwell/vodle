@@ -92,7 +92,6 @@ pipeline {
 				"""
 				zip zipFile: "SoftwareReleases/rspsUI/rsps_${fileVersion}/rsps_${fileVersion}.zip", archive: false, dir: "dist/rsps"
 				sh """
-				mv ${WORKSPACE}/rsps_${fileVersion}.zip ${WORKSPACE}/SoftwareReleases/rspsUI/rsps_${fileVersion}/
 				echo DM_BASELINE=ITS5000:rsps_${fileVersion} >>propsfile
 				"""
 				wrap([$class: 'BuildUser']) {
