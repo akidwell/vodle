@@ -79,6 +79,11 @@ pipeline {
 				sh './build-dev.sh'
 			} 
 		}
+		stage('Zip') {	
+			steps{
+				zip zipFile: "rsps_${fileVersion}.zip", archive: false, dir: "dist/rsps"
+			}
+		}
 		stage("Build Release"){
 			when {
 	      		expression { params.Environment == "RELEASE"}
@@ -107,11 +112,6 @@ pipeline {
 				)
 				}       
 			} 
-		}
-		stage('Zip') {	
-			steps{
-				zip zipFile: "rsps_${fileVersion}.zip", archive: false, dir: "dist/rsps"
-			}
 		}
 		stage('Archive') {	
 			steps{
