@@ -9,14 +9,17 @@ export class FormatDateForDisplay {
 
   constructor() { }
 
-  public formatDateForDisplay(date: Date | moment.Moment) : string | null {
+  public formatDateForDisplay(date: Date | moment.Moment | null) : string | null {
     var displayString: string | null;
-      if (moment.isMoment(date)){
-        displayString = date.format('MM/DD/YYYY');
-      } else {
-        var datePipe =  new DatePipe('en-US');
-        displayString = datePipe.transform(date, 'MM/dd/yyyy');
-      }
-      return displayString;
+    if (date == null) {
+      return null;
+    }
+    if (moment.isMoment(date)){
+      displayString = date.format('MM/DD/YYYY');
+    } else {
+      var datePipe =  new DatePipe('en-US');
+      displayString = datePipe.transform(date, 'MM/dd/yyyy');
+    }
+    return displayString;
   }
 }

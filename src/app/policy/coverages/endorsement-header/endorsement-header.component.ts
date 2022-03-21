@@ -129,13 +129,13 @@ export class EndorsementHeaderComponent implements OnInit {
   }
 
   changeExpirationDate() {
-    if(this.endorsement.transactionExpirationDate && moment(this.endorsement.transactionExpirationDate) < moment(this.endorsement.transactionEffectiveDate)) {
+    if (!this.endorsement.transactionExpirationDate || (this.endorsement.transactionExpirationDate && moment(this.endorsement.transactionExpirationDate) <= moment(this.endorsement.transactionEffectiveDate))){
       this.endorsement.transactionExpirationDate = null;
       this.isTransactionExpirationDateValid = false;
       return;
-    } else {
-      this.isTransactionExpirationDateValid = true;
     }
+    this.isTransactionExpirationDateValid = true;
+    this.policyInfo.policyExpirationDate = moment(this.policyInfo.policyExpirationDate).startOf("day").toDate();
     if(this.isExtensionDateSelected()) {
       this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate;
       this.savePolicyInfo = true;
