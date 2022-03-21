@@ -92,7 +92,7 @@ pipeline {
 				"""
 				zip zipFile: "SoftwareReleases/rspsUI/rsps_${fileVersion}/rsps_${fileVersion}.zip", archive: false, dir: "dist/rsps"
 				sh """
-				echo DM_BASELINE=ITS5000:rsps_${fileVersion} >>propsfile
+				echo DMBL=rsps_${fileVersion} >>propsfile
 				"""
 				wrap([$class: 'BuildUser']) {
 						build (job: 'Dimensions Upload and Baseline', 
@@ -101,8 +101,8 @@ pipeline {
 								string(name: 'SDACOMPONENT', value: "59803989-b407-49e1-8d9e-b718f4d2d947"),
 								string(name: 'DMSTATUS', value: "APPROVED"),
 								string(name: 'DMPART', value: "RELEASE.A;1"),
-					string(name: 'DMTEMPLATE', value: "ITS5000_JENKINS_BL"),
-					string(name: 'DMPROJECT', value: "SOFTWARE RELEASES"),
+					      string(name: 'DMTEMPLATE', value: "ITS5000_JENKINS_BL"),
+					      string(name: 'DMPROJECT', value: "SOFTWARE RELEASES"),
 								string(name: 'DMWORKSPACE', value: "${WORKSPACE}")
 							],
 							wait: true
