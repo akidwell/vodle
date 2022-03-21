@@ -103,7 +103,7 @@ pipeline {
 								string(name: 'DMPART', value: "RELEASE.A;1"),
 					string(name: 'DMTEMPLATE', value: "ITS5000_JENKINS_BL"),
 					string(name: 'DMPROJECT', value: "SOFTWARE RELEASES"),
-								string(name: 'DMWORKSPACE', value: "${WORKSPACE}/SoftwareReleases/rspsUI/rsps_${fileVersion}/")
+								string(name: 'DMWORKSPACE', value: "${WORKSPACE}")
 							],
 							wait: true
 						)
