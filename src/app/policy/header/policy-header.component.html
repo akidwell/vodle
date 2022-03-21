@@ -14,7 +14,7 @@
     </div>
     <div class="effectiveDate">
       <u><h6>Policy Eff Date</h6></u>
-      {{policyInfo.policyEffectiveDate | date:'MM/dd/YYYY'}}
+      {{formatDateService.formatDateForDisplay(policyInfo.policyEffectiveDate) }}
     </div>
     <div class="expirationDate">
       <u><h6>Policy Exp Date</h6></u>

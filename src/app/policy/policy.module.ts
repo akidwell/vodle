@@ -48,6 +48,7 @@ import { PipesModule } from '../pipes/pipes.module';
 import { ConfirmationDialogService } from './services/confirmation-dialog-service/confirmation-dialog.service';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DATE_FORMATS } from '../config/date-format';
+import { FormatDateForDisplay } from './services/format-date-display.service';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { DATE_FORMATS } from '../config/date-format';
     UpdatePolicyChild,
     UnderlyingCoverageService,
     LimitsPatternHelperService,
+    FormatDateForDisplay,
     ConfirmationDialogService,
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     {

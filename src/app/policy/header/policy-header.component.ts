@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AccountInformation, PolicyInformation } from '../policy';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
+import { FormatDateForDisplay } from '../services/format-date-display.service';
 
 @Component({
   selector: 'rsps-policy-header',
@@ -16,7 +17,7 @@ export class PolicyHeaderComponent implements OnInit {
   statusSub!: Subscription;
   status: string = "";
 
-  constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService) { }
+  constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService, public formatDateService: FormatDateForDisplay) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -29,9 +30,8 @@ export class PolicyHeaderComponent implements OnInit {
       next: status => {
         this.status = status;
       }
-    }); 
+    });
   }
-
   ngOnDestroy(): void {
     this.statusSub?.unsubscribe();
   }
