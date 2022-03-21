@@ -48,7 +48,7 @@
           <div class="col-lg-2">
             <label class='hidden-label' for="limits">Limits</label>
             <input type="text" click-stop-propagation class="form-control" id="limits" [readonly]="!canEdit || !canEditLimitPattern"
-              [required]="canEdit && canEditLimitPattern" showValidation [isValid]="isLimitsPatternValid" [(ngModel)]="coverage.limitsPattern" name="limits"
+              [required]="canEdit && canEditLimitPattern" [(ngModel)]="coverage.limitsPattern" name="limits"
               #limits="ngModel" [mask]="setLimitsPatternMask()" (change)="changeLimitsPattern()"
               [dropSpecialCharacters]="false">
             <div [hidden]="isLimitsPatternValid || !canEdit || !canEditLimitPattern" class="alert alert-danger">
