@@ -16,8 +16,10 @@ export class PolicyHeaderComponent implements OnInit {
   endorsementNumber: number = 0;
   statusSub!: Subscription;
   status: string = "";
-
-  constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService, public formatDateService: FormatDateForDisplay) { }
+  formatDateForDisplay: FormatDateForDisplay;
+  constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService, private formatDateService: FormatDateForDisplay) {
+    this.formatDateForDisplay = formatDateService;
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
