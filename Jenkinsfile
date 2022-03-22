@@ -79,7 +79,7 @@ pipeline {
 				sh './build-dev.sh'
 			} 
 		}
-		stage("Build Release"){
+		stage("Build Release and Deploy"){
 			when {
 	      		expression { params.Environment == "RELEASE"}
 	    	}
@@ -99,10 +99,15 @@ pipeline {
 							parameters: [
 								string(name: 'DMPRODUCT', value: "ITS5000"),
 								string(name: 'SDACOMPONENT', value: "59803989-b407-49e1-8d9e-b718f4d2d947"),
-								string(name: 'DMSTATUS', value: "APPROVED"),
+                string(name: 'SDAAPPLICATION', value: "f8ae9b8a-bb31-41f1-ba52-4f3e62f1add1"),
+                string(name: 'SDAENV', value: "f99bb5dc-7f6d-49d9-be45-db98a643219c"),
+                string(name: 'SDAPROCESS', value: "10f049ac-a05e-42b9-bd45-81f745cbab7e"),
+                string(name: 'DMSTATUS', value: "APPROVED"),
+								string(name: 'DEPLOYME', value: "Yes"),
 								string(name: 'DMPART', value: "RELEASE.A;1"),
 					      string(name: 'DMTEMPLATE', value: "ITS5000_JENKINS_BL"),
 					      string(name: 'DMPROJECT', value: "SOFTWARE RELEASES"),
+                string(name: 'MYTAG', value: "rsps_${fileVersion}"),
 								string(name: 'DMWORKSPACE', value: "${WORKSPACE}")
 							],
 							wait: true
