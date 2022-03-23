@@ -267,6 +267,7 @@ export class PolicyInformationComponent implements OnInit {
     } else {
       this.canSetRetroDate = false;
       this.policyInfo.quoteData.retroDate = null;
+      this.policyInfo.retroDate = null;
       return false;
     }
   }
@@ -275,6 +276,7 @@ export class PolicyInformationComponent implements OnInit {
     if (coverageDescription.includes(' OCC') || coverageDescription.includes('Occurrence')){
       this.policyInfo.quoteData.claimsMadeOrOccurrence = 'O';
       this.policyInfo.quoteData.retroDate = null;
+      this.policyInfo.retroDate = null;
       return true;
     } else {
       return false;
@@ -282,6 +284,7 @@ export class PolicyInformationComponent implements OnInit {
   }
   changeClaimsMadeOccurrence() {
     this.policyInfo.quoteData.retroDate = null;
+    this.policyInfo.retroDate = null;
     if (this.policyInfo.quoteData.claimsMadeOrOccurrence == 'C') {
       this.canSetRetroDate = true;
     } else {
