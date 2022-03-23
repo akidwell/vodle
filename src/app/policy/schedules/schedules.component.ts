@@ -46,11 +46,11 @@ export class SchedulesComponent implements OnInit, PolicySave {
 
 
   isValid(): boolean {
-    return this.locationComp.isValid() && this.aniGroupComp.isValid() && this.underlyingCoveragesComp.isValid();
+    return !this.canEditPolicy || (this.locationComp.isValid() && this.aniGroupComp.isValid() && this.underlyingCoveragesComp.isValid());
   }
 
   isDirty(): boolean {
-    return this.locationComp.isDirty() || this.aniGroupComp.isDirty() || this.underlyingCoveragesComp.isDirty();
+    return this.canEditPolicy && (this.locationComp.isDirty() || this.aniGroupComp.isDirty() || this.underlyingCoveragesComp.isDirty());
   }
 
   save(): void {

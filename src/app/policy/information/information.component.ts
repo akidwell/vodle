@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import { UserAuth } from 'src/app/authorization/user-auth';
 import { deepClone } from 'src/app/helper/deep-clone';
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { NotificationService } from 'src/app/notification/notification-service';
@@ -30,9 +31,17 @@ export class InformationComponent implements OnInit, PolicySave {
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
   lockEndorsementFields: boolean = false;
+  canEditEndorsement: boolean = false;
+  canEditPolicy: boolean = false;
+  authSub: Subscription;
+  statusSub!: Subscription;
 
   constructor(private endorsementStatusService: EndorsementStatusService, private route: ActivatedRoute, private notification: NotificationService,
-    private policyService: PolicyService, private policyHistoryService: PolicyHistoryService) { }
+    private policyService: PolicyService, private policyHistoryService: PolicyHistoryService,private userAuth: UserAuth) { 
+      this.authSub = this.userAuth.canEditPolicy$.subscribe(
+        (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+      );
+    }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
@@ -45,15 +54,28 @@ export class InformationComponent implements OnInit, PolicySave {
       this.endorsement = data['endorsementData'].endorsement;
       this.lockEndorsementFields = this.setEndorsementFieldStatus();
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   isValid(): boolean {
-    this.endorsementStatusService.policyInfoValidated =  this.policyInfoComp.isValid() && this.accountInfoComp.accountInfoForm.status == 'VALID';
+    if (!this.canEdit) {
+      return true;
+    }
+    this.endorsementStatusService.policyInfoValidated = this.policyInfoComp.isValid() && this.accountInfoComp.accountInfoForm.status == 'VALID';
     return this.policyInfoComp.isValid() && this.accountInfoComp.accountInfoForm.status == 'VALID';
   }
 
   isDirty(): boolean {
-    return ((this.policyInfoComp.policyInfoForm.dirty == true || this.accountInfoComp.accountInfoForm.dirty == true) ? true : false);
+    return this.canEdit && ((this.policyInfoComp.policyInfoForm.dirty == true || this.accountInfoComp.accountInfoForm.dirty == true) ? true : false);
   }
 
   save(): void {
@@ -159,5 +181,9 @@ export class InformationComponent implements OnInit, PolicySave {
     } else {
       return false;
     }
+  }
+
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 }

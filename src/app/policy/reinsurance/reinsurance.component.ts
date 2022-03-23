@@ -198,12 +198,11 @@ export class ReinsuranceComponent implements OnInit {
       this.endorsementStatusService.reinsuranceValidated = totalMatches;
       return totalMatches;
     }
-    this.endorsementStatusService.reinsuranceValidated = true;
     return true;
   }
 
   isDirty(): boolean {
-    if (this.components != null) {
+    if (this.canEdit && this.components != null) {
       for (let child of this.components) {
         if (child.isDirty()) {
           return true;
