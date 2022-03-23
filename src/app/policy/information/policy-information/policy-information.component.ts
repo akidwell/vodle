@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
 import { DatePipe } from '@angular/common';
 import { TransactionTypes } from '../../transaction-types';
+import { ReinsuranceLookupService } from '../../reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -65,7 +66,7 @@ export class PolicyInformationComponent implements OnInit {
   @Input() public lockEndorsementFields!: boolean;
 
   constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService,
-    private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe) {
+    private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe ,private reinsuranceLookupService: ReinsuranceLookupService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -160,6 +161,9 @@ export class PolicyInformationComponent implements OnInit {
       this.endorsementChanged = true;
       this.endorsementStatusService.reinsuranceValidated = false;
       this.endorsement.transactionEffectiveDate = this.policyInfo.policyEffectiveDate;
+      // Force Reinsurance drop downs to refresh
+      this.reinsuranceLookupService.clearReinsuranceCodes();
+      this.reinsuranceLookupService.refreshReinsuranceCodes();
     }
   }
   changeExpirationDate() {
@@ -172,6 +176,9 @@ export class PolicyInformationComponent implements OnInit {
   changeProgramId() {
     if (this.endorsement.endorsementNumber == 0) {
       this.endorsementStatusService.reinsuranceValidated = false;
+      // Force Reinsurance drop downs to refresh
+      this.reinsuranceLookupService.clearReinsuranceCodes();
+      this.reinsuranceLookupService.refreshReinsuranceCodes();
     }
   }
   changePolicySymbol() {

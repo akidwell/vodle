@@ -8,7 +8,6 @@ import { NotificationService } from 'src/app/notification/notification-service';
 import { AccountInformation, Endorsement, PolicyInformation } from '../policy';
 import { PolicySave } from '../policy-save';
 import { PolicyService } from '../policy.service';
-import { ReinsuranceLookupService } from '../reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 import { EndorsementStatusService } from '../services/endorsement-status.service';
 import { AccountInformationComponent } from './account-information/account-information.component';
 import { PolicyInformationComponent } from './policy-information/policy-information.component';
@@ -33,7 +32,7 @@ export class InformationComponent implements OnInit, PolicySave {
   lockEndorsementFields: boolean = false;
 
   constructor(private endorsementStatusService: EndorsementStatusService, private route: ActivatedRoute, private notification: NotificationService,
-    private policyService: PolicyService, private reinsuranceLookupService: ReinsuranceLookupService,  private policyHistoryService: PolicyHistoryService) { }
+    private policyService: PolicyService, private policyHistoryService: PolicyHistoryService) { }
 
   @ViewChild(PolicyInformationComponent) policyInfoComp!: PolicyInformationComponent;
   @ViewChild(AccountInformationComponent) accountInfoComp!: AccountInformationComponent;
@@ -70,9 +69,6 @@ export class InformationComponent implements OnInit, PolicySave {
     var subject = new Subject<boolean>();
     if (this.policyInfoComp.allowEndorsementSave()) {
         this.policyService.updateEndorsement(this.endorsement).subscribe(() => {
-          // Force Reinsurance drop downs to refresh
-          this.reinsuranceLookupService.clearReinsuranceCodes();
-          this.reinsuranceLookupService.refreshReinsuranceCodes();
           subject.next(true)
         });
     } else {

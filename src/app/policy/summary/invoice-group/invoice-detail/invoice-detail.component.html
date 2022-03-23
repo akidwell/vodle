@@ -1,6 +1,6 @@
 <form #invoiceDetailForm="ngForm">
   <div class="row">
-    <div class="col-lg-5">
+    <div class="col-lg-4">
       <label for="lineItemDescription" *ngIf="index==0">Coverage Description</label>
     </div>
     <div class="col-lg-2">
@@ -17,11 +17,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-5" *ngIf="index == 0">
-      <input type="text" class="form-control" id="lineItemDescription" [readonly]="true"
+    <div class="col-lg-4" *ngIf="!canEditDetail">
+      <input type="text" class="form-control" id="lineItemDescription" readonly
         [ngModel]="invoiceDetail.lineItemDescription" name="lineItemDescription" #lineItemDescription="ngModel">
     </div>
-    <div class="col-lg-5" *ngIf="index > 0">
+    <div class="col-lg-4" *ngIf="canEditDetail">
       <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description"
         bindValue="code" [required]="canEditDetail" [clearable]="false" name="lineItemDescription"
         [(ngModel)]="invoiceDetail.lineItemCode" [readonly]="!canEditDetail" #lineItemDescription="ngModel"
@@ -40,17 +40,17 @@
         (ngModelChange)="changeFeeAmount($event)" [required]="canEditDetail">
       </div>
     <div class="col-lg-1">
-      <input type="text" class="form-control" id="commissionRate" [readonly]="true"
+      <input type="text" class="form-control" id="commissionRate" readonly
         [ngModel]="invoiceDetail.commissionRate" name="commissionRate" #commissionRate="ngModel" mask="percent"
         suffix="%" [dropSpecialCharacters]="false">
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control" id="commissionAmount" [readonly]="true"
+      <input type="text" class="form-control" id="commissionAmount" readonly
         [ngModel]="invoiceDetail.commissionAmount | currency: 'USD' : '' : '1.2-2' | minusSignToParens" name="commissionAmount"
         #commissionAmount="ngModel">
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control" id="netAmount" [readonly]="true"
+      <input type="text" class="form-control" id="netAmount" readonly
         [ngModel]="invoiceDetail.netAmount | currency: 'USD' : '' : '1.2-2' | minusSignToParens" name="netAmount" #netAmount="ngModel">
     </div>
     <div class="col-lg-1">
