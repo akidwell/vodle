@@ -111,6 +111,9 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   isValid(): boolean {
+    if (!this.canEdit) {
+      return true;
+    }
     if (this.components != null) {
       for (let child of this.components) {
         if (!child.isValid()) {
@@ -137,7 +140,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   isDirty(): boolean {
-    return this.isCoveragesDirty() || (this.headerComp.endorsementHeaderForm.dirty ?? false);
+    return this.canEdit && (this.isCoveragesDirty() || (this.headerComp.endorsementHeaderForm.dirty ?? false));
   }
 
   save(): void {
