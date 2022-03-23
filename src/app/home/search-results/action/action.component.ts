@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { Code } from 'src/app/drop-downs/code';
@@ -41,7 +42,7 @@ export class ActionComponent implements OnInit {
   @ViewChild('actionModal') private modalContent!: TemplateRef<ActionComponent>
   private modalRef!: NgbModalRef
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService,  private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private errorDialogService: ErrorDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -185,8 +186,16 @@ export class ActionComponent implements OnInit {
     })  }
 
   checkTransEffectiveDate(): boolean {
-
-    if (this.endorsementActionInfo.transEffectiveDate < this.policyInfo.policyEffectiveDate || this.endorsementActionInfo.transEffectiveDate  > this.policyInfo.policyExpirationDate) {
+    if (this.endorsementActionInfo.transactionType !== undefined) {
+      if (this.endorsementActionInfo.transactionType.toString() == '20') {
+        if (!moment(this.endorsementActionInfo.transEffectiveDate).isSame(moment(this.policyInfo.policyExpirationDate).toDate())) {
+          this.endorsementActionForm.controls['transEffectiveDate'].setErrors({ 'incorrect': true });
+          this.isTransEffectiveValid = false;
+          return false;
+        }
+      }
+    }
+    if ((moment(this.endorsementActionInfo.transEffectiveDate).toDate() < moment(this.policyInfo.policyEffectiveDate).toDate()) || (moment(this.endorsementActionInfo.transEffectiveDate).toDate() > moment(this.policyInfo.policyExpirationDate).toDate())) {
       this.endorsementActionForm.controls['transEffectiveDate'].setErrors({ 'incorrect': true });
       this.isTransEffectiveValid = false;
       return false;
@@ -219,16 +228,17 @@ export class ActionComponent implements OnInit {
     //checking for policy extenstions and that the transExpDate is after the policyExpDate
     if (this.endorsementActionInfo.transactionType !== undefined) {
       if (this.endorsementActionInfo.transactionType.toString() == '20') {
-        if (this.endorsementActionInfo.transExpirationDate < this.policyInfo.policyExpirationDate) {
+        if (moment(this.endorsementActionInfo.transExpirationDate).toDate() <= moment(this.policyInfo.policyExpirationDate).toDate()) {
           this.endorsementActionForm.controls['transExpirationDate'].setErrors({ 'incorrect': true });
           this.isTransExpirationValid = false;
           return false;
         }
       }
     }
-    // checking that all expirations date come after the transEffDate
-    if (this.endorsementActionInfo.transEffectiveDate != undefined){
-      if (this.endorsementActionInfo.transExpirationDate < this.endorsementActionInfo.transEffectiveDate) {
+    // checking that all expirations date come after the transEffDate and that trans expiration date is not greater than the policy expiration date
+    if (this.endorsementActionInfo.transEffectiveDate != undefined && this.endorsementActionInfo.transactionType.toString() != '20'){
+      if ((moment(this.endorsementActionInfo.transExpirationDate).toDate() < moment(this.endorsementActionInfo.transEffectiveDate).toDate())
+            || (moment(this.endorsementActionInfo.transExpirationDate).toDate() > moment(this.policyInfo.policyExpirationDate).toDate())) {
         this.endorsementActionForm.controls['transExpirationDate'].setErrors({ 'incorrect': true });
         this.isTransExpirationValid = false;
         return false;
