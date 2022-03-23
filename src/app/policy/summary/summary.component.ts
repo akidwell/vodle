@@ -96,8 +96,8 @@ export class SummaryComponent implements OnInit {
     invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
     invoice.reason = this.endorsementStatusService.endorsementReason;
     let invoiceDetail = newInvoiceDetail();
-    invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
-    invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
+    invoiceDetail.lineItemCode = this.policyInfo.quoteData.coverageCode.trim();
+    invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code.trim() == invoiceDetail.lineItemCode)?.description ?? "Error";
     invoiceDetail.feeAmount = this.endorsement.premium ?? 0;
     invoiceDetail.commissionRate = this.accountInfo.commissionRate ?? 0;
     invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
@@ -118,7 +118,6 @@ export class SummaryComponent implements OnInit {
     if (this.invoices[0].transactionTypeCode != this.endorsement.transactionTypeCode) {
       this.invoices[0].isUpdated = true;
       this.invoices[0].transactionTypeCode = this.endorsement.transactionTypeCode;
-
       const transactionTypes$ = this.dropDownService.getTransactionTypes();
       const transactionTypes = await lastValueFrom(transactionTypes$);
       this.invoices[0].transctionTypeDescription = transactionTypes.find(x => x.key == this.invoices[0].transactionTypeCode)?.description ?? ""
@@ -130,12 +129,12 @@ export class SummaryComponent implements OnInit {
     else {
       invoiceDetail = newInvoiceDetail();
     }
-    if (invoiceDetail.lineItemCode != this.endorsementCoveragesGroups[0].coverages[0].coverageCode.trim()) {
+    if (invoiceDetail.lineItemCode != this.policyInfo.quoteData.coverageCode.trim()) {
       invoiceDetail.isUpdated = true;
       const coverageCodes$ = this.dropDownService.getCoverageCodes();
       const coverageCodes = await lastValueFrom(coverageCodes$);
-      invoiceDetail.lineItemCode = this.endorsementCoveragesGroups[0].coverages[0].coverageCode;
-      invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code == invoiceDetail.lineItemCode)?.description ?? "Error";
+      invoiceDetail.lineItemCode = this.policyInfo.quoteData.coverageCode.trim();
+      invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code.trim() == invoiceDetail.lineItemCode)?.description ?? "Error";
     }
     if (invoiceDetail.feeAmount != this.endorsement.premium) {
       invoiceDetail.isUpdated = true;

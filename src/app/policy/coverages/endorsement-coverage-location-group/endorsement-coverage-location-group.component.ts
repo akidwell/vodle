@@ -80,6 +80,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
       if (this.endorsementCoveragesGroup.coverages.length > 0) {
         this.endorsementCoveragesGroup.coverages[0].isFirst = true;
       }
+      this.endorsementStatusService.coverageValidated = false;
     }
   }
 

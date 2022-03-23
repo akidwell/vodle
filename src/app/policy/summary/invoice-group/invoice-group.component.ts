@@ -85,7 +85,7 @@ export class InvoiceGroupComponent implements OnInit {
 
   getNextSequence(): number {
     if (this.invoice.invoiceDetail.length == 0) {
-      return 1;
+      return 2;
     }
     else {
       return Math.max(...this.invoice.invoiceDetail.map(o => o.lineNumber)) + 1;
