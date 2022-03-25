@@ -76,12 +76,12 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
 
       if(this.policyInfo.policyCancelDate != null){
-        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel')  &&  x.description !== 'New Business' && x.description !== 'Renewal Business');
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
       else if(this.policyInfo.policyCancelDate == null){
-        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' &&  x.description !== 'New Business' && x.description !== 'Renewal Business' );
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
 
@@ -123,11 +123,11 @@ export class ActionComponent implements OnInit {
         this.endorsementActionInfo.transactionType = 1
       }
       if(this.policyInfo.policyCancelDate != null){
-        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel')  &&  x.description !== 'New Business' && x.description !== 'Renewal Business');
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
       }
       else if(this.policyInfo.policyCancelDate == null){
-        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' &&  x.description !== 'New Business' && x.description !== 'Renewal Business' );
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
 
@@ -172,12 +172,12 @@ export class ActionComponent implements OnInit {
       this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
 
       if(this.policyInfo.policyCancelDate != null){
-        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel'));
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel')  &&  x.description !== 'New Business' && x.description !== 'Renewal Business');
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
       else if(this.policyInfo.policyCancelDate == null){
-        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement');
+      this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' &&  x.description !== 'New Business' && x.description !== 'Renewal Business' );
         this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
       }
 
