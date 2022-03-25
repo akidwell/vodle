@@ -61,10 +61,10 @@
 }
 
 .voidStatus{
- color: #8e0122 !important;
+ color: #ed0139 !important;
 }
 .table-striped>tbody>tr:is(.voidStatus):nth-of-type(odd)>*{
-  color: #8e0122 !important;
+  color: #ed0139 !important;
 }
 
 .table th {
