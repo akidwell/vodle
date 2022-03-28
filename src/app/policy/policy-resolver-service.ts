@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PolicyHistoryService } from '../navigation/policy-history/policy-history.service';
 import { EndorsementCoveragesResolved } from './coverages/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from './policy';
 import { PolicyService } from './policy.service';
+import { ReinsuranceLookupService } from './reinsurance/reinsurance-lookup/reinsurance-lookup.service';
 import { UnderlyingCoveragesResolved } from './schedules/schedules';
 import { EndorsementStatusService } from './services/endorsement-status.service';
 import { InvoiceResolved } from './summary/invoice';
@@ -46,7 +47,7 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
 })
 export class PolicyInformationResolver implements Resolve<PolicyInformationResolved> {
 
-    constructor(private router: Router, private policyService: PolicyService, private policyHistoryService: PolicyHistoryService) { }
+    constructor(private router: Router, private policyService: PolicyService, private policyHistoryService: PolicyHistoryService, private reinsuranceLookupService: ReinsuranceLookupService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyInformationResolved> {
         const id = route.paramMap.get('id') ?? "";
@@ -64,7 +65,15 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
 
         return this.policyService.getPolicyInfo(Number(id))
             .pipe(
-                tap(res => this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + " " + res.formattedPolicyNo, Number(end))),
+                tap(async res => {
+                    // Update history for opened Policy
+                    this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + " " + res.formattedPolicyNo, Number(end));
+                    // Preload aggreements
+                    const results$ = this.reinsuranceLookupService.getReinsurance(res.programId, res.policyEffectiveDate);
+                    await lastValueFrom(results$);
+                    const resultsFAC$ = this.reinsuranceLookupService.getFaculativeReinsurance(res.policyEffectiveDate);
+                    await lastValueFrom(resultsFAC$);
+                }),
                 map(policyInfo => ({ policyInfo })),
                 catchError((error) => {
                     this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });

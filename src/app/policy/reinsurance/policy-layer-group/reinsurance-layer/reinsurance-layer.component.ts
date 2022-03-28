@@ -9,6 +9,7 @@ import { PolicyService } from 'src/app/policy/policy.service';
 import { NgForm } from '@angular/forms';
 import { UserAuth } from 'src/app/authorization/user-auth';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
+import { ErrorDialogService } from 'src/app/error-handling/error-dialog-service/error-dialog-service';
 
 
 @Component({
@@ -28,7 +29,6 @@ export class ReinsuranceLayerComponent implements OnInit {
   deleteSub!: Subscription;
   policyLayer!: PolicyLayerData[];
   updateSub!: Subscription;
-  dirtySub!: Subscription | undefined;
   isDirty: boolean = false;
   treatyNo!: number;
   commRate!: number;
@@ -47,7 +47,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService) { 
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private errorDialogService: ErrorDialogService) { 
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -75,18 +75,15 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.dirtySub = this.reinsuranceForm.statusChanges?.subscribe(() => {
-      this.isDirty = this.reinsuranceForm.form.dirty ?? false;
-    });
     setTimeout(() => {
       if (this.reinsuranceLayer.isNew && this.canEditPolicy) {
+        console.log(this.policyLayerData.policyLayerNo);
         this.reinsuranceForm.form.markAsDirty();
       }
     });
   }
 
   ngOnDestroy(): void {
-    this.dirtySub?.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.reinsuranceSub?.unsubscribe();
@@ -118,11 +115,15 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   async save(policyLayerData: PolicyLayerData[]): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.updateSub = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData).subscribe(result => {
-        resolve(result);
+    const results$ = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData);
+    return await lastValueFrom(results$)
+      .then(x => {
+        return true;
+      }).catch((error) => {
+        this.errorDialogService.open("Reinsurance Save Error!", error.error.Message)
+        this.endorsementStatusService.reinsuranceValidated = false;
+        return false;
       });
-    })
   }
 
   changeFaculative(): void {
