@@ -122,13 +122,13 @@
           <div class="col-lg-1">
             <label for="deductible">Deductible</label>
             <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible" nullValue
-              [required]="canEdit && isDeductibleRequired && showDeductible" [(ngModel)]="coverage.deductible" name="deductible"
+              [required]="this.checkDeductibleRequired()" [(ngModel)]="coverage.deductible" name="deductible"
               #deductible="ngModel" string-to-currency [allowNegative]="false">
           </div>
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
             <ng-select *ngIf="!showEachEmployeeDeductible" id="deductibleType" [items]="deductibleTypes$ | async"
-              bindLabel="description" bindValue="code" [required]="canEdit && isDeductibleRequired && showDeductible "
+              bindLabel="description" bindValue="code" [required]="this.checkDeductibleRequired()"
               name="deductibleType" [readonly]="!canEdit || !showDeductible" [(ngModel)]="coverage.deductibleType">
             </ng-select>
             <ng-select *ngIf="showEachEmployeeDeductible" id="deductibleType"
@@ -185,7 +185,7 @@
           <div class="col-lg-2">
             <label for="exposureBase">Exposure</label>
             <input type="text" class="form-control" id="exposureBase" [readonly]="!canEdit" nullValue
-              [(ngModel)]="coverage.exposureBase" name="exposureBase" #sir="ngModel" string-to-currency [allowNegative]="false">
+              [(ngModel)]="coverage.exposureBase" name="exposureBase" #exposureBase="ngModel" string-to-currency [allowNegative]="false">
           </div>
         </div>
         <div class="empty-space"></div>

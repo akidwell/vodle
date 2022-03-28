@@ -49,6 +49,7 @@ import { ConfirmationDialogService } from './services/confirmation-dialog-servic
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DATE_FORMATS } from '../config/date-format';
 import { FormatDateForDisplay } from './services/format-date-display.service';
+import { EndorsementStoredValues } from './services/endorsement-stored-values-service';
 
 @NgModule({
   declarations: [
@@ -104,6 +105,7 @@ import { FormatDateForDisplay } from './services/format-date-display.service';
     UnderlyingCoverageService,
     LimitsPatternHelperService,
     FormatDateForDisplay,
+    EndorsementStoredValues,
     ConfirmationDialogService,
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     {
