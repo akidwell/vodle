@@ -38,6 +38,8 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   confirmation: string = "";
 
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
+  @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
+  private modalRef!: NgbModalRef
 
   constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -49,7 +51,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
     this.states$ = this.dropdowns.getStates();
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -68,13 +70,10 @@ export class EndorsementCoverageLocationComponent implements OnInit {
     });
   }
 
-  @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
-  private modalRef!: NgbModalRef
-
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
-  
+
   open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementCoverageLocationGroupComponent): Promise<LocationResult> {
     return new Promise<LocationResult>(resolve => {
       this.isLoadingAddress = false;

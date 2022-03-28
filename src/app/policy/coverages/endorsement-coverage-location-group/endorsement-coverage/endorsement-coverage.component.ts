@@ -14,6 +14,7 @@ import { UpdatePolicyChild } from '../../../services/update-child.service';
 import { LimitsPatternHelperService } from 'src/app/policy/services/limits-pattern-helper.service';
 import { EndorsementStatusService } from 'src/app/policy/services/endorsement-status.service';
 import { DatePipe } from '@angular/common';
+import { EndorsementStoredValues } from 'src/app/policy/services/endorsement-stored-values-service';
 
 @Component({
   templateUrl: './endorsement-coverage.component.html',
@@ -64,8 +65,9 @@ export class EndorsementCoverageComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
 
   constructor(private dropdowns: DropDownsService, private updatePolicyChild: UpdatePolicyChild,
-    private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private policyService: PolicyService,
-    private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService, private datePipe: DatePipe) {
+    private userAuth: UserAuth, private subCodeDefaultsService: SubCodeDefaultsService, private endorsementStoredValuesService: EndorsementStoredValues,
+    private policyService: PolicyService, private limitsPatternHelper: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService,
+    private datePipe: DatePipe) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -232,8 +234,12 @@ export class EndorsementCoverageComponent implements OnInit {
     return this.coverage.claimsMadeOrOccurrence == 'C';
   }
 
-  private checkDeductibleRequired(): boolean {
-    return this.subCodeDefaults.subCode == 336
+  checkDeductibleRequired(): boolean {
+    if (this.canEdit && this.showDeductible && (this.subCodeDefaults && this.subCodeDefaults.subCode == 336) && (this.endorsementStoredValuesService.SIR == null || this.endorsementStoredValuesService.SIR == 0)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private showEachEmployeeDeductibles(): boolean {

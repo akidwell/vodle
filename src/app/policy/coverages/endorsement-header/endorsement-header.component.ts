@@ -8,6 +8,7 @@ import { Code } from 'src/app/drop-downs/code';
 import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
 import { Endorsement, PolicyInformation } from '../../policy';
 import { EndorsementStatusService } from '../../services/endorsement-status.service';
+import { EndorsementStoredValues } from '../../services/endorsement-stored-values-service';
 import { UpdatePolicyChild } from '../../services/update-child.service';
 import { TransactionTypes } from '../../transaction-types';
 
@@ -36,7 +37,8 @@ export class EndorsementHeaderComponent implements OnInit {
   @Input() public endorsement!: Endorsement;
   @Input() public policyInfo!: PolicyInformation;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private datePipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private updatePolicyChild: UpdatePolicyChild) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private datePipe: DatePipe, private endorsementStoredValuesService: EndorsementStoredValues,
+    private endorsementStatusService: EndorsementStatusService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -55,6 +57,7 @@ export class EndorsementHeaderComponent implements OnInit {
     this.transactionTypes = await lastValueFrom(transactionTypes$);
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
     this.checkAttachmentPointValid();
+    this.endorsementStoredValuesService.SIR = this.endorsement.sir;
    // this.checkUnderlyingLimitValid();
   }
 
@@ -183,7 +186,9 @@ export class EndorsementHeaderComponent implements OnInit {
     }
     return false;
   }
-
+  changeSIR(value: number): void {
+    this.endorsementStoredValuesService.SIR = value;
+  }
   get canEdit(): boolean {
     return this.canEditEndorsement && this.canEditPolicy
   }
