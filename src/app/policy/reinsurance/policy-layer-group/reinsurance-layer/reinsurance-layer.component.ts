@@ -77,7 +77,6 @@ export class ReinsuranceLayerComponent implements OnInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       if (this.reinsuranceLayer.isNew && this.canEditPolicy) {
-        console.log(this.policyLayerData.policyLayerNo);
         this.reinsuranceForm.form.markAsDirty();
       }
     });

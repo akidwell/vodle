@@ -17,10 +17,8 @@ export class AppComponent {
 
   constructor(private authService: AuthService, private router: Router) {
     // Subscribe to authentication state changes
-    console.log('happens')
     this.authService.$authenticationState.subscribe({
       next: (isAuthenticated: boolean) => {
-        console.log(isAuthenticated)
         this.isAuthenticated = isAuthenticated
       },
       error: (err: string) => this.errorMessage = err
