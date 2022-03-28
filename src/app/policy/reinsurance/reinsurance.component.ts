@@ -167,9 +167,15 @@ export class ReinsuranceComponent implements OnInit {
     }
   }
 
-  save(): void {
-    if (this.canEdit)
-      this.policyLayerGroup.savePolicyLayers();
+  async save(): Promise<void> {
+    if (this.canEdit) {
+      const isSaved = await this.policyLayerGroup.savePolicyLayers();
+      if (isSaved && this.components != null) {
+        this.policyLayerData.forEach(c => c.isNew = false);
+        this.policyLayerData.forEach(c => c.reinsuranceData.forEach(x => x.isNew = false));
+        this.components.forEach(c => c.markPristine());
+      }
+    }
   }
 
   isValid(): boolean {
