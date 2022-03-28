@@ -79,7 +79,6 @@ export class DirectPolicyCreateComponent implements OnInit {
   
   async openRewrite(policy: PolicySearchResults): Promise<boolean> {
     return new Promise<boolean>(resolve => {
-      console.log(policy)
       this.isSearching = false;
       this.submissionError = "invalid";
       this.isSubmissionNumberValid = false;
@@ -88,8 +87,6 @@ export class DirectPolicyCreateComponent implements OnInit {
       this.policyData = newPolicyData();
       this.policyInfo = policy;
       this.policyData.endorsementNumber = policy.endorsementNumber;
-      console.log(this.policyData.endorsementNumber)
-      console.log(policy.endorsementNumber)
       this.title = "Cancel/Rewrite"
       this.isRewrite = true;
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
@@ -162,7 +159,6 @@ export class DirectPolicyCreateComponent implements OnInit {
   }
 
   setExpirationDate() {
-    console.log(this.policyData.policyExpirationDate);
     if (this.policyData.policyEffectiveDate != null && (this.policyData.policyExpirationDate == null || this.policyData.policyExpirationDate.toString() === '' ) && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate())) {
       let newDate = new Date(this.policyData.policyEffectiveDate);
       newDate.setFullYear(newDate.getFullYear() + 1);
