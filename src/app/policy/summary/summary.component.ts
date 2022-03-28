@@ -24,6 +24,8 @@ export class SummaryComponent implements OnInit {
   policyInfo!: PolicyInformation;
   accountInfo!: AccountInformation;
   endorsement!: Endorsement;
+  canEditEndorsement: boolean = false;
+  statusSub!: Subscription;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -42,6 +44,16 @@ export class SummaryComponent implements OnInit {
         this.loadInvoice();
       });
     });
+    this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
+      next: canEdit => {
+        this.canEditEndorsement = canEdit;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
+    this.statusSub?.unsubscribe();
   }
 
   async loadInvoice() {
@@ -155,18 +167,14 @@ export class SummaryComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
-    this.authSub.unsubscribe();
-  }
-
   @ViewChildren(InvoiceGroupComponent) invoiceGroupComp: QueryList<InvoiceGroupComponent> | undefined;
 
   isValid(): boolean {
-    return this.invoiceGroupComp?.get(0)?.isValid() ?? true;
+    return !this.canEdit || (this.invoiceGroupComp?.get(0)?.isValid() ?? true);
   }
 
   isDirty(): boolean {
-    return this.invoiceGroupComp?.get(0)?.isDirty() ?? false;
+    return  this.canEdit && (this.invoiceGroupComp?.get(0)?.isDirty() ?? false);
   }
 
   save(): void {
@@ -181,4 +189,7 @@ export class SummaryComponent implements OnInit {
     this.showInvalid = false;
   }
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy;
+  }
 }

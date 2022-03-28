@@ -167,9 +167,15 @@ export class ReinsuranceComponent implements OnInit {
     }
   }
 
-  save(): void {
-    if (this.canEdit)
-      this.policyLayerGroup.savePolicyLayers();
+  async save(): Promise<void> {
+    if (this.canEdit) {
+      const isSaved = await this.policyLayerGroup.savePolicyLayers();
+      if (isSaved && this.components != null) {
+        this.policyLayerData.forEach(c => c.isNew = false);
+        this.policyLayerData.forEach(c => c.reinsuranceData.forEach(x => x.isNew = false));
+        this.components.forEach(c => c.markPristine());
+      }
+    }
   }
 
   isValid(): boolean {
@@ -198,12 +204,11 @@ export class ReinsuranceComponent implements OnInit {
       this.endorsementStatusService.reinsuranceValidated = totalMatches;
       return totalMatches;
     }
-    this.endorsementStatusService.reinsuranceValidated = true;
     return true;
   }
 
   isDirty(): boolean {
-    if (this.components != null) {
+    if (this.canEdit && this.components != null) {
       for (let child of this.components) {
         if (child.isDirty()) {
           return true;

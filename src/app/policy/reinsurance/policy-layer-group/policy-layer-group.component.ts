@@ -21,7 +21,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   policyLayerCollapsed = false;
-  policyLayer!: PolicyLayerData[];
+  policyLayers!: PolicyLayerData[];
   endorsementNumber!: number;
   policyId!: number;
   faTrashcan = faTrashAlt;
@@ -44,7 +44,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.endorsement = data['endorsementData'].endorsement;
-      this.policyLayer = data['policyLayerData'].policyLayer;
+      this.policyLayers = data['policyLayerData'].policyLayer;
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
     });
@@ -68,7 +68,7 @@ export class PolicyLayerGroupComponent implements OnInit {
     const reinsuranceindex = this.policyLayerData.reinsuranceData.indexOf(existingReinsuranceLayer, 0);
     if (reinsuranceindex > 0 || (reinsuranceindex == 0 && this.policyLayerData.reinsuranceData.length > 0)) {
       this.policyLayerData.reinsuranceData.splice(reinsuranceindex, 1);
-      this.policyLayer.forEach(x=> x.reinsuranceData.forEach((value, index)=>{  value.reinsLayerNo = index + 1}));
+      this.policyLayers.forEach(x=> x.reinsuranceData.forEach((value, index)=>{  value.reinsLayerNo = index + 1}));
       if (!existingReinsuranceLayer.isNew) {
         this.endorsementStatusService.reinsuranceValidated = false;
         this.notification.show('Reinsurance Layer deleted.', { classname: 'bg-success text-light', delay: 5000 });
@@ -76,19 +76,19 @@ export class PolicyLayerGroupComponent implements OnInit {
     }
     if (reinsuranceindex == 0 && this.policyLayerData.reinsuranceData.length < 1){
       const polLayerNo = existingReinsuranceLayer.policyLayerNo
-      const existingPolicyLayer = this.policyLayer.findIndex(i=> i.policyLayerNo == polLayerNo)
+      const existingPolicyLayer = this.policyLayers.findIndex(i=> i.policyLayerNo == polLayerNo)
       this.deleteExistingPolicyLayer(existingPolicyLayer)
     }
   }
 
   deleteExistingPolicyLayer(existingPolicyLayer: number){
-    if (!this.policyLayer[existingPolicyLayer].isNew) {
+    if (!this.policyLayers[existingPolicyLayer].isNew) {
       this.endorsementStatusService.reinsuranceValidated = false;
       this.notification.show('Policy and Reinsurance Layers deleted.', { classname: 'bg-success text-light', delay: 5000 });
     }
-    this.policyLayer.splice(existingPolicyLayer, 1);
-    this.policyLayer.forEach((value, index) =>{  value.policyLayerNo = index + 1 });
-    this.policyLayer.forEach(x=> x.reinsuranceData.forEach((value)=>{  value.policyLayerNo = x.policyLayerNo}));
+    this.policyLayers.splice(existingPolicyLayer, 1);
+    this.policyLayers.forEach((value, index) =>{  value.policyLayerNo = index + 1 });
+    this.policyLayers.forEach(x=> x.reinsuranceData.forEach((value)=>{  value.policyLayerNo = x.policyLayerNo}));
   }
 
   isValid(): boolean {
@@ -116,7 +116,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   async savePolicyLayers(): Promise<boolean> {
     if (this.canEditPolicy) {
       let saveCount: number = 0;
-      let result = await this.reinsComp.save(this.policyLayer);
+      let result = await this.reinsComp.save(this.policyLayers);
       if (result === false) {
         this.notification.show('Reinsurance Layer ' + this.reinsComp.reinsuranceLayer.reinsLayerNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
       }
@@ -126,6 +126,7 @@ export class PolicyLayerGroupComponent implements OnInit {
       }
       if (saveCount > 0) {
         this.notification.show('Reinsurance Layers successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        return true;
       }
       if (!this.isValid()) {
         this.notification.show('Reinsurance Layers not saved.', { classname: 'bg-danger text-light', delay: 5000 });
@@ -135,10 +136,8 @@ export class PolicyLayerGroupComponent implements OnInit {
     return false;
   }
 
-  private markPristine(): void {
-    this.components.forEach(c => c.reinsuranceForm.form.markAsPristine());
-    this.policyLayer.forEach(c => c.isNew = false);
-    this.policyLayer.forEach(c => c.reinsuranceData.forEach(x => x.isNew = false));
+  public markPristine(): void {
+    this.components.forEach(c =>{ c.reinsuranceForm.form.markAsPristine(); c.reinsuranceForm.form.markAsUntouched();});
   }
 
   calcTotalPolicyLayerLimit(): number {
