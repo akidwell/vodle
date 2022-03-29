@@ -215,7 +215,6 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
   isRetroDateActive(): boolean {
-    //console.log(this.canSetRetroDate, !this.isFieldReadOnly(true))
     if (this.canSetRetroDate && !this.isFieldReadOnly(true)) {
       return true;
     } else {

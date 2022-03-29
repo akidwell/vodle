@@ -225,7 +225,6 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     this.limitedLimitsBasis.forEach((basis,index) => {
       this.ucData.underlyingScheduleLimitData.forEach(element => {
         if(!element.isUserAdded && element.limitBasisCode == basis) {
-          console.log(this.ucData.limitsPattern)
           if(element.includeExclude && element.includeExclude?.toLowerCase() == 'e') {
             this.ucData.limitsPattern += 'Exclude'
             element.limit = 'Exclude';

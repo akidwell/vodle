@@ -20,20 +20,13 @@ export class AuthService {
 
   constructor(private userAuth: UserAuth, private http: HttpClient,  private jwtHelper: JwtHelperService,
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, private router: Router, private config: ConfigService, private oktaAuthState: OktaAuthStateService) {
-    // Subscribe to authentication state changes
-    // this.authStateManager.subscribe((authState: AuthState) => {
-    //   console.log(authState)
-    //   // handle the latest evaluated authState, like integrate with client framework's state management store
-    // });
     this.oktaAuthState.authState$.subscribe((isAuthenticated: AuthState) => {
-      console.log(isAuthenticated)
       if (isAuthenticated) {
         this.login();
       }
     });
     this.$authenticationState = new Observable((observer: Observer<boolean>) => {
       this.isAuthenticated().then(val => {
-        console.log(val, observer)
         observer.next(val);
       });
     });
@@ -46,10 +39,8 @@ export class AuthService {
 
   async isAuthenticated() {
     // Checks if there is a current accessToken in the TokenManger.
-    console.log(await this.oktaAuth.isAuthenticated())
     const accessToken = await this.oktaAuth.getAccessToken();
     const idToken = await this.oktaAuth.getIdToken();
-    console.log(accessToken, idToken)
     return !!(accessToken || idToken);
   }
 
@@ -70,7 +61,7 @@ export class AuthService {
           localStorage.setItem('jwt_token', this.userAuth.bearerToken);
         }
       },
-      error: err => console.log("!!! " + err)
+      error: err => console.error(err)
     });
   }
 
@@ -80,7 +71,7 @@ export class AuthService {
       .pipe(
         tap(async token => {
           if (token == null) {
-            console.log("No token");
+            console.warn("No token");
           }
           else {
             const tokenString = JSON.parse(JSON.stringify(token));
@@ -93,7 +84,7 @@ export class AuthService {
           }
         }),
         catchError(err => {
-          console.log("Error: " + err.message);
+          console.error("Error: " + err.message);
           return "";
         })
       )

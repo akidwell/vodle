@@ -45,14 +45,14 @@ export class GlobalErrorHandler implements ErrorHandler {
           }
         })
       }
-      console.log(errorMessage);
+      console.error(errorMessage);
 
       this.ngZone.run(() => {
         errorDialogService.open("Service Error", formattedErrorMessage);
       });
     }
     else if (error.message?.includes("AuthApiError")) {
-      console.log("Ignored AuthApiError: " + error.message);
+      console.error("Ignored AuthApiError: " + error.message);
       // Do nothing for now
     } else {
       // Client Error
@@ -65,7 +65,7 @@ export class GlobalErrorHandler implements ErrorHandler {
           this.response = jobLoggerResponse;
         }
       })
-      console.log(errorMessage);
+      console.error(errorMessage);
       this.ngZone.run(() => {
         errorDialogService.open("Client Error", errorMessage);
       });
