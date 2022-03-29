@@ -200,7 +200,7 @@ pipeline {
 										string(name: 'SDAENV', value: "40bf25f4-209c-482a-90cb-d10e1e5bb7ec"),
 										string(name: 'SDAPROCESS', value: "10f049ac-a05e-42b9-bd45-81f745cbab7e"),
 										string(name: 'DEPLOYME', value: "Yes"),
-										string(name: 'DMBL', value: "rsps_${fileVersion}"),
+										string(name: 'DMBL', value: "rsps_${fileVersion}")
 									],
 									wait: true
 								)
