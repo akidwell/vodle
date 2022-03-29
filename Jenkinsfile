@@ -163,6 +163,54 @@ pipeline {
 					wait: true
 				)
 				}
+		stage("Deploy to UAT"){
+			when {
+	      		expression { params.Environment == "RELEASE"}
+	    	}
+			steps{
+				script {
+                    def userInput = true
+                    def didTimeout = false
+                    try {
+                        timeout(time: 30, unit: 'MINUTES') { // change to a convenient timeout for you
+                            userInput = input(
+                            id: 'Proceed1', message: 'Deploy to UAT?', parameters: [
+                            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please choose the following option below:']
+                            ])
+                        } 
+                    }   catch(err) { // timeout reached or input false
+                            def user = err.getCauses()[0].getUser()
+                            if('SYSTEM' == user.toString()) { // SYSTEM means timeout.
+                                didTimeout = true
+                            } else {
+                                userInput = false
+                                echo "Aborted by: [${user}]"
+                            }
+                        }
+                         if (didTimeout) {
+                            echo "No input was received before timeout!"
+                        } else if (userInput == true) {
+                            echo "Deploying to UAT!"
+							wrap([$class: 'BuildUser']) {
+								build (job: 'Downstream_DA_Deployment', 
+									parameters: [
+										string(name: 'DMPRODUCT', value: "ITS5000"),
+										string(name: 'SDACOMPONENT', value: "59803989-b407-49e1-8d9e-b718f4d2d947"),
+										string(name: 'SDAAPPLICATION', value: "f8ae9b8a-bb31-41f1-ba52-4f3e62f1add1"),
+										string(name: 'SDAENV', value: "40bf25f4-209c-482a-90cb-d10e1e5bb7ec"),
+										string(name: 'SDAPROCESS', value: "10f049ac-a05e-42b9-bd45-81f745cbab7e"),
+										string(name: 'DEPLOYME', value: "Yes"),
+										string(name: 'DMBL', value: "rsps_${fileVersion}"),
+									],
+									wait: true
+								)
+							} 							
+                        } else {
+                            echo "Deploy to UAT not needed!"
+                        } 				
+				}
+			} 
+		}        
 			}
 		}    
 	}
