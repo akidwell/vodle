@@ -241,6 +241,15 @@ export class EndorsementCoverageComponent implements OnInit {
       return false;
     }
   }
+  checkDeductibleTypeRequired(): boolean {
+    if (this.canEdit && this.showDeductible && (this.subCodeDefaults && this.subCodeDefaults.subCode == 336) && (this.endorsementStoredValuesService.SIR == null || this.endorsementStoredValuesService.SIR == 0)) {
+      return true;
+    } else if (this.coverage.deductible && this.coverage.deductible > 0) {
+      return true
+    } else {
+      return false;
+    }
+  }
 
   private showEachEmployeeDeductibles(): boolean {
     // If Employee Benefits and Claims made then need to show the each employee drop down

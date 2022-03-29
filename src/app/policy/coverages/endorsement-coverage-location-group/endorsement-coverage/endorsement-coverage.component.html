@@ -128,7 +128,7 @@
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
             <ng-select *ngIf="!showEachEmployeeDeductible" id="deductibleType" [items]="deductibleTypes$ | async"
-              bindLabel="description" bindValue="code" [required]="this.checkDeductibleRequired()"
+              bindLabel="description" bindValue="code" [required]="this.checkDeductibleTypeRequired()"
               name="deductibleType" [readonly]="!canEdit || !showDeductible" [(ngModel)]="coverage.deductibleType">
             </ng-select>
             <ng-select *ngIf="showEachEmployeeDeductible" id="deductibleType"
