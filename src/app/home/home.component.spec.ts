@@ -12,7 +12,7 @@ describe('HomeComponent', () => {
     })
     .compileComponents();
   });
-//test2
+//test3
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
