@@ -30,7 +30,7 @@ export const newInvoice = (): InvoiceData => ({
   invoiceStatus: 'N',
   invoiceStatusDescription: 'New',
   proFlag: 0,
-  invoiceDate: new Date(),
+  invoiceDate: null,
   dueDate: null,
   effectiveDate: null,
   expirationDate: null,
