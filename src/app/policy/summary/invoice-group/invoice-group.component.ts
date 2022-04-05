@@ -18,6 +18,7 @@ import { ConfirmationDialogService } from '../../services/confirmation-dialog-se
 import { PolicyHistoryService } from 'src/app/navigation/policy-history/policy-history.service';
 import { deepClone } from 'src/app/helper/deep-clone';
 import { PolicyInformation } from '../../policy';
+import * as moment from 'moment';
 
 @Component({
   selector: 'rsps-invoice-group',
@@ -155,15 +156,6 @@ export class InvoiceGroupComponent implements OnInit {
         this.invoiceCopy = deepClone(this.invoice);
         this.invoice.invoiceStatus = "T";
         this.invoice.proFlag = 3;
-        this.invoice.invoiceDate = new Date();
-        this.invoice.invoiceDate.setHours(0, 0, 0, 0);
-        let effectiveDate = new Date(this.invoice.effectiveDate);
-        let dueDate = new Date();
-        dueDate.setDate(effectiveDate.getDate() + 30);
-        this.invoice.dueDate = dueDate;
-        if (effectiveDate < this.invoice.invoiceDate) {
-          this.invoice.dueDate.setDate(this.invoice.invoiceDate.getDate() + 30);
-        }
         const isSaved = await this.save(false);
         if (isSaved) {
           if (this.canExport) {
