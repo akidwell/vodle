@@ -1,4 +1,3 @@
-import { sequence } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -23,7 +22,6 @@ import { UnderlyingCoverageService } from '../../services/underlying-coverage.se
 })
 export class UnderlyingCoverageDetailComponent implements OnInit {
   canEditPolicy: boolean = true;
-  ucdCollapsed = true;
   ucbCollapsed = true;
   isReadOnly: boolean = false;
   limitsPatternString: string = '';
@@ -48,6 +46,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   canEditEndorsement: boolean = false;
   layerTypes: string[] = [];
   @Input() ucData!: UnderlyingCoverage;
+  ucdCollapsed = true;
 
   @Output() deleteThisCoverage: EventEmitter<UnderlyingCoverage> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) ucForm!: NgForm;
@@ -96,6 +95,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     } else if (FirstLayerTypeProgramIds.includes(this.policyInfo.programId)){
       this.layerTypes = FirstLayerTypes;
     }
+    this.ucdCollapsed = !this.ucData.isNew;
   }
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
