@@ -15,21 +15,24 @@ export function onAuthRequired(_oktaAuth: OktaAuth) {
   });
 }
 const routes: Routes = [
-  { path: CALLBACK_PATH, component: OktaCallbackComponent  },
-  { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) , canActivate: [OktaAuthGuard, AuthGuard] , data: {
-    onAuthRequired
-  }  },
-  { path: '', redirectTo: 'home', pathMatch: 'full'},
-  { path: 'import', loadChildren: () => import('./import/import.module').then(m => m.ImportModule), canActivate: [OktaAuthGuard, AuthGuard] , data: {
-    onAuthRequired
-  }  },
+  { path: CALLBACK_PATH, component: OktaCallbackComponent },
+  {
+    path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'import', loadChildren: () => import('./import/import.module').then(m => m.ImportModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
   { path: 'reports', component: ReportsComponent },
   { path: 'applications', component: ApplicationsComponent },
-  { path: 'policy', loadChildren: () => import('./policy/policy.module').then(m => m.PolicyModule) , canActivate: [OktaAuthGuard, AuthGuard] , data: {
-    onAuthRequired
-  } },
+  {
+    path: 'policy', loadChildren: () => import('./policy/policy.module').then(m => m.PolicyModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
+  {
+    path: 'insured', loadChildren: () => import('./insured/insured.module').then(m => m.InsuredModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
   { path: 'access-denied', component: AccessDeniedComponent },
-  { path: 'logged-out', redirectTo: 'home', pathMatch: 'full'},
+  { path: 'logged-out', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

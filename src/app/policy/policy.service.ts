@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { NewEndorsementData } from '../home/search-results/policy-search-results';
+import { coverageANI } from '../shared/components/additional-named-insured/additional-named-insured';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from './coverages/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from './policy';
 import { UnderlyingCoverage } from './schedules/schedules';
@@ -71,6 +72,12 @@ export class PolicyService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
       + '/endorsements/' + coverage.endorsementNumber.toString() + '/coverages/' + coverage.sequence.toString());
   }
+  
+  // Temp for resusability research
+  getAdditionalNamedInsured(policyId: number, endorsementNo: number): Observable<coverageANI[]> {
+    return this.http.get<coverageANI[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
+  }
+
   getAdditionalNamedInsureds(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsureds[]> {
     return this.http.get<AdditionalNamedInsureds[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
   }
