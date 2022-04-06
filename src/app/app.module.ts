@@ -8,7 +8,7 @@ import { ApplicationsComponent } from './core/components/applications/applicatio
 import { ReportsComponent } from './core/components/reports/reports.component';
 import { NavigationComponent } from './core/components/navigation/navigation.component';
 import { OktaAuthModule } from '@okta/okta-angular';
-import { AuthInterceptor } from './core/authorization/auth.interceptor';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { UserComponent } from './core/components/user/user.component';
 import { NgbAlert, NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';

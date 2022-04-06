@@ -6,7 +6,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { PolicyService } from '../../services/policy/policy.service';
 import { UnderlyingCoverage } from '../../models/schedules';
-import { UnderlyingCoverageDetailComponent } from '../underlying-coverage-detail/underlying-coverage-detail.component';
+import { UnderlyingCoverageDetailComponent } from '../schedules-underlying-coverage-detail/underlying-coverage-detail.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 
 @Component({

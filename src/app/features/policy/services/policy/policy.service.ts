@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/policy-search-results';
 import { coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
-import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages/coverages';
+import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages-base/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
 import { InvoiceData } from '../../models/invoice';

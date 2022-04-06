@@ -8,8 +8,8 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { DatePipe } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { InvoiceMasterComponent } from '../invoice-master/invoice-master.component';
-import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail.component';
+import { InvoiceMasterComponent } from '../summary-invoice-master/invoice-master.component';
+import { InvoiceDetailComponent } from '../summary-invoice-detail/invoice-detail.component';
 import { PolicyIssuanceRequest } from '../../models/policy-issuance-request';
 import { PolicyIssuanceService } from '../../services/policy-issuance-service/policy-issuance.service';
 import { ConfirmationDialogService } from '../../../../core/services/confirmation-dialog/confirmation-dialog.service';
