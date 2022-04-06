@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { UserAuth } from 'src/app/authorization/user-auth';
-import { Code } from 'src/app/drop-downs/code';
-import { DropDownsService } from 'src/app/drop-downs/drop-downs.service';
-import { PolicyService } from 'src/app/policy/policy.service';
-import { ConfirmationDialogService } from 'src/app/policy/services/confirmation-dialog-service/confirmation-dialog.service';
+import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { Code } from 'src/app/core/models/code';
+import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
 
 @Component({

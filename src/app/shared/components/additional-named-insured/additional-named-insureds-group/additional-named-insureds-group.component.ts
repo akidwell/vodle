@@ -2,9 +2,9 @@ import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@a
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { UserAuth } from 'src/app/authorization/user-auth';
-import { NotificationService } from 'src/app/notification/notification-service';
-import { deepClone } from 'src/app/helper/deep-clone';
+import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { NotificationService } from 'src/app/core/components/notification/notification-service';
+import { deepClone } from 'src/app/core/utils/deep-clone';
 import { AdditionalNamedInsured, coverageANI } from '../additional-named-insured';
 import { SharedAdditionalNamedInsuredsComponent } from '../additional-named-insureds/additional-named-insureds.component';
 
