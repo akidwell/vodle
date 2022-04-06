@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { DirectPolicyCreateComponent } from '../direct-policy/direct-policy-create.component';
+import { DirectPolicyComponent } from '../direct-policy/direct-policy.component';
 
 @Component({
   templateUrl: './home.component.html',
@@ -10,7 +10,7 @@ import { DirectPolicyCreateComponent } from '../direct-policy/direct-policy-crea
 export class HomeComponent implements OnInit {
   directPolicySubscription!: Subscription;
   
-  @ViewChild('modal') private directPolicyComponent!: DirectPolicyCreateComponent
+  @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent
 
   constructor(private navigationService: NavigationService) { }
 

@@ -12,8 +12,7 @@ import { EndorsementNumberResponse } from 'src/app/features/policy/models/policy
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { NewEndorsementData, PolicySearchResults } from '../../models/policy-search-results';
-import { ActionService } from './action.service';
-
+import { EndorsementNumbersService } from '../../services/endorsement-numbers/endorsement-numbers.service';
 
 @Component({
   selector: 'rsps-action',
@@ -42,7 +41,7 @@ export class ActionComponent implements OnInit {
   @ViewChild('actionModal') private modalContent!: TemplateRef<ActionComponent>
   private modalRef!: NgbModalRef
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService,  private router: Router, public modalService: NgbModal, private actionService: ActionService, private policyService: PolicyService, private navigationService: NavigationService, private messageDialogService: MessageDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService,  private router: Router, public modalService: NgbModal, private endorsementNumbersService: EndorsementNumbersService, private policyService: PolicyService, private navigationService: NavigationService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -61,7 +60,7 @@ export class ActionComponent implements OnInit {
     this.isBackout = false;
 
     this.policyInfo = policy;
-    const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
+    const usedEndorsementNumbers$ =  this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
     const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
     this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
@@ -100,7 +99,7 @@ export class ActionComponent implements OnInit {
     this.policyInfo = policy;
     this.isRewrite = false;
     this.isBackout = true;
-    const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
+    const usedEndorsementNumbers$ =  this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
     const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
     this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
@@ -148,7 +147,7 @@ export class ActionComponent implements OnInit {
     this.isBackout = false;
 
     this.policyInfo = policy;
-    const usedEndorsementNumbers$ =  this.actionService.getEndorsementNumbers(policy.policyId);
+    const usedEndorsementNumbers$ =  this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
     this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
     const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
     this.endorsementReasons =  await lastValueFrom(endorsementReasons$);

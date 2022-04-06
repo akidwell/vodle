@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { lastValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
-import { EndorsementNumberResponse, newPolicyData, PolicyAddResponse, PolicyData } from 'src/app/features/policy/models/policy';
+import { EndorsementNumberResponse, newPolicyData, PolicyData } from 'src/app/features/policy/models/policy';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgForm } from '@angular/forms';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
@@ -11,17 +11,17 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { debounceTime, tap } from 'rxjs/operators';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { SubmissionSearchService } from '../../services/submission-search/submission-search.service';
-import { ActionService } from '../action/action.service';
 import { PolicySearchResults } from '../../models/policy-search-results';
 import { SubmissionResponse } from '../../models/submissionResponse';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { EndorsementNumbersService } from '../../services/endorsement-numbers/endorsement-numbers.service';
 
 @Component({
-  selector: 'rsps-direct-policy-create',
-  templateUrl: './direct-policy-create.component.html',
-  styleUrls: ['./direct-policy-create.component.css']
+  selector: 'rsps-direct-policy',
+  templateUrl: './direct-policy.component.html',
+  styleUrls: ['./direct-policy.component.css']
 })
-export class DirectPolicyCreateComponent implements OnInit {
+export class DirectPolicyComponent implements OnInit {
   faCheckCircle = faCheckCircle;
   faTimesCircle = faTimesCircle;
   policyData!: PolicyData;
@@ -42,10 +42,10 @@ export class DirectPolicyCreateComponent implements OnInit {
   policyInfo!: PolicySearchResults;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
-  @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyCreateComponent>
+  @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyComponent>
   private modalRef!: NgbModalRef
 
-  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService, private messageDialogService: MessageDialogService, private actionService: ActionService) {
+  constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService, private messageDialogService: MessageDialogService, private endorsementNumbersService: EndorsementNumbersService) {
     this.policyData = newPolicyData();
    }
 
@@ -104,7 +104,7 @@ export class DirectPolicyCreateComponent implements OnInit {
           this.isRenewal =  match.expiringPolicyId != null ? true : false;
 
           if (match.expiringPolicyId != null) {
-            const endorsementNumbers$ = this.actionService.getEndorsementNumbers(match.expiringPolicyId);
+            const endorsementNumbers$ = this.endorsementNumbersService.getEndorsementNumbers(match.expiringPolicyId);
             this.endorsementNumbers$ = of(await lastValueFrom(endorsementNumbers$));
           }
           if (match.isMatch) {
