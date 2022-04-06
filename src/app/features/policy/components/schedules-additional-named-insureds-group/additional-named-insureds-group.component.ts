@@ -4,7 +4,7 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { AdditionalNamedInsureds } from '../../models/policy';
-import { AdditionalNamedInsuredsComponent } from '../additional-named-insureds/additional-named-insureds.component';
+import { AdditionalNamedInsuredsComponent } from '../schedules-additional-named-insureds/additional-named-insureds.component';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 

@@ -6,8 +6,8 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { AddressLookupService } from '../../../../core/services/address-lookup/address-lookup.service';
-import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages/coverages';
-import { EndorsementCoverageLocationGroupComponent } from '../endorsement-coverage-location-group/endorsement-coverage-location-group.component';
+import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages-base/coverages';
+import { EndorsementCoverageLocationGroupComponent } from '../coverages-endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { PolicyService } from '../../services/policy/policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 

@@ -5,7 +5,7 @@ import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { EndorsementCoverage } from '../coverages/coverages';
+import { EndorsementCoverage } from '../coverages-base/coverages';
 import { SubCodeDefaultsService } from '../../services/sub-code-defaults/sub-code-defaults.service';
 import { SubCodeDefaults } from '../../models/subCodeDefaults';
 import { PolicyInformation } from '../../models/policy';

@@ -13,7 +13,7 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/mat
 import { DATE_FORMATS } from '../../core/constants/date-format';
 import { HomeComponent } from './components/home/home.component';
 import { ActionComponent } from './components/action/action.component';
-import { DirectPolicyCreateComponent } from './components/direct-policy/direct-policy-create.component';
+import { DirectPolicyComponent } from './components/direct-policy/direct-policy.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
@@ -24,7 +24,7 @@ import { SearchModule } from 'src/app/shared/components/search-bar/search-bar.mo
   declarations: [
     HomeComponent,
     SearchResultsComponent,
-    DirectPolicyCreateComponent,
+    DirectPolicyComponent,
     ActionComponent
   ],
   imports: [

@@ -3,7 +3,7 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@a
 import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PolicyHistoryService } from '../../../../core/services/policy-history/policy-history.service';
-import { EndorsementCoveragesResolved } from '../../components/coverages/coverages';
+import { EndorsementCoveragesResolved } from '../../components/coverages-base/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from '../../models/policy';
 import { PolicyService } from '../policy/policy.service';
 import { ReinsuranceLookupService } from '../reinsurance-lookup/reinsurance-lookup.service';

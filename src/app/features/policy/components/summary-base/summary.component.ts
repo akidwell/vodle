@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { EndorsementCoveragesGroup } from '../coverages/coverages';
+import { EndorsementCoveragesGroup } from '../coverages-base/coverages';
 import { AccountInformation, Endorsement, PolicyInformation } from '../../models/policy';
 import { InvoiceData, newInvoice, newInvoiceDetail } from '../../models/invoice';
-import { InvoiceGroupComponent } from '../invoice-group/invoice-group.component';
+import { InvoiceGroupComponent } from '../summary-invoice-group/invoice-group.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 
 @Component({

@@ -5,9 +5,9 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { AdditionalNamedInsureds, EndorsementLocation } from '../../models/policy';
 import { PolicySave } from '../../models/policy-save';
 import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
-import { AdditionalNamedInsuredsGroupComponent } from '../additional-named-insureds-group/additional-named-insureds-group.component';
-import { EndorsementLocationGroupComponent } from '../endorsement-location-group/endorsement-location-group.component';
-import { UnderlyingCoveragesComponent } from '../underlying-coverages/underlying-coverages.component';
+import { AdditionalNamedInsuredsGroupComponent } from '../schedules-additional-named-insureds-group/additional-named-insureds-group.component';
+import { EndorsementLocationGroupComponent } from '../schedules-endorsement-location-group/endorsement-location-group.component';
+import { UnderlyingCoveragesComponent } from '../schedules-underlying-coverages/underlying-coverages.component';
 
 @Component({
   selector: 'rsps-schedules',
