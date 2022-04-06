@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">Additional Named Insureds
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="aniCollapsed">
+    <div class="card-body" *ngIf="aniData.length > 0">
+      <div *ngFor="let item of aniData; let i = index">
+        <rsps-shared-additional-named-insureds (copyExistingAni)=copyExistingAni($event)
+          (deleteExistingAni)=deleteExistingAni($event) [ani]=aniData [aniData]=item [index]=i></rsps-shared-additional-named-insureds>
+      </div>
+    </div> 
+  </div>
+  <div class="card-footer">
+    <div id="aniFooter">
+      <button *ngIf="canEditPolicy" style="float:left; background:none; border:none;" class="underline"
+        (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
+      <div style="float:right;">Additional Named Insureds: {{aniData.length}}</div>
+    </div>
+  </div>
+</div>

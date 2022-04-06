@@ -10,9 +10,9 @@ import { SearchComponent } from './search/search.component';
 import { Location } from '@angular/common';
 import { PolicyComponent } from './policy/policy.component';
 import { ImportComponent } from './import/import.component';
-import { ReportsComponent } from './reports/reports.component';
+import { ReportsComponent } from './core/components/reports/reports.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationComponent } from './navigation/navigation.component';
+import { NavigationComponent } from './core/components/navigation/navigation.component';
 import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
 
 @Directive({
