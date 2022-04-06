@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
-import { AuthService } from './authorization/auth.service'
+import { AuthService } from './core/authorization/auth.service'
 
 
 @Component({

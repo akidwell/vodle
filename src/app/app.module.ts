@@ -3,28 +3,28 @@ import { APP_INITIALIZER, ErrorHandler, Injector, NgModule } from '@angular/core
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { VersionComponent } from './version/version.component';
-import { ApplicationsComponent } from './applications/applications.component';
-import { ReportsComponent } from './reports/reports.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
-import { AuthInterceptor } from './authorization/auth.interceptor';
+import { VersionComponent } from './core/components/version/version.component';
+import { ApplicationsComponent } from './core/components/applications/applications.component';
+import { ReportsComponent } from './core/components/reports/reports.component';
+import { NavigationComponent } from './core/components/navigation/navigation.component';
+import { OktaAuthModule } from '@okta/okta-angular';
+import { AuthInterceptor } from './core/authorization/auth.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
-import { UserComponent } from './user/user.component';
+import { UserComponent } from './core/components/user/user.component';
 import { NgbAlert, NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { GlobalErrorHandler } from './error-handling/global-error-handler';
-import { ServerErrorInterceptor } from './error-handling/server-error-interceptor';
+import { GlobalErrorHandler } from './core/components/error-handling/global-error-handler';
+import { ServerErrorInterceptor } from './core/interceptors/server-error-interceptor';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './app-reuse-strategy';
-import { BusyModule } from './busy/busy.module';
-import { PreInitService, preInitServiceFactory } from './config/preInit.service';
-import { DirectivesModule } from './directives/directives.module';
-import { ErrorDialogService } from './error-handling/error-dialog-service/error-dialog-service';
+import { BusyModule } from './core/components/busy/busy.module';
+import { PreInitService, preInitServiceFactory } from './core/services/config/preInit.service';
+import { DirectivesModule } from './shared/directives/directives.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { PipesModule } from './pipes/pipes.module';
+import { PipesModule } from './shared/pipes/pipes.module';
+import { MessageDialogService } from './core/services/message-dialog/message-dialog-service';
 
 @NgModule({
   declarations: [
@@ -59,7 +59,7 @@ import { PipesModule } from './pipes/pipes.module';
   ],
   providers: [
     PreInitService,
-    ErrorDialogService,
+    MessageDialogService,
     {
       provide: APP_INITIALIZER,
       multi: true,
