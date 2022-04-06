@@ -6,7 +6,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../models/policy';
-import { EndorsementLocationComponent } from '../endorsement-location/endorsement-location.component';
+import { EndorsementLocationComponent } from '../schedules-endorsement-location/endorsement-location.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 
 @Component({

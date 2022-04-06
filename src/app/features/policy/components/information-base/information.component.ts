@@ -9,8 +9,8 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { AccountInformation, Endorsement, PolicyInformation } from '../../models/policy';
 import { PolicySave } from '../../models/policy-save';
 import { PolicyService } from '../../services/policy/policy.service';
-import { AccountInformationComponent } from '../account-information/account-information.component';
-import { PolicyInformationComponent } from '../policy-information/policy-information.component';
+import { AccountInformationComponent } from '../information-account/account-information.component';
+import { PolicyInformationComponent } from '../information-policy/policy-information.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 
 @Component({

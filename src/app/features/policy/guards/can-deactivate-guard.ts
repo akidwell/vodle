@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { InformationComponent } from '../components/information/information.component';
-import { CoveragesComponent } from '../components/coverages/coverages.component';
-import { SchedulesComponent } from '../components/schedules/schedules.component';
-import { SummaryComponent } from '../components/summary/summary.component';
+import { InformationComponent } from '../components/information-base/information.component';
+import { CoveragesComponent } from '../components/coverages-base/coverages.component';
+import { SchedulesComponent } from '../components/schedules-base/schedules.component';
+import { SummaryComponent } from '../components/summary-base/summary.component';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 
 @Injectable()

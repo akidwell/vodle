@@ -3,10 +3,10 @@ import { NgForm } from '@angular/forms';
 import { faAngleDown, faAngleUp, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { newEndorsementCoverage, EndorsementCoverage, EndorsementCoveragesGroup } from '../coverages/coverages';
-import { EndorsementCoverageLocationComponent, LocationResult } from '../endorsement-coverage-location/endorsement-coverage-location.component';
-import { EndorsementCoverageComponent } from '../endorsement-coverage/endorsement-coverage.component';
-import { EndorsementCoverageDirective } from '../endorsement-coverage/endorsement-coverage.directive';
+import { newEndorsementCoverage, EndorsementCoverage, EndorsementCoveragesGroup } from '../coverages-base/coverages';
+import { EndorsementCoverageLocationComponent, LocationResult } from '../coverages-endorsement-coverage-location/endorsement-coverage-location.component';
+import { EndorsementCoverageComponent } from '../coverages-endorsement-coverage/endorsement-coverage.component';
+import { EndorsementCoverageDirective } from '../coverages-endorsement-coverage/endorsement-coverage.directive';
 import { Endorsement, PolicyInformation } from '../../models/policy';
 import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
@@ -183,7 +183,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
         this.endorsementCoveragesGroup.coverages[0].isFirst = true;
       }
 
-      await import('../endorsement-coverage/endorsement-coverage.component');
+      await import('../coverages-endorsement-coverage/endorsement-coverage.component');
       const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
       viewContainerRef.clear();
 
