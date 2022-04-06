@@ -7,7 +7,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NewEndorsementData, PolicySearchResults } from '../../models/policy-search-results';
 import { PolicySearchService } from '../../services/policy-search/policy-search.service';
 import { ActionComponent } from '../action/action.component';
-import { DirectPolicyCreateComponent } from '../direct-policy/direct-policy-create.component';
+import { DirectPolicyComponent } from '../direct-policy/direct-policy.component';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class SearchResultsComponent implements OnInit {
   canEdit: boolean = false;
   backout: boolean = false;
 
-  constructor(private router: Router, private userAuth: UserAuth, private route: ActivatedRoute,  public modalService: NgbModal,  private policySearchService: PolicySearchService, private navigationService: NavigationService) {
+  constructor(private router: Router, private userAuth: UserAuth, public modalService: NgbModal,  private policySearchService: PolicySearchService, private navigationService: NavigationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );}
@@ -102,7 +102,7 @@ export class SearchResultsComponent implements OnInit {
   }
   @ViewChild('actionModal') private actionComponent: ActionComponent | undefined
   @ViewChild('modalPipe') modalPipe: any;
-  @ViewChild('modal') private directPolicyComponent!: DirectPolicyCreateComponent
+  @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent
 
   async newEndorsement(policy: PolicySearchResults, event: any) {
     let filtered = this.searchResults.filter(x => x.policyId == policy.policyId).filter(y => y.invoiceStatus == null)

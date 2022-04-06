@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuoteCreateComponent } from './direct-policy-create.component';
+import { DirectPolicyComponent } from './direct-policy.component';
 
-describe('QuoteCreateComponent', () => {
-  let component: QuoteCreateComponent;
-  let fixture: ComponentFixture<QuoteCreateComponent>;
+describe('DirectPolicyComponent', () => {
+  let component: DirectPolicyComponent;
+  let fixture: ComponentFixture<DirectPolicyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ QuoteCreateComponent ]
+      declarations: [ DirectPolicyComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuoteCreateComponent);
+    fixture = TestBed.createComponent(DirectPolicyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

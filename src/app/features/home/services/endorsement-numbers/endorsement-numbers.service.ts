@@ -1,14 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { EndorsementNumberResponse } from 'src/app/features/policy/models/policy';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ActionService {
+export class EndorsementNumbersService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
