@@ -16,7 +16,7 @@ export interface EndorsementCoverage {
   deductible: number | null;
   deductibleType: string | null;
   rateAmount: number;
-  limitsPatternGroupCode: number;
+  limitsPatternGroupCode: number | null;
   coverageType: string;
   coverageCode: string;
   sequence: number;
