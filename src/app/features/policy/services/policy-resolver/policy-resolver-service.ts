@@ -272,45 +272,44 @@ export class UnderlyingCoveragesResolver implements Resolve<UnderlyingCoveragesR
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
-export class InvoiceResolver implements Resolve<InvoiceResolved> {
+// @Injectable({
+//     providedIn: 'root'
+// })
+// export class InvoiceResolver implements Resolve<InvoiceResolved> {
 
-    constructor(private router: Router, private policyService: PolicyService) { }
+//     constructor(private router: Router, private policyService: PolicyService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InvoiceResolved> {
-        let id: any;
-        let end: any;
-        if ((route.parent?.paramMap?.keys?.length ?? 0) > 0) {
-            id = route.parent?.paramMap.get('id') ?? "";
-            end = route.parent?.paramMap.get('end') ?? 0;
-        }
-        else {
-            id = route.paramMap.get('id') ?? "";
-            end = route.paramMap.get('end') ?? 0;
-        }
-        if (isNaN(+id)) {
-            const message = `Policy id was not a number: ${id}`;
-            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-            return of({ invoicesData: null, error: message });
-        }
-        if (isNaN(+end)) {
-            const message = `Endorsement was not a number: ${end}`;
-            this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-            return of({ invoicesData: null, error: message });
-        }
-        return this.policyService.getPolicyInvoices(Number(id), Number(end))
-            .pipe(
-                map(invoicesData => ({ invoicesData })),
-                catchError((error) => {
-                    this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
-                    return of({ invoicesData: null, error: error });
-                })
-            );
-    }
-}
-
+//     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InvoiceResolved> {
+//         let id: any;
+//         let end: any;
+//         if ((route.parent?.paramMap?.keys?.length ?? 0) > 0) {
+//             id = route.parent?.paramMap.get('id') ?? "";
+//             end = route.parent?.paramMap.get('end') ?? 0;
+//         }
+//         else {
+//             id = route.paramMap.get('id') ?? "";
+//             end = route.paramMap.get('end') ?? 0;
+//         }
+//         if (isNaN(+id)) {
+//             const message = `Policy id was not a number: ${id}`;
+//             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+//             return of({ invoicesData: null, error: message });
+//         }
+//         if (isNaN(+end)) {
+//             const message = `Endorsement was not a number: ${end}`;
+//             this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
+//             return of({ invoicesData: null, error: message });
+//         }
+//         return this.policyService.getPolicyInvoices(Number(id), Number(end))
+//             .pipe(
+//                 map(invoicesData => ({ invoicesData })),
+//                 catchError((error) => {
+//                     this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
+//                     return of({ invoicesData: null, error: error });
+//                 })
+//             );
+//     }
+// }
 
 
 @Injectable({

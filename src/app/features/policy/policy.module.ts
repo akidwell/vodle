@@ -20,7 +20,6 @@ import { CoveragesComponent } from './components/coverages-base/coverages.compon
 import { EndorsementCoverageComponent } from './components/coverages-endorsement-coverage/endorsement-coverage.component';
 import { HoverClassDirective } from 'src/app/shared/directives/hover-class.directive';
 import { EndorsementHeaderComponent } from './components/coverages-endorsement-header/endorsement-header.component';
-import { NotificationComponent } from 'src/app/core/components/notification/notification-container.component';
 import { EndorsementCoverageLocationComponent } from './components/coverages-endorsement-coverage-location/endorsement-coverage-location.component';
 import { SchedulesComponent } from './components/schedules-base/schedules.component';
 import { ReinsuranceComponent } from './components/reinsurance-base/reinsurance.component';
@@ -63,7 +62,6 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
     EndorsementCoverageComponent,
     HoverClassDirective,
     EndorsementHeaderComponent,
-    NotificationComponent,
     EndorsementCoverageLocationComponent,
     SchedulesComponent,
     ReinsuranceComponent,

@@ -91,10 +91,15 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   }
 
   async save(): Promise<boolean> {
-    return new Promise((resolve) => {
+    return await new Promise(async (resolve) => {
       if (this.aniData.isNew) {
-        console.log("SAVE");
-        this.aniData.save();
+        console.log("New SAVE");
+        this.aniForm.form.markAsPristine();
+        this.aniForm.form.markAsUntouched();
+        this.aniData.isNew = false;
+
+        resolve(await this.aniData.save());
+
         // this.addSub = this.policyService.addAdditionalNamedInsureds(this.aniData).subscribe(result => {
         //   resolve(result);
         //   this.aniForm.form.markAsPristine();
@@ -103,7 +108,12 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
         // });
       } else {
         console.log("SAVE");
-        this.aniData.save();
+        this.aniForm.form.markAsPristine();
+        this.aniForm.form.markAsUntouched();
+        this.aniData.isNew = false;
+
+        resolve(await this.aniData.save());
+        
         // this.updateSub = this.policyService.updateAdditionalNamedInsureds(this.aniData).subscribe(result => {
         //   this.aniForm.form.markAsPristine();
         //   this.aniForm.form.markAsUntouched();

@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
-import { AuthService } from './core/authorization/auth.service'
-
 
 @Component({
   selector: 'rsps-root',
@@ -10,20 +8,9 @@ import { AuthService } from './core/authorization/auth.service'
 })
 export class AppComponent {
   title = 'RSPS';
-  isAuthenticated: boolean = false;
-  userName: string | undefined;
-  errorMessage = '';
   loading: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {
-    // Subscribe to authentication state changes
-    this.authService.$authenticationState.subscribe({
-      next: (isAuthenticated: boolean) => {
-        this.isAuthenticated = isAuthenticated
-      },
-      error: (err: string) => this.errorMessage = err
-    });
-
+  constructor(private router: Router) {
     this.router.events.subscribe(event => {
       switch (true) {
         case event instanceof NavigationStart: {
