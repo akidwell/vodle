@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, lastValueFrom, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ConfigService } from 'src/app/core/services/config/config.service';
@@ -71,6 +71,19 @@ export class EndorsementStatusService {
   private _endorsementReason = new BehaviorSubject<string>("");
   endorsementReason$ = this._endorsementReason.asObservable();
   get endorsementReason(): string { return this._endorsementReason.getValue(); }
+
+  private _invoiceSaving = new BehaviorSubject<boolean>(false);
+  invoiceSaving$ = this._invoiceSaving.asObservable();
+  get invoiceSaving(): boolean { return this._invoiceSaving.getValue(); }
+  set invoiceSaving(value: boolean) {
+    this._invoiceSaving.next(value);
+  }
+
+  private _refreshInvoice = new Subject<void>();
+  refreshInvoice$ = this._refreshInvoice.asObservable();
+  public refreshInvoice() {
+    this._refreshInvoice.next();
+  }
 
   isValidated(): boolean {
     return this.policyInfoValidated && this.reinsuranceValidated && this.coverageValidated;

@@ -12,7 +12,7 @@ export class SubCodeDefaultsService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getSubCodeDefaults(programId: number, coverageDescriptionId: number, policySymbol: string, isClaimsMade: boolean): Observable<SubCodeDefaults> {
-    const params = new HttpParams().append('programId', programId).append('coverageDescriptionId', coverageDescriptionId).append('policySymbol', policySymbol).append('isClaimsMade', isClaimsMade);
+    let params = new HttpParams().append('programId', programId).append('coverageDescriptionId', coverageDescriptionId).append('policySymbol', policySymbol).append('isClaimsMade', isClaimsMade);
     return this.http.get<SubCodeDefaults>(this.config.apiBaseUrl + 'api/lookups/sub-code-defaults', { params })
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
@@ -8,6 +8,7 @@ import { AccountInformation, Endorsement, PolicyInformation } from '../../models
 import { InvoiceData, newInvoice, newInvoiceDetail } from '../../models/invoice';
 import { InvoiceGroupComponent } from '../summary-invoice-group/invoice-group.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { PolicyService } from '../../services/policy/policy.service';
 
 @Component({
   selector: 'rsps-summary',
@@ -16,7 +17,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 })
 export class SummaryComponent implements OnInit {
   endorsementCoveragesGroups: EndorsementCoveragesGroup[] = [];
-  invoices!: InvoiceData[];
+  invoices: InvoiceData[] = [];
   authSub: Subscription;
   canEditPolicy: boolean = false;
   showInvalid: boolean = false;
@@ -26,27 +27,72 @@ export class SummaryComponent implements OnInit {
   endorsement!: Endorsement;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
+  invoiceSavingSub!: Subscription;
+  refreshInvoiceSub!: Subscription;
+  policyTabvalidatedSub!: Subscription;
+  coverageTabvalidatedSub!: Subscription;
+  reinsuranceTabvalidatedSub!: Subscription;
+  isInvoiceSaving: boolean = false;
+  showBusy: boolean = false;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private router: Router, private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService, private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
+    this.policyTabvalidatedSub = this.endorsementStatusService.policyInfoValidated$.subscribe(() => {
+      this.checkValidation();
+    });
+    this.coverageTabvalidatedSub = this.endorsementStatusService.coverageValidated$.subscribe(() => {
+      this.checkValidation();
+    });
+    this.reinsuranceTabvalidatedSub = this.endorsementStatusService.reinsuranceValidated$.subscribe(() => {
+      this.checkValidation();
+    });
+
+    this.router.events.subscribe(event => {
+      switch (true) {
+        case event instanceof NavigationStart: {
+          var nav = event as NavigationStart;
+          if (nav.url.startsWith('/policy') && nav.url.endsWith('/summary')) {
+            this.checkUpdate();
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    })
   }
 
-  ngOnInit(): void {
-    this.route.data.subscribe(response => {
-      this.invoices = response.invoices.invoicesData;
-      this.route.parent?.data.subscribe(async data => {
-        this.endorsement = data['endorsementData'].endorsement;
-        this.policyInfo = data['policyInfoData'].policyInfo;
-        this.accountInfo = data['accountData'].accountInfo;
-        this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
-        this.loadInvoice();
-      });
+  async ngOnInit(): Promise<void> {
+    this.route.parent?.data.subscribe(async data => {
+      this.endorsement = data['endorsementData'].endorsement;
+      this.policyInfo = data['policyInfoData'].policyInfo;
+      this.accountInfo = data['accountData'].accountInfo;
+      this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
     });
+
+    const invoices$ = this.policyService.getPolicyInvoices(this.endorsement.policyId, this.endorsement.endorsementNumber);
+    this.invoices = await lastValueFrom(invoices$);
+    this.loadInvoice();
+
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
-      next: canEdit => {
+      next: async canEdit => {
         this.canEditEndorsement = canEdit;
+      }
+    });
+    this.invoiceSavingSub = this.endorsementStatusService.invoiceSaving$.subscribe({
+      next: async isInvoiceSaving => {
+        this.showBusy = isInvoiceSaving;
+      }
+    });
+    this.refreshInvoiceSub = this.endorsementStatusService.refreshInvoice$.subscribe({
+      next: async () => {
+        const invoices$ = this.policyService.getPolicyInvoices(this.endorsement.policyId, this.endorsement.endorsementNumber);
+        this.invoices = await lastValueFrom(invoices$);
+        this.loadInvoice();
+        this.showBusy = false;
       }
     });
   }
@@ -54,6 +100,11 @@ export class SummaryComponent implements OnInit {
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.invoiceSavingSub?.unsubscribe();
+    this.refreshInvoiceSub?.unsubscribe();
+    this.policyTabvalidatedSub?.unsubscribe();
+    this.coverageTabvalidatedSub?.unsubscribe();
+    this.reinsuranceTabvalidatedSub?.unsubscribe();
   }
 
   async loadInvoice() {
@@ -66,16 +117,22 @@ export class SummaryComponent implements OnInit {
         }
       });
     }
-    else if (this.invoices.length > 0 && (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0))) {
-      await this.updateInvoice();
+    else {
+      this.checkUpdate();
     }
   }
 
+  private async checkUpdate() {
+     if (this.invoices.length > 0 && (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0))) {
+      await this.updateInvoice();
+    }
+  }
+  
   private checkValidation(): boolean {
     const policyInfoValidated = this.endorsementStatusService.policyInfoValidated;
     const coveragesValidated = this.endorsementStatusService.coverageValidated;
     const reinsuranceValidated = this.endorsementStatusService.reinsuranceValidated;
-    if (this.canEditPolicy && (!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
+    if ((!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
       this.showInvalid = true;
       this.invalidMessage = "Unable to create/edit invoice at this time";
       if (!policyInfoValidated) {
@@ -88,6 +145,10 @@ export class SummaryComponent implements OnInit {
         this.invalidMessage += "<br><li>Reinsurance needs to be validated";
       }
       return false;
+    }
+    else {
+      this.invalidMessage = ""
+      this.showInvalid = false;
     }
     return true;
   }
@@ -104,7 +165,8 @@ export class SummaryComponent implements OnInit {
     const transactionTypes$ = this.dropDownService.getTransactionTypes();
     const transactionTypes = await lastValueFrom(transactionTypes$);
     const coverageCodes$ = this.dropDownService.getCoverageCodes();
-    const coverageCodes =  await lastValueFrom(coverageCodes$);
+    const coverageCodes = await lastValueFrom(coverageCodes$);
+
     invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
     invoice.reason = this.endorsementStatusService.endorsementReason;
     let invoiceDetail = newInvoiceDetail();
@@ -115,6 +177,15 @@ export class SummaryComponent implements OnInit {
     invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
     invoiceDetail.netAmount = invoiceDetail.feeAmount - invoiceDetail.commissionAmount;
     invoice.invoiceDetail.push(invoiceDetail);
+    // On endorsement 0 we need to copy any fees imported from Paul
+    if (this.endorsement.endorsementNumber == 0) {
+      const lineitems$ = this.policyService.getPolicyLineItems(this.policyInfo.policyId, this.endorsement.endorsementNumber);
+      const lineitems = await lastValueFrom(lineitems$);
+      lineitems.forEach(l => {
+        l.isNew = true;
+        invoice.invoiceDetail.push(l)
+      });
+    }
     this.invoices.unshift(invoice);
   }
 
@@ -174,7 +245,7 @@ export class SummaryComponent implements OnInit {
   }
 
   isDirty(): boolean {
-    return  this.canEdit && (this.invoiceGroupComp?.get(0)?.isDirty() ?? false);
+    return this.canEdit && (this.invoiceGroupComp?.get(0)?.isDirty() ?? false);
   }
 
   save(): void {

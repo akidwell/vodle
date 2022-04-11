@@ -25,6 +25,7 @@ import { DirectivesModule } from './shared/directives/directives.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PipesModule } from './shared/pipes/pipes.module';
 import { MessageDialogService } from './core/services/message-dialog/message-dialog-service';
+import { NotificationComponent } from './core/components/notification/notification-container.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { MessageDialogService } from './core/services/message-dialog/message-dia
     ApplicationsComponent,
     ReportsComponent,
     NavigationComponent,
-    UserComponent
+    UserComponent,
+    NotificationComponent
   ],
   imports: [
     BrowserModule,

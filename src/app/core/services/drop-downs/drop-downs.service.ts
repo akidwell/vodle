@@ -20,8 +20,11 @@ export class DropDownsService {
     return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
   }
 
-  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null): Observable<Code[]> {
+  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageID?: number | null): Observable<Code[]> {
     let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
+    if (coverageID != null) {
+      params = params.append('coverageID', coverageID)
+    }
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params })
   }
 
