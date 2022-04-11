@@ -56,6 +56,7 @@ export class EndorsementCoverageComponent implements OnInit {
   statusSub!: Subscription;
   limitMask: string= "";
   showEachEmployeeDeductible: boolean = false;
+  resetLimitsPatternGroupCodeOnClassCodeChange: boolean = false;
 
   @Input() public policyInfo!: PolicyInformation;
   @Input() public coverage!: EndorsementCoverage;
@@ -115,6 +116,9 @@ export class EndorsementCoverageComponent implements OnInit {
         this.endorsementCoveragesForm.form.markAsDirty();
       }
     });
+    if (this.coverage.glClassCode == 99999) {
+      this.resetLimitsPatternGroupCodeOnClassCodeChange = true;
+    }
   }
 
   ngOnDestroy(): void {
@@ -160,7 +164,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   changeCoverageDescription(event: any = "") {
-    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol, this.coverage.claimsMadeOrOccurrence == "C").subscribe({
+    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol, this.coverage.claimsMadeOrOccurrence == "C", this.coverage.limitsPatternGroupCode).subscribe({
       next: (subCodeDefaults: SubCodeDefaults) => {
         this.subCodeDefaults = subCodeDefaults;
         this.showDeductible = subCodeDefaults.deductible;
@@ -198,6 +202,13 @@ export class EndorsementCoverageComponent implements OnInit {
   changeClassCode() {
     if (this.coverage.programId != 84 && this.coverage.programId != 85) {
       this.coverage.coverageId = null;
+      if (this.coverage.glClassCode == 99999) {
+        this.coverage.limitsPatternGroupCode = null;
+        this.resetLimitsPatternGroupCodeOnClassCodeChange = true;
+      } else if (this.resetLimitsPatternGroupCodeOnClassCodeChange) {
+        this.coverage.limitsPatternGroupCode = null;
+        this.resetLimitsPatternGroupCodeOnClassCodeChange = false;
+      }
     }
     if (this.coverage.coverageCode != null && this.coverage.glClassCode != null && this.coverage.policySymbol != null && this.coverage.programId != null) {
       this.coverageDescriptions$ = this.dropdowns.getCoverageDescriptions(this.coverage.coverageCode, this.coverage.policySymbol, this.coverage.programId, this.coverage.glClassCode, this.coverage.coverageId);
