@@ -11,7 +11,7 @@
         (click)="collapseAllLocations()">Collapse All</button>
     </div>
     <div *ngFor="let item of endorsementCoveragesGroups; index as i">
-      <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event)
+      <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event) *ngIf="(item.coverages.length > 0) || (this.canEditEndorsement)"
         (deleteThisGroup)=deleteGroup($event) [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
         [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length" [endorsement]="endorsement" [policyInfo]="policyInfo"></rsps-endorsement-coverage-location-group>
     </div>
