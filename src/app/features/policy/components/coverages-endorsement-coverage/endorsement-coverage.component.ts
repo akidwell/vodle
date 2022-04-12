@@ -164,7 +164,6 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   changeCoverageDescription(event: any = "") {
-    console.log(this.coverage)
     this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol, this.coverage.claimsMadeOrOccurrence == "C", this.coverage.limitsPatternGroupCode).subscribe({
       next: (subCodeDefaults: SubCodeDefaults) => {
         this.subCodeDefaults = subCodeDefaults;
