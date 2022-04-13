@@ -190,13 +190,13 @@ export class SummaryComponent implements OnInit {
   }
 
   private async updateInvoice() {
-    if (this.invoices[0].effectiveDate != this.policyInfo.policyEffectiveDate) {
+    if (this.invoices[0].effectiveDate != this.endorsement.transactionEffectiveDate) {
       this.invoices[0].isUpdated = true;
-      this.invoices[0].effectiveDate = this.policyInfo.policyEffectiveDate;
+      this.invoices[0].effectiveDate = this.endorsement.transactionEffectiveDate;
     }
-    if (this.invoices[0].expirationDate != (this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate)) {
+    if (this.invoices[0].expirationDate != this.endorsement.transactionExpirationDate) {
       this.invoices[0].isUpdated = true;
-      this.invoices[0].expirationDate = this.policyInfo.policyExtendedExpDate ?? this.policyInfo.policyExpirationDate;
+      this.invoices[0].expirationDate = this.endorsement.transactionExpirationDate;
     }
     if (this.invoices[0].transactionTypeCode != this.endorsement.transactionTypeCode) {
       this.invoices[0].isUpdated = true;
