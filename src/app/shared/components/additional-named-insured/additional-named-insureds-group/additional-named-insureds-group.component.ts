@@ -41,6 +41,8 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   @Input() public policyId!: number;
   @Input() public endorsementNumber!: number;
 
+  @Input() public key1!: number;
+  @Input() public key2!: number;
 
   ngOnInit(): void {
     // this.route.parent?.data.subscribe(data => {
@@ -114,7 +116,15 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   createNewAni(): coverageANI {
-    return new coverageANI();
+
+    let x = new coverageANI();
+    x.key1 = this.key1;
+    x.key2 = this.key2;
+    x.isNew = true;
+    x.createdDate = new Date();
+    x.sequenceNo = this.getNextSequence();
+    return x;
+    //return new coverageANI();
     // return {
     //   name: "",
     //   role: undefined,
@@ -132,7 +142,10 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
     if (this.canEditPolicy && this.isDirty()) {
       let saveCount: number = 0;
       if (this.components != null) {
+        console.log(this.components.length.toString());
         for (let child of this.components) {
+          console.log("child");
+          console.log(child.aniForm.dirty);
           if (child.aniForm.dirty) {         
             let result = await child.save();
             if (result === false) {

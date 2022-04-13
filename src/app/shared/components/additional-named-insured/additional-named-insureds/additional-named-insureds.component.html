@@ -6,7 +6,10 @@
       <div class="col-lg-5">
         <label for="createDate" *ngIf="index==0">Additional Named Insured</label>
       </div>
-      <div class="col-lg-2">
+      <div class="col-lg-1" *ngIf="aniData.showActive">
+        <label for="isActive" *ngIf="index==0">Active</label>
+      </div>
+      <div class="col-lg-1">
         <label for="createDate" *ngIf="index==0">Create Date</label>
       </div>
     </div>
@@ -21,7 +24,11 @@
       <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="80"
         [required]="canEditPolicy" name="name" [(ngModel)]="aniData.name" (change)="checkDuplicateNameRoleCombo()">
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-1" *ngIf="aniData.showActive">
+      <input type="checkbox" class="form-checkbox" id="isActive" [(ngModel)]="aniData.isActive"
+        name="isActive" [readonly]="!canEditPolicy">
+    </div>
+    <div class="col-lg-1">
       <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" name="createDate"
         [ngModel]="aniData.createdDate | date:'MM/dd/yyyy'" (ngModelChange)="aniData.createdDate=$event">
     </div>

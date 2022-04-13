@@ -35,7 +35,6 @@ export class InvoiceGroupComponent implements OnInit {
   updateSub!: Subscription;
   showInvalid: boolean = false;
   invalidMessage: string = "";
-  showBusy: boolean = false;
   issuanceSub!: Subscription;
   invoiceCopy!: InvoiceData;
 
@@ -124,14 +123,15 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   async clickSave() {
-    this.showBusy = true;
+    this.endorsementStatusService.invoiceSaving = true;
     await this.tempSave(true);
-    this.showBusy = false;
+    this.endorsementStatusService.invoiceSaving = false;
   }
 
   async tempSave(refresh: boolean): Promise<void> {
     if (this.isValid()) {
       if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
+        this.endorsementStatusService.invoiceSaving = true;
         if (this.invoice.invoiceStatus == "N") {
           this.invoice.invoiceStatus = "T";
           this.invoice.proFlag = 0;
@@ -140,6 +140,7 @@ export class InvoiceGroupComponent implements OnInit {
         else if (this.isDirty()) {
           const isSaved = await this.save(refresh);
         }
+        this.endorsementStatusService.invoiceSaving = false;
       }
     }
     else {
@@ -151,7 +152,7 @@ export class InvoiceGroupComponent implements OnInit {
   async post(): Promise<void> {
     if (this.isValid()) {
       if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
-        this.showBusy = true;
+        this.endorsementStatusService.invoiceSaving = true;
         this.invoiceCopy = deepClone(this.invoice);
         this.invoice.invoiceStatus = "T";
         this.invoice.proFlag = 3;
@@ -160,13 +161,13 @@ export class InvoiceGroupComponent implements OnInit {
           if (this.canExport) {
             await this.export();
           }
-          this.refreshPage();
+         // this.refreshPage();
         }
         else {
           // Restore before Post changes
           this.invoice = deepClone(this.invoiceCopy);
         }
-        this.showBusy = false;
+        this.endorsementStatusService.invoiceSaving = false;
       }
     }
     else {
@@ -176,11 +177,12 @@ export class InvoiceGroupComponent implements OnInit {
 
   async export(): Promise<void> {
     const parm: PolicyIssuanceRequest = { policyId: this.invoice.policyId, endorsementNumber: this.invoice.endorsementNumber };
-    this.showBusy = true;
+    this.endorsementStatusService.invoiceSaving = true;
     const results$ = this.policyIssuanceService.postPolicyIssuance(parm);
     await lastValueFrom(results$).then(
       importPolicyResponse => {
-        this.showBusy = false;
+
+        this.endorsementStatusService.invoiceSaving = false;
         if (importPolicyResponse.isPolicyIssued) {
           this.messageDialogService.open("Export to Issuance", "Successful");
         }
@@ -192,7 +194,7 @@ export class InvoiceGroupComponent implements OnInit {
         }
       },
       error => {
-        this.showBusy = false;
+        this.endorsementStatusService.invoiceSaving = false;
         const errorMessage = error.error?.Message ?? error.message;
         this.messageDialogService.open("Export to Issuance failed", "Error Message: " + errorMessage);
       }
@@ -215,7 +217,7 @@ export class InvoiceGroupComponent implements OnInit {
         return this.refresh(result == null, refresh);
       },
         (error) => {
-          this.showBusy = false;
+          this.endorsementStatusService.invoiceSaving = false;
           this.showInvoiceNotSaved();
           const errorMessage = error.error?.Message ?? error.message;
           this.messageDialogService.open("Invoice Save Error", errorMessage);
@@ -230,7 +232,7 @@ export class InvoiceGroupComponent implements OnInit {
         return this.refresh(result == null, refresh);
       },
         (error) => {
-          this.showBusy = false;
+          this.endorsementStatusService.invoiceSaving = false;
           this.showInvoiceNotSaved();
           const errorMessage = error.error?.Message ?? error.message;
           this.messageDialogService.open("Invoice Save Error", errorMessage);
@@ -242,7 +244,8 @@ export class InvoiceGroupComponent implements OnInit {
     if (isSuccesful) {
       this.markPristine();
       await this.endorsementStatusService.refresh();
-      if (refresh) {
+      this.endorsementStatusService.refreshInvoice();
+     // if (refresh) {
         // If a Void then make sure the policy dates were not affected by a trigger
         if (this.invoice.invoiceStatus == "V") {
           const results$ = this.policyService.getPolicyInfo(this.invoice.policyId);
@@ -251,8 +254,8 @@ export class InvoiceGroupComponent implements OnInit {
             this.policyInfo.policyExtendedExpDate = policy.policyExtendedExpDate;
           });
         }
-        this.refreshPage();
-      }
+        //this.refreshPage();
+    //  }
       this.showInvoiceSaved();
       return true;
     }
@@ -263,8 +266,8 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   private refreshPage() {
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([this.router.url])
+    // this.router.onSameUrlNavigation = 'reload';
+    // this.router.navigate([this.router.url])
   }
 
   private markPristine() {
@@ -296,30 +299,29 @@ export class InvoiceGroupComponent implements OnInit {
     }
 
     if (undoPost) {
-      this.showBusy = true;
+      this.endorsementStatusService.invoiceSaving = true;
       await this.undoPost();
-      this.showBusy = false;
+      this.endorsementStatusService.invoiceSaving = false;
     }
     else {
       const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to Void this invoice?");
       if (voidConfirm) {
-        this.showBusy = true;
+        this.endorsementStatusService.invoiceSaving = true;
         if (await this.voidInvoice()) {
-          this.showBusy = false;
+          this.endorsementStatusService.invoiceSaving = false;
           if (this.invoice.endorsementNumber > 0) {
             this.confirmationDialogService.open("Delete Confirmation", "Would you also like to Delete the related endorsement?")
               .then(async deleteEndorsement => {
                 if (deleteEndorsement) {
                   this.router.navigate(['/home']);
-                  this.showBusy = true;
+                  this.endorsementStatusService.invoiceSaving = true;
                   const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
                   await lastValueFrom(results$).then(() => {
                     this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
-                    this.showBusy = false;
                     this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
                   },
                     error => {
-                      this.showBusy = false;
+                      this.endorsementStatusService.invoiceSaving = false;
                       const errorMessage = error.error?.Message ?? error.message;
                       this.messageDialogService.open("Invoice Void failed", "Error Message: " + errorMessage);
                     }
@@ -331,7 +333,7 @@ export class InvoiceGroupComponent implements OnInit {
         else {
           // Restore before Void changes
           this.invoice = deepClone(this.invoiceCopy);
-          this.showBusy = false;
+          this.endorsementStatusService.invoiceSaving = false;
         }
       }
     }
