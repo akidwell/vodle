@@ -100,4 +100,11 @@ body {
   left: 0;
 }
 
-
+.ngb-toasts {
+  position: fixed;
+  top: auto!important;
+  bottom: 0!important;
+  right: 0!important;
+  left: center!important;
+  margin: 0.5em;
+}

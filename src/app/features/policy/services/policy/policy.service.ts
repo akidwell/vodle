@@ -4,11 +4,11 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/policy-search-results';
-import { coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsured, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages-base/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
-import { InvoiceData } from '../../models/invoice';
+import { InvoiceData, InvoiceDetail } from '../../models/invoice';
 
 @Injectable({
   providedIn: 'root'
@@ -72,12 +72,6 @@ export class PolicyService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
       + '/endorsements/' + coverage.endorsementNumber.toString() + '/coverages/' + coverage.sequence.toString());
   }
-  
-  // Temp for resusability research
-  getAdditionalNamedInsured(policyId: number, endorsementNo: number): Observable<coverageANI[]> {
-    return this.http.get<coverageANI[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
-  }
-
   getAdditionalNamedInsureds(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsureds[]> {
     return this.http.get<AdditionalNamedInsureds[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
   }
@@ -137,6 +131,26 @@ export class PolicyService {
   createNewEndorsement(data: NewEndorsementData): Observable<NewEndorsementData>{
     return this.http.post<NewEndorsementData>(this.config.apiBaseUrl + 'api/policies/endorsements', data);
 
+  }
+  getPolicyLineItems(policyId: number, endorsementNo: number): Observable<InvoiceDetail[]> {
+    return this.http.get<InvoiceDetail[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/line-items');
+  }
+
+  //////////////////////////////////////////////////////////////////////
+  // Component research
+  getInsuredAdditionalNamedInsured(policyId: number): Observable<AdditionalNamedInsured[]> {
+    return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/insured/' + policyId + '/add-insureds');
+  }
+
+  getAdditionalNamedInsured(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsured[]> {
+    return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
+  }
+
+  addAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+    return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
+  }
+  updateAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
 
 }

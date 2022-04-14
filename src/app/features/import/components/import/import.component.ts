@@ -66,13 +66,6 @@ export class ImportComponent implements OnInit {
   private _search(): Observable<SearchResult> {
     const {pageSize, page, searchTerm} = this._state;
     
-    // Catch invaldid characters, this is used for demonstration purposes
-    var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
-    if (pattern.test(searchTerm)) {
-        this._loading$.next(false);
-        throw Error("No special characters");
-    }
-
     // 1. Populate from source
     let policies = this.importPolicies;
 
