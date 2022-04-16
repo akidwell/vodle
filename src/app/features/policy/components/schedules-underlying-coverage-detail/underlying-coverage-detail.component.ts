@@ -124,7 +124,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
 
   //This updates the coverages by primary coverage code (AP) or limits pattern group code (PAUL)
   updateCoverageType():void {
-    if (this.ucData.primaryCoverageCode && this.ucData.limitsPatternGroupCode) {
+    if (this.ucData.primaryCoverageCode || this.ucData.limitsPatternGroupCode) {
       this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
         (limitBasisDescriptions: UnderlyingLimitBasis[]) =>
         {
@@ -154,11 +154,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     } else {
       this.updateLimitsPatternBasisCodes();
     }
-    if (this.isAPPolicy && onInit) {
-      this.updateAPLimitsPattern();
-    } else {
-      this.updateLimitsPattern();
-    }
+    this.updateLimitsPattern();
   }
   //On changing LimitsPatternGroupCode for PAUL or PrimaryCoverageCode for AP we need to regenerate default limit basis
   generateNewUnderlyingScheduleLimitData(): UnderlyingCoverageLimit[] {
@@ -175,11 +171,13 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       limitBasis: basis?.limitBasis || "0",
       endorsementNo: this.ucData.endorsementNo,
       policyId: this.ucData.policyId,
-      limit: '0',
+      limitDisplay: '0',
+      limit: 0,
       limitBasisCode: basis?.limitBasisCode || 0,
       order: basis?.order || 999,
       sequence: this.ucData.sequence,
       includeExclude: null,
+      excessDisplay: '',
       excess: null,
       isUserAdded: userAdded
     }
@@ -189,62 +187,68 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   updateLimitsPattern(): void {
     this.ucData.limitsPattern = '';
     this.limitedLimitsBasis.forEach((basis,index) => {
-
-
       this.ucData.underlyingScheduleLimitData.forEach(element => {
         if(!element.isUserAdded && element.limitBasisCode == basis) {
-          if((element.limit && (element.limit.toString().toLowerCase() == 'e'
-          || element.limit.toString().toLowerCase() == 'exclude'
-          || element.limit.toString().toLowerCase() == 'excluded'))
+          if((element.limitDisplay && (element.limitDisplay.toLowerCase() == 'e'
+          || element.limitDisplay.toLowerCase() == 'exclude'
+          || element.limitDisplay.toLowerCase() == 'excluded'))
           || (element.includeExclude != null && element.includeExclude.toLowerCase() == 'e')) {
-            this.ucData.limitsPattern += 'Excluded'
-          } else if ((element.limit && (element.limit.toString().toLowerCase() == 'i'
-          || element.limit.toString().toLowerCase() == 'include'
-          || element.limit.toString().toLowerCase() == 'included'))
+            element.limitDisplay = 'Excluded'
+            element.limit = null;
+          } else if ((element.limitDisplay && (element.limitDisplay.toLowerCase() == 'i'
+          || element.limitDisplay.toLowerCase() == 'include'
+          || element.limitDisplay.toLowerCase() == 'included'))
           || (element.includeExclude != null && element.includeExclude.toLowerCase() == 'i')) {
-            this.ucData.limitsPattern += 'Included'
-          } else if (!parseInt(element.limit)){
-            element.limit = '0';
-            this.ucData.limitsPattern += element.limit;
-          } else if (parseInt(element.limit) < 100){
-            this.ucData.limitsPattern = (parseInt(element.limit) * 1000000).toString();
+            element.limitDisplay = 'Included'
+            element.limit = null;
+          } else if (!parseInt(element.limitDisplay)){
+            element.limitDisplay = '0'
+            element.limit = 0;
+          } else if (parseInt(element.limitDisplay) < 100){
+            element.limit = parseInt(element.limitDisplay) * 1000000;
+            element.limitDisplay = element.limit.toString();
           } else {
-            this.ucData.limitsPattern += element.limit;
+            element.limit = parseInt(element.limitDisplay);
           }
+          this.ucData.limitsPattern += element.limitDisplay;
           if(index < this.limitedLimitsBasis.length - 1) {
             this.ucData.limitsPattern += '/';
           }
         }
       });
     });
+    //handle userAdded records
+    this.ucData.underlyingScheduleLimitData.forEach(element => {
+    if(element.isUserAdded) {
+        if((element.includeExclude != null && element.includeExclude.toLowerCase() == 'e')) {
+          element.limitDisplay = 'Excluded'
+          element.limit = null;
+        } else if ((element.includeExclude != null && element.includeExclude.toLowerCase() == 'i')) {
+          element.limitDisplay = 'Included'
+          element.limit = null;
+        } else if (parseInt(element.limitDisplay) < 100){
+          element.limit = parseInt(element.limitDisplay) * 1000000;
+          element.limitDisplay = element.limit.toString();
+        } else {
+          element.limit = parseInt(element.limitDisplay);
+        }
+      }
+    });
     this.isLimitsPatternValid = this.checkLimitsPatternValid();
   }
-  updateAPLimitsPattern(): void {
-    this.ucData.limitsPattern = '';
-    this.limitedLimitsBasis.forEach((basis,index) => {
-      this.ucData.underlyingScheduleLimitData.forEach(element => {
-        if(!element.isUserAdded && element.limitBasisCode == basis) {
-          if(element.includeExclude && element.includeExclude?.toLowerCase() == 'e') {
-            this.ucData.limitsPattern += 'Exclude'
-            element.limit = 'Exclude';
-          } else if (element.includeExclude && element.includeExclude?.toLowerCase() == 'i') {
-            this.ucData.limitsPattern += 'Included'
-            element.limit = 'Include';
-          } else if (!parseInt(element.limit)){
-            element.limit = '0';
-            this.ucData.limitsPattern += element.limit;
-          } else if (parseInt(element.limit) < 100){
-            this.ucData.limitsPattern = (parseInt(element.limit) * 1000000).toString();
-          } else {
-          this.ucData.limitsPattern += element.limit;
-          }
-          if(index < this.limitedLimitsBasis.length - 1) {
-            this.ucData.limitsPattern += '/';
-          }
-        }
 
-      });
+  handleLimitUpdate() {
+    this.ucData.underlyingScheduleLimitData.forEach(element => {
+      if(element.limitDisplay.toLowerCase() == 'excluded') {
+        element.includeExclude = 'E';
+      } else if (element.limitDisplay.toLowerCase() == 'included') {
+        element.includeExclude = 'I';
+      } else {
+        element.includeExclude = null;
+      }
     })
+    this.ucForm.controls['limitsPattern'].markAsDirty();
+    this.updateLimitsPattern()
   }
   //On Limits field change
   updateLimitBasisData(): void {
@@ -259,17 +263,21 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     this.ucData.underlyingScheduleLimitData.forEach((element,index) => {
       if (this.limitedLimitsBasis.includes(element.limitBasisCode)){
         if(limits[index].toLowerCase() == 'e' || limits[index].toLowerCase() == 'exclude' || limits[index].toLowerCase() == 'excluded') {
-          element.limit = 'Excluded';
+          element.limitDisplay = 'Excluded';
+          element.limit = null;
           element.includeExclude = 'E';
         } else if (limits[index].toLowerCase() == 'i' || limits[index].toLowerCase() == 'include' || limits[index].toLowerCase() == 'included') {
-          element.limit = 'Included';
+          element.limitDisplay = 'Included';
+          element.limit = null;
           element.includeExclude = 'I';
         } else if (!parseInt(limits[index])){
-          element.limit = '0';
+          element.limitDisplay = '0';
+          element.limit = null;
           element.includeExclude = null;
           regenerateString = true;
         } else {
-          element.limit = limits[index];
+          element.limitDisplay = parseInt(limits[index]).toString();
+          element.limit = parseInt(limits[index]);
           element.includeExclude = null;
         }
 
@@ -280,9 +288,37 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       this.isLimitsPatternValid = this.checkLimitsPatternValid();
     });
   }
+  updateExcessLimitBasisData(): void {
+    var limits: string[] = this.ucData.excessOfLimitsPattern?.split('/') || [];
+    this.ucData.excessOfLimitsPattern = '';
+    if(limits.length != this.limitedLimitsBasis.length ) {
+      //throw warning and regenerate
+      //this.updateLimitsPattern();
+      this.ucData.excessOfLimitsPattern = '0';
+      return;
+    }
+    this.ucData.underlyingScheduleLimitData.forEach((element,index) => {
+      if (this.limitedLimitsBasis.includes(element.limitBasisCode)){
+        if (!parseInt(limits[index])){
+          element.excessDisplay = '0';
+          element.excess = null;
+        } else if (parseInt(limits[index]) < 100){
+          element.excess = (parseInt(limits[index]) * 1000000);
+          element.excessDisplay = element.excess.toString();
+        } else {
+          element.excessDisplay = limits[index];
+          element.excess = parseInt(limits[index])
+        }
+      }
+      this.ucData.excessOfLimitsPattern += element.excessDisplay;
+          if(index < this.limitedLimitsBasis.length - 1) {
+            this.ucData.excessOfLimitsPattern += '/';
+          }
+    });
+  }
   //On Limits field change
   updateExcessOfLimitBasisData(): void {
-    this.ucData.excessOfLimitsPattern = this.limitsPatternHelperService.parseLimitsPattern(this.ucData.excessOfLimitsPattern || '', this.limitedLimitsBasis.length);
+    this.updateExcessLimitBasisData();
   }
   generateLimits(): void {
     this.getUserAddedCount();
@@ -293,6 +329,8 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
 
       for (let limitIndex = 0; limitIndex < (this.limitBasisDescriptions?.length || 0); limitIndex++) {
         if (this.limitBasisDescriptions && (element.limitBasisCode == this.limitBasisDescriptions[limitIndex].limitBasisCode)) {
+          element.limitDisplay = this.setLimitDisplay(element.limit, element.includeExclude);
+          element.excessDisplay = this.setExcessDisplay(element.limit);
           element.limitBasis = this.limitBasisDescriptions[limitIndex].limitBasisDesc;
           element.order = this.limitBasisDescriptions[limitIndex].order;
           break;
@@ -301,11 +339,14 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
 
       element.order = element.order ? element.order : 999;
       element.isUserAdded = element.order == 999 ? true : false;
+      if (element.isUserAdded) {
+        element.limitDisplay = this.setLimitDisplay(element.limit, element.includeExclude);
+      }
     }
 
     if(this.isAPPolicy) {
       this.updateAPLimitsPatternBasisCodes();
-      this.updateAPLimitsPattern();
+      this.updateLimitsPattern();
     }
     this.ucData.underlyingScheduleLimitData.sort((a,b) => a.order - b.order )
     for (let index = 0; index < this.ucData.underlyingScheduleLimitData?.length; index++) {
@@ -339,6 +380,26 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
         }
       });
   }
+  setLimitDisplay(limit: number | null, includeExclude: string | null): string {
+    if (limit == null) {
+      if (includeExclude == 'E') {
+        return 'Exclude';
+      } else if (includeExclude == 'I') {
+        return 'Include';
+      } else {
+        return '';
+      }
+    } else {
+      return limit.toString()
+    }
+  }
+  setExcessDisplay(limit: number | null): string {
+    if (limit == null) {
+      return '';
+    } else {
+      return limit.toString()
+    }
+  }
   getUserAddedCount(): void {
     this.userAddedCount = 0;
     this.ucData.underlyingScheduleLimitData?.forEach(d => {
@@ -371,6 +432,9 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     this.deleteThisCoverage.emit(this.ucData)
   }
   checkLimitsPatternValid(): boolean {
+    if (this.isAPPolicy && this.ucData.limitsPatternGroupCode == null) {
+      return true;
+    }
     let isValid = this.ucData.limitsPattern?.split('/').length == this.limitedLimitsBasis.length;
     for (let x of this.ucData.limitsPattern?.split("/") || []) {
       if ((x == "") || (x == '0')) {

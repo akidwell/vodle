@@ -22,6 +22,8 @@ export class LimitsPatternHelperService {
         limit = '0';
       } else if (parseInt(limit) < 100){
         limit = (parseInt(limit) * 1000000).toString();
+      } else {
+        limit = parseInt(limit).toString()
       }
       newLimitsPattern += limit + '/'
     });

@@ -36,7 +36,7 @@
       <div class="col-lg-2">
         <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
         <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-          [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()" [title]="ucData.limitsPattern">
+          [required]="(canEditPolicy && !isAPPolicy)" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()" [title]="ucData.limitsPattern">
           <div [hidden]="isLimitsPatternValid || !canEditPolicy" class="alert alert-danger">
             Invalid Pattern
           </div>
@@ -100,7 +100,7 @@
       <div class="row container" style="padding-top: 10px; width: 100%">
         <div *ngFor="let item of ucData.underlyingScheduleLimitData; let i = index">
           <rsps-underlying-coverage-limit-basis
-          (onLimitChange)="updateLimitsPattern()"
+          (onLimitChange)="handleLimitUpdate()"
           (deleteThisLimit)=deleteUserAddedLimit($event)
           [ucLimit]=item>
           </rsps-underlying-coverage-limit-basis>

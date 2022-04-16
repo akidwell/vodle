@@ -23,7 +23,7 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
   @Input() ucLimit!: UnderlyingCoverageLimit;
   @Output() onLimitChange: EventEmitter<any> = new EventEmitter();
   @Output() deleteThisLimit: EventEmitter<UnderlyingCoverageLimit> = new EventEmitter();
-  
+
   constructor(private route: ActivatedRoute, public UCService: UnderlyingCoverageService, private userAuth: UserAuth, private limitsPatternHelperService: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -36,7 +36,7 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -45,7 +45,7 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     this.statusSub?.unsubscribe();
   }
   limitChange(): void{
-    this.ucLimit.limit = this.limitsPatternHelperService.parseLimitsPattern(this.ucLimit.limit || '', 1)
+    this.ucLimit.limitDisplay = this.limitsPatternHelperService.parseLimitsPattern(this.ucLimit.limitDisplay || '', 1)
     this.onLimitChange.emit();
   }
   deleteLimit(): void {
