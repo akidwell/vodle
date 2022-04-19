@@ -194,7 +194,8 @@ export class ActionComponent implements OnInit {
         }
       }
     }
-    if ((moment(this.endorsementActionInfo.transEffectiveDate).toDate() < moment(this.policyInfo.policyEffectiveDate).toDate()) || (moment(this.endorsementActionInfo.transEffectiveDate).toDate() > moment(this.policyInfo.policyExpirationDate).toDate())) {
+    if ((moment(this.endorsementActionInfo.transEffectiveDate).toDate() < moment(this.policyInfo.policyEffectiveDate).toDate())
+      || (moment(this.endorsementActionInfo.transEffectiveDate).toDate() > moment(this.policyInfo.policyExtendedDate ? this.policyInfo.policyExtendedDate : this.policyInfo.policyExpirationDate).toDate())) {
       this.endorsementActionForm.controls['transEffectiveDate'].setErrors({ 'incorrect': true });
       this.isTransEffectiveValid = false;
       return false;
@@ -235,9 +236,9 @@ export class ActionComponent implements OnInit {
       }
     }
     // checking that all expirations date come after the transEffDate and that trans expiration date is not greater than the policy expiration date
-    if (this.endorsementActionInfo.transEffectiveDate != undefined && this.endorsementActionInfo.transactionType.toString() != '20'){
+    if (this.endorsementActionInfo.transEffectiveDate != undefined && this.endorsementActionInfo.transactionType.toString() != '20') {
       if ((moment(this.endorsementActionInfo.transExpirationDate).toDate() < moment(this.endorsementActionInfo.transEffectiveDate).toDate())
-            || (moment(this.endorsementActionInfo.transExpirationDate).toDate() > moment(this.policyInfo.policyExpirationDate).toDate())) {
+        || (moment(this.endorsementActionInfo.transExpirationDate).toDate() > moment(this.policyInfo.policyExtendedDate ? this.policyInfo.policyExtendedDate : this.policyInfo.policyExpirationDate).toDate())) {
         this.endorsementActionForm.controls['transExpirationDate'].setErrors({ 'incorrect': true });
         this.isTransExpirationValid = false;
         return false;
