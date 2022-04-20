@@ -1,0 +1,21 @@
+<form #coveragesForm="ngForm">
+  <div class="content">
+    <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true"
+      [innerHTML]="invalidMessage"></ngb-alert>
+    <rsps-endorsement-header [policyInfo]="policyInfo" [endorsement]="endorsement"></rsps-endorsement-header>
+    <div>
+      <button class="btn btn-sm btn-primary pull-right" *ngIf="canEdit" (click)="newLocation()">Add Location</button>
+      <button class="btn btn-sm btn-primary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
+        (click)="expandAllLocations()">Expand All</button>
+      <button class="btn btn-sm btn-primary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
+        (click)="collapseAllLocations()">Collapse All</button>
+    </div>
+    <div *ngFor="let item of endorsementCoveragesGroups; index as i">
+      <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event) *ngIf="(item.coverages.length > 0) || (this.canEditEndorsement)"
+        (deleteThisGroup)=deleteGroup($event) [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
+        [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length" [endorsement]="endorsement" [policyInfo]="policyInfo"></rsps-endorsement-coverage-location-group>
+    </div>
+  </div>
+</form>
+
+<rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>

@@ -1,0 +1,37 @@
+<form #invoiceGroupForm="ngForm">
+  <div class="card">
+    <div style="display: inline-block;">
+      <button class="btn btn-md btn-primary" style="float:left;" *ngIf="canSave" [disabled]="!isDirty()"
+        appPreventDoubleClick (throttledClick)="clickSave()" [throttleTime]="700">Save</button>
+      <button class="btn btn-md btn-primary" style="float:right;" *ngIf="canPost" (click)="post()">Post</button>
+      <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" [hidden]="!canVoid"
+        (click)="confirmVoid()">Void</button>
+      <button class="btn btn-md btn-primary" style="float:right;" *ngIf="canExport"
+        (click)="export()">Export</button>
+    </div>
+    <div class="card-header" (click)="collapsePanel(!invoiceCollapsed)">{{title}}
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="invoiceCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!invoiceCollapsed"></fa-icon>
+    </div>
+    <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true"
+      [innerHTML]="invalidMessage"></ngb-alert>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="invoiceCollapsed">
+      <rsps-invoice-master [invoice]=invoice></rsps-invoice-master>
+      <div class="card-body">
+        <div *ngFor="let item of invoice.invoiceDetail; index as i">
+          <rsps-invoice-detail [invoice]=invoice [invoiceDetail]=item [index]=i></rsps-invoice-detail>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="showFooter">
+      <div id="invoiceFooter">
+        <button *ngIf="canAddDetail" style="float:left; background:none; border:none;" class="underline"
+          (click)="addNewInvoiceDetail();">Add Line Item</button>
+        <span class="float-center">Total: {{totalNetAmount | currency: 'USD' : 'symbol':'1.2-2' | minusSignToParens}}
+        </span>
+        <div style="float:right;">Invoice Details: {{invoice.invoiceDetail.length}}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
