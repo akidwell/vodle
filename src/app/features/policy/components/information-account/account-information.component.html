@@ -2,8 +2,8 @@
   <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
       Account Information
-      <fa-icon style="float: right" [icon]="faPlus" *ngIf="accountCollapsed"></fa-icon>
-      <fa-icon style="float: right" [icon]="faMinus" *ngIf="!accountCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
       <div class="card-body">

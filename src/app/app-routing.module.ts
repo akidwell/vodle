@@ -28,9 +28,9 @@ const routes: Routes = [
   {
     path: 'policy', loadChildren: () => import('./features/policy/policy.module').then(m => m.PolicyModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
   },
-  // {
-  //   path: 'insured', loadChildren: () => import('./features/insured/insured.module').then(m => m.InsuredModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
-  // },
+  {
+    path: 'insured', loadChildren: () => import('./features/insured/insured.module').then(m => m.InsuredModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
   { path: 'access-denied', component: AccessDeniedComponent },
   { path: 'logged-out', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }

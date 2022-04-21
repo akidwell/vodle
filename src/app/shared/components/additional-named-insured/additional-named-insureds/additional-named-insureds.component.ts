@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
@@ -8,6 +7,7 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 
 @Component({
   selector: 'rsps-shared-additional-named-insureds',
@@ -25,7 +25,6 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   saveSub!: Subscription;
   aniCollapsed = false;
   isReadOnly: boolean = true;
-  // ani!: AdditionalNamedInsured[];
   nameRoleArray: string[] = new Array;
   nameRoleDuplicates: string[] = new Array;
   isNameRoleValid: boolean = true;
@@ -38,16 +37,13 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
 
-  constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
   ngOnInit(): void {
-    // this.route.parent?.data.subscribe(data => {
-    //   this.ani = data['aniData'].additionalNamedInsureds;
-    // });
     this.aniRoles$ = this.dropdowns.getAdditonalNamedInsuredsRoles();
   }
 
@@ -65,63 +61,61 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
   }
-  
+
   copyAni(): void {
     this.copyExistingAni.emit(this.aniData);
   }
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open("Delete Confirmation","Are you sure you want to delete this Additional Named Insured?").then((result: boolean) => {
-        if (result) {
-          this.deleteAni();
-        }
-      });
+    this.confirmationDialogService.open("Delete Confirmation", "Are you sure you want to delete this Additional Named Insured?").then((result: boolean) => {
+      if (result) {
+        this.deleteAni();
+      }
+    });
   }
 
   async deleteAni() {
     if (this.aniData.isNew) {
       this.deleteExistingAni.emit(this.aniData);
     } else {
-      this.aniData.delete();
-      // this.deleteSub = this.policyService.deleteAdditionalNamedInsureds(this.aniData).subscribe(result => {
-      //   this.deleteExistingAni.emit(this.aniData);
-      //   return result;
-      // });
+      await this.aniData.delete().then(() => {
+        this.deleteExistingAni.emit(this.aniData)
+      });
     }
   }
 
   async save(): Promise<boolean> {
-    return await new Promise(async (resolve) => {
-      if (this.aniData.isNew) {
-        console.log("New SAVE");
-        this.aniForm.form.markAsPristine();
-        this.aniForm.form.markAsUntouched();
-        this.aniData.isNew = false;
-
-        resolve(await this.aniData.save());
-
-        // this.addSub = this.policyService.addAdditionalNamedInsureds(this.aniData).subscribe(result => {
-        //   resolve(result);
-        //   this.aniForm.form.markAsPristine();
-        //   this.aniForm.form.markAsUntouched();
-        //   this.aniData.isNew = false;
-        // });
-      } else {
-        console.log("SAVE");
-        this.aniForm.form.markAsPristine();
-        this.aniForm.form.markAsUntouched();
-        this.aniData.isNew = false;
-
-        resolve(await this.aniData.save());
-        
-        // this.updateSub = this.policyService.updateAdditionalNamedInsureds(this.aniData).subscribe(result => {
-        //   this.aniForm.form.markAsPristine();
-        //   this.aniForm.form.markAsUntouched();
-        //   this.aniData.isNew = false;
-        //   resolve(result);
-        // });
-      }
-    })
+    if (this.aniData.isNew) {
+      return await this.aniData.save()
+        .then(result => {
+          if (result) {
+            this.aniForm.form.markAsPristine();
+            this.aniForm.form.markAsUntouched();
+            this.aniData.isNew = false;
+          }
+          return result;
+        })
+        .catch(error => {
+          this.messageDialogService.open("Add error", error.error.Message ?? error.message);
+          return false;
+        }
+        );
+    } else {
+      return await this.aniData.save()
+        .then(result => {
+          if (result) {
+            this.aniForm.form.markAsPristine();
+            this.aniForm.form.markAsUntouched();
+            this.aniData.isNew = false;
+          }
+          return result;
+        })
+        .catch(error => {
+          this.messageDialogService.open("Update error", error.error.Message ?? error.message);
+          return false;
+        }
+        );
+    }
   }
 
   checkDuplicateNameRoleCombo(): void {
