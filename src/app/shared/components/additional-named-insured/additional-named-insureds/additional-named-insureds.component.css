@@ -22,3 +22,12 @@ input[type="date"] {
 .btn {
   margin-right: 5px;
 }
+
+.form-checkbox{
+  height: 25px;
+  width: 25px; 
+}
+
+input[type="checkbox"][readonly] {
+  pointer-events: none;
+}

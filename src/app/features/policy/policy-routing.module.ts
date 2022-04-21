@@ -4,7 +4,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { CoveragesComponent } from './components/coverages-base/coverages.component';
 import { InformationComponent } from './components/information-base/information.component';
 import { PolicyNotFoundComponent } from './components/policy-not-found/policy-not-found.component';
-import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, UnderlyingCoveragesResolver, PolicyLayerResolver, EndorsementStatusResolver } from './services/policy-resolver/policy-resolver-service';
+import { AccountInformationResolver, EndorsementResolver, EndorsementCoveragesResolver, PolicyInformationResolver, AdditionalNamedInsuredsResolver, EndorsementLocationResolver, UnderlyingCoveragesResolver, PolicyLayerResolver, EndorsementStatusResolver } from './services/policy-resolver/policy-resolver.service';
 import { ReinsuranceComponent } from './components/reinsurance-base/reinsurance.component';
 import { SchedulesComponent } from './components/schedules-base/schedules.component';
 import { SummaryComponent } from './components/summary-base/summary.component';
