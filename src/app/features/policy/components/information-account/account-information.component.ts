@@ -18,8 +18,8 @@ export class AccountInformationComponent implements OnInit {
   canEditPolicy: boolean = false;
   authSub: Subscription;
   accountSub!: Subscription;
-  faPlus = faAngleDown;
-  faMinus = faAngleUp;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
 

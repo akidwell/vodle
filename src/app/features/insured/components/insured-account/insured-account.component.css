@@ -1,0 +1,37 @@
+.card-header {
+  color: white;
+  background-color: #00274e;
+}
+
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+}
+
+.form-checkbox {
+  height: 25px;
+  width: 25px;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+}
+input[type="checkbox"][readonly] {
+    pointer-events: none;
+}
+
+.paddedRow{
+    margin: 15px !important;
+}
+
+.form-label{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+  }

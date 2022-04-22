@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/policy-search-results';
 import { AdditionalNamedInsured, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
@@ -36,7 +36,6 @@ export class PolicyService {
   getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UCCoverage[]> {
     return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule')
     .pipe(
-      tap(),
       map((receivedData: UnderlyingCoverage[]) => {
           var data: UCCoverage[] = [];
           receivedData.forEach(element => {
@@ -148,19 +147,25 @@ export class PolicyService {
 
   //////////////////////////////////////////////////////////////////////
   // Component research
-  getInsuredAdditionalNamedInsured(policyId: number): Observable<AdditionalNamedInsured[]> {
-    return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/insured/' + policyId + '/add-insureds');
+  getAdditionalNamedInsured(policyId: number, endorsementNo: number): Observable<coverageANI[]> {
+    return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds')
+    .pipe(
+      map((receivedData: AdditionalNamedInsured[]) => {
+          var data: coverageANI[] = [];
+          receivedData.forEach(element => {
+            data.push(new coverageANI(this,element))
+          });
+          return data;
+      }));
   }
 
-  getAdditionalNamedInsured(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsured[]> {
-    return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
-  }
-
-  addAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
-    return this.http.post<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
+  addAdditionalNamedInsured(aniData: coverageANI): Observable<coverageANI> {
+    return this.http.post<coverageANI>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
   updateAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
-
+  deleteAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + aniData.policyId + '/endorsements/' + aniData.endorsementNo + '/additional-insureds/' + aniData.sequenceNo);
+  }
 }
