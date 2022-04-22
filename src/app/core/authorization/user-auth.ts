@@ -31,6 +31,16 @@ export class UserAuth {
   get canEditPolicy(): boolean { return this._canEditPolicy.getValue(); }
   set canEditPolicy(value: boolean) { this._canEditPolicy.next(value); }
 
+  private _canEditInsured = new BehaviorSubject<boolean>(false);
+  canEditInsured$ = this._canEditInsured.asObservable();
+  get canEditInsured(): boolean { return this._canEditInsured.getValue(); }
+  set canEditInsured(value: boolean) { this._canEditInsured.next(value); }
+
+  private _canEditSubmission = new BehaviorSubject<boolean>(false);
+  canEditSubmission$ = this._canEditSubmission.asObservable();
+  get canEditSubmission(): boolean { return this._canEditSubmission.getValue(); }
+  set canEditSubmission(value: boolean) { this._canEditSubmission.next(value); }
+
   private _userRole = new BehaviorSubject<string>("");
   userRole$ = this._userRole.asObservable();
   get userRole(): string { return this._userRole.getValue(); }
@@ -46,8 +56,8 @@ export class UserAuth {
   loaded() {
     this._loaded$.next(true);
   }
-  
-  
+
+
   init(): void {
     this.userName = "";
     this.bearerToken = "";
