@@ -97,10 +97,11 @@ export class AuthService {
     this.userAuth.canExecuteImport = token.CanExecuteImport == 'True';
     this.userAuth.isApiAuthenticated = token.valid == 'True';
     this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
+    this.userAuth.canEditInsured = token.CanEditInsured == 'True';
+    this.userAuth.canEditSubmission = token.CanEditSubmission == 'True';
     this.userAuth.userRole = token.userRole;
     this.userAuth.environment = token.environment;
     this.userAuth.loaded();
-
     if (!this.userAuth.isAuthenticated) {
       this.router.navigate(['/access-denied']);
     }
