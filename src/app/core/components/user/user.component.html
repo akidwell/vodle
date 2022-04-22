@@ -38,10 +38,13 @@
       <button (click)="clearHistory()" ngbDropdownItem>
         <fa-icon [icon]="faTrash"></fa-icon>
         Clear History
-      </button> 
+      </button>
       <div class="dropdown-divider"></div>
       <span class="dropdown-item-text">{{environment}}</span>
-      <span class="dropdown-item-text">{{role}}</span> 
+      <span class="dropdown-item-text">{{role}}</span>
+      <span class="dropdown-item-text">Edit Policy: {{canEditPolicy ? 'T' : 'F'}}</span>
+      <span class="dropdown-item-text">Edit Sub: {{canEditSubmission ? 'T' : 'F'}}</span>
+      <span class="dropdown-item-text">Edit Ins: {{canEditInsured ? 'T' : 'F'}}</span>
     </form>
   </div>
 </div>

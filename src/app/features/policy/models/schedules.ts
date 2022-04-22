@@ -17,18 +17,22 @@ export interface UnderlyingCoverage {
   isNew: boolean;
 }
 
+
 export interface UnderlyingCoverageLimit {
-  policyId: Number;
+  policyId: number;
   endorsementNo: number;
   sequence: number;
   limitBasisCode: number;
-  limit: string;
+  limit: number | null;
+  limitDisplay: string;
   includeExclude: string | null;
   excess: number | null;
+  excessDisplay: string;
   order: number;
   limitBasis: string;
   isUserAdded: boolean;
 }
+
 export interface UnderlyingLimitBasis {
   limitBasisCode: number;
   limitType: string;
