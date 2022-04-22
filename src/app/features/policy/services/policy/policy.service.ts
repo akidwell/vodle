@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/policy-search-results';
 import { AdditionalNamedInsured, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
@@ -9,6 +9,7 @@ import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCove
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
 import { InvoiceData, InvoiceDetail } from '../../models/invoice';
+import { UCCoverage } from '../../classes/UCCoverage';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,17 @@ export class PolicyService {
   getEndorsementCoveragesGroups(policyId: number, endorsementNo: number): Observable<EndorsementCoveragesGroup[]> {
     return this.http.get<EndorsementCoveragesGroup[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/coveragesgroups');
   }
-  getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UnderlyingCoverage[]> {
-    return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule');
+  getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UCCoverage[]> {
+    return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule')
+    .pipe(
+      tap(),
+      map((receivedData: UnderlyingCoverage[]) => {
+          var data: UCCoverage[] = [];
+          receivedData.forEach(element => {
+            data.push(new UCCoverage(element))
+          });
+          return data;
+      }));
   }
   updateUnderlyingCoverages(underlyingCoverages: UnderlyingCoverage[]): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/underlying-schedule', underlyingCoverages);

@@ -17,8 +17,9 @@ export interface UnderlyingCoverage {
   isNew: boolean;
 }
 
+
 export interface UnderlyingCoverageLimit {
-  policyId: Number;
+  policyId: number;
   endorsementNo: number;
   sequence: number;
   limitBasisCode: number;
@@ -31,6 +32,7 @@ export interface UnderlyingCoverageLimit {
   limitBasis: string;
   isUserAdded: boolean;
 }
+
 export interface UnderlyingLimitBasis {
   limitBasisCode: number;
   limitType: string;

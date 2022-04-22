@@ -25,7 +25,7 @@
         <div>Coverage Type</div>
         <ng-select id="primaryCoverageCode" click-stop-propagation [items]="coverageTypes$ | async" bindLabel="description" bindValue="key" placeholder=""
         [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="primaryCoverageCode"
-        [(ngModel)]="ucData.primaryCoverageCode" #limitsPattern="ngModel"  (change)="updateCoverageType()">
+        [(ngModel)]="ucData.primaryCoverageCode" #limitsPattern="ngModel"  (change)="processValueChange()">
       </ng-select>
       </div>
       <div class="col-lg-2">
@@ -34,9 +34,9 @@
           name="name" [(ngModel)]="ucData.carrierName" >
       </div>
       <div class="col-lg-2">
-        <div>Limits {{userAddedCount > 0 ? '+ ' + userAddedCount : ''}}</div>
+        <div>Limits {{ucData.userAddedCount > 0 ? '+ ' + ucData.userAddedCount : ''}}</div>
         <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-          [required]="(canEditPolicy && !isAPPolicy)" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="updateLimitBasisData()" [title]="ucData.limitsPattern">
+          [required]="(canEditPolicy && !isAPPolicy)" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="processLimitsChange()" [title]="ucData.limitsPattern">
           <div [hidden]="isLimitsPatternValid || !canEditPolicy" class="alert alert-danger">
             Invalid Pattern
           </div>
@@ -44,16 +44,16 @@
       <div class="col-lg-2">
         <div>Limits Pattern</div>
         <ng-select click-stop-propagation *ngIf="!isAPPolicy" id="limitsPatternGroupCode" [items]="this.allLimitsPatternDescription" bindLabel="description" bindValue="key" placeholder=""
-          [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy && !isAPPolicy" name="limitsPatternGroupCode" [title]="limitedLimitsPatternString"
-          [(ngModel)]="ucData.limitsPatternGroupCode" #limitsPatternGroupCode="ngModel"  (change)="updateLimitsPatternGroupCode()">
+          [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy && !isAPPolicy" name="limitsPatternGroupCode" [title]="ucData.limitsPatternString"
+          [(ngModel)]="ucData.limitsPatternGroupCode" #limitsPatternGroupCode="ngModel"  (change)="processValueChange()">
         </ng-select>
-        <div *ngIf="isAPPolicy">{{this.limitedLimitsPatternString}}</div>
+        <div *ngIf="isAPPolicy">{{this.ucData.limitsPatternString}}</div>
       </div>
       <div class="col-lg-2" *ngIf="isExcessUmbrella">
         <div>Excess Of Limits</div>
         <input click-stop-propagation type="text" class="form-control" id="excessOfLimitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-          [required]="canEditPolicy" name="excessOfLimitsPattern" [(ngModel)]="ucData.excessOfLimitsPattern" (change)="updateExcessOfLimitBasisData()" [title]="ucData.excessOfLimitsPattern">
-          <div [hidden]="isLimitsPatternValid" class="alert alert-danger">
+          [required]="canEditPolicy" name="excessOfLimitsPattern" [(ngModel)]="ucData.excessOfLimitsPattern" (change)="processExcessOfLimitsChange()" [title]="ucData.excessOfLimitsPattern">
+          <div [hidden]="isExcessOfLimitsPatternValid" class="alert alert-danger">
             Invalid Pattern
           </div>
       </div>
@@ -100,13 +100,13 @@
       <div class="row container" style="padding-top: 10px; width: 100%">
         <div *ngFor="let item of ucData.underlyingScheduleLimitData; let i = index">
           <rsps-underlying-coverage-limit-basis
-          (onLimitChange)="handleLimitUpdate()"
-          (deleteThisLimit)=deleteUserAddedLimit($event)
+          (onLimitChange)="processCoverageLimitUpdate()"
+          (deleteThisLimit)=ucData.deleteUserDefinedLimit($event)
           [ucLimit]=item>
           </rsps-underlying-coverage-limit-basis>
         </div>
       </div>
-      <button style="float:left; background:none; border:none;" class="underline" *ngIf="canEditPolicy" (click)="addUserDefinedLimitBasis()">Add Limit</button>
+      <button style="float:left; background:none; border:none;" class="underline" *ngIf="canEditPolicy" (click)="ucData.addUserDefinedLimit()">Add Limit</button>
     </div>
     <div class="empty-space"></div>
   <div class="row container">

@@ -8,6 +8,7 @@ import { PolicyService } from '../../services/policy/policy.service';
 import { UnderlyingCoverage } from '../../models/schedules';
 import { UnderlyingCoverageDetailComponent } from '../schedules-underlying-coverage-detail/underlying-coverage-detail.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { UCCoverage } from '../../classes/UCCoverage';
 
 @Component({
   selector: 'rsps-underlying-coverages',
@@ -15,7 +16,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./underlying-coverages.component.css']
 })
 export class UnderlyingCoveragesComponent implements OnInit {
-  underlyingCoverages!: UnderlyingCoverage[];
+  underlyingCoverages!: UCCoverage[];
   authSub: Subscription;
   canEditPolicy: boolean = false;
   deleteSub!: Subscription;
@@ -66,7 +67,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
     }) : 0;
 
     var newUnderlyingCoverage = this.createNewUnderlyingCoverage(maxSequence);
-    this.underlyingCoverages.push(newUnderlyingCoverage);
+    this.underlyingCoverages.push(new UCCoverage(newUnderlyingCoverage));
   }
   //Will create and return a new underlying coverage
   createNewUnderlyingCoverage(maxSequence: number): UnderlyingCoverage {
@@ -123,7 +124,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
       this.underlyingCoverages.splice(index,1);
     });
   }
-  deleteCoverage(existingCoverage: UnderlyingCoverage) {
+  deleteCoverage(existingCoverage: UCCoverage) {
     const index = this.underlyingCoverages.indexOf(existingCoverage, 0);
     if (!existingCoverage.isNew) {
       this.deleteComponent(index, existingCoverage);
