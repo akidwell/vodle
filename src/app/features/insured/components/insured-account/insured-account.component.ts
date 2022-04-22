@@ -17,14 +17,18 @@ export class InsuredAccountComponent implements OnInit {
   isReadOnly: boolean = false;
   states$: Observable<Code[]> | undefined;
   countries$: Observable<Code[]> | undefined;
-  
+  entityType$: Observable<Code[]> | undefined;
+  sicCodes$: Observable<Code[]> | undefined;
+  naicsCodes$: Observable<Code[]> | undefined;
+
   @Input() public insured!: Insured;
   
   constructor(private dropdowns: DropDownsService) { }
 
   ngOnInit(): void {
     this.states$ = this.dropdowns.getStates();
-    this.countries$ = this.dropdowns.getStates();
+    this.countries$ = this.dropdowns.getCountries();
+    this.entityType$ = this.dropdowns.getEntityType();
   }
 
   verify() {
