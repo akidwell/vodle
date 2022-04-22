@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { PolicyInformation } from 'src/app/features/policy/models/policy';
-import { UnderlyingCoverageLimit } from '../../models/schedules';
+import { UCLimit } from '../../classes/UCLimit';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { LimitsPatternHelperService } from '../../services/limits-pattern-helper/limits-pattern-helper.service';
 import { UnderlyingCoverageService } from '../../services/underlying-coverage/underlying-coverage.service';
@@ -20,10 +20,10 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
   isLimitsPatternValid: boolean = true;
   statusSub!: Subscription;
   canEditEndorsement: boolean = false;
-  @Input() ucLimit!: UnderlyingCoverageLimit;
+  @Input() ucLimit!: UCLimit;
   @Output() onLimitChange: EventEmitter<any> = new EventEmitter();
-  @Output() deleteThisLimit: EventEmitter<UnderlyingCoverageLimit> = new EventEmitter();
-  
+  @Output() deleteThisLimit: EventEmitter<UCLimit> = new EventEmitter();
+
   constructor(private route: ActivatedRoute, public UCService: UnderlyingCoverageService, private userAuth: UserAuth, private limitsPatternHelperService: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -36,7 +36,7 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -45,7 +45,7 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     this.statusSub?.unsubscribe();
   }
   limitChange(): void{
-    this.ucLimit.limit = this.limitsPatternHelperService.parseLimitsPattern(this.ucLimit.limit || '', 1)
+    this.ucLimit.limitDisplay = this.limitsPatternHelperService.parseLimitsPattern(this.ucLimit.limitDisplay || '', 1)
     this.onLimitChange.emit();
   }
   deleteLimit(): void {

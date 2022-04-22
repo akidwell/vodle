@@ -9,6 +9,7 @@ import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCove
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
 import { InvoiceData, InvoiceDetail } from '../../models/invoice';
+import { UCCoverage } from '../../classes/UCCoverage';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,16 @@ export class PolicyService {
   getEndorsementCoveragesGroups(policyId: number, endorsementNo: number): Observable<EndorsementCoveragesGroup[]> {
     return this.http.get<EndorsementCoveragesGroup[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/coveragesgroups');
   }
-  getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UnderlyingCoverage[]> {
-    return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule');
+  getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UCCoverage[]> {
+    return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule')
+    .pipe(
+      map((receivedData: UnderlyingCoverage[]) => {
+          var data: UCCoverage[] = [];
+          receivedData.forEach(element => {
+            data.push(new UCCoverage(element))
+          });
+          return data;
+      }));
   }
   updateUnderlyingCoverages(underlyingCoverages: UnderlyingCoverage[]): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/underlying-schedule', underlyingCoverages);
