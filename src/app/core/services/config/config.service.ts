@@ -46,4 +46,7 @@ export class ConfigService {
   get defaultPolicyHistorySize(): number {
     return this.appConfig.defaultPolicyHistorySize;
   }
+  get defaultApiVersion(): string {
+    return this.appConfig.apiVersion;
+  }
 }
