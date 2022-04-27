@@ -11,7 +11,7 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 import { EndorsementNumberResponse } from 'src/app/features/policy/models/policy';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
-import { NewEndorsementData, PolicySearchResults } from '../../models/policy-search-results';
+import { NewEndorsementData, PolicySearchResponses } from '../../models/search-results';
 import { EndorsementNumbersService } from '../../services/endorsement-numbers/endorsement-numbers.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class ActionComponent implements OnInit {
   authSub: Subscription;
   canEdit: boolean = false;
   endorsementActionInfo!: NewEndorsementData;
-  policyInfo!: PolicySearchResults;
+  policyInfo!: PolicySearchResponses;
   isTransEffectiveValid: boolean = true;
   isTransExpirationValid: boolean = true;
   isNewEndorsementNumberValid: boolean = true;
@@ -55,7 +55,7 @@ export class ActionComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
+  async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses, status: string): Promise<void> {
     this.isRewrite = false;
     this.isBackout = false;
 
@@ -95,7 +95,7 @@ export class ActionComponent implements OnInit {
       this.modalRef.result.then(resolve, resolve)
     })
   } 
-  async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string): Promise<void> {
+  async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses, status: string): Promise<void> {
     this.policyInfo = policy;
     this.isRewrite = false;
     this.isBackout = true;
@@ -142,7 +142,7 @@ export class ActionComponent implements OnInit {
     })
   } 
 
-  async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResults, status: string) {
+  async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses, status: string) {
     this.isRewrite = true;
     this.isBackout = false;
 
