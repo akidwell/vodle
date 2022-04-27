@@ -49,4 +49,7 @@ export class ConfigService {
   get defaultApiVersion(): string {
     return this.appConfig.apiVersion;
   }
+  get apiSwitchIsActive(): boolean {
+    return this.appConfig.apiSwitch;
+  }
 }

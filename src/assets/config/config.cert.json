@@ -8,5 +8,6 @@
     "oktaPostLogoutRedirectUri" : "https://garscert.td.afg/rsps/logged-out",
     "preventForcedRedirect" : false,
     "defaultPolicyHistorySize" : 5,
-    "apiVersion": "1.0"
+    "apiVersion": "1.0",
+    "apiSwitch": false
 }
