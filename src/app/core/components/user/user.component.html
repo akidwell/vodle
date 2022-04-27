@@ -40,6 +40,16 @@
         Clear History
       </button>
       <div class="dropdown-divider"></div>
+      <div class="row">
+
+        <label for="apiSwitch">API Version</label>
+            <ng-select id="apiSwitch" *ngIf='apiSwitchActive' [items]="apiOptions" [searchable]="false" [clearable]="false"
+              name="apiSwitch" (change)="changeApiVersion()"
+              [(ngModel)]="activeAPIVersion">
+            </ng-select>
+            <div *ngIf='!apiSwitchActive'>{{activeAPIVersion}}</div>
+      </div>
+      <div class="dropdown-divider"></div>
       <span class="dropdown-item-text">{{environment}}</span>
       <span class="dropdown-item-text">{{role}}</span>
       <span class="dropdown-item-text">Edit Policy: {{canEditPolicy ? 'T' : 'F'}}</span>
