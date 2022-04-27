@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
-import { NewEndorsementData } from '../../../home/models/policy-search-results';
+import { NewEndorsementData } from '../../../home/models/search-results';
 import { AdditionalNamedInsured, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages-base/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';

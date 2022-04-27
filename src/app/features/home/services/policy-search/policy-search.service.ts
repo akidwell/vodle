@@ -3,23 +3,28 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { ConfigService } from 'src/app/core/services/config/config.service';
-import { PolicySearchResults } from '../../models/policy-search-results';
+import { SearchResults } from '../../models/search-results';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PolicySearchService {
   private _loading$ = new BehaviorSubject<boolean>(false);
-  searchResults = new BehaviorSubject<PolicySearchResults[]>([]);
+  results: SearchResults = {
+    policySearchResponses: [],
+    submissionSearchResponses: [],
+    insuredSearchResponses: []};
+    
+  searchResults = new BehaviorSubject<SearchResults>(this.results);
 
   get loading$() { return this._loading$.asObservable(); }
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  getPolicySearch(filter: string): Observable<PolicySearchResults[]> {
+  getPolicySearch(filter: string): Observable<SearchResults> {
     const params = new HttpParams().append('filter', filter);
     this._loading$.next(true)
-    return this.http.get<PolicySearchResults[]>(this.config.apiBaseUrl + 'api/policies/search', { params })
+    return this.http.get<SearchResults>(this.config.apiBaseUrl + 'api/policies/search', { params,  'headers': { 'X-Version': this.config.defaultApiVersion} })
       .pipe(
         tap(result => this.searchResults.next(result)),
         tap(() => this._loading$.next(false)),
