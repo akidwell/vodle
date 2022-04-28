@@ -123,7 +123,6 @@ export class UserComponent implements OnInit {
   }
   changeApiVersion(){
     this.apiService.setApiVersion = this.activeAPIVersion;
-    console.log(this.apiService.getApiVersion)
   }
   async clearHistory() {
     const confirm = await this.confirmationDialogService.open("Confirmation", "Are you sure you want to clear all Policies in your history? Have to refresh to get changes.");
