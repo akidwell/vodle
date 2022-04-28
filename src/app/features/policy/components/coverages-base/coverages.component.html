@@ -5,14 +5,26 @@
     <rsps-endorsement-header [policyInfo]="policyInfo" [endorsement]="endorsement"></rsps-endorsement-header>
     <div>
       <button class="btn btn-sm btn-primary pull-right" *ngIf="canEdit" (click)="newLocation()">Add Location</button>
-      <button class="btn btn-sm btn-primary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
+      &nbsp;
+      <span *ngIf="!copyIsActive">
+        <button class="btn btn-sm btn-secondary pull-right" *ngIf="canEdit" (click)="startCopyLocations()">Copy Location(s)</button>
+        &nbsp;
+      </span>
+      <span *ngIf="copyIsActive">
+        <button class="btn btn-sm btn-primary pull-right" [disabled]="!saveCopyLocationsActive()" *ngIf="canEdit" (click)="saveCopyLocations()">Copy Selected</button>
+        &nbsp;
+        <button class="btn btn-sm btn-secondary pull-right" *ngIf="canEdit" (click)="endCopyLocations()">Cancel Copy</button>
+        &nbsp;
+      </span>
+      <button class="btn btn-sm btn-secondary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
         (click)="expandAllLocations()">Expand All</button>
-      <button class="btn btn-sm btn-primary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
+        &nbsp;
+      <button class="btn btn-sm btn-secondary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
         (click)="collapseAllLocations()">Collapse All</button>
     </div>
     <div *ngFor="let item of endorsementCoveragesGroups; index as i">
       <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event) *ngIf="(item.coverages.length > 0) || (this.canEditEndorsement)"
-        (deleteThisGroup)=deleteGroup($event) [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
+        (deleteThisGroup)=deleteGroup($event)  [copyCoverageGroupsActive]=copyIsActive [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
         [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length" [endorsement]="endorsement" [policyInfo]="policyInfo"></rsps-endorsement-coverage-location-group>
     </div>
   </div>
