@@ -43,6 +43,7 @@ export interface EndorsementCoverageLocation {
   county: string;
   zip: string;
   isNew: boolean;
+  countryCode: string;
 }
 
 export interface EndorsementCoveragesGroup {
