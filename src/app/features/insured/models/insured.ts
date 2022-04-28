@@ -2,6 +2,11 @@
 export interface Insured {
     insuredCode: number
     name: string,
+    formerName1: string,
+    formerName2: string,
+    sicCode: string,
+    naicsCode: string,
+    entityType: number,
     street1: string,
     street2: string,
     city: string,
@@ -9,18 +14,32 @@ export interface Insured {
     zip: string,
     county: string,
     country: string,
-    formerName: string,
     contactName: string,
+    phone: number | null,
+    fax: number | null,
     email: string,
-    contactPhone: number | null,
-    contactFax: number | null,
-    addressOveridden: boolean
+    website: string,
+    comments: string,
+    customerCode: number | null,
+    addressOveridden: boolean,
+    addressVerified: Date | null,
+    fein: string,
+    createdBy: string,
+    createdDate: Date | null,
+    modifiedBy: string,
+    modifiedDate: Date  | null,
+    isNew: boolean
 }
 
 export const newInsured = (): Insured => {
     return {
         insuredCode: 0,
         name: "",
+        formerName1: "",
+        formerName2: "",
+        sicCode: "",
+        naicsCode: "",
+        entityType: 0,
         street1: "",
         street2: "",
         city: "",
@@ -28,11 +47,20 @@ export const newInsured = (): Insured => {
         zip: "",
         county: "",
         country: "",
-        formerName: "",
         contactName: "",
+        phone: null,
+        fax: null,
         email: "",
-        contactPhone: null,
-        contactFax: null,
-        addressOveridden: false
+        website: "",
+        comments: "",
+        customerCode: null,
+        addressOveridden: false,
+        addressVerified: null,
+        fein: "",
+        createdBy: "",
+        createdDate: null,
+        modifiedBy: "",
+        modifiedDate: null,
+        isNew: true
     }
-  }
+}

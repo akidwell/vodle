@@ -39,7 +39,6 @@ const routes: Routes = [
       {
         path: 'summary',
         component: SummaryComponent,
-        // runGuardsAndResolvers: 'always',
         canDeactivate: [CanDeactivateGuard],
         data: { saveComponent: true }
       }

@@ -25,7 +25,8 @@ input[type="date"] {
 
 .form-checkbox{
   height: 25px;
-  width: 25px; 
+  width: 25px;
+  margin: 6px;
 }
 
 input[type="checkbox"][readonly] {

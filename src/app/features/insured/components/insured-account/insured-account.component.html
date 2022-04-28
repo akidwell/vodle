@@ -1,106 +1,162 @@
-<div class="card">
-  <div class="card-header" (click)="collapse.toggle()">
-    Insured Account
-    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
-    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
-  </div>
-  <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-lg-2">
-          <label for="insuredCode" class="form-label" title="Insured Code">Insured Code</label>
-          <input type="text" class="form-control" id="insuredCode" [ngModel]="insured.insuredCode" name="insuredCode"
-            readonly #insuredCode="ngModel">
-        </div>
-        <div class="col-lg-1">
-          <label for="override" class="form-label" title="Override">Override</label>
-          <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.addressOveridden"
-            name="override" [readonly]="isReadOnly">
-        </div>
-        <div class="col-lg-1">
-          <button class="btn btn-md btn-primary" (click)="verify()">Verify</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4">
-          <label for="namedInsured" class="form-label" title="First Named Insured">First Named Insured</label>
-          <input type="text" class="form-control" id="namedInsured" [readonly]="isReadOnly" [ngModel]="insured.name"
-            name="namedInsured" #namedInsured="ngModel">
-        </div>
-        <div class="col-lg-4">
-          <label for="formerName" class="form-label" title="Former Name">Former Name</label>
-          <input type="text" class="form-control" id="formerName" [readonly]="isReadOnly" [ngModel]="insured.formerName"
-            name="formerName" #formerName="ngModel">
-        </div>
-        <div class="col-lg-4">
-          <label for="contactName" class="form-label" title="Contact Name">Contact Name</label>
-          <input type="text" class="form-control" id="contactName" [readonly]="isReadOnly"
-            [(ngModel)]="insured.contactName" name="contactName" #contactName="ngModel">
+<form #accountInfoForm="ngForm">
+  <div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+      Insured Account
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-6">
+            <label for="sicCode" class="form-label" title="SIC Code">SIC Code</label>
+            <ng-select id="sicCode" [items]="sicCodes$ | async" bindLabel="description" bindValue="code"
+            maxlength="4" [clearable]="false" [readonly]="!canEditInsured" name="sicCode" [(ngModel)]="insured.state" #sicCode="ngModel">
+            </ng-select>
+          </div>
+          <div class="col-lg-6">
+            <label for="naics" class="form-label" title="NAICS">NAICS</label>
+            <ng-select id="naics" [items]="naicsCodes$ | async" bindLabel="description" bindValue="code"
+            maxlength="6" [clearable]="false" [readonly]="!canEditInsured" name="naics" [(ngModel)]="insured.state" #naics="ngModel">
+            </ng-select>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-4">
-          <label for="street1" class="form-label" title="Street Address">Street Address</label>
-          <input type="text" class="form-control" id="street1" [readonly]="isReadOnly" name="street1"
-            [(ngModel)]="insured.street1" #street1="ngModel">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-2">
+            <label for="insuredCode" class="form-label" title="Insured Code">Insured Code</label>
+            <input type="text" class="form-control" id="insuredCode" [ngModel]="insured.insuredCode" name="insuredCode"
+              readonly #insuredCode="ngModel">
+          </div>
+          <div class="col-lg-1">
+            <label for="override" class="form-label" title="Override">Override</label>
+            <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.addressOveridden"
+              name="override" [readonly]="!canEditInsured">
+          </div>
+          <div class="col-lg-1">
+            <button class="btn btn-md btn-primary" (click)="verify()" name="verify"
+              style="margin-top: 32px;" *ngIf="canEditInsured">Verify</button>
+          </div>
         </div>
-        <div class="col-lg-4"></div>
-        <div class="col-lg-4">
-          <label for="email" class="form-label" title="Email">Email</label>
-          <input type="text" class="form-control" id="email" [readonly]="isReadOnly" name="email"
-            [(ngModel)]="insured.email" #email="ngModel">
+        <div class="row">
+          <div class="col-lg-4">
+            <label for="namedInsured" class="form-label" title="First Named Insured">First Named Insured</label>
+            <input type="text" class="form-control" id="namedInsured" maxlength="40" [readonly]="!canEditInsured" [required]="canEditInsured"  [(ngModel)]="insured.name"
+              name="namedInsured" #namedInsured="ngModel">
+          </div>
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4">
+            <label for="customerCode" class="form-label" title="Customer Code">Customer Code</label>
+            <input type="text" class="form-control" id="customerCode" [readonly]="!canEditInsured"
+              [(ngModel)]="insured.customerCode" name="customerCode" #customerCode="ngModel">
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4">
-          <label for="street2" class="form-label" title="Apt/Suit/Floor">Apt/Suit/Floor</label>
-          <input type="text" class="form-control" id="street2" [readonly]="isReadOnly" name="street2"
-            [(ngModel)]="insured.street2" #street2="ngModel">
+        <div class="row">
+          <div class="col-lg-4">
+            <label for="street1" class="form-label" title="Street Address">Street Address</label>
+            <input type="text" class="form-control" id="street1" maxlength="40" [readonly]="!canEditInsured" [required]="canEditInsured" name="street1" 
+              [(ngModel)]="insured.street1" #street1="ngModel">
+          </div>
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4">
+            <label for="entityType" class="form-label" title="Entity Type">Entity Type</label>
+            <ng-select id="entityType" [items]="entityType$ | async" bindLabel="description" bindValue="key"
+              [readonly]="!canEditInsured" name="entityType" [(ngModel)]="insured.entityType"
+              #entityType="ngModel">
+            </ng-select>
+          </div>
         </div>
-        <div class="col-lg-4"></div>
-        <div class="col-lg-2">
-          <label for="phone" class="form-label" title="Phone">Phone</label>
-          <input type="text" class="form-control" id="phone" [readonly]="isReadOnly" name="phone"
-            [(ngModel)]="insured.contactPhone" #phone="ngModel">
+        <div class="row">
+          <div class="col-lg-4">
+            <label for="street2" class="form-label" title="Apt/Suit/Floor">Apt/Suit/Floor</label>
+            <input type="text" class="form-control" id="street2" maxlength="40" [readonly]="!canEditInsured" name="street2"
+              [(ngModel)]="insured.street2" #street2="ngModel">
+          </div>
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4">
+            <label for="fein" class="form-label" title="FEIN">FEIN</label>
+            <input type="text" class="form-control" id="fein" [readonly]="!canEditInsured" name="fein"
+              [(ngModel)]="insured.fein" #fein="ngModel" mask="00-0000000"> 
+          </div>
         </div>
-        <div class="col-lg-2">
-          <label for="fax" class="form-label" title="Fax">Fax</label>
-          <input type="text" class="form-control" id="fax" [readonly]="isReadOnly" name="fax"
-            [(ngModel)]="insured.contactFax" #fax="ngModel">
+        <div class="row">
+          <div class="col-lg-2">
+            <label for="city" class="form-label" title="City">City</label>
+            <input type="text" class="form-control" id="city" [readonly]="!canEditInsured" maxlength="40" [required]="canEditInsured" name="city"
+              [(ngModel)]="insured.city" #city="ngModel">
+          </div>
+          <div class="col-lg-2">
+            <label for="state" class="form-label" title="State">State</label>
+            <ng-select id="state" [items]="states$ | async" bindLabel="description" bindValue="code" [clearable]="false"
+              [readonly]="!canEditInsured" [required]="canEditInsured" name="state" [(ngModel)]="insured.state" #state="ngModel">
+            </ng-select>
+          </div>
+          <div class="col-lg-2">
+            <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
+            <input type="text" class="form-control" id="zip" [readonly]="!canEditInsured" [required]="canEditInsured" name="zip"
+              [(ngModel)]="insured.zip" #zip="ngModel" mask="00000||00000-0000">
+          </div>
+          <div class="col-lg-2"></div>
+          <div class="col-lg-4">
+            <label for="website" class="form-label" title="Website">Website</label>
+            <input type="text" class="form-control" id="website" maxlength="100" [readonly]="!canEditInsured" name="website"
+              [(ngModel)]="insured.website" #website="ngModel">
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-2">
-          <label for="street2" class="form-label" title="Apt/Suit/Floor">City</label>
-          <input type="text" class="form-control" id="street2" [readonly]="isReadOnly" name="street2"
-            [(ngModel)]="insured.street2" #street2="ngModel">
+        <div class="row">
+          <div class="col-lg-4">
+            <label for="county" class="form-label" title="County">County</label>
+            <input type="text" class="form-control" id="county" maxlength="100" [readonly]="!canEditInsured" name="county"
+              [(ngModel)]="insured.county" #county="ngModel">
+          </div>
+          <div class="col-lg-8">
+            <label for="comments" class="form-label" title="Comments">Comments</label>
+            <textarea type="text" class="form-control" id="comments" maxlength="255" [readonly]="!canEditInsured" name="comments"
+              [(ngModel)]="insured.comments" #comments="ngModel"></textarea>
+          </div>
         </div>
-        <div class="col-lg-2">
-          <label for="State" class="form-label" title="State">State</label>
-          <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
-            [clearable]="false" [readonly]="isReadOnly" name="state" [(ngModel)]="insured.state" #state="ngModel">
-          </ng-select>
+        <div class="row">
+          <div class="col-lg-4">
+            <label for="country" class="form-label" title="Country">Country</label>
+            <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
+              [readonly]="!canEditInsured" name="country" [(ngModel)]="insured.country" #state="ngModel">
+            </ng-select>
+          </div>
         </div>
-        <div class="col-lg-2">
-          <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
-          <input type="text" class="form-control" id="zip" [readonly]="isReadOnly" name="zip"
-            [(ngModel)]="insured.contactFax" #zip="ngModel">
+        <div class="row">
+          <div class="col-lg-4">
+            <label for="formerName1" class="form-label" title="Former Name">Former Name</label>
+            <input type="text" class="form-control" id="formerName1" maxlength="60" [readonly]="!canEditInsured"
+              [(ngModel)]="insured.formerName1" name="formerName1" #formerName1="ngModel">
+          </div>
+          <div class="col-lg-4">
+            <label for="createdBy" class="form-label" title="Created">Created</label>
+            <input type="text" class="form-control" id="createdBy" readonly [ngModel]="insured.createdBy"
+              name="createdBy" #createdBy="ngModel">
+          </div>
+          <div class="col-lg-4">
+            <label for="modifiedBy" class="form-label" title="Created">Modified</label>
+            <input type="text" class="form-control" id="modifiedBy" readonly [ngModel]="insured.modifiedBy"
+              name="modifiedBy" #modifiedBy="ngModel">
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4">
-          <label for="county" class="form-label" title="County">County</label>
-          <input type="text" class="form-control" id="county" [readonly]="isReadOnly" name="county"
-            [(ngModel)]="insured.county" #county="ngModel">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4">
-          <label for="country" class="form-label" title="Country">Country</label>
-          <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
-          [clearable]="false" [readonly]="isReadOnly" name="country" [(ngModel)]="insured.country" #state="ngModel">
-        </ng-select>
+        <div class="row">
+          <div class="col-lg-4">
+            <input type="text" class="form-control" id="formerName2" maxlength="60" [readonly]="!canEditInsured"
+              [(ngModel)]="insured.formerName2" name="formerName2" #formerName2="ngModel">
+          </div>
+          <div class="col-lg-4">
+            <input type="text" class="form-control" id="createdDate" readonly
+              [ngModel]="insured.createdDate | date:'MM/dd/YYYY h:mm:ss a'" name="createdDate" #createdDate="ngModel">
+          </div>
+          <div class="col-lg-4">
+            <input type="text" class="form-control" id="modifiedDate" readonly
+              [ngModel]="insured.modifiedDate | date:'MM/dd/YYYY h:mm:ss a'" name="modifiedDate"
+              #modifiedDate="ngModel">
+          </div>
         </div>
       </div>
     </div>
   </div>
+</form>

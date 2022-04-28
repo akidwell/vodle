@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { SearchResults } from '../../../models/search-results';
 
 @Component({
@@ -20,14 +21,14 @@ export class InsuredSearchResultsComponent implements OnInit {
     insuredSearchResponses: []
   };
   
-  constructor( private router: Router) { }
+  constructor(private router: Router, private navigationService: NavigationService) { }
 
   ngOnInit(): void {
   }
 
   routeToInsured(insuredCode: number) {
-
-      this.router.navigate(['/insured/' + insuredCode]);
+    this.navigationService.resetPolicy();
+    this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
 }

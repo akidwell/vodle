@@ -14,8 +14,8 @@ import { SharedAdditionalNamedInsuredsComponent } from '../additional-named-insu
   styleUrls: ['./additional-named-insureds-group.component.css']
 })
 export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
-  authSub: Subscription;
-  canEditPolicy: boolean = false;
+  //authSub: Subscription;
+  // canEditPolicy: boolean = false;
   invalidMessage: string = "";
   showInvalid: boolean = false;
   faAngleDown = faAngleDown;
@@ -26,11 +26,12 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   @ViewChildren(SharedAdditionalNamedInsuredsComponent) components: QueryList<SharedAdditionalNamedInsuredsComponent> | undefined;
   @Input() public aniData!: AdditionalNamedInsured[];
   @Input() public newANI!: AdditionalNamedInsured;
+  @Input() public canEdit: boolean = false;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService,private policyService: PolicyService) {
-    this.authSub = this.userAuth.canEditPolicy$.subscribe(
-      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
-    );
+    // this.authSub = this.userAuth.canEditPolicy$.subscribe(
+    //   (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    // );
   }
 
   ngOnInit(): void {
@@ -38,7 +39,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    //this.authSub.unsubscribe();
   }
 
   isValid(): boolean {
@@ -98,7 +99,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   async saveAdditionalNamedInsureds(): Promise<boolean> {
-    if (this.canEditPolicy && this.isDirty()) {
+    if (this.canEdit && this.isDirty()) {
       let saveCount: number = 0;
       if (this.components != null) {
         for (let child of this.components) {

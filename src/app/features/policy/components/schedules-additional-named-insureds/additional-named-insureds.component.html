@@ -18,7 +18,7 @@
       </ng-select>
     </div>
     <div class="col-lg-5">
-      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="80"
+      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
         [required]="canEditPolicy" name="name" [(ngModel)]="aniData.name" (change)="checkDuplicateNameRoleCombo()">
     </div>
     <div class="col-lg-2">

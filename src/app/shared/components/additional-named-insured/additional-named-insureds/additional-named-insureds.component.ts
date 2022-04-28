@@ -15,8 +15,8 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
   styleUrls: ['./additional-named-insureds.component.css']
 })
 export class SharedAdditionalNamedInsuredsComponent implements OnInit {
-  authSub: Subscription;
-  canEditPolicy: boolean = false;
+  //authSub: Subscription;
+  //canEditPolicy: boolean = false;
   aniRoles$: Observable<Code[]> | undefined;
   collapsed: boolean = true;
   deleteSub!: Subscription;
@@ -28,19 +28,20 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   nameRoleArray: string[] = new Array;
   nameRoleDuplicates: string[] = new Array;
   isNameRoleValid: boolean = true;
-  canEditEndorsement: boolean = false;
+  // canEditEndorsement: boolean = false;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsured;
   @Input() ani!: AdditionalNamedInsured[];
+  @Input() public canEdit: boolean = false;
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
 
   constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private messageDialogService: MessageDialogService) {
-    this.authSub = this.userAuth.canEditPolicy$.subscribe(
-      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
-    );
+    // this.authSub = this.userAuth.canEditPolicy$.subscribe(
+    //   (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    // );
   }
 
   ngOnInit(): void {
@@ -56,7 +57,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    //this.authSub.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
