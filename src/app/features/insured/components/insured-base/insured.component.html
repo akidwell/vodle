@@ -1,10 +1,14 @@
+
+<div class="navToolbar">
+  <ul class="nav nav-tabs nav-fill">
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Insured</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLinkActive='active' [routerLink]="['submissions']">Submission Activity</a>
+    </li>
+  </ul>
+</div>
 <div class='content-fluid'>
-  <button class="btn btn-md btn-primary" (click)="saveInsured()">Save</button>
-  <rsps-insured-account [insured]="insured"></rsps-insured-account>
-  <button class="btn btn-md btn-primary" (click)="save()">Save</button>
-  <rsps-shared-additional-named-insureds-group [aniData]="aniCoverageData" [newANI]="newCoverageANI">
-  </rsps-shared-additional-named-insureds-group>
-  <button class="btn btn-md btn-primary" (click)="saveInsured()">Save</button>
-  <rsps-shared-additional-named-insureds-group [aniData]="aniInsuredData" [newANI]="newInsuredANI">
-  </rsps-shared-additional-named-insureds-group>
+  <router-outlet></router-outlet>
 </div>

@@ -27,7 +27,8 @@ export interface Insured {
     createdBy: string,
     createdDate: Date | null,
     modifiedBy: string,
-    modifiedDate: Date  | null
+    modifiedDate: Date  | null,
+    isNew: boolean
 }
 
 export const newInsured = (): Insured => {
@@ -59,6 +60,7 @@ export const newInsured = (): Insured => {
         createdBy: "",
         createdDate: null,
         modifiedBy: "",
-        modifiedDate: null
+        modifiedDate: null,
+        isNew: true
     }
 }
