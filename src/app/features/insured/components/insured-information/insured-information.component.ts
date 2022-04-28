@@ -67,15 +67,13 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   async save(): Promise<void> {
-    //this.saveInsured().subscribe(async () => {
     if (await this.saveInsured()) {
       this.contacts.forEach(c => c.insuredCode = this.insured.insuredCode);
       await this.saveContacts();
       await this.saveInsuredANI();
     }
 
-    this.router.navigate(['/insured/' + this.insured.insuredCode.toString()]);
-    //});
+    this.router.navigate(['/insured/' + this.insured.insuredCode.toString() + '/information']);
   }
 
   async saveInsured(): Promise<boolean> {

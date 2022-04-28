@@ -12,25 +12,26 @@ import { InsuredAdditionalNamedInsuredsResolver, InsuredContactResolver, Insured
 const routes: Routes = [
   {
     path: 'insured-not-found',
-    component: InsuredNotFoundComponent,
+    component: InsuredNotFoundComponent
   },
   {
-    path: '', component: InsuredComponent,
+    path: '', 
+    component: InsuredComponent,
     resolve: {
       insuredData: InsuredResolver,
       aniData: InsuredAdditionalNamedInsuredsResolver,
       contacts: InsuredContactResolver
     },
     children: [
-      { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } }
+      { path: '', redirectTo: 'information',pathMatch: 'full' },
+      { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard] }, // , data: { saveComponent: true } },
+      { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] } // , data: { saveComponent: true } },
     ]
   },
   {
     path: ':id',
     component: InsuredComponent,
-    canActivate: [OktaAuthGuard, AuthGuard],
+    // canActivate: [OktaAuthGuard, AuthGuard],
     resolve: {
       insuredData: InsuredResolver,
       aniData: InsuredAdditionalNamedInsuredsResolver,
@@ -38,8 +39,8 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } }
+      { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
+      { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
     ]
   }
 ];

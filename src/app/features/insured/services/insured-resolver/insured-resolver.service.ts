@@ -20,7 +20,7 @@ export class InsuredResolver implements Resolve<InsuredResolved> {
             return of({ insured: newInsured() });
         }
         if (isNaN(+id)) {
-            const message = `INsured id was not a number: ${id}`;
+            const message = `Insured id was not a number: ${id}`;
             this.router.navigate(['/insured/insured-not-found'], { state: { error: message } });
             return of({ insured: null, error: message });
         }

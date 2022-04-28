@@ -51,7 +51,7 @@ export class InsuredContactGroupComponent implements OnInit {
     this.insuredContacts.push(newContact);
   }
 
-  primaryContact(contact: InsuredContact) {
+  setPrimaryContact(contact: InsuredContact) {
 
     if (this.components != null) {
       for (let child of this.components) {

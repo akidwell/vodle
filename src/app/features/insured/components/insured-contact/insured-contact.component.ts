@@ -30,7 +30,6 @@ export class InsuredContactComponent implements OnInit {
   addSub!: Subscription;
   updateSub!: Subscription;
   anchorId!: string;
-  saveSub!: Subscription;
   faSolidStar = faSolidStar;
   faStar = faStar;
   isHover: boolean = false;
@@ -40,7 +39,7 @@ export class InsuredContactComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) contactForm!: NgForm;
   @Output() copyExistingContact: EventEmitter<InsuredContact> = new EventEmitter();
   @Output() deleteThisContact: EventEmitter<InsuredContact> = new EventEmitter();
-  @Output() primaryContact: EventEmitter<InsuredContact> = new EventEmitter();
+  @Output() setPrimaryContact: EventEmitter<InsuredContact> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
@@ -120,7 +119,7 @@ export class InsuredContactComponent implements OnInit {
   }
 
   favorite(contact: InsuredContact) {
-    this.primaryContact.emit(this.contact);
+    this.setPrimaryContact.emit(this.contact);
     this.contactForm.form.markAsDirty();
     contact.isPrimary = true;
   }

@@ -42,14 +42,14 @@
         <div class="row">
           <div class="col-lg-4">
             <label for="namedInsured" class="form-label" title="First Named Insured">First Named Insured</label>
-            <input type="text" class="form-control" id="namedInsured" maxlength="40" [readonly]="!canEditInsured" [required]="canEditInsured"  [ngModel]="insured.name"
+            <input type="text" class="form-control" id="namedInsured" maxlength="40" [readonly]="!canEditInsured" [required]="canEditInsured"  [(ngModel)]="insured.name"
               name="namedInsured" #namedInsured="ngModel">
           </div>
           <div class="col-lg-4"></div>
           <div class="col-lg-4">
             <label for="customerCode" class="form-label" title="Customer Code">Customer Code</label>
             <input type="text" class="form-control" id="customerCode" [readonly]="!canEditInsured"
-              [ngModel]="insured.customerCode" name="customerCode" #customerCode="ngModel">
+              [(ngModel)]="insured.customerCode" name="customerCode" #customerCode="ngModel">
           </div>
         </div>
         <div class="row">
@@ -128,7 +128,7 @@
           <div class="col-lg-4">
             <label for="formerName1" class="form-label" title="Former Name">Former Name</label>
             <input type="text" class="form-control" id="formerName1" maxlength="60" [readonly]="!canEditInsured"
-              [ngModel]="insured.formerName1" name="formerName1" #formerName1="ngModel">
+              [(ngModel)]="insured.formerName1" name="formerName1" #formerName1="ngModel">
           </div>
           <div class="col-lg-4">
             <label for="createdBy" class="form-label" title="Created">Created</label>
@@ -144,7 +144,7 @@
         <div class="row">
           <div class="col-lg-4">
             <input type="text" class="form-control" id="formerName2" maxlength="60" [readonly]="!canEditInsured"
-              [ngModel]="insured.formerName2" name="formerName2" #formerName2="ngModel">
+              [(ngModel)]="insured.formerName2" name="formerName2" #formerName2="ngModel">
           </div>
           <div class="col-lg-4">
             <input type="text" class="form-control" id="createdDate" readonly
