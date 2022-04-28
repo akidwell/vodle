@@ -195,7 +195,7 @@
             <span class="btn btn-secondary" (click)=deleteCoverage() hover-class="btn-danger"
               *ngIf="!coverage.isNew && originalAction == 'A' && canEdit">Delete</span>
             <span class="btn btn-secondary" (click)=deleteCoverage() hover-class="btn-warning"
-              *ngIf="coverage.isNew && originalAction == 'A'">Remove</span>
+              *ngIf="coverage.isNew">Remove</span>
           </div>
           <span class='astext' (click)="collapseExpand(true)">
             <fa-icon [icon]="faArrowUp"></fa-icon>

@@ -40,6 +40,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @Input() public currentSequence!: number;
   @Input() public locationIndex!: number;
   @Input() public groupCount!: number;
+  @Input() public copyCoverageGroupsActive!: boolean;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Output() status: EventEmitter<any> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
@@ -152,8 +153,9 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   isDirty() {
     if (this.components != null) {
       for (let child of this.components) {
-        if (child.endorsementCoveragesForm.dirty || this.setLocationOnInit) {
+        if (child.endorsementCoveragesForm.dirty || this.setLocationOnInit || child.coverage.isCopied) {
           this.setLocationOnInit = false;
+          child.coverage.isCopied = false;
           return true;
         }
       }
@@ -220,7 +222,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   calcTotal(): number {
     let total: number = 0
-    this.endorsementCoveragesGroup.coverages.forEach(coverage => { 
+    this.endorsementCoveragesGroup.coverages.forEach(coverage => {
       total += Number.isNaN(Number(coverage.premium)) ? 0 : Number(coverage.premium)
      });
     return total;
