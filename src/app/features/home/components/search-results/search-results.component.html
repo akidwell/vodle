@@ -2,14 +2,17 @@
   <strong>Loading...</strong>
   <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
 </div>
+
+<!--Policy transaction panel-->
+
 <div class="card">
-  <div class="card-header" (click)="collapsed = !collapsed">Policy Transactions
+  <div class="card-header" *ngIf="searchResults.policySearchResponses.length > 0" (click)="collapsed = !collapsed">Policy Transactions
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
   </div>
-  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-    <div id="policyHeader" class="card-header" *ngIf="searchResults && searchResults.length">
-      <div class="row container" *ngIf="searchResults && searchResults.length">
+  <div #collapse="ngbCollapse" *ngIf="searchResults.policySearchResponses.length > 0" [(ngbCollapse)]="collapsed">
+    <div id="policyHeader" class="card-header">
+      <div class="row container" *ngIf="searchResults && searchResults.policySearchResponses.length">
         <div class="col-lg-7">Named Insured: <b>{{insuredName}}</b></div>
         <div class="col-lg-5">Status:
           <span [ngClass]="status"><b>{{status}}</b></span>
@@ -17,7 +20,8 @@
       </div>
     </div>
     <div style="overflow-x: scroll">
-      <table class="table table-striped table-bordered"  *ngIf="searchResults && searchResults.length">
+      <table class="table table-striped table-bordered"
+        *ngIf="searchResults && searchResults.policySearchResponses.length">
         <thead id="searchHeader">
           <tr>
             <th>PolicyId</th>
@@ -38,64 +42,76 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let policy of searchResults; let i = index"
+          <tr *ngFor="let policy of searchResults.policySearchResponses; let i = index"
             [ngClass]="{'policyBorder':policy.firstPolicyRow && i != 0, 'voidStatus': policy.invoiceStatus == 'V'}"
             [ngStyle]="{'background-color': (policy.invoiceStatus == null) ? '#fdfd96' : null}">
-            <td>
-              <span *ngIf="policy.firstPolicyRow">{{ policy.policyId }}</span>
-            </td>
-            <td><a [routerLink]="[]" (click)="openPolicy(policy)">
-            <td nowrap>{{policy.policyNumber}}</td></a></td>
-            <td>{{ policy.endorsementNumber }}</td>
-            <td>
-              <span *ngIf="policy.firstPolicyRow">{{ policy.policyEffectiveDate | date: 'MM/dd/yyyy'}}</span>
-            </td>
-            <td>
-              <span *ngIf="policy.firstPolicyRow">{{ policy.policyExpirationDate | date: 'MM/dd/yyyy'}}</span>
-            </td>
-            <td>
-              <span *ngIf="policy.firstPolicyRow">{{ policy.policyExtendedDate | date: 'MM/dd/yyyy'}}</span>
-            </td>
-            <td>{{ policy.invoiceNumber}}</td>
-            <td>{{ policy.invoiceDate | date: 'MM/dd/yyyy'}}</td>
-            <td>{{ policy.transactionEffectiveDate | date: 'MM/dd/yyyy'}}</td>
-            <td>{{ policy.transactionExpirationDate | date: 'MM/dd/yyyy'}}</td>
-            <td>{{ policy.voidDate | date: 'MM/dd/yyyy'}}</td>
-            <td>{{ policy.invoiceStatus}}</td>
-            <td align="right">{{ policy.amount | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}</td>
-            <td>{{ policy.transactionType}}</td>
-            <td *ngIf="canEdit" class="overflow-hidden" id="actionCell">
-                  <div ngbDropdown container="body"  placement="bottom-end" class="d-inline-block" >
-                    <button class="btn btn-outline-primary"  id="action" ngbDropdownToggle>Actions</button>
-                    <div ngbDropdownMenu container="body" aria-labelledby="action">
-                      <button ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="endorsement">Endorsement</button>
-                      <button *ngIf="policy.canBackOut" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="backout">Back Out/Back In</button>
-                      <button *ngIf="policy.policyCancelDate == null && !policy.isRewrite" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="cancelRewrite">Cancel/Rewrite</button>
-                      <button *ngIf="policy.isRewrite" ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)" value="rewrite">Rewrite</button>
-                    </div>
+            <ng-container>
+              <td>
+                <span *ngIf="policy.firstPolicyRow">{{ policy.policyId }}</span>
+              </td>
+              <td><a [routerLink]="[]" (click)="openPolicy(policy)">
+              <td nowrap>{{policy.policyNumber}}</td></a></td>
+              <td>{{ policy.endorsementNumber }}</td>
+              <td>
+                <span *ngIf="policy.firstPolicyRow">{{ policy.policyEffectiveDate | date: 'MM/dd/yyyy'}}</span>
+              </td>
+              <td>
+                <span *ngIf="policy.firstPolicyRow">{{ policy.policyExpirationDate | date: 'MM/dd/yyyy'}}</span>
+              </td>
+              <td>
+                <span *ngIf="policy.firstPolicyRow">{{ policy.policyExtendedDate | date: 'MM/dd/yyyy'}}</span>
+              </td>
+              <td>{{ policy.invoiceNumber}}</td>
+              <td>{{ policy.invoiceDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{ policy.transactionEffectiveDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{ policy.transactionExpirationDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{ policy.voidDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{ policy.invoiceStatus}}</td>
+              <td align="right">{{ policy.amount | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}</td>
+              <td>{{ policy.transactionType}}</td>
+              <td *ngIf="canEdit" class="overflow-hidden" id="actionCell">
+                <div ngbDropdown container="body" placement="bottom-end" class="d-inline-block">
+                  <button class="btn btn-outline-primary" id="action" ngbDropdownToggle>Actions</button>
+                  <div ngbDropdownMenu container="body" aria-labelledby="action">
+                    <button ngbDropdownItem class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)"
+                      value="endorsement">Endorsement</button>
+                    <button *ngIf="policy.canBackOut" ngbDropdownItem class="btn btn-outline-primary"
+                      (click)="newEndorsement(policy, $event)" value="backout">Back Out/Back In</button>
+                    <button *ngIf="policy.policyCancelDate == null && !policy.isRewrite" ngbDropdownItem
+                      class="btn btn-outline-primary" (click)="newEndorsement(policy, $event)"
+                      value="cancelRewrite">Cancel/Rewrite</button>
+                    <button *ngIf="policy.isRewrite" ngbDropdownItem class="btn btn-outline-primary"
+                      (click)="newEndorsement(policy, $event)" value="rewrite">Rewrite</button>
                   </div>
-            </td>
+                </div>
+              </td>
+            </ng-container>
+
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-  <div class="card-footer" >
+  <div *ngIf="searchResults.policySearchResponses.length > 0" class="card-footer">
     <div id="searchFooter">
-      <div style="float:right;">Results: {{searchResults.length}}</div>
+      <div style="float:right;">Results: {{searchResults.policySearchResponses.length}}</div>
     </div>
   </div>
-</div>
-<rsps-action #actionModal></rsps-action>
-<ng-template #modalPipe let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Error Creating Endorsement</h4>
-  </div>
-  <div class="modal-body">
-    <p>Please process or void the active endorsements before starting a new endorsement</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
-  </div>
-</ng-template>
-<rsps-direct-policy #modal></rsps-direct-policy>
+
+<rsps-submission-search-results  *ngIf="searchResults.submissionSearchResponses.length > 0" [searchResults]="searchResults"></rsps-submission-search-results>
+<rsps-insured-search-results  *ngIf="searchResults.insuredSearchResponses.length > 0" [searchResults]="searchResults"></rsps-insured-search-results>
+
+    </div>
+    <rsps-action #actionModal></rsps-action>
+    <ng-template #modalPipe let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Error Creating Endorsement</h4>
+      </div>
+      <div class="modal-body">
+        <p>Please process or void the active endorsements before starting a new endorsement</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Close</button>
+      </div>
+    </ng-template>
+    <rsps-direct-policy #modal></rsps-direct-policy>

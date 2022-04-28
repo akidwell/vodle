@@ -11,7 +11,7 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { debounceTime, tap } from 'rxjs/operators';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { SubmissionSearchService } from '../../services/submission-search/submission-search.service';
-import { PolicySearchResults } from '../../models/policy-search-results';
+import { PolicySearchResponses } from '../../models/search-results';
 import { SubmissionResponse } from '../../models/submissionResponse';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { EndorsementNumbersService } from '../../services/endorsement-numbers/endorsement-numbers.service';
@@ -39,7 +39,7 @@ export class DirectPolicyComponent implements OnInit {
   isRewrite: boolean = false;
   endorsementNumbers$: Observable<EndorsementNumberResponse[]> | undefined;
   title: string = "Direct Policy"
-  policyInfo!: PolicySearchResults;
+  policyInfo!: PolicySearchResponses;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
   @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyComponent>
@@ -77,7 +77,7 @@ export class DirectPolicyComponent implements OnInit {
   }
 
   
-  async openRewrite(policy: PolicySearchResults): Promise<boolean> {
+  async openRewrite(policy: PolicySearchResponses): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       this.isSearching = false;
       this.submissionError = "invalid";
@@ -199,7 +199,7 @@ export class DirectPolicyComponent implements OnInit {
       });
   }
 
-  async createRewrite(policy: PolicySearchResults) {
+  async createRewrite(policy: PolicySearchResponses) {
     this.showBusy = true;
     this.modalRef.close();
     const response$ = this.policyService.addPolicy(this.policyData);

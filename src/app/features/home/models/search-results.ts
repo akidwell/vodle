@@ -1,4 +1,10 @@
-export interface PolicySearchResults {
+export interface SearchResults {
+  policySearchResponses: PolicySearchResponses[];
+  submissionSearchResponses: SubmissionSearchResponses[];
+  insuredSearchResponses: InsuredSearchResponses[];
+}
+
+export interface PolicySearchResponses {
     policyId: number;
     policyNumber: string;
     fullPolicyNumber: string;
@@ -21,6 +27,34 @@ export interface PolicySearchResults {
     masterPolicy: string;
     canBackOut:  boolean;
     isRewrite: boolean;
+   
+  }
+
+  export interface SubmissionSearchResponses{
+    submissionNumber: number;
+    quoteNumber: number;
+    underwriter: string;
+    producerBranch: string;
+    submissionStatus: string;
+    insuredName: string;
+    policyNumber: string;
+    effectiveDate: Date;
+    expirationDate: Date;
+    submissionDate: Date;
+    renewalFlag: boolean;
+    coverageType: string;
+    profitCenter: string;
+  }
+
+  export interface InsuredSearchResponses{
+    insuredName: string;
+    insuredCode: number;
+    name: string;
+    insuredCity: string;
+    insuredState: string;
+    zip: string;
+    formerName: string;
+    streetAddress: string;
   }
 
   export interface NewEndorsementData {

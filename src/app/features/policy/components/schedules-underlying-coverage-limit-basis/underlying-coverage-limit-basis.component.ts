@@ -45,7 +45,9 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     this.statusSub?.unsubscribe();
   }
   limitChange(): void{
-    this.ucLimit.limitDisplay = this.limitsPatternHelperService.parseLimitsPattern(this.ucLimit.limitDisplay || '', 1)
+    this.ucLimit.checkLimitDisplayForIncludeExclude();
+    this.ucLimit.setLimit();
+    this.ucLimit.limitDisplay = this.ucLimit.setLimitDisplay(this.ucLimit.limit, this.ucLimit.includeExclude)
     this.onLimitChange.emit();
   }
   deleteLimit(): void {

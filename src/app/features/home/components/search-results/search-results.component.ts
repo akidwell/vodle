@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { NewEndorsementData, PolicySearchResults } from '../../models/policy-search-results';
+import { NewEndorsementData, PolicySearchResponses, SearchResults } from '../../models/search-results';
 import { PolicySearchService } from '../../services/policy-search/policy-search.service';
 import { ActionComponent } from '../action/action.component';
 import { DirectPolicyComponent } from '../direct-policy/direct-policy.component';
@@ -19,7 +19,11 @@ export class SearchResultsComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   searchFilter: string = "";
-  searchResults!: PolicySearchResults[];
+  searchResults: SearchResults = {
+    policySearchResponses: [],
+    submissionSearchResponses: [],
+    insuredSearchResponses: []
+  };
   searchSub!: Subscription;
   loadingSub!: Subscription;
   loading: boolean = false;
@@ -42,17 +46,17 @@ export class SearchResultsComponent implements OnInit {
       }
     });
     this.searchSub = this.policySearchService.searchResults.subscribe({
-      next: results => {
+      next: results => {    
         // Flag for every new policy number
         let policyNumber: string = "";
-        for (let x of results) {
+        for (let x of results.policySearchResponses) {
           if (x.policyNumber != policyNumber) {
             x.firstPolicyRow = true;
             policyNumber = x.policyNumber;
           }
         }
         //flag for if policy endorsement can be backedout/backedin
-        for (let y of results) {
+        for (let y of results.policySearchResponses) {
           if ((y.transactionType != 'Endorsement' && y.transactionType != 'Reinstatement' && y.transactionType != 'Flat Cancel'
            && y.transactionType != 'Pro-Rata Cancel' && y.transactionType != 'Short Rate Cancel' && y.transactionType != 'Policy Extension By Endt')) {
             y.canBackOut = true;
@@ -61,25 +65,28 @@ export class SearchResultsComponent implements OnInit {
           }
         }
 
-        this.searchResults = results;
-        if (results.length > 0) {
-          this.insuredName = results[0].insuredName;
+        this.searchResults.policySearchResponses = results.policySearchResponses;
+        this.searchResults.submissionSearchResponses = results.submissionSearchResponses;
+        this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
+        console.log(this.searchResults)
+        if (results.policySearchResponses.length > 0) {
+          this.insuredName = results.policySearchResponses[0].insuredName;
           let today = new Date();
           let expirationDate = new Date();
-          if (results[0].policyCancelDate != null)
+          if (results.policySearchResponses[0].policyCancelDate != null)
           {
-            expirationDate = new Date(results[0].policyCancelDate);
+            expirationDate = new Date(results.policySearchResponses[0].policyCancelDate);
           }
-          else if (results[0].policyExtendedDate != null) {
-            expirationDate = new Date(results[0].policyExtendedDate);
+          else if (results.policySearchResponses[0].policyExtendedDate != null) {
+            expirationDate = new Date(results.policySearchResponses[0].policyExtendedDate);
           }
           else {
-            expirationDate = new Date(results[0].policyExpirationDate);
+            expirationDate = new Date(results.policySearchResponses[0].policyExpirationDate);
           }
           if (today <= expirationDate) {
             this.status = "InForce";
           }
-          else if (results[0].policyCancelDate != null)  {
+          else if (results.policySearchResponses[0].policyCancelDate != null)  {
             this.status = "Cancelled";
           }
           else {
@@ -96,7 +103,7 @@ export class SearchResultsComponent implements OnInit {
     this.searchSub?.unsubscribe();
   }
 
-  openPolicy(policy: PolicySearchResults): void {
+  openPolicy(policy: PolicySearchResponses): void {
     this.navigationService.resetPolicy();
     this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
   }
@@ -104,8 +111,8 @@ export class SearchResultsComponent implements OnInit {
   @ViewChild('modalPipe') modalPipe: any;
   @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent
 
-  async newEndorsement(policy: PolicySearchResults, event: any) {
-    let filtered = this.searchResults.filter(x => x.policyId == policy.policyId).filter(y => y.invoiceStatus == null)
+  async newEndorsement(policy: PolicySearchResponses, event: any) {
+    let filtered = this.searchResults.policySearchResponses.filter(x => x.policyId == policy.policyId).filter(y => y.invoiceStatus == null)
     if (filtered.length > 0){
       this.modalService.open(this.modalPipe)
       return;
@@ -118,12 +125,11 @@ export class SearchResultsComponent implements OnInit {
       await this.actionComponent.backoutPopup(endorsementAction, policy, this.status);
     } else if(this.actionComponent != null && event.target.value == "cancelRewrite"){
       let endorsementAction: NewEndorsementData = ({} as any) as NewEndorsementData;
-      let premium: number = this.searchResults.filter(x => x.invoiceStatus != 'V' && x.policyId == policy.policyId).reduce((premium, current)=> premium += current.amount, 0)
+      let premium: number = this.searchResults.policySearchResponses.filter(x => x.invoiceStatus != 'V' && x.policyId == policy.policyId).reduce((premium, current)=> premium += current.amount, 0)
       endorsementAction.premium = -premium;
       await this.actionComponent.cancelRewritePopup(endorsementAction, policy, this.status);
      } else if (this.directPolicyComponent != null && event.target.value == "rewrite"){
        this.directPolicyComponent.openRewrite(policy)
       }
   }
-
 }

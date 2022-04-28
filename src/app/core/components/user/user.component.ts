@@ -8,6 +8,8 @@ import { PolicyHistoryService } from '../../services/policy-history/policy-histo
 import { ConfirmationDialogService } from '../../services/confirmation-dialog/confirmation-dialog.service';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '@okta/okta-angular';
+import { ConfigService } from '../../services/config/config.service';
+import { APIVersionService } from '../../services/API-version-service/api-version.service';
 
 @Component({
   selector: 'rsps-user',
@@ -42,8 +44,11 @@ export class UserComponent implements OnInit {
   canEditInsured: boolean = false;
   canEditSubmission: boolean = false;
   canEditPolicy: boolean = false;
+  apiOptions: string[] = ['1.0', '2.0'];
+  activeAPIVersion: string = '1.0';
+  apiSwitchActive: boolean = false;
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService, private apiService: APIVersionService, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated
@@ -72,6 +77,8 @@ export class UserComponent implements OnInit {
         this.historySize = size;
       }
     );
+    this.activeAPIVersion = this.apiService.getApiVersion;
+    this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
 
   async ngOnInit(): Promise<void> { }
@@ -114,7 +121,10 @@ export class UserComponent implements OnInit {
       this.policyHistoryService.policyhistorySize = this.historySize;
     }
   }
-
+  changeApiVersion(){
+    this.apiService.setApiVersion = this.activeAPIVersion;
+    console.log(this.apiService.getApiVersion)
+  }
   async clearHistory() {
     const confirm = await this.confirmationDialogService.open("Confirmation", "Are you sure you want to clear all Policies in your history? Have to refresh to get changes.");
     if (confirm) {

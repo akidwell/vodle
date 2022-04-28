@@ -111,6 +111,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
         if (this.components != null) {
           for (let child of this.components) {
             if (child.ucForm.dirty) {
+              child.ucData.isNew = false;
               child.ucForm.form.markAsPristine();
               child.ucForm.form.markAsUntouched();
             }
