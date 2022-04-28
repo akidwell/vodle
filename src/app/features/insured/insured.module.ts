@@ -9,12 +9,22 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule } from 'ngx-mask';
+import { InsuredContactGroupComponent } from './components/insured-contact-group/insured-contact-group.component';
+import { InsuredContactComponent } from './components/insured-contact/insured-contact.component';
+import { InsuredInformationComponent } from './components/insured-information/insured-information.component';
+import { InsuredSubmissionActivityComponent } from './components/insured-submission-activity/insured-submission-activity.component';
+import { CanDeactivateGuard } from './guards/can-deactivate-guard';
+import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 
 
 @NgModule({
   declarations: [
     InsuredComponent,
-    InsuredAccountComponent],
+    InsuredAccountComponent,
+    InsuredContactComponent,
+    InsuredContactGroupComponent,
+    InsuredInformationComponent,
+    InsuredSubmissionActivityComponent],
   imports: [
     CommonModule,
     InsuredRoutingModule,
@@ -23,7 +33,11 @@ import { NgxMaskModule } from 'ngx-mask';
     FontAwesomeModule,
     NgbModule,
     NgSelectModule,
+    DirectivesModule,
     NgxMaskModule.forRoot()
+  ],
+  providers: [
+    CanDeactivateGuard
   ]
 })
 export class InsuredModule { }

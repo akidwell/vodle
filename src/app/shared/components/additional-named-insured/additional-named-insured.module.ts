@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedAdditionalNamedInsuredsComponent } from './additional-named-insureds/additional-named-insureds.component';
 import { SharedAdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 
 
@@ -18,7 +19,8 @@ import { SharedAdditionalNamedInsuredsGroupComponent } from './additional-named-
     FormsModule,
     NgbModule,
     NgSelectModule,
-    FormsModule
+    FormsModule,
+    DirectivesModule
   ],
   exports: [SharedAdditionalNamedInsuredsGroupComponent]
 })

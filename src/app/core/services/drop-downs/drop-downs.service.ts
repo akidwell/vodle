@@ -192,6 +192,29 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
+  // Countries 
+  private cacheCountries: any;
+  private cacheCountries$!: Observable<any> | null;
+
+  getCountries(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheCountries) {
+      observable = of(this.cacheCountries);
+    } else if (this.cacheCountries$) {
+      observable = this.cacheCountries$;
+    } else {
+      this.cacheCountries$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/countries')
+        .pipe(
+          tap(res => this.cacheCountries = res),
+          share(),
+          finalize(() => this.cacheCountries$ = null)
+        );
+      observable = this.cacheCountries$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
   // Limits Pattern 
   private cacheLimitsPattern: any;
   private cacheLimitsPattern$!: Observable<any> | null;
@@ -578,6 +601,29 @@ getAuditCodes(): Observable<Code[]> {
           finalize(() => this.cacheEachEmployee$ = null)
         );
       observable = this.cacheEachEmployee$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Entity Type
+  private cacheEntityType: any;
+  private cacheEntityType$!: Observable<any> | null;
+
+  getEntityType(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheEntityType) {
+      observable = of(this.cacheEntityType);
+    } else if (this.cacheEntityType$) {
+      observable = this.cacheEntityType$;
+    } else {
+      this.cacheEntityType$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/insured_entity_type')
+        .pipe(
+          tap(res => this.cacheEntityType = res),
+          share(),
+          finalize(() => this.cacheEntityType$ = null)
+        );
+      observable = this.cacheEntityType$;
     }
     return observable;
   }

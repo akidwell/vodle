@@ -18,7 +18,6 @@ import { PolicyInformationComponent } from './components/information-policy/poli
 import { InformationComponent } from './components/information-base/information.component';
 import { CoveragesComponent } from './components/coverages-base/coverages.component';
 import { EndorsementCoverageComponent } from './components/coverages-endorsement-coverage/endorsement-coverage.component';
-import { HoverClassDirective } from 'src/app/shared/directives/hover-class.directive';
 import { EndorsementHeaderComponent } from './components/coverages-endorsement-header/endorsement-header.component';
 import { EndorsementCoverageLocationComponent } from './components/coverages-endorsement-coverage-location/endorsement-coverage-location.component';
 import { SchedulesComponent } from './components/schedules-base/schedules.component';
@@ -60,7 +59,6 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
     PolicyInformationComponent,
     CoveragesComponent,
     EndorsementCoverageComponent,
-    HoverClassDirective,
     EndorsementHeaderComponent,
     EndorsementCoverageLocationComponent,
     SchedulesComponent,

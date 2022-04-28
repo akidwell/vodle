@@ -18,6 +18,9 @@ export class AppComponent {
           if (nav.url.startsWith('/policy') && !nav.url.endsWith('/summary')) {
             this.loading = true;
           }
+          if (nav.url.startsWith('/insured')) {
+            this.loading = true;
+          }
           break;
         }
         case event instanceof NavigationEnd:

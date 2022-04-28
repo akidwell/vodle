@@ -13,6 +13,7 @@ export interface AdditionalNamedInsured {
   name: string;
   createdDate?: Date | null;
   isActive?: boolean | null;
+  canDelete?: boolean | null;
   isNew: boolean;
   get key1(): number;
   set key1(value: number);
@@ -37,6 +38,8 @@ export class coverageANI implements AdditionalNamedInsured {
   isNew: boolean = false;
   isActive?: boolean;
   showActive: boolean = false;
+  canDelete: boolean = true;
+
 
   constructor(private policyService: PolicyService, ani?: AdditionalNamedInsured) {
     this.policyId = ani?.policyId ?? 0;
@@ -55,8 +58,6 @@ export class coverageANI implements AdditionalNamedInsured {
   set key2(value: number) { this.endorsementNo = value };
 
   async save(): Promise<boolean> {
-    console.log("coverageANI Save!");
-
     if (this.isNew) {
       const results$ = this.policyService.addAdditionalNamedInsured(this);
       await lastValueFrom(results$).then(result => {
@@ -101,6 +102,7 @@ export class insuredANI implements AdditionalNamedInsured {
   createdDate?: Date | null;
   isNew: boolean = false;
   isActive?: boolean = false;
+  canDelete?: boolean = false;
   showActive: boolean = true;
 
   constructor(private insuredService: InsuredService, ani?: AdditionalNamedInsured) {
@@ -112,6 +114,7 @@ export class insuredANI implements AdditionalNamedInsured {
     this.role = ani?.role;
     this.name = ani?.name ?? "";
     this.isActive = ani?.isActive ?? true;
+    this.canDelete = ani?.canDelete ?? true;
     this.createdDate = ani?.createdDate;
     this.isNew = ani?.isNew ?? false;
   }
@@ -123,7 +126,6 @@ export class insuredANI implements AdditionalNamedInsured {
   set key2(value: number) { this.insuredCode = value };
 
   async save(): Promise<boolean> {
-    console.log("Insured Save!");
     if (this.isNew) {
       const results$ = this.insuredService.addInsuredAdditionalNamedInsured(this);
       await lastValueFrom(results$).then(result => {
