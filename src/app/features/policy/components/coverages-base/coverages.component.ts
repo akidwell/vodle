@@ -156,6 +156,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
   private clearExistingIdentities(group: EndorsementCoveragesGroup): EndorsementCoveragesGroup {
     group.location.locationId = 0;
+    group.copyThisGroup = false;
     group.coverages.forEach(coverage => {
       coverage.locationId = 0;
       coverage.action = 'A';
