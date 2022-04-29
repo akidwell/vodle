@@ -1,16 +1,16 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute, ChildrenOutletContexts, Router } from '@angular/router';
-import { lastValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { coverageANI, insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/components/additional-named-insured/additional-named-insureds-group/additional-named-insureds-group.component';
 import { Insured } from '../../models/insured';
 import { InsuredContact } from '../../models/insured-contact';
 import { InsuredService } from '../../services/insured-service/insured.service';
 import { InsuredAccountComponent } from '../insured-account/insured-account.component';
 import { InsuredContactGroupComponent } from '../insured-contact-group/insured-contact-group.component';
-import { InsuredContactComponent } from '../insured-contact/insured-contact.component';
 
 @Component({
   selector: 'rsps-insured-information',
@@ -28,16 +28,17 @@ export class InsuredInformationComponent implements OnInit {
   updateSub!: Subscription;
   showInvalid: boolean = false;
   invalidMessage: string = "";
+  showBusy: boolean = false;
 
-  // @ViewChildren(SharedAdditionalNamedInsuredsGroupComponent) aniComp: QueryList<SharedAdditionalNamedInsuredsGroupComponent> | undefined;
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
 
-  constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService) {
+  constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
+    this.newInsuredANI = new insuredANI(this.insuredService);
   }
 
   ngOnInit(): void {
@@ -46,7 +47,6 @@ export class InsuredInformationComponent implements OnInit {
       this.aniInsuredData = data['aniData'].additionalNamedInsureds;
       this.contacts = data['contacts'].insuredContacts;
     });
-
   }
 
   ngOnDestroy(): void {
@@ -62,18 +62,26 @@ export class InsuredInformationComponent implements OnInit {
     return this.accountInfoComp.accountInfoForm.status == 'VALID' && this.contactComp.isValid() && this.aniComp.isValid();
   }
 
+  isInsuredDirty(): boolean {
+    return this.canEditInsured && (this.accountInfoComp?.accountInfoForm?.dirty ?? false); 
+  }
+
   isDirty(): boolean {
-    return this.canEditInsured && (this.accountInfoComp.accountInfoForm.dirty ?? false); // || this.contactComp.isDirty() || this.aniComp.isDirty());
+    return this.canEditInsured && (this.isInsuredDirty() || this.contactComp?.isDirty() || this.aniComp?.isDirty());
   }
 
   async save(): Promise<void> {
+    this.showBusy = true;
     if (await this.saveInsured()) {
       this.contacts.forEach(c => c.insuredCode = this.insured.insuredCode);
+      this.aniInsuredData.forEach(c => c.insuredCode = this.insured.insuredCode);
       await this.saveContacts();
       await this.saveInsuredANI();
     }
-
-    this.router.navigate(['/insured/' + this.insured.insuredCode.toString() + '/information']);
+    this.showBusy = false;
+    if (this.insured.insuredCode > 0) {
+      this.router.navigate(['/insured/' + this.insured.insuredCode.toString() + '/information']);
+    }
   }
 
   async saveInsured(): Promise<boolean> {
@@ -83,11 +91,10 @@ export class InsuredInformationComponent implements OnInit {
         return await lastValueFrom(results$)
           .then(async insured => {
             this.insured = insured;
-            this.insured.isNew = false;
-           // this.insured.insuredCode = insured.insuredCode;
-          
+            this.insured.isNew = false;         
             this.accountInfoComp.accountInfoForm.form.markAsPristine();
             this.accountInfoComp.accountInfoForm.form.markAsUntouched();
+            this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
             return true;
           },
             (error) => {
@@ -98,16 +105,15 @@ export class InsuredInformationComponent implements OnInit {
             });
       }
       else {
-        if (this.isDirty()) {
+        if (this.isInsuredDirty()) {
           const results$ = this.insuredService.updateInsured(this.insured);
           return await lastValueFrom(results$)
             .then(async insured => {
-              
                 this.insured = insured;
                 this.insured.isNew = false;
                 this.accountInfoComp.accountInfoForm.form.markAsPristine();
-                this.accountInfoComp.accountInfoForm.form.markAsUntouched();
-      
+                this.accountInfoComp.accountInfoForm.form.markAsUntouched();   
+                this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
               return true;
             },
               (error) => {
@@ -124,50 +130,15 @@ export class InsuredInformationComponent implements OnInit {
       this.showInvalidControls()
     }
     return false;
-
-
-    // return new Promise((resolve) => {
-    //   if (this.insured.isNew) {
-    //     this.addSub = this.insuredService.addInsured(this.insured).subscribe(result => {
-    //       this.insured.isNew = false;
-    //       this.insured.insuredCode = result.insuredCode;
-    //       this.accountInfoComp.accountInfoForm.form.markAsPristine();
-    //       this.accountInfoComp.accountInfoForm.form.markAsUntouched();
-    //       resolve(true);
-    //     });
-    //   } else {
-    //     this.updateSub = this.insuredService.updateInsured(this.insured).subscribe(result => {
-    //       this.accountInfoComp.accountInfoForm.form.markAsPristine();
-    //       this.accountInfoComp.accountInfoForm.form.markAsUntouched();
-    //       resolve(result);
-    //     });
-    //   }
-    // })
-
-    // var subject = new Subject<boolean>();
-    // //if (this.policyInfoComp.allowEndorsementSave()) {
-    // this.insuredService.updateInsured(this.insured).subscribe(() => {
-    //   subject.next(true)
-    // });
-    // //} else {
-    // //  setTimeout(() => subject.next(true), 0)
-    // // }
-    // return subject.asObservable();
   }
 
   async saveContacts(): Promise<boolean> {
     return await this.contactComp.save();
   }
 
-  // saveANI() {
-  //   this.invoiceGroupComp?.get(0)?.saveAdditionalNamedInsureds();
-  // }
-
   async saveInsuredANI() {
     await this.aniComp?.saveAdditionalNamedInsureds();
   }
-
-
 
   showInvalidControls(): void {
     let invalid = [];
@@ -194,7 +165,7 @@ export class InsuredInformationComponent implements OnInit {
       for (let child of this.contactComp.components) {
         for (let name in child.contactForm.controls) {
           if (child.contactForm.controls[name].invalid) {
-            invalid.push(name + " - Contact: #" + child.index.toString());
+            invalid.push(name + " - Contact: #" + (child.index + 1));
           }
         }
       }

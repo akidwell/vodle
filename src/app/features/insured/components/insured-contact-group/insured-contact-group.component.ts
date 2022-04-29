@@ -39,9 +39,12 @@ export class InsuredContactGroupComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  addNewEndorsementLocation(): void {
-    let newLocation = newInsuredContact();
-    this.insuredContacts.push(newLocation);
+  addNewContact(): void {
+    let newContact = newInsuredContact();
+    if (this.insuredContacts.length == 0) {
+      newContact.isPrimary = true;
+    }
+    this.insuredContacts.push(newContact);
   }
 
   copyExistingContact(contact: InsuredContact) {
@@ -79,6 +82,12 @@ export class InsuredContactGroupComponent implements OnInit {
       this.insuredContacts.splice(index, 1);
       if (!contact.isNew) {
         this.notification.show('Contact deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      }
+      if (contact.isPrimary) {
+        if (this.components != null &&  this.insuredContacts.length > 0) {
+          this.insuredContacts[0].isPrimary = true;
+          this.components?.first.contactForm.form.markAsDirty();
+        }
       }
     }
   }
@@ -121,7 +130,7 @@ export class InsuredContactGroupComponent implements OnInit {
           }
         }
         if (saveCount > 0) {
-          this.notification.show('Contact successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          this.notification.show('Contact(s) successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         }
       }
       if (!this.isValid()) {

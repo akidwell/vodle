@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
-import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
@@ -15,8 +13,6 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
   styleUrls: ['./additional-named-insureds.component.css']
 })
 export class SharedAdditionalNamedInsuredsComponent implements OnInit {
-  //authSub: Subscription;
-  //canEditPolicy: boolean = false;
   aniRoles$: Observable<Code[]> | undefined;
   collapsed: boolean = true;
   deleteSub!: Subscription;
@@ -28,7 +24,6 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   nameRoleArray: string[] = new Array;
   nameRoleDuplicates: string[] = new Array;
   isNameRoleValid: boolean = true;
-  // canEditEndorsement: boolean = false;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsured;
@@ -38,10 +33,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
 
-  constructor(private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private messageDialogService: MessageDialogService) {
-    // this.authSub = this.userAuth.canEditPolicy$.subscribe(
-    //   (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
-    // );
+  constructor(private dropdowns: DropDownsService, private confirmationDialogService: ConfirmationDialogService, private messageDialogService: MessageDialogService) {
   }
 
   ngOnInit(): void {
@@ -57,7 +49,6 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    //this.authSub.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
