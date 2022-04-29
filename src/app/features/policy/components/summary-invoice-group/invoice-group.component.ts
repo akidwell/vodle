@@ -161,7 +161,6 @@ export class InvoiceGroupComponent implements OnInit {
           if (this.canExport) {
             await this.export();
           }
-         // this.refreshPage();
         }
         else {
           // Restore before Post changes

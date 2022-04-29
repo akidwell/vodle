@@ -41,7 +41,7 @@ export class InsuredContactComponent implements OnInit {
   @Output() deleteThisContact: EventEmitter<InsuredContact> = new EventEmitter();
   @Output() setPrimaryContact: EventEmitter<InsuredContact> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => {
         this.canEditInsured = canEditInsured
@@ -74,12 +74,12 @@ export class InsuredContactComponent implements OnInit {
   openDeleteConfirmation() {
     this.confirmationDialogService.open("Delete Confirmation", "Are you sure you want to delete this contact?").then((result: boolean) => {
       if (result) {
-        this.deleteLocation();
+        this.deleteContact();
       }
     });
   }
 
-  async deleteLocation() {
+  async deleteContact() {
     if (this.contact.isNew) {
       this.deleteThisContact.emit(this.contact);
     } else {
@@ -95,7 +95,7 @@ export class InsuredContactComponent implements OnInit {
       if (this.contact.isNew) {
         this.addSub = this.insuredService.addInsuredContact(this.contact).subscribe(result => {
           this.contact.isNew = false;
-          this.contact.insuredCode = result.insuredCode;
+          this.contact.insuredContactId = result.insuredContactId;
           this.contactForm.form.markAsPristine();
           this.contactForm.form.markAsUntouched();
           resolve(true);
