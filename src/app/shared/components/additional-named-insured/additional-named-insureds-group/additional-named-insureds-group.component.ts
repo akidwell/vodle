@@ -1,10 +1,6 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
-import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
-import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
 import { SharedAdditionalNamedInsuredsComponent } from '../additional-named-insureds/additional-named-insureds.component';
 
@@ -14,8 +10,6 @@ import { SharedAdditionalNamedInsuredsComponent } from '../additional-named-insu
   styleUrls: ['./additional-named-insureds-group.component.css']
 })
 export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
-  //authSub: Subscription;
-  // canEditPolicy: boolean = false;
   invalidMessage: string = "";
   showInvalid: boolean = false;
   faAngleDown = faAngleDown;
@@ -28,18 +22,11 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   @Input() public newANI!: AdditionalNamedInsured;
   @Input() public canEdit: boolean = false;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService,private policyService: PolicyService) {
-    // this.authSub = this.userAuth.canEditPolicy$.subscribe(
-    //   (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
-    // );
+  constructor(private notification: NotificationService) {
   }
 
   ngOnInit(): void {
     this.aniCollapsed = false;
-  }
-
-  ngOnDestroy(): void {
-    //this.authSub.unsubscribe();
   }
 
   isValid(): boolean {

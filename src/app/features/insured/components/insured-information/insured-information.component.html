@@ -1,8 +1,14 @@
-<button class="btn btn-md btn-primary" (click)="save()">Save</button>
-<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage"></ngb-alert>
+<button class="btn btn-md btn-primary" [disabled]="!isDirty()" appPreventDoubleClick
+  (throttledClick)="save()" [throttleTime]="700">Save</button>
+<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
+</ngb-alert>
 <rsps-insured-account [insured]="insured"></rsps-insured-account>
 <rsps-insured-contact-group [insuredContacts]="contacts">
 </rsps-insured-contact-group>
 <rsps-shared-additional-named-insureds-group [aniData]="aniInsuredData" [newANI]="newInsuredANI"
   [canEdit]="canEditInsured">
 </rsps-shared-additional-named-insureds-group>
+
+<div *ngIf="showBusy">
+  <rsps-busy></rsps-busy>
+</div>

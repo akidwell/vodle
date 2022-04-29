@@ -15,6 +15,7 @@ import { InsuredInformationComponent } from './components/insured-information/in
 import { InsuredSubmissionActivityComponent } from './components/insured-submission-activity/insured-submission-activity.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
+import { BusyModule } from 'src/app/core/components/busy/busy.module';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { DirectivesModule } from 'src/app/shared/directives/directives.module';
     NgbModule,
     NgSelectModule,
     DirectivesModule,
+    BusyModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

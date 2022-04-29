@@ -8,10 +8,6 @@ export interface InsuredContact {
     email: string,
     phone: string,
     fax: string,
-    createdBy: string,
-    createdDate: Date | null,
-    modifiedBy: string,
-    modifiedDate: Date | null
     isNew: boolean
 }
 
@@ -25,10 +21,6 @@ export const newInsuredContact = (): InsuredContact => {
         email: "",
         phone: "",
         fax: "",
-        createdBy: "",
-        createdDate: null,
-        modifiedBy: "",
-        modifiedDate: null,
         isNew: true
     }
 }
