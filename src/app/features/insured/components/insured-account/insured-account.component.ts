@@ -5,6 +5,7 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { newAddressVerificationReques } from '../../models/address-verification-request';
 import { Insured } from '../../models/insured';
 import { AddressVerificationService } from '../../services/address-verification/address-verification.service';
@@ -32,18 +33,12 @@ export class InsuredAccountComponent implements OnInit {
   countryUpdated: string = "";
   loading: boolean = false;
   addressErrorMessage: string = "";
-  loadingNaics: boolean = true;
-  loadingSic: boolean = false;
-
-  photos: Code[] = [];
-  photosBuffer: Code[] = [];
-  bufferSize = 50;
-  numberOfItemsFromEndBeforeFetchingMore = 10;
+  loadingNaics: boolean = false;
 
   @Input() public insured!: Insured;
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressVerificationService: AddressVerificationService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressVerificationService: AddressVerificationService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
@@ -53,13 +48,7 @@ export class InsuredAccountComponent implements OnInit {
     this.states$ = this.dropdowns.getStates();
     this.countries$ = this.dropdowns.getCountries();
     this.entityType$ = this.dropdowns.getEntityType();
-     this.sicCodes$ = this.dropdowns.getSicCodes();
-
-    this.dropdowns.getSicCodes().subscribe(photos => {
-      this.photos = photos;
-      this.photosBuffer = this.photos.slice(0, this.bufferSize);
-    });
-
+    this.sicCodes$ = this.dropdowns.getSicCodes();
     if (this.insured.sicCode != null) {
       this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.insured.sicCode)
         .pipe(tap(() => this.loadingNaics = false));
@@ -68,31 +57,6 @@ export class InsuredAccountComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
-  }
-
-  onScrollToEnd() {
-    this.fetchMore();
-  }
-
-  // onScroll({ end }) {
-  //   if (this.loadingSic || this.photos.length <= this.photosBuffer.length) {
-  //     return;
-  //   }
-
-  //   if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
-  //     this.fetchMore();
-  //   }
-  // }
-
-  private fetchMore() {
-    const len = this.photosBuffer.length;
-    const more = this.photos.slice(len, this.bufferSize + len);
-    this.loadingSic = true;
-    // using timeout here to simulate backend API delay
-    setTimeout(() => {
-      this.loadingSic = false;
-      this.photosBuffer = this.photosBuffer.concat(more);
-    }, 200)
   }
 
   verify() {
@@ -140,7 +104,11 @@ export class InsuredAccountComponent implements OnInit {
         this.loading = false;
         this.accountInfoForm.form.markAsDirty();
       },
-      error: () => this.loading = false
+      error: (error) => {
+        this.loading = false;
+        const errorMessage = error.error?.Message ?? error.message;
+        this.messageDialogService.open("Errpr", errorMessage);
+      }
     });
 
   }

@@ -18,9 +18,7 @@ const routes: Routes = [
     path: '', 
     component: InsuredComponent,
     resolve: {
-      insuredData: InsuredResolver,
-      // aniData: InsuredAdditionalNamedInsuredsResolver,
-      // contacts: InsuredContactResolver
+      insuredData: InsuredResolver
     },
     children: [
       { path: '', redirectTo: 'information',pathMatch: 'full' },
@@ -31,11 +29,8 @@ const routes: Routes = [
   {
     path: ':id',
     component: InsuredComponent,
-    // canActivate: [OktaAuthGuard, AuthGuard],
     resolve: {
-      insuredData: InsuredResolver,
-      // aniData: InsuredAdditionalNamedInsuredsResolver,
-      // contacts: InsuredContactResolver
+      insuredData: InsuredResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
