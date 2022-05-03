@@ -44,8 +44,6 @@ export class InsuredInformationComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.insured = data['insuredData'].insured;
-      // this.aniInsuredData = data['aniData'].additionalNamedInsureds;
-      // this.contacts = data['contacts'].insuredContacts;
     });
   }
 
