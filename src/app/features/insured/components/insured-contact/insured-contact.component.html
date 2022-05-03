@@ -42,9 +42,9 @@
     <div class="col-lg-2">
       <fa-icon *ngIf="contact.isPrimary"
         style="float:left; margin-top: 5px; color: gold;stroke: black;stroke-width: 15px;" title="Primary"
-        [icon]="faSolidStar" (click)="$event.preventDefault();unfavorite(contact)" click-stop-propagation></fa-icon>
-      <fa-icon *ngIf="!contact.isPrimary && isHover" style="float:left;" title="Favorite" [icon]="faStar"
-        (click)="$event.preventDefault();favorite(contact)" click-stop-propagation></fa-icon>
+        [icon]="faSolidStar" (click)="$event.preventDefault();" click-stop-propagation></fa-icon>
+      <fa-icon *ngIf="!contact.isPrimary" [ngClass]="(!contact.isPrimary && isHover && canEditInsured) ? 'visible' : 'hidden'" title="Favorite"
+        [icon]="faStar" (click)="$event.preventDefault();primary(contact)" click-stop-propagation></fa-icon>
       <span class="btn btn-secondary" style="margin-left: 5px;" (click)=copyContact() hover-class="btn-primary"
         *ngIf="canEditInsured">Copy</span>
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
@@ -52,5 +52,5 @@
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
         *ngIf="contact.isNew && canEditInsured">Remove</span>
     </div>
-  </div>
+    </div>
 </form>

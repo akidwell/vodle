@@ -6,8 +6,6 @@ import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { NgForm } from '@angular/forms';
-import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
-import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { InsuredContact } from '../../models/insured-contact';
 import { InsuredService } from '../../services/insured-service/insured.service';
@@ -90,25 +88,25 @@ export class InsuredContactComponent implements OnInit {
     }
   }
 
-  async save(): Promise<boolean> {
-    return new Promise((resolve) => {
-      if (this.contact.isNew) {
-        this.addSub = this.insuredService.addInsuredContact(this.contact).subscribe(result => {
-          this.contact.isNew = false;
-          this.contact.insuredContactId = result.insuredContactId;
-          this.contactForm.form.markAsPristine();
-          this.contactForm.form.markAsUntouched();
-          resolve(true);
-        });
-      } else {
-        this.updateSub = this.insuredService.updateInsuredContact(this.contact).subscribe(result => {
-          this.contactForm.form.markAsPristine();
-          this.contactForm.form.markAsUntouched();
-          resolve(result);
-        });
-      }
-    })
-  }
+  // async save(): Promise<boolean> {
+  //   return new Promise((resolve) => {
+  //     if (this.contact.isNew) {
+  //       this.addSub = this.insuredService.addInsuredContact(this.contact).subscribe(result => {
+  //         this.contact.isNew = false;
+  //         this.contact.insuredContactId = result.insuredContactId;
+  //         this.contactForm.form.markAsPristine();
+  //         this.contactForm.form.markAsUntouched();
+  //         resolve(true);
+  //       });
+  //     } else {
+  //       this.updateSub = this.insuredService.updateInsuredContact(this.contact).subscribe(result => {
+  //         this.contactForm.form.markAsPristine();
+  //         this.contactForm.form.markAsUntouched();
+  //         resolve(result);
+  //       });
+  //     }
+  //   })
+  // }
 
   collapseExpand(event: boolean) {
     if (this.firstExpand) {
@@ -118,13 +116,11 @@ export class InsuredContactComponent implements OnInit {
     this.collapsed = event;
   }
 
-  favorite(contact: InsuredContact) {
-    this.setPrimaryContact.emit(this.contact);
-    this.contactForm.form.markAsDirty();
-    contact.isPrimary = true;
+  primary(contact: InsuredContact) {
+    if (this.canEditInsured) {
+      this.setPrimaryContact.emit(this.contact);
+      this.contactForm.form.markAsDirty();
+      contact.isPrimary = true;
+    }
   }
-  unfavorite(contact: InsuredContact) {
-   // contact.isPrimary = false;
-  }
-
 }

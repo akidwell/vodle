@@ -28,6 +28,11 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params })
   }
 
+  getNaicsCodes(sicCode: string) {
+    let params = new HttpParams().append('sicCode', sicCode);
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
+  }
+
   // Policy specific drop downs
   clearPolicyDropDowns() {
     this.clearClassCodes();
@@ -719,4 +724,29 @@ getAuditCodes(): Observable<Code[]> {
     }
     return observable;
   }
+
+  ////////////////////////////////////////
+  // Sic Codes 
+  private cacheSicCodes: any;
+  private cacheSicCodes$!: Observable<any> | null;
+
+  getSicCodes(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheSicCodes) {
+      observable = of(this.cacheSicCodes);
+    } else if (this.cacheSicCodes$) {
+      observable = this.cacheSicCodes$;
+    } else {
+      this.cacheSicCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes')
+        .pipe(
+          tap(res => this.cacheSicCodes = res),
+          share(),
+          finalize(() => this.cacheSicCodes$ = null)
+        );
+      observable = this.cacheSicCodes$;
+    }
+    return observable;
+  }
+
+
 }

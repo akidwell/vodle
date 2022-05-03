@@ -48,14 +48,14 @@ export class InsuredContactGroupComponent implements OnInit {
   }
 
   copyExistingContact(contact: InsuredContact) {
-    const newContact: InsuredContact = deepClone(contact);
+    let newContact: InsuredContact = deepClone(contact);
+    newContact.insuredContactId = null;
     newContact.isNew = true;
     newContact.isPrimary = false;
     this.insuredContacts.push(newContact);
   }
 
-  setPrimaryContact(contact: InsuredContact) {
-
+  setPrimaryContact() {
     if (this.components != null) {
       for (let child of this.components) {
         if (child.contact.isPrimary) {
@@ -93,6 +93,9 @@ export class InsuredContactGroupComponent implements OnInit {
   }
 
   isValid(): boolean {
+    if (this.hasDuplicates()) {
+      return false;
+    }
     if (this.components != null) {
       for (let child of this.components) {
         if (child.contactForm.status != 'VALID') {
@@ -101,6 +104,31 @@ export class InsuredContactGroupComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  hasDuplicates(): boolean {
+    let dupe: boolean = false;
+    this.insuredContacts.forEach(x => {
+      if (!dupe) {
+        dupe = this.insuredContacts.filter(c => c.firstName == x.firstName && c.lastName == x.lastName && c.email == x.email && c.phone == x.phone && c.fax == x.fax).length > 1;
+      }
+    });
+    return dupe;
+  }
+
+  getDuplicateName(): string {
+    let dupe: boolean = false;
+    let dupeName: string = "";
+
+    this.insuredContacts.forEach(x => {
+      if (!dupe) {
+        dupe = this.insuredContacts.filter(c => c.firstName == x.firstName).length > 1;
+        if (dupe) {
+          dupeName = (x.firstName + " " + x.lastName).trim();
+        }
+      }
+    });
+    return dupeName;
   }
 
   isDirty() {
@@ -114,31 +142,31 @@ export class InsuredContactGroupComponent implements OnInit {
     return false;
   }
 
-  async save(): Promise<boolean> {
-    if (this.canEditInsured && this.isDirty()) {
-      let saveCount: number = 0;
-      if (this.components != null) {
-        for (let child of this.components) {
-          if (child.contactForm.dirty) {
-            let result = await child.save();
-            if (result === false) {
-              this.notification.show('Contacts ' + child.contact.firstName.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-            }
-            else {
-              saveCount++;
-            }
-          }
-        }
-        if (saveCount > 0) {
-          this.notification.show('Contact(s) successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        }
-      }
-      if (!this.isValid()) {
-        this.notification.show('Contact not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        return false;
-      }
-    }
-    return false;
-  }
+  // async save(): Promise<boolean> {
+  //   if (this.canEditInsured && this.isDirty()) {
+  //     let saveCount: number = 0;
+  //     if (this.components != null) {
+  //       for (let child of this.components) {
+  //         if (child.contactForm.dirty) {
+  //           let result = await child.save();
+  //           if (result === false) {
+  //             this.notification.show('Contacts ' + child.contact.firstName.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+  //           }
+  //           else {
+  //             saveCount++;
+  //           }
+  //         }
+  //       }
+  //       if (saveCount > 0) {
+  //         this.notification.show('Contact(s) successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+  //       }
+  //     }
+  //     if (!this.isValid()) {
+  //       this.notification.show('Contact not saved.', { classname: 'bg-danger text-light', delay: 5000 });
+  //       return false;
+  //     }
+  //   }
+  //   return false;
+  // }
 
 }

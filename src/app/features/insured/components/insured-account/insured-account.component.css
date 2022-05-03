@@ -42,3 +42,7 @@ input[type="checkbox"][readonly] {
   box-sizing: border-box;
   border-bottom: 2px solid black;
 }
+
+.updated {
+  border-right: 5px double orange;
+}

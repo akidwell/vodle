@@ -1,11 +1,13 @@
+import { AdditionalNamedInsured, insuredANI } from "src/app/shared/components/additional-named-insured/additional-named-insured"
+import { InsuredContact } from "./insured-contact"
 
 export interface Insured {
-    insuredCode: number
+    insuredCode: number | null,
     name: string,
     formerName1: string,
     formerName2: string,
-    sicCode: string,
-    naicsCode: string,
+    sicCode: string | null,
+    naicsCode: string | null,
     entityType: number,
     street1: string,
     street2: string,
@@ -21,24 +23,26 @@ export interface Insured {
     website: string,
     comments: string,
     customerCode: number | null,
-    addressOveridden: boolean,
-    addressVerified: Date | null,
+    isAddressOverride: boolean,
+    addressVerifiedDate: Date | null,
     fein: string,
     createdBy: string,
     createdDate: Date | null,
     modifiedBy: string,
     modifiedDate: Date  | null,
-    isNew: boolean
+    isNew: boolean,
+    contacts: InsuredContact[],
+    additionalNamedInsureds: insuredANI[]
 }
 
 export const newInsured = (): Insured => {
     return {
-        insuredCode: 0,
+        insuredCode: null,
         name: "",
         formerName1: "",
         formerName2: "",
-        sicCode: "",
-        naicsCode: "",
+        sicCode: null,
+        naicsCode: null,
         entityType: 0,
         street1: "",
         street2: "",
@@ -54,13 +58,15 @@ export const newInsured = (): Insured => {
         website: "",
         comments: "",
         customerCode: null,
-        addressOveridden: false,
-        addressVerified: null,
+        isAddressOverride: false,
+        addressVerifiedDate: null,
         fein: "",
         createdBy: "",
         createdDate: null,
         modifiedBy: "",
         modifiedDate: null,
-        isNew: true
+        isNew: true,
+        contacts: [],
+        additionalNamedInsureds: []
     }
 }

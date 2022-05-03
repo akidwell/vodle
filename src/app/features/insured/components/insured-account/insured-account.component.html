@@ -10,14 +10,52 @@
         <div class="row">
           <div class="col-lg-6">
             <label for="sicCode" class="form-label" title="SIC Code">SIC Code</label>
+
+
             <ng-select id="sicCode" [items]="sicCodes$ | async" bindLabel="description" bindValue="code"
-            maxlength="4" [clearable]="false" [readonly]="!canEditInsured" name="sicCode" [(ngModel)]="insured.state" #sicCode="ngModel">
+              [readonly]="!canEditInsured" name="sicCode" [(ngModel)]="insured.sicCode" [searchFn]="dropDownSearch"
+              #sicCode="ngModel" (change)="changeSicCode()"
+              [virtualScroll]="true">
+              <ng-template ng-label-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+              </ng-template>
             </ng-select>
+
+
+            <!-- <ng-select id="sicCode" [items]="photosBuffer" bindLabel="description" bindValue="code" maxlength="4"
+              [readonly]="!canEditInsured" name="sicCode" [(ngModel)]="insured.sicCode" [searchFn]="dropDownSearch"
+              #sicCode="ngModel" (change)="changeSicCode()"
+              appendTo="body"
+               [virtualScroll]="true"
+               [searchable]="true" 
+               (scrollToEnd)="onScrollToEnd()">
+              <ng-template ng-header-tmp>
+                <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+              </ng-template>
+            </ng-select> -->
+
+
           </div>
           <div class="col-lg-6">
             <label for="naics" class="form-label" title="NAICS">NAICS</label>
             <ng-select id="naics" [items]="naicsCodes$ | async" bindLabel="description" bindValue="code"
-            maxlength="6" [clearable]="false" [readonly]="!canEditInsured" name="naics" [(ngModel)]="insured.state" #naics="ngModel">
+              [readonly]="!canEditInsured" name="naics" [(ngModel)]="insured.naicsCode" [loading]="loadingNaics"
+              loadingText="Loading..." #naics="ngModel">
+              <ng-template ng-label-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+              </ng-template>
             </ng-select>
           </div>
         </div>
@@ -31,22 +69,36 @@
           </div>
           <div class="col-lg-1">
             <label for="override" class="form-label" title="Override">Override</label>
-            <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.addressOveridden"
-              name="override" [readonly]="!canEditInsured">
+            <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.isAddressOverride"
+              name="override" [readonly]="!canEditInsured" (change)="addressOverride()">
           </div>
-          <div class="col-lg-1">
+          <div class="col-lg-2">
             <button class="btn btn-md btn-primary" (click)="verify()" name="verify"
-              style="margin-top: 32px;" *ngIf="canEditInsured">Verify</button>
+              style="margin-top: 32px;float: left;" *ngIf="canEditInsured"
+              [disabled]="insured.isAddressOverride || loading">Verify</button>
+            <div class="d-flex justify-content-center" style="float:left; margin-top: 35px; margin-left: 5px;"
+              *ngIf="loading">
+              <strong>Loading...</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+            <span *ngIf="!loading && isVerified && !insured.isAddressOverride"
+              style="margin-top: 35px; margin-left: 5px; float: left; color: #42A948;font-weight: bold;">Address
+              Verified</span>
+            <span *ngIf="!loading && !isVerified && !insured.isAddressOverride && addressErrorMessage.length == 0"
+              style="margin-top: 35px;  margin-left: 5px; float: left; color: #a94442;font-weight: bold;">Address not
+              Verified</span>
+            <span *ngIf="!loading && !isVerified && !insured.isAddressOverride"
+              style="margin-top: 35px;  margin-left: 5px; float: left; color: #a94442;font-weight: bold;">{{addressErrorMessage}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-4">
             <label for="namedInsured" class="form-label" title="First Named Insured">First Named Insured</label>
-            <input type="text" class="form-control" id="namedInsured" maxlength="40" [readonly]="!canEditInsured" [required]="canEditInsured"  [(ngModel)]="insured.name"
-              name="namedInsured" #namedInsured="ngModel">
+            <input type="text" class="form-control" id="namedInsured" maxlength="40" [readonly]="!canEditInsured"
+              [required]="canEditInsured" [(ngModel)]="insured.name" name="namedInsured" #namedInsured="ngModel">
           </div>
           <div class="col-lg-4"></div>
-          <div class="col-lg-4">
+          <div class="col-lg-2">
             <label for="customerCode" class="form-label" title="Customer Code">Customer Code</label>
             <input type="text" class="form-control" id="customerCode" [readonly]="!canEditInsured"
               [(ngModel)]="insured.customerCode" name="customerCode" #customerCode="ngModel">
@@ -55,72 +107,77 @@
         <div class="row">
           <div class="col-lg-4">
             <label for="street1" class="form-label" title="Street Address">Street Address</label>
-            <input type="text" class="form-control" id="street1" maxlength="40" [readonly]="!canEditInsured" [required]="canEditInsured" name="street1" 
-              [(ngModel)]="insured.street1" #street1="ngModel">
+            <input type="text" class="form-control" id="street1" maxlength="40" [readonly]="!canEditInsured || loading"
+              [required]="canEditInsured" name="street1" [(ngModel)]="insured.street1" #street1="ngModel">
           </div>
           <div class="col-lg-4"></div>
-          <div class="col-lg-4">
+          <div class="col-lg-2">
             <label for="entityType" class="form-label" title="Entity Type">Entity Type</label>
             <ng-select id="entityType" [items]="entityType$ | async" bindLabel="description" bindValue="key"
-              [readonly]="!canEditInsured" name="entityType" [(ngModel)]="insured.entityType"
-              #entityType="ngModel">
+              [readonly]="!canEditInsured" name="entityType" [(ngModel)]="insured.entityType" #entityType="ngModel">
             </ng-select>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-4">
             <label for="street2" class="form-label" title="Apt/Suit/Floor">Apt/Suit/Floor</label>
-            <input type="text" class="form-control" id="street2" maxlength="40" [readonly]="!canEditInsured" name="street2"
-              [(ngModel)]="insured.street2" #street2="ngModel">
+            <input type="text" class="form-control" id="street2" maxlength="40" [readonly]="!canEditInsured || loading"
+              name="street2" [(ngModel)]="insured.street2" #street2="ngModel">
           </div>
           <div class="col-lg-4"></div>
-          <div class="col-lg-4">
+          <div class="col-lg-2">
             <label for="fein" class="form-label" title="FEIN">FEIN</label>
             <input type="text" class="form-control" id="fein" [readonly]="!canEditInsured" name="fein"
-              [(ngModel)]="insured.fein" #fein="ngModel" mask="00-0000000"> 
+              [(ngModel)]="insured.fein" #fein="ngModel" mask="00-0000000">
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-2">
+          <div class="col-lg-4">
             <label for="city" class="form-label" title="City">City</label>
-            <input type="text" class="form-control" id="city" [readonly]="!canEditInsured" maxlength="40" [required]="canEditInsured" name="city"
-              [(ngModel)]="insured.city" #city="ngModel">
+            <input type="text" class="form-control" id="city" [readonly]="!canEditInsured || loading" maxlength="40"
+              [required]="canEditInsured" name="city" [(ngModel)]="insured.city" #city="ngModel"
+              [ngClass]="cityUpdated">
           </div>
           <div class="col-lg-2">
-            <label for="state" class="form-label" title="State">State</label>
-            <ng-select id="state" [items]="states$ | async" bindLabel="description" bindValue="code" [clearable]="false"
-              [readonly]="!canEditInsured" [required]="canEditInsured" name="state" [(ngModel)]="insured.state" #state="ngModel">
-            </ng-select>
-          </div>
-          <div class="col-lg-2">
-            <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
-            <input type="text" class="form-control" id="zip" [readonly]="!canEditInsured" [required]="canEditInsured" name="zip"
-              [(ngModel)]="insured.zip" #zip="ngModel" mask="00000||00000-0000">
           </div>
           <div class="col-lg-2"></div>
           <div class="col-lg-4">
             <label for="website" class="form-label" title="Website">Website</label>
-            <input type="text" class="form-control" id="website" maxlength="100" [readonly]="!canEditInsured" name="website"
-              [(ngModel)]="insured.website" #website="ngModel">
+            <input type="text" class="form-control" id="website" maxlength="100" [readonly]="!canEditInsured"
+              name="website" [(ngModel)]="insured.website" #website="ngModel">
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-4">
-            <label for="county" class="form-label" title="County">County</label>
-            <input type="text" class="form-control" id="county" maxlength="100" [readonly]="!canEditInsured" name="county"
-              [(ngModel)]="insured.county" #county="ngModel">
+          <div class="col-lg-2">
+            <label for="state" class="form-label" title="State">State</label>
+            <ng-select id="state" [items]="states$ | async" bindLabel="description" bindValue="code" [clearable]="false"
+              [readonly]="!canEditInsured || loading" [required]="canEditInsured" name="state"
+              [(ngModel)]="insured.state" #state="ngModel" [ngClass]="stateUpdated">
+            </ng-select>
+          </div>
+          <div class="col-lg-2">
+            <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
+            <input type="text" class="form-control" id="zip" [readonly]="!canEditInsured || loading"
+              [required]="canEditInsured" name="zip" [(ngModel)]="insured.zip" #zip="ngModel" mask="00000||00000-0000"
+              [ngClass]="zipUpdated">
           </div>
           <div class="col-lg-8">
             <label for="comments" class="form-label" title="Comments">Comments</label>
-            <textarea type="text" class="form-control" id="comments" maxlength="255" [readonly]="!canEditInsured" name="comments"
-              [(ngModel)]="insured.comments" #comments="ngModel"></textarea>
+            <textarea type="text" class="form-control" id="comments" maxlength="255" [readonly]="!canEditInsured"
+              name="comments" [(ngModel)]="insured.comments" #comments="ngModel"></textarea>
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-2">
+            <label for="county" class="form-label" title="County">County</label>
+            <input type="text" class="form-control" id="county" maxlength="100" [readonly]="!canEditInsured || loading"
+              name="county" [(ngModel)]="insured.county" #county="ngModel" [ngClass]="countyUpdated">
+          </div>
+          <div class="col-lg-2">
             <label for="country" class="form-label" title="Country">Country</label>
             <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
-              [readonly]="!canEditInsured" name="country" [(ngModel)]="insured.country" #state="ngModel">
+              [readonly]="!canEditInsured || loading" [required]="canEditInsured" name="country"
+              [(ngModel)]="insured.country" #state="ngModel" [ngClass]="countryUpdated">
             </ng-select>
           </div>
         </div>
