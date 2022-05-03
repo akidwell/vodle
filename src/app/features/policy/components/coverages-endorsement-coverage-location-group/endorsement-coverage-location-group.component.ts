@@ -153,9 +153,9 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   isDirty() {
     if (this.components != null) {
       for (let child of this.components) {
+        console.log(child.coverage.locationId,child.coverage.isCopied)
         if (child.endorsementCoveragesForm.dirty || this.setLocationOnInit || child.coverage.isCopied) {
           this.setLocationOnInit = false;
-          child.coverage.isCopied = false;
           return true;
         }
       }

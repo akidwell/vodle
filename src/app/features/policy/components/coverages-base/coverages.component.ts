@@ -142,33 +142,37 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
   private copyGroup(groupsToBeCopied: EndorsementCoveragesGroup[], index: number) {
     let group = deepClone(groupsToBeCopied[index]);
-    this.clearExistingIdentities(group);
+    this.clearExistingLocationIdentity(group);
 
     this.locationSub = this.policyService.addEndorsementCoverageLocation(group.location)
       .subscribe(result => {
         group.location.locationId = result;
-        this.setNewCoveragesIdentity(group.coverages, result);
+        this.setCopiedCoveragesIdentity(group.coverages, result);
         this.endorsementCoveragesGroups.push(group);
         if (index < groupsToBeCopied.length - 1) {
           this.copyGroup(groupsToBeCopied, index+1)
         }
       });
   }
-  private clearExistingIdentities(group: EndorsementCoveragesGroup): EndorsementCoveragesGroup {
+  private clearExistingLocationIdentity(group: EndorsementCoveragesGroup) {
     group.location.locationId = 0;
-    group.coverages.forEach(coverage => {
-      coverage.locationId = 0;
-      coverage.action = 'A';
-      coverage.isNew = true;
-    });
-    return group;
+    group.copyThisGroup = false;
   }
-  private setNewCoveragesIdentity(coverages: EndorsementCoverage[], locationId: number) {
+  private setCopiedCoveragesIdentity(coverages: EndorsementCoverage[], locationId: number) {
     coverages.forEach(coverage => {
       coverage.sequence = this.coveragesSequence;
       this.coveragesSequence++;
       coverage.isCopied = true;
       coverage.locationId = locationId;
+      coverage.action = 'A';
+      coverage.isNew = true;
+    });
+  }
+  private removeCopiedStatusOnCoverages(groups: EndorsementCoveragesGroup[]) {
+    groups.forEach(group => {
+      group.coverages.forEach(coverage => {
+        coverage.isCopied = false;
+      });
     });
   }
   isValid(): boolean {
@@ -239,6 +243,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     var subject = new Subject<boolean>();
     if (this.isCoveragesDirty()) {
       this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
+        this.removeCopiedStatusOnCoverages(this.endorsementCoveragesGroups);
         this.data['endorsementCoveragesGroups'].endorsementCoveragesGroups = deepClone(this.endorsementCoveragesGroups);
         this.updatePolicyChild.notifyEndorsementCoverages();
         this.refreshEndorsement();
