@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
@@ -38,7 +39,7 @@ export class InsuredAccountComponent implements OnInit {
   @Input() public insured!: Insured;
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressVerificationService: AddressVerificationService, private messageDialogService: MessageDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressVerificationService: AddressVerificationService, private messageDialogService: MessageDialogService, public datepipe: DatePipe) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
@@ -120,6 +121,13 @@ export class InsuredAccountComponent implements OnInit {
 
   public get isVerified(): boolean {
     return this.insured.addressVerifiedDate != null;
+  }
+
+  get createdUserFormatted() {
+    return this.insured.createdBy + " - " + this.datepipe.transform(this.insured.createdDate, 'MM/dd/YYYY h:mm:ss a');
+  }
+  get modifiedUserFormatted() {
+    return this.insured.createdBy + " - " + this.datepipe.transform(this.insured.createdDate, 'MM/dd/YYYY h:mm:ss a');
   }
 
   dropDownSearch(term: string, item: Code) {
