@@ -37,53 +37,53 @@ export class InsuredResolver implements Resolve<InsuredResolved> {
 }
 
 
-@Injectable({
-    providedIn: 'root'
-})
-export class InsuredContactResolver implements Resolve<InsuredContactsResolved> {
+// @Injectable({
+//     providedIn: 'root'
+// })
+// export class InsuredContactResolver implements Resolve<InsuredContactsResolved> {
 
-    constructor(private router: Router, private insuredService: InsuredService) { }
+//     constructor(private router: Router, private insuredService: InsuredService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredContactsResolved> {
-        const id = route.paramMap.get('id') ?? "";
+//     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredContactsResolved> {
+//         const id = route.paramMap.get('id') ?? "";
     
-        if (isNaN(+id)) {
-            const message = `Insured id was not a number: ${id}`;
-            return of({ insuredContacts: [], error: message });
-        }
+//         if (isNaN(+id)) {
+//             const message = `Insured id was not a number: ${id}`;
+//             return of({ insuredContacts: [], error: message });
+//         }
        
-        return this.insuredService.getInsuredContacts(Number(id))
-            .pipe(
-                map(insuredContacts => ({ insuredContacts })),
-                catchError((error) => {
-                    return of({ insuredContacts: [], error: error });
-                })
-            );
-    }
-}
+//         return this.insuredService.getInsuredContacts(Number(id))
+//             .pipe(
+//                 map(insuredContacts => ({ insuredContacts })),
+//                 catchError((error) => {
+//                     return of({ insuredContacts: [], error: error });
+//                 })
+//             );
+//     }
+// }
 
 
-@Injectable({
-    providedIn: 'root'
-})
-export class InsuredAdditionalNamedInsuredsResolver implements Resolve<InsuredAdditionalNamedInsuredsResolved> {
+// @Injectable({
+//     providedIn: 'root'
+// })
+// export class InsuredAdditionalNamedInsuredsResolver implements Resolve<InsuredAdditionalNamedInsuredsResolved> {
 
-    constructor(private router: Router, private insuredService: InsuredService) { }
+//     constructor(private router: Router, private insuredService: InsuredService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredAdditionalNamedInsuredsResolved> {
-        const id = route.paramMap.get('id') ?? "";
+//     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredAdditionalNamedInsuredsResolved> {
+//         const id = route.paramMap.get('id') ?? "";
     
-        if (isNaN(+id)) {
-            const message = `Insured id was not a number: ${id}`;
-            return of({ additionalNamedInsureds: null, error: message });
-        }
+//         if (isNaN(+id)) {
+//             const message = `Insured id was not a number: ${id}`;
+//             return of({ additionalNamedInsureds: null, error: message });
+//         }
        
-        return this.insuredService.getInsuredAdditionalNamedInsured(Number(id))
-            .pipe(
-                map(additionalNamedInsureds => ({ additionalNamedInsureds })),
-                catchError((error) => {
-                    return of({ additionalNamedInsureds: null, error: error });
-                })
-            );
-    }
-}
+//         return this.insuredService.getInsuredAdditionalNamedInsured(Number(id))
+//             .pipe(
+//                 map(additionalNamedInsureds => ({ additionalNamedInsureds })),
+//                 catchError((error) => {
+//                     return of({ additionalNamedInsureds: null, error: error });
+//                 })
+//             );
+//     }
+// }

@@ -1,6 +1,6 @@
 
 export interface InsuredContact {
-    insuredContactId: number,
+    insuredContactId: number | null,
     insuredCode: number,
     isPrimary: boolean,
     firstName: string,
@@ -13,7 +13,7 @@ export interface InsuredContact {
 
 export const newInsuredContact = (): InsuredContact => {
     return {
-        insuredContactId: 0,
+        insuredContactId: null,
         insuredCode: 0,
         isPrimary: false,
         firstName: "",

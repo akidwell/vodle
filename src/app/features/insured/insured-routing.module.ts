@@ -7,7 +7,7 @@ import { InsuredNotFoundComponent } from './components/insured-not-found/insured
 import { InsuredSubmissionActivityComponent } from './components/insured-submission-activity/insured-submission-activity.component';
 import { AuthGuard } from './guards/auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
-import { InsuredAdditionalNamedInsuredsResolver, InsuredContactResolver, InsuredResolver } from './services/insured-resolver/insured-resolver.service';
+import { InsuredResolver } from './services/insured-resolver/insured-resolver.service';
 
 const routes: Routes = [
   {
@@ -18,24 +18,19 @@ const routes: Routes = [
     path: '', 
     component: InsuredComponent,
     resolve: {
-      insuredData: InsuredResolver,
-      aniData: InsuredAdditionalNamedInsuredsResolver,
-      contacts: InsuredContactResolver
+      insuredData: InsuredResolver
     },
     children: [
       { path: '', redirectTo: 'information',pathMatch: 'full' },
-      { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard] }, // , data: { saveComponent: true } },
-      { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] } // , data: { saveComponent: true } },
+      { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
+      { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
     ]
   },
   {
     path: ':id',
     component: InsuredComponent,
-    // canActivate: [OktaAuthGuard, AuthGuard],
     resolve: {
-      insuredData: InsuredResolver,
-      aniData: InsuredAdditionalNamedInsuredsResolver,
-      contacts: InsuredContactResolver
+      insuredData: InsuredResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },

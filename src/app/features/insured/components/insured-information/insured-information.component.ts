@@ -44,8 +44,6 @@ export class InsuredInformationComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.insured = data['insuredData'].insured;
-      this.aniInsuredData = data['aniData'].additionalNamedInsureds;
-      this.contacts = data['contacts'].insuredContacts;
     });
   }
 
@@ -59,11 +57,15 @@ export class InsuredInformationComponent implements OnInit {
     if (!this.canEditInsured) {
       return true;
     }
-    return this.accountInfoComp.accountInfoForm.status == 'VALID' && this.contactComp.isValid() && this.aniComp.isValid();
+    return this.accountInfoComp.accountInfoForm.status == 'VALID' && this.contactComp.isValid() && this.aniComp.isValid() && this.adddressValid();
+  }
+
+  private adddressValid() {
+    return this.insured.isAddressOverride || this.insured.addressVerifiedDate != null;
   }
 
   isInsuredDirty(): boolean {
-    return this.canEditInsured && (this.accountInfoComp?.accountInfoForm?.dirty ?? false); 
+    return this.canEditInsured && (this.accountInfoComp?.accountInfoForm?.dirty ?? false);
   }
 
   isDirty(): boolean {
@@ -72,52 +74,53 @@ export class InsuredInformationComponent implements OnInit {
 
   async save(): Promise<void> {
     this.showBusy = true;
-    if (await this.saveInsured()) {
-      this.contacts.forEach(c => c.insuredCode = this.insured.insuredCode);
-      this.aniInsuredData.forEach(c => c.insuredCode = this.insured.insuredCode);
-      await this.saveContacts();
-      await this.saveInsuredANI();
-    }
+
+    const refresh = this.insured.isNew;
+    await this.saveInsured();
+      // this.contacts.forEach(c => c.insuredCode = this.insured.insuredCode!);
+      // this.aniInsuredData.forEach(c => c.insuredCode = this.insured.insuredCode!);
+      // await this.saveContacts();
+      // await this.saveInsuredANI();
     this.showBusy = false;
-    if (this.insured.insuredCode > 0) {
-      this.router.navigate(['/insured/' + this.insured.insuredCode.toString() + '/information']);
+    if (refresh && this.insured.insuredCode !== null) {
+      this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
     }
   }
 
   async saveInsured(): Promise<boolean> {
     if (this.isValid()) {
+      this.hideInvalid();
       if (this.insured.isNew) {
         const results$ = this.insuredService.addInsured(this.insured);
         return await lastValueFrom(results$)
           .then(async insured => {
             this.insured = insured;
-            this.insured.isNew = false;         
-            this.accountInfoComp.accountInfoForm.form.markAsPristine();
-            this.accountInfoComp.accountInfoForm.form.markAsUntouched();
+            this.insured.isNew = false;
+            this.markClean();
             this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
             return true;
           },
             (error) => {
-              // this.showInvoiceNotSaved();
+              this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
               const errorMessage = error.error?.Message ?? error.message;
               this.messageDialogService.open("Insured Save Error", errorMessage);
               return false;
             });
       }
       else {
-        if (this.isInsuredDirty()) {
+        if (this.isDirty()) {
           const results$ = this.insuredService.updateInsured(this.insured);
           return await lastValueFrom(results$)
             .then(async insured => {
-                this.insured = insured;
-                this.insured.isNew = false;
-                this.accountInfoComp.accountInfoForm.form.markAsPristine();
-                this.accountInfoComp.accountInfoForm.form.markAsUntouched();   
-                this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+              this.insured = insured;
+              this.insured.isNew = false;
+              this.markClean();
+
+              this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
               return true;
             },
               (error) => {
-                // this.showInvoiceNotSaved();
+                this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
                 const errorMessage = error.error?.Message ?? error.message;
                 this.messageDialogService.open("Insured Save Error", errorMessage);
                 return false;
@@ -132,13 +135,38 @@ export class InsuredInformationComponent implements OnInit {
     return false;
   }
 
-  async saveContacts(): Promise<boolean> {
-    return await this.contactComp.save();
+  // async saveContacts(): Promise<boolean> {
+  //   return await this.contactComp.save();
+  // }
+
+  // async saveInsuredANI() {
+  //   await this.aniComp?.saveAdditionalNamedInsureds();
+  // }
+
+
+  private markClean() {
+    this.accountInfoComp.accountInfoForm.form.markAsPristine();
+    this.accountInfoComp.accountInfoForm.form.markAsUntouched();
+
+    if (this.aniComp.components != null) {
+      for (let child of this.aniComp.components) {
+        for (let name in child.aniForm.controls) {
+          child.aniForm.form.markAsPristine();
+          child.aniForm.form.markAsUntouched();
+        }
+      }
+    }
+    if (this.contactComp.components != null) {
+      for (let child of this.contactComp.components) {
+        for (let name in child.contactForm.controls) {
+          child.contactForm.form.markAsPristine();
+          child.contactForm.form.markAsUntouched();
+        }
+      }
+    }
+
   }
 
-  async saveInsuredANI() {
-    await this.aniComp?.saveAdditionalNamedInsureds();
-  }
 
   showInvalidControls(): void {
     let invalid = [];
@@ -169,6 +197,14 @@ export class InsuredInformationComponent implements OnInit {
           }
         }
       }
+    }
+
+    if (this.contactComp.hasDuplicates()) {
+      const name = this.contactComp.getDuplicateName();
+      invalid.push("Contact " + name + " is a duplicated");
+    }
+    if (!this.adddressValid()) {
+      invalid.push("Address not Verified");
     }
 
     this.invalidMessage = "";

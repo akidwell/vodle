@@ -6,7 +6,7 @@ import { PolicyService } from "src/app/features/policy/services/policy/policy.se
 export interface AdditionalNamedInsured {
   policyId: number;
   endorsementNo: number;
-  addInsuredCode?: number | null;
+  addInsuredCode: number | null;
   insuredCode?: number | null;
   sequenceNo: number;
   role?: number;
@@ -29,7 +29,7 @@ export interface AdditionalNamedInsured {
 export class coverageANI implements AdditionalNamedInsured {
   policyId: number = 0;
   endorsementNo: number = 0;
-  addInsuredCode?: number;
+  addInsuredCode: number | null = null;
   insuredCode?: number;
   sequenceNo: number = 0;
   role?: number | undefined;
@@ -93,7 +93,7 @@ export class coverageANI implements AdditionalNamedInsured {
 
 export class insuredANI implements AdditionalNamedInsured {
   policyId: number = 0;
-  addInsuredCode: number = 0;
+  addInsuredCode: number | null = null;
   insuredCode: number = 0;
   endorsementNo: number = 0;
   sequenceNo: number = 0;
@@ -107,7 +107,7 @@ export class insuredANI implements AdditionalNamedInsured {
 
   constructor(private insuredService: InsuredService, ani?: AdditionalNamedInsured) {
     this.policyId = ani?.policyId ?? 0;
-    this.addInsuredCode = ani?.addInsuredCode ?? 0;
+    this.addInsuredCode = ani?.addInsuredCode ?? null;
     this.insuredCode = ani?.insuredCode ?? 0;
     this.endorsementNo = ani?.endorsementNo ?? 0;
     this.sequenceNo = ani?.sequenceNo ?? 0;
@@ -119,33 +119,37 @@ export class insuredANI implements AdditionalNamedInsured {
     this.isNew = ani?.isNew ?? false;
   }
 
-  get key1() { return this.addInsuredCode };
+  get key1() { return this.addInsuredCode ?? 0};
   set key1(value: number) { this.addInsuredCode = value };
 
   get key2() { return this.insuredCode };
   set key2(value: number) { this.insuredCode = value };
 
   async save(): Promise<boolean> {
-    if (this.isNew) {
-      const results$ = this.insuredService.addInsuredAdditionalNamedInsured(this);
-      await lastValueFrom(results$).then(result => {
-        if (result) {
-          this.addInsuredCode = result.addInsuredCode;
-          this.createdDate = result.createdDate;
-          this.isNew = false;
-        }
-      });
-    }
-    else {
-      const results$ = this.insuredService.updateInsuredAdditionalNamedInsured(this);
-      await lastValueFrom(results$).then(result => {
-        if (result) {
-          this.isNew = false;
-        }
-      });
-    }
-    return true;
+    throw new Error('Method not implemented.');
   }
+
+  // async save(): Promise<boolean> {
+  //   if (this.isNew) {
+  //     const results$ = this.insuredService.addInsuredAdditionalNamedInsured(this);
+  //     await lastValueFrom(results$).then(result => {
+  //       if (result) {
+  //         this.addInsuredCode = result.addInsuredCode;
+  //         this.createdDate = result.createdDate;
+  //         this.isNew = false;
+  //       }
+  //     });
+  //   }
+  //   else {
+  //     const results$ = this.insuredService.updateInsuredAdditionalNamedInsured(this);
+  //     await lastValueFrom(results$).then(result => {
+  //       if (result) {
+  //         this.isNew = false;
+  //       }
+  //     });
+  //   }
+  //   return true;
+  // }
 
   async delete(): Promise<boolean> {
     const results$ = this.insuredService.deleteInsuredAdditionalNamedInsured(this);

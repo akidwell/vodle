@@ -8,7 +8,7 @@
       <div class="card-body" *ngIf="insuredContacts.length > 0">
         <div *ngFor="let item of insuredContacts; let i = index">
           <rsps-insured-contact (deleteThisContact)=deleteContact($event)
-            (copyExistingContact)=copyExistingContact($event) (setPrimaryContact)=setPrimaryContact($event) [contact]=item
+            (copyExistingContact)=copyExistingContact($event) (setPrimaryContact)=setPrimaryContact() [contact]=item
             [index]=i></rsps-insured-contact>
         </div>
       </div>
