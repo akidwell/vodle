@@ -6,11 +6,11 @@
 <!--Policy transaction panel-->
 
 <div class="card">
-  <div class="card-header" *ngIf="searchResults.policySearchResponses.length > 0" (click)="collapsed = !collapsed">Policy Transactions
+  <div class="card-header"  (click)="collapsed = !collapsed">Policy Transactions
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
   </div>
-  <div #collapse="ngbCollapse" *ngIf="searchResults.policySearchResponses.length > 0" [(ngbCollapse)]="collapsed">
+  <div #collapse="ngbCollapse"  [(ngbCollapse)]="collapsed">
     <div id="policyHeader" class="card-header">
       <div class="row container" *ngIf="searchResults && searchResults.policySearchResponses.length">
         <div class="col-lg-7">Named Insured: <b>{{insuredName}}</b></div>
@@ -92,7 +92,7 @@
       </table>
     </div>
   </div>
-  <div *ngIf="searchResults.policySearchResponses.length > 0" class="card-footer">
+  <div class="card-footer">
     <div id="searchFooter">
       <div style="float:right;">Results: {{searchResults.policySearchResponses.length}}</div>
     </div>
