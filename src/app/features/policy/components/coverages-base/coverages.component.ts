@@ -29,12 +29,14 @@ export class CoveragesComponent implements OnInit, PolicySave {
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
   invalidMessage: string = "";
+  locationSub!: Subscription;
   showInvalid: boolean = false;
   coveragesSequence!: number;
   coveragesSub!: Subscription;
   canEditEndorsement: boolean = false;
   statusSub!: Subscription;
   data!: Data;
+  copyIsActive: boolean = false;
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
   @ViewChildren(EndorsementCoverageLocationGroupComponent) components: QueryList<EndorsementCoverageLocationGroupComponent> | undefined;
@@ -109,7 +111,70 @@ export class CoveragesComponent implements OnInit, PolicySave {
     }
     return false;
   }
+  startCopyLocations() {
+    this.copyIsActive = true;
+  }
 
+  endCopyLocations() {
+    this.copyIsActive = false;
+    this.endorsementCoveragesGroups.forEach(group => {
+      group.copyThisGroup = false;
+    });
+  }
+  async saveCopyLocations() {
+    let groupsToBeCopied: EndorsementCoveragesGroup[] = [];
+    this.endorsementCoveragesGroups.forEach(group => {
+      if(group.copyThisGroup) {
+        groupsToBeCopied.push(group);
+      }
+    });
+    this.copyGroup(groupsToBeCopied, 0);
+    this.endCopyLocations();
+  }
+  saveCopyLocationsActive(): boolean {
+    var saveActive = false;
+    this.endorsementCoveragesGroups.forEach(group => {
+      if(group.copyThisGroup) {
+        saveActive = true;
+      }
+    });
+    return saveActive;
+  }
+  private copyGroup(groupsToBeCopied: EndorsementCoveragesGroup[], index: number) {
+    let group = deepClone(groupsToBeCopied[index]);
+    this.clearExistingLocationIdentity(group);
+
+    this.locationSub = this.policyService.addEndorsementCoverageLocation(group.location)
+      .subscribe(result => {
+        group.location.locationId = result;
+        this.setCopiedCoveragesIdentity(group.coverages, result);
+        this.endorsementCoveragesGroups.push(group);
+        if (index < groupsToBeCopied.length - 1) {
+          this.copyGroup(groupsToBeCopied, index+1)
+        }
+      });
+  }
+  private clearExistingLocationIdentity(group: EndorsementCoveragesGroup) {
+    group.location.locationId = 0;
+    group.copyThisGroup = false;
+  }
+  private setCopiedCoveragesIdentity(coverages: EndorsementCoverage[], locationId: number) {
+    coverages.forEach(coverage => {
+      coverage.sequence = this.coveragesSequence;
+      this.coveragesSequence++;
+      coverage.isCopied = true;
+      coverage.locationId = locationId;
+      coverage.action = 'A';
+      coverage.isNew = true;
+    });
+  }
+  private removeCopiedStatusOnCoverages(groups: EndorsementCoveragesGroup[]) {
+    groups.forEach(group => {
+      group.coverages.forEach(coverage => {
+        coverage.isCopied = false;
+      });
+    });
+  }
   isValid(): boolean {
     if (!this.canEdit) {
       return true;
@@ -178,6 +243,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     var subject = new Subject<boolean>();
     if (this.isCoveragesDirty()) {
       this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
+        this.removeCopiedStatusOnCoverages(this.endorsementCoveragesGroups);
         this.data['endorsementCoveragesGroups'].endorsementCoveragesGroups = deepClone(this.endorsementCoveragesGroups);
         this.updatePolicyChild.notifyEndorsementCoverages();
         this.refreshEndorsement();
@@ -234,7 +300,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
         if (!child.isLimitsPatternValid) {
           invalid.push("Location: #" + child.coverage.locationId.toString() + " Invalid Limit Pattern");
         }
-        for (let name in child.endorsementCoveragesForm.controls) {     
+        for (let name in child.endorsementCoveragesForm.controls) {
           if (child.endorsementCoveragesForm.controls[name].invalid) {
             invalid.push(name + " - Location: #" + child.coverage.locationId.toString());
           }

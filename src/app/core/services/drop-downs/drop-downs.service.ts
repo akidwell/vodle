@@ -28,6 +28,11 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params })
   }
 
+  getNaicsCodes(sicCode: string) {
+    let params = new HttpParams().append('sicCode', sicCode);
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
+  }
+
   // Policy specific drop downs
   clearPolicyDropDowns() {
     this.clearClassCodes();
@@ -187,6 +192,29 @@ export class DropDownsService {
           finalize(() => this.cacheStates$ = null)
         );
       observable = this.cacheStates$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Countries 
+  private cacheCountries: any;
+  private cacheCountries$!: Observable<any> | null;
+
+  getCountries(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheCountries) {
+      observable = of(this.cacheCountries);
+    } else if (this.cacheCountries$) {
+      observable = this.cacheCountries$;
+    } else {
+      this.cacheCountries$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/countries')
+        .pipe(
+          tap(res => this.cacheCountries = res),
+          share(),
+          finalize(() => this.cacheCountries$ = null)
+        );
+      observable = this.cacheCountries$;
     }
     return observable;
   }
@@ -583,6 +611,29 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
+  // Entity Type
+  private cacheEntityType: any;
+  private cacheEntityType$!: Observable<any> | null;
+
+  getEntityType(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheEntityType) {
+      observable = of(this.cacheEntityType);
+    } else if (this.cacheEntityType$) {
+      observable = this.cacheEntityType$;
+    } else {
+      this.cacheEntityType$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/insured_entity_type')
+        .pipe(
+          tap(res => this.cacheEntityType = res),
+          share(),
+          finalize(() => this.cacheEntityType$ = null)
+        );
+      observable = this.cacheEntityType$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
   //Exposure Codes
   private cacheExposureCodes: any;
   private cacheExposureCodes$!: Observable<any> | null;
@@ -673,4 +724,29 @@ getAuditCodes(): Observable<Code[]> {
     }
     return observable;
   }
+
+  ////////////////////////////////////////
+  // Sic Codes 
+  private cacheSicCodes: any;
+  private cacheSicCodes$!: Observable<any> | null;
+
+  getSicCodes(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheSicCodes) {
+      observable = of(this.cacheSicCodes);
+    } else if (this.cacheSicCodes$) {
+      observable = this.cacheSicCodes$;
+    } else {
+      this.cacheSicCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes')
+        .pipe(
+          tap(res => this.cacheSicCodes = res),
+          share(),
+          finalize(() => this.cacheSicCodes$ = null)
+        );
+      observable = this.cacheSicCodes$;
+    }
+    return observable;
+  }
+
+
 }

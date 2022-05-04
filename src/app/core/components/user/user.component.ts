@@ -8,6 +8,8 @@ import { PolicyHistoryService } from '../../services/policy-history/policy-histo
 import { ConfirmationDialogService } from '../../services/confirmation-dialog/confirmation-dialog.service';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '@okta/okta-angular';
+import { ConfigService } from '../../services/config/config.service';
+import { APIVersionService } from '../../services/API-version-service/api-version.service';
 
 @Component({
   selector: 'rsps-user',
@@ -36,8 +38,17 @@ export class UserComponent implements OnInit {
   historySub: Subscription;
   isReadOnly: boolean = false;
   historySize: number = 1;
+  editPol: Subscription;
+  editSub: Subscription;
+  editIns: Subscription;
+  canEditInsured: boolean = false;
+  canEditSubmission: boolean = false;
+  canEditPolicy: boolean = false;
+  apiOptions: string[] = ['1.0', '2.0'];
+  activeAPIVersion: string = '1.0';
+  apiSwitchActive: boolean = false;
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {  
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService, private apiService: APIVersionService, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated
@@ -48,16 +59,26 @@ export class UserComponent implements OnInit {
           this.apiToken = userAuth.ApiBearerToken;
           this.role = userAuth.userRole;
           this.isReadOnly = this.role == "ReadOnly";
-          this.environment = userAuth.environment;        
+          this.environment = userAuth.environment;
         }
       }
     );
-
+    this.editPol = this.userAuth.canEditPolicy$.subscribe(
+      (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
+    );
+    this.editSub = this.userAuth.canEditSubmission$.subscribe(
+      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    );
+    this.editIns = this.userAuth.canEditInsured$.subscribe(
+      (canEditInsured: boolean) => this.canEditInsured = canEditInsured
+    );
     this.historySub = this.policyHistoryService.policyhistorySize$.subscribe(
       (size: number) => {
         this.historySize = size;
       }
     );
+    this.activeAPIVersion = this.apiService.getApiVersion;
+    this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
 
   async ngOnInit(): Promise<void> { }
@@ -100,7 +121,9 @@ export class UserComponent implements OnInit {
       this.policyHistoryService.policyhistorySize = this.historySize;
     }
   }
-
+  changeApiVersion(){
+    this.apiService.setApiVersion = this.activeAPIVersion;
+  }
   async clearHistory() {
     const confirm = await this.confirmationDialogService.open("Confirmation", "Are you sure you want to clear all Policies in your history? Have to refresh to get changes.");
     if (confirm) {

@@ -1,7 +1,8 @@
-import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from "@angular/router";
+import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy, UrlSegment } from "@angular/router";
 
 export class CustomReuseStrategy extends RouteReuseStrategy {
-    private savedHandles = new Map<string, DetachedRouteHandle>();
+    private savedHandles: Map<string, DetachedRouteHandle> = new Map();
+
 
     retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
         return this.savedHandles.get(this.getPath(route)) as DetachedRouteHandle;
@@ -28,14 +29,32 @@ export class CustomReuseStrategy extends RouteReuseStrategy {
         if (handle) {
             (handle as any).componentRef.destroy();
         }
-
         this.savedHandles.delete(key);
     }
 
-    private getPath(route: ActivatedRouteSnapshot): string {
-        let path = "";
-        if (route.routeConfig != null && route.routeConfig.path != null)
-            path = route.routeConfig.path;
-        return path;
+    public clearAllHandles(): void {
+        this.savedHandles.forEach(c => {
+            const handle = c;
+            if (handle) {
+                (handle as any).componentRef.destroy();
+            }
+        });
+        this.savedHandles.clear();
     }
+
+    // private getPath(route: ActivatedRouteSnapshot): string {
+    //     let path = "";
+    //     if (route.routeConfig != null && route.routeConfig.path != null)
+    //         path = route.routeConfig.path;
+    //     return path;
+    // }
+
+    private getPath(route: ActivatedRouteSnapshot) {
+        // Build the complete path from the root to the input route
+        const segments: UrlSegment[][] = route.pathFromRoot.map(r => r.url);
+        const subpaths = ([] as UrlSegment[]).concat(...segments).map(segment => segment.path);
+        // Result: ${route_depth}-${path}
+        return segments.length + '-' + subpaths.join('/');
+      }
+      
 }

@@ -13,8 +13,7 @@
   <div class="col-lg-4">
     <div>Limit</div>
     <input  type="text" class="form-control" id="limit" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
-      [required]="canEditPolicy" name="
-      limitsPattern" [(ngModel)]="ucLimit.limit" (change)="limitChange()" >
+      [required]="canEditPolicy" name="limitsPattern" [(ngModel)]="ucLimit.limitDisplay" (change)="limitChange()" >
 
   </div>
   <div class="col-lg-4">

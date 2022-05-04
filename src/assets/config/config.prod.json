@@ -7,5 +7,7 @@
     "oktaRedirectUri" : "https://gars.gaig.com/rsps/callback",
     "oktaPostLogoutRedirectUri" : "https://gars.gaig.com/rsps/logged-out",
     "preventForcedRedirect" : false,
-    "defaultPolicyHistorySize" : 5
+    "defaultPolicyHistorySize" : 5,
+    "apiVersion": "1.0",
+    "apiSwitch": false
 }

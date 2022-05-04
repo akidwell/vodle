@@ -31,3 +31,13 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Developer info
+
+First, fork the repository and set up remotes. See documentation:
+https://docs.github.com/en/get-started/quickstart/fork-a-repo
+
+Once fork/remotes are set up, to pull changes down to your local from dev run:
+`git fetch upstream`
+then
+`git pull upstream dev`

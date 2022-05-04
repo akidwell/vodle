@@ -28,6 +28,7 @@ export interface EndorsementCoverage {
   ecCollapsed: boolean;
   isFirst: boolean;
   isNew: boolean;
+  isCopied?: boolean;
 }
 
 
@@ -42,11 +43,13 @@ export interface EndorsementCoverageLocation {
   county: string;
   zip: string;
   isNew: boolean;
+  countryCode: string;
 }
 
 export interface EndorsementCoveragesGroup {
   coverages: EndorsementCoverage[];
   location: EndorsementCoverageLocation;
+  copyThisGroup?: boolean;
 }
 
 export interface EndorsementCoveragesResolved {

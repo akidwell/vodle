@@ -19,13 +19,17 @@ import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SearchModule } from 'src/app/shared/components/search-bar/search-bar.module';
+import { SubmissionSearchResultsComponent } from './components/search-results/submission-search-results/submission-search-results.component';
+import { InsuredSearchResultsComponent } from './components/search-results/insured-search-results/insured-search-results.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     SearchResultsComponent,
     DirectPolicyComponent,
-    ActionComponent
+    ActionComponent,
+    SubmissionSearchResultsComponent,
+    InsuredSearchResultsComponent
   ],
   imports: [
     CommonModule,
