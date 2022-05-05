@@ -88,26 +88,6 @@ export class InsuredContactComponent implements OnInit {
     }
   }
 
-  // async save(): Promise<boolean> {
-  //   return new Promise((resolve) => {
-  //     if (this.contact.isNew) {
-  //       this.addSub = this.insuredService.addInsuredContact(this.contact).subscribe(result => {
-  //         this.contact.isNew = false;
-  //         this.contact.insuredContactId = result.insuredContactId;
-  //         this.contactForm.form.markAsPristine();
-  //         this.contactForm.form.markAsUntouched();
-  //         resolve(true);
-  //       });
-  //     } else {
-  //       this.updateSub = this.insuredService.updateInsuredContact(this.contact).subscribe(result => {
-  //         this.contactForm.form.markAsPristine();
-  //         this.contactForm.form.markAsUntouched();
-  //         resolve(result);
-  //       });
-  //     }
-  //   })
-  // }
-
   collapseExpand(event: boolean) {
     if (this.firstExpand) {
       this.states$ = this.dropdowns.getStates();
