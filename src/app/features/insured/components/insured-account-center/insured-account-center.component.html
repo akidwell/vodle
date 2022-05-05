@@ -3,21 +3,21 @@
     <div class="row">
       <div class="col-lg-12">
         <label for="formerName1" class="form-label" title="Former Name">Former Name</label>
-        <input type="text" class="form-control" id="formerName1" maxlength="60" [readonly]="!canEditInsured"
+        <input type="text" class="form-control" id="formerName1" nullValue maxlength="60" [readonly]="!canEditInsured"
           [(ngModel)]="insured.formerName1" name="formerName1" #formerName1="ngModel">
       </div>
     </div>
     <div class="row">
       <div class="col-lg-12">
         <label for="formerName2" class="form-label" title="Former Name2">Former Name 2</label>
-        <input type="text" class="form-control" id="formerName2" maxlength="60" [readonly]="!canEditInsured"
+        <input type="text" class="form-control" id="formerName2" nullValue maxlength="60" [readonly]="!canEditInsured"
           [(ngModel)]="insured.formerName2" name="formerName2" #formerName2="ngModel">
       </div>
     </div>
     <div class="row">
       <div class="col-lg-12">
         <label for="comments" class="form-label" title="Comments">Comments</label>
-        <textarea type="text" class="form-control" id="comments" maxlength="255" [readonly]="!canEditInsured"
+        <textarea type="text" class="form-control" id="comments" nullValue maxlength="255" [readonly]="!canEditInsured"
           name="comments" [(ngModel)]="insured.comments" #comments="ngModel"></textarea>
       </div>
     </div>

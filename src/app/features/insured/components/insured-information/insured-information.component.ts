@@ -80,6 +80,7 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   async saveInsured(): Promise<boolean> {
+    console.log(this.insured.formerName1);
     if (this.isValid()) {
       this.hideInvalid();
       if (this.insured.isNew) {
