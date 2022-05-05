@@ -4,6 +4,7 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PolicySave } from 'src/app/features/policy/models/policy-save';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/components/additional-named-insured/additional-named-insureds-group/additional-named-insureds-group.component';
 import { Insured } from '../../models/insured';
@@ -64,23 +65,14 @@ export class InsuredInformationComponent implements OnInit {
     return this.insured.isAddressOverride || this.insured.addressVerifiedDate != null;
   }
 
-  isInsuredDirty(): boolean {
-    return this.canEditInsured && (this.accountInfoComp?.accountInfoForm?.dirty ?? false);
-  }
-
   isDirty(): boolean {
-    return this.canEditInsured && (this.isInsuredDirty() || this.contactComp?.isDirty() || this.aniComp?.isDirty());
+    return this.canEditInsured && (this.accountInfoComp?.isDirty() || this.contactComp?.isDirty() || this.aniComp?.isDirty());
   }
 
   async save(): Promise<void> {
     this.showBusy = true;
-
     const refresh = this.insured.isNew;
     await this.saveInsured();
-      // this.contacts.forEach(c => c.insuredCode = this.insured.insuredCode!);
-      // this.aniInsuredData.forEach(c => c.insuredCode = this.insured.insuredCode!);
-      // await this.saveContacts();
-      // await this.saveInsuredANI();
     this.showBusy = false;
     if (refresh && this.insured.insuredCode !== null) {
       this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
@@ -134,15 +126,6 @@ export class InsuredInformationComponent implements OnInit {
     }
     return false;
   }
-
-  // async saveContacts(): Promise<boolean> {
-  //   return await this.contactComp.save();
-  // }
-
-  // async saveInsuredANI() {
-  //   await this.aniComp?.saveAdditionalNamedInsureds();
-  // }
-
 
   private markClean() {
     this.accountInfoComp.accountInfoForm.form.markAsPristine();

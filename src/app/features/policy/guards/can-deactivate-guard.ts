@@ -60,7 +60,7 @@ export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open();
+    return await this.navigationConfirmationService.open("Leave Confirmation","Unable to save due to errors! Do you wish to leave and lose all changes?");
   }
 
 }

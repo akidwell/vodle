@@ -3,56 +3,7 @@
   background-color: #00274e;
 }
 
-.ng-valid[required],
-.ng-valid.required {
-  border-left: 5px solid #42A948;
-}
-
-.ng-invalid:not(form) {
-  border-left: 5px solid #a94442;
-}
-
-.form-checkbox {
-  height: 25px;
-  width: 25px;
-  margin-left: 6px;
-}
-
-input[type="checkbox"] {
-  display: inline-block;
-}
-
-input[type="checkbox"][readonly] {
-  pointer-events: none;
-}
-
-.paddedRow {
-  margin: 15px !important;
-}
-
-.form-label {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  width: 100%;
-  display: block;
-  /* margin-bottom: 0px; */
-}
-
 #card-header {
   box-sizing: border-box;
   border-bottom: 2px solid black;
-}
-
-.updated {
-  border-right: 5px double orange;
-}
-
-
-.hidden-label{
-  visibility: hidden;
-  height: 1px;
-  position:absolute;
-  top: 0;
-  left: 0;
 }
