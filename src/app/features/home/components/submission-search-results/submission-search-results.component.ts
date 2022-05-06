@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { SearchResults } from '../../../models/search-results';
+import { Subscription } from 'rxjs';
+import { SearchResults } from '../../models/search-results';
+import { PolicySearchService } from '../../services/policy-search/policy-search.service';
+
 
 @Component({
   selector: 'rsps-submission-search-results',
@@ -13,16 +16,19 @@ export class SubmissionSearchResultsComponent implements OnInit {
   collapsed: boolean = false;
   canEdit: boolean = false;
 
+
+
   @Input('searchResults') searchResults: SearchResults = {
     policySearchResponses: [],
     submissionSearchResponses: [],
-    insuredSearchResponses: []
+    insuredSearchResponses: [],
+    searchType: ""
   };
 
 
   constructor() { }
 
   ngOnInit(): void {
-  }
 
+  }
 }
