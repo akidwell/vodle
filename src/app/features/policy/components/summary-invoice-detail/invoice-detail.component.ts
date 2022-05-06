@@ -76,11 +76,19 @@ export class InvoiceDetailComponent implements OnInit {
 
   async deleteDetail() {
     if (this.invoiceDetail.isNew) {
-      this.removeDetailFromList();
+      setTimeout(() => {
+        this.invoiceDetailForm.form.markAsPristine();
+        this.invoiceDetailForm.form.markAsUntouched();
+        this.removeDetailFromList();
+      });    
     } else {
       this.deleteSub = this.policyService.deletePolicyInvoiceDetails(this.invoice.policyId, this.invoice.endorsementNumber, this.invoiceDetail.invoiceNumber ?? 0, this.invoiceDetail.lineNumber).subscribe(result => {
-        this.removeDetailFromList();
-        this.notification.show('Invoice Detail deleted.', { classname: 'bg-success text-light', delay: 5000 });
+        setTimeout(() => {
+          this.invoiceDetailForm.form.markAsPristine();
+          this.invoiceDetailForm.form.markAsUntouched();
+          this.removeDetailFromList();
+          this.notification.show('Invoice Detail deleted.', { classname: 'bg-success text-light', delay: 5000 });
+        });        
       });
     }
   }

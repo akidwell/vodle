@@ -3,8 +3,6 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { faAngleUp, faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
-import { Code } from 'src/app/core/models/code';
-import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { NgForm } from '@angular/forms';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { InsuredContact } from '../../models/insured-contact';
@@ -18,28 +16,22 @@ import { InsuredService } from '../../services/insured-service/insured.service';
 export class InsuredContactComponent implements OnInit {
   canEditInsured: boolean = false;
   authSub: Subscription;
-  collapsed: boolean = true;
-  firstExpand: boolean = true;
   faArrowUp = faAngleUp;
-  isLoadingAddress: boolean = false;
-  states$: Observable<Code[]> | undefined;
-  counties: string[] = [];
   deleteSub!: Subscription;
-  addSub!: Subscription;
-  updateSub!: Subscription;
-  anchorId!: string;
   faSolidStar = faSolidStar;
   faStar = faStar;
   isHover: boolean = false;
+  contacts: InsuredContact[] = [];
 
   @Input() contact!: InsuredContact;
+  @Input() insuredContacts: InsuredContact[] = [];
   @Input() index!: number;
   @ViewChild(NgForm, { static: false }) contactForm!: NgForm;
   @Output() copyExistingContact: EventEmitter<InsuredContact> = new EventEmitter();
   @Output() deleteThisContact: EventEmitter<InsuredContact> = new EventEmitter();
   @Output() setPrimaryContact: EventEmitter<InsuredContact> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private userAuth: UserAuth, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => {
         this.canEditInsured = canEditInsured
@@ -47,14 +39,11 @@ export class InsuredContactComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.deleteSub?.unsubscribe();
-    this.updateSub?.unsubscribe();
-    this.addSub?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -79,28 +68,36 @@ export class InsuredContactComponent implements OnInit {
 
   async deleteContact() {
     if (this.contact.isNew) {
-      this.deleteThisContact.emit(this.contact);
+      setTimeout(() => {
+        this.contactForm.form.markAsPristine();
+        this.contactForm.form.markAsUntouched();
+        this.deleteThisContact.emit(this.contact);
+      });
     } else {
       this.deleteSub = this.insuredService.deleteInsureContact(this.contact).subscribe(result => {
-        this.deleteThisContact.emit(this.contact);
+        setTimeout(() => {
+          this.contactForm.form.markAsPristine();
+          this.contactForm.form.markAsUntouched();
+          this.deleteThisContact.emit(this.contact);
+        });
         return result;
       });
     }
   }
 
-  collapseExpand(event: boolean) {
-    if (this.firstExpand) {
-      this.states$ = this.dropdowns.getStates();
-      this.firstExpand = false;
-    }
-    this.collapsed = event;
-  }
-
-  primary(contact: InsuredContact) {
+  setPrimary(contact: InsuredContact) {
     if (this.canEditInsured) {
       this.setPrimaryContact.emit(this.contact);
       this.contactForm.form.markAsDirty();
       contact.isPrimary = true;
     }
   }
+
+  public get canRemove(): boolean {
+    return this.contact.isNew && this.canEditInsured && (!this.contact.isPrimary || this.insuredContacts.length == 1);
+  }
+  public get canDelete(): boolean {
+    return !this.contact.isNew && this.canEditInsured && ((!this.contact.isPrimaryTracked && !this.contact.isPrimary) || this.insuredContacts.length == 1);
+  }
+
 }

@@ -123,29 +123,25 @@ export class InsuredInformationComponent implements OnInit {
       }
     }
     else {
-      this.showInvalidControls()
+      this.showInvalidControls();
+      window.scroll(0,0);
     }
     return false;
   }
 
   private markClean() {
-    this.accountInfoComp.accountInfoForm.form.markAsPristine();
-    this.accountInfoComp.accountInfoForm.form.markAsUntouched();
+    this.accountInfoComp.markClean();
 
     if (this.aniComp.components != null) {
       for (let child of this.aniComp.components) {
-        for (let name in child.aniForm.controls) {
           child.aniForm.form.markAsPristine();
           child.aniForm.form.markAsUntouched();
-        }
       }
     }
     if (this.contactComp.components != null) {
       for (let child of this.contactComp.components) {
-        for (let name in child.contactForm.controls) {
           child.contactForm.form.markAsPristine();
           child.contactForm.form.markAsUntouched();
-        }
       }
     }
 

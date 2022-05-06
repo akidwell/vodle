@@ -2,12 +2,12 @@ import { Insured } from "./insured"
 
 export interface AddressVerificationRequest {
     street1: string,
-    street2: string,
+    street2: string | null,
     city: string,
     state: string,
     zip: string,
-    county: string,
-    country: string
+    county: string | null,
+    country: string | null
 }
 
 
