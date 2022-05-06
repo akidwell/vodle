@@ -1,5 +1,17 @@
+<div class="d-flex justify-content-center" *ngIf="loading">
+  <strong>Loading...</strong>
+  <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+</div>
+
 <div class="content-fluid">
   <rsps-search-bar></rsps-search-bar>
-  <rsps-search-results></rsps-search-results>
-</div>
+      <div class="row">
+        <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'policy'}">
+          <rsps-policy-search-results *ngIf="(searchResults.policySearchResponses.length > 0) || (version == '1.0')" [searchResults]="searchResults"></rsps-policy-search-results> </div>
+        <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'submission'}">
+          <rsps-submission-search-results *ngIf="searchResults.submissionSearchResponses.length > 0" [searchResults]="searchResults" ></rsps-submission-search-results></div>
+        <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'insured'}">
+          <rsps-insured-search-results *ngIf="searchResults.insuredSearchResponses.length > 0" [searchResults]="searchResults" ></rsps-insured-search-results> </div>
+      </div>
+ </div>
 <rsps-direct-policy #modal></rsps-direct-policy>

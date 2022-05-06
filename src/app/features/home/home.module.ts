@@ -14,22 +14,22 @@ import { DATE_FORMATS } from '../../core/constants/date-format';
 import { HomeComponent } from './components/home/home.component';
 import { ActionComponent } from './components/action/action.component';
 import { DirectPolicyComponent } from './components/direct-policy/direct-policy.component';
-import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SearchModule } from 'src/app/shared/components/search-bar/search-bar.module';
-import { SubmissionSearchResultsComponent } from './components/search-results/submission-search-results/submission-search-results.component';
-import { InsuredSearchResultsComponent } from './components/search-results/insured-search-results/insured-search-results.component';
+import { InsuredSearchResultsComponent } from './components/insured-search-results/insured-search-results.component';
+import { PolicySearchResultsComponent } from './components/policy-search-results/policy-search-results.component';
+import { SubmissionSearchResultsComponent } from './components/submission-search-results/submission-search-results.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    SearchResultsComponent,
     DirectPolicyComponent,
     ActionComponent,
     SubmissionSearchResultsComponent,
-    InsuredSearchResultsComponent
+    InsuredSearchResultsComponent,
+    PolicySearchResultsComponent
   ],
   imports: [
     CommonModule,

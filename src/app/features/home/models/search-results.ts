@@ -2,6 +2,7 @@ export interface SearchResults {
   policySearchResponses: PolicySearchResponses[];
   submissionSearchResponses: SubmissionSearchResponses[];
   insuredSearchResponses: InsuredSearchResponses[];
+  searchType: string;
 }
 
 export interface PolicySearchResponses {
@@ -26,8 +27,7 @@ export interface PolicySearchResponses {
     firstPolicyRow : boolean;
     masterPolicy: string;
     canBackOut:  boolean;
-    isRewrite: boolean;
-   
+    isRewrite: boolean;   
   }
 
   export interface SubmissionSearchResponses{

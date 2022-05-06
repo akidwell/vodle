@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { SearchResults } from '../../../models/search-results';
+import { SearchResults } from '../../models/search-results';
+import { PolicySearchService } from '../../services/policy-search/policy-search.service';
+
 
 @Component({
   selector: 'rsps-insured-search-results',
@@ -12,19 +15,22 @@ import { SearchResults } from '../../../models/search-results';
 export class InsuredSearchResultsComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
+  searchFilter: string = "";
   collapsed: boolean = false;
-  canEdit: boolean = false;
+
 
   @Input('searchResults') searchResults: SearchResults = {
     policySearchResponses: [],
     submissionSearchResponses: [],
-    insuredSearchResponses: []
+    insuredSearchResponses: [],
+    searchType: ""
   };
   
   constructor(private router: Router, private navigationService: NavigationService) { }
 
   ngOnInit(): void {
-  }
+ 
+      }
 
   routeToInsured(insuredCode: number) {
     this.navigationService.resetPolicy();
