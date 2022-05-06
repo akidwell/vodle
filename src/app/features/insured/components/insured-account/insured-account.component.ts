@@ -39,7 +39,6 @@ export class InsuredAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  //  this.sicCodes$ = this.dropdowns.getSicCodes();
     this.sicCodes$ = this.dropdowns.getSicCodes()
     .pipe(tap(() => this.loadingSic = false));
 
@@ -57,7 +56,7 @@ export class InsuredAccountComponent implements OnInit {
   }
 
   isDirty(): boolean {
-    return (this.addressComp?.addressPanel?.dirty ?? false) || (this.centerComp?.centerPanel?.dirty ?? false) || (this.rightComp?.rightPanel?.dirty ?? false);
+    return (this.accountInfoForm.form.dirty ?? false) || (this.addressComp?.addressPanel?.dirty ?? false) || (this.centerComp?.centerPanel?.dirty ?? false) || (this.rightComp?.rightPanel?.dirty ?? false);
   }
 
   dropDownSearch(term: string, item: Code) {
@@ -75,5 +74,16 @@ export class InsuredAccountComponent implements OnInit {
     else {
       this.naicsCodes$ = new Observable<Code[]>();
     }
+  }
+
+  markClean() {
+    this.accountInfoForm.form.markAsPristine();
+    this.accountInfoForm.form.markAsUntouched();
+    this.addressComp?.addressPanel.form.markAsPristine();
+    this.centerComp?.centerPanel.form.markAsPristine();
+    this.rightComp?.rightPanel.form.markAsPristine();
+    this.addressComp?.addressPanel.form.markAsUntouched();
+    this.centerComp?.centerPanel.form.markAsUntouched();
+    this.rightComp?.rightPanel.form.markAsUntouched();
   }
 }

@@ -1,5 +1,5 @@
 
-export interface InsuredContact {
+export interface InsuredContact extends Tracking {
     insuredContactId: number | null,
     insuredCode: number,
     isPrimary: boolean,
@@ -7,8 +7,12 @@ export interface InsuredContact {
     lastName: string,
     email: string,
     phone: string,
-    fax: string,
-    isNew: boolean
+    fax: string, 
+}
+
+interface Tracking  {
+    isNew: boolean,
+    isPrimaryTracked: boolean
 }
 
 export const newInsuredContact = (): InsuredContact => {
@@ -21,6 +25,7 @@ export const newInsuredContact = (): InsuredContact => {
         email: "",
         phone: "",
         fax: "",
+        isPrimaryTracked: false,
         isNew: true
     }
 }

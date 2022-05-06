@@ -30,3 +30,16 @@
 .hidden {
   visibility: hidden;
 }
+
+.greyStar {
+  color: grey;
+  size: 10px;
+}
+
+.primaryStar {
+  float:left; 
+  margin-top: 5px; 
+  color: gold;
+  stroke: black;
+  stroke-width: 15px;
+}

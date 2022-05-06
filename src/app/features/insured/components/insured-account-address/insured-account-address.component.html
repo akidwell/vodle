@@ -18,7 +18,7 @@
     <div class="row">
       <div class="col-lg-12">
         <label for="street2" class="form-label" title="Apt/Suit/Floor">Apt/Suit/Floor</label>
-        <input type="text" class="form-control" id="street2" maxlength="40" [readonly]="!canEditAddress" name="street2"
+        <input type="text" class="form-control" id="street2" nullValue maxlength="40" [readonly]="!canEditAddress" name="street2"
           [(ngModel)]="insured.street2" #street2="ngModel" (ngModelChange)="changeStreet2()">
       </div>
     </div>
@@ -58,7 +58,7 @@
       <div class="col-lg-6">
         <label for="county" class="form-label" title="County">County</label>
         <div class="inputspinner">
-          <input type="text" class="form-control" id="county" maxlength="100" [readonly]="!canEditAddress" name="county"
+          <input type="text" class="form-control" id="county" nullValue maxlength="100" [readonly]="!canEditAddress" name="county"
             [(ngModel)]="insured.county" #county="ngModel" [ngClass]="countyUpdated" (ngModelChange)="changeCounty()">
           <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
         </div>

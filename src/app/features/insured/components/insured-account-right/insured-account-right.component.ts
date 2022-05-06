@@ -31,14 +31,14 @@ export class InsuredAccountRightComponent implements OnInit {
   }
 
   get createdUserFormatted() {
-    if (this.insured.createdBy != "") {
+    if ((this.insured.createdBy ?? "") != "") {
       return this.insured.createdBy + " - " + this.datepipe.transform(this.insured.createdDate, 'MM/dd/YYYY h:mm:ss a');
     }
     return null;
   }
 
   get modifiedUserFormatted() {
-    if (this.insured.modifiedBy != null) {
+    if ((this.insured.modifiedBy ?? "") != "") {
       return this.insured.modifiedBy + " - " + this.datepipe.transform(this.insured.modifiedDate, 'MM/dd/YYYY h:mm:ss a');
     }
     return null;

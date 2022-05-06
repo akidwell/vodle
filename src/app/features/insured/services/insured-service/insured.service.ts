@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { ConfigService } from "src/app/core/services/config/config.service";
-import { AdditionalNamedInsured, insuredANI } from "src/app/shared/components/additional-named-insured/additional-named-insured";
+import { insuredANI } from "src/app/shared/components/additional-named-insured/additional-named-insured";
 import { Insured } from "../../models/insured";
 import { InsuredContact } from "../../models/insured-contact";
 
@@ -22,6 +22,7 @@ export class InsuredService {
                     data.push(new insuredANI(this, element))
                 });
                 receivedData.additionalNamedInsureds = data;
+                receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null})
                 return receivedData;
             }));
     }
@@ -37,6 +38,7 @@ export class InsuredService {
                     data.push(new insuredANI(this, element))
                 });
                 receivedData.additionalNamedInsureds = data;
+                receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null})
                 return receivedData;
             }));
     }
