@@ -17,5 +17,15 @@
         "@typescript-eslint"
     ],
     "rules": {
+      "no-extra-semi": "off",
+      "@typescript-eslint/no-extra-semi": ["error"],
+      "semi": "off",
+      "@typescript-eslint/semi": ["error"],
+      "no-unexpected-multiline": "error",
+      "no-multi-spaces": "error",
+      "no-trailing-spaces": "error",
+      "indent":["error", 2],
+      "quotes": "off",
+      "@typescript-eslint/quotes": ["error", "single", { "avoidEscape": true }]
     }
 }
