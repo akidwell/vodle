@@ -52,6 +52,8 @@ export class InsuredContactGroupComponent implements OnInit {
     newContact.insuredContactId = null;
     newContact.isNew = true;
     newContact.isPrimary = false;
+    newContact.isPrimaryTracked = false;
+    newContact.firstName = "CopyOf " + newContact.firstName;
     this.insuredContacts.push(newContact);
   }
 
@@ -61,32 +63,29 @@ export class InsuredContactGroupComponent implements OnInit {
         if (child.contact.isPrimary) {
           child.contactForm.form.markAsDirty();
           child.contact.isPrimary = false;
+          //  child.contact.isDirty = true;
         }
       }
     }
-
-    // this.insuredContacts.forEach(contact => {
-    //   if (contact.isPrimary) {
-    //     this.contactForm.form.markAsDirty();
-    //     contact.isPrimary = false;
-    //   }
-    // });
-    // this.contactForm.form.markAsDirty();
-    // contact.isPrimary = true;
-
   }
 
   deleteContact(contact: InsuredContact) {
     const index = this.insuredContacts.indexOf(contact, 0);
     if (index > -1) {
+
+    
       this.insuredContacts.splice(index, 1);
       if (!contact.isNew) {
         this.notification.show('Contact deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
       if (contact.isPrimary) {
-        if (this.components != null &&  this.insuredContacts.length > 0) {
-          this.insuredContacts[0].isPrimary = true;
-          this.components?.first.contactForm.form.markAsDirty();
+        if (this.components != null && this.insuredContacts.length > 0) {
+          // this.insuredContacts[0].isPrimary = true;
+          // for (let child of this.components) {
+          //   if (child.contact.isPrimary) {
+          //     child.contactForm.form.markAsDirty();
+          //   }
+          // }
         }
       }
     }
@@ -104,6 +103,17 @@ export class InsuredContactGroupComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  isDirty() {
+    if (this.components != null) {
+      for (let child of this.components) {
+        if (child.contactForm.dirty) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   hasDuplicates(): boolean {
@@ -130,43 +140,4 @@ export class InsuredContactGroupComponent implements OnInit {
     });
     return dupeName;
   }
-
-  isDirty() {
-    if (this.components != null) {
-      for (let child of this.components) {
-        if (child.contactForm.dirty) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  // async save(): Promise<boolean> {
-  //   if (this.canEditInsured && this.isDirty()) {
-  //     let saveCount: number = 0;
-  //     if (this.components != null) {
-  //       for (let child of this.components) {
-  //         if (child.contactForm.dirty) {
-  //           let result = await child.save();
-  //           if (result === false) {
-  //             this.notification.show('Contacts ' + child.contact.firstName.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-  //           }
-  //           else {
-  //             saveCount++;
-  //           }
-  //         }
-  //       }
-  //       if (saveCount > 0) {
-  //         this.notification.show('Contact(s) successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-  //       }
-  //     }
-  //     if (!this.isValid()) {
-  //       this.notification.show('Contact not saved.', { classname: 'bg-danger text-light', delay: 5000 });
-  //       return false;
-  //     }
-  //   }
-  //   return false;
-  // }
-
 }

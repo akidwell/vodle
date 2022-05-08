@@ -5,10 +5,10 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { newAddressVerificationReques } from '../../models/address-verification-request';
 import { Insured } from '../../models/insured';
-import { AddressVerificationService } from '../../services/address-verification/address-verification.service';
+import { InsuredAccountAddressComponent } from '../insured-account-address/insured-account-address.component';
+import { InsuredAccountCenterComponent } from '../insured-account-center/insured-account-center.component';
+import { InsuredAccountRightComponent } from '../insured-account-right/insured-account-right.component';
 
 @Component({
   selector: 'rsps-insured-account',
@@ -21,37 +21,33 @@ export class InsuredAccountComponent implements OnInit {
   accountCollapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  states$: Observable<Code[]> | undefined;
-  countries$: Observable<Code[]> | undefined;
-  entityType$: Observable<Code[]> | undefined;
   sicCodes$: Observable<Code[]> | undefined;
   naicsCodes$: Observable<Code[]> | undefined;
-  cityUpdated: string = "";
-  stateUpdated: string = "";
-  zipUpdated: string = "";
-  countyUpdated: string = "";
-  countryUpdated: string = "";
-  loading: boolean = false;
-  addressErrorMessage: string = "";
-  loadingNaics: boolean = false;
+  loadingSic: boolean = true;
+  loadingNaics: boolean = true;
 
   @Input() public insured!: Insured;
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
+  @ViewChild(InsuredAccountAddressComponent) addressComp: InsuredAccountAddressComponent | undefined;
+  @ViewChild(InsuredAccountCenterComponent) centerComp: InsuredAccountCenterComponent | undefined;
+  @ViewChild(InsuredAccountRightComponent) rightComp: InsuredAccountRightComponent | undefined;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressVerificationService: AddressVerificationService, private messageDialogService: MessageDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
   }
 
   ngOnInit(): void {
-    this.states$ = this.dropdowns.getStates();
-    this.countries$ = this.dropdowns.getCountries();
-    this.entityType$ = this.dropdowns.getEntityType();
-    this.sicCodes$ = this.dropdowns.getSicCodes();
+    this.sicCodes$ = this.dropdowns.getSicCodes()
+    .pipe(tap(() => this.loadingSic = false));
+
     if (this.insured.sicCode != null) {
       this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.insured.sicCode)
         .pipe(tap(() => this.loadingNaics = false));
+    }
+    else {
+      this.loadingNaics = false;
     }
   }
 
@@ -59,67 +55,8 @@ export class InsuredAccountComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  verify() {
-    this.loading = true;
-    const address = newAddressVerificationReques(this.insured);
-    this.addressVerificationService.getAddressVerification(address).subscribe({
-      next: result => {
-        this.addressErrorMessage = result.message;
-        if (this.insured.city != (result.city ?? "")) {
-          this.insured.city = result.city
-          this.cityUpdated = "updated";
-        }
-        else {
-          this.cityUpdated = "";
-        }
-        if (this.insured.state != (result.state ?? "")) {
-          this.insured.state = result.state
-          this.stateUpdated = "updated";
-        }
-        else {
-          this.stateUpdated = "";
-        }
-        if (this.insured.zip != (result.zip ?? "")) {
-          this.insured.zip = result.zip
-          this.zipUpdated = "updated";
-        }
-        else {
-          this.zipUpdated = "";
-        }
-        if (this.insured.county != (result.county ?? "")) {
-          this.insured.county = result.county
-          this.countyUpdated = "updated";
-        }
-        else {
-          this.countyUpdated = "";
-        }
-        if (this.insured.country != result.country) {
-          this.insured.country = result.country
-          this.countryUpdated = "updated";
-        }
-        else {
-          this.countryUpdated = "";
-        }
-        this.insured.addressVerifiedDate = result.verifyDate;
-        this.loading = false;
-        this.accountInfoForm.form.markAsDirty();
-      },
-      error: (error) => {
-        this.loading = false;
-        const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open("Errpr", errorMessage);
-      }
-    });
-
-  }
-
-  addressOverride() {
-    this.insured.addressVerifiedDate = null;
-    this.addressErrorMessage = "";
-  }
-
-  public get isVerified(): boolean {
-    return this.insured.addressVerifiedDate != null;
+  isDirty(): boolean {
+    return (this.accountInfoForm.form.dirty ?? false) || (this.addressComp?.addressPanel?.dirty ?? false) || (this.centerComp?.centerPanel?.dirty ?? false) || (this.rightComp?.rightPanel?.dirty ?? false);
   }
 
   dropDownSearch(term: string, item: Code) {
@@ -137,5 +74,16 @@ export class InsuredAccountComponent implements OnInit {
     else {
       this.naicsCodes$ = new Observable<Code[]>();
     }
+  }
+
+  markClean() {
+    this.accountInfoForm.form.markAsPristine();
+    this.accountInfoForm.form.markAsUntouched();
+    this.addressComp?.addressPanel.form.markAsPristine();
+    this.centerComp?.centerPanel.form.markAsPristine();
+    this.rightComp?.rightPanel.form.markAsPristine();
+    this.addressComp?.addressPanel.form.markAsUntouched();
+    this.centerComp?.centerPanel.form.markAsUntouched();
+    this.rightComp?.rightPanel.form.markAsUntouched();
   }
 }

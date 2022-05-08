@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { InsuredRoutingModule } from './insured-routing.module';
 import { AdditionalNamedInsuredModule } from '../../shared/components/additional-named-insured/additional-named-insured.module';
 import { InsuredComponent } from './components/insured-base/insured.component';
@@ -16,6 +16,10 @@ import { InsuredSubmissionActivityComponent } from './components/insured-submiss
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
+import { InsuredHeaderComponent } from './components/insured-header.component.ts/insured-header.component';
+import { InsuredAccountAddressComponent } from './components/insured-account-address/insured-account-address.component';
+import { InsuredAccountCenterComponent } from './components/insured-account-center/insured-account-center.component';
+import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
 
 
 @NgModule({
@@ -25,6 +29,10 @@ import { BusyModule } from 'src/app/core/components/busy/busy.module';
     InsuredContactComponent,
     InsuredContactGroupComponent,
     InsuredInformationComponent,
+    InsuredHeaderComponent,
+    InsuredAccountAddressComponent,
+    InsuredAccountCenterComponent,
+    InsuredAccountRightComponent,
     InsuredSubmissionActivityComponent],
   imports: [
     CommonModule,
@@ -39,7 +47,8 @@ import { BusyModule } from 'src/app/core/components/busy/busy.module';
     NgxMaskModule.forRoot()
   ],
   providers: [
-    CanDeactivateGuard
+    CanDeactivateGuard,
+    DatePipe
   ]
 })
 export class InsuredModule { }

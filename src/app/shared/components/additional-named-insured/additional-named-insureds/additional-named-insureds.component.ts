@@ -68,10 +68,18 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
 
   async deleteAni() {
     if (this.aniData.isNew) {
-      this.deleteExistingAni.emit(this.aniData);
+      setTimeout(() => {
+        this.aniForm.form.markAsPristine();
+        this.aniForm.form.markAsUntouched();
+        this.deleteExistingAni.emit(this.aniData);
+      });  
     } else {
       await this.aniData.delete().then(() => {
-        this.deleteExistingAni.emit(this.aniData)
+        setTimeout(() => {
+          this.aniForm.form.markAsPristine();
+          this.aniForm.form.markAsUntouched();
+          this.deleteExistingAni.emit(this.aniData);
+        });  
       });
     }
   }
