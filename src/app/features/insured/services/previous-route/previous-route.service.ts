@@ -9,8 +9,6 @@ export class PreviousRouteService {
   private previousUrl: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public previousUrl$: Observable<string> = this.previousUrl.asObservable();
 
-  constructor() { }
-
   setPreviousUrl(previousUrl: string) {
     this.previousUrl.next(previousUrl);
   }

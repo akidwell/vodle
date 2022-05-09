@@ -9,7 +9,7 @@ import { Insured } from '../../models/insured';
 })
 export class InsuredHeaderComponent implements OnInit {
   insured!: Insured;
-  
+
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {

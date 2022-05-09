@@ -1,5 +1,5 @@
-import { insuredANI } from "src/app/shared/components/additional-named-insured/additional-named-insured"
-import { InsuredContact } from "./insured-contact"
+import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { InsuredContact } from './insured-contact';
 
 export interface Insured {
     insuredCode: number | null,
@@ -32,33 +32,33 @@ export interface Insured {
 }
 
 export const newInsured = (): Insured => {
-    return {
-        insuredCode: null,
-        name: "",
-        formerName1: null,
-        formerName2: null,
-        sicCode: null,
-        naicsCode: null,
-        entityType: null,
-        street1: "",
-        street2: null,
-        city: "",
-        state: "",
-        zip: "",
-        county: null,
-        country: null,
-        website: null,
-        comments: null,
-        customerCode: null,
-        isAddressOverride: false,
-        addressVerifiedDate: null,
-        fein: null,
-        createdBy: "",
-        createdDate: null,
-        modifiedBy: "",
-        modifiedDate: null,
-        isNew: true,
-        contacts: [],
-        additionalNamedInsureds: []
-    }
-}
+  return {
+    insuredCode: null,
+    name: '',
+    formerName1: null,
+    formerName2: null,
+    sicCode: null,
+    naicsCode: null,
+    entityType: null,
+    street1: '',
+    street2: null,
+    city: '',
+    state: '',
+    zip: '',
+    county: null,
+    country: null,
+    website: null,
+    comments: null,
+    customerCode: null,
+    isAddressOverride: false,
+    addressVerifiedDate: null,
+    fein: null,
+    createdBy: '',
+    createdDate: null,
+    modifiedBy: '',
+    modifiedDate: null,
+    isNew: true,
+    contacts: [],
+    additionalNamedInsureds: []
+  };
+};
