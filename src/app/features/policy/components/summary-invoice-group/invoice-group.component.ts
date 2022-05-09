@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { InvoiceData, newInvoiceDetail } from '../../models/invoice';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, Subscription } from 'rxjs';
@@ -44,6 +44,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
+  @Output() resetInvoice: EventEmitter<null> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService, private policyHistoryService: PolicyHistoryService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -110,6 +111,10 @@ export class InvoiceGroupComponent implements OnInit {
     return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
   }
 
+  get canReset(): boolean {
+    return this.index == 0 && this.invoice != null && this.endorsementStatusService.isValidated() && this.canEditPolicy && this.endorsementStatusService.invoiced && this.invoice.invoiceStatus == "V" &&  this.invoice.proFlag == 5;
+  }
+  
   get showFooter(): boolean {
     return this.invoice != null && (this.invoice.invoiceStatus != "V")
   }
@@ -147,6 +152,13 @@ export class InvoiceGroupComponent implements OnInit {
       this.showInvalidControls();
     }
 
+  }
+
+  async reset() {
+      const confirm = await this.confirmationDialogService.open("Confirmation", "Would you like to create a new invoice?");
+      if (confirm) {
+        this.resetInvoice.emit();
+      }
   }
 
   async post(): Promise<void> {

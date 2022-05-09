@@ -18,7 +18,7 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
     if (component instanceof InsuredInformationComponent) {
       // Skip checks if bypassFormGuard is set
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
-        return true
+        return true;
       }
       if (component.isValid()) {
         if (component.isDirty()) {
@@ -36,7 +36,7 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
         return true;
       }
       // Show errors
-      component.showInvalidControls()
+      component.showInvalidControls();
       window.scroll(0, 0);
       // Check to see if trying to leave policy
       if (this.checkLeavePolicy(state.url, nextState.url)) {
@@ -57,7 +57,7 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
     const startRoute = startUrl.split('/');
     const endRoute = endUrl.split('/');
     // if nagivating outstide policy then open confirm leave dialog
-    if (!endUrl.startsWith("/insured") || endUrl.endsWith("/submissions")) {
+    if (!endUrl.startsWith('/insured') || endUrl.endsWith('/submissions')) {
       return true;
     }
     // if nagivating different policy or endorsement then open confirm leave dialog
@@ -68,7 +68,7 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open("Leave Confirmation", "Unable to leave without saving?");
+    return await this.navigationConfirmationService.open('Leave Confirmation', 'Unable to leave without saving?');
   }
 
 }

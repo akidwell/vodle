@@ -1,7 +1,6 @@
-import { InsuredContact } from "./insured-contact";
+import { InsuredContact } from './insured-contact';
 
 export interface InsuredContactsResolved {
-    insuredContacts:  InsuredContact[] | null;
+    insuredContacts: InsuredContact[] | null;
     error?: any;
   }
-  
