@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
@@ -10,6 +10,7 @@ import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/comp
 import { Insured } from '../../models/insured';
 import { InsuredContact } from '../../models/insured-contact';
 import { InsuredService } from '../../services/insured-service/insured.service';
+import { PreviousRouteService } from '../../services/previous-route/previous-route.service';
 import { InsuredAccountComponent } from '../insured-account/insured-account.component';
 import { InsuredContactGroupComponent } from '../insured-contact-group/insured-contact-group.component';
 
@@ -27,19 +28,25 @@ export class InsuredInformationComponent implements OnInit {
   authSub: Subscription;
   addSub!: Subscription;
   updateSub!: Subscription;
+  prevSub!: Subscription;
   showInvalid: boolean = false;
   invalidMessage: string = "";
   showBusy: boolean = false;
+  previousUrl: string = '';
 
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
 
-  constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService, private previousRouteService: PreviousRouteService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
     this.newInsuredANI = new insuredANI(this.insuredService);
+
+    this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
+      this.previousUrl = previousUrl;
+    });
   }
 
   ngOnInit(): void {
@@ -52,6 +59,12 @@ export class InsuredInformationComponent implements OnInit {
     this.authSub.unsubscribe();
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
+    this.prevSub?.unsubscribe();
+  }
+
+  prev() {
+    console.log(this.previousUrl);
+    this.router.navigate([this.previousUrl]);
   }
 
   isValid(): boolean {
@@ -124,29 +137,26 @@ export class InsuredInformationComponent implements OnInit {
     }
     else {
       this.showInvalidControls();
-      window.scroll(0,0);
+      window.scroll(0, 0);
     }
     return false;
   }
 
   private markClean() {
     this.accountInfoComp.markClean();
-
     if (this.aniComp.components != null) {
       for (let child of this.aniComp.components) {
-          child.aniForm.form.markAsPristine();
-          child.aniForm.form.markAsUntouched();
+        child.aniForm.form.markAsPristine();
+        child.aniForm.form.markAsUntouched();
       }
     }
     if (this.contactComp.components != null) {
       for (let child of this.contactComp.components) {
-          child.contactForm.form.markAsPristine();
-          child.contactForm.form.markAsUntouched();
+        child.contactForm.form.markAsPristine();
+        child.contactForm.form.markAsUntouched();
       }
     }
-
   }
-
 
   showInvalidControls(): void {
     let invalid = [];
@@ -181,7 +191,7 @@ export class InsuredInformationComponent implements OnInit {
 
     if (this.contactComp.hasDuplicates()) {
       const name = this.contactComp.getDuplicateName();
-      invalid.push("Contact " + name + " is a duplicated");
+      invalid.push("Contact " + name + " is duplicated");
     }
     if (!this.adddressValid()) {
       invalid.push("Address not Verified");
