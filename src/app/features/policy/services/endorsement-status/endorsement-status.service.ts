@@ -58,12 +58,7 @@ export class EndorsementStatusService {
   private _invoiced = new BehaviorSubject<boolean>(false);
   invoiced$ = this._invoiced.asObservable();
   get invoiced(): boolean { return this._invoiced.getValue(); }
-  set invoiced(value: boolean) {
-      this._status.isInvoiced = value;
-      this._invoiced.next(value);
-      this.updateEndorsementStatus(this._status).subscribe();
-  }
-
+  
   private _directQuote = new BehaviorSubject<boolean>(false);
   directQuote$ = this._directQuote.asObservable();
   get directQuote(): boolean { return this._directQuote.getValue(); }
@@ -112,6 +107,18 @@ export class EndorsementStatusService {
           this.canEditEndorsement.next(editFlag);
         })
       );
+  }
+
+  async UpdateInvoiced(value: boolean): Promise<void> {
+    this._status.isInvoiced = value;
+    const results$ = this.updateEndorsementStatus(this._status);
+    return await lastValueFrom(results$).then(
+      (result) => {
+        if (result) {
+          this._invoiced.next(value);
+        }
+      }
+    );
   }
 
   async refresh(): Promise<void> {

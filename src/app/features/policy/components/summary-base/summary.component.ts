@@ -9,6 +9,7 @@ import { InvoiceData, newInvoice, newInvoiceDetail } from '../../models/invoice'
 import { InvoiceGroupComponent } from '../summary-invoice-group/invoice-group.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { PolicyService } from '../../services/policy/policy.service';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'rsps-summary',
@@ -35,7 +36,9 @@ export class SummaryComponent implements OnInit {
   isInvoiceSaving: boolean = false;
   showBusy: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService, private policyService: PolicyService) {
+  @ViewChildren(InvoiceGroupComponent) invoiceGroupComp: QueryList<InvoiceGroupComponent> | undefined;
+
+  constructor(private router: Router, private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService, private policyService: PolicyService,private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -238,7 +241,11 @@ export class SummaryComponent implements OnInit {
     }
   }
 
-  @ViewChildren(InvoiceGroupComponent) invoiceGroupComp: QueryList<InvoiceGroupComponent> | undefined;
+  async resetInvoice() {
+   this.createInvoice();
+   await this.endorsementStatusService.UpdateInvoiced(false);
+   this.endorsementStatusService.refresh();
+  }
 
   isValid(): boolean {
     return !this.canEdit || (this.invoiceGroupComp?.get(0)?.isValid() ?? true);
