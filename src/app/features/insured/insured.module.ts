@@ -20,6 +20,7 @@ import { InsuredHeaderComponent } from './components/insured-header.component.ts
 import { InsuredAccountAddressComponent } from './components/insured-account-address/insured-account-address.component';
 import { InsuredAccountCenterComponent } from './components/insured-account-center/insured-account-center.component';
 import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
+import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { InsuredAccountRightComponent } from './components/insured-account-right
     NgSelectModule,
     DirectivesModule,
     BusyModule,
+    PipesModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
