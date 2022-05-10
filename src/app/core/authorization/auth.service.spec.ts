@@ -17,16 +17,16 @@ describe('AuthService', () => {
 
 
   beforeEach(() => {
-    mockOktaService = jasmine.createSpyObj(['getAccessToken'])
+    mockOktaService = jasmine.createSpyObj(['getAccessToken']);
     mockOktaService.getAccessToken.and.returnValue('');
-    mockConfigService = jasmine.createSpyObj(['apiBaseUrl'])
+    mockConfigService = jasmine.createSpyObj(['apiBaseUrl']);
     mockConfigService.apiBaseUrl.and.returnValue('');
-    mockAuthService = jasmine.createSpyObj(['bearerToken'])
+    mockAuthService = jasmine.createSpyObj(['bearerToken']);
     mockAuthService.bearerToken.and.returnValue('');
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService, {provide: UserAuth, useValue: mockAuthService}, {provide: JwtHelperService, useValue: mockJwtService }, {provide: OktaAuthService, useValue: mockOktaService },  { provide: ConfigService, useValue: mockConfigService }]
+      providers: [AuthService, {provide: UserAuth, useValue: mockAuthService}, {provide: JwtHelperService, useValue: mockJwtService }, {provide: OktaAuthService, useValue: mockOktaService }, { provide: ConfigService, useValue: mockConfigService }]
     });
     service = TestBed.inject(AuthService);
 

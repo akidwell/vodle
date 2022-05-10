@@ -8,10 +8,10 @@ export interface PolicyHistory {
 }
 
 export const newPolicyHistory = (): PolicyHistory => ({
-    policyId: 0,
-    policyNumber: "",
-    endorsementNumber: 0,
-    openDate: new Date,
-    favorite: false,
-    hover: false
+  policyId: 0,
+  policyNumber: '',
+  endorsementNumber: 0,
+  openDate: new Date,
+  favorite: false,
+  hover: false
 });
