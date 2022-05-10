@@ -68,7 +68,7 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open('Leave Confirmation', 'Unable to leave without saving?');
+    return await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
   }
 
 }
