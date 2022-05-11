@@ -41,3 +41,18 @@ Once fork/remotes are set up, to pull changes down to your local from dev run:
 `git fetch upstream`
 then
 `git pull upstream dev`
+
+Updating packages
+
+npm outdated (provide list of what out of date)
+
+For @Angular packages this provides list of what needs to be updated
+ng update 
+-- example of individual updates (They may error if there are peer dependicies and need to run in different order)
+ng update @angular/cdk
+ng update @angular/cli
+ng update @angular/core
+ng update @angular/material
+
+For other packages use the following to update one at a time
+npm install package@latest
