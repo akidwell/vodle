@@ -4,6 +4,6 @@ export interface Version {
 }
 
 export const newVersion = (): Version => ({
-    version: "?.?.?.?",
-    machineName: ""
-})
+  version: '?.?.?.?',
+  machineName: ''
+});

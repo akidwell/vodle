@@ -16,20 +16,20 @@ export class DropDownsService {
 
   // Non static drop downs
   getLimitBasisDescriptions(coverageCode: number,programId: number, limitsPatternGroupCode: number){
-    let params = new HttpParams().append('primaryCoverageCode', coverageCode).append('limitsPatternGroupCode', limitsPatternGroupCode).append('programId', programId);
+    const params = new HttpParams().append('primaryCoverageCode', coverageCode).append('limitsPatternGroupCode', limitsPatternGroupCode).append('programId', programId);
     return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
   }
 
   getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageID?: number | null): Observable<Code[]> {
-    let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? "").append('policySymbol', policySymbol).append('programId', programId);
+    let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? '').append('policySymbol', policySymbol).append('programId', programId);
     if (coverageID != null) {
-      params = params.append('coverageID', coverageID)
+      params = params.append('coverageID', coverageID);
     }
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params })
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params });
   }
 
   getNaicsCodes(sicCode: string) {
-    let params = new HttpParams().append('sicCode', sicCode);
+    const params = new HttpParams().append('sicCode', sicCode);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
   }
 
@@ -41,16 +41,16 @@ export class DropDownsService {
   getRiskGrades(programId?: number): Observable<Code[]> {
     if (programId) {
       const params = new HttpParams().append('programId', programId);
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades', { params })
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades', { params });
     }
     else {
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades')
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades');
     }
   }
 
-  
+
   ////////////////////////////////////////
-  // Class Codes 
+  // Class Codes
   private cacheClassCodes: any;
   private cacheClassCodes$!: Observable<any> | null;
 
@@ -61,7 +61,7 @@ export class DropDownsService {
     } else if (this.cacheClassCodes$) {
       observable = this.cacheClassCodes$;
     } else {
-      let params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
+      const params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
       this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/class-codes', { params })
         .pipe(
           tap(res => this.cacheClassCodes = res),
@@ -81,7 +81,7 @@ export class DropDownsService {
   // Static Drop Downs
 
   ////////////////////////////////////////
-  // PAC Codes 
+  // PAC Codes
   private cachePACCodes: any;
   private cachePACCodes$!: Observable<any> | null;
 
@@ -104,7 +104,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Programs 
+  // Programs
   private cachePrograms: any;
   private cachePrograms$!: Observable<any> | null;
 
@@ -127,7 +127,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // CoverageCodes 
+  // CoverageCodes
   private cacheCoverageCodes: any;
   private cacheCoverageCodes$!: Observable<any> | null;
 
@@ -150,7 +150,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Policy Symbols 
+  // Policy Symbols
   private cachePolicySymbolsCodes: any;
   private cachePolicySymbolsCodes$!: Observable<any> | null;
 
@@ -174,7 +174,7 @@ export class DropDownsService {
 
 
   ////////////////////////////////////////
-  // States 
+  // States
   private cacheStates: any;
   private cacheStates$!: Observable<any> | null;
 
@@ -197,7 +197,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Countries 
+  // Countries
   private cacheCountries: any;
   private cacheCountries$!: Observable<any> | null;
 
@@ -220,7 +220,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Limits Pattern 
+  // Limits Pattern
   private cacheLimitsPattern: any;
   private cacheLimitsPattern$!: Observable<any> | null;
 
@@ -243,7 +243,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Limits Basis 
+  // Limits Basis
   private cacheLimitsBasis: any;
   private cacheLimitsBasis$!: Observable<any> | null;
 
@@ -266,7 +266,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Carrier Codes 
+  // Carrier Codes
   private cacheCarrierCodes: any;
   private cacheCarrierCodes$!: Observable<any> | null;
 
@@ -289,11 +289,11 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Audigtg Codes 
+  // Audigtg Codes
   private cacheAuditCodes: any;
   private cacheAuditCodes$!: Observable<any> | null;
 
-getAuditCodes(): Observable<Code[]> {
+  getAuditCodes(): Observable<Code[]> {
     let observable: Observable<any>;
     if (this.cacheAuditCodes) {
       observable = of(this.cacheAuditCodes);
@@ -312,7 +312,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Assumed Carriers 
+  // Assumed Carriers
   private cacheAssumedCarriers: any;
   private cacheAssumedCarriers$!: Observable<any> | null;
 
@@ -335,7 +335,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // NY Free Trade Zone 
+  // NY Free Trade Zone
   private cacheNyFreeTradeZones: any;
   private cacheNyFreeTradeZones$!: Observable<any> | null;
 
@@ -358,7 +358,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Deregulation Indicators 
+  // Deregulation Indicators
   private cacheDeregulationIndicators: any;
   private cacheDeregulationIndicators$!: Observable<any> | null;
 
@@ -381,7 +381,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Payment Frequencies 
+  // Payment Frequencies
   private cachePaymentFrequencies: any;
   private cachePaymentFrequencies$!: Observable<any> | null;
 
@@ -404,7 +404,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Risk Types 
+  // Risk Types
   private cacheRiskTypes: any;
   private cacheRiskTypes$!: Observable<any> | null;
 
@@ -427,7 +427,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Underlying Coverage Descriptions 
+  // Underlying Coverage Descriptions
   private cacheUnderlyingCoverageDescriptions: any;
   private cacheUnderlyingCoverageDescriptions$!: Observable<any> | null;
 
@@ -450,7 +450,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Transation Types 
+  // Transation Types
   private cacheTransationTypes: any;
   private cacheTransationTypes$!: Observable<any> | null;
 
@@ -496,7 +496,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Terrorism Codes 
+  // Terrorism Codes
   private cacheTerrorismCodes: any;
   private cacheTerrorismCodes$!: Observable<any> | null;
 
@@ -519,7 +519,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Actions 
+  // Actions
   private cacheActions: any;
   private cacheActions$!: Observable<any> | null;
 
@@ -726,7 +726,7 @@ getAuditCodes(): Observable<Code[]> {
   }
 
   ////////////////////////////////////////
-  // Sic Codes 
+  // Sic Codes
   private cacheSicCodes: any;
   private cacheSicCodes$!: Observable<any> | null;
 

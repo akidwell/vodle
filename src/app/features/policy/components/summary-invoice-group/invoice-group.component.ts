@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { InvoiceData, newInvoiceDetail } from '../../models/invoice';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, Subscription } from 'rxjs';
@@ -27,14 +27,14 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 export class InvoiceGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  invoiceCollapsed: boolean = false;
+  invoiceCollapsed = false;
   authSub: Subscription;
-  canEditPolicy: boolean = false;
-  title: string = "Transaction Summary";
+  canEditPolicy = false;
+  title = 'Transaction Summary';
   addSub!: Subscription;
   updateSub!: Subscription;
-  showInvalid: boolean = false;
-  invalidMessage: string = "";
+  showInvalid = false;
+  invalidMessage = '';
   issuanceSub!: Subscription;
   invoiceCopy!: InvoiceData;
 
@@ -44,6 +44,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) invoiceGroupForm!: NgForm;
   @ViewChild(InvoiceMasterComponent) header!: InvoiceMasterComponent;
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
+  @Output() resetInvoice: EventEmitter<null> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService, private policyHistoryService: PolicyHistoryService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -65,7 +66,7 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   addNewInvoiceDetail(): void {
-    let newDetail = newInvoiceDetail();
+    const newDetail = newInvoiceDetail();
     newDetail.invoiceNumber = this.invoice.invoiceNumber;
     newDetail.lineNumber = this.getNextSequence();
     this.invoice.invoiceDetail.push(newDetail);
@@ -75,10 +76,10 @@ export class InvoiceGroupComponent implements OnInit {
   collapsePanel(isCollapsed: boolean) {
     this.invoiceCollapsed = isCollapsed;
     if (isCollapsed) {
-      this.title = "Transaction Summary - " + this.invoice.invoiceNumber + " - " + this.datepipe.transform(this.invoice.invoiceDate, 'MM/dd/yyyy') + " - " + this.invoice.invoiceStatusDescription;
+      this.title = 'Transaction Summary - ' + this.invoice.invoiceNumber + ' - ' + this.datepipe.transform(this.invoice.invoiceDate, 'MM/dd/yyyy') + ' - ' + this.invoice.invoiceStatusDescription;
     }
     else {
-      this.title = "Transaction Summary";
+      this.title = 'Transaction Summary';
     }
   }
 
@@ -91,54 +92,58 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
   get canSave(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy;
   }
 
   get canPost(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy;
   }
 
   get canVoid(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && (this.invoice.proFlag == 0 || this.invoice.proFlag == 3))) && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && (this.invoice.proFlag == 0 || this.invoice.proFlag == 3))) && this.endorsementStatusService.isValidated() && this.canEditPolicy;
   }
 
   get canExport(): boolean {
-    return this.invoice != null && ((this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == "P") && this.endorsementStatusService.isValidated() && !this.endorsementStatusService.directQuote && this.invoice.endorsementNumber == 0 && this.canEditPolicy
+    return this.invoice != null && ((this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 3) || this.invoice.invoiceStatus == 'P') && this.endorsementStatusService.isValidated() && !this.endorsementStatusService.directQuote && this.invoice.endorsementNumber == 0 && this.canEditPolicy;
   }
 
   get canAddDetail(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return this.invoice != null && (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy;
+  }
+
+  get canReset(): boolean {
+    return this.index == 0 && this.invoice != null && this.endorsementStatusService.isValidated() && this.canEditPolicy && this.endorsementStatusService.invoiced && this.invoice.invoiceStatus == 'V' && this.invoice.proFlag == 5;
   }
 
   get showFooter(): boolean {
-    return this.invoice != null && (this.invoice.invoiceStatus != "V")
+    return this.invoice != null && (this.invoice.invoiceStatus != 'V');
   }
 
   get totalNetAmount(): number {
-    let total: number = 0;
+    let total = 0;
     this.invoice.invoiceDetail.forEach(element => {
-      total += Number.isNaN(Number(element.netAmount)) ? 0 : Number(element.netAmount)
+      total += Number.isNaN(Number(element.netAmount)) ? 0 : Number(element.netAmount);
     });
     return total;
   }
 
   async clickSave() {
     this.endorsementStatusService.invoiceSaving = true;
-    await this.tempSave(true);
+    await this.tempSave();
     this.endorsementStatusService.invoiceSaving = false;
   }
 
-  async tempSave(refresh: boolean): Promise<void> {
+  async tempSave(): Promise<void> {
     if (this.isValid()) {
-      if (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) {
+      if (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 0)) {
         this.endorsementStatusService.invoiceSaving = true;
-        if (this.invoice.invoiceStatus == "N") {
-          this.invoice.invoiceStatus = "T";
+        if (this.invoice.invoiceStatus == 'N') {
+          this.invoice.invoiceStatus = 'T';
           this.invoice.proFlag = 0;
-          const isSaved = await this.save(refresh);
+          await this.save();
         }
         else if (this.isDirty()) {
-          const isSaved = await this.save(refresh);
+          await this.save();
         }
         this.endorsementStatusService.invoiceSaving = false;
       }
@@ -149,14 +154,21 @@ export class InvoiceGroupComponent implements OnInit {
 
   }
 
+  async reset() {
+    const confirm = await this.confirmationDialogService.open('Confirmation', 'Would you like to create a new invoice?');
+    if (confirm) {
+      this.resetInvoice.emit();
+    }
+  }
+
   async post(): Promise<void> {
     if (this.isValid()) {
-      if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0))) {
+      if (this.invoice.effectiveDate != null && (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 0))) {
         this.endorsementStatusService.invoiceSaving = true;
         this.invoiceCopy = deepClone(this.invoice);
-        this.invoice.invoiceStatus = "T";
+        this.invoice.invoiceStatus = 'T';
         this.invoice.proFlag = 3;
-        const isSaved = await this.save(false);
+        const isSaved = await this.save();
         if (isSaved) {
           if (this.canExport) {
             await this.export();
@@ -183,78 +195,75 @@ export class InvoiceGroupComponent implements OnInit {
 
         this.endorsementStatusService.invoiceSaving = false;
         if (importPolicyResponse.isPolicyIssued) {
-          this.messageDialogService.open("Export to Issuance", "Successful");
+          this.messageDialogService.open('Export to Issuance', 'Successful');
         }
-        else if (importPolicyResponse.errorMessage.indexOf("already exist") > 0) {
-          this.messageDialogService.open("Export to Issuance", "Policy already imported");
+        else if (importPolicyResponse.errorMessage.indexOf('already exist') > 0) {
+          this.messageDialogService.open('Export to Issuance', 'Policy already imported');
         }
         else {
-          this.messageDialogService.open("Export to Issuance failed", "Error Message: " + importPolicyResponse.errorMessage);
+          this.messageDialogService.open('Export to Issuance failed', 'Error Message: ' + importPolicyResponse.errorMessage);
         }
       },
       error => {
         this.endorsementStatusService.invoiceSaving = false;
         const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open("Export to Issuance failed", "Error Message: " + errorMessage);
+        this.messageDialogService.open('Export to Issuance failed', 'Error Message: ' + errorMessage);
       }
     );
   }
 
-  private async save(refresh: boolean = false): Promise<boolean> {
+  private async save(): Promise<boolean> {
     if (this.invoice.isNew) {
-      return await this.addInvoice(refresh);
+      return await this.addInvoice();
     }
     else {
-      return await this.updateInvoice(refresh);
+      return await this.updateInvoice();
     }
   }
 
-  private async addInvoice(refresh: boolean = false): Promise<boolean> {
+  private async addInvoice(): Promise<boolean> {
     const results$ = this.policyService.addPolicyInvoice(this.invoice);
     return await lastValueFrom(results$)
       .then(async result => {
-        return this.refresh(result == null, refresh);
+        return this.refresh(result == null);
       },
-        (error) => {
-          this.endorsementStatusService.invoiceSaving = false;
-          this.showInvoiceNotSaved();
-          const errorMessage = error.error?.Message ?? error.message;
-          this.messageDialogService.open("Invoice Save Error", errorMessage);
-          return false;
-        });
+      (error) => {
+        this.endorsementStatusService.invoiceSaving = false;
+        this.showInvoiceNotSaved();
+        const errorMessage = error.error?.Message ?? error.message;
+        this.messageDialogService.open('Invoice Save Error', errorMessage);
+        return false;
+      });
   }
 
-  private async updateInvoice(refresh: boolean = false): Promise<boolean> {
+  private async updateInvoice(): Promise<boolean> {
     const results$ = this.policyService.updatePolicyInvoice(this.invoice);
     return await lastValueFrom(results$)
       .then(async result => {
-        return this.refresh(result == null, refresh);
+        return this.refresh(result == null);
       },
-        (error) => {
-          this.endorsementStatusService.invoiceSaving = false;
-          this.showInvoiceNotSaved();
-          const errorMessage = error.error?.Message ?? error.message;
-          this.messageDialogService.open("Invoice Save Error", errorMessage);
-          return false;
-        });
+      (error) => {
+        this.endorsementStatusService.invoiceSaving = false;
+        this.showInvoiceNotSaved();
+        const errorMessage = error.error?.Message ?? error.message;
+        this.messageDialogService.open('Invoice Save Error', errorMessage);
+        return false;
+      });
   }
 
-  private async refresh(isSuccesful: boolean, refresh: boolean = false): Promise<boolean> {
+  private async refresh(isSuccesful: boolean): Promise<boolean> {
     if (isSuccesful) {
       this.markPristine();
       await this.endorsementStatusService.refresh();
       this.endorsementStatusService.refreshInvoice();
-     // if (refresh) {
-        // If a Void then make sure the policy dates were not affected by a trigger
-        if (this.invoice.invoiceStatus == "V") {
-          const results$ = this.policyService.getPolicyInfo(this.invoice.policyId);
-          await lastValueFrom(results$).then((policy) => {
-            this.policyInfo.policyCancelDate = policy.policyCancelDate;
-            this.policyInfo.policyExtendedExpDate = policy.policyExtendedExpDate;
-          });
-        }
-        //this.refreshPage();
-    //  }
+      // If a Void then make sure the policy dates were not affected by a trigger
+      if (this.invoice.invoiceStatus == 'V') {
+        const results$ = this.policyService.getPolicyInfo(this.invoice.policyId);
+        await lastValueFrom(results$).then((policy) => {
+          this.policyInfo.policyCancelDate = policy.policyCancelDate;
+          this.policyInfo.policyExtendedExpDate = policy.policyExtendedExpDate;
+        });
+      }
       this.showInvoiceSaved();
       return true;
     }
@@ -264,18 +273,13 @@ export class InvoiceGroupComponent implements OnInit {
     }
   }
 
-  private refreshPage() {
-    // this.router.onSameUrlNavigation = 'reload';
-    // this.router.navigate([this.router.url])
-  }
-
   private markPristine() {
     this.invoice.isNew = false;
     this.invoice.isUpdated = false;
-    this.invoice.invoiceDetail.forEach(c => { c.isUpdated = false; c.isNew = false; })
+    this.invoice.invoiceDetail.forEach(c => { c.isUpdated = false; c.isNew = false; });
     this.header.invoiceMasterForm.form.markAsPristine();
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         child.invoiceDetailForm.form.markAsPristine();
       }
     }
@@ -290,11 +294,11 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   async confirmVoid(): Promise<void> {
-    let undoPost: boolean = false;
+    let undoPost = false;
 
     // If voiding a Endorsement 0 give the user the option to undo and set back to temp save
-    if (this.invoice.endorsementNumber == 0 && this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 3) {
-      undoPost = await this.confirmationDialogService.open("Void Confirmation", "Do you want to set back to Temp status?");
+    if (this.invoice.endorsementNumber == 0 && this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 3) {
+      undoPost = await this.confirmationDialogService.open('Void Confirmation', 'Do you want to set back to Temp status?');
     }
 
     if (undoPost) {
@@ -303,13 +307,13 @@ export class InvoiceGroupComponent implements OnInit {
       this.endorsementStatusService.invoiceSaving = false;
     }
     else {
-      const voidConfirm = await this.confirmationDialogService.open("Void Confirmation", "Are you sure you want to Void this invoice?");
+      const voidConfirm = await this.confirmationDialogService.open('Void Confirmation', 'Are you sure you want to Void this invoice?');
       if (voidConfirm) {
         this.endorsementStatusService.invoiceSaving = true;
         if (await this.voidInvoice()) {
           this.endorsementStatusService.invoiceSaving = false;
           if (this.invoice.endorsementNumber > 0) {
-            this.confirmationDialogService.open("Delete Confirmation", "Would you also like to Delete the related endorsement?")
+            this.confirmationDialogService.open('Delete Confirmation', 'Would you also like to Delete the related endorsement?')
               .then(async deleteEndorsement => {
                 if (deleteEndorsement) {
                   this.router.navigate(['/home']);
@@ -317,13 +321,13 @@ export class InvoiceGroupComponent implements OnInit {
                   const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
                   await lastValueFrom(results$).then(() => {
                     this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
-                    this.messageDialogService.open("Invoice Voided", "Transaction was deleted succesfully!");
+                    this.messageDialogService.open('Invoice Voided', 'Transaction was deleted succesfully!');
                   },
-                    error => {
-                      this.endorsementStatusService.invoiceSaving = false;
-                      const errorMessage = error.error?.Message ?? error.message;
-                      this.messageDialogService.open("Invoice Void failed", "Error Message: " + errorMessage);
-                    }
+                  error => {
+                    this.endorsementStatusService.invoiceSaving = false;
+                    const errorMessage = error.error?.Message ?? error.message;
+                    this.messageDialogService.open('Invoice Void failed', 'Error Message: ' + errorMessage);
+                  }
                   );
                 }
               });
@@ -339,12 +343,12 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   private async undoPost(): Promise<boolean> {
-    if (this.isValid()) {     
+    if (this.isValid()) {
       this.invoiceCopy = deepClone(this.invoice);
-      this.invoice.invoiceStatus = "T";
+      this.invoice.invoiceStatus = 'T';
       this.invoice.proFlag = 0;
       this.invoice.voidDate = null;
-      if (!(await this.save(true))) {
+      if (!(await this.save())) {
         // Restore before Undo
         this.invoice = deepClone(this.invoiceCopy);
         return false;
@@ -360,10 +364,10 @@ export class InvoiceGroupComponent implements OnInit {
   private async voidInvoice(): Promise<boolean> {
     if (this.isValid()) {
       this.invoiceCopy = deepClone(this.invoice);
-      this.invoice.invoiceStatus = "V";
+      this.invoice.invoiceStatus = 'V';
       this.invoice.proFlag = 0;
       this.invoice.voidDate = new Date();
-      return await this.save(true);
+      return await this.save();
     }
     else {
       this.showInvalidControls();
@@ -375,10 +379,10 @@ export class InvoiceGroupComponent implements OnInit {
     if (this.header != null) {
       if (this.header.invoiceMasterForm.status != 'VALID') {
         return false;
-      };
+      }
     }
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.invoiceDetailForm.status != 'VALID') {
           return false;
         }
@@ -394,7 +398,7 @@ export class InvoiceGroupComponent implements OnInit {
       }
     }
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.invoiceDetailForm.dirty) {
           return true;
         }
@@ -404,27 +408,27 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   showInvalidControls(): void {
-    let invalid = [];
+    const invalid = [];
     // Loop through each child component to see it any of them have invalid controls
     if (this.components != null) {
-      for (let child of this.components) {
-        for (let name in child.invoiceDetailForm.controls) {
+      for (const child of this.components) {
+        for (const name in child.invoiceDetailForm.controls) {
           if (child.invoiceDetailForm.controls[name].invalid) {
             invalid.push(name);
           }
         }
       }
     }
-    this.invalidMessage = "";
+    this.invalidMessage = '';
     // Compile all invalid controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
-      for (let error of invalid) {
-        this.invalidMessage += "<br><li>" + error;
+      for (const error of invalid) {
+        this.invalidMessage += '<br><li>' + error;
       }
     }
     if (this.showInvalid) {
-      this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
+      this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
     }
     else {
       this.hideInvalid();

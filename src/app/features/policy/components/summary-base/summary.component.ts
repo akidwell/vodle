@@ -5,7 +5,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { EndorsementCoveragesGroup } from '../coverages-base/coverages';
 import { AccountInformation, Endorsement, PolicyInformation } from '../../models/policy';
-import { InvoiceData, newInvoice, newInvoiceDetail } from '../../models/invoice';
+import { InvoiceData, InvoiceDetail, newInvoice, newInvoiceDetail } from '../../models/invoice';
 import { InvoiceGroupComponent } from '../summary-invoice-group/invoice-group.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { PolicyService } from '../../services/policy/policy.service';
@@ -19,50 +19,52 @@ export class SummaryComponent implements OnInit {
   endorsementCoveragesGroups: EndorsementCoveragesGroup[] = [];
   invoices: InvoiceData[] = [];
   authSub: Subscription;
-  canEditPolicy: boolean = false;
-  showInvalid: boolean = false;
-  invalidMessage: string = "";
+  canEditPolicy = false;
+  showInvalid = false;
+  invalidMessage = '';
   policyInfo!: PolicyInformation;
   accountInfo!: AccountInformation;
   endorsement!: Endorsement;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   statusSub!: Subscription;
   invoiceSavingSub!: Subscription;
   refreshInvoiceSub!: Subscription;
   policyTabvalidatedSub!: Subscription;
   coverageTabvalidatedSub!: Subscription;
   reinsuranceTabvalidatedSub!: Subscription;
-  isInvoiceSaving: boolean = false;
-  showBusy: boolean = false;
+  isInvoiceSaving = false;
+  showBusy = false;
+
+  @ViewChildren(InvoiceGroupComponent) invoiceGroupComp: QueryList<InvoiceGroupComponent> | undefined;
 
   constructor(private router: Router, private route: ActivatedRoute, private userAuth: UserAuth, private dropDownService: DropDownsService, private endorsementStatusService: EndorsementStatusService, private policyService: PolicyService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
-    this.policyTabvalidatedSub = this.endorsementStatusService.policyInfoValidated$.subscribe(() => {
-      this.checkValidation();
+    this.policyTabvalidatedSub = this.endorsementStatusService.policyInfoValidated$.subscribe(async () => {
+      this.checkFixed();
     });
-    this.coverageTabvalidatedSub = this.endorsementStatusService.coverageValidated$.subscribe(() => {
-      this.checkValidation();
+    this.coverageTabvalidatedSub = this.endorsementStatusService.coverageValidated$.subscribe(async () => {
+      this.checkFixed();
     });
-    this.reinsuranceTabvalidatedSub = this.endorsementStatusService.reinsuranceValidated$.subscribe(() => {
-      this.checkValidation();
+    this.reinsuranceTabvalidatedSub = this.endorsementStatusService.reinsuranceValidated$.subscribe(async () => {
+      this.checkFixed();
     });
 
     this.router.events.subscribe(event => {
       switch (true) {
-        case event instanceof NavigationStart: {
-          var nav = event as NavigationStart;
-          if (nav.url.startsWith('/policy') && nav.url.endsWith('/summary')) {
-            this.checkUpdate();
-          }
-          break;
+      case event instanceof NavigationStart: {
+        const nav = event as NavigationStart;
+        if (nav.url.startsWith('/policy') && nav.url.endsWith('/summary')) {
+          this.checkUpdate();
         }
-        default: {
-          break;
-        }
+        break;
       }
-    })
+      default: {
+        break;
+      }
+      }
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -107,12 +109,21 @@ export class SummaryComponent implements OnInit {
     this.reinsuranceTabvalidatedSub?.unsubscribe();
   }
 
+  async checkFixed() {
+    if (this.showInvalid && this.endorsementStatusService.isValidated()) {
+      await this.loadInvoice();
+    }
+    else {
+      this.checkValidation();
+    }
+  }
+
   async loadInvoice() {
     const isValid = this.checkValidation();
-    if (isValid && !this.endorsementStatusService.invoiced && this.invoices.filter(i => i.invoiceStatus != "V").length == 0) {
+    if (isValid && !this.endorsementStatusService.invoiced && this.invoices.filter(i => i.invoiceStatus != 'V').length == 0) {
       await this.createInvoice();
       this.invoiceGroupComp?.forEach(element => {
-        if (element.invoice.invoiceStatus == "V") {
+        if (element.invoice.invoiceStatus == 'V') {
           element.collapsePanel(true);
         }
       });
@@ -123,38 +134,38 @@ export class SummaryComponent implements OnInit {
   }
 
   private async checkUpdate() {
-     if (this.invoices.length > 0 && (this.invoices[0].invoiceStatus == "N" || (this.invoices[0].invoiceStatus == "T" && this.invoices[0].proFlag == 0))) {
+    if (this.invoices.length > 0 && (this.invoices[0].invoiceStatus == 'N' || (this.invoices[0].invoiceStatus == 'T' && this.invoices[0].proFlag == 0))) {
       await this.updateInvoice();
     }
   }
-  
+
   private checkValidation(): boolean {
     const policyInfoValidated = this.endorsementStatusService.policyInfoValidated;
     const coveragesValidated = this.endorsementStatusService.coverageValidated;
     const reinsuranceValidated = this.endorsementStatusService.reinsuranceValidated;
     if ((!policyInfoValidated || !coveragesValidated || !reinsuranceValidated)) {
       this.showInvalid = true;
-      this.invalidMessage = "Unable to create/edit invoice at this time";
+      this.invalidMessage = 'Unable to create/edit invoice at this time';
       if (!policyInfoValidated) {
-        this.invalidMessage += "<br><li> Policy Info needs to be validated";
+        this.invalidMessage += '<br><li> Policy Info needs to be validated';
       }
       if (!coveragesValidated) {
-        this.invalidMessage += "<br><li> Coverages needs to be validated";
+        this.invalidMessage += '<br><li> Coverages needs to be validated';
       }
       if (!reinsuranceValidated) {
-        this.invalidMessage += "<br><li>Reinsurance needs to be validated";
+        this.invalidMessage += '<br><li>Reinsurance needs to be validated';
       }
       return false;
     }
     else {
-      this.invalidMessage = ""
+      this.invalidMessage = '';
       this.showInvalid = false;
     }
     return true;
   }
 
   private async createInvoice() {
-    let invoice = newInvoice();
+    const invoice = newInvoice();
     invoice.policyId = this.policyInfo.policyId;
     invoice.PolicySymbol = this.policyInfo.policySymbol;
     invoice.FullPolicyNumber = this.policyInfo.fullPolicyNo;
@@ -167,11 +178,11 @@ export class SummaryComponent implements OnInit {
     const coverageCodes$ = this.dropDownService.getCoverageCodes();
     const coverageCodes = await lastValueFrom(coverageCodes$);
 
-    invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? "Error";
+    invoice.transctionTypeDescription = transactionTypes.find(c => c.key == this.endorsement.transactionTypeCode)?.description ?? 'Error';
     invoice.reason = this.endorsementStatusService.endorsementReason;
-    let invoiceDetail = newInvoiceDetail();
+    const invoiceDetail = newInvoiceDetail();
     invoiceDetail.lineItemCode = this.policyInfo.quoteData.coverageCode.trim();
-    invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code.trim() == invoiceDetail.lineItemCode)?.description ?? "Error";
+    invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code.trim() == invoiceDetail.lineItemCode)?.description ?? 'Error';
     invoiceDetail.feeAmount = this.endorsement.premium ?? 0;
     invoiceDetail.commissionRate = this.accountInfo.commissionRate ?? 0;
     invoiceDetail.commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
@@ -183,7 +194,7 @@ export class SummaryComponent implements OnInit {
       const lineitems = await lastValueFrom(lineitems$);
       lineitems.forEach(l => {
         l.isNew = true;
-        invoice.invoiceDetail.push(l)
+        invoice.invoiceDetail.push(l);
       });
     }
     this.invoices.unshift(invoice);
@@ -203,9 +214,9 @@ export class SummaryComponent implements OnInit {
       this.invoices[0].transactionTypeCode = this.endorsement.transactionTypeCode;
       const transactionTypes$ = this.dropDownService.getTransactionTypes();
       const transactionTypes = await lastValueFrom(transactionTypes$);
-      this.invoices[0].transctionTypeDescription = transactionTypes.find(x => x.key == this.invoices[0].transactionTypeCode)?.description ?? ""
+      this.invoices[0].transctionTypeDescription = transactionTypes.find(x => x.key == this.invoices[0].transactionTypeCode)?.description ?? '';
     }
-    let invoiceDetail: any;
+    let invoiceDetail: InvoiceDetail;
     if (this.invoices[0].invoiceDetail.length > 0) {
       invoiceDetail = this.invoices[0].invoiceDetail[0];
     }
@@ -217,15 +228,15 @@ export class SummaryComponent implements OnInit {
       const coverageCodes$ = this.dropDownService.getCoverageCodes();
       const coverageCodes = await lastValueFrom(coverageCodes$);
       invoiceDetail.lineItemCode = this.policyInfo.quoteData.coverageCode.trim();
-      invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code.trim() == invoiceDetail.lineItemCode)?.description ?? "Error";
+      invoiceDetail.lineItemDescription = coverageCodes.find(c => c.code.trim() == invoiceDetail.lineItemCode)?.description ?? 'Error';
     }
     if (invoiceDetail.feeAmount != this.endorsement.premium) {
       invoiceDetail.isUpdated = true;
-      invoiceDetail.feeAmount = this.endorsement.premium;
+      invoiceDetail.feeAmount = this.endorsement.premium ?? 0;
     }
     if (invoiceDetail.commissionRate != this.accountInfo.commissionRate) {
       invoiceDetail.isUpdated = true;
-      invoiceDetail.commissionRate = this.accountInfo.commissionRate;
+      invoiceDetail.commissionRate = this.accountInfo.commissionRate ?? 0;
     }
     const commissionAmount = Math.round(10 * (invoiceDetail.feeAmount * (invoiceDetail.commissionRate / 100))) / 10;
     if (invoiceDetail.commissionAmount != commissionAmount) {
@@ -238,10 +249,14 @@ export class SummaryComponent implements OnInit {
     }
   }
 
-  @ViewChildren(InvoiceGroupComponent) invoiceGroupComp: QueryList<InvoiceGroupComponent> | undefined;
+  async resetInvoice() {
+    this.createInvoice();
+    await this.endorsementStatusService.UpdateInvoiced(false);
+    this.endorsementStatusService.refresh();
+  }
 
   isValid(): boolean {
-    return !this.canEdit || (this.invoiceGroupComp?.get(0)?.isValid() ?? true);
+    return (!this.canEdit || (this.invoiceGroupComp?.get(0)?.isValid() ?? true));
   }
 
   isDirty(): boolean {
@@ -249,7 +264,7 @@ export class SummaryComponent implements OnInit {
   }
 
   save(): void {
-    this.invoiceGroupComp?.get(0)?.tempSave(false);
+    this.invoiceGroupComp?.get(0)?.tempSave();
   }
 
   showInvalidControls(): void {
@@ -257,7 +272,9 @@ export class SummaryComponent implements OnInit {
   }
 
   hideInvalid(): void {
-    this.showInvalid = false;
+    if (this.endorsementStatusService.isValidated()) {
+      this.showInvalid = false;
+    }
   }
 
   get canEdit(): boolean {
