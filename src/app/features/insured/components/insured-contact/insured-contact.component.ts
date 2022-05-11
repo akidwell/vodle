@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { faAngleUp, faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
@@ -13,14 +13,14 @@ import { InsuredService } from '../../services/insured-service/insured.service';
   templateUrl: './insured-contact.component.html',
   styleUrls: ['./insured-contact.component.css']
 })
-export class InsuredContactComponent implements OnInit {
-  canEditInsured: boolean = false;
+export class InsuredContactComponent {
+  canEditInsured = false;
   authSub: Subscription;
   faArrowUp = faAngleUp;
   deleteSub!: Subscription;
   faSolidStar = faSolidStar;
   faStar = faStar;
-  isHover: boolean = false;
+  isHover = false;
   contacts: InsuredContact[] = [];
 
   @Input() contact!: InsuredContact;
@@ -34,12 +34,10 @@ export class InsuredContactComponent implements OnInit {
   constructor(private userAuth: UserAuth, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => {
-        this.canEditInsured = canEditInsured
+        this.canEditInsured = canEditInsured;
       }
     );
   }
-
-  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
@@ -59,7 +57,7 @@ export class InsuredContactComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open("Delete Confirmation", "Are you sure you want to delete this contact?").then((result: boolean) => {
+    this.confirmationDialogService.open('Delete Confirmation', 'Are you sure you want to delete this contact?').then((result: boolean) => {
       if (result) {
         this.deleteContact();
       }

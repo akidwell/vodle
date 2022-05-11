@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['../../../../app.component.css']
 })
 export class InsuredNotFoundComponent {
-  errorMessage: string = "";
+  errorMessage = '';
 
   constructor(private router: Router) {
     this.errorMessage = this.router.getCurrentNavigation()?.extras.state?.error;

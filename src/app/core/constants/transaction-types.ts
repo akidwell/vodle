@@ -23,4 +23,4 @@ export const TransactionTypes = {
   ERPPremium: 23,
   NonRenewal: 24,
   ReversalOfNonRenewal: 30
-}
+};

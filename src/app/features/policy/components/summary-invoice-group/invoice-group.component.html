@@ -3,6 +3,8 @@
     <div style="display: inline-block;">
       <button class="btn btn-md btn-primary" style="float:left;" *ngIf="canSave" [disabled]="!isDirty()"
         appPreventDoubleClick (throttledClick)="clickSave()" [throttleTime]="700">Save</button>
+        <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" *ngIf="canReset"
+        (click)="reset()">Reset</button>
       <button class="btn btn-md btn-primary" style="float:right;" *ngIf="canPost" (click)="post()">Post</button>
       <button class="btn btn-md btn-primary" hover-class="btn-danger" style="float:right;" [hidden]="!canVoid"
         (click)="confirmVoid()">Void</button>

@@ -16,15 +16,15 @@ import { InsuredAccountRightComponent } from '../insured-account-right/insured-a
   styleUrls: ['./insured-account.component.css']
 })
 export class InsuredAccountComponent implements OnInit {
-  canEditInsured: boolean = false;
+  canEditInsured = false;
   authSub: Subscription;
   accountCollapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   sicCodes$: Observable<Code[]> | undefined;
   naicsCodes$: Observable<Code[]> | undefined;
-  loadingSic: boolean = true;
-  loadingNaics: boolean = true;
+  loadingSic = true;
+  loadingNaics = true;
 
   @Input() public insured!: Insured;
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
@@ -40,7 +40,7 @@ export class InsuredAccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.sicCodes$ = this.dropdowns.getSicCodes()
-    .pipe(tap(() => this.loadingSic = false));
+      .pipe(tap(() => this.loadingSic = false));
 
     if (this.insured.sicCode != null) {
       this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.insured.sicCode)
