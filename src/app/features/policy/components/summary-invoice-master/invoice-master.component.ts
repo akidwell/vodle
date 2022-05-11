@@ -14,7 +14,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 })
 export class InvoiceMasterComponent implements OnInit {
   authSub: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   endorsementReasons!: Code[];
 
   @Input() public invoice!: InvoiceData;
@@ -36,7 +36,7 @@ export class InvoiceMasterComponent implements OnInit {
   }
 
   get canEditComment(): boolean {
-    return (this.invoice.invoiceStatus == "N" || (this.invoice.invoiceStatus == "T" && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy
+    return (this.invoice.invoiceStatus == 'N' || (this.invoice.invoiceStatus == 'T' && this.invoice.proFlag == 0)) && this.endorsementStatusService.isValidated() && this.canEditPolicy;
   }
 
 }

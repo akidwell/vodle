@@ -12,9 +12,9 @@ import { EndorsementStatusData } from '../../models/policy';
 export class EndorsementStatusService {
   private _status!: EndorsementStatusData;
   authSub: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
 
-  status = new BehaviorSubject<string>("");
+  status = new BehaviorSubject<string>('');
   canEditEndorsement = new BehaviorSubject<boolean>(false);
 
   private _policyInfoValidated = new BehaviorSubject<boolean>(false);
@@ -45,25 +45,25 @@ export class EndorsementStatusService {
   set reinsuranceValidated(value: boolean) {
     if (this.canEditPolicy && this._status.isReinsuranceValidated != value) {
       this._status.isReinsuranceValidated = value;
-      this._reinsuranceValidated.next(value)
+      this._reinsuranceValidated.next(value);
       this.updateEndorsementStatus(this._status).subscribe();
     }
   }
 
   private _isRewrite = new BehaviorSubject<boolean>(false);
   _isRewrite$ = this._isRewrite.asObservable();
-  get isRewrite(): boolean { return this._isRewrite.getValue(); 
+  get isRewrite(): boolean { return this._isRewrite.getValue();
   }
-  
+
   private _invoiced = new BehaviorSubject<boolean>(false);
   invoiced$ = this._invoiced.asObservable();
   get invoiced(): boolean { return this._invoiced.getValue(); }
-  
+
   private _directQuote = new BehaviorSubject<boolean>(false);
   directQuote$ = this._directQuote.asObservable();
   get directQuote(): boolean { return this._directQuote.getValue(); }
 
-  private _endorsementReason = new BehaviorSubject<string>("");
+  private _endorsementReason = new BehaviorSubject<string>('');
   endorsementReason$ = this._endorsementReason.asObservable();
   get endorsementReason(): string { return this._endorsementReason.getValue(); }
 
@@ -99,11 +99,11 @@ export class EndorsementStatusService {
           this._coverageValidated.next(data?.isCoverageValidated ?? false);
           this._reinsuranceValidated.next(data?.isReinsuranceValidated ?? false);
           this._directQuote.next(data?.isDirectQuote ?? false);
-          this._endorsementReason.next(data?.endorsementReason ?? "");
-          this._isRewrite.next(data?.isRewrite ?? false)
+          this._endorsementReason.next(data?.endorsementReason ?? '');
+          this._isRewrite.next(data?.isRewrite ?? false);
           this._invoiced.next(data?.isInvoiced ?? false);
-          this.status.next(data?.invoiceStatusDescription ?? "");
-          const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == "N" || (data.invoiceStatus == "T" && data.proFlag == 0));
+          this.status.next(data?.invoiceStatusDescription ?? '');
+          const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == 'N' || (data.invoiceStatus == 'T' && data.proFlag == 0));
           this.canEditEndorsement.next(editFlag);
         })
       );
