@@ -19,27 +19,27 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 export class EndorsementCoverageLocationComponent implements OnInit {
   location!: EndorsementCoverageLocation;
   originallocation!: EndorsementCoverageLocation;
-  isReadOnly: boolean = false;
+  isReadOnly = false;
   authSub: Subscription;
-  canEditPolicy: boolean = false;
-  canDeleteLocation: boolean = false;
+  canEditPolicy = false;
+  canDeleteLocation = false;
   states$: Observable<Code[]> | undefined;
-  showLocationId: boolean = false;
+  showLocationId = false;
   locationSub!: Subscription;
-  isDirty: boolean = false;
+  isDirty = false;
   dirtySub!: Subscription | undefined;
   addressSub!: Subscription;
-  isLoadingAddress: boolean = false;
+  isLoadingAddress = false;
   counties: string[] = [];
   coverage!: EndorsementCoveragesGroup;
   parent!: EndorsementCoverageLocationGroupComponent;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   statusSub!: Subscription;
-  confirmation: string = "";
+  confirmation = '';
 
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
-  @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>
-  private modalRef!: NgbModalRef
+  @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>;
+  private modalRef!: NgbModalRef;
 
   constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -71,7 +71,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   open(locationInfo: EndorsementCoveragesGroup, parent: EndorsementCoverageLocationGroupComponent): Promise<LocationResult> {
@@ -83,16 +83,16 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.originallocation = Object.assign({}, locationInfo.location);
       this.location = locationInfo.location;
       this.showLocationId = (this.location.locationId ?? 0) > 0;
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
-      this.modalRef.result.then(resolve, resolve)
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' });
+      this.modalRef.result.then(resolve, resolve);
       this.canDeleteLocation = true;
-      for (let x of locationInfo.coverages) {
-        if (x.action != "A") {
+      for (const x of locationInfo.coverages) {
+        if (x.action != 'A') {
           this.canDeleteLocation = false;
           break;
         }
       }
-    })
+    });
   }
 
   new(locationInfo: EndorsementCoverageLocation): Promise<LocationResult> {
@@ -100,17 +100,17 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.locationForm.form.markAsPristine();
       this.location = locationInfo;
       this.location.isNew = true;
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
-      this.modalRef.result.then(resolve, resolve)
-    })
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' });
+      this.modalRef.result.then(resolve, resolve);
+    });
   }
 
   changeZipCode(): void {
-    if (this.locationForm.controls["zipCode"].valid) {
+    if (this.locationForm.controls['zipCode'].valid) {
       this.isLoadingAddress = true;
-      this.location.city = "";
-      this.location.state = "";
-      this.location.county = "";
+      this.location.city = '';
+      this.location.state = '';
+      this.location.county = '';
       this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
         next: address => {
           if (address != null) {
@@ -118,7 +118,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
             this.location.state = address?.state;
             this.location.county = address?.county[0];
             this.counties = [];
-            for (let county of address.county) {
+            for (const county of address.county) {
               this.counties = this.counties.concat(county);
             }
           }
@@ -172,7 +172,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
           this.modalRef.close(LocationResult.delete);
         }
         else {
-          window.alert("Could not delete location!");
+          window.alert('Could not delete location!');
         }
       });
   }
@@ -180,9 +180,9 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modalConfirmation') modalConfirmation: any;
 
   openDeleteConfirmation() {
-    this.confirmation = "overlay"
+    this.confirmation = 'overlay';
     this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
-      this.confirmation = ""
+      this.confirmation = '';
       if (result == 'Yes') {
         this.delete();
       }
