@@ -18,27 +18,32 @@
 }
 
 .insured {
-  width: 35%;
+  width: 34%;
 }
 
 .policyNumber {
+  white-space: nowrap;
+  overflow: hidden;
   width: 12%;
 }
 
 .endorsement {
-  width: 5%;
+  width: 6%;
 }
 
 .effectiveDate {
   width: 10%;
+  overflow: hidden;
 }
 
 .expirationDate {
   width: 10%;
+  overflow: hidden;
 }
 
 .extensionDate {
   width: 10%;
+  overflow: hidden;
 }
 
 .status {
@@ -48,4 +53,7 @@
 h6{
   white-space: nowrap;
   min-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
 }
