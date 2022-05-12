@@ -21,6 +21,7 @@ import { InsuredAccountAddressComponent } from './components/insured-account-add
 import { InsuredAccountCenterComponent } from './components/insured-account-center/insured-account-center.component';
 import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
+import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { PipesModule } from 'src/app/shared/pipes/pipes.module';
     DirectivesModule,
     BusyModule,
     PipesModule,
+    SubmissionActivityModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
