@@ -28,7 +28,7 @@
                     <td>{{ insured.name }}</td>
                     <td>{{ insured.insuredCity }}</td>
                     <td>{{ insured.insuredState }}</td>
-                    <td>{{ insured.zip | zipCode }}</td>
+                    <td nowrap>{{ insured.zip | zipCode }}</td>
                     <td>{{ insured.insuredName }}</td>
                     <td>{{ insured.streetAddress }}</td>
                     <td>{{ insured.formerName }}</td>
@@ -49,6 +49,7 @@
     </div>
     <div *ngIf="searchResults.insuredSearchResponses.length > 0" class="card-footer">
       <div id="searchFooter">
+        <div style="float:left;"><a class="nav-link">Add Insured Account</a></div>
         <div style="float:right;">Results:{{searchResults.insuredSearchResponses.length}}</div>
       </div>
     </div>

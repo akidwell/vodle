@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskModule } from 'ngx-mask';
-import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -20,14 +20,13 @@ import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SearchModule } from 'src/app/shared/components/search-bar/search-bar.module';
 import { InsuredSearchResultsComponent } from './components/insured-search-results/insured-search-results.component';
 import { PolicySearchResultsComponent } from './components/policy-search-results/policy-search-results.component';
-import { SubmissionSearchResultsComponent } from './components/submission-search-results/submission-search-results.component';
+import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 
 @NgModule({
   declarations: [
     HomeComponent,
     DirectPolicyComponent,
     ActionComponent,
-    SubmissionSearchResultsComponent,
     InsuredSearchResultsComponent,
     PolicySearchResultsComponent
   ],
@@ -45,7 +44,8 @@ import { SubmissionSearchResultsComponent } from './components/submission-search
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
-    PipesModule
+    PipesModule,
+    SubmissionActivityModule
   ],
   providers: [
     DatePipe,
