@@ -29,6 +29,9 @@ const routes: Routes = [
     path: 'policy', loadChildren: () => import('./features/policy/policy.module').then(m => m.PolicyModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
   },
   {
+    path: 'submission', loadChildren: () => import('./features/submission/submission.module').then(m => m.SubmissionModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
+  {
     path: 'insured', loadChildren: () => import('./features/insured/insured.module').then(m => m.InsuredModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
   },
   { path: 'access-denied', component: AccessDeniedComponent },
@@ -37,7 +40,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)
+  imports: [RouterModule.forRoot(routes)
   ],
   exports: [RouterModule],
 })

@@ -11,7 +11,8 @@
         &nbsp;
       </span>
       <span *ngIf="copyIsActive">
-        <button class="btn btn-sm btn-primary pull-right" [disabled]="!saveCopyLocationsActive()" *ngIf="canEdit" (click)="saveCopyLocations()">Copy Selected</button>
+        <button class="btn btn-sm btn-primary pull-right" appPreventDoubleClick (throttledClick)="saveCopyLocations()" [throttleTime]="700"
+        [disabled]="!saveCopyLocationsActive()" *ngIf="canEdit">Copy Selected</button>
         &nbsp;
         <button class="btn btn-sm btn-secondary pull-right" *ngIf="canEdit" (click)="endCopyLocations()">Cancel Copy</button>
         &nbsp;

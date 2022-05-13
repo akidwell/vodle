@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output,  ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faAngleDown, faAngleUp, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -22,16 +22,16 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   authSub: Subscription;
-  canEditPolicy: boolean = false;
-  setLocationOnInit: boolean = false;
+  canEditPolicy = false;
+  setLocationOnInit = false;
   formStatus!: string;
   anchorId!: string;
-  locationCollapsed: boolean = true;
+  locationCollapsed = true;
   collapsePanelSubscription!: Subscription;
   expandPanelSubscription!: Subscription;
-  loaded: boolean = false;
+  loaded = false;
   components: EndorsementCoverageComponent[] = [];
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   statusSub!: Subscription;
 
   @Input() public endorsement!: Endorsement;
@@ -43,7 +43,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @Input() public copyCoverageGroupsActive!: boolean;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
   @Output() status: EventEmitter<any> = new EventEmitter();
-  @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent
+  @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent;
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
 
@@ -119,12 +119,12 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   async openLocation(group: EndorsementCoveragesGroup) {
     if (this.locationComponent != null) {
-      var result = await this.locationComponent.open(group, this);
+      const result = await this.locationComponent.open(group, this);
       if (result == LocationResult.delete) {
         this.deleteThisGroup.emit(this.endorsementCoveragesGroup);
       }
@@ -141,7 +141,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   }
   isValid(): boolean {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.endorsementCoveragesForm.status != 'VALID' || !child.isLimitsPatternValid) {
           return false;
         }
@@ -152,8 +152,8 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   isDirty() {
     if (this.components != null) {
-      for (let child of this.components) {
-        console.log(child.coverage.locationId,child.coverage.isCopied)
+      for (const child of this.components) {
+        console.log(child.coverage.locationId,child.coverage.isCopied);
         if (child.endorsementCoveragesForm.dirty || this.setLocationOnInit || child.coverage.isCopied) {
           this.setLocationOnInit = false;
           return true;
@@ -164,7 +164,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   }
 
   createNewCoverage(): EndorsementCoverage {
-    let newCoverage = newEndorsementCoverage();
+    const newCoverage = newEndorsementCoverage();
     newCoverage.sequence = this.currentSequence;
     newCoverage.locationId = this.endorsementCoveragesGroup.location.locationId;
     newCoverage.endorsementNumber = this.endorsement.endorsementNumber;
@@ -189,7 +189,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
       const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
       viewContainerRef.clear();
 
-      for (let coverage of this.endorsementCoveragesGroup.coverages) {
+      for (const coverage of this.endorsementCoveragesGroup.coverages) {
         this.addComponent(coverage, false);
       }
       this.loaded = true;
@@ -216,15 +216,15 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   focus(): void {
     setTimeout(() => {
-      document.getElementById(this.anchorId)!.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+      document.getElementById(this.anchorId)!.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
     }, 250);
   }
 
   calcTotal(): number {
-    let total: number = 0
+    let total = 0;
     this.endorsementCoveragesGroup.coverages.forEach(coverage => {
-      total += Number.isNaN(Number(coverage.premium)) ? 0 : Number(coverage.premium)
-     });
+      total += Number.isNaN(Number(coverage.premium)) ? 0 : Number(coverage.premium);
+    });
     return total;
   }
 }
