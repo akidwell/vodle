@@ -36,27 +36,27 @@ export class EndorsementCoverageComponent implements OnInit {
   subCodeDefaults!: SubCodeDefaults;
   defaultsSub!: Subscription;
   deleteSub!: Subscription;
-  showDeductible: boolean = false;
-  showIncludeExlude: boolean = false;
-  canEditPolicy: boolean = false;
+  showDeductible = false;
+  showIncludeExlude = false;
+  canEditPolicy = false;
   includeExclude: Code[] = [];
-  isRetroDateRequired: boolean = false;
-  isDeductibleRequired: boolean = false;
-  isLimitsPatternValid: boolean = true;
-  isRetroDateValid: boolean = true;
-  canEditLimitPattern: boolean = false;
-  canEditPremium: boolean = false;
+  isRetroDateRequired = false;
+  isDeductibleRequired = false;
+  isLimitsPatternValid = true;
+  isRetroDateValid = true;
+  canEditLimitPattern = false;
+  canEditPremium = false;
   anchorId!: string;
   originalAction!: string;
   saveEventSubscription!: Subscription;
   collapsePanelSubscription!: Subscription;
   terrorismSubscription!: Subscription;
-  showClaimsMade: boolean = false;
-  canEditEndorsement: boolean = false;
+  showClaimsMade = false;
+  canEditEndorsement = false;
   statusSub!: Subscription;
-  limitMask: string= "";
-  showEachEmployeeDeductible: boolean = false;
-  resetLimitsPatternGroupCodeOnClassCodeChange: boolean = false;
+  limitMask= '';
+  showEachEmployeeDeductible = false;
+  resetLimitsPatternGroupCodeOnClassCodeChange = false;
 
   @Input() public policyInfo!: PolicyInformation;
   @Input() public coverage!: EndorsementCoverage;
@@ -94,7 +94,7 @@ export class EndorsementCoverageComponent implements OnInit {
 
     this.anchorId = 'focusHere' + this.coverage.locationId + '-' + this.coverage.sequence;
     if ((this.coverage.coverageId ?? 0) > 0) {
-      this.changeCoverageDescription("open");
+      this.changeCoverageDescription('open');
     }
     this.originalAction = this.coverage.action;
     this.isRetroDateRequired = this.checkRetroDateRequired();
@@ -112,7 +112,7 @@ export class EndorsementCoverageComponent implements OnInit {
       this.ecCollapsed = true;
     });
     this.terrorismSubscription = this.updatePolicyChild.terrorismChange$.subscribe(() => {
-      if (this.coverage.premiumType == "T") {
+      if (this.coverage.premiumType == 'T') {
         this.endorsementCoveragesForm.form.markAsDirty();
       }
     });
@@ -132,7 +132,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   copyCoverage(): void {
@@ -140,9 +140,11 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   focus(): void {
-    this.ecCollapsed = false;
+    if (!this.coverage.isCopied)
+      this.ecCollapsed = false;
+
     setTimeout(() => {
-      document.getElementById(this.anchorId)!.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      document.getElementById(this.anchorId)!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 350);
   }
 
@@ -154,31 +156,31 @@ export class EndorsementCoverageComponent implements OnInit {
   populateExcludeInclude() {
     this.includeExclude = [];
     if (this.subCodeDefaults.coverageExcluded) {
-      let code: Code = ({ code: "E", key: 0, description: "Excluded" });
+      const code: Code = ({ code: 'E', key: 0, description: 'Excluded' });
       this.includeExclude = this.includeExclude.concat(code);
     }
     if (this.subCodeDefaults.coverageIncluded) {
-      let code: Code = ({ code: "I", key: 0, description: "Included" });
+      const code: Code = ({ code: 'I', key: 0, description: 'Included' });
       this.includeExclude = this.includeExclude.concat(code);
     }
   }
 
-  changeCoverageDescription(event: any = "") {
-    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol, this.coverage.claimsMadeOrOccurrence == "C", this.coverage.limitsPatternGroupCode).subscribe({
+  changeCoverageDescription(event: any = '') {
+    this.defaultsSub = this.subCodeDefaultsService.getSubCodeDefaults(this.coverage.programId, this.coverage.coverageId ?? 0,this.policyInfo.policySymbol, this.coverage.claimsMadeOrOccurrence == 'C', this.coverage.limitsPatternGroupCode).subscribe({
       next: (subCodeDefaults: SubCodeDefaults) => {
         this.subCodeDefaults = subCodeDefaults;
         this.showDeductible = subCodeDefaults.deductible;
         this.showClaimsMade = subCodeDefaults.occurrenceOrClaimsMade;
         this.showIncludeExlude = subCodeDefaults.coverageIncluded || subCodeDefaults.coverageExcluded;
-        if (event != "open") {
+        if (event != 'open') {
           if (!this.showDeductible) {
             this.coverage.deductible = null;
-            this.coverage.deductibleType = null
+            this.coverage.deductibleType = null;
           }
           if (!this.showIncludeExlude) {
             this.coverage.includeExclude = null;
           }
-            if (!this.showClaimsMade) {
+          if (!this.showClaimsMade) {
             this.coverage.claimsMadeOrOccurrence = null;
           }
         }
@@ -233,7 +235,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   changeLimitsPattern() {
-    this.coverage.limitsPattern = this.limitsPatternHelper.parseLimitsPattern(this.coverage.limitsPattern, this.subCodeDefaults.defaultLimitPatternDescription.split("/").length)
+    this.coverage.limitsPattern = this.limitsPatternHelper.parseLimitsPattern(this.coverage.limitsPattern, this.subCodeDefaults.defaultLimitPatternDescription.split('/').length);
     this.isLimitsPatternValid = this.checkLimitsPatternValid();
   }
 
@@ -256,7 +258,7 @@ export class EndorsementCoverageComponent implements OnInit {
     if (this.canEdit && this.showDeductible && (this.subCodeDefaults && this.subCodeDefaults.subCode == 336) && (this.endorsementStoredValuesService.SIR == null || this.endorsementStoredValuesService.SIR == 0)) {
       return true;
     } else if (this.coverage.deductible && this.coverage.deductible > 0) {
-      return true
+      return true;
     } else {
       return false;
     }
@@ -272,7 +274,7 @@ export class EndorsementCoverageComponent implements OnInit {
       const retroDate = Number(this.datePipe.transform(this.coverage.retroDate, 'yyyyMMdd'));
       const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
 
-      let isValid = (retroDate <= expirationDate);
+      const isValid = (retroDate <= expirationDate);
       if (!isValid) {
         this.endorsementCoveragesForm.controls['retroDate'].setErrors({ 'incorrect': !isValid });
       }
@@ -283,9 +285,9 @@ export class EndorsementCoverageComponent implements OnInit {
 
   checkLimitsPatternValid(): boolean {
     if (this.subCodeDefaults != null && this.isNotExcluded()) {
-      let isValid = this.subCodeDefaults.defaultLimitPatternDescription.split("/").length == this.coverage.limitsPattern.split("/").length;
-      for (let x of this.coverage.limitsPattern.split("/")) {
-        if ((x == "") || (x == '0')) {
+      let isValid = this.subCodeDefaults.defaultLimitPatternDescription.split('/').length == this.coverage.limitsPattern.split('/').length;
+      for (const x of this.coverage.limitsPattern.split('/')) {
+        if ((x == '') || (x == '0')) {
           isValid = false;
         }
       }
@@ -295,14 +297,14 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   setLimitsPatternMask(): string {
-    let mask: string = "";
+    let mask = '';
     if (this.subCodeDefaults != null) {
-      for (let x of this.subCodeDefaults.defaultLimitPatternDescription.split("/")) {
-        mask = mask + "0*/";
+      for (const x of this.subCodeDefaults.defaultLimitPatternDescription.split('/')) {
+        mask = mask + '0*/';
       }
       mask = mask.slice(0, -1);
     }
-   this.limitMask = mask.replace(/0/g, "");
+    this.limitMask = mask.replace(/0/g, '');
     return mask;
   }
 

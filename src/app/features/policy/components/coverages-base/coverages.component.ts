@@ -25,22 +25,22 @@ export class CoveragesComponent implements OnInit, PolicySave {
   endorsementCoveragesGroups!: EndorsementCoveragesGroup[];
   formStatus: any;
   authSub: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
-  invalidMessage: string = "";
+  invalidMessage = '';
   locationSub!: Subscription;
-  showInvalid: boolean = false;
+  showInvalid = false;
   coveragesSequence!: number;
   coveragesSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   statusSub!: Subscription;
   data!: Data;
-  copyIsActive: boolean = false;
+  copyIsActive = false;
 
   @ViewChild(EndorsementHeaderComponent) headerComp!: EndorsementHeaderComponent;
   @ViewChildren(EndorsementCoverageLocationGroupComponent) components: QueryList<EndorsementCoverageLocationGroupComponent> | undefined;
-  @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined
+  @ViewChild('modal') private locationComponent: EndorsementCoverageLocationComponent | undefined;
 
   constructor(private route: ActivatedRoute, private userAuth: UserAuth,public modalService: NgbModal, private messageDialogService: MessageDialogService, private policyService: PolicyService, private updatePolicyChild: UpdatePolicyChild, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
@@ -56,7 +56,6 @@ export class CoveragesComponent implements OnInit, PolicySave {
       this.endorsementCoveragesGroups = data['endorsementCoveragesGroups'].endorsementCoveragesGroups;
       //This flattens the sequence number over all the coverages data and gets the highest value. This value will be used for adding any new coverage.
       this.coveragesSequence = this.getNextCoverageSequence(this.endorsementCoveragesGroups);
-      this.saveEndorsementCoverages = this.saveEndorsementCoverages;
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
@@ -77,7 +76,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   getNextCoverageSequence(allGroups: EndorsementCoveragesGroup[]) {
     return allGroups.map(group => group.coverages.map(coverage => coverage.sequence)).reduce(
       (locGroup, seq) => locGroup.concat(seq), []).reduce(
-        (a, b) => Math.max(a, b), 0) + 1;
+      (a, b) => Math.max(a, b), 0) + 1;
   }
   getProgramId(firstGroup: EndorsementCoveragesGroup) {
     return firstGroup.coverages[0].programId;
@@ -85,15 +84,15 @@ export class CoveragesComponent implements OnInit, PolicySave {
 
   async newLocation() {
     if (this.locationComponent != null) {
-      let location: EndorsementCoverageLocation = ({} as any) as EndorsementCoverageLocation;
+      const location: EndorsementCoverageLocation = ({} as any) as EndorsementCoverageLocation;
       // get policyId from route
-      let policyId: number = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
+      const policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
       location.policyId = policyId;
 
-      var result = await this.locationComponent.new(location);
+      const result = await this.locationComponent.new(location);
       if (result == LocationResult.new) {
         let coverage: EndorsementCoverage = ({} as EndorsementCoverage) as EndorsementCoverage;
-        let group: EndorsementCoveragesGroup = { coverages: [], location: location }
+        const group: EndorsementCoveragesGroup = { coverages: [], location: location };
         coverage = newEndorsementCoverage();
 
         coverage.sequence = this.coveragesSequence;
@@ -122,7 +121,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     });
   }
   async saveCopyLocations() {
-    let groupsToBeCopied: EndorsementCoveragesGroup[] = [];
+    const groupsToBeCopied: EndorsementCoveragesGroup[] = [];
     this.endorsementCoveragesGroups.forEach(group => {
       if(group.copyThisGroup) {
         groupsToBeCopied.push(group);
@@ -132,7 +131,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     this.endCopyLocations();
   }
   saveCopyLocationsActive(): boolean {
-    var saveActive = false;
+    let saveActive = false;
     this.endorsementCoveragesGroups.forEach(group => {
       if(group.copyThisGroup) {
         saveActive = true;
@@ -141,7 +140,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
     return saveActive;
   }
   private copyGroup(groupsToBeCopied: EndorsementCoveragesGroup[], index: number) {
-    let group = deepClone(groupsToBeCopied[index]);
+    const group = deepClone(groupsToBeCopied[index]);
     this.clearExistingLocationIdentity(group);
 
     this.locationSub = this.policyService.addEndorsementCoverageLocation(group.location)
@@ -150,7 +149,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
         this.setCopiedCoveragesIdentity(group.coverages, result);
         this.endorsementCoveragesGroups.push(group);
         if (index < groupsToBeCopied.length - 1) {
-          this.copyGroup(groupsToBeCopied, index+1)
+          this.copyGroup(groupsToBeCopied, index+1);
         }
       });
   }
@@ -180,7 +179,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
       return true;
     }
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (!child.isValid()) {
           this.endorsementStatusService.coverageValidated = false;
           return false;
@@ -189,13 +188,13 @@ export class CoveragesComponent implements OnInit, PolicySave {
     }
     this.endorsementStatusService.coverageValidated = this.headerComp.endorsementHeaderForm.status == 'VALID'
       && this.checkPremiumMatches() && this.headerComp.checkUnderlyingLimitValid() && this.headerComp.checkAttachmentPointValid()
-      && this.headerComp.checkAttachmentPointUnderlyingLimitValid() && this.checkTerrorismMessage() == "";
+      && this.headerComp.checkAttachmentPointUnderlyingLimitValid() && this.checkTerrorismMessage() == '';
     return this.endorsementStatusService.coverageValidated;
   }
 
   isCoveragesDirty(): boolean {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.isDirty()) {
           return true;
         }
@@ -211,36 +210,35 @@ export class CoveragesComponent implements OnInit, PolicySave {
   save(): void {
     this.savePolicyInfo().subscribe(() => {
       this.saveEndorsementInfo().subscribe(() => {
-        this.saveEndorsementCoverages().subscribe(() => {
-        });
+        this.saveEndorsementCoverages();
       });
-    })
+    });
   }
 
   saveEndorsementInfo(): Observable<boolean> {
-    var subject = new Subject<boolean>();
+    const subject = new Subject<boolean>();
 
     if (this.headerComp.canSave()) {
       const results$ = this.policyService.updateEndorsement(this.endorsement);
       lastValueFrom(results$)
-      .then(x => {
-        this.data['endorsementData'].endorsement = deepClone(this.endorsement);
-        this.headerComp.endorsementHeaderForm.form.markAsPristine();
-        this.headerComp.endorsementHeaderForm.form.markAsUntouched();
-        this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        subject.next(true)
-      }).catch((error) => {
-        this.messageDialogService.open("Endorsement Header Error", error.error.Message)
-        this.endorsementStatusService.coverageValidated = false;
-      });
+        .then(() => {
+          this.data['endorsementData'].endorsement = deepClone(this.endorsement);
+          this.headerComp.endorsementHeaderForm.form.markAsPristine();
+          this.headerComp.endorsementHeaderForm.form.markAsUntouched();
+          this.notification.show('Endorsesement Header successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          subject.next(true);
+        }).catch((error) => {
+          this.messageDialogService.open('Endorsement Header Error', error.error.Message);
+          this.endorsementStatusService.coverageValidated = false;
+        });
     } else {
-      setTimeout(() => subject.next(true), 0)
+      setTimeout(() => subject.next(true), 0);
     }
     return subject.asObservable();
   }
 
   saveEndorsementCoverages(): Observable<boolean> {
-    var subject = new Subject<boolean>();
+    const subject = new Subject<boolean>();
     if (this.isCoveragesDirty()) {
       this.coveragesSub = this.policyService.updateEndorsementGroups(this.endorsementCoveragesGroups).subscribe(() => {
         this.removeCopiedStatusOnCoverages(this.endorsementCoveragesGroups);
@@ -250,21 +248,21 @@ export class CoveragesComponent implements OnInit, PolicySave {
         this.notification.show('Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
       });
     } else {
-      setTimeout(() => subject.next(true), 0)
+      setTimeout(() => subject.next(true), 0);
     }
     return subject.asObservable();
   }
   savePolicyInfo(): Observable<boolean> {
-    var subject = new Subject<boolean>();
+    const subject = new Subject<boolean>();
     if (this.headerComp.savePolicyInfo) {
       this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
-          this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
-          this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-          this.headerComp.savePolicyInfo = false;
-          subject.next(true)
-        })
+        this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
+        this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        this.headerComp.savePolicyInfo = false;
+        subject.next(true);
+      });
     } else {
-      setTimeout(() => subject.next(true), 0)
+      setTimeout(() => subject.next(true), 0);
     }
     return subject.asObservable();
   }
@@ -285,59 +283,59 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   showInvalidControls(): void {
-    let invalid = [];
-    let controls = this.headerComp.endorsementHeaderForm.controls;
+    const invalid = [];
+    const controls = this.headerComp.endorsementHeaderForm.controls;
     this.showInvalid = false;
     // Check each control if it is valid
-    for (let name in controls) {
+    for (const name in controls) {
       if (controls[name].invalid) {
         invalid.push(name);
       }
     }
     // Loop through each child component to see it any of them have invalid controls
-    for (let groups of this.components!) {
-      for (let child of groups.components) {
+    for (const groups of this.components || []) {
+      for (const child of groups.components) {
         if (!child.isLimitsPatternValid) {
-          invalid.push("Location: #" + child.coverage.locationId.toString() + " Invalid Limit Pattern");
+          invalid.push('Location: #' + child.coverage.locationId.toString() + ' Invalid Limit Pattern');
         }
-        for (let name in child.endorsementCoveragesForm.controls) {
+        for (const name in child.endorsementCoveragesForm.controls) {
           if (child.endorsementCoveragesForm.controls[name].invalid) {
-            invalid.push(name + " - Location: #" + child.coverage.locationId.toString());
+            invalid.push(name + ' - Location: #' + child.coverage.locationId.toString());
           }
         }
       }
     }
-    this.invalidMessage = "";
+    this.invalidMessage = '';
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
-      for (let error of invalid) {
-        this.invalidMessage += "<br><li>" + error;
+      for (const error of invalid) {
+        this.invalidMessage += '<br><li>' + error;
       }
     }
     const terrorismMessage = this.checkTerrorismMessage();
-    if (terrorismMessage != "") {
+    if (terrorismMessage != '') {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>" + terrorismMessage;
+      this.invalidMessage += '<br><li>' + terrorismMessage;
     }
     if (!this.checkPremiumMatches()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Premium totals do not match";
+      this.invalidMessage += '<br><li>Premium totals do not match';
     }
     if (!this.headerComp.checkAttachmentPointValid()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Attachment must be greater than 0 on Excess Policy";
+      this.invalidMessage += '<br><li>Attachment must be greater than 0 on Excess Policy';
     }
     if (!this.headerComp.checkAttachmentPointUnderlyingLimitValid()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Attachment Point must be greater than the underlying limits";
+      this.invalidMessage += '<br><li>Attachment Point must be greater than the underlying limits';
     }
     if (!this.headerComp.checkUnderlyingLimitValid()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Underlying Limit must be greater than 0 for XS policy";
+      this.invalidMessage += '<br><li>Underlying Limit must be greater than 0 for XS policy';
     }
     if (this.showInvalid) {
-      this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
+      this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
     }
     else {
       this.hideInvalid();
@@ -348,24 +346,24 @@ export class CoveragesComponent implements OnInit, PolicySave {
     let terrorCoverageCount = 0;
     this.endorsementCoveragesGroups.forEach(group => {
       group.coverages.forEach(coverage => {
-        if (coverage.premiumType == "T") {
+        if (coverage.premiumType == 'T') {
           terrorCoverageCount++;
         }
-      })
-    })
-    if (this.endorsement.terrorismCode == "D" && terrorCoverageCount > 0) {
-      return "There should be no Terrorism Coverages when Terorism Code is D"
+      });
+    });
+    if (this.endorsement.terrorismCode == 'D' && terrorCoverageCount > 0) {
+      return 'There should be no Terrorism Coverages when Terorism Code is D';
     }
-    else if (this.endorsement.terrorismCode == "F" && terrorCoverageCount == 0) {
-      return "There should be at least one Terrorism Coverage when Terorism Code is F"
+    else if (this.endorsement.terrorismCode == 'F' && terrorCoverageCount == 0) {
+      return 'There should be at least one Terrorism Coverage when Terorism Code is F';
     }
-    return "";
+    return '';
   }
 
   checkPremiumMatches(): boolean {
-    let total: number = 0;
-    this.endorsementCoveragesGroups.forEach(group => { group.coverages.forEach(coverage => total += Number(coverage.premium) ?? 0) });
-    return this.headerComp.endorsement.premium == total
+    let total = 0;
+    this.endorsementCoveragesGroups.forEach(group => { group.coverages.forEach(coverage => total += Number(coverage.premium) ?? 0); });
+    return this.headerComp.endorsement.premium == total;
   }
 
   hideInvalid(): void {
@@ -379,7 +377,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
 }
