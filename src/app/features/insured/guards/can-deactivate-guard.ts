@@ -25,6 +25,7 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
           if (this.checkLeavePolicy(state.url, nextState.url)) {
             return this.confirmLeave().then(confirm => {
               if (confirm) {
+                window.scroll(0, 0);
                 component.hideInvalid();
               }
               return confirm;
