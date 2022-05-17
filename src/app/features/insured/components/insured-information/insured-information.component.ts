@@ -49,6 +49,8 @@ export class InsuredInformationComponent implements OnInit {
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
     });
+    // Testing passing data from home search
+    //console.log(this.router?.getCurrentNavigation()?.extras?.state?.insuredName);
   }
 
   ngOnInit(): void {
@@ -88,7 +90,7 @@ export class InsuredInformationComponent implements OnInit {
     let save: boolean | null = true;
 
     const refresh = this.insured.isNew;
-    if (this.insured.isNew) {
+    if (this.insured.isNew && this.isValid()) {
       save = await this.checkDuplicates();
     }
     if (save) {
@@ -99,14 +101,7 @@ export class InsuredInformationComponent implements OnInit {
         this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
       }
     }
-    else if (save == null) {
-      // When null then they navigated to another Insured
-      this.markClean();
-      this.showBusy = false;
-    }
-    else {
-      this.showBusy = false;
-    }
+    this.showBusy = false;
   }
 
   private async checkDuplicates(): Promise<boolean | null> {
@@ -123,7 +118,6 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   async saveInsured(): Promise<boolean> {
-    console.log(this.insured.formerName1);
     if (this.isValid()) {
       this.hideInvalid();
       if (this.insured.isNew) {
@@ -151,7 +145,6 @@ export class InsuredInformationComponent implements OnInit {
               this.insured = insured;
               this.insured.isNew = false;
               this.markClean();
-
               this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
               return true;
             },
@@ -172,7 +165,7 @@ export class InsuredInformationComponent implements OnInit {
     return false;
   }
 
-  private markClean() {
+  public markClean() {
     this.accountInfoComp.markClean();
     if (this.aniComp.components != null) {
       for (const child of this.aniComp.components) {
