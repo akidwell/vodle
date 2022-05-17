@@ -1,0 +1,43 @@
+<form #locationForm="ngForm">
+  <ng-template #modal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Possible Duplicates for: {{source.name }} - Address: {{source.street1 }}, {{source.city }} - FEIN: {{source.fein | fein}} </h4>
+    </div>
+    <div class="modal-body">
+      <div style="overflow-x: scroll">
+        <table class="table table-striped table-bordered" *ngIf=" searchResults.length">
+          <thead id="searchHeader">
+            <tr>
+              <th>Name</th>
+              <th>Street1</th>
+              <th>Street2</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Zip</th>
+              <th>FEIN</th>
+              <th>Name Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let insured of searchResults; let i = index">
+              <ng-container>
+                <td><a [routerLink]="[]" (click)="routeToInsured(insured.insuredCode)">
+                <td nowrap>{{ insured.name }}</td></a></td>
+                <td>{{ insured.street1 }}</td>
+                <td>{{ insured.street2 }}</td>
+                <td>{{ insured.city }}</td>
+                <td>{{ insured.state }}</td>
+                <td nowrap>{{ insured.zip | zipCode }}</td>
+                <td>{{ insured.fein | fein }}</td>
+                <td>{{ insured.matchScore | percent}}</td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="save()">Save Anyway</button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+  </ng-template>

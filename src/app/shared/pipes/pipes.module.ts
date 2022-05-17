@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FeinPipe } from './fein.pipe';
 import { MinusSignToParens } from './minus-sign.pipe';
 import { ZipCodePipe } from './zip-code.pipe';
 
@@ -6,10 +7,12 @@ import { ZipCodePipe } from './zip-code.pipe';
   imports: [],
   declarations: [
     ZipCodePipe,
+    FeinPipe,
     MinusSignToParens,
   ],
   exports: [
     ZipCodePipe,
+    FeinPipe,
     MinusSignToParens
   ]
 })
