@@ -53,7 +53,7 @@ export class InsuredService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/insureds/' + aniData.insuredCode + '/additional-insureds/' + aniData.addInsuredCode);
   }
 
-  checkDuplicates(request: InsuredDupeRequest): Observable<InsuredDupeResponse[]> { 
+  checkDuplicates(request: InsuredDupeRequest): Observable<InsuredDupeResponse[]> {
     return this.http.post<InsuredDupeResponse[]>(this.config.apiBaseUrl + 'api/insureds/check-duplicates/', request);
   }
 }
