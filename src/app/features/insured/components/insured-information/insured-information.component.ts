@@ -49,6 +49,8 @@ export class InsuredInformationComponent implements OnInit {
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
     });
+    // Testing passing data from home search
+    //console.log(this.router?.getCurrentNavigation()?.extras?.state?.insuredName);
   }
 
   ngOnInit(): void {
