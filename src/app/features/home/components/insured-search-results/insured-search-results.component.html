@@ -49,7 +49,8 @@
     </div>
     <div *ngIf="searchResults.insuredSearchResponses.length > 0" class="card-footer">
       <div id="searchFooter">
-        <div style="float:left;"><a class="nav-link">Add Insured Account</a></div>
+        <button *ngIf="canEditInsured" style="float:left; background:none; border:none;" class="underline"
+        (click)="routeToNewInsured()">Add Insured</button>
         <div style="float:right;">Results:{{searchResults.insuredSearchResponses.length}}</div>
       </div>
     </div>

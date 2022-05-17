@@ -8,10 +8,12 @@ import { insuredANI } from 'src/app/shared/components/additional-named-insured/a
 import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/components/additional-named-insured/additional-named-insureds-group/additional-named-insureds-group.component';
 import { Insured } from '../../models/insured';
 import { InsuredContact } from '../../models/insured-contact';
+import { newInsuredDupeRequst } from '../../models/insured-dupe-request';
 import { InsuredService } from '../../services/insured-service/insured.service';
 import { PreviousRouteService } from '../../services/previous-route/previous-route.service';
 import { InsuredAccountComponent } from '../insured-account/insured-account.component';
 import { InsuredContactGroupComponent } from '../insured-contact-group/insured-contact-group.component';
+import { InsuredDuplicatesComponent } from '../insured-duplicates/insured-duplicates.component';
 
 @Component({
   selector: 'rsps-insured-information',
@@ -36,6 +38,7 @@ export class InsuredInformationComponent implements OnInit {
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
+  @ViewChild('modal') private locationComponent!: InsuredDuplicatesComponent;
 
   constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService, private previousRouteService: PreviousRouteService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
@@ -82,13 +85,41 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   async save(): Promise<void> {
-    this.showBusy = true;
+    let save: boolean | null = true;
+
     const refresh = this.insured.isNew;
-    await this.saveInsured();
-    this.showBusy = false;
-    if (refresh && this.insured.insuredCode !== null) {
-      this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
+    if (this.insured.isNew) {
+      save = await this.checkDuplicates();
     }
+    if (save) {
+      this.showBusy = true;
+      await this.saveInsured();
+      this.showBusy = false;
+      if (refresh && this.insured.insuredCode !== null) {
+        this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
+      }
+    }
+    else if (save == null) {
+      // When null then they navigated to another Insured
+      this.markClean();
+      this.showBusy = false;
+    }
+    else {
+      this.showBusy = false;
+    }
+  }
+
+  private async checkDuplicates(): Promise<boolean | null> {
+    const dupe = newInsuredDupeRequst(this.insured);
+    const results$ = this.insuredService.checkDuplicates(dupe);
+    const results = await lastValueFrom(results$);
+
+    if (results.length > 0) {
+      if (this.locationComponent != null) {
+        return await this.locationComponent.open(this.insured, results);
+      }
+    }
+    return true;
   }
 
   async saveInsured(): Promise<boolean> {
@@ -216,6 +247,5 @@ export class InsuredInformationComponent implements OnInit {
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
 
 }

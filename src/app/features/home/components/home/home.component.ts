@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { APIVersionService } from 'src/app/core/services/API-version-service/api-version.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { SearchResults, SubmissionSearchResponses } from '../../models/search-results';
-import { SubmissionResponse } from '../../models/submissionResponse';
 import { PolicySearchService } from '../../services/policy-search/policy-search.service';
 import { DirectPolicyComponent } from '../direct-policy/direct-policy.component';
 
