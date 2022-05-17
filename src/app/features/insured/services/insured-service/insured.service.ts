@@ -5,6 +5,8 @@ import { ConfigService } from 'src/app/core/services/config/config.service';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { Insured } from '../../models/insured';
 import { InsuredContact } from '../../models/insured-contact';
+import { InsuredDupeRequest } from '../../models/insured-dupe-request';
+import { InsuredDupeResponse } from '../../models/insured-dupe-response';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +51,9 @@ export class InsuredService {
 
   deleteInsuredAdditionalNamedInsured(aniData: insuredANI): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/insureds/' + aniData.insuredCode + '/additional-insureds/' + aniData.addInsuredCode);
+  }
+
+  checkDuplicates(request: InsuredDupeRequest): Observable<InsuredDupeResponse[]> { 
+    return this.http.post<InsuredDupeResponse[]>(this.config.apiBaseUrl + 'api/insureds/check-duplicates/', request);
   }
 }

@@ -22,6 +22,7 @@ import { InsuredAccountCenterComponent } from './components/insured-account-cent
 import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
+import { InsuredDuplicatesComponent } from './components/insured-duplicates/insured-duplicates.component';
 
 
 @NgModule({
@@ -35,7 +36,9 @@ import { SubmissionActivityModule } from 'src/app/shared/components/submission-a
     InsuredAccountAddressComponent,
     InsuredAccountCenterComponent,
     InsuredAccountRightComponent,
-    InsuredSubmissionActivityComponent],
+    InsuredSubmissionActivityComponent,
+    InsuredDuplicatesComponent
+  ],
   imports: [
     CommonModule,
     InsuredRoutingModule,

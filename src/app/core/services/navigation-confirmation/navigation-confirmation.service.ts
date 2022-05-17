@@ -17,5 +17,5 @@ export class NavigationConfirmationService {
       return result;
     });
   }
-  
+
 }
