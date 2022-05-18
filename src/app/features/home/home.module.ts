@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskModule } from 'ngx-mask';
-import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -14,22 +14,21 @@ import { DATE_FORMATS } from '../../core/constants/date-format';
 import { HomeComponent } from './components/home/home.component';
 import { ActionComponent } from './components/action/action.component';
 import { DirectPolicyComponent } from './components/direct-policy/direct-policy.component';
-import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SearchModule } from 'src/app/shared/components/search-bar/search-bar.module';
-import { SubmissionSearchResultsComponent } from './components/search-results/submission-search-results/submission-search-results.component';
-import { InsuredSearchResultsComponent } from './components/search-results/insured-search-results/insured-search-results.component';
+import { InsuredSearchResultsComponent } from './components/insured-search-results/insured-search-results.component';
+import { PolicySearchResultsComponent } from './components/policy-search-results/policy-search-results.component';
+import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    SearchResultsComponent,
     DirectPolicyComponent,
     ActionComponent,
-    SubmissionSearchResultsComponent,
-    InsuredSearchResultsComponent
+    InsuredSearchResultsComponent,
+    PolicySearchResultsComponent
   ],
   imports: [
     CommonModule,
@@ -45,7 +44,8 @@ import { InsuredSearchResultsComponent } from './components/search-results/insur
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
-    PipesModule
+    PipesModule,
+    SubmissionActivityModule
   ],
   providers: [
     DatePipe,

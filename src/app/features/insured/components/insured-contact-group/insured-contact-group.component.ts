@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -13,14 +13,14 @@ import { NgForm } from '@angular/forms';
   templateUrl: './insured-contact-group.component.html',
   styleUrls: ['./insured-contact-group.component.css']
 })
-export class InsuredContactGroupComponent implements OnInit {
+export class InsuredContactGroupComponent {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  contactsCollapsed: boolean = false;
+  contactsCollapsed = false;
   endorsementNumber!: number;
   authSub!: Subscription;
-  canEditInsured: boolean = false;
-  canEditEndorsement: boolean = false;
+  canEditInsured = false;
+  canEditEndorsement = false;
 
   @Input() public insuredContacts: InsuredContact[] = [];
   @ViewChildren(InsuredContactComponent) components: QueryList<InsuredContactComponent> | undefined;
@@ -32,15 +32,12 @@ export class InsuredContactGroupComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-  }
-
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
   }
 
   addNewContact(): void {
-    let newContact = newInsuredContact();
+    const newContact = newInsuredContact();
     if (this.insuredContacts.length == 0) {
       newContact.isPrimary = true;
     }
@@ -48,17 +45,18 @@ export class InsuredContactGroupComponent implements OnInit {
   }
 
   copyExistingContact(contact: InsuredContact) {
-    let newContact: InsuredContact = deepClone(contact);
+    const newContact: InsuredContact = deepClone(contact);
     newContact.insuredContactId = null;
     newContact.isNew = true;
     newContact.isPrimary = false;
-    newContact.firstName = "CopyOf " + newContact.firstName;
+    newContact.isPrimaryTracked = false;
+    newContact.firstName = 'CopyOf ' + newContact.firstName;
     this.insuredContacts.push(newContact);
   }
 
   setPrimaryContact() {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.contact.isPrimary) {
           child.contactForm.form.markAsDirty();
           child.contact.isPrimary = false;
@@ -74,12 +72,6 @@ export class InsuredContactGroupComponent implements OnInit {
       if (!contact.isNew) {
         this.notification.show('Contact deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
-      if (contact.isPrimary) {
-        if (this.components != null &&  this.insuredContacts.length > 0) {
-          this.insuredContacts[0].isPrimary = true;
-          this.components?.first.contactForm.form.markAsDirty();
-        }
-      }
     }
   }
 
@@ -88,7 +80,7 @@ export class InsuredContactGroupComponent implements OnInit {
       return false;
     }
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.contactForm.status != 'VALID') {
           return false;
         }
@@ -97,8 +89,19 @@ export class InsuredContactGroupComponent implements OnInit {
     return true;
   }
 
+  isDirty() {
+    if (this.components != null) {
+      for (const child of this.components) {
+        if (child.contactForm.dirty) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   hasDuplicates(): boolean {
-    let dupe: boolean = false;
+    let dupe = false;
     this.insuredContacts.forEach(x => {
       if (!dupe) {
         dupe = this.insuredContacts.filter(c => c.firstName == x.firstName && c.lastName == x.lastName && c.email == x.email && c.phone == x.phone && c.fax == x.fax).length > 1;
@@ -108,29 +111,17 @@ export class InsuredContactGroupComponent implements OnInit {
   }
 
   getDuplicateName(): string {
-    let dupe: boolean = false;
-    let dupeName: string = "";
+    let dupe = false;
+    let dupeName = '';
 
     this.insuredContacts.forEach(x => {
       if (!dupe) {
         dupe = this.insuredContacts.filter(c => c.firstName == x.firstName).length > 1;
         if (dupe) {
-          dupeName = (x.firstName + " " + x.lastName).trim();
+          dupeName = (x.firstName + ' ' + x.lastName).trim();
         }
       }
     });
     return dupeName;
   }
-
-  isDirty() {
-    if (this.components != null) {
-      for (let child of this.components) {
-        if (child.contactForm.dirty) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
 }

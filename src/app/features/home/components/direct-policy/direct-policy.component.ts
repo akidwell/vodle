@@ -26,31 +26,31 @@ export class DirectPolicyComponent implements OnInit {
   faTimesCircle = faTimesCircle;
   policyData!: PolicyData;
   submissionSub!: Subscription;
-  isSubmissionNumberValid: boolean = false;
-  showPolicyNumberInvalid: boolean = false;
-  showExpirationDateInvalid: boolean = false;
+  isSubmissionNumberValid = false;
+  showPolicyNumberInvalid = false;
+  showExpirationDateInvalid = false;
   policySymbols$: Observable<Code[]> | undefined;
-  submissionError: string = "invalid";
-  isSearching: boolean = false;
+  submissionError = 'invalid';
+  isSearching = false;
   searchThrottle = new Subject<void>();
   searchSub!: Subscription;
-  showBusy: boolean = false;
-  isRenewal: boolean = false;
-  isRewrite: boolean = false;
+  showBusy = false;
+  isRenewal = false;
+  isRewrite = false;
   endorsementNumbers$: Observable<EndorsementNumberResponse[]> | undefined;
-  title: string = "Direct Policy"
+  title = 'Direct Policy';
   policyInfo!: PolicySearchResponses;
 
   @ViewChild('quoteForm', { static: false }) quoteForm!: NgForm;
-  @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyComponent>
-  private modalRef!: NgbModalRef
+  @ViewChild('modal') private modalContent!: TemplateRef<DirectPolicyComponent>;
+  private modalRef!: NgbModalRef;
 
   constructor(private modalService: NgbModal, private submissionSearchService: SubmissionSearchService, private policyService: PolicyService, private router: Router, private dropDownsService: DropDownsService, private navigationService: NavigationService, private messageDialogService: MessageDialogService, private endorsementNumbersService: EndorsementNumbersService) {
     this.policyData = newPolicyData();
-   }
+  }
 
   ngOnInit(): void {
-  
+
     this.policySymbols$ = this.dropDownsService.getPolicySymbols();
 
     this.searchSub = this.searchThrottle.pipe(tap(() => this.isSearching = true), debounceTime(500)).subscribe(() => {
@@ -66,32 +66,32 @@ export class DirectPolicyComponent implements OnInit {
   open(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       this.isSearching = false;
-      this.submissionError = "invalid";
+      this.submissionError = 'invalid';
       this.isSubmissionNumberValid = false;
       this.showPolicyNumberInvalid = false;
       this.showExpirationDateInvalid = false;
       this.policyData = newPolicyData();
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
-      this.modalRef.result.then(resolve, resolve)
-    })
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' });
+      this.modalRef.result.then(resolve, resolve);
+    });
   }
 
-  
+
   async openRewrite(policy: PolicySearchResponses): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       this.isSearching = false;
-      this.submissionError = "invalid";
+      this.submissionError = 'invalid';
       this.isSubmissionNumberValid = false;
       this.showPolicyNumberInvalid = false;
       this.showExpirationDateInvalid = false;
       this.policyData = newPolicyData();
       this.policyInfo = policy;
       this.policyData.endorsementNumber = policy.endorsementNumber;
-      this.title = "Cancel/Rewrite"
+      this.title = 'Cancel/Rewrite';
       this.isRewrite = true;
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
-      this.modalRef.result.then(resolve, resolve)
-    })
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' });
+      this.modalRef.result.then(resolve, resolve);
+    });
   }
 
   submissionLookup() {
@@ -101,14 +101,14 @@ export class DirectPolicyComponent implements OnInit {
         next: async (match: SubmissionResponse) => {
           this.isSearching = false;
           this.isSubmissionNumberValid = match.isMatch;
-          this.isRenewal =  match.expiringPolicyId != null ? true : false;
+          this.isRenewal = match.expiringPolicyId != null ? true : false;
 
           if (match.expiringPolicyId != null) {
             const endorsementNumbers$ = this.endorsementNumbersService.getEndorsementNumbers(match.expiringPolicyId);
             this.endorsementNumbers$ = of(await lastValueFrom(endorsementNumbers$));
           }
           if (match.isMatch) {
-            this.submissionError = "valid";
+            this.submissionError = 'valid';
             this.policyData.policyEffectiveDate = match.effectiveDate;
             this.policyData.policyExpirationDate = match.expirationDate;
             this.policyData.policySymbol = match.policySymbol;
@@ -116,7 +116,7 @@ export class DirectPolicyComponent implements OnInit {
             this.policyData.endorsementNumber = null;
             this.policyData.premium = null;
             if(this.isRewrite){
-              this.policyData.endorsementNumber = this.policyInfo.endorsementNumber
+              this.policyData.endorsementNumber = this.policyInfo.endorsementNumber;
             }
           }
           else {
@@ -132,15 +132,15 @@ export class DirectPolicyComponent implements OnInit {
 
   private clear() {
     this.isSearching = false;
-    this.submissionError = "invalid";
+    this.submissionError = 'invalid';
     this.isSubmissionNumberValid = false;
     this.isRenewal = false;
     this.policyData.policyEffectiveDate = null;
     this.policyData.policyExpirationDate = null;
     this.policyData.endorsementNumber = null;
     this.policyData.premium = null;
-    this.policyData.policySymbol = "";
-    this.policyData.policyNumber = "";
+    this.policyData.policySymbol = '';
+    this.policyData.policyNumber = '';
   }
 
   leavePolicyNumber() {
@@ -160,7 +160,7 @@ export class DirectPolicyComponent implements OnInit {
 
   setExpirationDate() {
     if (this.policyData.policyEffectiveDate != null && (this.policyData.policyExpirationDate == null || this.policyData.policyExpirationDate.toString() === '' ) && !isNaN(new Date(this.policyData.policyEffectiveDate).getDate())) {
-      let newDate = new Date(this.policyData.policyEffectiveDate);
+      const newDate = new Date(this.policyData.policyEffectiveDate);
       newDate.setFullYear(newDate.getFullYear() + 1);
       this.policyData.policyExpirationDate = newDate;
       this.checkDates();
@@ -172,7 +172,7 @@ export class DirectPolicyComponent implements OnInit {
       this.showExpirationDateInvalid = this.policyData.policyEffectiveDate >= this.policyData.policyExpirationDate;
     }
   }
-  
+
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1;
@@ -192,16 +192,17 @@ export class DirectPolicyComponent implements OnInit {
       })
       .catch((error) => {
         this.showBusy = false;
-        this.messageDialogService.open("Direct Policy Error", error.error.Message)
+        this.messageDialogService.open('Direct Policy Error', error.error.Message)
           .then(() =>
             this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
           );
       });
   }
 
-  async createRewrite(policy: PolicySearchResponses) {
+  async createRewrite() {
     this.showBusy = true;
     this.modalRef.close();
+    console.log(this.policyData);
     const response$ = this.policyService.addPolicy(this.policyData);
     await lastValueFrom(response$)
       .then((response) => {
@@ -213,7 +214,7 @@ export class DirectPolicyComponent implements OnInit {
       })
       .catch((error) => {
         this.showBusy = false;
-        this.messageDialogService.open("Cancel/Rewrite Error", error.error.Message)
+        this.messageDialogService.open('Cancel/Rewrite Error', error.error.Message)
           .then(() =>
             this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' })
           );

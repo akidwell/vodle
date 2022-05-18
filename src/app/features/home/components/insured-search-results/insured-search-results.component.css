@@ -1,0 +1,86 @@
+.card-header {
+    color: white;
+    background-color: #00274e;
+  }
+  
+  #policyHeader{
+    color: black;
+    background-color: #e6e9ed;
+  }
+  
+  .card {
+    overflow-y:inherit ;
+    overflow-x: hidden;
+  }
+  
+  .Cancelled {
+    color: #ed0139;
+  }
+  
+  .Expired {
+    color: #ed0139;
+  }
+  
+  .InForce {
+    color: green;
+  }
+  
+  #searchHeader {
+    background-color: #335271;
+    color: white;
+  }
+  
+  #searchFooter {
+    font-weight: bold;
+    text-align: center;
+  }
+  .nav-link {
+    color: black;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    padding: 0%;
+    font-weight: normal;
+  }
+  
+  .table {
+    margin-top: 0px;
+    margin-bottom: 0px
+  }
+  
+  #actionCell {
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  #action {
+    height: fit-content;
+    width: fit-content;
+    color: black;
+    border-color: black;
+    background-color: rgb(235, 230, 230);
+    margin-left: 10px;
+    margin-top: 2px;
+  
+  }
+  
+  .policyBorder {
+    border-top: 10px solid black;
+  }
+  
+  .voidStatus{
+   color: #ed0139 !important;
+  }
+  .table-striped>tbody>tr:is(.voidStatus):nth-of-type(odd)>*{
+    color: #ed0139 !important;
+  }
+  
+  .table th {
+    vertical-align: top;
+  }
+
+  .underline:hover {
+    text-decoration: underline;
+  }
+  

@@ -28,29 +28,30 @@
         maxlength="25" [required]="canEditInsured" name="lastName" [(ngModel)]="contact.lastName">
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control" id="email" [readonly]="!canEditInsured"  maxlength="100" name="email"
+      <input type="text" class="form-control" id="email" [readonly]="!canEditInsured" nullValue maxlength="100" name="email"
         [(ngModel)]="contact.email" #email="ngModel">
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control" id="phone" [readonly]="!canEditInsured" name="phone"
+      <input type="text" class="form-control" id="phone" [readonly]="!canEditInsured" nullValue name="phone"
         [(ngModel)]="contact.phone" #phone="ngModel" mask="(000) 000-0000">
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control" id="fax" [readonly]="!canEditInsured" name="fax" [(ngModel)]="contact.fax"
+      <input type="text" class="form-control" id="fax" [readonly]="!canEditInsured" nullValue name="fax" [(ngModel)]="contact.fax"
         #fax="ngModel" mask="(000) 000-0000">
     </div>
     <div class="col-lg-2">
-      <fa-icon *ngIf="contact.isPrimary"
-        style="float:left; margin-top: 5px; color: gold;stroke: black;stroke-width: 15px;" title="Primary"
-        [icon]="faSolidStar" (click)="$event.preventDefault();" click-stop-propagation></fa-icon>
-      <fa-icon *ngIf="!contact.isPrimary" [ngClass]="(!contact.isPrimary && isHover && canEditInsured) ? 'visible' : 'hidden'" title="Favorite"
-        [icon]="faStar" (click)="$event.preventDefault();primary(contact)" click-stop-propagation></fa-icon>
+      <fa-icon *ngIf="contact.isPrimary" class="primaryStar" title="Primary" [icon]="faSolidStar"></fa-icon>
+      <fa-icon *ngIf="contact.isPrimaryTracked && !contact.isPrimary" class="greyStar" title="Primary" [icon]="faSolidStar"
+        (click)="$event.preventDefault();setPrimary(contact)" click-stop-propagation></fa-icon>
+      <fa-icon *ngIf="!contact.isPrimary && !contact.isPrimaryTracked"
+        [ngClass]="(!contact.isPrimary && isHover && canEditInsured) ? 'visible' : 'hidden'" title="Favorite"
+        [icon]="faStar" (click)="$event.preventDefault();setPrimary(contact)" click-stop-propagation></fa-icon>
       <span class="btn btn-secondary" style="margin-left: 5px;" (click)=copyContact() hover-class="btn-primary"
         *ngIf="canEditInsured">Copy</span>
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-        *ngIf="!contact.isNew && canEditInsured">Delete</span>
+        *ngIf="canDelete">Delete</span>
       <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-        *ngIf="contact.isNew && canEditInsured">Remove</span>
+        *ngIf="canRemove">Remove</span>
     </div>
-    </div>
+  </div>
 </form>

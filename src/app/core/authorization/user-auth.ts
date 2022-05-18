@@ -6,17 +6,17 @@ import { BehaviorSubject } from 'rxjs';
 })
 
 export class UserAuth {
-  userId: string = "";
-  userName: string = "";
-  bearerToken: string = "";
-  isAuthenticated: boolean = false;
+  userId = '';
+  userName = '';
+  bearerToken = '';
+  isAuthenticated = false;
 
   private _isApiAuthenticated = new BehaviorSubject<boolean>(false);
   isApiAuthenticated$ = this._isApiAuthenticated.asObservable();
   get isApiAuthenticated(): boolean { return this._isApiAuthenticated.getValue(); }
   set isApiAuthenticated(value: boolean) { this._isApiAuthenticated.next(value); }
 
-  private _apiBearerToken = new BehaviorSubject<string>("");
+  private _apiBearerToken = new BehaviorSubject<string>('');
   ApiBearerToken$ = this._apiBearerToken.asObservable();
   get ApiBearerToken(): string { return this._apiBearerToken.getValue(); }
   set ApiBearerToken(value: string) { this._apiBearerToken.next(value); }
@@ -41,12 +41,12 @@ export class UserAuth {
   get canEditSubmission(): boolean { return this._canEditSubmission.getValue(); }
   set canEditSubmission(value: boolean) { this._canEditSubmission.next(value); }
 
-  private _userRole = new BehaviorSubject<string>("");
+  private _userRole = new BehaviorSubject<string>('');
   userRole$ = this._userRole.asObservable();
   get userRole(): string { return this._userRole.getValue(); }
   set userRole(value: string) { this._userRole.next(value); }
 
-  private _environment = new BehaviorSubject<string>("");
+  private _environment = new BehaviorSubject<string>('');
   environment$ = this._environment.asObservable();
   get environment(): string { return this._environment.getValue(); }
   set environment(value: string) { this._environment.next(value); }
@@ -59,8 +59,8 @@ export class UserAuth {
 
 
   init(): void {
-    this.userName = "";
-    this.bearerToken = "";
+    this.userName = '';
+    this.bearerToken = '';
   }
 
 }

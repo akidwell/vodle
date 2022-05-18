@@ -17,6 +17,12 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { InsuredHeaderComponent } from './components/insured-header.component.ts/insured-header.component';
+import { InsuredAccountAddressComponent } from './components/insured-account-address/insured-account-address.component';
+import { InsuredAccountCenterComponent } from './components/insured-account-center/insured-account-center.component';
+import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
+import { PipesModule } from 'src/app/shared/pipes/pipes.module';
+import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
+import { InsuredDuplicatesComponent } from './components/insured-duplicates/insured-duplicates.component';
 
 
 @NgModule({
@@ -27,7 +33,12 @@ import { InsuredHeaderComponent } from './components/insured-header.component.ts
     InsuredContactGroupComponent,
     InsuredInformationComponent,
     InsuredHeaderComponent,
-    InsuredSubmissionActivityComponent],
+    InsuredAccountAddressComponent,
+    InsuredAccountCenterComponent,
+    InsuredAccountRightComponent,
+    InsuredSubmissionActivityComponent,
+    InsuredDuplicatesComponent
+  ],
   imports: [
     CommonModule,
     InsuredRoutingModule,
@@ -38,6 +49,8 @@ import { InsuredHeaderComponent } from './components/insured-header.component.ts
     NgSelectModule,
     DirectivesModule,
     BusyModule,
+    PipesModule,
+    SubmissionActivityModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

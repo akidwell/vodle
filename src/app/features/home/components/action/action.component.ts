@@ -23,25 +23,25 @@ export class ActionComponent implements OnInit {
   endorsementReasons!: Code[];
   transactionTypes!: Code[];
   authSub: Subscription;
-  canEdit: boolean = false;
+  canEdit = false;
   endorsementActionInfo!: NewEndorsementData;
   policyInfo!: PolicySearchResponses;
-  isTransEffectiveValid: boolean = true;
-  isTransExpirationValid: boolean = true;
-  isNewEndorsementNumberValid: boolean = true;
+  isTransEffectiveValid = true;
+  isTransExpirationValid = true;
+  isNewEndorsementNumberValid = true;
   usedEndorsementNumbers!: EndorsementNumberResponse[];
   NewEndorsementResponse!: NewEndorsementData;
   errorMessage = '';
-  showBusy: boolean = false;
+  showBusy = false;
   cancelTypes: string[] = [ 'Pro-Rata Cancel', 'Short Rate Cancel', 'Flat Cancel'];
   isRewrite!: boolean;
   isBackout!: boolean;
 
   @ViewChild(NgForm, { static: false }) endorsementActionForm!: NgForm;
-  @ViewChild('actionModal') private modalContent!: TemplateRef<ActionComponent>
-  private modalRef!: NgbModalRef
+  @ViewChild('actionModal') private modalContent!: TemplateRef<ActionComponent>;
+  private modalRef!: NgbModalRef;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService,  private router: Router, public modalService: NgbModal, private endorsementNumbersService: EndorsementNumbersService, private policyService: PolicyService, private navigationService: NavigationService, private messageDialogService: MessageDialogService) {
+  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private router: Router, public modalService: NgbModal, private endorsementNumbersService: EndorsementNumbersService, private policyService: PolicyService, private navigationService: NavigationService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -55,134 +55,134 @@ export class ActionComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses, status: string): Promise<void> {
+  async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses): Promise<void> {
     this.isRewrite = false;
     this.isBackout = false;
 
     this.policyInfo = policy;
-    const usedEndorsementNumbers$ =  this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
-    this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
-    const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
-    this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
-    const transactionTypes$ =  this.dropdowns.getTransactionTypes();
-    this.transactionTypes =  await lastValueFrom(transactionTypes$);
+    const usedEndorsementNumbers$ = this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
+    this.usedEndorsementNumbers = await lastValueFrom(usedEndorsementNumbers$);
+    const endorsementReasons$ = this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons = await lastValueFrom(endorsementReasons$);
+    const transactionTypes$ = this.dropdowns.getTransactionTypes();
+    this.transactionTypes = await lastValueFrom(transactionTypes$);
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
       this.endorsementActionInfo.premium = 0;
-      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
-      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
-      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber;
+      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId;
+      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId;
 
       if(this.policyInfo.policyCancelDate != null){
-        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel')  &&  x.description !== 'New Business' && x.description !== 'Renewal Business');
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel') && x.description !== 'New Business' && x.description !== 'Renewal Business');
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
       else if(this.policyInfo.policyCancelDate == null){
-        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' &&  x.description !== 'New Business' && x.description !== 'Renewal Business' );
-        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' && x.description !== 'New Business' && x.description !== 'Renewal Business' );
+        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement');
       }
 
       if (policy.masterPolicy !== '1') {
         if (policy.policyExtendedDate != null) {
-          this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate
+          this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate;
         } else {
           this.endorsementActionInfo.transExpirationDate = policy.policyExpirationDate;
         }
       }
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
-      this.modalRef.result.then(resolve, resolve)
-    })
-  } 
-  async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses, status: string): Promise<void> {
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true });
+      this.modalRef.result.then(resolve, resolve);
+    });
+  }
+  async backoutPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses): Promise<void> {
     this.policyInfo = policy;
     this.isRewrite = false;
     this.isBackout = true;
-    const usedEndorsementNumbers$ =  this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
-    this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
-    const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
-    this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
-    const transactionTypes$ =  this.dropdowns.getTransactionTypes();
-    this.transactionTypes =  await lastValueFrom(transactionTypes$);
+    const usedEndorsementNumbers$ = this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
+    this.usedEndorsementNumbers = await lastValueFrom(usedEndorsementNumbers$);
+    const endorsementReasons$ = this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons = await lastValueFrom(endorsementReasons$);
+    const transactionTypes$ = this.dropdowns.getTransactionTypes();
+    this.transactionTypes = await lastValueFrom(transactionTypes$);
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
-      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
-      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
-      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber;
+      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId;
+      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId;
       this.endorsementActionInfo.backout = true;
 
       if (this.policyInfo.amount > 0){
-        this.endorsementActionInfo.premium = -this.policyInfo.amount
+        this.endorsementActionInfo.premium = -this.policyInfo.amount;
         this.endorsementActionInfo.transactionType = 12;
       }
       if (this.policyInfo.amount < 0){
-        this.endorsementActionInfo.premium = Math.abs(this.policyInfo.amount)
-        this.endorsementActionInfo.transactionType = 1
+        this.endorsementActionInfo.premium = Math.abs(this.policyInfo.amount);
+        this.endorsementActionInfo.transactionType = 1;
       }
       if(this.policyInfo.policyCancelDate != null){
-        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel')  &&  x.description !== 'New Business' && x.description !== 'Renewal Business');
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel') && x.description !== 'New Business' && x.description !== 'Renewal Business');
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
       }
       else if(this.policyInfo.policyCancelDate == null){
-        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' &&  x.description !== 'New Business' && x.description !== 'Renewal Business' );
-        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' && x.description !== 'New Business' && x.description !== 'Renewal Business' );
+        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement');
       }
 
       if (policy.masterPolicy !== '1') {
         if (policy.policyExtendedDate != null) {
-          this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate
+          this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate;
         } else {
           this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
         }
       }
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
-      this.modalRef.result.then(resolve, resolve)
-    })
-  } 
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true });
+      this.modalRef.result.then(resolve, resolve);
+    });
+  }
 
-  async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses, status: string) {
+  async cancelRewritePopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses) {
     this.isRewrite = true;
     this.isBackout = false;
 
     this.policyInfo = policy;
-    const usedEndorsementNumbers$ =  this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
-    this.usedEndorsementNumbers =  await lastValueFrom(usedEndorsementNumbers$);
-    const endorsementReasons$ =  this.dropdowns.getEndorsementReasons();
-    this.endorsementReasons =  await lastValueFrom(endorsementReasons$);
-    const transactionTypes$ =  this.dropdowns.getTransactionTypes();
-    this.transactionTypes =  await lastValueFrom(transactionTypes$);
+    const usedEndorsementNumbers$ = this.endorsementNumbersService.getEndorsementNumbers(policy.policyId);
+    this.usedEndorsementNumbers = await lastValueFrom(usedEndorsementNumbers$);
+    const endorsementReasons$ = this.dropdowns.getEndorsementReasons();
+    this.endorsementReasons = await lastValueFrom(endorsementReasons$);
+    const transactionTypes$ = this.dropdowns.getTransactionTypes();
+    this.transactionTypes = await lastValueFrom(transactionTypes$);
 
     return new Promise<void>(resolve => {
       this.endorsementActionInfo = endorsementAction;
-      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber
+      this.endorsementActionInfo.endorsementNumber = this.policyInfo.endorsementNumber;
       this.endorsementActionInfo.isRewrite = true;
       this.endorsementActionInfo.transactionType = 4;
       this.endorsementActionInfo.transEffectiveDate = this.policyInfo.policyEffectiveDate;
       if (policy.policyExtendedDate != null) {
-        this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate
+        this.endorsementActionInfo.transExpirationDate = policy.policyExtendedDate;
       } else {
         this.endorsementActionInfo.transExpirationDate = this.policyInfo.policyExpirationDate;
       }
-      this.endorsementActionInfo.endorsementReason = "PCR";
+      this.endorsementActionInfo.endorsementReason = 'PCR';
       ///////check this
-      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId
-      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId
+      this.endorsementActionInfo.sourcePolicyId = this.policyInfo.policyId;
+      this.endorsementActionInfo.destinationPolicyId = this.policyInfo.policyId;
 
       if(this.policyInfo.policyCancelDate != null){
-        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel')  &&  x.description !== 'New Business' && x.description !== 'Renewal Business');
+        this.transactionTypes = this.transactionTypes.filter(x => !x.description.includes('Cancel') && x.description !== 'New Business' && x.description !== 'Renewal Business');
         this.endorsementReasons = this.endorsementReasons.filter(x => !x.description.includes('Cancelled') && !x.description.includes('Flat Cancel & Rewrite'));
 
       }
       else if(this.policyInfo.policyCancelDate == null){
-      this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' &&  x.description !== 'New Business' && x.description !== 'Renewal Business' );
-        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement')
+        this.transactionTypes = this.transactionTypes.filter(x => x.description !== 'Reinstatement' && x.description !== 'New Business' && x.description !== 'Renewal Business' );
+        this.endorsementReasons = this.endorsementReasons.filter(x => x.description !== 'Reinstatement');
       }
 
-      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true })
-      this.modalRef.result.then(resolve, resolve)
-    })  }
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true });
+      this.modalRef.result.then(resolve, resolve);
+    }); }
 
   checkTransEffectiveDate(): boolean {
     if (this.endorsementActionInfo.transactionType !== undefined) {
@@ -209,10 +209,10 @@ export class ActionComponent implements OnInit {
     if (this.policyInfo.masterPolicy == '1') {
       if (this.endorsementActionInfo.transEffectiveDate !== undefined) {
 
-        let transEffectivePlus1 = new Date(this.endorsementActionInfo.transEffectiveDate);
+        const transEffectivePlus1 = new Date(this.endorsementActionInfo.transEffectiveDate);
         transEffectivePlus1.setFullYear(transEffectivePlus1.getFullYear() + 1);
 
-        let polExpirationPlus1 = new Date(this.policyInfo.policyEffectiveDate);
+        const polExpirationPlus1 = new Date(this.policyInfo.policyEffectiveDate);
         polExpirationPlus1.setFullYear(polExpirationPlus1.getFullYear() + 1);
 
         if (transEffectivePlus1 < polExpirationPlus1) {
@@ -251,7 +251,7 @@ export class ActionComponent implements OnInit {
   checkEndorsementNumber(): boolean {
     this.isNewEndorsementNumberValid = true;
     if (this.endorsementActionInfo.newEndorsementNumber != undefined) {
-      let filteredList = this.usedEndorsementNumbers.filter(x => x.endorsementNumber == this.endorsementActionInfo.newEndorsementNumber);
+      const filteredList = this.usedEndorsementNumbers.filter(x => x.endorsementNumber == this.endorsementActionInfo.newEndorsementNumber);
       if (filteredList.length !== 0) {
         this.endorsementActionForm.controls['newEndorsementNumber'].setErrors({ 'incorrect': true });
         this.isNewEndorsementNumberValid = false;
@@ -265,7 +265,7 @@ export class ActionComponent implements OnInit {
   }
 
   clearAndClose(): void {
-    this.isTransEffectiveValid = true
+    this.isTransEffectiveValid = true;
     this.isTransExpirationValid = true;
     this.isNewEndorsementNumberValid = true;
     this.modalRef.close();
@@ -278,14 +278,14 @@ export class ActionComponent implements OnInit {
     const response$ = this.policyService.createNewEndorsement(this.endorsementActionInfo);
     await lastValueFrom(response$)
       .then((endResponse) => {
-        this.modalRef.close()
+        this.modalRef.close();
         this.NewEndorsementResponse = endResponse;
         this.routeEndorsement();
       })
       .catch((error) => {
-        this.modalRef.close()
+        this.modalRef.close();
         this.showBusy = false;
-        this.messageDialogService.open("Endorsement Error", error.error.Message)
+        this.messageDialogService.open('Endorsement Error', error.error.Message)
           .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));
       });
   }
@@ -298,8 +298,8 @@ export class ActionComponent implements OnInit {
     }
     else {
       this.showBusy = false;
-      this.messageDialogService.open("Endorsement Error", this.errorMessage)
-      .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));    
+      this.messageDialogService.open('Endorsement Error', this.errorMessage)
+        .then(() => this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static' }));
     }
   }
 

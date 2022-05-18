@@ -3,7 +3,7 @@
     <ngb-alert *ngIf="showInvalid && canEditPolicy" type=danger (closed)="hideInvalid()" [dismissible]="true"
       [innerHTML]="invalidMessage"></ngb-alert>
     <div *ngFor="let item of invoices; index as i">
-        <rsps-invoice-group [index]=i [invoice]=item [policyInfo]=policyInfo></rsps-invoice-group>
+        <rsps-invoice-group [index]=i [invoice]=item [policyInfo]=policyInfo (resetInvoice)=resetInvoice()></rsps-invoice-group>
     </div>
    </div>
 </form>

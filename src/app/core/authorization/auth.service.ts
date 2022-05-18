@@ -18,7 +18,7 @@ export class AuthService {
   tokenJSON: IAuthObject | undefined;
   public $authenticationState: Observable<any>;
 
-  constructor(private userAuth: UserAuth, private http: HttpClient,  private jwtHelper: JwtHelperService,
+  constructor(private userAuth: UserAuth, private http: HttpClient, private jwtHelper: JwtHelperService,
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, private router: Router, private config: ConfigService, private oktaAuthState: OktaAuthStateService) {
     this.oktaAuthState.authState$.subscribe((isAuthenticated: AuthState) => {
       if (isAuthenticated) {
@@ -47,7 +47,7 @@ export class AuthService {
   header = {
     headers: new HttpHeaders()
       .set('OKTA-Authorization', 'Bearer ' + this.oktaAuth.getAccessToken())
-  }
+  };
 
   private _headers = new HttpHeaders();
 
@@ -55,7 +55,7 @@ export class AuthService {
     this.userAuth.init();
     this.getAuthToken().subscribe({
       next: token => {
-        if (token != null && token != "") {
+        if (token != null && token != '') {
           this.userAuth.bearerToken = JSON.parse(JSON.stringify(token)).data;
           this.userAuth.ApiBearerToken = JSON.parse(JSON.stringify(token)).data;
           localStorage.setItem('jwt_token', this.userAuth.bearerToken);
@@ -71,7 +71,7 @@ export class AuthService {
       .pipe(
         tap(async token => {
           if (token == null) {
-            console.warn("No token");
+            console.warn('No token');
           }
           else {
             const tokenString = JSON.parse(JSON.stringify(token));
@@ -84,10 +84,10 @@ export class AuthService {
           }
         }),
         catchError(err => {
-          console.error("Error: " + err.message);
-          return "";
+          console.error('Error: ' + err.message);
+          return '';
         })
-      )
+      );
   }
 
   processAuthClaims(token: IAuthObject) {
