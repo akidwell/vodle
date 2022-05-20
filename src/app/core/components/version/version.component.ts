@@ -8,8 +8,8 @@ import { VersionService } from '../../services/version/version.service';
   templateUrl: './version.component.html'
 })
 export class VersionComponent implements OnInit, OnDestroy {
-  uiVersion: string = '';
-  apiVersion: string = '';
+  uiVersion = '';
+  apiVersion = '';
   errorMessage = '';
   sub!: Subscription;
 

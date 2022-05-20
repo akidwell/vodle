@@ -10,8 +10,8 @@ describe('ReportsComponent', () => {
   let mockReportsService: any;
 
   beforeEach(async () => {
-    mockReportsService = jasmine.createSpyObj(['getReports'])
-    mockReportsService.getReports.and.returnValue(of(["test Report"]));
+    mockReportsService = jasmine.createSpyObj(['getReports']);
+    mockReportsService.getReports.and.returnValue(of(['test Report']));
 
     await TestBed.configureTestingModule({
       declarations: [ReportsComponent],
