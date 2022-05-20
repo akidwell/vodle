@@ -12,6 +12,7 @@ export class UpdateService {
   constructor(private updates: SwUpdate, private confirmationDialogService: ConfirmationDialogService, private messageDialogServive: MessageDialogService, private configService: ConfigService) { }
 
   startTimer() {
+    console.log('Enable UpdateService: ' + environment.production);
     if (environment.production) {
       const updateInterval$ = interval(this.configService.updateTimerSecs * 1000);
       updateInterval$.subscribe(() => {
