@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -6,18 +6,15 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './confirmation-dialog.component.html',
   styleUrls: ['./confirmation-dialog.component.css']
 })
-export class ConfirmationDialogComponent implements OnInit {
+export class ConfirmationDialogComponent {
 
-  public message: string = "";
-  public title: string = "Error!";
-  
+  public message = '';
+  public title = 'Error!';
+
   constructor(public activeModal: NgbActiveModal) { }
 
-  ngOnInit(): void {
-  }
-
-  close(val: any) {
-    if (val == "Yes") {
+  close(val: string) {
+    if (val == 'Yes') {
       this.activeModal.close(true);
     }
     this.activeModal.close(false);

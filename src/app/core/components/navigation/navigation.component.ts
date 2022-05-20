@@ -16,7 +16,7 @@ import { NavigationService } from 'src/app/features/policy/services/navigation/n
 export class NavigationComponent implements OnInit {
   reportNavbarOpen = false;
   applicationNavbarOpen = false;
-  isAuthenticated: boolean = false;
+  isAuthenticated = false;
   faFileAlt = faFileAlt;
   faFileImport = faFileImport;
   faHome = faHome;
@@ -32,8 +32,8 @@ export class NavigationComponent implements OnInit {
   editSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
-  showFav: boolean = false;
-  canEditPolicy: boolean = false;
+  showFav = false;
+  canEditPolicy = false;
 
   constructor(private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
@@ -72,10 +72,10 @@ export class NavigationComponent implements OnInit {
   }
 
   favorite(policy: PolicyHistory) {
-    policy.favorite = this.currentPolicy.favoritePolicyHistory(policy.policyId, policy.endorsementNumber, true)
+    policy.favorite = this.currentPolicy.favoritePolicyHistory(policy.policyId, policy.endorsementNumber, true);
   }
   unfavorite(policy: PolicyHistory) {
-    policy.favorite = this.currentPolicy.favoritePolicyHistory(policy.policyId, policy.endorsementNumber, false)
+    policy.favorite = this.currentPolicy.favoritePolicyHistory(policy.policyId, policy.endorsementNumber, false);
   }
 
   hoverFavorite(policy: PolicyHistory) {

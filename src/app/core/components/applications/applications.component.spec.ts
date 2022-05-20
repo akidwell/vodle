@@ -9,8 +9,8 @@ describe('ApplicationsComponent', () => {
   let mockApplicationsService: any;
 
   beforeEach(async () => {
-    mockApplicationsService = jasmine.createSpyObj(['getApplications'])
-    mockApplicationsService.getApplications.and.returnValue(of(["test"]));
+    mockApplicationsService = jasmine.createSpyObj(['getApplications']);
+    mockApplicationsService.getApplications.and.returnValue(of(['test']));
 
     await TestBed.configureTestingModule({
       declarations: [ApplicationsComponent],

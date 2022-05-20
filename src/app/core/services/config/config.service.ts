@@ -52,4 +52,7 @@ export class ConfigService {
   get apiSwitchIsActive(): boolean {
     return this.appConfig.apiSwitch;
   }
+  get updateTimerSecs(): number {
+    return this.appConfig.updateTimerSecs;
+  }
 }
