@@ -79,3 +79,8 @@
   .table th {
     vertical-align: top;
   }
+
+  .underline:hover {
+    text-decoration: underline;
+  }
+  
