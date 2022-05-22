@@ -1,0 +1,52 @@
+
+<div>
+  <div>
+    <label>Producer Contact</label>
+      <input id="producer-search" type="text" class="form-control"
+      [class.is-invalid]="searchFailed"
+      [(ngModel)]="model"
+      #producerContact (click)="producerContact.select()"
+      [inputFormatter]="displayFormatter"
+      [resultFormatter]="displayFormatter"
+      [ngbTypeahead]="search"
+      [disabled]="this.producerCode == null"
+      (selectItem)="selectedProducerContact($event)"
+      (focusout)="leaveSearchBar()"
+      placement="bottom-start"
+      placeholder="Producer search" />
+  </div>
+  <div *ngIf="canEdit && showContactMaintenance" class="card">
+    <div class="card-header" (click)="collapse.toggle()">Producer Contact Maintenance
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="pcCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!pcCollapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="pcCollapsed">
+      <div *ngFor="let producerContact of searchResponse; let i = index">
+        <div class="row">
+          <div class="col-lg-4" >
+            {{producerContact.firstName + ' ' + producerContact.lastName}}
+          </div >
+          <div class="col-lg-4">
+            {{producerContact.email}}
+          </div>
+          <div class="col-lg-2">
+            {{producerContact.phone}}
+          </div>
+          <div class="col-lg-1">
+            {{producerContact.isActive ? 'Active' : 'Inactive'}}
+          </div>
+          <div class="col-lg-1">
+            actions
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div id="producerContactFooter">
+        <button style="float:left; background:none; border:none;" class="underline"
+          (click)="addNewProducerContact();">Add Producer Contact</button>
+        <div style="float:right;">Producer Coverages: {{searchResponse.length}}</div>
+      </div>
+    </div>
+  </div>
+</div>

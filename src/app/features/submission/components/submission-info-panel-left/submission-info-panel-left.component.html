@@ -1,0 +1,32 @@
+<form #insuredPanel="ngForm">
+    <div class="row">
+      <div class="col-lg-9">
+        <label for="newRenewalFlag"  class="form-label" title="newRenewalFlag">Submission Type</label>
+              <input type="text" class="form-control" id="newRenewalFlag" [required]="!isFieldReadOnly(false)"
+                [readonly]="isFieldReadOnly(false)" [(ngModel)]="submission.newRenewalFlag"
+                #newRenewalFlag="ngModel" name="newRenewalFlag">
+      </div>
+      <div class="col-lg-3">
+        <label for="override" class="form-label" title="Override">Renewable</label>
+        <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="isRenewable"
+          name="override" [readonly]="!canEditSubmission" (change)="changeRenewable()">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-9">
+        <label for="expiringPolicy"  class="form-label" title="Expiring Policy">Expiring Policy</label>
+              <input type="text" class="form-control" id="expiringPolicy" [required]="!isFieldReadOnly(false)"
+                [readonly]="isFieldReadOnly(false)" [(ngModel)]="submission.expiringPolicyId"
+                #expiringPolicy="ngModel" name="expiringPolicy">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-9">
+        <label for="extExpiringPolicy"  class="form-label" title="EXT Expiring Policy">EXT Expiring Policy</label>
+              <input type="text" class="form-control" id="extExpiringPolicy"
+                [readonly]="isFieldReadOnly(false)" [(ngModel)]="submission.extExpiringPolicyNo"
+                #extExpiringPolicy="ngModel" name="extExpiringPolicy">
+      </div>
+    </div>
+
+</form>

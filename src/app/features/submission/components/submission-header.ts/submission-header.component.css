@@ -1,0 +1,17 @@
+#submissionHeader {
+  background-color: #335271;
+  color: white;
+  font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+    sans-serif;
+  position: sticky;
+  z-index: 1;
+  width: 100%;
+  top: 48px;
+  height: fit-content;
+  padding: 0.25%;
+}
+
+/* Overwrite margin size */
+.row {
+  margin: 0;
+}
