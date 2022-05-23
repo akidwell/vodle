@@ -21,6 +21,7 @@ import { SearchModule } from 'src/app/shared/components/search-bar/search-bar.mo
 import { InsuredSearchResultsComponent } from './components/insured-search-results/insured-search-results.component';
 import { PolicySearchResultsComponent } from './components/policy-search-results/policy-search-results.component';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
+import { PacerSearchResultsComponent } from './components/pacer-search-results/pacer-search-results.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SubmissionActivityModule } from 'src/app/shared/components/submission-a
     DirectPolicyComponent,
     ActionComponent,
     InsuredSearchResultsComponent,
-    PolicySearchResultsComponent
+    PolicySearchResultsComponent,
+    PacerSearchResultsComponent
   ],
   imports: [
     CommonModule,

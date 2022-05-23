@@ -14,7 +14,7 @@
               <th>Submission No</th>
               <th>Quote No</th>
               <th>Sub Date</th>
-              <th>Renewable</th>
+              <th>N/R</th>
               <th>Sub Status</th>
               <th>Profit Center</th>
               <th>Effective Date</th>
@@ -57,7 +57,7 @@
     </div>
     <div class="card-footer">
       <div id="searchFooter">
-        <div style="float:left;"><a class="nav-link">Add Submission</a></div>
+        <div *ngIf="canEditSubmission" style="float:left;"><a class="nav-link">Add Submission</a></div>
         <div style="float:right;">Results:{{submissionResults.length}}</div>
       </div>
     </div>

@@ -1,0 +1,48 @@
+<div class="card" >
+    <div class="card-header"  *ngIf="pacerSearchResults.length > 0"(click)="collapsed = !collapsed">Pacer Accounts
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse"  *ngIf="pacerSearchResults.length > 0" [(ngbCollapse)]="collapsed">
+      <div style="overflow-x: scroll">
+        <table class="table table-striped table-bordered"
+          *ngIf=" pacerSearchResults.length ">
+          <thead id="searchHeader">
+            <tr>
+              <th>Pacer Id</th>
+              <th>First Named Insured</th>
+              <th>Address</th>
+              <th class="col-sm-2">Other Named Insured</th>
+              <th>Effective Date</th>
+              <th>Recieved Date</th>
+              <th>Producer</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Policy No.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let insured of pacerSearchResults; let i = index">
+              <ng-container>
+                  <td nowrap>{{ insured.pacerId }}</td>
+                    <td><a [routerLink]="[]" (click)="routeToNewInsuredFromPacer(insured)">{{ insured.name }}</a></td>
+                    <td >{{ insured.streetAddress }} {{ insured.insuredCity }} {{ insured.insuredState }} {{ insured.zip | zipCode }}</td>
+                    <td class="col-sm-2">{{ insured.insuredName }}</td>
+                    <td>{{ insured.effectiveDate  | date: 'MM/dd/yyyy' }}</td>
+                    <td>{{ insured.recievedDate  | date: 'MM/dd/yyyy'}}</td>
+                    <td>{{ insured.producer }}</td>
+                    <td>{{ insured.type }}</td>
+                    <td>{{ insured.subStatus }}</td>
+                    <td>{{ insured.policyNumber }}</td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="pacerSearchResults.length > 0" class="card-footer">
+      <div id="searchFooter">
+        
+        <div style="float:right;">Results:{{pacerSearchResults.length }}</div>
+      </div>
+    </div>
