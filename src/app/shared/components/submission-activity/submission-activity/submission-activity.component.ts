@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionSearchResponses } from 'src/app/features/home/models/search-results';
 
 @Component({
@@ -8,8 +10,13 @@ import { SubmissionSearchResponses } from 'src/app/features/home/models/search-r
   styleUrls: ['./submission-activity.component.css']
 })
 export class SharedSubmissionActivityComponent implements OnInit {
+  canEditSubmission = false;
+  authSub: Subscription;
 
-  constructor() { }
+  constructor( private userAuth: UserAuth) {
+    this.authSub = this.userAuth.canEditSubmission$.subscribe(
+      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    ); }
 
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;

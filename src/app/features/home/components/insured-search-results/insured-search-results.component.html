@@ -1,56 +1,46 @@
-<div class="card"  *ngIf="searchResults.insuredSearchResponses.length > 0">
-    <div class="card-header"  *ngIf="searchResults.insuredSearchResponses.length > 0"(click)="collapsed = !collapsed">Insured Accounts
+<div class="card"  >
+    <div class="card-header"  (click)="collapsed = !collapsed">Insured Accounts
       <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
       <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
     </div>
-    <div #collapse="ngbCollapse"  *ngIf="searchResults.insuredSearchResponses.length > 0" [(ngbCollapse)]="collapsed">
+    <div #collapse="ngbCollapse"  [(ngbCollapse)]="collapsed">
       <div style="overflow-x: scroll">
         <table class="table table-striped table-bordered"
-          *ngIf=" searchResults.insuredSearchResponses.length">
+          *ngIf="insuredResults.length">
           <thead id="searchHeader">
             <tr>
               <th>Insured Code</th>
               <th>Search Name</th>
+              <th>Street Address</th>
               <th>Insured City</th>
               <th>Insured State</th>
               <th>Zip</th>
               <th>Named Insured</th>
-              <th>Street Address</th>
               <th>Former Name</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let insured of searchResults.insuredSearchResponses; let i = index">
+            <tr *ngFor="let insured of insuredResults; let i = index">
               <ng-container>
-                <td><a [routerLink]="[]" (click)="routeToInsured(insured.insuredCode)">
+                    <td><a [routerLink]="[]" (click)="routeToInsured(insured.insuredCode)">
                     <td nowrap>{{ insured.insuredCode }}</td></a></td>
                     <td>{{ insured.name }}</td>
+                    <td>{{ insured.streetAddress }}</td>
                     <td>{{ insured.insuredCity }}</td>
                     <td>{{ insured.insuredState }}</td>
                     <td nowrap>{{ insured.zip | zipCode }}</td>
                     <td>{{ insured.insuredName }}</td>
-                    <td>{{ insured.streetAddress }}</td>
                     <td>{{ insured.formerName }}</td>
-                    <td class="overflow-hidden" id="actionCell">
-                  <div ngbDropdown container="body" placement="bottom-end" class="d-inline-block">
-                    <button class="btn btn-outline-primary" id="action" ngbDropdownToggle>Actions</button>
-                    <div ngbDropdownMenu container="body" aria-labelledby="action">
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="clone">Copy</button>
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew">Delete</button>
-                    </div>
-                  </div>
-                </td>
               </ng-container>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div *ngIf="searchResults.insuredSearchResponses.length > 0" class="card-footer">
+    <div  class="card-footer">
       <div id="searchFooter">
         <button *ngIf="canEditInsured" style="float:left; background:none; border:none;" class="underline"
         (click)="routeToNewInsured()">Add Insured</button>
-        <div style="float:right;">Results:{{searchResults.insuredSearchResponses.length}}</div>
+        <div style="float:right;">Results:{{insuredResults.length}}</div>
       </div>
     </div>
