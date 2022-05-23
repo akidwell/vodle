@@ -9,5 +9,6 @@
     "preventForcedRedirect" : false,
     "defaultPolicyHistorySize" : 5,
     "apiVersion": "2.0",
-    "apiSwitch": true
+    "apiSwitch": true,
+    "updateTimerSecs": 30
 }

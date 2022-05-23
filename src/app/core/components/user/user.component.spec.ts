@@ -11,7 +11,7 @@ describe('UserComponent', () => {
   let mockOktaService: OktaAuthService;
   let httpTestingController: HttpTestingController;
   let mockJwtService: JwtHelperService;
-  
+
   const oktaConfig = {
     issuer: 'https://not-real.okta.com',
     clientId: 'fake-client-id',
@@ -22,9 +22,9 @@ describe('UserComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ UserComponent ],
       imports: [HttpClientTestingModule ],
-      providers: [OktaAuthService,  { provide: OKTA_CONFIG, useValue: oktaConfig }, {provide: JwtHelperService, useValue: mockJwtService }]
+      providers: [OktaAuthService, { provide: OKTA_CONFIG, useValue: oktaConfig }, {provide: JwtHelperService, useValue: mockJwtService }]
     })
-    .compileComponents();
+      .compileComponents();
 
     httpTestingController = TestBed.inject(HttpTestingController);
     mockOktaService = TestBed.inject(OktaAuthService);

@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +46,6 @@ export class InsuredSearchResultsComponent implements OnInit {
 
   routeToNewInsured() {
     this.navigationService.resetPolicy();
-    this.router.navigate(['/insured/information']);
+    this.router.navigate(['/insured/information'],{ state: { insuredName: 'test' } });
   }
 }

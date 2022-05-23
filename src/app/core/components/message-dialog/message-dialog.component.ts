@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -6,16 +6,13 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './message-dialog.component.html',
   styleUrls: ['./message-dialog.component.css']
 })
-export class MessageDialogComponent implements OnInit {
-  public errorMessage: string = "";
-  public title: string = "Error!";
-  
+export class MessageDialogComponent {
+  public errorMessage = '';
+  public title = 'Error!';
+
   constructor(public activeModal: NgbActiveModal) { }
 
-  ngOnInit(): void {
-  }
-
-  close() { 
+  close() {
     this.activeModal.close(true);
   }
 

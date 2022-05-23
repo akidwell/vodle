@@ -26,6 +26,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PipesModule } from './shared/pipes/pipes.module';
 import { MessageDialogService } from './core/services/message-dialog/message-dialog-service';
 import { NotificationComponent } from './core/components/notification/notification-container.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from 'src/environments/environment';
+import { UpdateService } from './core/services/update/update.service';
 
 @NgModule({
   declarations: [
@@ -57,11 +60,19 @@ import { NotificationComponent } from './core/components/notification/notificati
     BusyModule,
     DirectivesModule,
     NoopAnimationsModule,
-    PipesModule
+    PipesModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      // registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerImmediately'
+    })
   ],
   providers: [
     PreInitService,
     MessageDialogService,
+    UpdateService,
     {
       provide: APP_INITIALIZER,
       multi: true,
@@ -77,7 +88,7 @@ import { NotificationComponent } from './core/components/notification/notificati
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
-    ],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
