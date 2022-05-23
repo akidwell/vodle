@@ -19,7 +19,7 @@ export class InsuredResolver implements Resolve<InsuredResolved> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredResolved> {
     const id = route.paramMap.get('id') ?? '';
-    if (id =='' && route.queryParams){
+    if (id =='' && route.queryParams.name){
       const data: insuredANI[] = [];
       if(route.queryParams.insuredName){
         data.push(new insuredANI(this.insuredService, route.queryParams.insuredName));

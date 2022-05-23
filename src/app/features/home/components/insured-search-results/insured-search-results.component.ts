@@ -46,6 +46,6 @@ export class InsuredSearchResultsComponent implements OnInit {
 
   routeToNewInsured() {
     this.navigationService.resetPolicy();
-    this.router.navigate(['/insured/information'],{ state: { insuredName: 'test' } });
+    this.router.navigate(['/insured/information']);
   }
 }
