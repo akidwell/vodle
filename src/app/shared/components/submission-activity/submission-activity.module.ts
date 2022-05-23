@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
+import { SubmissionMarkModule } from '../submission-mark/submission-mark.module';
 
 
 
@@ -19,8 +20,8 @@ import { DirectivesModule } from '../../directives/directives.module';
     FormsModule,
     NgbModule,
     NgSelectModule,
-    FormsModule,
-    DirectivesModule
+    DirectivesModule,
+    SubmissionMarkModule
   ],
   exports: [SharedSubmissionActivityComponent]
 })

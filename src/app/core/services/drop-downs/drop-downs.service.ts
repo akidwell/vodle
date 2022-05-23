@@ -33,6 +33,11 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
   }
 
+  getMarkDeadReasons(isNew: boolean) {
+    const params = new HttpParams().append('isNew', isNew);
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-dead-reasons', { params });
+  }
+
   // Policy specific drop downs
   clearPolicyDropDowns() {
     this.clearClassCodes();
@@ -748,5 +753,50 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Submission Events
+  private cacheSubmissionEvents: Code[] | null = null;
+  private cacheSubmissionEvents$!: Observable<Code[]> | null;
+
+  getSubmissionEvents(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheSubmissionEvents) {
+      observable = of(this.cacheSubmissionEvents);
+    } else if (this.cacheSubmissionEvents$) {
+      observable = this.cacheSubmissionEvents$;
+    } else {
+      this.cacheSubmissionEvents$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/submission-events')
+        .pipe(
+          tap(res => this.cacheSubmissionEvents = res),
+          share(),
+          finalize(() => this.cacheSubmissionEvents$ = null)
+        );
+      observable = this.cacheSubmissionEvents$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Mark Decline Reasons
+  private cacheMarkDeclineReasons: Code[] | null = null;
+  private cacheMarkDeclineReasons$!: Observable<Code[]> | null;
+
+  getMarkDeclineReasons(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheMarkDeclineReasons) {
+      observable = of(this.cacheMarkDeclineReasons);
+    } else if (this.cacheMarkDeclineReasons$) {
+      observable = this.cacheMarkDeclineReasons$;
+    } else {
+      this.cacheMarkDeclineReasons$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-decline-reasons')
+        .pipe(
+          tap(res => this.cacheMarkDeclineReasons = res),
+          share(),
+          finalize(() => this.cacheMarkDeclineReasons$ = null)
+        );
+      observable = this.cacheMarkDeclineReasons$;
+    }
+    return observable;
+  }
 
 }
