@@ -8,8 +8,6 @@ import { SharedAdditionalNamedInsuredsComponent } from './additional-named-insur
 import { SharedAdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
 import { DirectivesModule } from '../../directives/directives.module';
 
-
-
 @NgModule({
   declarations: [SharedAdditionalNamedInsuredsGroupComponent,
     SharedAdditionalNamedInsuredsComponent],

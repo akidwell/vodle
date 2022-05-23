@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { PolicySearchService } from '../../../features/home/services/policy-search/policy-search.service';
@@ -8,18 +8,16 @@ import { PolicySearchService } from '../../../features/home/services/policy-sear
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent {
   faSearch = faSearch;
-  searchTerm: string = "";
+  searchTerm = '';
   sub!: Subscription;
-  disabled: boolean = true;
+  disabled = true;
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   get loading$() { return this._loading$.asObservable(); }
 
   constructor(private policySearchService: PolicySearchService) { }
-
-  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();

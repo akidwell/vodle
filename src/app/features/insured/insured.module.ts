@@ -16,7 +16,7 @@ import { InsuredSubmissionActivityComponent } from './components/insured-submiss
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
-import { InsuredHeaderComponent } from './components/insured-header.component.ts/insured-header.component';
+import { InsuredHeaderComponent } from './components/insured-header/insured-header.component';
 import { InsuredAccountAddressComponent } from './components/insured-account-address/insured-account-address.component';
 import { InsuredAccountCenterComponent } from './components/insured-account-center/insured-account-center.component';
 import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';

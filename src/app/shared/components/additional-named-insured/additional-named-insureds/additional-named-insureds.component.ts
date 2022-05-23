@@ -14,21 +14,21 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 })
 export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   aniRoles$: Observable<Code[]> | undefined;
-  collapsed: boolean = true;
+  collapsed = true;
   deleteSub!: Subscription;
   addSub!: Subscription;
   updateSub!: Subscription;
   saveSub!: Subscription;
   aniCollapsed = false;
-  isReadOnly: boolean = true;
-  nameRoleArray: string[] = new Array;
-  nameRoleDuplicates: string[] = new Array;
-  isNameRoleValid: boolean = true;
+  isReadOnly = true;
+  nameRoleArray: string[] = [];
+  nameRoleDuplicates: string[] = [];
+  isNameRoleValid = true;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsured;
   @Input() ani!: AdditionalNamedInsured[];
-  @Input() public canEdit: boolean = false;
+  @Input() public canEdit = false;
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
@@ -59,7 +59,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open("Delete Confirmation", "Are you sure you want to delete this Additional Named Insured?").then((result: boolean) => {
+    this.confirmationDialogService.open('Delete Confirmation', 'Are you sure you want to delete this Additional Named Insured?').then((result: boolean) => {
       if (result) {
         this.deleteAni();
       }
@@ -72,14 +72,14 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
         this.aniForm.form.markAsPristine();
         this.aniForm.form.markAsUntouched();
         this.deleteExistingAni.emit(this.aniData);
-      });  
+      });
     } else {
       await this.aniData.delete().then(() => {
         setTimeout(() => {
           this.aniForm.form.markAsPristine();
           this.aniForm.form.markAsUntouched();
           this.deleteExistingAni.emit(this.aniData);
-        });  
+        });
       });
     }
   }
@@ -96,7 +96,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
           return result;
         })
         .catch(error => {
-          this.messageDialogService.open("Add error", error.error.Message ?? error.message);
+          this.messageDialogService.open('Add error', error.error.Message ?? error.message);
           return false;
         }
         );
@@ -111,7 +111,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
           return result;
         })
         .catch(error => {
-          this.messageDialogService.open("Update error", error.error.Message ?? error.message);
+          this.messageDialogService.open('Update error', error.error.Message ?? error.message);
           return false;
         }
         );

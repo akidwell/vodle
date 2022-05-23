@@ -38,7 +38,7 @@ export class InsuredInformationComponent implements OnInit {
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
-  @ViewChild('modal') private locationComponent!: InsuredDuplicatesComponent;
+  @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
 
   constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService, private previousRouteService: PreviousRouteService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
@@ -110,8 +110,8 @@ export class InsuredInformationComponent implements OnInit {
     const results = await lastValueFrom(results$);
 
     if (results.length > 0) {
-      if (this.locationComponent != null) {
-        return await this.locationComponent.open(this.insured, results);
+      if (this.dupeComponent != null) {
+        return await this.dupeComponent.open(this.insured, results);
       }
     }
     return true;
