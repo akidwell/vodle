@@ -23,7 +23,18 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-6">
+        <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
+        <div class="inputspinner">
+          <input type="text" class="form-control" id="zip" [readonly]="!canEditAddress"
+            [required]="canEditInsured" name="zip" [(ngModel)]="insured.zip" #zip="ngModel" mask="00000||00000-0000"
+            [ngClass]="zipUpdated" (ngModelChange)="changeZip()">
+          <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
         <label for="city" class="form-label" title="City">City</label>
         <div class="inputspinner">
           <input type="text" class="form-control" id="city" [readonly]="!canEditAddress" maxlength="40"
@@ -32,8 +43,6 @@
           <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-lg-6">
         <label for="state" class="form-label" title="State">State</label>
         <div class="inputspinner">
@@ -44,15 +53,7 @@
           <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
         </div>
       </div>
-      <div class="col-lg-6">
-        <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
-        <div class="inputspinner">
-          <input type="text" class="form-control" id="zip" [readonly]="!canEditAddress"
-            [required]="canEditInsured" name="zip" [(ngModel)]="insured.zip" #zip="ngModel" mask="00000||00000-0000"
-            [ngClass]="zipUpdated" (ngModelChange)="changeZip()">
-          <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-        </div>
-      </div>
+      
     </div>
     <div class="row">
       <div class="col-lg-6">

@@ -4,7 +4,7 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionSearchResponses } from 'src/app/features/home/models/search-results';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
-import { SubmissionMarkService } from '../../submission-mark/submission-mark.service';
+import { SubmissionMarkService } from '../submission-mark/submission-mark.service';
 
 @Component({
   selector: 'shared-rsps-submission-activity',
