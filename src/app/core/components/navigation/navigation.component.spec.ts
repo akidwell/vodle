@@ -19,20 +19,20 @@ describe('NavigationComponent', () => {
     issuer: 'https://not-real.okta.com',
     clientId: 'fake-client-id',
     redirectUri: 'http://localhost:4200'
-  }
-  
+  };
+
   beforeEach(async () => {
-    mockUserAuth = jasmine.createSpyObj(['isAuthenticated'])
+    mockUserAuth = jasmine.createSpyObj(['isAuthenticated']);
     mockUserAuth.isAuthenticated.and.returnValue(true);
 
     await TestBed.configureTestingModule({
       imports: [OktaAuthModule],
       declarations: [ NavigationComponent],
-      providers: [OktaAuthService,  { provide: OKTA_CONFIG, useValue: oktaConfig }, { provide: UserAuth, useValue: mockUserAuth }]
+      providers: [OktaAuthService, { provide: OKTA_CONFIG, useValue: oktaConfig }, { provide: UserAuth, useValue: mockUserAuth }]
     })
-    .compileComponents();
+      .compileComponents();
 
-    
+
     httpTestingController = TestBed.inject(HttpTestingController);
     mockOktaService = TestBed.inject(OktaAuthService);
   });
