@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Submission } from 'src/app/features/submission/models/submission';
-import { SubmissionMarkComponent } from './submission-mark/submission-mark.component';
+import { SubmissionMarkComponent } from './submission-mark.component';
 
 @Injectable({
   providedIn: 'root'
