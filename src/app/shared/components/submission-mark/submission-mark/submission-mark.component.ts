@@ -42,7 +42,9 @@ export class SubmissionMarkComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.dirtySub = this.submissionMark.statusChanges?.subscribe(() => {
-      this.isValid = (this.submissionMark.dirty ?? false) && (this.submissionMark.valid ?? false);
+      setTimeout(() => {
+        this.isValid = (this.submissionMark.dirty ?? false) && (this.submissionMark.valid ?? false);
+      }, 0);
     });
   }
 
