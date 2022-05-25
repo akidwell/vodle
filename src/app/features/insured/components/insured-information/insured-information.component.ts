@@ -34,6 +34,7 @@ export class InsuredInformationComponent implements OnInit {
   invalidMessage = '';
   showBusy = false;
   previousUrl = '';
+  previousLabel = 'Previous';
 
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
@@ -48,9 +49,9 @@ export class InsuredInformationComponent implements OnInit {
 
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
+      const position = previousUrl.lastIndexOf('/') + 1;
+      this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
     });
-    // Testing passing data from home search
-    //console.log(this.router?.getCurrentNavigation()?.extras?.state?.insuredName);
   }
 
   ngOnInit(): void {

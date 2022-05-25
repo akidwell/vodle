@@ -3,13 +3,12 @@ import { SwUpdate } from '@angular/service-worker';
 import { interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from '../config/config.service';
-import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 import { MessageDialogService } from '../message-dialog/message-dialog-service';
 
 @Injectable()
 export class UpdateService {
 
-  constructor(private updates: SwUpdate, private confirmationDialogService: ConfirmationDialogService, private messageDialogServive: MessageDialogService, private configService: ConfigService) { }
+  constructor(private updates: SwUpdate, private messageDialogServive: MessageDialogService, private configService: ConfigService) { }
 
   startTimer() {
     console.log('Enable UpdateService: ' + environment.production);
@@ -44,7 +43,7 @@ export class UpdateService {
   startConfirmation() {
     if (environment.production) {
       this.updates.versionUpdates.subscribe(async event => {
-        if (event.type == 'VERSION_READY' && await this.confirmationDialogService.open('New Version Available', 'Update?')) {
+        if (event.type == 'VERSION_READY' && await this.messageDialogServive.open('New Version Available', 'New version will be installed, you will lose any unsaved changes!')) {
           this.updates.activateUpdate().then(() => document.location.reload());
         }
       });
