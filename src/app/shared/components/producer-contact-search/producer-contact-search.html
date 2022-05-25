@@ -36,7 +36,14 @@
             {{producerContact.isActive ? 'Active' : 'Inactive'}}
           </div>
           <div class="col-lg-1">
-            actions
+            <div ngbDropdown container="body" placement="bottom-end" class="d-inline-block">
+              <button class="btn btn-outline-primary" id="action" ngbDropdownToggle></button>
+              <div ngbDropdownMenu container="body" aria-labelledby="action">
+                <button *ngIf="producerContact.isActive" ngbDropdownItem class="btn btn-outline-primary" (click)="selectedProducerContact(producerContact)" value="select">Select</button>
+                <button *ngIf="producerContact.isActive" ngbDropdownItem class="btn btn-outline-primary" value="inactivate">Inactivate</button>
+                <button *ngIf="!producerContact.isActive" ngbDropdownItem class="btn btn-outline-primary" value="activate">Activate</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

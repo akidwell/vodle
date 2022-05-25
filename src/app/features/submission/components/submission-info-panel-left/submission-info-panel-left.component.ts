@@ -14,6 +14,7 @@ export class SubmissionInfoPanelLeftComponent implements OnInit {
   canEditSubmission = false;
   lockSubmissionFields = false;
   isRenewable = true;
+  newRenewalFlags = [{'value': 1, 'description': 'New'}, {'value': 2, 'description': 'Renewal'}, {'value': 3, 'description': 'Count as Renewal'}];
   @Input() public submission!: Submission;
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService) {

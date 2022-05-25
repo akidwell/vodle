@@ -1,9 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { lastValueFrom, Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
+import { Code } from 'src/app/core/models/code';
+import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { Submission } from '../../models/submission';
 import { SubmissionService } from '../../services/submission-service/submission-service';
 
@@ -22,8 +27,20 @@ export class SubmissionInformationComponent implements OnInit {
   showInvalid = false;
   invalidMessage = '';
   showBusy = false;
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
+  submissionCollapsed = false;
+  sicCodes$: Observable<Code[]> | undefined;
+  loadingSic = false;
+  naicsCodes$: Observable<Code[]> | undefined;
+  loadingNaics = false;
+  seCollapsed = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private submissionService: SubmissionService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService) {
+  @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
+
+  constructor(private route: ActivatedRoute, private router: Router, private dropdowns: DropDownsService,
+    private submissionService: SubmissionService, private userAuth: UserAuth, private navigationService: NavigationService,
+    private messageDialogService: MessageDialogService, private notification: NotificationService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
@@ -34,6 +51,17 @@ export class SubmissionInformationComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.submission = data['submissionData'].submission;
     });
+    this.sicCodes$ = this.dropdowns.getSicCodes()
+      .pipe(tap(() => this.loadingSic = false));
+
+    if (this.submission.sicCode != null) {
+      this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.submission.sicCode)
+        .pipe(tap(() => this.loadingNaics = false));
+    }
+    else {
+      this.loadingNaics = false;
+    }
+    console.log(this.submission);
   }
 
   ngOnDestroy(): void {
@@ -41,7 +69,27 @@ export class SubmissionInformationComponent implements OnInit {
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
   }
+  routeToInsured(insuredCode: number) {
+    this.navigationService.resetPolicy();
+    this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
+  }
 
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
+
+  changeSicCode() {
+    if (this.submission.sicCode != null) {
+      this.loadingNaics = true;
+      this.submission.naicsCode = null;
+      this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.submission.sicCode)
+        .pipe(tap(() => this.loadingNaics = false));
+    }
+    else {
+      this.naicsCodes$ = new Observable<Code[]>();
+    }
+  }
   isValid(): boolean {
     if (!this.canEditSubmission) {
       return true;

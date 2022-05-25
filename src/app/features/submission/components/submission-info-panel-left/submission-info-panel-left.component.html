@@ -2,9 +2,12 @@
     <div class="row">
       <div class="col-lg-9">
         <label for="newRenewalFlag"  class="form-label" title="newRenewalFlag">Submission Type</label>
-              <input type="text" class="form-control" id="newRenewalFlag" [required]="!isFieldReadOnly(false)"
+              <!-- <input type="text" class="form-control" id="newRenewalFlag" [required]="!isFieldReadOnly(false)"
                 [readonly]="isFieldReadOnly(false)" [(ngModel)]="submission.newRenewalFlag"
-                #newRenewalFlag="ngModel" name="newRenewalFlag">
+                #newRenewalFlag="ngModel" name="newRenewalFlag"> -->
+                <ng-select id="policyTerm" click-stop-propagation [items]="newRenewalFlags" bindLabel="description" bindValue="value" placeholder=""
+                [clearable]="false" name="policyTerm"
+                [(ngModel)]="submission.newRenewalFlag" #limitsPattern="ngModel"></ng-select>
       </div>
       <div class="col-lg-3">
         <label for="override" class="form-label" title="Override">Renewable</label>
@@ -20,7 +23,7 @@
                 #expiringPolicy="ngModel" name="expiringPolicy">
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="submission.newRenewalFlag == 3" >
       <div class="col-lg-9">
         <label for="extExpiringPolicy"  class="form-label" title="EXT Expiring Policy">EXT Expiring Policy</label>
               <input type="text" class="form-control" id="extExpiringPolicy"

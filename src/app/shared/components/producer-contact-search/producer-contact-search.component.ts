@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Injectable, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of, OperatorFunction} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, filter} from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { ProducerContact } from 'src/app/features/submission/models/producer-contact';
 import * as moment from 'moment';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { deepClone } from 'src/app/core/utils/deep-clone';
 
 export interface FuzzyProducerContactSearchResponse {
   query: string,
@@ -41,6 +42,7 @@ export class ProducerContactSearchService {
 export class ProducerContactSearch implements OnInit{
   model!: ProducerContact | null;
   originalModel!: ProducerContact;
+  allowSearching = true;
   searching = false;
   searchFailed = false;
   faAngleDown = faAngleDown;
@@ -58,6 +60,7 @@ export class ProducerContactSearch implements OnInit{
   get producerCode(): number | null {
     return this._producerCode;
   }
+  @ViewChild('producerContact') producerContact!: ElementRef;
   @Input() public canEdit!: boolean;
   @Input() public producerContactOnLoad!: ProducerContact | null;
   @Output() producerContactSelected: EventEmitter<ProducerContact | null> = new EventEmitter();
@@ -67,6 +70,7 @@ export class ProducerContactSearch implements OnInit{
   }
   ngOnInit(): void {
     if (this.producerContactOnLoad) {
+      this.allowSearching = false;
       this.model = this.producerContactOnLoad;
       this.originalModel = this.model;
       this.formatDisplay(this.model);
@@ -77,7 +81,8 @@ export class ProducerContactSearch implements OnInit{
   displayFormatter = (producer: ProducerContact) => producer.display;
 
   leaveSearchBar() {
-    if (this.model?.display) {
+    console.log(this.model, this.allowSearching);
+    if (this.model?.display || !this.allowSearching) {
       this.showContactMaintenance = false;
     } else {
       this.showContactMaintenance = true;
@@ -85,6 +90,8 @@ export class ProducerContactSearch implements OnInit{
   }
   selectedProducerContact(producer: any){
     console.log(producer);
+    this.allowSearching = false;
+    this.model = producer;
     this.originalModel = producer;
     this.showContactMaintenance = false;
     this.producerContactSelected.emit(producer.item);
@@ -94,7 +101,16 @@ export class ProducerContactSearch implements OnInit{
     producer.display = producer.firstName + '\xa0' + producer.lastName + '\xa0\xa0\xa0' + producer.email + (producer.phone ? '\xa0\xa0\xa0' + producer.phone : '');
   }
   handleEmptyResultSet(): never[] {
+    console.log('empty');
+    this.allowSearching = true;
     this.producerContactSelected.emit(null);
+    return [];
+  }
+  resetDisplay(): never[] {
+    console.log('reset');
+    this.allowSearching = false;
+    this.model = deepClone(this.originalModel);
+    this.producerContact.nativeElement.blur();
     return [];
   }
   resetSearch(): void {
@@ -110,9 +126,11 @@ export class ProducerContactSearch implements OnInit{
       distinctUntilChanged(),
       tap(() => {
         this.searching = true;
+        this.showContactMaintenance = false;
+        this.pcCollapsed = true;
       }),
       switchMap(term =>
-        term.length < 3 ? this.handleEmptyResultSet() :
+        term.length < 3 ? this.handleEmptyResultSet() : this.allowSearching == false ? this.resetDisplay() :
           this._service.search(term, this.producerCode ? this.producerCode : 0).pipe(
             tap((response) => {
               this.searchFailed = false;

@@ -18,7 +18,7 @@
       </u>
       <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="polExpDateCalendar" class="form-control" [required]="false"
-                  [(ngModel)]="submission.polExpDate" (dateChange)="changeEffDate()"
+                  [(ngModel)]="submission.polExpDate" (dateChange)="changeExpDate()"
                   name="polExpDate" #polExpDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polExpDateCalendar">
                   </mat-datepicker-toggle>
@@ -28,7 +28,10 @@
       <u>
         <h6>Policy Term</h6>
       </u>
-      Manually calc?
+      <ng-select id="policyTerm" click-stop-propagation [items]="policyTermOptions" bindLabel="description" bindValue="value" placeholder=""
+      [clearable]="false" name="policyTerm"
+      [(ngModel)]="policyTerm" #limitsPattern="ngModel"  (change)="policyTermChange()">
+    </ng-select>
     </div>
     <div class="col-lg-2">
       <!-- placeholder -->
