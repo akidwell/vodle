@@ -10,7 +10,11 @@
   z-index: 2;
   width: 100%;
 }
-
+::ng-deep ngb-typeahead-window {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 body {
   width: calc(100% - 210px);
   margin-left: 210px;

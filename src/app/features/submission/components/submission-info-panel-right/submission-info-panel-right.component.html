@@ -1,0 +1,36 @@
+<form #insuredPanel="ngForm">
+    <div class="row">
+      <div class="col-lg-6">
+        <label for="department"  class="form-label" title="Department">Departments</label>
+        <ng-select id="department" [items]="departments$ | async" bindLabel="description" bindValue="key"
+          [clearable]="false" [readonly]="isFieldReadOnly(false)" name="department" (ngModelChange)="changeDepartment()"
+          [required]="!isFieldReadOnly(false)" [(ngModel)]="submission.departmentCode" #department="ngModel">
+        </ng-select>
+      </div>
+      <div class="col-lg-6">
+        <label for="underwriter"  class="form-label" title="Underwriter">Underwriter</label>
+        <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key"
+          [clearable]="false" [readonly]="isFieldReadOnly(false)" name="underwriter"
+          [required]="!isFieldReadOnly(false)" [(ngModel)]="submission.underwriter" #underwriter="ngModel">
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <producer-fuzzy-search
+        (producerSelected)=updateProducer($event)
+        [department]="submission.departmentCode || 0"
+        [policyDate]="submission.polEffDate || currentDate"
+        [producerOnLoad]="submission.producer"
+        ></producer-fuzzy-search>
+      </div>
+      <div class="col-lg-12">
+        <producer-contact-fuzzy-search
+        (producerContactSelected)=updateProducerContact($event)
+        [producerCode]="submission.producerCode || 0"
+        [canEdit]="canEditSubmission"
+        [producerContactOnLoad]="submission.producerContact"
+        ></producer-contact-fuzzy-search>
+      </div>
+    </div>
+</form>

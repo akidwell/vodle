@@ -109,6 +109,50 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
+  // Departments
+  private cacheDepartments: any;
+  private cacheDepartments$!: Observable<any> | null;
+
+  getDepartments(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheDepartments) {
+      observable = of(this.cacheDepartments);
+    } else if (this.cacheDepartments$) {
+      observable = this.cacheDepartments$;
+    } else {
+      this.cacheDepartments$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/lookups/departments')
+        .pipe(
+          tap(res => this.cacheDepartments = res),
+          share(),
+          finalize(() => this.cacheDepartments$ = null)
+        );
+      observable = this.cacheDepartments$;
+    }
+    return observable;
+  }
+  ////////////////////////////////////////
+  // Departments
+  private cacheUnderwriters: any;
+  private cacheUnderwriters$!: Observable<any> | null;
+
+  getUnderwriters(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheUnderwriters) {
+      observable = of(this.cacheUnderwriters);
+    } else if (this.cacheUnderwriters$) {
+      observable = this.cacheUnderwriters$;
+    } else {
+      this.cacheUnderwriters$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/lookups/underwriters')
+        .pipe(
+          tap(res => this.cacheUnderwriters = res),
+          share(),
+          finalize(() => this.cacheUnderwriters$ = null)
+        );
+      observable = this.cacheUnderwriters$;
+    }
+    return observable;
+  }
+  ////////////////////////////////////////
   // Programs
   private cachePrograms: any;
   private cachePrograms$!: Observable<any> | null;

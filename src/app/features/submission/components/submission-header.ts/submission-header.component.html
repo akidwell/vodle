@@ -1,0 +1,58 @@
+<div id="SubmissionHeader">
+  <div class="row">
+    <div class="col-lg-2">
+      <u>
+        <h6>Policy Eff Date</h6>
+      </u>
+      <input style="display: inline-block; max-width: 80%;" matInput
+                  [matDatepicker]="polEffDateCalendar" class="form-control" [required]="false"
+                  [(ngModel)]="submission.polEffDate" (dateChange)="changeEffDate()"
+                  name="polEffDate" #polEffDate="ngModel">
+                  <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polEffDateCalendar">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #polEffDateCalendar></mat-datepicker>
+    </div>
+    <div class="col-lg-2">
+      <u>
+        <h6>Policy Exp Date</h6>
+      </u>
+      <input style="display: inline-block; max-width: 80%;" matInput
+                  [matDatepicker]="polExpDateCalendar" class="form-control" [required]="false"
+                  [(ngModel)]="submission.polExpDate" (dateChange)="changeExpDate()"
+                  name="polExpDate" #polExpDate="ngModel">
+                  <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polExpDateCalendar">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #polExpDateCalendar></mat-datepicker>
+    </div>
+    <div class="col-lg-2">
+      <u>
+        <h6>Policy Term</h6>
+      </u>
+      <ng-select id="policyTerm" click-stop-propagation [items]="policyTermOptions" bindLabel="description" bindValue="value" placeholder=""
+      [clearable]="false" name="policyTerm"
+      [(ngModel)]="policyTerm" #limitsPattern="ngModel"  (change)="policyTermChange()">
+    </ng-select>
+    </div>
+    <div class="col-lg-2">
+      <!-- placeholder -->
+    </div>
+    <div class="col-lg-2">
+      <u>
+        <h6>Quote Due Date</h6>
+      </u>
+      <input style="display: inline-block; max-width: 80%;" matInput
+                  [matDatepicker]="quoteDueDateCalendar" class="form-control" [required]="false"
+                  [(ngModel)]="submission.quoteDueDate" (dateChange)="changeEffDate()"
+                  name="quoteDueDate" #quoteDueDate="ngModel">
+                  <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="quoteDueDateCalendar">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #quoteDueDateCalendar></mat-datepicker>
+    </div>
+    <div class="col-lg-2">
+      <u>
+        <h6>Status</h6>
+      </u>
+      {{submission.statusCode}}
+    </div>
+  </div>
+</div>
