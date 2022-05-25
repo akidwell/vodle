@@ -6,22 +6,28 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
-
-
-
+import { SubmissionMarkComponent } from './submission-mark/submission-mark.component';
+import { SubmissionMarkService } from './submission-mark/submission-mark.service';
 
 @NgModule({
   declarations: [
-    SharedSubmissionActivityComponent ],
+    SharedSubmissionActivityComponent,
+    SubmissionMarkComponent
+  ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
     NgSelectModule,
-    FormsModule,
     DirectivesModule
   ],
-  exports: [SharedSubmissionActivityComponent]
+  providers: [
+    SubmissionMarkService
+  ],
+  exports: [
+    SharedSubmissionActivityComponent,
+    SubmissionMarkComponent
+  ]
 })
 export class SubmissionActivityModule { }

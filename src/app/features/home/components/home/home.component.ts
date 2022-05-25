@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { APIVersionService } from 'src/app/core/services/API-version-service/api-version.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { SearchResults, SubmissionSearchResponses } from '../../models/search-results';
+import { InsuredSearchResponses, SearchResults, SubmissionSearchResponses } from '../../models/search-results';
 import { PolicySearchService } from '../../services/policy-search/policy-search.service';
 import { DirectPolicyComponent } from '../direct-policy/direct-policy.component';
 
@@ -27,33 +27,48 @@ export class HomeComponent implements OnInit {
   loadingSub!: Subscription;
   loading = false;
   version = '';
+ @Input('pacerSearchResults') pacerSearchResults: InsuredSearchResponses[] = [];
+ @Input('insuredResults') insuredResults: InsuredSearchResponses[] = [];
 
-  constructor(private navigationService: NavigationService, private policySearchService: PolicySearchService, private apiService: APIVersionService) { }
 
-  ngOnInit(): void {
-    this.directPolicySubscription = this.navigationService.createDirectPolicy$.subscribe(() => {
-      this.directPolicyComponent.open();
-    });
-    this.loadingSub = this.policySearchService.loading$.subscribe({
-      next: results => {
-        this.loading = results;
-      }
-    });
-    this.searchSub = this.policySearchService.searchResults.subscribe({
-      next: results => {
+ constructor(private navigationService: NavigationService, private policySearchService: PolicySearchService, private apiService: APIVersionService) { }
 
-        this.searchResults.policySearchResponses = results.policySearchResponses;
-        this.searchResults.submissionSearchResponses = results.submissionSearchResponses;
-        this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
-        this.searchResults.searchType = results.searchType;
-        this.submissionResults = results.submissionSearchResponses;
-        this.version = this.apiService.getApiVersion;
-      }
-    });
-  }
+ ngOnInit(): void {
+   this.directPolicySubscription = this.navigationService.createDirectPolicy$.subscribe(() => {
+     this.directPolicyComponent.open();
+   });
+   this.loadingSub = this.policySearchService.loading$.subscribe({
+     next: results => {
+       this.loading = results;
+     }
+   });
+   this.searchSub = this.policySearchService.searchResults.subscribe({
+     next: results => {
 
-  ngOnDestroy(): void {
-    this.directPolicySubscription.unsubscribe();
-  }
+       this.searchResults.policySearchResponses = results.policySearchResponses;
+       this.searchResults.submissionSearchResponses = results.submissionSearchResponses;
+       this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
+       this.searchResults.searchType = results.searchType;
+       console.log(this.searchResults.searchType == 'insured');
+       this.submissionResults = results.submissionSearchResponses;
+       this.version = this.apiService.getApiVersion;
+       this.insuredResults = [];
+       this.pacerSearchResults = [];
+       this.searchResults.insuredSearchResponses.forEach(element =>
+       {
+         if(element.isPacerResult){
+           this.pacerSearchResults.push(element);
+         }else if(!element.isPacerResult){
+           this.insuredResults.push(element);
+         }
+       });
+     }
+   });
+
+ }
+
+ ngOnDestroy(): void {
+   this.directPolicySubscription.unsubscribe();
+ }
 
 }

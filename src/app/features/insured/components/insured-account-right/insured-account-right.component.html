@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-lg-12">
         <label for="customerCode" class="form-label" title="Customer Code">Customer Code</label>
-        <input type="number" class="form-control" id="customerCode" [readonly]="!canEditInsured" maxInt nullValue
+        <input type="number" class="form-control" id="customerCode" readonly maxInt nullValue
           [(ngModel)]="insured.customerCode" name="customerCode" #customerCode="ngModel">
       </div>
     </div>
