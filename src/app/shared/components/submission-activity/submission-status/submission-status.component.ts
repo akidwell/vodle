@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionEventEnum } from 'src/app/core/enums/submission-event.enum';
+import { SubmissionReasonEnum } from 'src/app/core/enums/submission-reason-enum';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
@@ -11,18 +12,20 @@ import { Submission } from 'src/app/features/submission/models/submission';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 
 @Component({
-  selector: 'rsps-submission-mark',
-  templateUrl: './submission-mark.component.html',
-  styleUrls: ['./submission-mark.component.css']
+  selector: 'rsps-submission-status',
+  templateUrl: './submission-status.component.html',
+  styleUrls: ['./submission-status.component.css']
 })
-export class SubmissionMarkComponent implements OnInit {
+export class SubmissionStatusComponent implements OnInit {
   authSub: Subscription;
   dirtySub!: Subscription | undefined;
   canEditSubmission = false;
   events$: Observable<Code[]> | undefined;
   deadReasons$: Observable<Code[]> | undefined;
   declineReasons$: Observable<Code[]> | undefined;
+  reactivateReasons$: Observable<Code[]> | undefined;
   isValid = false;
+  title = 'Mark Submission Dead/Decline';
 
   @Input() submission!: Submission;
   @ViewChild('submissionMark', { static: false }) submissionMark!: NgForm;
@@ -35,9 +38,21 @@ export class SubmissionMarkComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.events$ = this.dropdowns.getSubmissionEvents();
-    this.deadReasons$ = this.dropdowns.getMarkDeadReasons((this.submission.NewRenewalFlag ?? 1) == 1);
+    this.deadReasons$ = this.dropdowns.getMarkDeadReasons((this.submission.newRenewalFlag ?? 1) == 1);
     this.declineReasons$ = this.dropdowns.getMarkDeclineReasons();
-    this.submission.StatusCode = SubmissionStatusEnum.Dead;
+    this.reactivateReasons$ = this.dropdowns.getReactivateReasons();
+
+    if (this.submission.statusCode == SubmissionStatusEnum.Dead) {
+      this.title = 'Reactivate Submission';
+      this.submission.statusCode = SubmissionStatusEnum.Live;
+      this.submission.eventCode = SubmissionEventEnum.Reactivated;
+      this.submission.reasonCode = SubmissionReasonEnum.Reactivated;
+    }
+    else {
+      this.submission.statusCode = SubmissionStatusEnum.Dead;
+      this.submission.eventCode = null;
+      this.submission.reasonCode = null;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -53,24 +68,36 @@ export class SubmissionMarkComponent implements OnInit {
     this.dirtySub?.unsubscribe();
   }
 
+  get showActions(): boolean {
+    return this.submission.statusCode == SubmissionStatusEnum.Dead;
+  }
+
   get showDeadReasons(): boolean {
-    return this.submission.EventCode == SubmissionEventEnum.MarkedDead || this.submission.EventCode == null;
+    return this.submission.statusCode == SubmissionStatusEnum.Dead && this.submission.eventCode == SubmissionEventEnum.MarkedDead || this.submission.eventCode == null;
   }
 
   get canEditDeadReasons(): boolean {
-    return this.canEditSubmission && this.submission.EventCode == SubmissionEventEnum.MarkedDead;
+    return this.canEditSubmission && this.submission.eventCode == SubmissionEventEnum.MarkedDead;
   }
 
   get showDeclineReasons(): boolean {
-    return this.submission.EventCode == SubmissionEventEnum.Declined;
+    return this.submission.statusCode == SubmissionStatusEnum.Dead && this.submission.eventCode == SubmissionEventEnum.Declined;
   }
 
   get canEditDeclineReasons(): boolean {
-    return this.canEditSubmission && this.submission.EventCode == SubmissionEventEnum.Declined;
+    return this.canEditSubmission && this.submission.eventCode == SubmissionEventEnum.Declined;
+  }
+
+  get showReactivateReasons(): boolean {
+    return this.submission.statusCode == SubmissionStatusEnum.Live && this.submission.eventCode == SubmissionEventEnum.Reactivated;
+  }
+
+  get canEditReactivateReasons(): boolean {
+    return this.canEditSubmission && this.submission.eventCode == SubmissionEventEnum.Reactivated;
   }
 
   changeAction() {
-    this.submission.ReasonCode = null;
+    this.submission.reasonCode = null;
   }
 
   get canSave(): boolean {

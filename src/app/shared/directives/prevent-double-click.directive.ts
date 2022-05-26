@@ -7,15 +7,13 @@ import { throttleTime } from 'rxjs/operators';
 })
 export class PreventDoubleClickDirective implements OnInit, OnDestroy {
   @Input()
-  throttleTime = 500;
+    throttleTime = 500;
 
   @Output()
-  throttledClick = new EventEmitter();
+    throttledClick = new EventEmitter();
 
   private clicks = new Subject();
   private subscription!: Subscription;
-
-  constructor() { }
 
   ngOnInit() {
     this.subscription = this.clicks.pipe(
