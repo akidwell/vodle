@@ -4,7 +4,7 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionSearchResponses } from 'src/app/features/home/models/search-results';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
-import { SubmissionMarkService } from '../submission-mark/submission-mark.service';
+import { SubmissionStatusService } from '../submission-status/submission-status.service';
 
 @Component({
   selector: 'shared-rsps-submission-activity',
@@ -19,7 +19,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
   canEditSubmission = false;
   authSub: Subscription;
 
-  constructor(private userAuth: UserAuth, private submissionMarkService: SubmissionMarkService, private submissionService: SubmissionService) {
+  constructor(private userAuth: UserAuth, private submissionStatusService: SubmissionStatusService, private submissionService: SubmissionService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
@@ -33,6 +33,6 @@ export class SharedSubmissionActivityComponent implements OnInit {
   async markDeadDecline(submissionNumber: number) {
     const results$ = this.submissionService.getSubmission(submissionNumber);
     const submission = await lastValueFrom(results$);
-    return this.submissionMarkService.open(submission);
+    return this.submissionStatusService.open(submission);
   }
 }
