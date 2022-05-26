@@ -35,9 +35,9 @@ export class SubmissionMarkComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.events$ = this.dropdowns.getSubmissionEvents();
-    this.deadReasons$ = this.dropdowns.getMarkDeadReasons((this.submission.NewRenewalFlag ?? 1) == 1);
+    this.deadReasons$ = this.dropdowns.getMarkDeadReasons((this.submission.newRenewalFlag ?? 1) == 1);
     this.declineReasons$ = this.dropdowns.getMarkDeclineReasons();
-    this.submission.StatusCode = SubmissionStatusEnum.Dead;
+    this.submission.statusCode = SubmissionStatusEnum.Dead;
   }
 
   ngAfterViewInit(): void {
@@ -54,23 +54,23 @@ export class SubmissionMarkComponent implements OnInit {
   }
 
   get showDeadReasons(): boolean {
-    return this.submission.EventCode == SubmissionEventEnum.MarkedDead || this.submission.EventCode == null;
+    return this.submission.eventCode == SubmissionEventEnum.MarkedDead || this.submission.eventCode == null;
   }
 
   get canEditDeadReasons(): boolean {
-    return this.canEditSubmission && this.submission.EventCode == SubmissionEventEnum.MarkedDead;
+    return this.canEditSubmission && this.submission.eventCode == SubmissionEventEnum.MarkedDead;
   }
 
   get showDeclineReasons(): boolean {
-    return this.submission.EventCode == SubmissionEventEnum.Declined;
+    return this.submission.eventCode == SubmissionEventEnum.Declined;
   }
 
   get canEditDeclineReasons(): boolean {
-    return this.canEditSubmission && this.submission.EventCode == SubmissionEventEnum.Declined;
+    return this.canEditSubmission && this.submission.eventCode == SubmissionEventEnum.Declined;
   }
 
   changeAction() {
-    this.submission.ReasonCode = null;
+    this.submission.reasonCode = null;
   }
 
   get canSave(): boolean {

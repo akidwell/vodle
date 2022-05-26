@@ -6,7 +6,7 @@
     <div class="col-lg-12">
       <label for="action" class="form-label" title="Action">Action</label>
       <ng-select id="action" [items]="events$ | async" bindLabel="description" bindValue="key" required
-        [clearable]="false" [readonly]="!canEditSubmission" name="action" [(ngModel)]="submission.EventCode"
+        [clearable]="false" [readonly]="!canEditSubmission" name="action" [(ngModel)]="submission.eventCode"
         #action="ngModel" (change)="changeAction()">
       </ng-select>
     </div>
@@ -14,20 +14,20 @@
       <label for="deadReaons" class="form-label" title="Dead Reasons">Reason</label>
       <ng-select id="deadReaons" appendTo="body" [items]="deadReasons$ | async" bindLabel="description" bindValue="key"
         [required]="canEditDeadReasons" [readonly]="!canEditDeadReasons" [clearable]="false" name="deadReaons"
-        [(ngModel)]="submission.ReasonCode" #entitdeadReaonsyType="ngModel">
+        [(ngModel)]="submission.reasonCode" #entitdeadReaonsyType="ngModel">
       </ng-select>
     </div>
     <div class="col-lg-12" *ngIf="showDeclineReasons">
       <label for="declineReasons" class="form-label" title="Decline Reasons">Reason</label>
       <ng-select id="declineReasons" appendTo="body" [items]="declineReasons$ | async" bindLabel="description"
         bindValue="key" [required]="canEditDeclineReasons" [readonly]="!canEditDeclineReasons" [clearable]="false"
-        name="declineReasons" [(ngModel)]="submission.ReasonCode" #declineReasons="ngModel">
+        name="declineReasons" [(ngModel)]="submission.reasonCode" #declineReasons="ngModel">
       </ng-select>
     </div>
     <div class="col-lg-12">
       <label for="remarks" class="form-label" title="Remarks">Remarks</label>
       <textarea type="text" class="form-control" id="comments" nullValue maxlength="255" [readonly]="!canEditSubmission"
-        name="remarks" [(ngModel)]="submission.Comments" #remarks="ngModel"></textarea>
+        name="remarks" [(ngModel)]="submission.comments" #remarks="ngModel"></textarea>
     </div>
   </div>
   <div class="modal-footer">
