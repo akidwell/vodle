@@ -38,12 +38,14 @@ export interface SubmissionSearchResponses{
     submissionStatus: string;
     insuredName: string;
     policyNumber: string;
+    policyNo: string;
     effectiveDate: Date;
     expirationDate: Date;
     submissionDate: Date;
     renewalFlag: string;
     coverageType: string;
     profitCenter: string;
+    cancelDate: Date;
   }
 
 export interface InsuredSearchResponses{
