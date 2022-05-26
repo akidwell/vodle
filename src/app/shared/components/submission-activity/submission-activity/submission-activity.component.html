@@ -19,6 +19,7 @@
               <th>Profit Center</th>
               <th>Effective Date</th>
               <th>Expiration Date</th>
+              <th>Cancel Date</th>
               <th>Policy No</th>
               <th>Producer Branch</th>
               <th>Underwriter</th>           
@@ -28,7 +29,8 @@
           <tbody>
             <tr *ngFor="let submission of submissionResults; let i = index">
               <ng-container>
-                <td>{{ submission.submissionNumber }}</td>
+                <td><a [routerLink]="[]" (click)="routeToSubmission(submission.submissionNumber)">
+                  <td>{{ submission.submissionNumber }}</td></a></td>
                 <td>{{ submission.quoteNumber }}</td>
                 <td>{{ submission.submissionDate | date: 'MM/dd/yyyy'}}</td>
                 <td>{{submission.renewalFlag}}</td>
@@ -36,7 +38,9 @@
                 <td>{{submission.profitCenter}}</td>
                 <td>{{submission.effectiveDate | date: 'MM/dd/yyyy'}}</td>
                 <td>{{submission.expirationDate | date: 'MM/dd/yyyy'}}</td>
-                <td>{{submission.policyNumber}}</td>
+                <td>{{submission.cancelDate | date: 'MM/dd/yyyy'}}</td>
+                <td><a [routerLink]="[]"(click)="search(submission.policyNo)">
+                  <td>{{submission.policyNumber}}</td></a></td>
                 <td>{{ submission.producerBranch}}</td>
                 <td>{{ submission.underwriter}} </td>
                 <td  class="overflow-hidden" id="actionCell">
@@ -57,7 +61,7 @@
     </div>
     <div class="card-footer">
       <div id="searchFooter">
-        <div *ngIf="canEditSubmission" style="float:left;"><a class="nav-link">Add Submission</a></div>
+        <div *ngIf="canEditSubmission && checkIfHomeRoute()" style="float:left;"><a class="nav-link">Add Submission</a></div>
         <div style="float:right;">Results:{{submissionResults.length}}</div>
       </div>
     </div>
