@@ -108,20 +108,21 @@
               </div> -->
               </div>
             </div>
+            <div class="row">
+              <div class="col-lg-4 panel">
+                <rsps-submission-info-panel-left
+                  [submission]="submission"
+                ></rsps-submission-info-panel-left>
+              </div>
+              <div class="col-lg-8 panel">
+                <rsps-submission-info-panel-right
+                  [submission]="submission"
+                ></rsps-submission-info-panel-right>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-4 panel">
-            <rsps-submission-info-panel-left
-              [submission]="submission"
-            ></rsps-submission-info-panel-left>
-          </div>
-          <div class="col-lg-8 panel">
-            <rsps-submission-info-panel-right
-              [submission]="submission"
-            ></rsps-submission-info-panel-right>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -132,25 +133,28 @@
       <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!seCollapsed"></fa-icon>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="seCollapsed">
-      <div *ngFor="let subEvent of submission.submissionEvents; let i = index">
-        <div class="row">
-          <div class="col-lg-3" >
-            {{subEvent.eventDescription}}
-          </div >
-          <div class="col-lg-1">
-            {{subEvent.reasonDescription}}
-          </div>
-          <div class="col-lg-4">
-            {{subEvent.remarks}}
-          </div>
-          <div class="col-lg-2">
-            {{subEvent.eventDate}}
-          </div>
-          <div class="col-lg-2">
-            {{subEvent.createdByUserName}}
-          </div>
-        </div>
-      </div>
+      <table class="table table-striped table-bordered">
+          <thead id="seHeader">
+            <tr>
+              <th>Event Description</th>
+              <th>Reason</th>
+              <th>Remarks</th>
+              <th>Event Date</th>
+              <th>Created By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let subEvent of submission.submissionEvents; let i = index">
+              <ng-container>
+                    <td>{{subEvent.eventDescription}}</td>
+                    <td>{{subEvent.reasonDescription}}</td>
+                    <td>{{subEvent.remarks}}</td>
+                    <td>{{formatDateForDisplay.formatDateForDisplay(subEvent.eventDate)}}</td>
+                    <td>{{subEvent.createdByUserName || '--'}}</td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
     </div>
   </div>
 

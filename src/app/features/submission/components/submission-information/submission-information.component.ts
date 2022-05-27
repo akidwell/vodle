@@ -7,6 +7,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { Submission } from '../../models/submission';
@@ -35,12 +36,13 @@ export class SubmissionInformationComponent implements OnInit {
   naicsCodes$: Observable<Code[]> | undefined;
   loadingNaics = false;
   seCollapsed = false;
-
+  formatDateForDisplay: FormatDateForDisplay;
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
 
   constructor(private route: ActivatedRoute, private router: Router, private dropdowns: DropDownsService,
     private submissionService: SubmissionService, private userAuth: UserAuth, private navigationService: NavigationService,
-    private messageDialogService: MessageDialogService, private notification: NotificationService) {
+    private messageDialogService: MessageDialogService, private notification: NotificationService,private formatDateService: FormatDateForDisplay) {
+    this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
