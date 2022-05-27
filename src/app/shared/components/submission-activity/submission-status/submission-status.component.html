@@ -1,9 +1,9 @@
 <form #submissionMark="ngForm">
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Mark Submission Dead/Decline</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{title}}</h4>
   </div>
   <div class="modal-body">
-    <div class="col-lg-12">
+    <div class="col-lg-12" *ngIf="showActions">
       <label for="action" class="form-label" title="Action">Action</label>
       <ng-select id="action" [items]="events$ | async" bindLabel="description" bindValue="key" required
         [clearable]="false" [readonly]="!canEditSubmission" name="action" [(ngModel)]="submission.eventCode"
@@ -22,6 +22,13 @@
       <ng-select id="declineReasons" appendTo="body" [items]="declineReasons$ | async" bindLabel="description"
         bindValue="key" [required]="canEditDeclineReasons" [readonly]="!canEditDeclineReasons" [clearable]="false"
         name="declineReasons" [(ngModel)]="submission.reasonCode" #declineReasons="ngModel">
+      </ng-select>
+    </div>
+    <div class="col-lg-12" *ngIf="showReactivateReasons">
+      <label for="reactivateReasons" class="form-label" title="Decline Reasons">Reason</label>
+      <ng-select id="reactivateReasons" appendTo="body" [items]="reactivateReasons$ | async" bindLabel="description"
+        bindValue="key" [required]="canEditReactivateReasons" [readonly]="!canEditReactivateReasons" [clearable]="false"
+        name="reactivateReasons" [(ngModel)]="submission.reasonCode" #reactivateReasons="ngModel">
       </ng-select>
     </div>
     <div class="col-lg-12">

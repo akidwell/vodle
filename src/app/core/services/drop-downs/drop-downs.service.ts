@@ -843,4 +843,27 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Reactivate Reasons
+  private cacheReactivateReasons: Code[] | null = null;
+  private cacheReactivateReasons$!: Observable<Code[]> | null;
+
+  getReactivateReasons(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheReactivateReasons) {
+      observable = of(this.cacheReactivateReasons);
+    } else if (this.cacheReactivateReasons$) {
+      observable = this.cacheReactivateReasons$;
+    } else {
+      this.cacheReactivateReasons$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/reactivate-reasons')
+        .pipe(
+          tap(res => this.cacheReactivateReasons = res),
+          share(),
+          finalize(() => this.cacheReactivateReasons$ = null)
+        );
+      observable = this.cacheReactivateReasons$;
+    }
+    return observable;
+  }
+
 }
