@@ -18,7 +18,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./reinsurance-layer.component.css']
 })
 export class ReinsuranceLayerComponent implements OnInit {
-  programId: number = 0;
+  programId = 0;
   effectiveDate: Date = new Date();
   reinsuranceSub!: Subscription;
   reinsuranceCodes$: Observable<ReinsuranceLookup[]> | undefined;
@@ -29,14 +29,14 @@ export class ReinsuranceLayerComponent implements OnInit {
   deleteSub!: Subscription;
   policyLayer!: PolicyLayerData[];
   updateSub!: Subscription;
-  isDirty: boolean = false;
+  isDirty = false;
   treatyNo!: number;
   commRate!: number;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   authSub: Subscription;
   endorsement!: Endorsement;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   reinsuranceRefreshedSub!: Subscription;
 
   @Input() policyLayerData!: PolicyLayerData;
@@ -47,7 +47,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService) { 
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -91,7 +91,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   async populateReinsuranceCodes(): Promise<void> {
@@ -116,10 +116,10 @@ export class ReinsuranceLayerComponent implements OnInit {
   async save(policyLayerData: PolicyLayerData[]): Promise<boolean> {
     const results$ = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData);
     return await lastValueFrom(results$)
-      .then(x => {
+      .then(() => {
         return true;
       }).catch((error) => {
-        this.messageDialogService.open("Reinsurance Save Error!", error.error.Message)
+        this.messageDialogService.open('Reinsurance Save Error!', error.error.Message);
         this.endorsementStatusService.reinsuranceValidated = false;
         return false;
       });
@@ -164,14 +164,13 @@ export class ReinsuranceLayerComponent implements OnInit {
         this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
         return result;
       }));
-      ;
     } else if (this.index == 0 && this.policyLayerData.reinsuranceData.length == 1) {
       this.save(this.policyLayer).then(() => this.deleteSub = this.policyService.deletePolicyAndReinsuranceLayers(this.reinsuranceLayer).subscribe(result => {
         this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
-        this.deleteExistingPolicyLayer.emit(this.policyLayerData)
+        this.deleteExistingPolicyLayer.emit(this.policyLayerData);
         return result;
       }));
-      this.save(this.policyLayer)
+      this.save(this.policyLayer);
     }
   }
 

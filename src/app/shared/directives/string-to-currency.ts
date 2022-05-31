@@ -24,7 +24,7 @@ export class StringToCurrencyDirective {
      setTimeout(() => {
        if (this.control.value != null) {
          const controlValue = this.control.value.toString();
-         this.control.reset(this.formatToCurrency(this.control.value.toString()));
+         this.control.reset(this.formatToCurrency(this.control.value.toString(),true));
          this.control.viewToModelUpdate((controlValue === '') ? null : isNaN(Number(controlValue)) ? Number(controlValue.replace(/[^0-9.-]+/g, '')) : Number(controlValue));
        }
      });
@@ -84,7 +84,7 @@ export class StringToCurrencyDirective {
      }
    }
 
-   private formatToCurrency(input: string): string {
+   private formatToCurrency(input: string, loading = false): string {
      const currencyPipe = new CurrencyPipe('en-US');
      const minusPipe = new MinusSignToParens();
      let formattedValue = '';
@@ -94,7 +94,8 @@ export class StringToCurrencyDirective {
      if (value.replace('-', '').replace('.', '') === '') {
        value = '';
      }
-     if (!this.allowNegative) {
+     // Always allow negative on loading
+     if (!this.allowNegative && !loading) {
        value = value.replace('-', '');
      }
      // If has a value then format it to USD and add parenthesis if negative
