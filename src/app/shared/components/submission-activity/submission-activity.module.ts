@@ -8,6 +8,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
 import { SubmissionStatusComponent } from './submission-status/submission-status.component';
 import { SubmissionStatusService } from './submission-status/submission-status.service';
+import { BusyModule } from 'src/app/core/components/busy/busy.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SubmissionStatusService } from './submission-status/submission-status.s
     FormsModule,
     NgbModule,
     NgSelectModule,
-    DirectivesModule
+    DirectivesModule,
+    BusyModule
   ],
   providers: [
     SubmissionStatusService

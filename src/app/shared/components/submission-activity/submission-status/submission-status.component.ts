@@ -1,14 +1,15 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionEventEnum } from 'src/app/core/enums/submission-event.enum';
 import { SubmissionReasonEnum } from 'src/app/core/enums/submission-reason-enum';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { Submission } from 'src/app/features/submission/models/submission';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { SubmissionStatus } from 'src/app/features/submission/models/submission-status';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 
 @Component({
@@ -26,11 +27,13 @@ export class SubmissionStatusComponent implements OnInit {
   reactivateReasons$: Observable<Code[]> | undefined;
   isValid = false;
   title = 'Mark Submission Dead/Decline';
+  showBusy = false;
 
-  @Input() submission!: Submission;
+  @Input() submission!: SubmissionStatus;
+  @Input() isReactivate = false;
   @ViewChild('submissionMark', { static: false }) submissionMark!: NgForm;
 
-  constructor(public activeModal: NgbActiveModal, private userAuth: UserAuth, private dropdowns: DropDownsService, private submissionService: SubmissionService) {
+  constructor(public activeModal: NgbActiveModal, private userAuth: UserAuth, private dropdowns: DropDownsService, private submissionService: SubmissionService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
@@ -38,11 +41,11 @@ export class SubmissionStatusComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.events$ = this.dropdowns.getSubmissionEvents();
-    this.deadReasons$ = this.dropdowns.getMarkDeadReasons((this.submission.newRenewalFlag ?? 1) == 1);
+    this.deadReasons$ = this.dropdowns.getMarkDeadReasons(this.submission.isNew);
     this.declineReasons$ = this.dropdowns.getMarkDeclineReasons();
     this.reactivateReasons$ = this.dropdowns.getReactivateReasons();
 
-    if (this.submission.statusCode == SubmissionStatusEnum.Dead) {
+    if (this.isReactivate) {
       this.title = 'Reactivate Submission';
       this.submission.statusCode = SubmissionStatusEnum.Live;
       this.submission.eventCode = SubmissionEventEnum.Reactivated;
@@ -105,10 +108,18 @@ export class SubmissionStatusComponent implements OnInit {
   }
 
   async save() {
-    // const results$ = this.submissionService.(this.submissionNumber);
-    // this.submission = await lastValueFrom(results$);
-
-    this.activeModal.close(true);
+    this.showBusy = true;
+    const results$ = this.submissionService.updateSubmissionStatus(this.submission);
+    await lastValueFrom(results$).then(result => {
+      this.showBusy = false;
+      this.activeModal.close(result.status);
+    },
+    error => {
+      this.showBusy = false;
+      this.activeModal.close();
+      const errorMessage = error.error?.Message ?? error.message;
+      this.messageDialogService.open(this.title + ' Failed', 'Error Message: ' + errorMessage);
+    });
   }
 
   cancel() {
