@@ -9,6 +9,7 @@ import { DirectivesModule } from '../../directives/directives.module';
 import { SubmissionStatusComponent } from './submission-status/submission-status.component';
 import { SubmissionStatusService } from './submission-status/submission-status.service';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BusyModule } from 'src/app/core/components/busy/busy.module';
     NgbModule,
     NgSelectModule,
     DirectivesModule,
-    BusyModule
+    BusyModule,
+    RouterModule
   ],
   providers: [
     SubmissionStatusService
