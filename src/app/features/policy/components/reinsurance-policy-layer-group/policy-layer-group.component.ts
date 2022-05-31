@@ -15,8 +15,8 @@ import { ReinsuranceLayerComponent } from '../reinsurance-layer/reinsurance-laye
 })
 export class PolicyLayerGroupComponent implements OnInit {
   endorsement!: Endorsement;
-  isReadOnly: boolean = true;
-  canEditPolicy: boolean = false;
+  isReadOnly = true;
+  canEditPolicy = false;
   authSub: Subscription;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
@@ -27,7 +27,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   faTrashcan = faTrashAlt;
   updateSub!: Subscription;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
 
   @Input() index!: number;
   @Input() policyLayerData!: PolicyLayerData;
@@ -61,23 +61,23 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   deleteExistingReinsuranceLayer(existingReinsuranceLayer: ReinsuranceLayerData) {
     const reinsuranceindex = this.policyLayerData.reinsuranceData.indexOf(existingReinsuranceLayer, 0);
     if (reinsuranceindex > 0 || (reinsuranceindex == 0 && this.policyLayerData.reinsuranceData.length > 0)) {
       this.policyLayerData.reinsuranceData.splice(reinsuranceindex, 1);
-      this.policyLayers.forEach(x=> x.reinsuranceData.forEach((value, index)=>{  value.reinsLayerNo = index + 1}));
+      this.policyLayers.forEach(x=> x.reinsuranceData.forEach((value, index)=>{ value.reinsLayerNo = index + 1;}));
       if (!existingReinsuranceLayer.isNew) {
         this.endorsementStatusService.reinsuranceValidated = false;
         this.notification.show('Reinsurance Layer deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
     }
     if (reinsuranceindex == 0 && this.policyLayerData.reinsuranceData.length < 1){
-      const polLayerNo = existingReinsuranceLayer.policyLayerNo
-      const existingPolicyLayer = this.policyLayers.findIndex(i=> i.policyLayerNo == polLayerNo)
-      this.deleteExistingPolicyLayer(existingPolicyLayer)
+      const polLayerNo = existingReinsuranceLayer.policyLayerNo;
+      const existingPolicyLayer = this.policyLayers.findIndex(i=> i.policyLayerNo == polLayerNo);
+      this.deleteExistingPolicyLayer(existingPolicyLayer);
     }
   }
 
@@ -87,13 +87,13 @@ export class PolicyLayerGroupComponent implements OnInit {
       this.notification.show('Policy and Reinsurance Layers deleted.', { classname: 'bg-success text-light', delay: 5000 });
     }
     this.policyLayers.splice(existingPolicyLayer, 1);
-    this.policyLayers.forEach((value, index) =>{  value.policyLayerNo = index + 1 });
-    this.policyLayers.forEach(x=> x.reinsuranceData.forEach((value)=>{  value.policyLayerNo = x.policyLayerNo}));
+    this.policyLayers.forEach((value, index) =>{ value.policyLayerNo = index + 1; });
+    this.policyLayers.forEach(x=> x.reinsuranceData.forEach((value)=>{ value.policyLayerNo = x.policyLayerNo;}));
   }
 
   isValid(): boolean {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.reinsuranceForm.status != 'VALID') {
           return false;
         }
@@ -104,7 +104,7 @@ export class PolicyLayerGroupComponent implements OnInit {
 
   isDirty() {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.reinsuranceForm.dirty) {
           return true;
         }
@@ -115,14 +115,14 @@ export class PolicyLayerGroupComponent implements OnInit {
 
   async savePolicyLayers(): Promise<boolean> {
     if (this.canEditPolicy) {
-      let saveCount: number = 0;
-      let result = await this.reinsComp.save(this.policyLayers);
+      let saveCount = 0;
+      const result = await this.reinsComp.save(this.policyLayers);
       if (result === false) {
         this.notification.show('Reinsurance Layer ' + this.reinsComp.reinsuranceLayer.reinsLayerNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
       }
       else {
         this.markPristine();
-        saveCount++
+        saveCount++;
       }
       if (saveCount > 0) {
         this.notification.show('Reinsurance Layers successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
@@ -141,7 +141,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   calcTotalPolicyLayerLimit(): number {
-    let total: number = 0;
+    let total = 0;
     this.policyLayerData.reinsuranceData.forEach(
       layer => total += Number.isNaN(Number(layer.reinsLimit)) ? 0 : Number(layer.reinsLimit)
     );
@@ -149,7 +149,7 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   calcTotalPolicyLayerPremium(): number {
-    let total: number = 0;
+    let total = 0;
     this.policyLayerData.reinsuranceData.forEach(
       layer => total += Number.isNaN(Number(layer.reinsCededPremium)) ? 0 : Number(layer.reinsCededPremium)
     );
@@ -157,6 +157,6 @@ export class PolicyLayerGroupComponent implements OnInit {
   }
 
   addNewReinsuranceLayer(): void {
-    this.addReinsurance.emit(this.policyLayerData)
+    this.addReinsurance.emit(this.policyLayerData);
   }
 }

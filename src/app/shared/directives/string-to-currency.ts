@@ -37,15 +37,17 @@ export class StringToCurrencyDirective {
 
    @HostListener('blur', ['$event.target'])
    onLeaveEvent(target: HTMLInputElement) {
-     const controlValue = target.value;
-     target.value = this.formatToCurrency(target.value.toString());
-     this.control.viewToModelUpdate((controlValue === '') ? null : isNaN(Number(controlValue)) ? Number(controlValue.replace(/[^0-9.-]+/g, '')) : Number(controlValue));
+     if (!target.readOnly) {
+       const controlValue = target.value;
+       target.value = this.formatToCurrency(target.value.toString());
+       this.control.viewToModelUpdate((controlValue === '') ? null : isNaN(Number(controlValue)) ? Number(controlValue.replace(/[^0-9.-]+/g, '')) : Number(controlValue));
+     }
    }
 
    @HostListener('focus', ['$event.target'])
    onEnterEvent(target: HTMLInputElement) {
      // Convert Parenthesis to minus sign
-     if (target.value.charAt(0) === '(') {
+     if (!target.readOnly && target.value.charAt(0) === '(') {
        target.value = '-' + target.value.replace(/[^0-9.-]+/g, '');
      }
    }
