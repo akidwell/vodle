@@ -49,7 +49,8 @@
                     <div ngbDropdownMenu container="body" aria-labelledby="action">
                       <button ngbDropdownItem class="btn btn-outline-primary" value="clone">Clone</button>
                       <button ngbDropdownItem class="btn btn-outline-primary" value="renew">Renew</button>
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew" (click)="markDeadDecline(submission.submissionNumber)">Mark Dead/Decline</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew" (click)="markDeadDecline(submission)">Mark Dead/Decline</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew" (click)="markReactivate(submission)">Reactivate</button>
                     </div>
                   </div>
                 </td>
