@@ -1,13 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionSearchResponses } from 'src/app/features/home/models/search-results';
 import { newSubmissionStatus } from 'src/app/features/submission/models/submission-status';
 import { SubmissionStatusService } from '../submission-status/submission-status.service';
 import { PolicySearchService } from 'src/app/features/home/services/policy-search/policy-search.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 
 @Component({
   selector: 'shared-rsps-submission-activity',
@@ -17,7 +19,7 @@ import { NavigationService } from 'src/app/features/policy/services/navigation/n
 export class SharedSubmissionActivityComponent implements OnInit {
 
   constructor( private userAuth: UserAuth, private router: Router, private navigationService: NavigationService, private policySearchService: PolicySearchService,
-    private submissionStatusService: SubmissionStatusService,) {
+    private submissionStatusService: SubmissionStatusService,private submissionService: SubmissionService, private messageDialogService: MessageDialogService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     ); }
@@ -76,6 +78,16 @@ export class SharedSubmissionActivityComponent implements OnInit {
     if (status != null) {
       submission.submissionStatus = status;
     }
-  }
+  } 
 
+  async renew(submission: SubmissionSearchResponses) {
+    const status$ = this.submissionService.renew(submission.submissionNumber);
+    await lastValueFrom(status$).then(result => {
+      this.router.navigate(['/submission'],{ state: { submission: result } });
+    },
+    error => {
+      const errorMessage = error.error?.Message ?? error.message;
+      this.messageDialogService.open('Error', 'Error Message: ' + errorMessage);
+    });
+  }
 }
