@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 
 
 @Component({
@@ -42,12 +43,11 @@ export class ReinsuranceLayerComponent implements OnInit {
   @Input() policyLayerData!: PolicyLayerData;
   @Input() reinsuranceLayer!: ReinsuranceLayerData;
   @Input() index!: number;
-  @ViewChild('modalConfirmation') modalConfirmation: any;
   @Output() deleteExistingReinsuranceLayer: EventEmitter<ReinsuranceLayerData> = new EventEmitter();
   @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService) {
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -150,12 +150,13 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
-      if (result == 'Yes') {
+    this.confirmationDialogService.open('Delete Confirmation', 'Are you sure you want to delete this Reinsurance Layer?').then((result: boolean) => {
+      if (result) {
         this.deleteReinsuranceLayer();
       }
     });
   }
+
   async deleteReinsuranceLayer() {
     if (this.reinsuranceLayer.isNew) {
       this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);

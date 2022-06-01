@@ -98,17 +98,4 @@
         <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning" *ngIf="reinsuranceLayer.isNew && canEdit">Remove</span>
     </div>
   </div>
-  <ng-template #modalConfirmation let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Delete Reinsurance Layer Confirmation</h4>
-
-    </div>
-    <div class="modal-body">
-      <p>Are you sure you want to delete this Reinsurance Layer?</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-danger" (click)="modal.close('Yes')">Yes</button>
-      <button type="button" class="btn btn-secondary" (click)="modal.close()">No</button>
-    </div>
-  </ng-template>
 </form>

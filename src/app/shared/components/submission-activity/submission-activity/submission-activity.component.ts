@@ -78,7 +78,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
     if (status != null) {
       submission.submissionStatus = status;
     }
-  } 
+  }
 
   async renew(submission: SubmissionSearchResponses) {
     const status$ = this.submissionService.renew(submission.submissionNumber);
