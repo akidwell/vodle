@@ -24,6 +24,10 @@ export class SubmissionService {
     return this.http.post<SubmissionStatusResult>(this.config.apiBaseUrl + 'api/submissions/status', submissionStatus);
   }
 
+  renew(id: number): Observable<SubmissionStatusResult> {
+    return this.http.get<SubmissionStatusResult>(this.config.apiBaseUrl + 'api/submissions/' + id.toString() + '/renew');
+  }
+
   // producerSearch(query: string): Observable<Producer[]> {
   //   const params = new HttpParams().append('query', query);
   //   return this.http.get<Producer[]>(this.config.apiBaseUrl + 'api/producer-branch/', { params })
