@@ -68,7 +68,6 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   prev() {
-    console.log(this.previousUrl);
     this.router.navigate([this.previousUrl]);
   }
 

@@ -202,7 +202,6 @@ export class DirectPolicyComponent implements OnInit {
   async createRewrite() {
     this.showBusy = true;
     this.modalRef.close();
-    console.log(this.policyData);
     const response$ = this.policyService.addPolicy(this.policyData);
     await lastValueFrom(response$)
       .then((response) => {
