@@ -5,6 +5,7 @@ import { Code } from 'src/app/core/models/code';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { Producer } from '../../models/producer';
 import { Submission } from '../../models/submission';
+import { SubmissionStatus, SubmissionStatusResult } from '../../models/submission-status';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,14 @@ export class SubmissionService {
           return receivedData;
         }));
   }
+  updateSubmissionStatus(submissionStatus: SubmissionStatus): Observable<SubmissionStatusResult> {
+    return this.http.post<SubmissionStatusResult>(this.config.apiBaseUrl + 'api/submissions/status', submissionStatus);
+  }
+
+  renew(id: number): Observable<SubmissionStatusResult> {
+    return this.http.get<SubmissionStatusResult>(this.config.apiBaseUrl + 'api/submissions/' + id.toString() + '/renew');
+  }
+
   // producerSearch(query: string): Observable<Producer[]> {
   //   const params = new HttpParams().append('query', query);
   //   return this.http.get<Producer[]>(this.config.apiBaseUrl + 'api/producer-branch/', { params })

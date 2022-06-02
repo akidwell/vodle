@@ -16,6 +16,13 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
     // if (id == '') {
     //   return of({ insured: newInsured() });
     // }
+
+    // Extract submission from routing if possible
+    const submission = this.router.getCurrentNavigation()?.extras?.state?.submission;
+    if (submission != null){
+      return of({ submission: submission});
+    }
+
     console.log(+id,isNaN(+id));
     if (isNaN(+id)) {
       const message = `Submission number was not a number: ${id}`;
