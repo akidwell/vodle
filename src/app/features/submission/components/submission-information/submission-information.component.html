@@ -1,6 +1,8 @@
 <div id="saveHeader">
-  <!-- <button class="btn btn-md btn-primary" *ngIf="canEditInsured" style="margin: 5px;" [disabled]="!isDirty()" appPreventDoubleClick
-    (throttledClick)="save()" [throttleTime]="700">Save</button> -->
+  <button class="btn btn-md btn-primary" *ngIf="canEditSubmission" style="margin: 5px;" [disabled]="!isDirty()" appPreventDoubleClick
+    (throttledClick)="save()" [throttleTime]="700">Save</button>
+    <button class="btn btn-md btn-primary" *ngIf="canEditSubmission && this.previousUrl !== ''" style="margin: 5px;" appPreventDoubleClick
+    (throttledClick)="prev()" [throttleTime]="700">{{previousLabel}}</button>
 </div>
 <ngb-alert
   *ngIf="showInvalid"
@@ -109,13 +111,15 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-4 panel">
+              <div class="col-lg-4">
                 <rsps-submission-info-panel-left
+                  #panelLeft
                   [submission]="submission"
                 ></rsps-submission-info-panel-left>
               </div>
-              <div class="col-lg-8 panel">
+              <div class="col-lg-8">
                 <rsps-submission-info-panel-right
+                  #panelRight
                   [submission]="submission"
                 ></rsps-submission-info-panel-right>
               </div>

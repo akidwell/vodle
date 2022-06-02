@@ -2,10 +2,12 @@
 <div>
   <div>
     <label>Producer Contact</label>
-      <input id="producer-search" type="text" class="form-control"
+      <input id="producer" type="text" class="form-control"
       [class.is-invalid]="searchFailed"
       [(ngModel)]="model"
-      #producerContact (click)="producerContact.select()"
+      name="producer"
+      #producer
+      (click)="producer.select()"
       [inputFormatter]="displayFormatter"
       [resultFormatter]="displayFormatter"
       [ngbTypeahead]="search"
