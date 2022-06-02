@@ -55,5 +55,6 @@ export interface Submission {
   insured: Insured,
   producer: Producer | null,
   producerContact: ProducerContact | null,
-  submissionEvents: SubmissionEvent[] | null
+  submissionEvents: SubmissionEvent[] | null,
+  underwriterName: string | null
 }

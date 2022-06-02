@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, of, OperatorFunction} from 'rxjs';
+import {Observable, of, OperatorFunction, Subscription} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, filter} from 'rxjs/operators';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
@@ -8,6 +8,7 @@ import { ProducerContact } from 'src/app/features/submission/models/producer-con
 import * as moment from 'moment';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { deepClone } from 'src/app/core/utils/deep-clone';
+import { UserAuth } from 'src/app/core/authorization/user-auth';
 
 export interface FuzzyProducerContactSearchResponse {
   query: string,
@@ -40,6 +41,7 @@ export class ProducerContactSearchService {
   styles: ['ngb-typeahead-window { max-height: 200px !important; overflow-y: auto;} .card-header { color: white; background-color: #00274e; }']
 })
 export class ProducerContactSearch implements OnInit{
+  authSub: Subscription;
   model!: ProducerContact | null;
   originalModel!: ProducerContact;
   allowSearching = true;
@@ -48,9 +50,11 @@ export class ProducerContactSearch implements OnInit{
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   showContactMaintenance = false;
+  lockSubmissionFields = false;
   searchResponse!: ProducerContact[];
   formatDateForDisplay: FormatDateForDisplay;
   pcCollapsed = true;
+  canEditSubmission = false;
   public _producerCode!: number | null;
   @Input() set producerCode(value: number | null) {
     console.log(value);
@@ -65,9 +69,13 @@ export class ProducerContactSearch implements OnInit{
   @Input() public producerContactOnLoad!: ProducerContact | null;
   @Output() producerContactSelected: EventEmitter<ProducerContact | null> = new EventEmitter();
 
-  constructor(private _service: ProducerContactSearchService, private formatDateService: FormatDateForDisplay) {
+  constructor(private userAuth: UserAuth, private _service: ProducerContactSearchService, private formatDateService: FormatDateForDisplay) {
     this.formatDateForDisplay = formatDateService;
+    this.authSub = this.userAuth.canEditSubmission$.subscribe(
+      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    );
   }
+
   ngOnInit(): void {
     if (this.producerContactOnLoad) {
       this.allowSearching = false;
@@ -76,7 +84,17 @@ export class ProducerContactSearch implements OnInit{
       this.formatDisplay(this.model);
     }
   }
-
+  isFieldReadOnly(checkSubmissionLockStatus: boolean): boolean {
+    if(!checkSubmissionLockStatus) {
+      return !this.canEditSubmission;
+    } else {
+      if (this.lockSubmissionFields) {
+        return true;
+      } else {
+        return !this.canEditSubmission;
+      }
+    }
+  }
   // formatter = (producer: ProducerContact) => producer.firstName + '\xa0' + producer.lastName;
   displayFormatter = (producer: ProducerContact) => producer.display;
 
@@ -110,7 +128,9 @@ export class ProducerContactSearch implements OnInit{
     console.log('reset');
     this.allowSearching = false;
     this.model = deepClone(this.originalModel);
-    this.producerContact.nativeElement.blur();
+    if (this.producerContact.nativeElement != null){
+      this.producerContact.nativeElement.blur();
+    }
     return [];
   }
   resetSearch(): void {
@@ -119,6 +139,11 @@ export class ProducerContactSearch implements OnInit{
   }
   addNewProducerContact() {
     console.log('add new');
+  }
+  isValid() {
+    //const input = document.getElementById('producer') as HTMLInputElement | null;
+    //this
+    //return input != null && (input. && input.touched);
   }
   search: OperatorFunction<string, readonly ProducerContact[]> = (text$: Observable<string>) =>
     text$.pipe(

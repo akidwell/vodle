@@ -2,15 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { lastValueFrom, Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PreviousRouteService } from 'src/app/features/insured/services/previous-route/previous-route.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { Submission } from '../../models/submission';
 import { SubmissionService } from '../../services/submission-service/submission-service';
+import { SubmissionInfoPanelLeftComponent } from '../submission-info-panel-left/submission-info-panel-left.component';
+import { SubmissionInfoPanelRightComponent } from '../submission-info-panel-right/submission-info-panel-right.component';
 
 
 @Component({
@@ -35,16 +39,30 @@ export class SubmissionInformationComponent implements OnInit {
   naicsCodes$: Observable<Code[]> | undefined;
   loadingNaics = false;
   seCollapsed = false;
+  formatDateForDisplay: FormatDateForDisplay;
+  prevSub!: Subscription;
+  previousUrl = '';
+  previousLabel = 'Previous';
 
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
+  @ViewChild(SubmissionInfoPanelRightComponent) submissionInfoPanelRight!: SubmissionInfoPanelRightComponent;
+  @ViewChild(SubmissionInfoPanelLeftComponent) submissionInfoPanelLeft!: SubmissionInfoPanelLeftComponent;
+
+
 
   constructor(private route: ActivatedRoute, private router: Router, private dropdowns: DropDownsService,
     private submissionService: SubmissionService, private userAuth: UserAuth, private navigationService: NavigationService,
-    private messageDialogService: MessageDialogService, private notification: NotificationService) {
+    private messageDialogService: MessageDialogService, private notification: NotificationService,private formatDateService: FormatDateForDisplay,
+    private previousRouteService: PreviousRouteService) {
+    this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
-    // this.newInsuredANI = new insuredANI(this.submissionService);
+    this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
+      this.previousUrl = previousUrl;
+      const position = previousUrl.lastIndexOf('/') + 1;
+      this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
+    });
   }
 
   ngOnInit(): void {
@@ -61,7 +79,7 @@ export class SubmissionInformationComponent implements OnInit {
     else {
       this.loadingNaics = false;
     }
-    console.log(this.submission);
+
   }
 
   ngOnDestroy(): void {
@@ -70,7 +88,8 @@ export class SubmissionInformationComponent implements OnInit {
     this.updateSub?.unsubscribe();
   }
   routeToInsured(insuredCode: number) {
-    this.navigationService.resetPolicy();
+    //this.navigationService.resetPolicy();
+    console.log(insuredCode);
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
@@ -78,7 +97,10 @@ export class SubmissionInformationComponent implements OnInit {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
   }
-
+  prev() {
+    console.log(this.previousUrl);
+    this.router.navigate([this.previousUrl]);
+  }
   changeSicCode() {
     if (this.submission.sicCode != null) {
       this.loadingNaics = true;

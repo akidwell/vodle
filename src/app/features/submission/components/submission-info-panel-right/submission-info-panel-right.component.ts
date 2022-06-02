@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { Producer } from '../../models/producer';
 import { Submission } from '../../models/submission';
 
 @Component({
@@ -30,7 +29,13 @@ export class SubmissionInfoPanelRightComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    this.underwriters$ = this.dropdowns.getUnderwriters();
+    this.underwriters$ = this.dropdowns.getUnderwriters().pipe(tap(x => {
+      console.log(x);
+      const foundCurrentUnderwriter = x.filter(p => p.key == this.submission.underwriter);
+      if (foundCurrentUnderwriter.length == 0) {
+        x.push({key: this.submission.underwriter || 0, description: this.submission.underwriterName || '', code: this.submission.underwriterName || ''});
+      }
+    }));
     this.departments$ = this.dropdowns.getDepartments();
     console.log('happens');
   }
