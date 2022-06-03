@@ -81,6 +81,8 @@ export class SharedSubmissionActivityComponent implements OnInit {
   }
 
   async renew(submission: SubmissionSearchResponses) {
+    // Commented out for now since this will need to be different
+
     const status$ = this.submissionService.renew(submission.submissionNumber);
     await lastValueFrom(status$).then(result => {
       this.router.navigate(['/submission'],{ state: { submission: result } });

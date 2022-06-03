@@ -17,7 +17,7 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
     //   return of({ insured: newInsured() });
     // }
 
-    // Extract submission from routing if possible
+    // Extract submission from routing if possible - This  might not be needed anymore keeping for reference only for now
     const submission = this.router.getCurrentNavigation()?.extras?.state?.submission;
     if (submission != null){
       return of({ submission: submission});
