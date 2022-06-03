@@ -33,7 +33,7 @@
                   <td>{{ submission.submissionNumber }}</td></a></td>
                 <td>{{ submission.quoteNumber }}</td>
                 <td>{{ submission.submissionDate | date: 'MM/dd/yyyy'}}</td>
-                <td>{{submission.renewalFlag}}</td>
+                <td>{{submission.newBusinessOrRenewalFlag}}</td>
                 <td>{{ submission.submissionStatus}}</td>
                 <td>{{submission.profitCenter}}</td>
                 <td>{{submission.effectiveDate | date: 'MM/dd/yyyy'}}</td>
@@ -47,10 +47,10 @@
                   <div ngbDropdown container="body" placement="bottom-end" class="d-inline-block">
                     <button class="btn btn-outline-primary" id="action" ngbDropdownToggle>Actions</button>
                     <div ngbDropdownMenu container="body" aria-labelledby="action">
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="clone">Clone</button>
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew" (click)="renew(submission)">Renew</button>
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew" (click)="markDeadDecline(submission)">Mark Dead/Decline</button>
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew" (click)="markReactivate(submission)">Reactivate</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canClone(submission)" value="clone">Clone</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canRenew(submission)" value="renew">Renew</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canMarkDeadDecline(submission)" value="dead" (click)="markDeadDecline(submission)">Mark Dead/Decline</button>
+                      <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canReactivate(submission)" value="reactivate" (click)="markReactivate(submission)">Reactivate</button>
                     </div>
                   </div>
                 </td>
