@@ -1,5 +1,5 @@
 <div id="saveHeader">
-  <button class="btn btn-md btn-primary" *ngIf="canEditSubmission" style="margin: 5px;" [disabled]="!isDirty()" appPreventDoubleClick
+  <button class="btn btn-md btn-primary" *ngIf="canEditSubmission" style="margin: 5px;" [disabled]="!isDirty() || !isValid()" appPreventDoubleClick
     (throttledClick)="save()" [throttleTime]="700">Save</button>
     <button class="btn btn-md btn-primary" *ngIf="canEditSubmission && this.previousUrl !== ''" style="margin: 5px;" appPreventDoubleClick
     (throttledClick)="prev()" [throttleTime]="700">{{previousLabel}}</button>
@@ -32,7 +32,7 @@
         <div class="row">
           <div class="panel">
             <div class="row">
-              <div class="col-lg-6">
+              <div *ngIf="submission.insured != null" class="col-lg-6">
                 <div class="col-lg-12">
                   <a
                     [routerLink]="[]"

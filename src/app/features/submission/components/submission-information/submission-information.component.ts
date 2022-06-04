@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subscription, tap } from 'rxjs';
+import { lastValueFrom, Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { Code } from 'src/app/core/models/code';
@@ -11,7 +11,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PreviousRouteService } from 'src/app/features/insured/services/previous-route/previous-route.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { Submission } from '../../models/submission';
+import { SubmissionClass } from '../../classes/SubmissionClass';
 import { SubmissionService } from '../../services/submission-service/submission-service';
 import { SubmissionInfoPanelLeftComponent } from '../submission-info-panel-left/submission-info-panel-left.component';
 import { SubmissionInfoPanelRightComponent } from '../submission-info-panel-right/submission-info-panel-right.component';
@@ -23,7 +23,7 @@ import { SubmissionInfoPanelRightComponent } from '../submission-info-panel-righ
   styleUrls: ['./submission-information.component.css']
 })
 export class SubmissionInformationComponent implements OnInit {
-  submission!: Submission;
+  submission!: SubmissionClass;
   canEditSubmission = false;
   authSub: Subscription;
   addSub!: Subscription;
@@ -112,22 +112,17 @@ export class SubmissionInformationComponent implements OnInit {
       this.naicsCodes$ = new Observable<Code[]>();
     }
   }
-  isValid(): boolean {
-    if (!this.canEditSubmission) {
-      return true;
-    }
-    return true;
-  }
 
   private adddressValid() {
     return true;
   }
 
   isDirty(): boolean {
-    return false;
-    // return this.canEditSubmission && (this.accountInfoComp?.isDirty() || this.contactComp?.isDirty() || this.aniComp?.isDirty());
+    return this.submission.isDirty;
   }
-
+  isValid(): boolean {
+    return this.submission.isValid;
+  }
   async save(): Promise<void> {
     // this.showBusy = true;
     // const refresh = this.insured.isNew;
@@ -136,7 +131,12 @@ export class SubmissionInformationComponent implements OnInit {
     // if (refresh && this.insured.insuredCode !== null) {
     //   this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
     // }
-    console.log('save');
+    const results$ = this.submissionService.updateSubmission(this.submission);
+    await lastValueFrom(results$).then(result => {
+      if (result) {
+        console.log('save');
+      }
+    });
   }
 
   async saveSubmission(): Promise<boolean> {

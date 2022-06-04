@@ -1,4 +1,3 @@
-import { Moment } from 'moment';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from './producer';
 import { ProducerContact } from './producer-contact';
@@ -11,7 +10,7 @@ export interface Submission {
   officeCode: number | null | undefined,
   departmentCode: number | null | undefined,
   sicCode: string | null,
-  insuredCode: number | null | undefined,
+  insuredCode: number | null,
   producerCode: number | null | undefined,
   brokerId: number | null | undefined,
   retailProducerCode: number | null | undefined,
@@ -52,7 +51,7 @@ export interface Submission {
   processor: number | null | undefined,
   submissionEventCode: string,
   extExpiringPolicyNo: string,
-  insured: Insured,
+  insured?: Insured | null,
   producer: Producer | null,
   producerContact: ProducerContact | null,
   submissionEvents: SubmissionEvent[] | null,
