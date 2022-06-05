@@ -5,6 +5,8 @@
       <input id="producer-search" type="text" class="form-control"
       [class.is-invalid]="searchFailed"
       [(ngModel)]="model"
+      [required]="isRequired"
+      [readonly]="!canEdit"
       #producer (click)="producer.select()"
       [inputFormatter]="displayFormatter"
       [resultFormatter]="displayFormatter"

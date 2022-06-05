@@ -7,10 +7,12 @@
       [(ngModel)]="model"
       name="producer"
       #producer
+      [required]="isRequired"
       (click)="producer.select()"
       [inputFormatter]="displayFormatter"
       [resultFormatter]="displayFormatter"
       [ngbTypeahead]="search"
+      [readonly]="!canEdit"
       [disabled]="this.producerCode == null"
       (selectItem)="selectedProducerContact($event)"
       (focusout)="leaveSearchBar()"

@@ -34,7 +34,7 @@ export class ProducerSearchService {
   selector: 'producer-fuzzy-search',
   templateUrl: './producer-search.html',
   providers: [ProducerSearchService],
-  styles: ['ngb-typeahead-window { max-height: 200px !important; overflow-y: auto;}']
+  styleUrls: ['./producer-search.css']
 })
 export class ProducerSearch implements OnInit{
   model!: Producer | null;
@@ -51,6 +51,8 @@ export class ProducerSearch implements OnInit{
   get department(): number | null {
     return this._department;
   }
+  @Input() public canEdit!: boolean;
+  @Input() public isRequired!: boolean;
   @Input() public producerOnLoad!: Producer | null;
   @Output() producerSelected: EventEmitter<Producer | null> = new EventEmitter();
 

@@ -89,7 +89,6 @@ export class SubmissionInformationComponent implements OnInit {
   }
   routeToInsured(insuredCode: number) {
     //this.navigationService.resetPolicy();
-    console.log(insuredCode);
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
