@@ -55,6 +55,10 @@
     margin-top: 2px;
   
   }
+
+  .dropdown-menu {
+    padding: 0px;
+}
   
   .policyBorder {
     border-top: 10px solid black;
