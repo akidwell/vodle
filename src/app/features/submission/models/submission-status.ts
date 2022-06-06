@@ -21,5 +21,6 @@ export const newSubmissionStatus = (): SubmissionStatus => {
 };
 
 export interface SubmissionStatusResult {
-  statusCode: SubmissionStatusEnum,
+  statusCode: number,
+  status: string
 }

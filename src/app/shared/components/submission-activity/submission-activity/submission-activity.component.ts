@@ -66,7 +66,8 @@ export class SharedSubmissionActivityComponent implements OnInit {
     submissionStatus.isNew = submission.newBusinessOrRenewalFlag == 'N';
     const status = await this.submissionStatusService.openDeadDecline(submissionStatus);
     if (status != null) {
-      submission.submissionStatus = status.toString();
+      submission.status = status.statusCode;
+      submission.submissionStatus = status.status;
     }
   }
 
@@ -75,7 +76,8 @@ export class SharedSubmissionActivityComponent implements OnInit {
     submissionStatus.submissionNumber = submission.submissionNumber;
     const status = await this.submissionStatusService.openReactivate(submissionStatus);
     if (status != null) {
-      submission.submissionStatus = status.toString();
+      submission.status = status.statusCode;
+      submission.submissionStatus = status.status;
     }
   }
 
