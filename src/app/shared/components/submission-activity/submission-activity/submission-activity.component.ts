@@ -104,7 +104,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
 
   canMarkDeadDecline(submission: SubmissionSearchResponses): boolean {
     console.log(submission);
-    return this.canEditSubmission && submission.status != 1 && submission.invoiceCount == null;
+    return this.canEditSubmission && submission.status != 1 && (submission.invoiceCount == null || submission.invoiceCount == 0);
   }
 
   canReactivate(submission: SubmissionSearchResponses): boolean {
