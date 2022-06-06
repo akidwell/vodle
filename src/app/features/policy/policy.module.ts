@@ -48,6 +48,8 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { EndorsementStoredValues } from './services/endorsement-stored-values/endorsement-stored-values.service';
 import { ConfirmationDialogService } from '../../core/services/confirmation-dialog/confirmation-dialog.service';
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
+import { AdditionalNamedInsuredModule } from 'src/app/shared/components/additional-named-insured/additional-named-insured.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,9 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    AdditionalNamedInsuredModule,
     PipesModule,
+    DragDropModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

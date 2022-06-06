@@ -7,6 +7,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedAdditionalNamedInsuredsComponent } from './additional-named-insureds/additional-named-insureds.component';
 import { SharedAdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
 import { DirectivesModule } from '../../directives/directives.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [SharedAdditionalNamedInsuredsGroupComponent,
@@ -18,7 +20,9 @@ import { DirectivesModule } from '../../directives/directives.module';
     NgbModule,
     NgSelectModule,
     FormsModule,
-    DirectivesModule
+    DirectivesModule,
+    DragDropModule,
+    MatSlideToggleModule
   ],
   exports: [SharedAdditionalNamedInsuredsGroupComponent]
 })

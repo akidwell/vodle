@@ -17,16 +17,16 @@ import { UpdatePolicyChild } from '../../services/update-child/update-child.serv
   styleUrls: ['./endorsement-location.component.css']
 })
 export class EndorsementLocationComponent implements OnInit {
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   authSub: Subscription;
-  collapsed: boolean = true;
-  firstExpand: boolean = true;
+  collapsed = true;
+  firstExpand = true;
   faArrowUp = faAngleUp;
-  isLoadingAddress: boolean = false;
+  isLoadingAddress = false;
   states$: Observable<Code[]> | undefined;
   counties: string[] = [];
   addressSub!: Subscription;
-  isDirty: boolean = false;
+  isDirty = false;
   dirtySub!: Subscription | undefined;
   deleteSub!: Subscription;
   addSub!: Subscription;
@@ -35,7 +35,7 @@ export class EndorsementLocationComponent implements OnInit {
   saveSub!: Subscription;
   collapsePanelSubscription!: Subscription;
   statusSub!: Subscription;
-  addressReadOnly: string = ""
+  addressReadOnly = '';
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
@@ -46,8 +46,8 @@ export class EndorsementLocationComponent implements OnInit {
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService, private policyService: PolicyService, private confirmationDialogService: ConfirmationDialogService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => {
-        this.canEditPolicy = canEditPolicy
-        this.addressReadOnly = canEditPolicy ? "address" : ""
+        this.canEditPolicy = canEditPolicy;
+        this.addressReadOnly = canEditPolicy ? 'address' : '';
       }
     );
   }
@@ -84,13 +84,13 @@ export class EndorsementLocationComponent implements OnInit {
       }
     });
   }
-  
+
   changeZipCode(): void {
-    if (this.locationForm.controls["zipCode"].valid) {
+    if (this.locationForm.controls['zipCode'].valid) {
       this.isLoadingAddress = true;
-      this.location.city = "";
-      this.location.state = "";
-      this.location.county = "";
+      this.location.city = '';
+      this.location.state = '';
+      this.location.county = '';
       this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
         next: address => {
           if (address != null) {
@@ -98,7 +98,7 @@ export class EndorsementLocationComponent implements OnInit {
             this.location.state = address?.state;
             this.location.county = address?.county[0];
             this.counties = [];
-            for (let county of address.county) {
+            for (const county of address.county) {
               this.counties = this.counties.concat(county);
             }
           }
@@ -109,11 +109,11 @@ export class EndorsementLocationComponent implements OnInit {
   }
 
   copyLocation(): void {
-     this.copyExistingLocation.emit(this.location);
+    this.copyExistingLocation.emit(this.location);
   }
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open("Delete Confirmation","Are you sure you want to delete this location?").then((result: boolean) => {
+    this.confirmationDialogService.open('Delete Confirmation','Are you sure you want to delete this location?').then((result: boolean) => {
       if (result) {
         this.deleteLocation();
       }
@@ -147,7 +147,7 @@ export class EndorsementLocationComponent implements OnInit {
           resolve(result);
         });
       }
-    })
+    });
   }
 
   collapseExpand(event: boolean) {

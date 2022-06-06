@@ -6,6 +6,7 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { faArrows } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-shared-additional-named-insureds',
@@ -24,6 +25,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   nameRoleArray: string[] = [];
   nameRoleDuplicates: string[] = [];
   isNameRoleValid = true;
+  faArrowsV = faArrows;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsured;
