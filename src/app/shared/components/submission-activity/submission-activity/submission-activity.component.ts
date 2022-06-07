@@ -63,7 +63,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
   async markDeadDecline(submission: SubmissionSearchResponses) {
     const submissionStatus = newSubmissionStatus();
     submissionStatus.submissionNumber = submission.submissionNumber;
-    submissionStatus.isNew = submission.renewalFlag == 'N';
+    submissionStatus.isNew = submission.newBusinessOrRenewalFlag == 'N';
     const status = await this.submissionStatusService.openDeadDecline(submissionStatus);
     if (status != null) {
       submission.submissionStatus = status;
@@ -89,5 +89,22 @@ export class SharedSubmissionActivityComponent implements OnInit {
       const errorMessage = error.error?.Message ?? error.message;
       this.messageDialogService.open('Error', 'Error Message: ' + errorMessage);
     });
+  }
+
+  canRenew(submission: SubmissionSearchResponses): boolean {
+    return this.canEditSubmission && submission.invoiceCount > 0 && submission.cancelDate == null && submission.isRenewablePolicyFlag;
+  }
+
+  canClone(submission: SubmissionSearchResponses): boolean {
+    return this.canEditSubmission && submission.status == 2;
+  }
+
+  canMarkDeadDecline(submission: SubmissionSearchResponses): boolean {
+    console.log(submission);
+    return this.canEditSubmission && submission.status != 1 && (submission.invoiceCount == null || submission.invoiceCount == 0);
+  }
+
+  canReactivate(submission: SubmissionSearchResponses): boolean {
+    return this.canEditSubmission && submission.status == 1;
   }
 }

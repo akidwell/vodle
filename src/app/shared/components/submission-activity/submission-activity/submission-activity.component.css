@@ -55,6 +55,10 @@
     margin-top: 2px;
   
   }
+    .dropdown-menu {
+      padding: 0px;
+  }
+
   .nav-link {
     color: black;
     cursor: pointer;
