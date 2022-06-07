@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../authorization/auth.service';
 import { UserAuth } from '../../authorization/user-auth';
 import { faUser, faPowerOff, faKey, faIdBadge, faUserLock, faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -19,11 +18,6 @@ import { APIVersionService } from '../../services/API-version-service/api-versio
 export class UserComponent {
   userName = '';
   environment = '';
-  modalHeader = '';
-  modalBody = '';
-  oktaToken: string | undefined;
-  apiToken: string | undefined;
-  modalToken: string | undefined;
   faUser = faUser;
   faPowerOff = faPowerOff;
   faKey = faKey;
@@ -48,15 +42,13 @@ export class UserComponent {
   activeAPIVersion = '1.0';
   apiSwitchActive = false;
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService, private apiService: APIVersionService, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService, private apiService: APIVersionService, private authService: AuthService, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated;
         if (isAuthenticated) {
           const userClaims = await this.oktaAuth.getUser();
           this.userName = userClaims.preferred_username ?? '';
-          this.oktaToken = this.oktaAuth.getAccessToken();
-          this.apiToken = userAuth.ApiBearerToken;
           this.role = userAuth.userRole;
           this.isReadOnly = this.role == 'ReadOnly';
           this.environment = userAuth.environment;
@@ -88,22 +80,6 @@ export class UserComponent {
 
   async logout() {
     this.authService.logout();
-  }
-
-  openOktaModal(content: any) {
-    this.modalHeader = 'Okta Token';
-    this.modalBody = this.oktaToken ?? '';
-    this.triggerModal(content);
-  }
-
-  openApiModal(content: any) {
-    this.modalHeader = 'Api Token';
-    this.modalBody = this.apiToken ?? '';
-    this.triggerModal(content);
-  }
-
-  triggerModal(content: any) {
-    this.modalService.open(content, { scrollable: true, size: 'xl', ariaLabelledBy: 'modal-basic-title' });
   }
 
   addHistoryCount() {
