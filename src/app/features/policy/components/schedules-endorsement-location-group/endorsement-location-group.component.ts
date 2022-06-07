@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faAngleDown, faAngleUp, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { deepClone } from 'src/app/core/utils/deep-clone';
@@ -8,9 +8,9 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../models/policy';
 import { EndorsementLocationComponent } from '../schedules-endorsement-location/endorsement-location.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'rsps-endorsement-location-group',
@@ -28,9 +28,9 @@ export class EndorsementLocationGroupComponent implements OnInit {
   canEditPolicy = false;
   statusSub!: Subscription;
   canEditEndorsement = false;
+  color: ThemePalette = 'warn';
   canDrag = false;
-  faLock = faLock;
-  faLockOpen = faLockOpen;
+  dragDropClass = '';
 
   @ViewChildren(EndorsementLocationComponent) components: QueryList<EndorsementLocationComponent> | undefined;
 
@@ -143,29 +143,10 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    //moveItemInArray(this.aniData, event.previousIndex, event.currentIndex);
-
     if (event.previousContainer === event.container) {
       moveItemInArray(this.locationData, event.previousIndex, event.currentIndex);
     }
-    //  else {
-    //   transferArrayItem(event.previousContainer.data,
-    //     event.container.data,
-    //     event.previousIndex,
-    //     event.currentIndex);
-    // }
-
     let sequence = 1;
-
-    // if (this.components != null) {
-    //   for (const child of this.components) {
-    //     if (child.location.sequence != sequence) {
-    //       child.location.sequence = sequence;
-    //       child.locationForm.form.markAsDirty();
-    //     }
-    //     sequence++;
-    //   }
-    // }
 
     this.locationData.forEach(c => {
       if (c.sequence != sequence) {
@@ -177,10 +158,15 @@ export class EndorsementLocationGroupComponent implements OnInit {
     });
   }
 
-  toggle() {
+  toggleDragDrop() {
+    // Collapse all locations
     this.updatePolicyChild.collapseEndorsementLocations();
-   // this.components?.forEach(c => c.locationForm.form.disable());
-    this.canDrag = !this.canDrag;
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
   }
 
 }

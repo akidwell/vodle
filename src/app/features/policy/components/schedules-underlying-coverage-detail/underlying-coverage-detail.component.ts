@@ -13,7 +13,8 @@ import { UnderlyingCoverageService } from '../../services/underlying-coverage/un
 import { LimitsPatternHelperService } from '../../services/limits-pattern-helper/limits-pattern-helper.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { UCCoverage } from '../../classes/UCCoverage';
-import { UCLimit} from '../../classes/UCLimit'
+import { UCLimit} from '../../classes/UCLimit';
+import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
 
 @Component({
   selector: 'rsps-underlying-coverage-detail',
@@ -21,9 +22,9 @@ import { UCLimit} from '../../classes/UCLimit'
   styleUrls: ['./underlying-coverage-detail.component.css']
 })
 export class UnderlyingCoverageDetailComponent implements OnInit {
-  canEditPolicy: boolean = true;
+  canEditPolicy = true;
   ucbCollapsed = true;
-  isReadOnly: boolean = false;
+  isReadOnly = false;
   limitBasisSubscription!: Subscription;
   limitsPatternSubscription?: Subscription;
   coverageTypes$: Observable<Code[]> | undefined;
@@ -33,25 +34,27 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   endorsementNumber!: number;
   policyId!: number;
   faArrowUp = faAngleUp;
-  isAPPolicy: boolean = false;
-  isExcessUmbrella: boolean = false;
-  isLimitsPatternValid: boolean = true;
-  isExcessOfLimitsPatternValid: boolean = true;
+  isAPPolicy = false;
+  isExcessUmbrella = false;
+  isLimitsPatternValid = true;
+  isExcessOfLimitsPatternValid = true;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   layerTypes: string[] = [];
-  @Input() ucData!: UCCoverage;
   ucdCollapsed = true;
+  collapsePanelSubscription!: Subscription;
 
+  @Input() ucData!: UCCoverage;
+  @Input() canDrag = false;
   @Output() deleteThisCoverage: EventEmitter<UCCoverage> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) ucForm!: NgForm;
   constructor(private route: ActivatedRoute, private dropdowns: DropDownsService, private userAuth: UserAuth,
-    public UCService: UnderlyingCoverageService, private limitsPatternHelperService: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService) {
+    public UCService: UnderlyingCoverageService, private limitsPatternHelperService: LimitsPatternHelperService, private endorsementStatusService: EndorsementStatusService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
 
-   }
+  }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
@@ -80,9 +83,15 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     }
     this.ucdCollapsed = !this.ucData.isNew;
   }
+  ngAfterViewInit(): void {
+    this.collapsePanelSubscription = this.updatePolicyChild.collapseUnderlyingCoveragesObservable$.subscribe(() => {
+      this.collapseExpand(true);
+    });
+  }
   ngOnDestroy(): void {
     this.authSub.unsubscribe();
     this.statusSub?.unsubscribe();
+    this.collapsePanelSubscription?.unsubscribe();
   }
   processLimitBasisOnLoad() {
     if (this.readyToLoadLimitsBasis()) {
@@ -107,7 +116,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
         (limitBasisDescriptions: UnderlyingLimitBasis[]) =>
         {
-          var reapplyLimits = '';
+          let reapplyLimits = '';
           //if length is the same we keep the limits and reapply them
           if (this.ucData.limitsPattern && this.ucData.limitsBasisList.length == limitBasisDescriptions.length) {
             reapplyLimits = this.ucData.limitsPattern;
@@ -148,14 +157,14 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   }
 
   deleteThisUnderlyingCoverage(): void{
-    this.deleteThisCoverage.emit(this.ucData)
+    this.deleteThisCoverage.emit(this.ucData);
   }
 
   readyToLoadLimitsBasis() {
     if (this.isAPPolicy) {
       return (this.ucData.primaryCoverageCode && this.ucData.primaryCoverageCode > 0);
     } else {
-      return ((this.ucData.primaryCoverageCode && this.ucData.primaryCoverageCode > 0) && (this.ucData.limitsPatternGroupCode && this.ucData.limitsPatternGroupCode > 0))
+      return ((this.ucData.primaryCoverageCode && this.ucData.primaryCoverageCode > 0) && (this.ucData.limitsPatternGroupCode && this.ucData.limitsPatternGroupCode > 0));
     }
   }
   checkLimitsPatternValid() {
@@ -165,7 +174,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       return;
     }
 
-    var isExcessOfValid = false;
+    let isExcessOfValid = false;
 
     if (!this.isExcessUmbrella) {
       this.isExcessOfLimitsPatternValid = true;
@@ -173,7 +182,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
       isExcessOfValid = (this.ucData.excessOfLimitsPattern == '0' && this.ucData.isFirstOrControlling()) || this.ucData.checkIfLimitsPatternIsValid(this.ucData.excessOfLimitsPattern ?? '');
     }
 
-    var isValid = this.ucData.checkIfLimitsPatternIsValid(this.ucData.limitsPattern ?? '');
+    const isValid = this.ucData.checkIfLimitsPatternIsValid(this.ucData.limitsPattern ?? '');
 
     if (!isValid) {
       this.ucForm.controls['limitsPattern'].markAsTouched();

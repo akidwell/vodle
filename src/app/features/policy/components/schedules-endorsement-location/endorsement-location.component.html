@@ -1,9 +1,4 @@
 <form #locationForm="ngForm">
-  <!-- <div class="row">
-    <div class="col-lg-8">
-      <label for="address" *ngIf="index==0">Location</label>
-    </div>
-  </div> -->
   <div [ngClass]="{'expanded':!collapsed}">
     <div #locationInfo (click)="collapseExpand(false)">
       <div class="row" *ngIf="collapsed">
@@ -13,13 +8,13 @@
             [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
         </div>
         <div class="col-lg-2">
-          <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary" *ngIf="canEditPolicy"
-            click-stop-propagation>Copy</span>
-          <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-            *ngIf="!location.isNew && canEditPolicy" click-stop-propagation>Delete</span>
-          <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-            *ngIf="location.isNew && canEditPolicy" click-stop-propagation>Remove</span>
-            {{location.sequence}}
+          <button class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary" *ngIf="canEditPolicy"
+            [disabled]="canDrag" click-stop-propagation>Copy</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+            [disabled]="canDrag" *ngIf="!location.isNew && canEditPolicy" click-stop-propagation>Delete</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+            [disabled]="canDrag" *ngIf="location.isNew && canEditPolicy" click-stop-propagation>Remove</button>
+          {{location.sequence}}
         </div>
       </div>
     </div>
@@ -91,12 +86,12 @@
       <div class="empty-space"></div>
       <div class="row">
         <div class="col-lg-2">
-          <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
-            *ngIf="canEditPolicy">Copy</span>
-          <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-            *ngIf="!location.isNew && canEditPolicy">Delete</span>
-          <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-            *ngIf="location.isNew && canEditPolicy">Remove</span>
+          <button class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
+            *ngIf="canEditPolicy">Copy</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+            *ngIf="!location.isNew && canEditPolicy">Delete</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+            *ngIf="location.isNew && canEditPolicy">Remove</button>
         </div>
         <div [id]='anchorId'></div>
         <span class='astext' (click)="collapseExpand(true)">

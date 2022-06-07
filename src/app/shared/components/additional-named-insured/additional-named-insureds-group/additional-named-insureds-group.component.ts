@@ -1,7 +1,7 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { faAngleDown, faAngleUp, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
 import { SharedAdditionalNamedInsuredsComponent } from '../additional-named-insureds/additional-named-insureds.component';
@@ -17,12 +17,9 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   aniCollapsed = false;
-  faLock = faLock;
-  faLockOpen = faLockOpen;
-
   color: ThemePalette = 'warn';
-  // checked = false;
   canDrag = false;
+  dragDropClass = '';
 
   @ViewChild(SharedAdditionalNamedInsuredsComponent) aniComp!: SharedAdditionalNamedInsuredsComponent;
   @ViewChildren(SharedAdditionalNamedInsuredsComponent) components: QueryList<SharedAdditionalNamedInsuredsComponent> | undefined;
@@ -121,21 +118,10 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    //moveItemInArray(this.aniData, event.previousIndex, event.currentIndex);
-
     if (event.previousContainer === event.container) {
       moveItemInArray(this.aniData, event.previousIndex, event.currentIndex);
-    } 
-    // else {
-    //   transferArrayItem(event.previousContainer.data,
-    //     event.container.data,
-    //     event.previousIndex,
-    //     event.currentIndex);
-    // }
-
+    }
     let sequence = 1;
-    //this.aniData.forEach(c => { console.log(test);c.sequenceNo = test; test++;});
-
     this.aniData.forEach(c => {
       if (c.sequenceNo != sequence) {
         const match = this.components?.find(l => l.aniData.sequenceNo == c.sequenceNo);
@@ -144,7 +130,16 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
       }
       sequence++;
     });
+  }
 
+  toggleDragDrop() {
+    // Collapse all locations
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
   }
 
 }

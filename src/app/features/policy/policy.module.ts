@@ -50,6 +50,7 @@ import { ConfirmationDialogService } from '../../core/services/confirmation-dial
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { AdditionalNamedInsuredModule } from 'src/app/shared/components/additional-named-insured/additional-named-insured.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     AdditionalNamedInsuredModule,
     PipesModule,
     DragDropModule,
+    MatSlideToggleModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

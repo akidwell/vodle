@@ -1,67 +1,35 @@
 <form #aniForm="ngForm">
-  <!-- <div class="row">
-    <div class="col-lg-3">
-      <label for="address" *ngIf="index==0">Role</label>
-    </div>
-    <div class="col-lg-4">
-      <label for="createDate" *ngIf="index==0">Additional Named Insured</label>
-    </div>
-    <div class="col-lg-1" *ngIf="aniData.showActive">
-      <label for="isActive" *ngIf="index==0">Active</label>
-    </div>
-    <div class="col-lg-2">
-      <label for="createDate" *ngIf="index==0">Create Date</label>
-    </div>
-  </div> -->
   <div class="row">
     <div class="col-lg-3">
       <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false"
-        [readonly]="!canEdit" [required]="canEdit" name="role" (change)="checkDuplicateNameRoleCombo()"
+        [readonly]="!canEdit || canDrag" [required]="canEdit" name="role" (change)="checkDuplicateNameRoleCombo()"
         [(ngModel)]="aniData.role" #role="ngModel">
       </ng-select>
     </div>
     <div class="col-lg-4" *ngIf="aniData.showActive">
-      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEdit" maxlength="79"
+      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEdit || canDrag" maxlength="79"
         [required]="canEdit" name="name" [(ngModel)]="aniData.name" (change)="checkDuplicateNameRoleCombo()">
     </div>
     <div class="col-lg-5" *ngIf="!aniData.showActive">
-      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEdit" maxlength="79"
+      <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEdit || canDrag" maxlength="79"
         [required]="canEdit" name="name" [(ngModel)]="aniData.name" (change)="checkDuplicateNameRoleCombo()">
     </div>
     <div class="col-lg-1" *ngIf="aniData.showActive">
       <input type="checkbox" class="form-checkbox" id="isActive" [(ngModel)]="aniData.isActive" name="isActive"
-        [readonly]="!canEdit">
+        [readonly]="!canEdit || canDrag">
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control" id="createDate" [readonly]="isReadOnly" name="createDate"
+      <input type="text" class="form-control" id="createDate" readonly name="createDate"
         [ngModel]="aniData.createdDate | date:'MM/dd/yyyy'" (ngModelChange)="aniData.createdDate=$event">
     </div>
     <div class="col-lg-2">
-      <span class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary" *ngIf="canEdit">Copy
-      </span>
-      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-        *ngIf="!aniData.isNew && canEdit && aniData.canDelete">
-        Delete</span>
-      <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-        *ngIf="aniData.isNew && canEdit">Remove</span>
-      {{aniData.sequenceNo}}
-      <!-- <ng-container class="drag-container" *ngIf="true">
-       
-        <ng-content select="[slot=drag-handle]">
-        </ng-content>
-        <fa-icon class="example-handle" style="float: right" [icon]="faArrowsV"></fa-icon>
-    </ng-container> -->
-      <!-- <fa-icon class="example-handle" style="float: right" [icon]="faArrowsV" cdkDragHandle></fa-icon> -->
-      <!-- <div class="example-handle" style="float: right;" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
-          </path>
-          <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-      </div> -->
-
-      
+      <button class="btn btn-secondary" (click)=copyAni() hover-class="btn-primary" *ngIf="canEdit" [disabled]="canDrag">Copy
+      </button>
+      <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+        *ngIf="!aniData.isNew && canEdit && aniData.canDelete" [disabled]="canDrag">
+        Delete</button>
+      <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+        *ngIf="aniData.isNew && canEdit" [disabled]="canDrag">Remove</button>
     </div>
     <div [hidden]="isNameRoleValid" class="alert alert-danger">
       Invalid Name/Role Combination

@@ -39,6 +39,7 @@ export class EndorsementLocationComponent implements OnInit {
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
+  @Input() canDrag = false;
   @ViewChild(NgForm, { static: false }) locationForm!: NgForm;
   @Output() copyExistingLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
   @Output() deleteThisLocation: EventEmitter<EndorsementLocation> = new EventEmitter();
@@ -151,11 +152,13 @@ export class EndorsementLocationComponent implements OnInit {
   }
 
   collapseExpand(event: boolean) {
-    if (this.firstExpand) {
-      this.states$ = this.dropdowns.getStates();
-      this.firstExpand = false;
+    if (!this.canDrag) {
+      if (this.firstExpand) {
+        this.states$ = this.dropdowns.getStates();
+        this.firstExpand = false;
+      }
+      this.collapsed = event;
     }
-    this.collapsed = event;
   }
 
   focus(): void {
