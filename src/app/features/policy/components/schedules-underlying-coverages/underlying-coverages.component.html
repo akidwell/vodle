@@ -2,7 +2,7 @@
   <div class="card-header" (click)="collapse.toggle()">Underlying Coverages
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="ucCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!ucCollapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditPolicy"
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditPolicy && underlyingCoverages.length > 1"
       [color]="color" [disabled]="!canEditPolicy" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
       Reorder: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>

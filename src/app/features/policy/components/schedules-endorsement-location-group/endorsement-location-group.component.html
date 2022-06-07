@@ -2,7 +2,7 @@
   <div class="card-header" (click)="collapse.toggle()">Location Schedule
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditPolicy"
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditPolicy && locationData.length > 1"
       [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
       Reorder: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>
