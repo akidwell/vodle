@@ -1,16 +1,20 @@
 <form #locationForm="ngForm">
-  <div class="row">
-    <div class="col-lg-6">
-      <label for="address" *ngIf="index==0">Location</label>
-    </div>
-  </div>
   <div [ngClass]="{'expanded':!collapsed}">
     <div #locationInfo (click)="collapseExpand(false)">
       <div class="row" *ngIf="collapsed">
-        <div class="col-lg-6">
-          <input type="address" class="form-control" id="address" readonly [ngClass]="addressReadOnly" #address="ngModel" name="address"
-            [required]="canEditPolicy"
+        <div class="col-lg-10">
+          <input type="address" class="form-control" id="address" readonly [ngClass]="addressReadOnly"
+            #address="ngModel" name="address" [required]="canEditPolicy"
             [ngModel]="location.street1 + (!location.street2 ? '' : ', ' + location.street2) + (!location.city ? '' : ', ' + location.city ) + (!location.state ? '' : ', ' + location.state) + (!location.zip ? '' : ' ' + location.zip)">
+        </div>
+        <div class="col-lg-2">
+          <button class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary" *ngIf="canEditPolicy"
+            [disabled]="canDrag" click-stop-propagation>Copy</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+            [disabled]="canDrag" *ngIf="!location.isNew && canEditPolicy" click-stop-propagation>Delete</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+            [disabled]="canDrag" *ngIf="location.isNew && canEditPolicy" click-stop-propagation>Remove</button>
+          {{location.sequence}}
         </div>
       </div>
     </div>
@@ -53,8 +57,8 @@
           </div>
           <div *ngIf="!isLoadingAddress">
             <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
-              [clearable]="false" [readonly]="!canEditPolicy || isLoadingAddress"
-              name="locationState" [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
+              [clearable]="false" [readonly]="!canEditPolicy || isLoadingAddress" name="locationState"
+              [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
             </ng-select>
           </div>
         </div>
@@ -82,12 +86,12 @@
       <div class="empty-space"></div>
       <div class="row">
         <div class="col-lg-2">
-          <span class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
-            *ngIf="canEditPolicy">Copy</span>
-          <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
-            *ngIf="!location.isNew && canEditPolicy">Delete</span>
-          <span class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
-            *ngIf="location.isNew && canEditPolicy">Remove</span>
+          <button class="btn btn-secondary" (click)=copyLocation() hover-class="btn-primary"
+            *ngIf="canEditPolicy">Copy</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-danger"
+            *ngIf="!location.isNew && canEditPolicy">Delete</button>
+          <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
+            *ngIf="location.isNew && canEditPolicy">Remove</button>
         </div>
         <div [id]='anchorId'></div>
         <span class='astext' (click)="collapseExpand(true)">

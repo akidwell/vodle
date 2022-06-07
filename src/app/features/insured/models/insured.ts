@@ -1,6 +1,5 @@
 import { Params } from '@angular/router';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
-import { InsuredService } from '../services/insured-service/insured.service';
 import { InsuredContact } from './insured-contact';
 
 export interface Insured {

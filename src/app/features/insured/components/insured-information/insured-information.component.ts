@@ -22,8 +22,8 @@ import { InsuredDuplicatesComponent } from '../insured-duplicates/insured-duplic
 })
 export class InsuredInformationComponent implements OnInit {
   insured!: Insured;
-  contacts: InsuredContact[] = [];
-  aniInsuredData: insuredANI[] = [];
+  // contacts: InsuredContact[] = [];
+  // aniInsuredData: insuredANI[] = [];
   canEditInsured = false;
   newInsuredANI!: insuredANI;
   authSub: Subscription;
