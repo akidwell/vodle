@@ -2,7 +2,7 @@
   <div class="card-header" (click)="collapse.toggle()">Contacts
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="contactsCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!contactsCollapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditInsured"
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditInsured && insuredContacts.length > 1"
       [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
       Reorder: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>
