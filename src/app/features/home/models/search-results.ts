@@ -42,10 +42,13 @@ export interface SubmissionSearchResponses{
     effectiveDate: Date;
     expirationDate: Date;
     submissionDate: Date;
-    renewalFlag: string;
+    newBusinessOrRenewalFlag: string;
+    isRenewablePolicyFlag: boolean;
     coverageType: string;
     profitCenter: string;
     cancelDate: Date;
+    status: number;
+    invoiceCount: number;
   }
 
 export interface InsuredSearchResponses{
