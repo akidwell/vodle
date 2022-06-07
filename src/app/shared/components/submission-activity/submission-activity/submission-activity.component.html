@@ -22,7 +22,7 @@
               <th>Cancel Date</th>
               <th>Policy No</th>
               <th>Producer Branch</th>
-              <th>Underwriter</th>           
+              <th>Underwriter</th>
                 <th>Actions</th>
             </tr>
           </thead>
@@ -62,7 +62,7 @@
     </div>
     <div class="card-footer">
       <div id="searchFooter">
-        <div *ngIf="canEditSubmission && checkIfHomeRoute()" style="float:left;"><a class="nav-link">Add Submission</a></div>
+        <div *ngIf="canEditSubmission && checkIfHomeRoute()" style="float:left;"><a class="nav-link" *ngIf="insured" (click)="addNewSubmission()">Add Submission</a></div>
         <div style="float:right;">Results:{{submissionResults.length}}</div>
       </div>
     </div>

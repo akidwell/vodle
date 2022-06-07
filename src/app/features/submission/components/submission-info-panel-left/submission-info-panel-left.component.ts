@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { SubmissionClass } from '../../classes/SubmissionClass';
 import { Submission } from '../../models/submission';
 
 @Component({
@@ -15,7 +16,7 @@ export class SubmissionInfoPanelLeftComponent implements OnInit {
   lockSubmissionFields = false;
   isRenewable = true;
   newRenewalFlags = [{'value': 1, 'description': 'New'}, {'value': 2, 'description': 'Renewal'}, {'value': 3, 'description': 'Count as Renewal'}];
-  @Input() public submission!: Submission;
+  @Input() public submission!: SubmissionClass;
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(

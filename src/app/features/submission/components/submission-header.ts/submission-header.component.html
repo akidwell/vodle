@@ -5,7 +5,9 @@
         <h6>Policy Eff Date</h6>
       </u>
       <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="polEffDateCalendar" class="form-control" [required]="false"
+                  [matDatepicker]="polEffDateCalendar" class="form-control"
+                  [required]="submission.policyDateRequired"
+                  [readonly]="!submission.policyDateEditable"
                   [(ngModel)]="submission.polEffDate" (dateChange)="changeEffDate()"
                   name="polEffDate" #polEffDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polEffDateCalendar">
@@ -17,7 +19,9 @@
         <h6>Policy Exp Date</h6>
       </u>
       <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="polExpDateCalendar" class="form-control" [required]="false"
+                  [matDatepicker]="polExpDateCalendar" class="form-control"
+                  [required]="submission.policyDateRequired"
+                  [readonly]="!submission.policyDateEditable"
                   [(ngModel)]="submission.polExpDate" (dateChange)="changeExpDate()"
                   name="polExpDate" #polExpDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polExpDateCalendar">
@@ -41,7 +45,9 @@
         <h6>Quote Due Date</h6>
       </u>
       <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="quoteDueDateCalendar" class="form-control" [required]="false"
+                  [matDatepicker]="quoteDueDateCalendar" class="form-control"
+                  [required]="submission.quoteDueDateRequired"
+                  [readonly]="!submission.quoteDueDateEditable"
                   [(ngModel)]="submission.quoteDueDate" (dateChange)="changeEffDate()"
                   name="quoteDueDate" #quoteDueDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="quoteDueDateCalendar">
@@ -52,7 +58,7 @@
       <u>
         <h6>Status</h6>
       </u>
-      {{submission.statusCode}}
+      {{submission.statusCodeDesc}}
     </div>
   </div>
 </div>

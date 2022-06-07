@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
-import { Submission } from '../../models/submission';
+import { SubmissionClass } from '../../classes/SubmissionClass';
 
 @Component({
   selector: 'rsps-submission-header',
@@ -9,7 +9,7 @@ import { Submission } from '../../models/submission';
   styleUrls: ['./submission-header.component.css']
 })
 export class SubmissionHeaderComponent implements OnInit {
-  submission!: Submission;
+  submission!: SubmissionClass;
   policyTermOptions = [{'value': 6, 'description': '6 months'}, {'value': 12, 'description': '1 year'}, {'value': 18, 'description': '18 months'}, {'value': 0, 'description': 'Custom'}];
   policyTerm: number | null = 0;
   constructor(private route: ActivatedRoute) { }

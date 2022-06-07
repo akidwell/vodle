@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { ConfigService } from 'src/app/core/services/config/config.service';
+import { SubmissionClass } from '../../classes/SubmissionClass';
 import { Producer } from '../../models/producer';
 import { Submission } from '../../models/submission';
 import { SubmissionStatus, SubmissionStatusResult } from '../../models/submission-status';
@@ -13,12 +14,23 @@ import { SubmissionStatus, SubmissionStatusResult } from '../../models/submissio
 export class SubmissionService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
-  getSubmission(id: number): Observable<Submission> {
+  getSubmission(id: number): Observable<SubmissionClass> {
     return this.http.get<Submission>(this.config.apiBaseUrl + 'api/submissions/' + id.toString())
       .pipe(
         map((receivedData: Submission) => {
-          return receivedData;
+          return new SubmissionClass(receivedData);
         }));
+  }
+  updateSubmission(submission: SubmissionClass) {
+    const subJSON = submission.toJSON();
+    console.log(subJSON);
+    const headers = { 'Content-Type': 'application/json'};
+    return this.http.put<boolean>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
+  }
+  postSubmission(submission: SubmissionClass) {
+    const subJSON = submission.toJSON();
+    const headers = { 'Content-Type': 'application/json'};
+    return this.http.post<Submission>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
   }
   updateSubmissionStatus(submissionStatus: SubmissionStatus): Observable<SubmissionStatusResult> {
     return this.http.post<SubmissionStatusResult>(this.config.apiBaseUrl + 'api/submissions/status', submissionStatus);
