@@ -7,6 +7,8 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { InsuredContactComponent } from '../insured-contact/insured-contact.component';
 import { InsuredContact, newInsuredContact } from '../../models/insured-contact';
 import { NgForm } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'rsps-insured-contact-group',
@@ -21,6 +23,9 @@ export class InsuredContactGroupComponent {
   authSub!: Subscription;
   canEditInsured = false;
   canEditEndorsement = false;
+  color: ThemePalette = 'warn';
+  canDrag = false;
+  dragDropClass = '';
 
   @Input() public insuredContacts: InsuredContact[] = [];
   @ViewChildren(InsuredContactComponent) components: QueryList<InsuredContactComponent> | undefined;
@@ -38,6 +43,7 @@ export class InsuredContactGroupComponent {
 
   addNewContact(): void {
     const newContact = newInsuredContact();
+    newContact.sequence = this.getNextSequence();
     if (this.insuredContacts.length == 0) {
       newContact.isPrimary = true;
     }
@@ -47,6 +53,7 @@ export class InsuredContactGroupComponent {
   copyExistingContact(contact: InsuredContact) {
     const newContact: InsuredContact = deepClone(contact);
     newContact.insuredContactId = null;
+    newContact.sequence = this.getNextSequence();
     newContact.isNew = true;
     newContact.isPrimary = false;
     newContact.isPrimaryTracked = false;
@@ -123,5 +130,39 @@ export class InsuredContactGroupComponent {
       }
     });
     return dupeName;
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.insuredContacts, event.previousIndex, event.currentIndex);
+    }
+    let sequence = 1;
+    this.insuredContacts.forEach(c => {
+      if (c.sequence != sequence) {
+        const match = this.components?.find(l => l.contact.sequence == c.sequence);
+        match?.contactForm.form.markAsDirty();
+        c.sequence = sequence;
+      }
+      sequence++;
+    });
+  }
+
+  getNextSequence(): number {
+    if (this.insuredContacts.length == 0) {
+      return 1;
+    }
+    else {
+      return Math.max(...this.insuredContacts.map(o => o.sequence)) + 1;
+    }
+  }
+
+  toggleDragDrop() {
+    this.contactsCollapsed = false;
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
   }
 }

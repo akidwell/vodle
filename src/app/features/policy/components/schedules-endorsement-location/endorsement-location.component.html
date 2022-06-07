@@ -14,7 +14,6 @@
             [disabled]="canDrag" *ngIf="!location.isNew && canEditPolicy" click-stop-propagation>Delete</button>
           <button class="btn btn-secondary" (click)=openDeleteConfirmation() hover-class="btn-warning"
             [disabled]="canDrag" *ngIf="location.isNew && canEditPolicy" click-stop-propagation>Remove</button>
-          {{location.sequence}}
         </div>
       </div>
     </div>

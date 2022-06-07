@@ -26,6 +26,7 @@ export class InsuredContactComponent {
   @Input() contact!: InsuredContact;
   @Input() insuredContacts: InsuredContact[] = [];
   @Input() index!: number;
+  @Input() canDrag = false;
   @ViewChild(NgForm, { static: false }) contactForm!: NgForm;
   @Output() copyExistingContact: EventEmitter<InsuredContact> = new EventEmitter();
   @Output() deleteThisContact: EventEmitter<InsuredContact> = new EventEmitter();
@@ -84,7 +85,7 @@ export class InsuredContactComponent {
   }
 
   setPrimary(contact: InsuredContact) {
-    if (this.canEditInsured) {
+    if (this.canEditInsured && !this.canDrag) {
       this.setPrimaryContact.emit(this.contact);
       this.contactForm.form.markAsDirty();
       contact.isPrimary = true;

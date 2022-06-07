@@ -133,7 +133,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   toggleDragDrop() {
-    // Collapse all locations
+    this.aniCollapsed = false;
     if (this.canDrag) {
       this.dragDropClass = 'drag';
     }

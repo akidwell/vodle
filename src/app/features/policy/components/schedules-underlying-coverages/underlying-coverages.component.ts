@@ -112,7 +112,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
   save(): void {
     if (this.canEditPolicy && this.isDirty()) {
-      this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(result => {
+      this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(() => {
         this.notification.show('Underlying Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         if (this.components != null) {
           for (const child of this.components) {
@@ -126,8 +126,8 @@ export class UnderlyingCoveragesComponent implements OnInit {
       });
     }
   }
-  async deleteComponent(index: any, existingCoverage: UnderlyingCoverage) {
-    this.deleteSub = this.policyService.deleteUnderlyingCoverage(existingCoverage).subscribe(result => {
+  async deleteComponent(index: number, existingCoverage: UnderlyingCoverage) {
+    this.deleteSub = this.policyService.deleteUnderlyingCoverage(existingCoverage).subscribe(() => {
       this.underlyingCoverages.splice(index,1);
     });
   }
@@ -157,6 +157,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
 
   toggleDragDrop() {
+    this.ucCollapsed = false;
     // Collapse all coverages
     this.updatePolicyChild.collapseUnderlyingCoverages();
     if (this.canDrag) {

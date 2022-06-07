@@ -23,6 +23,8 @@ import { InsuredAccountRightComponent } from './components/insured-account-right
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 import { InsuredDuplicatesComponent } from './components/insured-duplicates/insured-duplicates.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -51,6 +53,8 @@ import { InsuredDuplicatesComponent } from './components/insured-duplicates/insu
     BusyModule,
     PipesModule,
     SubmissionActivityModule,
+    DragDropModule,
+    MatSlideToggleModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
