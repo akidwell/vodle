@@ -27,6 +27,11 @@ export class SubmissionService {
     const headers = { 'Content-Type': 'application/json'};
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
   }
+  postSubmission(submission: SubmissionClass) {
+    const subJSON = submission.toJSON();
+    const headers = { 'Content-Type': 'application/json'};
+    return this.http.post<Submission>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
+  }
   updateSubmissionStatus(submissionStatus: SubmissionStatus): Observable<SubmissionStatusResult> {
     return this.http.post<SubmissionStatusResult>(this.config.apiBaseUrl + 'api/submissions/status', submissionStatus);
   }

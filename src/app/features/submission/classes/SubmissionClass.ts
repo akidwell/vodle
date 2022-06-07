@@ -1,3 +1,4 @@
+import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-desc-enum';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from '../models/producer';
@@ -18,7 +19,7 @@ export class SubmissionClass implements Submission {
   private _newRenewalFlag = 1;
   private _expiringPolicyId: number | null = null;
   private _extExpiringPolicyNo: string | null = null;
-  private _renewablePolicy: boolean | number = false;
+  private _renewablePolicy: boolean | number = true;
   private _isDirty = false;
 
   producerCodeRequiredStatus = SubmissionStatusEnum.Live;
@@ -74,7 +75,7 @@ export class SubmissionClass implements Submission {
   retailProducerCode: number | null = null;
   statusCode = 0;
   reasonCode = 0;
-  comments = '';
+  comments: string | null = null;
   applyToDate: Date | null = null;
   createdBy: number | null = null;
   createdDate: Date | null = null;
@@ -83,13 +84,13 @@ export class SubmissionClass implements Submission {
   groupId: number | null = null;
   eventCode: number | null = null;
   eventDate: Date | null = null;
-  programId = 0;
+  programId: number | null = null;
   contractorCode: number | null = null;
   xrefSubNum: number | null = null;
   cancelDate: Date | null = null;
   assistantBroker: number | null = null;
-  producerContactName = '';
-  producerContactEmail = '';
+  producerContactName: string | null = null;
+  producerContactEmail: string | null = null;
   teamId: number | null = null;
   uwBranchCode = '';
   businessUnit = '';
@@ -104,6 +105,8 @@ export class SubmissionClass implements Submission {
   producerContact: ProducerContact | null = null;
   submissionEvents: SubmissionEvent[] = [];
   underwriterName: string | null = null;
+  statusCodeDesc: string | null = null;
+  invalidList: string[] = [];
 
   constructor(sub?: Submission, insured?: Insured){
     this._departmentCode = sub?.departmentCode || null;
@@ -112,8 +115,8 @@ export class SubmissionClass implements Submission {
     this._sicCode = sub?.sicCode || insured?.sicCode || null;
     this._naicsCode = sub?.naicsCode || insured?.naicsCode || null;
     this._underwriter = sub?.underwriter || null;
-    this.regionCode = sub?.regionCode || null;
-    this.officeCode = sub?.officeCode || null;
+    this.regionCode = sub?.regionCode || 3;
+    this.officeCode = sub?.officeCode || 9;
     this.insuredCode = sub?.insuredCode || insured?.insuredCode || null;
     this.brokerId = sub?.brokerId || null;
     this.retailProducerCode = sub?.retailProducerCode || null;
@@ -121,10 +124,10 @@ export class SubmissionClass implements Submission {
     this._polExpDate = sub?.polExpDate || null;
     this._quoteDueDate = sub?.quoteDueDate || null;
     this._expiringPolicyId = sub?.expiringPolicyId || null;
-    this._newRenewalFlag = sub?.newRenewalFlag || 0;
+    this._newRenewalFlag = sub?.newRenewalFlag || 1;
     this.statusCode = sub?.statusCode || 0;
     this.reasonCode = sub?.reasonCode || 0;
-    this.comments = sub?.comments || '';
+    this.comments = sub?.comments || null;
     this.applyToDate = sub?.applyToDate || null;
     this.createdBy = sub?.createdBy || null;
     this.createdDate = sub?.createdDate || null;
@@ -135,30 +138,31 @@ export class SubmissionClass implements Submission {
     this.eventDate = sub?.eventDate || null;
     this.programId = sub?.programId || 0;
     this.contractorCode = sub?.contractorCode || null;
-    this._renewablePolicy = sub?.renewablePolicy === 1 ? true : false;
+    this._renewablePolicy = sub?.renewablePolicy === 0 ? false : true;
     this.xrefSubNum = sub?.xrefSubNum || null;
     this.cancelDate = sub?.cancelDate || null;
     this.assistantBroker = sub?.assistantBroker || null;
-    this.producerContactName = sub?.producerContactName || '';
-    this.producerContactEmail = sub?.producerContactEmail || '';
+    this.producerContactName = sub?.producerContactName || null;
+    this.producerContactEmail = sub?.producerContactEmail || null;
     this.teamId = sub?.teamId || null;
     this.uwBranchCode = sub?.uwBranchCode || '';
     this.businessUnit = sub?.businessUnit || '';
     this.submissionGroupId = sub?.submissionGroupId || null;
     this.submissionNumber = sub?.submissionNumber || 0;
-    this.companyCode = sub?.companyCode || null;
+    this.companyCode = sub?.companyCode || 3;
     this.underwriterName = sub?.underwriterName || null;
     this.submissionEvents = sub?.submissionEvents || [];
     this.producerContact = sub?.producerContact || null;
     this.producer = sub?.producer || null;
     this.insured = sub?.insured || insured || null;
-    this._extExpiringPolicyNo = sub?.extExpiringPolicyNo || '';
+    this._extExpiringPolicyNo = sub?.extExpiringPolicyNo || null;
     this.submissionEventCode = sub?.submissionEventCode || '';
     this.processor = sub?.processor || null;
     this.constructionWrapup = sub?.constructionWrapup || null;
     this.lobCode = sub?.lobCode || null;
     this.businessType = sub?.businessType || '';
 
+    this.setStatusDesc();
     this.setRequiredFields();
     this.setEditableFields();
   }
@@ -259,6 +263,11 @@ export class SubmissionClass implements Submission {
   }
   get isValid(): boolean {
     let valid = true;
+    const invalidList = [];
+    if (this.insuredCode == null) {
+      valid = false;
+      invalidList.push('No insured attached to submission');
+    }
     switch (this.statusCode) {
     case SubmissionStatusEnum.Dead:
       valid = false;
@@ -282,11 +291,30 @@ export class SubmissionClass implements Submission {
   markDirty() {
     this._isDirty = true;
   }
-  isFieldEditable(statusLock: SubmissionStatusEnum) {
+  private isFieldEditable(statusLock: SubmissionStatusEnum) {
     return this.statusCode === SubmissionStatusEnum.Dead ? false : this.statusCode < statusLock;
   }
-  isFieldRequired(statusRequired: SubmissionStatusEnum) {
+  private isFieldRequired(statusRequired: SubmissionStatusEnum) {
     return this.statusCode === SubmissionStatusEnum.Dead ? false : this.statusCode >= statusRequired;
+  }
+  private setStatusDesc() {
+    switch (this.statusCode) {
+    case SubmissionStatusEnum.Live:
+      this.statusCodeDesc = SubmissionStatusDescEnum.Live;
+      break;
+    case SubmissionStatusEnum.Dead:
+      this.statusCodeDesc = SubmissionStatusDescEnum.Dead;
+      break;
+    case SubmissionStatusEnum.InQuote:
+      this.statusCodeDesc = SubmissionStatusDescEnum.InQuote;
+      break;
+    case SubmissionStatusEnum.Bound:
+      this.statusCodeDesc = SubmissionStatusDescEnum.Bound;
+      break;
+    default:
+      this.statusCodeDesc = null;
+      break;
+    }
   }
   setRequiredFields(){
     this.naicsRequired = this.isFieldRequired(this.naicsCodeRequiredStatus);
@@ -313,38 +341,82 @@ export class SubmissionClass implements Submission {
     this.renewablePolicyEditable = this.isFieldEditable(this.renewablePolicyLockStatus);
   }
   validateNew(valid: boolean): boolean {
-    if (this._underwriter === null) {
+    this.invalidList = [];
+    if (!this.validateUnderwriter()) {
       valid = false;
     }
-    if (this._producerCode === null) {
+    if (!this.validateProducer()) {
       valid = false;
     }
-    if (this._departmentCode === null) {
+    if (!this.validateDepartment()) {
+      valid = false;
+    }
+    if (!this.validatePolicyDates()) {
       valid = false;
     }
     return valid;
   }
   validateQuoted(valid: boolean): boolean {
-    if (this._underwriter === null) {
+    this.invalidList = [];
+    if (!this.validateUnderwriter()) {
       valid = false;
     }
-    if (this._producerCode === null) {
+    if (!this.validateProducer()) {
       valid = false;
     }
-    if (this._departmentCode === null) {
+    if (!this.validateDepartment()) {
+      valid = false;
+    }
+    if (!this.validatePolicyDates()) {
       valid = false;
     }
     return valid;
   }
   validateBound(valid: boolean): boolean {
-    if (this._underwriter === null) {
+    this.invalidList = [];
+    if (!this.validateUnderwriter()) {
       valid = false;
     }
-    if (this._producerCode === null) {
+    if (!this.validateProducer()) {
       valid = false;
     }
+    if (!this.validateDepartment()) {
+      valid = false;
+    }
+    if (!this.validatePolicyDates()) {
+      valid = false;
+    }
+    return valid;
+  }
+  validateUnderwriter(): boolean {
+    let valid = true;
+    if (this.underwriter === null) {
+      valid = false;
+      this.invalidList.push('No Underwriter selected.');
+    }
+    return valid;
+  }
+  validateProducer(): boolean {
+    let valid = true;
+    if (this.producerCode === null) {
+      valid = false;
+      this.invalidList.push('No Producer selected.');
+    }
+    return valid;
+  }
+  validateDepartment(): boolean {
+    let valid = true;
     if (this._departmentCode === null) {
       valid = false;
+      this.invalidList.push('No Department selected.');
+    }
+    return valid;
+  }
+  validatePolicyDates(): boolean {
+    let valid = true;
+    if (this._polEffDate === null || this._polExpDate === null) {
+      valid = false;
+      this.invalidList.push('Policy effective and expiration dates must be set.');
     }
     return valid;
   }
@@ -366,6 +438,8 @@ export class SubmissionClass implements Submission {
       quoteDueDate: this._quoteDueDate,
       expiringPolicyId: this._expiringPolicyId,
       newRenewalFlag: this._newRenewalFlag,
+      createdBy: this.createdBy,
+      createdDate: this.createdDate,
       statusCode: this.statusCode,
       reasonCode: this.reasonCode,
       comments: this.comments,

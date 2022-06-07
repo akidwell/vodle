@@ -5,6 +5,7 @@ import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, fil
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { Producer } from 'src/app/features/submission/models/producer';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
+import * as moment from 'moment';
 
 export interface FuzzySearchResponse {
   query: string,
@@ -19,7 +20,8 @@ export class ProducerSearchService {
     if (query === '') {
       return of([]);
     }
-    const params = new HttpParams().append('query', query ).append('departmentCode', department).append('policyDate', policyDate.toString());
+    const policyDateString = moment.isMoment(policyDate) ? policyDate.format('YYYY-MM-DD HH:mm') : policyDate.toString();
+    const params = new HttpParams().append('query', query ).append('departmentCode', department).append('policyDate', policyDateString);
     return this.http
       .get<FuzzySearchResponse>(this.config.apiBaseUrl + 'api/lookups/producer-branch/', {params}).pipe(
         tap(response => {
