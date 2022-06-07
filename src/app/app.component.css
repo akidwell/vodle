@@ -42,7 +42,7 @@ body {
   height: 100%;
   width: 210px;
   overflow: auto;
-  z-index: 2;
+  z-index: 3;
 }
 
 .banner-label {
