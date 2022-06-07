@@ -159,6 +159,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
 
   toggleDragDrop() {
+    this.locationCollapsed = false;
     // Collapse all locations
     this.updatePolicyChild.collapseEndorsementLocations();
     if (this.canDrag) {

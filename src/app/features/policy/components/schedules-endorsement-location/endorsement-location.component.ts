@@ -164,7 +164,7 @@ export class EndorsementLocationComponent implements OnInit {
   focus(): void {
     this.collapsed = false;
     setTimeout(() => {
-      document.getElementById(this.anchorId)!.scrollIntoView();
+      document.getElementById(this.anchorId)?.scrollIntoView();
     }, 250);
   }
 }

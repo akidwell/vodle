@@ -3,7 +3,7 @@
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
     <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEdit" [color]="color"
-      [disabled]="!canEdit" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
+      [(ngModel)]="canDrag" (change)="toggleDragDrop()">
       Reorder: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>
   </div>
@@ -27,10 +27,10 @@
         </div>
       </div>
       <div cdkDropList class="drag-list" [cdkDropListDisabled]="!canDrag" (cdkDropListDropped)="drop($event)">
-        <div class="drag-block" [ngClass]="dragDropClass" cdkDrag
-          *ngFor="let item of aniData; let i = index">
+        <div class="drag-block" [ngClass]="dragDropClass" cdkDrag *ngFor="let item of aniData; let i = index">
           <rsps-shared-additional-named-insureds (copyExistingAni)=copyExistingAni($event)
-            (deleteExistingAni)=deleteExistingAni($event) [ani]=aniData [aniData]=item [canEdit]=canEdit [index]=i [canDrag]=canDrag>
+            (deleteExistingAni)=deleteExistingAni($event) [ani]=aniData [aniData]=item [canEdit]=canEdit [index]=i
+            [canDrag]=canDrag>
           </rsps-shared-additional-named-insureds>
         </div>
       </div>

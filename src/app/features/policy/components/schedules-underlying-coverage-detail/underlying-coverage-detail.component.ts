@@ -13,7 +13,6 @@ import { UnderlyingCoverageService } from '../../services/underlying-coverage/un
 import { LimitsPatternHelperService } from '../../services/limits-pattern-helper/limits-pattern-helper.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { UCCoverage } from '../../classes/UCCoverage';
-import { UCLimit} from '../../classes/UCLimit';
 import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
 
 @Component({
