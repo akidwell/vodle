@@ -194,6 +194,8 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   }
 
   collapseExpand(event: boolean) {
-    this.ucdCollapsed = event;
+    if (!this.canDrag) {
+      this.ucdCollapsed = event;
+    }
   }
 }

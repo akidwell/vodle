@@ -112,4 +112,5 @@ body {
   right: 0!important;
   left: center!important;
   margin: 0.5em;
+  z-index: 2;
 }
