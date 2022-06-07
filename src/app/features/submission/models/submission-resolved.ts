@@ -1,6 +1,6 @@
-import { Submission } from './submission';
+import { SubmissionClass } from '../classes/SubmissionClass';
 
 export interface SubmissionResolved {
-    submission: Submission | null;
+    submission: SubmissionClass | null;
     error?: string;
   }

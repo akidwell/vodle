@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, map, Observable, of, tap } from 'rxjs';
+import { SubmissionClass } from '../../classes/SubmissionClass';
 import { SubmissionResolved } from '../../models/submission-resolved';
 import { SubmissionService } from '../submission-service/submission-service';
 
@@ -13,9 +14,10 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<SubmissionResolved> {
     const id = route.paramMap.get('id') ?? '';
-    // if (id == '') {
-    //   return of({ insured: newInsured() });
-    // }
+    if (id == '') {
+      const insured = this.router.getCurrentNavigation()?.extras?.state?.insured;
+      return of({ submission: new SubmissionClass(undefined, insured) });
+    }
 
     // Extract submission from routing if possible - This  might not be needed anymore keeping for reference only for now
     const submission = this.router.getCurrentNavigation()?.extras?.state?.submission;

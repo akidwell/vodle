@@ -10,6 +10,8 @@ import { PolicySearchService } from 'src/app/features/home/services/policy-searc
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { Insured } from 'src/app/features/insured/models/insured';
+import { deepClone } from 'src/app/core/utils/deep-clone';
 
 @Component({
   selector: 'shared-rsps-submission-activity',
@@ -34,6 +36,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
   searchTerm = '';
 
   @Input('submissionResults') submissionResults!: SubmissionSearchResponses[];
+  @Input('insured') insured?: Insured;
 
   ngOnInit(): void {
 
@@ -80,7 +83,15 @@ export class SharedSubmissionActivityComponent implements OnInit {
       submission.submissionStatus = status.status;
     }
   }
-
+  addNewSubmission() {
+    const insuredForSubmission = deepClone(this.insured);
+    if (insuredForSubmission) {
+      insuredForSubmission.additionalNamedInsureds = [];
+      this.router.navigate(['/submission'], {
+        state: { insured: insuredForSubmission }
+      });
+    }
+  }
   async renew(submission: SubmissionSearchResponses) {
     // Commented out for now since this will need to be different
 
