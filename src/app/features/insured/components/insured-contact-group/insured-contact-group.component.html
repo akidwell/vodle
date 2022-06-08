@@ -4,7 +4,7 @@
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!contactsCollapsed"></fa-icon>
     <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditInsured && insuredContacts.length > 1"
       [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
-      Reorder: {{canDrag ? 'On' : 'Off'}}
+      Sort: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="contactsCollapsed">

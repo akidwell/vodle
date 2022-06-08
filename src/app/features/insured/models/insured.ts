@@ -76,7 +76,7 @@ export const newInsuredFromPacer = (ani: insuredANI[], data:Params): Insured => 
     street1: data.streetAddress,
     street2: null,
     city: data.insuredCity,
-    state: data.stateName,
+    state: data.insuredState,
     zip: data.zip,
     county: null,
     country: null,

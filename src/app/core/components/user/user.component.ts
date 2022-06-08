@@ -8,7 +8,7 @@ import { ConfirmationDialogService } from '../../services/confirmation-dialog/co
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { ConfigService } from '../../services/config/config.service';
-import { APIVersionService } from '../../services/API-version-service/api-version.service';
+import { APIVersionService } from '../../services/api-version-service/api-version.service';
 
 @Component({
   selector: 'rsps-user',

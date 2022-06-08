@@ -16,4 +16,14 @@ export class PreviousRouteService {
   public getPreviousUrl() {
     return this.previousUrl;
   }
+
+  public getPreviousUrlFormatted() {
+    if (this.previousUrl != undefined) {
+      const path = this.previousUrl.value.split('/');
+      if (path.length > 1) {
+        return 'Previous - ' + path[1][0].toUpperCase() + path[1].slice(1) + (path[2] !== undefined ? ' #' + path[2] : '');
+      }
+    }
+    return '';
+  }
 }

@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { ConfigService } from "../../services/config/config.service";
+import { Injectable } from '@angular/core';
+import { ConfigService } from '../config/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class APIVersionService {
-  apiVersion: string = '1.0';
+  apiVersion = '1.0';
   constructor(private config: ConfigService) {
     this.apiVersion = this.config.defaultApiVersion;
   }

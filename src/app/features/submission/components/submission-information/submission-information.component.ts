@@ -9,7 +9,7 @@ import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { PreviousRouteService } from 'src/app/features/insured/services/previous-route/previous-route.service';
+import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
 import { SubmissionService } from '../../services/submission-service/submission-service';
@@ -61,8 +61,9 @@ export class SubmissionInformationComponent implements OnInit {
     );
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
-      const position = previousUrl.lastIndexOf('/') + 1;
-      this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
+      //const position = previousUrl.lastIndexOf('/') + 1;
+      // this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
+      this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
     });
   }
 
