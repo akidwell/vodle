@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { APIVersionService } from 'src/app/core/services/api-version-service/api-version.service';
+import { APIVersionService } from 'src/app/core/services/api-version-service2/api-version.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { InsuredSearchResponses, SearchResults, SubmissionSearchResponses } from '../../models/search-results';
 import { PolicySearchService } from '../../services/policy-search/policy-search.service';
