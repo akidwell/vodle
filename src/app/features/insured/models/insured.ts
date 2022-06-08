@@ -64,10 +64,10 @@ export const newInsured = (): Insured => {
   };
 };
 
-export const newInsuredFromPacer = (ani: insuredANI[], data:Params): Insured => {
+export const newInsuredFromPacer = ( data:Params): Insured => {
   return {
     insuredCode: null,
-    name: data.name.substring(0,79),
+    name: data.name.substring(0,39),
     formerName1: null,
     formerName2: null,
     sicCode: null,
@@ -79,9 +79,9 @@ export const newInsuredFromPacer = (ani: insuredANI[], data:Params): Insured => 
     state: data.insuredState,
     zip: data.zip,
     county: null,
-    country: null,
+    country: data.country,
     website: null,
-    comments: 'From Pacer',
+    comments: 'Conversion From Pacer',
     customerCode: null,
     isAddressOverride: false,
     addressVerifiedDate: null,
@@ -92,7 +92,7 @@ export const newInsuredFromPacer = (ani: insuredANI[], data:Params): Insured => 
     modifiedDate: null,
     isNew: true,
     contacts: [],
-    additionalNamedInsureds: ani
+    additionalNamedInsureds: []
 
   };
 

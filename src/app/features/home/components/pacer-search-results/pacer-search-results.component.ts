@@ -31,12 +31,10 @@ export class PacerSearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.pacerSearchResults);
   }
 
-  routeToNewInsuredFromPacer(pacerInsured: InsuredSearchResponses) {
+  routeToNewInsuredFromPacer(insured: InsuredSearchResponses) {
     this.navigationService.resetPolicy();
-    console.log(pacerInsured);
-    this.router.navigate(['/insured/information'], {queryParams: pacerInsured});
+    this.router.navigate(['/insured/information'],{ state: { pacerInsured: insured } });
   }
 }

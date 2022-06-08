@@ -57,6 +57,7 @@ export interface InsuredSearchResponses{
     name: string;
     insuredCity: string;
     insuredState: string;
+    country: string;
     zip: string;
     formerName: string;
     streetAddress: string;
