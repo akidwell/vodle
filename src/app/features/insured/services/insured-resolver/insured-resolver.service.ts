@@ -19,14 +19,9 @@ export class InsuredResolver implements Resolve<InsuredResolved> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredResolved> {
     const id = route.paramMap.get('id') ?? '';
-    if (id =='' && route.queryParams.name){
-      const data: insuredANI[] = [];
-      if(route.queryParams.insuredName){
-        data.push(new insuredANI(this.insuredService, route.queryParams.insuredName));
-        data[0].name = route.queryParams.insuredName;
-        data[0].role = 2;
-      }
-      return of({ insured: newInsuredFromPacer(data, route.queryParams)});
+    const pacerInsured = this.router.getCurrentNavigation()?.extras?.state?.pacerInsured;
+    if (pacerInsured != null){
+      return of({ insured: newInsuredFromPacer( pacerInsured)});
     }
     if (id == '') {
       return of({ insured: newInsured() });
