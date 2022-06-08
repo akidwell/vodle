@@ -7,10 +7,9 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/components/additional-named-insured/additional-named-insureds-group/additional-named-insureds-group.component';
 import { Insured } from '../../models/insured';
-import { InsuredContact } from '../../models/insured-contact';
 import { newInsuredDupeRequst } from '../../models/insured-dupe-request';
 import { InsuredService } from '../../services/insured-service/insured.service';
-import { PreviousRouteService } from '../../services/previous-route/previous-route.service';
+import { PreviousRouteService } from '../../../../core/services/previous-route/previous-route.service';
 import { InsuredAccountComponent } from '../insured-account/insured-account.component';
 import { InsuredContactGroupComponent } from '../insured-contact-group/insured-contact-group.component';
 import { InsuredDuplicatesComponent } from '../insured-duplicates/insured-duplicates.component';
@@ -22,8 +21,6 @@ import { InsuredDuplicatesComponent } from '../insured-duplicates/insured-duplic
 })
 export class InsuredInformationComponent implements OnInit {
   insured!: Insured;
-  // contacts: InsuredContact[] = [];
-  // aniInsuredData: insuredANI[] = [];
   canEditInsured = false;
   newInsuredANI!: insuredANI;
   authSub: Subscription;
@@ -50,7 +47,9 @@ export class InsuredInformationComponent implements OnInit {
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
       const position = previousUrl.lastIndexOf('/') + 1;
-      this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
+      // this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
+      //this.previousLabel = 'Previous - ' + previousUrl;
+      this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
     });
   }
 
