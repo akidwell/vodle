@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-desc-enum';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Insured } from '../../insured/models/insured';
@@ -20,7 +22,12 @@ export class SubmissionClass implements Submission {
   private _expiringPolicyId: number | null = null;
   private _extExpiringPolicyNo: string | null = null;
   private _renewablePolicy: boolean | number = true;
+  private _policyTerm: PolicyTermEnum | number | null = PolicyTermEnum.annual;
+
   private _isDirty = false;
+
+  private _effectiveDatePastWarningRange = 89;
+  private _effectiveDateFutureWarningRange = -180;
 
   producerCodeRequiredStatus = SubmissionStatusEnum.Live;
   producerContactRequiredStatus = SubmissionStatusEnum.Bound;
@@ -33,7 +40,7 @@ export class SubmissionClass implements Submission {
 
   producerCodeLockStatus = SubmissionStatusEnum.Bound;
   producerContactLockStatus = SubmissionStatusEnum.Bound;
-  departmentCodeLockStatus = SubmissionStatusEnum.InQuote;
+  departmentCodeLockStatus = SubmissionStatusEnum.Bound;
   underwriterLockStatus = SubmissionStatusEnum.Bound;
   sicCodeLockStatus = SubmissionStatusEnum.Bound;
   naicsCodeLockStatus = SubmissionStatusEnum.Bound;
@@ -53,18 +60,18 @@ export class SubmissionClass implements Submission {
   policyDateRequired = false;
   quoteDueDateRequired = false;
 
-  producerEditable = false;
-  producerContactEditable = false;
-  departmentEditable = false;
-  underwriterEditable = false;
-  sicCodeEditable = false;
-  naicsEditable = false;
-  policyDateEditable = false;
-  quoteDueDateEditable = false;
-  newRenewalFlagEditable = false;
-  expiringPolicyEditable = false;
-  extExpiringPolicyEditable = false;
-  renewablePolicyEditable = false;
+  producerReadonly = false;
+  producerContactReadonly = false;
+  departmentReadonly = false;
+  underwriterReadonly = false;
+  sicCodeReadonly = false;
+  naicsReadonly = false;
+  policyDateReadonly = false;
+  quoteDueDateReadonly = false;
+  newRenewalFlagReadonly = false;
+  expiringPolicyReadonly = false;
+  extExpiringPolicyReadonly = false;
+  renewablePolicyReadonly = false;
 
   submissionNumber = 0;
   companyCode: number | null = null;
@@ -107,6 +114,10 @@ export class SubmissionClass implements Submission {
   underwriterName: string | null = null;
   statusCodeDesc: string | null = null;
   invalidList: string[] = [];
+  warningsList: string[] = [];
+  warningsMessage = '';
+  hasPostedInvoice = false;
+  hasQuoteWithCoverages = false;
 
   constructor(sub?: Submission, insured?: Insured){
     this._departmentCode = sub?.departmentCode || null;
@@ -161,10 +172,14 @@ export class SubmissionClass implements Submission {
     this.constructionWrapup = sub?.constructionWrapup || null;
     this.lobCode = sub?.lobCode || null;
     this.businessType = sub?.businessType || '';
+    this._policyTerm = sub?.policyTerm || insured ? PolicyTermEnum.annual : PolicyTermEnum.custom;
+    this.hasPostedInvoice = sub?.hasPostedInvoice || false;
+    this.hasQuoteWithCoverages = sub?.hasQuoteWithCoverages || false;
 
     this.setStatusDesc();
+    this.setReadonlyFields();
     this.setRequiredFields();
-    this.setEditableFields();
+    this.setWarnings();
   }
 
   get departmentCode() : number | null {
@@ -193,6 +208,8 @@ export class SubmissionClass implements Submission {
   }
   set polEffDate(date: Date | null) {
     this._polEffDate = date;
+    this.applyPolicyTerm();
+    this.setWarnings();
     this._isDirty = true;
   }
   get polExpDate() : Date | null {
@@ -200,6 +217,7 @@ export class SubmissionClass implements Submission {
   }
   set polExpDate(date: Date | null) {
     this._polExpDate = date;
+    this._policyTerm = PolicyTermEnum.custom;
     this._isDirty = true;
   }
   get quoteDueDate() : Date | null {
@@ -207,6 +225,17 @@ export class SubmissionClass implements Submission {
   }
   set quoteDueDate(date: Date | null) {
     this._quoteDueDate = date;
+    this._isDirty = true;
+  }
+  get policyTerm() : PolicyTermEnum | number | null {
+    return this._policyTerm;
+  }
+  set policyTerm(term: PolicyTermEnum | number | null) {
+    this._policyTerm = term;
+    console.log(this._policyTerm, term);
+    if (term !== PolicyTermEnum.custom) {
+      this.applyPolicyTerm();
+    }
     this._isDirty = true;
   }
   get producerCode() : number | null {
@@ -285,17 +314,22 @@ export class SubmissionClass implements Submission {
 
     return valid;
   }
+  applyPolicyTerm(){
+    if (this._policyTerm != PolicyTermEnum.custom) {
+      this._polExpDate = moment(this._polEffDate).add(this._policyTerm, 'M').toDate();
+    }
+  }
   markClean() {
     this._isDirty = false;
   }
   markDirty() {
     this._isDirty = true;
   }
-  private isFieldEditable(statusLock: SubmissionStatusEnum) {
-    return this.statusCode === SubmissionStatusEnum.Dead ? false : this.statusCode < statusLock;
+  private isFieldReadonly(statusLock: SubmissionStatusEnum) {
+    return (this.hasPostedInvoice || this.statusCode === SubmissionStatusEnum.Dead) ? true : (this.statusCode < statusLock) ? false : true;
   }
-  private isFieldRequired(statusRequired: SubmissionStatusEnum) {
-    return this.statusCode === SubmissionStatusEnum.Dead ? false : this.statusCode >= statusRequired;
+  private isFieldRequired(statusRequired: SubmissionStatusEnum, fieldIsReadonly?: boolean) {
+    return (fieldIsReadonly || this.statusCode === SubmissionStatusEnum.Dead) ? false : this.statusCode >= statusRequired;
   }
   private setStatusDesc() {
     switch (this.statusCode) {
@@ -317,28 +351,50 @@ export class SubmissionClass implements Submission {
     }
   }
   setRequiredFields(){
-    this.naicsRequired = this.isFieldRequired(this.naicsCodeRequiredStatus);
-    this.sicCodeRequired = this.isFieldRequired(this.sicCodeRequiredStatus);
-    this.policyDateRequired = this.isFieldRequired(this.policyDateRequiredStatus);
-    this.quoteDueDateRequired = this.isFieldRequired(this.quoteDueDateRequiredStatus);
-    this.departmentRequired = this.isFieldRequired(this.departmentCodeRequiredStatus);
-    this.producerContactRequired = this.isFieldRequired(this.producerContactRequiredStatus);
-    this.producerRequired = this.isFieldRequired(this.producerCodeRequiredStatus);
-    this.underwriterRequired = this.isFieldRequired(this.underwriterRequiredStatus);
+    this.producerRequired = this.isFieldRequired(this.producerCodeRequiredStatus, this.producerReadonly);
+    this.underwriterRequired = this.isFieldRequired(this.underwriterRequiredStatus, this.underwriterReadonly);
+    this.policyDateRequired = this.isFieldRequired(this.policyDateRequiredStatus, this.policyDateReadonly);
+    this.departmentRequired = this.isFieldRequired(this.departmentCodeRequiredStatus, this.departmentReadonly);
+    //this.naicsRequired = this.isFieldRequired(this.naicsCodeRequiredStatus, this.naicsReadonly);
+    //this.sicCodeRequired = this.isFieldRequired(this.sicCodeRequiredStatus, this.sicCodeReadonly);
+    //this.quoteDueDateRequired = this.isFieldRequired(this.quoteDueDateRequiredStatus, this.quoteDueDateReadonly);
+    //this.producerContactRequired = this.isFieldRequired(this.producerContactRequiredStatus, this.producerContactReadonly);
   }
-  setEditableFields(){
-    this.naicsEditable = this.isFieldEditable(this.naicsCodeLockStatus);
-    this.sicCodeEditable = this.isFieldEditable(this.sicCodeLockStatus);
-    this.policyDateEditable = this.isFieldEditable(this.policyDateLockStatus);
-    this.quoteDueDateEditable = this.isFieldEditable(this.quoteDueDateLockStatus);
-    this.departmentEditable = this.isFieldEditable(this.departmentCodeLockStatus);
-    this.producerContactEditable = this.isFieldEditable(this.producerContactLockStatus);
-    this.producerEditable = this.isFieldEditable(this.producerCodeLockStatus);
-    this.underwriterEditable = this.isFieldEditable(this.underwriterLockStatus);
-    this.newRenewalFlagEditable = this.isFieldEditable(this.newRenewalFlagLockStatus);
-    this.expiringPolicyEditable = this.isFieldEditable(this.expiringPolicyLockStatus);
-    this.extExpiringPolicyEditable = this.isFieldEditable(this.extExpiringPolicyLockStatus);
-    this.renewablePolicyEditable = this.isFieldEditable(this.renewablePolicyLockStatus);
+  setReadonlyFields(){
+    this.naicsReadonly = this.isFieldReadonly(this.naicsCodeLockStatus);
+    this.sicCodeReadonly = this.isFieldReadonly(this.sicCodeLockStatus);
+    this.policyDateReadonly = this.isFieldReadonly(this.policyDateLockStatus);
+    this.quoteDueDateReadonly = this.isFieldReadonly(this.quoteDueDateLockStatus);
+    this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus) || this.hasQuoteWithCoverages;
+    this.producerContactReadonly = this.isFieldReadonly(this.producerContactLockStatus);
+    this.producerReadonly = this.isFieldReadonly(this.producerCodeLockStatus);
+    this.underwriterReadonly = this.isFieldReadonly(this.underwriterLockStatus);
+    this.newRenewalFlagReadonly = this.isFieldReadonly(this.newRenewalFlagLockStatus);
+    this.expiringPolicyReadonly = this.isFieldReadonly(this.expiringPolicyLockStatus);
+    this.extExpiringPolicyReadonly = this.isFieldReadonly(this.extExpiringPolicyLockStatus);
+    this.renewablePolicyReadonly = this.isFieldReadonly(this.renewablePolicyLockStatus);
+  }
+  setWarnings(){
+    this.warningsList = [];
+    this.warningsMessage = '';
+    this.setDateEffectiveDateWarning();
+    this.createWarningString();
+  }
+  setDateEffectiveDateWarning() {
+    const diff = moment().diff(moment(this.polEffDate), 'days');
+    if (diff >= this._effectiveDatePastWarningRange) {
+      this.warningsList.push('Policy Effective Date is effective ' + diff + ' days ago.');
+    } else if (diff <= this._effectiveDateFutureWarningRange) {
+      this.warningsList.push('Policy Effective Date is effective ' + Math.abs(diff) + ' days in the future.');
+    }
+  }
+  createWarningString(){
+    if (this.warningsList.length > 0) {
+      for (const error of this.warningsList) {
+        this.warningsMessage += '<br><li>' + error;
+      }
+    }
+
   }
   validateNew(valid: boolean): boolean {
     this.invalidList = [];
@@ -460,7 +516,8 @@ export class SubmissionClass implements Submission {
       lobCode: this.lobCode,
       processor: this.processor,
       submissionEventCode: this.submissionEventCode,
-      extExpiringPolicyNo: this._extExpiringPolicyNo
+      extExpiringPolicyNo: this._extExpiringPolicyNo,
+      policyTerm: this._policyTerm === PolicyTermEnum.custom ? null : this._policyTerm
     };
   }
 

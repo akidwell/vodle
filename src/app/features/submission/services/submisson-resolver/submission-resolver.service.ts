@@ -25,7 +25,6 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
       return of({ submission: submission});
     }
 
-    console.log(+id,isNaN(+id));
     if (isNaN(+id)) {
       const message = `Submission number was not a number: ${id}`;
       this.router.navigate(['/submission/submission-not-found'], { state: { error: message } });

@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
-import { Submission } from '../../models/submission';
 
 @Component({
   selector: 'rsps-submission-info-panel-left',
@@ -37,8 +36,5 @@ export class SubmissionInfoPanelLeftComponent implements OnInit {
         return !this.canEditSubmission;
       }
     }
-  }
-  changeRenewable() {
-    this.submission.renewablePolicy = this.isRenewable ? 1 : 0;
   }
 }
