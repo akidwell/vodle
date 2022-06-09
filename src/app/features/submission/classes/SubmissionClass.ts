@@ -172,10 +172,9 @@ export class SubmissionClass implements Submission {
     this.constructionWrapup = sub?.constructionWrapup || null;
     this.lobCode = sub?.lobCode || null;
     this.businessType = sub?.businessType || '';
-    this._policyTerm = sub?.policyTerm || insured ? PolicyTermEnum.annual : PolicyTermEnum.custom;
+    this._policyTerm = sub?.policyTerm ? sub?.policyTerm : insured ? PolicyTermEnum.annual : PolicyTermEnum.custom;
     this.hasPostedInvoice = sub?.hasPostedInvoice || false;
     this.hasQuoteWithCoverages = sub?.hasQuoteWithCoverages || false;
-
     this.setStatusDesc();
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -233,7 +232,6 @@ export class SubmissionClass implements Submission {
   }
   set policyTerm(term: PolicyTermEnum | number | null) {
     this._policyTerm = term;
-    console.log(this._policyTerm, term);
     if (term !== PolicyTermEnum.custom) {
       this.applyPolicyTerm();
     }
@@ -397,7 +395,6 @@ export class SubmissionClass implements Submission {
       this.warningsList.push('Policy Effective Date must be before Expiration Date');
       this._polExpDate = null;
     }
-    console.log(diff);
   }
   createWarningString(){
     if (this.warningsList.length > 0) {

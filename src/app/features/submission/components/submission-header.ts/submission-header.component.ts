@@ -10,7 +10,7 @@ import { SubmissionClass } from '../../classes/SubmissionClass';
 })
 export class SubmissionHeaderComponent implements OnInit {
   submission!: SubmissionClass;
-  policyTermOptions = [{'value': PolicyTermEnum.six_months, 'description': '6 months'}, {'value': PolicyTermEnum.annual, 'description': 'Annual'}, {'value': PolicyTermEnum.eighteen_months, 'description': '18 months'}, {'value': PolicyTermEnum.two_years, 'description': '2 years'}, {'value': PolicyTermEnum.custom, 'description': 'Custom'}];
+  policyTermOptions = [{'value': PolicyTermEnum.three_months, 'description': '3 months'},{'value': PolicyTermEnum.six_months, 'description': '6 months'}, {'value': PolicyTermEnum.annual, 'description': 'Annual'}, {'value': PolicyTermEnum.eighteen_months, 'description': '18 months'}, {'value': PolicyTermEnum.custom, 'description': 'Custom'}];
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
