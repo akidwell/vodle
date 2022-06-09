@@ -40,7 +40,7 @@ export class SubmissionClass implements Submission {
 
   producerCodeLockStatus = SubmissionStatusEnum.Bound;
   producerContactLockStatus = SubmissionStatusEnum.Bound;
-  departmentCodeLockStatus = SubmissionStatusEnum.Bound;
+  departmentCodeLockStatus = SubmissionStatusEnum.InQuote;
   underwriterLockStatus = SubmissionStatusEnum.Bound;
   sicCodeLockStatus = SubmissionStatusEnum.Bound;
   naicsCodeLockStatus = SubmissionStatusEnum.Bound;
@@ -117,7 +117,6 @@ export class SubmissionClass implements Submission {
   warningsList: string[] = [];
   warningsMessage = '';
   hasPostedInvoice = false;
-  hasQuoteWithCoverages = false;
 
   constructor(sub?: Submission, insured?: Insured){
     this._departmentCode = sub?.departmentCode || null;
@@ -174,7 +173,6 @@ export class SubmissionClass implements Submission {
     this.businessType = sub?.businessType || '';
     this._policyTerm = sub?.policyTerm ? sub?.policyTerm : insured ? PolicyTermEnum.annual : PolicyTermEnum.custom;
     this.hasPostedInvoice = sub?.hasPostedInvoice || false;
-    this.hasQuoteWithCoverages = sub?.hasQuoteWithCoverages || false;
     this.setStatusDesc();
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -186,6 +184,10 @@ export class SubmissionClass implements Submission {
   }
   set departmentCode(code: number | null) {
     this._departmentCode = code;
+    this.producer = null;
+    this.producerContact = null;
+    this._producerCode = null;
+    this._producerContact = null;
     this._isDirty = true;
   }
   get extExpiringPolicyNo() : string | null {
@@ -365,7 +367,7 @@ export class SubmissionClass implements Submission {
     this.sicCodeReadonly = this.isFieldReadonly(this.sicCodeLockStatus);
     this.policyDateReadonly = this.isFieldReadonly(this.policyDateLockStatus);
     this.quoteDueDateReadonly = this.isFieldReadonly(this.quoteDueDateLockStatus);
-    this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus) || this.hasQuoteWithCoverages;
+    this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus);
     this.producerContactReadonly = this.isFieldReadonly(this.producerContactLockStatus);
     this.producerReadonly = this.isFieldReadonly(this.producerCodeLockStatus);
     this.underwriterReadonly = this.isFieldReadonly(this.underwriterLockStatus);

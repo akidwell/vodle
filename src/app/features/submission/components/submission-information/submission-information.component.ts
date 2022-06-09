@@ -42,6 +42,8 @@ export class SubmissionInformationComponent implements OnInit {
   loadingNaics = false;
   seCollapsed = false;
   formatDateForDisplay: FormatDateForDisplay;
+  underwriters$: Observable<Code[]> | undefined;
+  departments$: Observable<Code[]> | undefined;
   prevSub!: Subscription;
   previousUrl = '';
   previousLabel = 'Previous';
@@ -81,7 +83,15 @@ export class SubmissionInformationComponent implements OnInit {
     else {
       this.loadingNaics = false;
     }
+    this.underwriters$ = this.dropdowns.getUnderwriters().pipe(tap(x => {
+      const foundCurrentUnderwriter = x.filter(p => p.key == this.submission.underwriter);
 
+      if (foundCurrentUnderwriter.length == 0) {
+        const expiredUnderwriter = {key: this.submission.underwriter || 0, description: this.submission.underwriterName || '', code: this.submission.underwriterName || ''};
+        x.push(expiredUnderwriter);
+      }
+    }));
+    this.departments$ = this.dropdowns.getDepartments();
   }
 
   ngOnDestroy(): void {

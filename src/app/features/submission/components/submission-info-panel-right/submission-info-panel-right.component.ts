@@ -12,14 +12,13 @@ import { Submission } from '../../models/submission';
   templateUrl: './submission-info-panel-right.component.html',
   styleUrls: ['./submission-info-panel-right.component.css']
 })
-export class SubmissionInfoPanelRightComponent implements OnInit {
+export class SubmissionInfoPanelRightComponent {
   authSub: Subscription;
   canEditSubmission = false;
   lockSubmissionFields = false;
   currentDate = new Date();
   selectedProducer!: Subscription;
-  underwriters$: Observable<Code[]> | undefined;
-  departments$: Observable<Code[]> | undefined;
+
   @Input() public submission!: SubmissionClass;
 
 
@@ -28,25 +27,7 @@ export class SubmissionInfoPanelRightComponent implements OnInit {
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
   }
-  ngOnInit(): void {
 
-    this.underwriters$ = this.dropdowns.getUnderwriters().pipe(tap(x => {
-      const foundCurrentUnderwriter = x.filter(p => p.key == this.submission.underwriter);
-      console.log(foundCurrentUnderwriter, this.submission.underwriter, this.submission.underwriterName);
-
-      if (foundCurrentUnderwriter.length == 0) {
-        const expiredUnderwriter = {key: this.submission.underwriter || 0, description: this.submission.underwriterName || '', code: this.submission.underwriterName || ''};
-        x.push(expiredUnderwriter);
-      }
-    }));
-    this.departments$ = this.dropdowns.getDepartments();
-  }
-  changeDepartment() {
-    this.submission.producer = null;
-    this.submission.producerContact = null;
-    this.submission.producerCode = null;
-    this.submission.producerContactId = null;
-  }
   updateProducer(model: any) {
     if (model == null) {
       this.submission.producerCode = null;
