@@ -218,6 +218,7 @@ export class SubmissionClass implements Submission {
   set polExpDate(date: Date | null) {
     this._polExpDate = date;
     this._policyTerm = PolicyTermEnum.custom;
+    this.setWarnings();
     this._isDirty = true;
   }
   get quoteDueDate() : Date | null {
@@ -236,6 +237,7 @@ export class SubmissionClass implements Submission {
     if (term !== PolicyTermEnum.custom) {
       this.applyPolicyTerm();
     }
+    this.setWarnings();
     this._isDirty = true;
   }
   get producerCode() : number | null {
@@ -377,16 +379,25 @@ export class SubmissionClass implements Submission {
   setWarnings(){
     this.warningsList = [];
     this.warningsMessage = '';
-    this.setDateEffectiveDateWarning();
+    this.setEffectiveDateWarning();
+    this.setExpirationDateBeforeEffectiveDateWarning();
     this.createWarningString();
   }
-  setDateEffectiveDateWarning() {
-    const diff = moment().diff(moment(this.polEffDate), 'days');
+  setEffectiveDateWarning() {
+    const diff = moment().diff(moment(this._polEffDate), 'days');
     if (diff >= this._effectiveDatePastWarningRange) {
       this.warningsList.push('Policy Effective Date is effective ' + diff + ' days ago.');
     } else if (diff <= this._effectiveDateFutureWarningRange) {
       this.warningsList.push('Policy Effective Date is effective ' + Math.abs(diff) + ' days in the future.');
     }
+  }
+  setExpirationDateBeforeEffectiveDateWarning() {
+    const diff = moment(this._polExpDate).diff(moment(this._polEffDate), 'days');
+    if (diff < 1) {
+      this.warningsList.push('Policy Effective Date must be before Expiration Date');
+      this._polExpDate = null;
+    }
+    console.log(diff);
   }
   createWarningString(){
     if (this.warningsList.length > 0) {
