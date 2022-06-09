@@ -232,7 +232,6 @@ export class SubmissionClass implements Submission {
   }
   set policyTerm(term: PolicyTermEnum | number | null) {
     this._policyTerm = term;
-    console.log(this._policyTerm, term);
     if (term !== PolicyTermEnum.custom) {
       this.applyPolicyTerm();
     }
@@ -396,7 +395,6 @@ export class SubmissionClass implements Submission {
       this.warningsList.push('Policy Effective Date must be before Expiration Date');
       this._polExpDate = null;
     }
-    console.log(diff);
   }
   createWarningString(){
     if (this.warningsList.length > 0) {
