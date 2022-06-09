@@ -172,10 +172,9 @@ export class SubmissionClass implements Submission {
     this.constructionWrapup = sub?.constructionWrapup || null;
     this.lobCode = sub?.lobCode || null;
     this.businessType = sub?.businessType || '';
-    this._policyTerm = sub?.policyTerm || insured ? PolicyTermEnum.annual : PolicyTermEnum.custom;
+    this._policyTerm = sub?.policyTerm ? sub?.policyTerm : insured ? PolicyTermEnum.annual : PolicyTermEnum.custom;
     this.hasPostedInvoice = sub?.hasPostedInvoice || false;
     this.hasQuoteWithCoverages = sub?.hasQuoteWithCoverages || false;
-
     this.setStatusDesc();
     this.setReadonlyFields();
     this.setRequiredFields();
