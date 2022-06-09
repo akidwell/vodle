@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { UpdateService } from './core/services/update/update.service';
-import { PreviousRouteService } from './features/insured/services/previous-route/previous-route.service';
+import { PreviousRouteService } from './core/services/previous-route/previous-route.service';
 
 @Component({
   selector: 'rsps-root',
@@ -37,7 +37,9 @@ export class AppComponent {
         const navEnd = event as NavigationEnd;
         this.previousUrl = this.currentUrl;
         this.currentUrl = navEnd.url;
-        if (this.previousUrl !== undefined && !this.previousUrl?.startsWith('/insured')) {
+        const previousPath = this.previousUrl?.split('/');
+        const currentPath = this.currentUrl?.split('/');
+        if (this.previousUrl !== undefined && previousPath[1] != currentPath[1]) {
           this.previousRouteService.setPreviousUrl(this.previousUrl);
         }
         this.loading = false;

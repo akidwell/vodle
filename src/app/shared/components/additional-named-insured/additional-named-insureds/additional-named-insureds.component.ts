@@ -6,6 +6,7 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { faArrows } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-shared-additional-named-insureds',
@@ -20,15 +21,16 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   updateSub!: Subscription;
   saveSub!: Subscription;
   aniCollapsed = false;
-  isReadOnly = true;
   nameRoleArray: string[] = [];
   nameRoleDuplicates: string[] = [];
   isNameRoleValid = true;
+  faArrowsV = faArrows;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsured;
   @Input() ani!: AdditionalNamedInsured[];
   @Input() public canEdit = false;
+  @Input() canDrag = false;
   @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();

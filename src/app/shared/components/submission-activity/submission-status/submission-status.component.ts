@@ -112,7 +112,7 @@ export class SubmissionStatusComponent implements OnInit {
     const results$ = this.submissionService.updateSubmissionStatus(this.submission);
     await lastValueFrom(results$).then(result => {
       this.showBusy = false;
-      this.activeModal.close(result.status);
+      this.activeModal.close(result);
     },
     error => {
       this.showBusy = false;

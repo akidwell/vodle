@@ -7,7 +7,6 @@
             name="copyGroup" [readonly]="!canEditPolicy">
             &nbsp;
         </span>
-
         <a [routerLink]="[]" click-stop-propagation (click)="openLocation(endorsementCoveragesGroup);">ID #:
           {{endorsementCoveragesGroup.location.locationId}}</a>
         <span *ngIf="groupCount > 1"

@@ -9,6 +9,9 @@ import { UnderlyingCoverage } from '../../models/schedules';
 import { UnderlyingCoverageDetailComponent } from '../schedules-underlying-coverage-detail/underlying-coverage-detail.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { UCCoverage } from '../../classes/UCCoverage';
+import { ThemePalette } from '@angular/material/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
 
 @Component({
   selector: 'rsps-underlying-coverages',
@@ -18,7 +21,7 @@ import { UCCoverage } from '../../classes/UCCoverage';
 export class UnderlyingCoveragesComponent implements OnInit {
   underlyingCoverages!: UCCoverage[];
   authSub: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   deleteSub!: Subscription;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
@@ -26,11 +29,14 @@ export class UnderlyingCoveragesComponent implements OnInit {
   endorsementNumber!: number;
   policyId!: number;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
+  color: ThemePalette = 'warn';
+  canDrag = false;
+  dragDropClass = '';
 
   @ViewChildren(UnderlyingCoverageDetailComponent) components: QueryList<UnderlyingCoverageDetailComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService) {
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private policyService: PolicyService, private endorsementStatusService: EndorsementStatusService, private notification: NotificationService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -56,17 +62,17 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   addNewUnderlyingCoverage(): void {
 
-    var maxSequence = this.underlyingCoverages.length > 0 ? this.underlyingCoverages.map(x => x.sequence)
-    .reduce((prev,current): number => {
-      return (prev > current) ? prev : current
-    }) : 0;
+    const maxSequence = this.underlyingCoverages.length > 0 ? this.underlyingCoverages.map(x => x.sequence)
+      .reduce((prev,current): number => {
+        return (prev > current) ? prev : current;
+      }) : 0;
 
-    var newUnderlyingCoverage = this.createNewUnderlyingCoverage(maxSequence);
+    const newUnderlyingCoverage = this.createNewUnderlyingCoverage(maxSequence);
     this.underlyingCoverages.push(new UCCoverage(newUnderlyingCoverage));
   }
   //Will create and return a new underlying coverage
@@ -82,11 +88,11 @@ export class UnderlyingCoveragesComponent implements OnInit {
       carrierCode: 0,
       underlyingScheduleLimitData: [],
       isNew: true
-    }
+    };
   }
   isValid(): boolean {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.ucForm.status != 'VALID') {
           return false;
         }
@@ -96,7 +102,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
   isDirty() {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.ucForm.dirty) {
           return true;
         }
@@ -106,10 +112,10 @@ export class UnderlyingCoveragesComponent implements OnInit {
   }
   save(): void {
     if (this.canEditPolicy && this.isDirty()) {
-      this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(result => {
+      this.policyService.updateUnderlyingCoverages(this.underlyingCoverages).subscribe(() => {
         this.notification.show('Underlying Coverages successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         if (this.components != null) {
-          for (let child of this.components) {
+          for (const child of this.components) {
             if (child.ucForm.dirty) {
               child.ucData.isNew = false;
               child.ucForm.form.markAsPristine();
@@ -120,8 +126,8 @@ export class UnderlyingCoveragesComponent implements OnInit {
       });
     }
   }
-  async deleteComponent(index: any, existingCoverage: UnderlyingCoverage) {
-    this.deleteSub = this.policyService.deleteUnderlyingCoverage(existingCoverage).subscribe(result => {
+  async deleteComponent(index: number, existingCoverage: UnderlyingCoverage) {
+    this.deleteSub = this.policyService.deleteUnderlyingCoverage(existingCoverage).subscribe(() => {
       this.underlyingCoverages.splice(index,1);
     });
   }
@@ -131,6 +137,34 @@ export class UnderlyingCoveragesComponent implements OnInit {
       this.deleteComponent(index, existingCoverage);
     } else {
       this.underlyingCoverages.splice(index,1);
+    }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.underlyingCoverages, event.previousIndex, event.currentIndex);
+    }
+    let sequence = 1;
+
+    this.underlyingCoverages.forEach(c => {
+      if (c.sequence != sequence) {
+        const match = this.components?.find(l => l.ucData.sequence == c.sequence);
+        match?.ucForm.form.markAsDirty();
+        c.sequence = sequence;
+      }
+      sequence++;
+    });
+  }
+
+  toggleDragDrop() {
+    this.ucCollapsed = false;
+    // Collapse all coverages
+    this.updatePolicyChild.collapseUnderlyingCoverages();
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
     }
   }
 }

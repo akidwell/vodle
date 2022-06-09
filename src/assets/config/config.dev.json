@@ -10,5 +10,5 @@
     "defaultPolicyHistorySize" : 5,
     "apiVersion": "2.0",
     "apiSwitch": true,
-    "updateTimerSecs": 3600
+    "updateTimerSecs": 60
 }

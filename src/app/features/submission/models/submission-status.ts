@@ -1,3 +1,4 @@
+import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 
 export interface SubmissionStatus {
     submissionNumber: number | null,
@@ -20,5 +21,6 @@ export const newSubmissionStatus = (): SubmissionStatus => {
 };
 
 export interface SubmissionStatusResult {
-  status: string,
+  statusCode: number,
+  status: string
 }

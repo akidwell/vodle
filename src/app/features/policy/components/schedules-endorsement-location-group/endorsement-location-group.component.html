@@ -2,19 +2,31 @@
   <div class="card-header" (click)="collapse.toggle()">Location Schedule
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditPolicy && locationData.length > 1"
+      [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
+      Sort: {{canDrag ? 'On' : 'Off'}}
+    </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
     <div class="card-body" *ngIf="locationData.length > 0">
-      <div *ngFor="let item of locationData; let i = index">
-        <rsps-endorsement-location (deleteThisLocation)=deleteLocation($event)
-          (copyExistingLocation)=copyExistingLocation($event) [location]=item [index]=i></rsps-endorsement-location>
+      <div class="row">
+        <div class="col-lg-8">
+          <label for="address">Location</label>
+        </div>
+      </div>
+      <div cdkDropList class="drag-list" [cdkDropListDisabled]="!canDrag" (cdkDropListDropped)="drop($event)">
+        <div class="drag-block" [ngClass]="dragDropClass" cdkDrag *ngFor="let item of locationData; let i = index">
+          <rsps-endorsement-location (deleteThisLocation)=deleteLocation($event)
+            (copyExistingLocation)=copyExistingLocation($event) [location]=item [index]=i [canDrag]="canDrag">
+          </rsps-endorsement-location>
+        </div>
       </div>
     </div>
   </div>
   <div class="card-footer">
     <div id="locationFooter">
-      <button *ngIf="canEditPolicy" style="float:left; background:none; border:none;" class="underline"
-        (click)="addNewEndorsementLocation();">Add Location</button>
+      <button *ngIf="canEditPolicy" [disabled]="canDrag" style="float:left; background:none; border:none;"
+        class="underline" (click)="addNewEndorsementLocation();">Add Location</button>
       <div style="float:right;">Locations: {{locationData.length}}</div>
     </div>
   </div>

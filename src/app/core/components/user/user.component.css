@@ -1,8 +1,8 @@
 .btn {
-    background-color: #001f3e;
-    color:white;
-  }
+  background-color: #001f3e;
+  color: white;
+}
 
-  .modal-body{
-    font-size: 80%;
-  }
+.ngbDropdown {
+  z-index: 2;
+}

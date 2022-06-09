@@ -1,7 +1,7 @@
-import { lastValueFrom } from "rxjs";
-import { deepClone } from "src/app/core/utils/deep-clone";
-import { InsuredService } from "src/app/features/insured/services/insured-service/insured.service";
-import { PolicyService } from "src/app/features/policy/services/policy/policy.service";
+import { lastValueFrom } from 'rxjs';
+import { deepClone } from 'src/app/core/utils/deep-clone';
+import { InsuredService } from 'src/app/features/insured/services/insured-service/insured.service';
+import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 
 export interface AdditionalNamedInsured {
   policyId: number;
@@ -27,18 +27,18 @@ export interface AdditionalNamedInsured {
 
 
 export class coverageANI implements AdditionalNamedInsured {
-  policyId: number = 0;
-  endorsementNo: number = 0;
+  policyId = 0;
+  endorsementNo = 0;
   addInsuredCode: number | null = null;
   insuredCode?: number;
-  sequenceNo: number = 0;
+  sequenceNo = 0;
   role?: number | undefined;
-  name: string = "";
+  name = '';
   createdDate?: Date | null;
-  isNew: boolean = false;
+  isNew = false;
   isActive?: boolean;
-  showActive: boolean = false;
-  canDelete: boolean = true;
+  showActive = false;
+  canDelete = true;
 
 
   constructor(private policyService: PolicyService, ani?: AdditionalNamedInsured) {
@@ -46,16 +46,16 @@ export class coverageANI implements AdditionalNamedInsured {
     this.endorsementNo = ani?.endorsementNo ?? 0;
     this.sequenceNo = ani?.sequenceNo ?? 0;
     this.role = ani?.role;
-    this.name = ani?.name ?? "";
+    this.name = ani?.name ?? '';
     this.createdDate = ani?.createdDate;
     this.isNew = ani?.isNew ?? false;
   }
 
-  get key1() { return this.policyId };
-  set key1(value: number) { this.policyId = value };
+  get key1() { return this.policyId; }
+  set key1(value: number) { this.policyId = value; }
 
-  get key2() { return this.endorsementNo };
-  set key2(value: number) { this.endorsementNo = value };
+  get key2() { return this.endorsementNo; }
+  set key2(value: number) { this.endorsementNo = value; }
 
   async save(): Promise<boolean> {
     if (this.isNew) {
@@ -84,7 +84,7 @@ export class coverageANI implements AdditionalNamedInsured {
   }
 
   clone(): coverageANI {
-    let copy = deepClone(this);
+    const copy = deepClone(this);
     copy.createdDate = null;
     copy.isNew = true;
     return new coverageANI(this.policyService,copy);
@@ -92,18 +92,18 @@ export class coverageANI implements AdditionalNamedInsured {
 }
 
 export class insuredANI implements AdditionalNamedInsured {
-  policyId: number = 0;
+  policyId = 0;
   addInsuredCode: number | null = null;
-  insuredCode: number = 0;
-  endorsementNo: number = 0;
-  sequenceNo: number = 0;
+  insuredCode = 0;
+  endorsementNo = 0;
+  sequenceNo = 0;
   role?: number | undefined;
-  name: string = "";
+  name = '';
   createdDate?: Date | null;
-  isNew: boolean = false;
+  isNew = false;
   isActive?: boolean = false;
   canDelete?: boolean = false;
-  showActive: boolean = true;
+  showActive = true;
 
   constructor(private insuredService: InsuredService, ani?: AdditionalNamedInsured) {
     this.policyId = ani?.policyId ?? 0;
@@ -112,18 +112,18 @@ export class insuredANI implements AdditionalNamedInsured {
     this.endorsementNo = ani?.endorsementNo ?? 0;
     this.sequenceNo = ani?.sequenceNo ?? 0;
     this.role = ani?.role;
-    this.name = ani?.name ?? "";
+    this.name = ani?.name ?? '';
     this.isActive = ani?.isActive ?? true;
     this.canDelete = ani?.canDelete ?? true;
     this.createdDate = ani?.createdDate;
     this.isNew = ani?.isNew ?? false;
   }
 
-  get key1() { return this.addInsuredCode ?? 0};
-  set key1(value: number) { this.addInsuredCode = value };
+  get key1() { return this.addInsuredCode ?? 0;}
+  set key1(value: number) { this.addInsuredCode = value; }
 
-  get key2() { return this.insuredCode };
-  set key2(value: number) { this.insuredCode = value };
+  get key2() { return this.insuredCode; }
+  set key2(value: number) { this.insuredCode = value; }
 
   async save(): Promise<boolean> {
     throw new Error('Method not implemented.');
@@ -157,7 +157,7 @@ export class insuredANI implements AdditionalNamedInsured {
   }
 
   clone(): insuredANI {
-    let copy = deepClone(this);
+    const copy = deepClone(this);
     copy.createdDate = null;
     copy.isNew = true;
     return new insuredANI(this.insuredService,copy);

@@ -7,7 +7,7 @@
   font-size: 32px;
   text-align: center;
   position: fixed;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
 }
 ::ng-deep ngb-typeahead-window {
@@ -42,7 +42,7 @@ body {
   height: 100%;
   width: 210px;
   overflow: auto;
-  z-index: 2;
+  z-index: 3;
 }
 
 .banner-label {
@@ -102,6 +102,7 @@ body {
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 2;
 }
 
 .ngb-toasts {
@@ -111,4 +112,5 @@ body {
   right: 0!important;
   left: center!important;
   margin: 0.5em;
+  z-index: 2;
 }

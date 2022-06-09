@@ -2,6 +2,7 @@
 export interface InsuredContact extends Tracking {
     insuredContactId: number | null,
     insuredCode: number,
+    sequence: number,
     isPrimary: boolean,
     firstName: string,
     lastName: string,
@@ -19,6 +20,7 @@ export const newInsuredContact = (): InsuredContact => {
   return {
     insuredContactId: null,
     insuredCode: 0,
+    sequence: 0,
     isPrimary: false,
     firstName: '',
     lastName: '',

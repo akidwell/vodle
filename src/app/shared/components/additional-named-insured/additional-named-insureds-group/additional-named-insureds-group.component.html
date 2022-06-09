@@ -2,18 +2,43 @@
   <div class="card-header" (click)="collapse.toggle()">Additional Named Insureds
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEdit && aniData.length > 1"
+      [(ngModel)]="canDrag" (change)="toggleDragDrop()">
+      Sort: {{canDrag ? 'On' : 'Off'}}
+    </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="aniCollapsed">
     <div class="card-body" *ngIf="aniData.length > 0">
-      <div *ngFor="let item of aniData; let i = index">
-        <rsps-shared-additional-named-insureds (copyExistingAni)=copyExistingAni($event)
-          (deleteExistingAni)=deleteExistingAni($event) [ani]=aniData [aniData]=item [canEdit]=canEdit [index]=i></rsps-shared-additional-named-insureds>
+      <div class="row">
+        <div class="col-lg-3">
+          <label for="address">Role</label>
+        </div>
+        <div class="col-lg-4" *ngIf="aniData[0]?.showActive">
+          <label for="createDate">Additional Named Insured</label>
+        </div>
+        <div class="col-lg-5" *ngIf="!aniData[0]?.showActive">
+          <label for="createDate">Additional Named Insured</label>
+        </div>
+        <div class="col-lg-1" *ngIf="aniData[0]?.showActive">
+          <label for="isActive">Active</label>
+        </div>
+        <div class="col-lg-2">
+          <label for="createDate">Create Date</label>
+        </div>
       </div>
-    </div> 
+      <div cdkDropList class="drag-list" [cdkDropListDisabled]="!canDrag" (cdkDropListDropped)="drop($event)">
+        <div class="drag-block" [ngClass]="dragDropClass" cdkDrag *ngFor="let item of aniData; let i = index">
+          <rsps-shared-additional-named-insureds (copyExistingAni)=copyExistingAni($event)
+            (deleteExistingAni)=deleteExistingAni($event) [ani]=aniData [aniData]=item [canEdit]=canEdit [index]=i
+            [canDrag]=canDrag>
+          </rsps-shared-additional-named-insureds>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="card-footer">
     <div id="aniFooter">
-      <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
+      <button *ngIf="canEdit" [disabled]="canDrag" style="float:left; background:none; border:none;" class="underline"
         (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
       <div style="float:right;">Additional Named Insureds: {{aniData.length}}</div>
     </div>
