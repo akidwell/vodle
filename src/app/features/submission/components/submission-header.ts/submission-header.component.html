@@ -7,8 +7,8 @@
       <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="polEffDateCalendar" class="form-control"
                   [required]="submission.policyDateRequired"
-                  [readonly]="!submission.policyDateEditable"
-                  [(ngModel)]="submission.polEffDate" (dateChange)="changeEffDate()"
+                  [readonly]="submission.policyDateReadonly"
+                  [(ngModel)]="submission.polEffDate"
                   name="polEffDate" #polEffDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polEffDateCalendar">
                   </mat-datepicker-toggle>
@@ -21,8 +21,8 @@
       <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="polExpDateCalendar" class="form-control"
                   [required]="submission.policyDateRequired"
-                  [readonly]="!submission.policyDateEditable"
-                  [(ngModel)]="submission.polExpDate" (dateChange)="changeExpDate()"
+                  [readonly]="submission.policyDateReadonly"
+                  [(ngModel)]="submission.polExpDate"
                   name="polExpDate" #polExpDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polExpDateCalendar">
                   </mat-datepicker-toggle>
@@ -32,10 +32,16 @@
       <u>
         <h6>Policy Term</h6>
       </u>
-      <ng-select id="policyTerm" click-stop-propagation [items]="policyTermOptions" bindLabel="description" bindValue="value" placeholder=""
-      [clearable]="false" name="policyTerm"
-      [(ngModel)]="policyTerm" #limitsPattern="ngModel"  (change)="policyTermChange()">
-    </ng-select>
+      <ng-select id="policyTerm"
+        click-stop-propagation
+        [items]="policyTermOptions"
+        bindLabel="description"
+        bindValue="value"
+        [readonly]="submission.policyDateReadonly"
+        [clearable]="false" name="policyTerm"
+        [(ngModel)]="submission.policyTerm" #policyTerm="ngModel">
+      </ng-select>
+
     </div>
     <div class="col-lg-2">
       <!-- placeholder -->
@@ -47,8 +53,8 @@
       <input style="display: inline-block; max-width: 80%;" matInput
                   [matDatepicker]="quoteDueDateCalendar" class="form-control"
                   [required]="submission.quoteDueDateRequired"
-                  [readonly]="!submission.quoteDueDateEditable"
-                  [(ngModel)]="submission.quoteDueDate" (dateChange)="changeEffDate()"
+                  [readonly]="submission.quoteDueDateReadonly"
+                  [(ngModel)]="submission.quoteDueDate"
                   name="quoteDueDate" #quoteDueDate="ngModel">
                   <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="quoteDueDateCalendar">
                   </mat-datepicker-toggle>

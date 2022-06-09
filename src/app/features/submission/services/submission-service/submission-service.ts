@@ -23,7 +23,6 @@ export class SubmissionService {
   }
   updateSubmission(submission: SubmissionClass) {
     const subJSON = submission.toJSON();
-    console.log(subJSON);
     const headers = { 'Content-Type': 'application/json'};
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
   }

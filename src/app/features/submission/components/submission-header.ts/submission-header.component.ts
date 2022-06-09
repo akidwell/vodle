@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import * as moment from 'moment';
+import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { SubmissionClass } from '../../classes/SubmissionClass';
 
 @Component({
@@ -10,29 +10,13 @@ import { SubmissionClass } from '../../classes/SubmissionClass';
 })
 export class SubmissionHeaderComponent implements OnInit {
   submission!: SubmissionClass;
-  policyTermOptions = [{'value': 6, 'description': '6 months'}, {'value': 12, 'description': '1 year'}, {'value': 18, 'description': '18 months'}, {'value': 0, 'description': 'Custom'}];
-  policyTerm: number | null = 0;
+  policyTermOptions = [{'value': PolicyTermEnum.six_months, 'description': '6 months'}, {'value': PolicyTermEnum.annual, 'description': 'Annual'}, {'value': PolicyTermEnum.eighteen_months, 'description': '18 months'}, {'value': PolicyTermEnum.two_years, 'description': '2 years'}, {'value': PolicyTermEnum.custom, 'description': 'Custom'}];
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.submission = data['submissionData'].submission;
-      console.log(this.submission.polEffDate);
     });
   }
-  policyTermChange() {
-    if (this.policyTerm) {
-      this.submission.polExpDate = moment(this.submission.polEffDate).add(this.policyTerm, 'M').toDate();
-    }
-    console.log(this.submission.polExpDate);
-  }
-  changeEffDate(): void {
-    if (this.policyTerm) {
-      this.submission.polExpDate = moment(this.submission.polEffDate).add(this.policyTerm, 'M').toDate();
-    }
-    console.log(this.submission.polExpDate);
-  }
-  changeExpDate(): void {
-    this.policyTerm = 0;
-  }
+
 }

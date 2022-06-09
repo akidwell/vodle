@@ -49,7 +49,6 @@ export class SubmissionInfoPanelRightComponent implements OnInit {
   }
   updateProducer(model: any) {
     if (model == null) {
-      console.log('clear records');
       this.submission.producerCode = null;
     } else {
       this.submission.producerCode = model.producerCode;
@@ -57,17 +56,14 @@ export class SubmissionInfoPanelRightComponent implements OnInit {
     this.submission.producer = model;
     this.submission.producerContactId = null;
     this.submission.producerContact = null;
-    console.log(model);
   }
   updateProducerContact(model: any) {
     if (model == null) {
-      console.log('clear records');
       this.submission.producerContactId = null;
     } else {
       this.submission.producerContactId = model.producerContactId;
     }
     this.submission.producerContact = model;
-    console.log(model);
   }
   isFieldReadOnly(checkSubmissionLockStatus: boolean): boolean {
     if(!checkSubmissionLockStatus) {

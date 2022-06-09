@@ -83,6 +83,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
     }
   }
   addNewSubmission() {
+    this.navigationService.resetPolicy();
     const insuredForSubmission = deepClone(this.insured);
     if (insuredForSubmission) {
       insuredForSubmission.additionalNamedInsureds = [];

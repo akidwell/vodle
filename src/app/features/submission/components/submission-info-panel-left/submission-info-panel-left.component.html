@@ -7,14 +7,14 @@
                 #newRenewalFlag="ngModel" name="newRenewalFlag"> -->
                 <ng-select id="policyTerm" click-stop-propagation [items]="newRenewalFlags" bindLabel="description" bindValue="value" placeholder=""
                 [clearable]="false" name="policyTerm"
-                [readonly]="!canEditSubmission || !submission.newRenewalFlagEditable"
+                [readonly]="!canEditSubmission || submission.newRenewalFlagReadonly"
                 [(ngModel)]="submission.newRenewalFlag" #limitsPattern="ngModel"></ng-select>
       </div>
       <div class="col-lg-3">
         <label for="override"  title="Override">Renewable</label>
         <div>
           <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="submission.renewablePolicy"
-            name="override" [readonly]="!canEditSubmission || !submission.renewablePolicyEditable">
+            name="override" [readonly]="!canEditSubmission || submission.renewablePolicyReadonly">
         </div>
       </div>
     </div>
@@ -22,7 +22,7 @@
       <div class="col-lg-9">
         <label for="expiringPolicy"   title="Expiring Policy">Expiring Policy</label>
               <input type="text" class="form-control" id="expiringPolicy"
-              [readonly]="!canEditSubmission || !submission.expiringPolicyEditable" [(ngModel)]="submission.expiringPolicyId"
+              [readonly]="!canEditSubmission || submission.expiringPolicyReadonly" [(ngModel)]="submission.expiringPolicyId"
                 #expiringPolicy="ngModel" name="expiringPolicy">
       </div>
     </div>
@@ -30,7 +30,7 @@
       <div class="col-lg-9">
         <label for="extExpiringPolicy"  title="EXT Expiring Policy">EXT Expiring Policy</label>
               <input type="text" class="form-control" id="extExpiringPolicy"
-              [readonly]="!canEditSubmission || !submission.extExpiringPolicyEditable" [(ngModel)]="submission.extExpiringPolicyNo"
+              [readonly]="!canEditSubmission || submission.extExpiringPolicyReadonly" [(ngModel)]="submission.extExpiringPolicyNo"
                 #extExpiringPolicy="ngModel" name="extExpiringPolicy">
       </div>
     </div>

@@ -10,12 +10,19 @@
   (closed)="hideInvalid()"
   [dismissible]="true"
   [innerHTML]="invalidMessage"
->
-</ngb-alert>
+></ngb-alert>
+<ngb-alert
+  *ngIf="submission.warningsList.length > 0 && canEditSubmission && !submission.policyDateReadonly"
+  type="warning"
+  (closed)="hideWarnings()"
+  [dismissible]="true"
+  [innerHTML]="submission.warningsMessage"
+></ngb-alert>
+
 <form #submissionInfoForm="ngForm">
   <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
-      Submission Information - {{ submission.submissionNumber }}
+      Submission Information <span *ngIf="submission.submissionNumber > 0"> - {{ submission.submissionNumber }}</span>
       <fa-icon
         style="float: right"
         [icon]="faAngleDown"
@@ -64,7 +71,7 @@
                     bindLabel="description"
                     bindValue="code"
                     [required]="submission.sicCodeRequired"
-                    [readonly]="!canEditSubmission || !submission.sicCodeEditable"
+                    [readonly]="!canEditSubmission || submission.sicCodeReadonly"
                     name="sicCode"
                     [(ngModel)]="submission.sicCode"
                     [loading]="loadingSic"
@@ -92,7 +99,7 @@
                     [items]="naicsCodes$ | async"
                     bindLabel="description"
                     bindValue="code"
-                    [readonly]="!canEditSubmission || !submission.naicsEditable"
+                    [readonly]="!canEditSubmission || submission.naicsReadonly"
                     name="naics"
                     [(ngModel)]="submission.naicsCode"
                     [loading]="loadingNaics"

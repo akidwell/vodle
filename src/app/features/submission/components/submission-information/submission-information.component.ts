@@ -30,6 +30,8 @@ export class SubmissionInformationComponent implements OnInit {
   updateSub!: Subscription;
   showInvalid = false;
   invalidMessage = '';
+  showWarnings = false;
+  warningMessage = '';
   showBusy = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
@@ -48,8 +50,6 @@ export class SubmissionInformationComponent implements OnInit {
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
   @ViewChild(SubmissionInfoPanelRightComponent) submissionInfoPanelRight!: SubmissionInfoPanelRightComponent;
   @ViewChild(SubmissionInfoPanelLeftComponent) submissionInfoPanelLeft!: SubmissionInfoPanelLeftComponent;
-
-
 
   constructor(private route: ActivatedRoute, private router: Router, private dropdowns: DropDownsService,
     private submissionService: SubmissionService, private userAuth: UserAuth, private navigationService: NavigationService,
@@ -89,7 +89,7 @@ export class SubmissionInformationComponent implements OnInit {
     this.updateSub?.unsubscribe();
   }
   routeToInsured(insuredCode: number) {
-    //this.navigationService.resetPolicy();
+    this.navigationService.resetPolicy();
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
@@ -98,7 +98,6 @@ export class SubmissionInformationComponent implements OnInit {
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
   }
   prev() {
-    console.log(this.previousUrl);
     this.router.navigate([this.previousUrl]);
   }
   changeSicCode() {
@@ -111,10 +110,6 @@ export class SubmissionInformationComponent implements OnInit {
     else {
       this.naicsCodes$ = new Observable<Code[]>();
     }
-  }
-
-  private adddressValid() {
-    return true;
   }
 
   isDirty(): boolean {
@@ -186,6 +181,8 @@ export class SubmissionInformationComponent implements OnInit {
   hideInvalid(): void {
     this.showInvalid = false;
   }
-
+  hideWarnings(): void {
+    this.showWarnings = false;
+  }
 
 }

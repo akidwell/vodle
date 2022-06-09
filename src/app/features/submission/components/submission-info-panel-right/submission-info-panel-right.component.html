@@ -3,14 +3,14 @@
       <div class="col-lg-6">
         <label for="department" title="Department">Departments</label>
         <ng-select id="department" [items]="departments$ | async" bindLabel="description" bindValue="key"
-          [clearable]="false" [readonly]="!canEditSubmission || !submission.departmentEditable" name="department" (ngModelChange)="changeDepartment()"
+          [clearable]="false" [readonly]="!canEditSubmission || submission.departmentReadonly" name="department" (ngModelChange)="changeDepartment()"
           [required]="submission.departmentRequired" [(ngModel)]="submission.departmentCode" #department="ngModel">
         </ng-select>
       </div>
       <div class="col-lg-6">
         <label for="underwriter"  title="Underwriter">Underwriter</label>
         <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key"
-          [clearable]="false" [readonly]="!canEditSubmission || !submission.underwriterEditable" name="underwriter"
+          [clearable]="false" [readonly]="!canEditSubmission || submission.underwriterReadonly" name="underwriter"
           [required]="submission.underwriterRequired" [(ngModel)]="submission.underwriter" #underwriter="ngModel">
         </ng-select>
       </div>
@@ -21,7 +21,7 @@
         #producer
         (producerSelected)=updateProducer($event)
         [department]="submission.departmentCode || 0"
-        [canEdit]="canEditSubmission && submission.producerEditable && submission.polEffDate != null"
+        [canEdit]="canEditSubmission && !submission.producerReadonly && submission.polEffDate != null"
         [isRequired]="submission.producerRequired"
         [policyDate]="submission.polEffDate || currentDate"
         [producerOnLoad]="submission.producer"
@@ -32,7 +32,7 @@
         #producerContact
         (producerContactSelected)=updateProducerContact($event)
         [producerCode]="submission.producerCode || 0"
-        [canEdit]="canEditSubmission && submission.producerContactEditable && submission.producerCode != null"
+        [canEdit]="canEditSubmission && !submission.producerContactReadonly && submission.producerCode != null"
         [isRequired]="submission.producerContactRequired"
         [producerContactOnLoad]="submission.producerContactId != null ? submission.producerContact : null"
         ></producer-contact-fuzzy-search>
