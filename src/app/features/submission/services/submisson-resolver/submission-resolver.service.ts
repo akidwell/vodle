@@ -15,7 +15,11 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<SubmissionResolved> {
     const id = route.paramMap.get('id') ?? '';
     if (id == '') {
-      const insured = this.router.getCurrentNavigation()?.extras?.state?.insured;
+      const insured = this.router.getCurrentNavigation()?.extras?.state?.insured || null;
+      if (insured == null) {
+        const message = 'No insured found.';
+        this.router.navigate(['/submission/submission-not-found'], { state: { error: message } });
+      }
       return of({ submission: new SubmissionClass(undefined, insured) });
     }
 
@@ -26,7 +30,7 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
     }
 
     if (isNaN(+id)) {
-      const message = `Submission number was not a number: ${id}`;
+      const message = 'Submission number was not a number: ${id}';
       this.router.navigate(['/submission/submission-not-found'], { state: { error: message } });
       return of({ submission: null, error: message });
     }
