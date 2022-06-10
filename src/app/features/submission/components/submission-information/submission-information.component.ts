@@ -146,7 +146,8 @@ export class SubmissionInformationComponent implements OnInit {
       });
     } else {
       const results$ = this.submissionService.updateSubmission(this.submission);
-      await lastValueFrom(results$).then(async () => {
+      await lastValueFrom(results$).then(async (results) => {
+        this.submission.submissionEvents.unshift(results);
         this.submission.markClean();
         this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         return true;
