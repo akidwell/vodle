@@ -31,7 +31,7 @@ export class PolicySearchResultsComponent implements OnInit {
     policySearchResponses: [],
     submissionSearchResponses: [],
     insuredSearchResponses: [],
-    searchType: ''
+    searchType: null
   };
 
 @Input('version') version!: string;

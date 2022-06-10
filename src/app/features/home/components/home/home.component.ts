@@ -15,21 +15,21 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent;
 
-  @Input('searchResults') searchResults: SearchResults = {
-    policySearchResponses: [],
-    submissionSearchResponses: [],
-    insuredSearchResponses: [],
-    searchType: ''
-  };
-  @Input('submissionResults') submissionResults!: SubmissionSearchResponses[];
 
   searchSub!: Subscription;
   loadingSub!: Subscription;
   loading = false;
   version = '';
+
+ @Input('submissionResults') submissionResults!: SubmissionSearchResponses[];
  @Input('pacerSearchResults') pacerSearchResults: InsuredSearchResponses[] = [];
  @Input('insuredResults') insuredResults: InsuredSearchResponses[] = [];
-
+ @Input('searchResults') searchResults: SearchResults = {
+   policySearchResponses: [],
+   submissionSearchResponses: [],
+   insuredSearchResponses: [],
+   searchType: null
+ };
 
  constructor(private navigationService: NavigationService, private policySearchService: PolicySearchService, private apiService: APIVersionService) { }
 
@@ -49,7 +49,6 @@ export class HomeComponent implements OnInit {
        this.searchResults.submissionSearchResponses = results.submissionSearchResponses;
        this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
        this.searchResults.searchType = results.searchType;
-       console.log(this.searchResults.searchType == 'insured');
        this.submissionResults = results.submissionSearchResponses;
        this.version = this.apiService.getApiVersion;
        this.insuredResults = [];
@@ -64,7 +63,6 @@ export class HomeComponent implements OnInit {
        });
      }
    });
-
  }
 
  ngOnDestroy(): void {

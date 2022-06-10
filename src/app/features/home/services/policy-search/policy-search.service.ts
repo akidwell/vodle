@@ -15,7 +15,7 @@ export class PolicySearchService {
     policySearchResponses: [],
     submissionSearchResponses: [],
     insuredSearchResponses: [],
-    searchType: ""
+    searchType: null
   };
 
   searchResults = new BehaviorSubject<SearchResults>(this.results);
