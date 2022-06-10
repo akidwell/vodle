@@ -40,19 +40,18 @@ export class SchedulesComponent implements OnInit, PolicySave {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
-
-  
   }
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.aniGroups = data['aniData'].additionalNamedInsureds;
       this.locationData = data['endorsementLocationData'].endorsementLocation;
-      const policy = data['policyInfoData'].policyInfo;
+      // const policy = data['policyInfoData'].policyInfo;
+      const endorsement = data['endorsementData'].endorsement;
       this.newInsuredANI = new coverageANI(this.policyService);
-      this.newInsuredANI.policyId = policy.policyId;
+      this.newInsuredANI.policyId = endorsement.policyId;
+      this.newInsuredANI.endorsementNo = endorsement.endorsementNumber;
     });
   }
-
 
   isValid(): boolean {
     return !this.canEditPolicy || (this.locationComp.isValid() && this.aniGroupComp.isValid() && this.underlyingCoveragesComp.isValid());
