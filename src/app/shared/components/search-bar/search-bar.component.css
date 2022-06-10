@@ -10,3 +10,10 @@
     cursor: default;
     opacity: 0.6;
 }
+
+  #spinner {
+    position: absolute;
+    top: calc(50%-10px);
+    right: 20px;
+    z-index: 7;
+ }
