@@ -56,7 +56,6 @@ export class SharedSubmissionActivityComponent implements OnInit {
   }
 
   search(policyNumber: string): void {
-    console.log(this.submissionResults);
     if(this.router.url != '/home'){
       this.router.navigate(['/home']);
     }
@@ -115,7 +114,6 @@ export class SharedSubmissionActivityComponent implements OnInit {
   }
 
   canMarkDeadDecline(submission: SubmissionSearchResponses): boolean {
-    console.log(submission);
     return this.canEditSubmission && submission.status != 1 && (submission.invoiceCount == null || submission.invoiceCount == 0);
   }
 
