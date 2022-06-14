@@ -283,7 +283,7 @@ export class InsuredClass implements Insured {
     this.createdDate = insured?.createdDate || null;
     this.modifiedBy = insured?.modifiedBy || null;
     this.modifiedDate = insured?.modifiedDate || null;
-    this.isNew = insured == null ? true : false;
+    this.isNew = insured == null ? true : insured.isNew ?? false;
 
     const contacts: InsuredContactClass[] = [];
     insured?.contacts?.forEach(element => {

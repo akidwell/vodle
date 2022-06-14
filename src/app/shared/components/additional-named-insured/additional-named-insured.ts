@@ -213,7 +213,7 @@ export class insuredANI implements AdditionalNamedInsured {
   constructor(private insuredService: InsuredService, ani?: AdditionalNamedInsured) {
     this._name = ani?.name || null;
     this._role = ani?.role || null;
-    this._isActive = ani?.isActive || null;
+    this._isActive = ani?.isActive ?? null;
     this.policyId = ani?.policyId ?? 0;
     this.addInsuredCode = ani?.addInsuredCode ?? null;
     this.insuredCode = ani?.insuredCode ?? 0;
