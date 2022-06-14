@@ -104,4 +104,8 @@ export class UserComponent {
       this.policyHistoryService.clearHistory();
     }
   }
+
+  refresh() {
+    document.location.reload();
+  }
 }
