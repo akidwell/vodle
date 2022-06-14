@@ -33,6 +33,7 @@ export class SearchBarComponent {
   }
 
   search(): void {
+    window.scrollTo(0,0);
     this.sub = this.policySearchService.getPolicySearch(this.searchTerm).subscribe();
   }
 
