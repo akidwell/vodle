@@ -1,18 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/components/additional-named-insured/additional-named-insureds-group/additional-named-insureds-group.component';
-import { Insured } from '../../models/insured';
 import { newInsuredDupeRequst } from '../../models/insured-dupe-request';
 import { InsuredService } from '../../services/insured-service/insured.service';
 import { PreviousRouteService } from '../../../../core/services/previous-route/previous-route.service';
 import { InsuredAccountComponent } from '../insured-account/insured-account.component';
 import { InsuredContactGroupComponent } from '../insured-contact-group/insured-contact-group.component';
 import { InsuredDuplicatesComponent } from '../insured-duplicates/insured-duplicates.component';
+import { InsuredClass } from '../../classes/insured-class';
+import { deepClone } from 'src/app/core/utils/deep-clone';
 
 @Component({
   selector: 'rsps-insured-information',
@@ -20,7 +21,7 @@ import { InsuredDuplicatesComponent } from '../insured-duplicates/insured-duplic
   styleUrls: ['./insured-information.component.css']
 })
 export class InsuredInformationComponent implements OnInit {
-  insured!: Insured;
+  insured!: InsuredClass;
   canEditInsured = false;
   newInsuredANI!: insuredANI;
   authSub: Subscription;
@@ -33,6 +34,7 @@ export class InsuredInformationComponent implements OnInit {
   previousUrl = '';
   previousLabel = 'Previous';
 
+  // @Input() public insured!: InsuredClass;
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
@@ -46,9 +48,6 @@ export class InsuredInformationComponent implements OnInit {
 
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
-      const position = previousUrl.lastIndexOf('/') + 1;
-      // this.previousLabel = 'Previous - ' + previousUrl.substring(position,position + 1).toUpperCase() + previousUrl.substring(position + 1, previousUrl.length);
-      //this.previousLabel = 'Previous - ' + previousUrl;
       this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
     });
   }
@@ -74,31 +73,24 @@ export class InsuredInformationComponent implements OnInit {
     if (!this.canEditInsured) {
       return true;
     }
-    return this.accountInfoComp.accountInfoForm.status == 'VALID' && this.contactComp.isValid() && this.aniComp.isValid() && this.adddressValid();
-  }
-
-  private adddressValid() {
-    return this.insured.isAddressOverride || this.insured.addressVerifiedDate != null;
+    if (this.insured.isValid) {
+      this.hideInvalid();
+    }
+    return this.insured.isValid;
   }
 
   isDirty(): boolean {
-    return this.canEditInsured && (this.accountInfoComp?.isDirty() || this.contactComp?.isDirty() || this.aniComp?.isDirty());
+    return this.insured.isDirty;
   }
 
   async save(): Promise<void> {
     let save: boolean | null = true;
-
-    const refresh = this.insured.isNew;
     if (this.insured.isNew && this.isValid()) {
       save = await this.checkDuplicates();
     }
     if (save) {
       this.showBusy = true;
       await this.saveInsured();
-      this.showBusy = false;
-      if (refresh && this.insured.insuredCode !== null) {
-        this.router.navigate(['/insured/' + this.insured.insuredCode?.toString() + '/information']);
-      }
     }
     this.showBusy = false;
   }
@@ -122,11 +114,12 @@ export class InsuredInformationComponent implements OnInit {
       if (this.insured.isNew) {
         const results$ = this.insuredService.addInsured(this.insured);
         return await lastValueFrom(results$)
-          .then(async insured => {
-            this.insured = insured;
+          .then(async result => {
             this.insured.isNew = false;
-            this.markClean();
             this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+            this.showBusy = false;
+            this.insured.markClean();
+            this.router.navigate(['/insured/' + result.insuredCode?.toString() + '/information']);
             return true;
           },
           (error) => {
@@ -141,9 +134,11 @@ export class InsuredInformationComponent implements OnInit {
           const results$ = this.insuredService.updateInsured(this.insured);
           return await lastValueFrom(results$)
             .then(async insured => {
-              this.insured = insured;
-              this.insured.isNew = false;
-              this.markClean();
+              this.insured.modifiedBy = insured.modifiedBy;
+              this.insured.modifiedDate = insured.modifiedDate;
+              this.insured.contacts = insured.contacts;
+              this.insured.additionalNamedInsureds = insured.additionalNamedInsureds;
+              this.insured.markClean();
               this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
               return true;
             },
@@ -164,70 +159,15 @@ export class InsuredInformationComponent implements OnInit {
     return false;
   }
 
-  public markClean() {
-    this.accountInfoComp.markClean();
-    if (this.aniComp.components != null) {
-      for (const child of this.aniComp.components) {
-        child.aniForm.form.markAsPristine();
-        child.aniForm.form.markAsUntouched();
-      }
-    }
-    if (this.contactComp.components != null) {
-      for (const child of this.contactComp.components) {
-        child.contactForm.form.markAsPristine();
-        child.contactForm.form.markAsUntouched();
-      }
-    }
-  }
-
   showInvalidControls(): void {
-    const invalid = [];
-
-    // Check each control in account information component if it is valid
-    const accountControls = this.accountInfoComp.accountInfoForm.controls;
-    for (const name in accountControls) {
-      if (accountControls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-
-    // Loop through each child component to see it any of them have invalid controls
-    if (this.aniComp.components != null) {
-      for (const child of this.aniComp.components) {
-        for (const name in child.aniForm.controls) {
-          if (child.aniForm.controls[name].invalid) {
-            invalid.push(name + ' - ANI: #' + child.aniData.sequenceNo.toString());
-          }
-        }
-      }
-    }
-    if (this.contactComp.components != null) {
-      for (const child of this.contactComp.components) {
-        for (const name in child.contactForm.controls) {
-          if (child.contactForm.controls[name].invalid) {
-            invalid.push(name + ' - Contact: #' + (child.index + 1));
-          }
-        }
-      }
-    }
-
-    if (this.contactComp.hasDuplicates()) {
-      const name = this.contactComp.getDuplicateName();
-      invalid.push('Contact ' + name + ' is duplicated');
-    }
-    if (!this.adddressValid()) {
-      invalid.push('Address not Verified');
-    }
-
     this.invalidMessage = '';
-    // Compile all invalide controls in a list
-    if (invalid.length > 0) {
+    // Compile all invalid controls in a list
+    if (this.insured.invalidList.length > 0) {
       this.showInvalid = true;
-      for (const error of invalid) {
+      for (const error of this.insured.invalidList) {
         this.invalidMessage += '<br><li>' + error;
       }
     }
-
     if (this.showInvalid) {
       this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
     }
@@ -241,3 +181,4 @@ export class InsuredInformationComponent implements OnInit {
   }
 
 }
+

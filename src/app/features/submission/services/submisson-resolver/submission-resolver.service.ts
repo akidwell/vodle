@@ -24,10 +24,10 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
     }
 
     // Extract submission from routing if possible - This  might not be needed anymore keeping for reference only for now
-    const submission = this.router.getCurrentNavigation()?.extras?.state?.submission;
-    if (submission != null){
-      return of({ submission: submission});
-    }
+    // const submission = this.router.getCurrentNavigation()?.extras?.state?.submission;
+    // if (submission != null){
+    //   return of({ submission: submission});
+    // }
 
     if (isNaN(+id)) {
       const message = 'Submission number was not a number: ${id}';
