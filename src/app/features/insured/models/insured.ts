@@ -32,38 +32,6 @@ export interface Insured {
     additionalNamedInsureds: insuredANI[]
 }
 
-// export const newInsured = (): Insured => {
-//   return {
-//     insuredCode: null,
-//     name: '',
-//     formerName1: null,
-//     formerName2: null,
-//     sicCode: null,
-//     naicsCode: null,
-//     entityType: null,
-//     street1: '',
-//     street2: null,
-//     city: '',
-//     state: '',
-//     zip: '',
-//     county: null,
-//     country: null,
-//     website: null,
-//     comments: null,
-//     customerCode: null,
-//     isAddressOverride: false,
-//     addressVerifiedDate: null,
-//     fein: null,
-//     createdBy: '',
-//     createdDate: null,
-//     modifiedBy: '',
-//     modifiedDate: null,
-//     isNew: true,
-//     contacts: [],
-//     additionalNamedInsureds: []
-//   };
-// };
-
 export const newInsuredFromPacer = ( data:Params): Insured => {
   return {
     insuredCode: null,
@@ -93,7 +61,6 @@ export const newInsuredFromPacer = ( data:Params): Insured => {
     isNew: true,
     contacts: [],
     additionalNamedInsureds: []
-
   };
 
 };
