@@ -12,8 +12,6 @@ export class VersionService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getVersion(): Observable<Version> {
-    const options = { responseType: 'text' };
-
     return this.http.get<Version>(this.config.apiBaseUrl + 'api/monitoring/version');
   }
 
