@@ -120,25 +120,25 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
     }
   }
 
-  checkDuplicateNameRoleCombo(): void {
-    if (this.aniForm.controls['role'].errors?.duplicate == true || this.aniForm.controls['name'].errors?.duplicate == true || this.aniForm.controls['name'].value == '') {
-      this.aniForm.controls['name'].setErrors(null);
-      this.aniForm.controls['role'].setErrors(null);
-    }
-    this.nameRoleArray = this.ani.map(a => a.role + a.name);
-    this.nameRoleDuplicates = this.nameRoleArray.filter((item, index) => this.nameRoleArray.indexOf(item) != index);
-    if (this.nameRoleDuplicates.length == 0 && this.aniForm.controls['name'].value != '') {
-      this.isNameRoleValid = true;
-      this.nameRoleArray = [];
-    } else if (this.nameRoleDuplicates.length != 0) {
-      this.isNameRoleValid = false;
-      this.nameRoleArray = [];
-      this.nameRoleDuplicates = [];
-      this.aniForm.controls['name'].setErrors({ 'duplicate': true });
-      this.aniForm.controls['role'].setErrors({ 'duplicate': true });
-    } else if (this.aniForm.controls['name'].value == '') {
-      this.isNameRoleValid = true;
-      this.aniForm.controls['name'].setErrors({ nullName: true });
-    }
-  }
+  // checkDuplicateNameRoleCombo(): void {
+  //   if (this.aniForm.controls['role'].errors?.duplicate == true || this.aniForm.controls['name'].errors?.duplicate == true || this.aniForm.controls['name'].value == '') {
+  //     this.aniForm.controls['name'].setErrors(null);
+  //     this.aniForm.controls['role'].setErrors(null);
+  //   }
+  //   this.nameRoleArray = this.ani.map(a => (a.role ?? '') + (a.name ?? ''));
+  //   this.nameRoleDuplicates = this.nameRoleArray.filter((item, index) => this.nameRoleArray.indexOf(item) != index);
+  //   if (this.nameRoleDuplicates.length == 0 && this.aniForm.controls['name'].value != '') {
+  //     this.isNameRoleValid = true;
+  //     this.nameRoleArray = [];
+  //   } else if (this.nameRoleDuplicates.length != 0) {
+  //     this.isNameRoleValid = false;
+  //     this.nameRoleArray = [];
+  //     this.nameRoleDuplicates = [];
+  //     this.aniForm.controls['name'].setErrors({ 'duplicate': true });
+  //     this.aniForm.controls['role'].setErrors({ 'duplicate': true });
+  //   } else if (this.aniForm.controls['name'].value == '') {
+  //     this.isNameRoleValid = true;
+  //     this.aniForm.controls['name'].setErrors({ nullName: true });
+  //   }
+  // }
 }

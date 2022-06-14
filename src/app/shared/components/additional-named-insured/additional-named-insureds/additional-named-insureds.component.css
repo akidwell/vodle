@@ -33,29 +33,6 @@ input[type="checkbox"][readonly] {
   pointer-events: none;
 }
 
-
-/* .example-handle {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #ccc;
-  cursor: move;
-  width: 24px;
-  height: 24px;
-} */
-
-/* .example-handle {
-
-  cursor: move;
+.alert {
+  padding: 5px;    
 }
-
-
-.drag-container {
-  position: relative;
-  top: 10px;
-  right: 10px;
-  color: #ccc;
-  cursor: move;
-  width: 24px;
-  height: 24px;
-} */

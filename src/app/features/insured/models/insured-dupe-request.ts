@@ -1,9 +1,9 @@
 import { Insured } from './insured';
 
 export interface InsuredDupeRequest {
-    name: string,
-    street1: string,
-    city: string,
+    name: string | null,
+    street1: string | null,
+    city: string | null,
     fein: string | null
 }
 

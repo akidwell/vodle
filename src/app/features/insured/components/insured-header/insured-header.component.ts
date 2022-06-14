@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Insured } from '../../models/insured';
+import { InsuredClass } from '../../classes/insured-class';
 
 @Component({
   selector: 'rsps-insured-header',
@@ -8,7 +8,7 @@ import { Insured } from '../../models/insured';
   styleUrls: ['./insured-header.component.css']
 })
 export class InsuredHeaderComponent implements OnInit {
-  insured!: Insured;
+  insured!: InsuredClass;
 
   constructor(private route: ActivatedRoute) { }
 

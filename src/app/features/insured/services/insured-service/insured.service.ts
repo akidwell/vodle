@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { InsuredClass } from '../../classes/insured-class';
 import { Insured } from '../../models/insured';
 import { InsuredContact } from '../../models/insured-contact';
 import { InsuredDupeRequest } from '../../models/insured-dupe-request';
@@ -15,7 +16,7 @@ export class InsuredService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  getInsured(id: number): Observable<Insured> {
+  getInsured(id: number): Observable<InsuredClass> {
     return this.http.get<Insured>(this.config.apiBaseUrl + 'api/insureds/' + id.toString())
       .pipe(
         map((receivedData: Insured) => {
@@ -25,14 +26,11 @@ export class InsuredService {
           });
           receivedData.additionalNamedInsureds = data;
           receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null; });
-          return receivedData;
+          return new InsuredClass(receivedData);
         }));
   }
-  addInsured(insured: Insured): Observable<Insured> {
-    return this.http.post<Insured>(this.config.apiBaseUrl + 'api/insureds/', insured);
-  }
-  updateInsured(insured: Insured): Observable<Insured> {
-    return this.http.put<Insured>(this.config.apiBaseUrl + 'api/insureds/', insured)
+  addInsured(insured: InsuredClass): Observable<InsuredClass> {
+    return this.http.post<InsuredClass>(this.config.apiBaseUrl + 'api/insureds/', insured)
       .pipe(
         map((receivedData: Insured) => {
           const data: insuredANI[] = [];
@@ -41,7 +39,21 @@ export class InsuredService {
           });
           receivedData.additionalNamedInsureds = data;
           receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null; });
-          return receivedData;
+          return new InsuredClass(receivedData);
+        }));
+  }
+  updateInsured(insured: InsuredClass): Observable<InsuredClass> {
+    const subJSON = insured.toJSON();
+    return this.http.put<InsuredClass>(this.config.apiBaseUrl + 'api/insureds/', subJSON)
+      .pipe(
+        map((receivedData: Insured) => {
+          const data: insuredANI[] = [];
+          receivedData.additionalNamedInsureds.forEach(element => {
+            data.push(new insuredANI(this, element));
+          });
+          receivedData.additionalNamedInsureds = data;
+          receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null; });
+          return new InsuredClass(receivedData);
         }));
   }
 

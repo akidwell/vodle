@@ -1,20 +1,20 @@
 import { Params } from '@angular/router';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
-import { InsuredContact } from './insured-contact';
+import { InsuredContactClass } from '../classes/insured-contact-class';
 
 export interface Insured {
     insuredCode: number | null,
-    name: string,
+    name: string | null,
     formerName1: string | null,
     formerName2: string | null,
     sicCode: string | null,
     naicsCode: string | null,
     entityType: number | null,
-    street1: string,
+    street1: string | null,
     street2: string | null,
-    city: string,
-    state: string,
-    zip: string,
+    city: string | null,
+    state: string | null,
+    zip: string | null,
     county: string | null,
     country: string | null,
     website: string | null,
@@ -23,46 +23,46 @@ export interface Insured {
     isAddressOverride: boolean,
     addressVerifiedDate: Date | null,
     fein: string | null,
-    createdBy: string,
+    createdBy: string | null,
     createdDate: Date | null,
-    modifiedBy: string,
+    modifiedBy: string | null,
     modifiedDate: Date | null,
     isNew: boolean,
-    contacts: InsuredContact[],
+    contacts: InsuredContactClass[],
     additionalNamedInsureds: insuredANI[]
 }
 
-export const newInsured = (): Insured => {
-  return {
-    insuredCode: null,
-    name: '',
-    formerName1: null,
-    formerName2: null,
-    sicCode: null,
-    naicsCode: null,
-    entityType: null,
-    street1: '',
-    street2: null,
-    city: '',
-    state: '',
-    zip: '',
-    county: null,
-    country: null,
-    website: null,
-    comments: null,
-    customerCode: null,
-    isAddressOverride: false,
-    addressVerifiedDate: null,
-    fein: null,
-    createdBy: '',
-    createdDate: null,
-    modifiedBy: '',
-    modifiedDate: null,
-    isNew: true,
-    contacts: [],
-    additionalNamedInsureds: []
-  };
-};
+// export const newInsured = (): Insured => {
+//   return {
+//     insuredCode: null,
+//     name: '',
+//     formerName1: null,
+//     formerName2: null,
+//     sicCode: null,
+//     naicsCode: null,
+//     entityType: null,
+//     street1: '',
+//     street2: null,
+//     city: '',
+//     state: '',
+//     zip: '',
+//     county: null,
+//     country: null,
+//     website: null,
+//     comments: null,
+//     customerCode: null,
+//     isAddressOverride: false,
+//     addressVerifiedDate: null,
+//     fein: null,
+//     createdBy: '',
+//     createdDate: null,
+//     modifiedBy: '',
+//     modifiedDate: null,
+//     isNew: true,
+//     contacts: [],
+//     additionalNamedInsureds: []
+//   };
+// };
 
 export const newInsuredFromPacer = ( data:Params): Insured => {
   return {
