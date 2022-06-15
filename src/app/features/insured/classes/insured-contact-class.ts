@@ -3,9 +3,9 @@ import { InsuredContact } from '../models/insured-contact';
 export class InsuredContactClass implements InsuredContact {
   insuredContactId: number | null = null;
   insuredCode: number | null = null;
-  sequence: number| null = null;
   isNew = false;
   isPrimaryTracked = false;
+  private _sequence: number | null = null;
   private _isPrimary: boolean | null = null;
   private _firstName: string | null = null;
   private _lastName: string | null = null;
@@ -16,6 +16,13 @@ export class InsuredContactClass implements InsuredContact {
   invalidList: string[] = [];
   isDuplicate = false;
 
+  get sequence() : number | null {
+    return this._sequence;
+  }
+  set sequence(value: number | null) {
+    this._sequence = value;
+    this._isDirty = true;
+  }
   get isPrimary() : boolean | null {
     return this._isPrimary;
   }
@@ -70,7 +77,7 @@ export class InsuredContactClass implements InsuredContact {
   constructor(contact?: InsuredContact){
     this.insuredCode = contact?.insuredCode || null;
     this.insuredContactId = contact?.insuredContactId || null;
-    this.sequence = contact?.sequence || null;
+    this._sequence = contact?.sequence || null;
     this._isPrimary = contact?.isPrimary || false;
     this._firstName = contact?.firstName || null;
     this._lastName = contact?.lastName || null;
@@ -84,6 +91,12 @@ export class InsuredContactClass implements InsuredContact {
     this.setRequiredFields();
   }
 
+  markClean() {
+    this._isDirty = false;
+  }
+  markDirty() {
+    this._isDirty = true;
+  }
   setRequiredFields(){
     // Do Nothing
   }
