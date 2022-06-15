@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
 import { Insured } from 'src/app/features/insured/models/insured';
 import { PolicyData } from 'src/app/features/policy/models/policy';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 
 @Injectable()
 export class PageDataService {
-  private _insuredData: Insured | null = null;
+  private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
   private _policyData: PolicyData | null = null;
   private _noData = true;
 
-  insuredData$: BehaviorSubject<Insured | null> = new BehaviorSubject(this._insuredData);
+  insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
   submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(this._submissionData);
   policyData$: BehaviorSubject<PolicyData | null> = new BehaviorSubject(this._policyData);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
 
-  get insuredData(): Insured | null {
+  get insuredData(): InsuredClass | null {
     return this._insuredData;
   }
 
-  set insuredData(val: Insured | null) {
+  set insuredData(val: InsuredClass | null) {
     this._insuredData = val;
     this.insuredData$.next(this._insuredData);
     if (val != null) {

@@ -11,6 +11,7 @@ import { SubmissionService } from 'src/app/features/submission/services/submissi
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { LayoutEnum } from 'src/app/core/enums/layout-enum';
+import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
 
 export interface HistoricRoute {
   url: string,
@@ -170,9 +171,9 @@ export class StatusBarComponent implements OnInit {
     this.pageDataService.submissionData = this.checkSubmissionData(child);
     return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null);
   }
-  private checkInsuredData(child: ActivatedRoute): Insured | null {
+  private checkInsuredData(child: ActivatedRoute): InsuredClass | null {
     if (child.snapshot.data && child.snapshot.data['insuredData']) {
-      const data: Insured = child.snapshot.data['insuredData'].insured;
+      const data: InsuredClass = child.snapshot.data['insuredData'].insured;
       this.setInsuredPadding();
       this.createInsuredHistory(data);
       return data;
