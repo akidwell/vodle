@@ -56,7 +56,6 @@ export class SharedSubmissionActivityComponent implements OnInit {
   }
 
   search(policyNumber: string): void {
-    console.log(this.submissionResults);
     if(this.router.url != '/home'){
       this.router.navigate(['/home']);
     }

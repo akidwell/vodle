@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { Insured } from '../../models/insured';
+import { InsuredClass } from '../../classes/insured-class';
 
 @Component({
   selector: 'rsps-insured-account-right',
@@ -17,7 +17,7 @@ export class InsuredAccountRightComponent implements OnInit {
   authSub: Subscription;
   entityType$: Observable<Code[]> | undefined;
 
-  @Input() public insured!: Insured;
+  @Input() public insured!: InsuredClass;
   @ViewChild(NgForm, { static: false }) rightPanel!: NgForm;
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, public datepipe: DatePipe) {

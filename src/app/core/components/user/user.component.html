@@ -25,8 +25,13 @@
           <fa-icon [icon]="faPowerOff"></fa-icon>
           Logout
         </button>
+        <button (click)="refresh()" ngbDropdownItem>
+          <fa-icon [icon]="faPowerOff"></fa-icon>
+          Refresh
+        </button>
         <div class="dropdown-divider"></div>
         <label for="historySize">History Size:</label>
+
         <div class="input-group">
           <div class="input-group">
             <div class="input-group-prepend">

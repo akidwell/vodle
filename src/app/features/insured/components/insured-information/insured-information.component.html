@@ -1,5 +1,5 @@
 <div id="saveHeader">
-  <button class="btn btn-md btn-primary" *ngIf="canEditInsured" style="margin: 5px;" [disabled]="!isDirty()" appPreventDoubleClick
+  <button class="btn btn-md btn-primary" *ngIf="canEditInsured" style="margin: 5px;" [disabled]="!isDirty() || !this.insured.isValid" appPreventDoubleClick
     (throttledClick)="save()" [throttleTime]="700">Save</button>
     <button class="btn btn-md btn-primary" *ngIf="canEditInsured && this.previousUrl !== ''" style="margin: 5px;" appPreventDoubleClick
     (throttledClick)="prev()" [throttleTime]="700">{{previousLabel}}</button>

@@ -19,7 +19,7 @@ const routes: Routes = [
       insuredData: InsuredResolver
     },
     children: [
-      { path: '', redirectTo: 'information',pathMatch: 'full' },
+      { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
       { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
     ]

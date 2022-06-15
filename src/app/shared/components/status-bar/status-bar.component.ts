@@ -193,7 +193,7 @@ export class StatusBarComponent implements OnInit {
     const newRoute: HistoricRoute = {
       type: 'Insured',
       url: this.currentUrl,
-      description: data.name
+      description: data.name || ''
     };
     if (this.compareNewRouteToLast(newRoute)) {
       this.history.splice(0,0,newRoute);

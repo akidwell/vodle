@@ -2,7 +2,7 @@ export interface SearchResults {
   policySearchResponses: PolicySearchResponses[];
   submissionSearchResponses: SubmissionSearchResponses[];
   insuredSearchResponses: InsuredSearchResponses[];
-  searchType: string;
+  searchType: string | null;
 }
 
 export interface PolicySearchResponses {
@@ -63,7 +63,7 @@ export interface InsuredSearchResponses{
     streetAddress: string;
     isPacerResult: boolean;
     pacerId: string;
-    effectiveDate: Date;
+    effectiveDate: Date | null;
     recievedDate: Date;
     subStatus: string;
     policyNumber: string;

@@ -24,7 +24,7 @@ export class InsuredSearchResultsComponent implements OnInit {
     policySearchResponses: [],
     submissionSearchResponses: [],
     insuredSearchResponses: [],
-    searchType: ''
+    searchType: null
   };
 
   @Input('insuredResults') insuredResults: InsuredSearchResponses[] = [];
@@ -36,7 +36,6 @@ export class InsuredSearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.insuredResults);
   }
 
   routeToInsured(insuredCode: number) {

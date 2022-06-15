@@ -6,10 +6,10 @@ import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { newAddressVerificationReques } from '../../models/address-verification-request';
-import { Insured } from '../../models/insured';
 import { AddressVerificationService } from '../../services/address-verification/address-verification.service';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle, faTruckMedical } from '@fortawesome/free-solid-svg-icons';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
+import { InsuredClass } from '../../classes/insured-class';
 
 @Component({
   selector: 'rsps-insured-account-address',
@@ -24,8 +24,6 @@ export class InsuredAccountAddressComponent implements OnInit {
   zipUpdated = '';
   countyUpdated = '';
   countryUpdated = '';
-  isVerifying = false;
-  zipLookup = false;
   addressErrorMessage = '';
   canEditInsured = false;
   authSub: Subscription;
@@ -33,7 +31,7 @@ export class InsuredAccountAddressComponent implements OnInit {
   states$: Observable<Code[]> | undefined;
   countries$: Observable<Code[]> | undefined;
 
-  @Input() public insured!: Insured;
+  @Input() public insured!: InsuredClass;
   @ViewChild(NgForm, { static: false }) addressPanel!: NgForm;
 
   constructor(private userAuth: UserAuth, private dropdowns: DropDownsService, private addressVerificationService: AddressVerificationService, private messageDialogService: MessageDialogService, private addressLookupService: AddressLookupService) {
@@ -48,7 +46,7 @@ export class InsuredAccountAddressComponent implements OnInit {
   }
 
   verify() {
-    this.isVerifying = true;
+    this.insured.isVerifying = true;
     const address = newAddressVerificationReques(this.insured);
     this.addressVerificationService.getAddressVerification(address).subscribe({
       next: result => {
@@ -89,11 +87,10 @@ export class InsuredAccountAddressComponent implements OnInit {
           this.countryUpdated = '';
         }
         this.insured.addressVerifiedDate = result.verifyDate;
-        this.isVerifying = false;
-        this.addressPanel.form.markAsDirty();
+        this.insured.isVerifying = false;
       },
       error: (error) => {
-        this.isVerifying = false;
+        this.insured.isVerifying = false;
         const errorMessage = error.error?.Message ?? error.message;
         this.messageDialogService.open('Error', errorMessage);
       }
@@ -101,48 +98,23 @@ export class InsuredAccountAddressComponent implements OnInit {
   }
 
   addressOverride() {
-    this.insured.addressVerifiedDate = null;
     this.addressErrorMessage = '';
   }
 
   public get showVerifiedStatus(): boolean {
-    return !this.isVerifying && this.insured.addressVerifiedDate !== null && !this.insured.isAddressOverride;
+    return !this.insured.isVerifying && this.insured.addressVerifiedDate !== null && !this.insured.isAddressOverride;
   }
 
   public get showUnverifiedStatus(): boolean {
-    return !this.isVerifying && this.insured.addressVerifiedDate == null && !this.insured.isAddressOverride;
+    return !this.insured.isVerifying && this.insured.addressVerifiedDate == null && !this.insured.isAddressOverride;
   }
   public get showErrorMessages(): boolean {
     return this.showUnverifiedStatus && (this.addressErrorMessage?.length ?? 0) == 0;
   }
 
-  public get canEditAddress(): boolean {
-    return !this.zipLookup && !this.isVerifying && this.canEditInsured;
-  }
-
-  changeStreet1() {
-    this.insured.addressVerifiedDate = null;
-  }
-  changeStreet2() {
-    this.insured.addressVerifiedDate = null;
-  }
-  changeCity() {
-    this.insured.addressVerifiedDate = null;
-  }
-  changeState() {
-    this.insured.addressVerifiedDate = null;
-  }
-  changeCounty() {
-    this.insured.addressVerifiedDate = null;
-  }
-  changeCountry() {
-    this.insured.addressVerifiedDate = null;
-  }
-
   changeZip(): void {
-    this.insured.addressVerifiedDate = null;
     if (this.addressPanel.controls['zip'].valid) {
-      this.zipLookup = true;
+      this.insured.isZipLookup = true;
       this.addressSub = this.addressLookupService.getAddress(this.insured.zip).subscribe({
         next: address => {
           if (address != null) {
@@ -159,10 +131,10 @@ export class InsuredAccountAddressComponent implements OnInit {
               this.insured.country = address.country;
             }
           }
-          this.zipLookup = false;
+          this.insured.isZipLookup = false;
         },
         error: (error) => {
-          this.zipLookup = false;
+          this.insured.isZipLookup = false;
           const errorMessage = error.error?.Message ?? error.message;
           this.messageDialogService.open('Error', errorMessage);
         }

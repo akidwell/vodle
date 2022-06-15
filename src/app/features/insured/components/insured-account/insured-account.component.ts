@@ -5,7 +5,7 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { Insured } from '../../models/insured';
+import { InsuredClass } from '../../classes/insured-class';
 import { InsuredAccountAddressComponent } from '../insured-account-address/insured-account-address.component';
 import { InsuredAccountCenterComponent } from '../insured-account-center/insured-account-center.component';
 import { InsuredAccountRightComponent } from '../insured-account-right/insured-account-right.component';
@@ -26,7 +26,7 @@ export class InsuredAccountComponent implements OnInit {
   loadingSic = true;
   loadingNaics = true;
 
-  @Input() public insured!: Insured;
+  @Input() public insured!: InsuredClass;
   @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
   @ViewChild(InsuredAccountAddressComponent) addressComp: InsuredAccountAddressComponent | undefined;
   @ViewChild(InsuredAccountCenterComponent) centerComp: InsuredAccountCenterComponent | undefined;

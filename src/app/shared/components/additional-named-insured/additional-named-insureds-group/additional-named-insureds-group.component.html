@@ -2,7 +2,7 @@
   <div class="card-header" (click)="collapse.toggle()">Additional Named Insureds
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="aniCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!aniCollapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEdit && aniData.length > 1"
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="false && canEdit && aniData.length > 1"
       [(ngModel)]="canDrag" (change)="toggleDragDrop()">
       Sort: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>

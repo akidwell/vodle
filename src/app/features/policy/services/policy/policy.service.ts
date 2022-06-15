@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/search-results';
-import { AdditionalNamedInsured, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsured, AdditionalNamedInsuredData, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages-base/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
@@ -172,13 +172,13 @@ export class PolicyService {
         }));
   }
 
-  addAdditionalNamedInsured(aniData: coverageANI): Observable<coverageANI> {
+  addAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<coverageANI> {
     return this.http.post<coverageANI>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
-  updateAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+  updateAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
-  deleteAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+  deleteAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + aniData.policyId + '/endorsements/' + aniData.endorsementNo + '/additional-insureds/' + aniData.sequenceNo);
   }
 }

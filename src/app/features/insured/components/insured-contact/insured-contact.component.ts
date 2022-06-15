@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { InsuredContact } from '../../models/insured-contact';
 import { InsuredService } from '../../services/insured-service/insured.service';
+import { InsuredContactClass } from '../../classes/insured-contact-class';
 
 @Component({
   selector: 'rsps-insured-contact',
@@ -23,14 +24,14 @@ export class InsuredContactComponent {
   isHover = false;
   contacts: InsuredContact[] = [];
 
-  @Input() contact!: InsuredContact;
-  @Input() insuredContacts: InsuredContact[] = [];
+  @Input() contact!: InsuredContactClass;
+  @Input() insuredContacts: InsuredContactClass[] = [];
   @Input() index!: number;
   @Input() canDrag = false;
   @ViewChild(NgForm, { static: false }) contactForm!: NgForm;
-  @Output() copyExistingContact: EventEmitter<InsuredContact> = new EventEmitter();
-  @Output() deleteThisContact: EventEmitter<InsuredContact> = new EventEmitter();
-  @Output() setPrimaryContact: EventEmitter<InsuredContact> = new EventEmitter();
+  @Output() copyExistingContact: EventEmitter<InsuredContactClass> = new EventEmitter();
+  @Output() deleteThisContact: EventEmitter<InsuredContactClass> = new EventEmitter();
+  @Output() setPrimaryContact: EventEmitter<InsuredContactClass> = new EventEmitter();
 
   constructor(private userAuth: UserAuth, private insuredService: InsuredService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
@@ -84,7 +85,7 @@ export class InsuredContactComponent {
     }
   }
 
-  setPrimary(contact: InsuredContact) {
+  setPrimary(contact: InsuredContactClass) {
     if (this.canEditInsured && !this.canDrag) {
       this.setPrimaryContact.emit(this.contact);
       this.contactForm.form.markAsDirty();

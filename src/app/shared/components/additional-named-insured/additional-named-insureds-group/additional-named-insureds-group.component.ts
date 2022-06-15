@@ -20,6 +20,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   color: ThemePalette = 'warn';
   canDrag = false;
   dragDropClass = '';
+  invalidList: string[] = [];
 
   @ViewChild(SharedAdditionalNamedInsuredsComponent) aniComp!: SharedAdditionalNamedInsuredsComponent;
   @ViewChildren(SharedAdditionalNamedInsuredsComponent) components: QueryList<SharedAdditionalNamedInsuredsComponent> | undefined;
@@ -35,25 +36,40 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   isValid(): boolean {
-    if (this.components != null) {
-      for (const child of this.components) {
-        if (child.aniForm.status != 'VALID') {
-          return false;
+    let valid = true;
+    this.invalidList = [];
+    this.aniData.forEach(c => {
+      if (!c.isValid) {
+        valid = false;
+        this.invalidList = this.invalidList.concat(c.invalidList);
+      }
+    });
+
+    if (!this.validateANI()) {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  validateANI(): boolean {
+    let dupe = false;
+    this.aniData.forEach(a => a.isDuplicate = false);
+    this.aniData.forEach(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.aniData.filter(c => c.role == x.role && c.name == x.name);
+        if (dupes.length > 1) {
+          dupes.forEach(d => d.isDuplicate = true);
+          dupe = true;
+          this.invalidList.push('Additional Named Insured: ' + x.name?.trim() + ' is duplicated.');
         }
       }
-    }
-    return true;
+    });
+    return !dupe;
   }
 
   isDirty() {
-    if (this.components != null) {
-      for (const child of this.components) {
-        if (child.aniForm.dirty) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return this.aniData.some(item => item.isDirty);
   }
   hideInvalid(): void {
     this.showInvalid = false;
