@@ -1,0 +1,27 @@
+.button:disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    color: #c0c0c0;
+    background-color: green;
+}
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+}
+.status-bar {
+  position: fixed;
+
+  z-index: 2;
+  width: 100%;
+}
+.header-bar {
+  position: fixed;
+  z-index: 2;
+}
+.button-bar {
+  /* background-color: #f2f4f6; */
+  background-color: red;
+  margin: 0px;
+}

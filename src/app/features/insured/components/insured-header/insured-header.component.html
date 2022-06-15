@@ -1,16 +1,19 @@
-<div id="insuredHeader">
-  <div class="row">
+<div id="insuredHeader" >
+  <div class="row" >
+    <div class="col-lg-2">&nbsp;</div>
     <div class="col-lg-4">
       <u>
-        <h6>Insured</h6>
+        <div class="header-title">Insured</div>
       </u>
-      {{insured.name}}
+      <span class="header-field">{{insured.name}}</span>
+
     </div>
-    <div class="col-lg-8">
+    <div class="col-lg-4">
       <u>
-        <h6>Address</h6>
+        <div class="header-title">Address</div>
       </u>
-      {{insured.city}}, {{insured.state}} {{insured.zip | zipCode }}
+      <span class="header-field">{{insured.city}}, {{insured.state}} {{insured.zip }}</span>
     </div>
+    <div class="col-lg-2">&nbsp;</div>
   </div>
 </div>

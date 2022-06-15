@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -10,7 +10,7 @@ import { SubmissionClass } from '../../classes/SubmissionClass';
   templateUrl: './submission-header.component.html',
   styleUrls: ['./submission-header.component.css']
 })
-export class SubmissionHeaderComponent implements OnInit {
+export class SubmissionHeaderComponent {
   authSub: Subscription;
   canEditSubmission = false;
   @Input() public submission!: SubmissionClass;
@@ -20,10 +20,4 @@ export class SubmissionHeaderComponent implements OnInit {
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
   }
-  ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.submission = data['submissionData'].submission;
-    });
-  }
-
 }

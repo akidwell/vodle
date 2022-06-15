@@ -29,6 +29,9 @@ import { NotificationComponent } from './core/components/notification/notificati
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from 'src/environments/environment';
 import { UpdateService } from './core/services/update/update.service';
+import { StatusModule } from './shared/components/status-bar/status-bar.module';
+import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
+import { PageDataService } from './core/services/page-data-service/page-data-service';
 
 @NgModule({
   declarations: [
@@ -57,6 +60,7 @@ import { UpdateService } from './core/services/update/update.service';
     NgbAlertModule,
     FormsModule,
     NgSelectModule,
+    StatusModule,
     BusyModule,
     DirectivesModule,
     NoopAnimationsModule,
@@ -72,6 +76,8 @@ import { UpdateService } from './core/services/update/update.service';
   providers: [
     PreInitService,
     MessageDialogService,
+    HeaderPaddingService,
+    PageDataService,
     UpdateService,
     {
       provide: APP_INITIALIZER,
@@ -84,7 +90,7 @@ import { UpdateService } from './core/services/update/update.service';
       multi: true,
       useClass: AuthInterceptor
     },
-    //  { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

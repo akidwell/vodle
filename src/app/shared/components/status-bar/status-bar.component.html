@@ -1,0 +1,56 @@
+<div class="status-bar" [style.padding-left.px]="headerPaddingService.sidebarPadding$ | async">
+  <div class="header-bar"
+  id="headerBar"  #headerBar
+  [style.height.px]="headerPaddingService.headerPadding$ | async"
+  (window:resize)="onResize()"
+  [ngStyle]="{'width': this.headerWidth > 0 ? (this.headerWidth + 'px'): '100%', 'margin-left.px': this.headerLeftMargin}"
+  >
+    <rsps-insured-header
+
+    *ngIf="pageDataService.insuredData != null"
+    [insured]="pageDataService.insuredData"
+  ></rsps-insured-header>
+  </div>
+
+  <div class="button-bar" [style.top.px]="headerPaddingService.headerPadding$ | async">
+    <button
+      class="btn btn-md btn-primary"
+      *ngIf="(canEditSubmission && pageDataService.submissionData != null) && (pageDataService.submissionData.isDirty)"
+      style="margin: 5px"
+      [disabled]="
+      pageDataService.submissionData != null && (!pageDataService.submissionData.isDirty || !pageDataService.submissionData.isValid)
+      "
+      (click)="saveSubmission()"
+    >
+      Save
+    </button>
+    <!-- <button class="btn btn-md btn-primary" style="margin: 5px" (click)="headerPaddingService.incrementHeaderPadding(10)">Test</button> -->
+    <!-- <span *ngIf="canEditSubmission && submission != null">
+      Submission Valid: {{ submission.isValid }}
+    </span>
+    <span *ngIf="canEditSubmission && submission != null">
+      Submission Dirty: {{ submission.isDirty }}
+    </span> -->
+    <!-- <button
+    class="btn btn-md btn-primary"
+    *ngIf="canEditSubmission"
+    style="margin: 5px"
+    [disabled]="!isDirty() || !isValid()"
+    appPreventDoubleClick
+    (throttledClick)="save()"
+    [throttleTime]="700"
+  >
+    Save
+  </button>
+  <button
+    class="btn btn-md btn-primary"
+    *ngIf="canEditSubmission && this.previousUrl !== ''"
+    style="margin: 5px"
+    appPreventDoubleClick
+    (throttledClick)="prev()"
+    [throttleTime]="700"
+  >
+    {{ previousLabel }}
+  </button> -->
+  </div>
+</div>

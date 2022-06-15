@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { UpdateService } from './core/services/update/update.service';
 import { PreviousRouteService } from './core/services/previous-route/previous-route.service';
+import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
+import { PageDataService } from './core/services/page-data-service/page-data-service';
+import { LayoutEnum } from './core/enums/layout-enum';
 
 @Component({
   selector: 'rsps-root',
@@ -11,15 +14,21 @@ import { PreviousRouteService } from './core/services/previous-route/previous-ro
 export class AppComponent {
   title = 'RSPS';
   loading = false;
+  widthOffset = LayoutEnum.sidebar_width;
 
   private previousUrl!: string;
   private currentUrl!: string;
 
-  constructor(private router: Router, private previousRouteService: PreviousRouteService, private updateService: UpdateService) {
+  constructor(private router: Router, private previousRouteService: PreviousRouteService, private updateService: UpdateService,
+    public headerPaddingService: HeaderPaddingService, public pageDataService: PageDataService) {
     this.updateService.startTimer();
     this.updateService.startConfirmation();
     this.updateService.startLogging();
     this.updateService.startUnrecoverableStateCheck();
+
+    this.headerPaddingService.sidebarPadding$.subscribe(padding => {
+      this.widthOffset = padding;
+    });
 
     this.router.events.subscribe(event => {
       switch (true) {

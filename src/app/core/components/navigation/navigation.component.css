@@ -1,10 +1,28 @@
+.sidebar {
+
+  position:fixed;
+}
+
 .sidebar a.active {
   text-decoration: none; font-weight: bold; color: white ;background-color: #ed0139;
 }
 .sidebar a:hover:not(.active) {
   text-decoration: none; font-weight: bold; color: #00274e;  background-color: #f2f4f6;
 }
-
+.sidebar-toggle {
+  overflow: hidden;
+  top:0;
+  position:fixed;
+  background-color: #00274e;
+}
+.toggle {
+  padding-left:12px;
+  padding-top:4px;
+}
+.toggle-icon {
+  color:white;
+  font-size: x-large;
+}
 hr.rounded {
   border-top: 3px solid white;
   border-radius: 5px;
@@ -14,7 +32,9 @@ img {
   max-width: 100%;
   max-height: 100%;
 }
-
+.fa fa-bars{
+  padding-top: 10px;
+}
 .nav-link {
   padding-right: 3px;
   padding-left: 10px;
@@ -25,4 +45,9 @@ img {
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
+}
+
+.banner-label {
+  color: white;
+  text-decoration: none;
 }

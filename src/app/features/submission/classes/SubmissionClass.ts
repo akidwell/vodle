@@ -30,13 +30,13 @@ export class SubmissionClass implements Submission {
   private _effectiveDateFutureWarningRange = -180;
 
   producerCodeRequiredStatus = SubmissionStatusEnum.Live;
-  producerContactRequiredStatus = SubmissionStatusEnum.Bound;
+  producerContactRequiredStatus = SubmissionStatusEnum.Live;
   departmentCodeRequiredStatus = SubmissionStatusEnum.Live;
   underwriterRequiredStatus = SubmissionStatusEnum.Live;
-  sicCodeRequiredStatus = SubmissionStatusEnum.Bound;
-  naicsCodeRequiredStatus = SubmissionStatusEnum.Bound;
   policyDateRequiredStatus = SubmissionStatusEnum.Live;
-  quoteDueDateRequiredStatus = SubmissionStatusEnum.Bound;
+  // quoteDueDateRequiredStatus = SubmissionStatusEnum.Bound;
+  // sicCodeRequiredStatus = SubmissionStatusEnum.Bound;
+  // naicsCodeRequiredStatus = SubmissionStatusEnum.Bound;
 
   producerCodeLockStatus = SubmissionStatusEnum.Bound;
   producerContactLockStatus = SubmissionStatusEnum.Bound;

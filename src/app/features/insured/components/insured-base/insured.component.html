@@ -1,14 +1,15 @@
-<rsps-insured-header></rsps-insured-header>
-<div class="navToolbar">
-  <ul class="nav nav-tabs nav-fill">
-    <li class="nav-item">
-      <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Insured</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLinkActive='active' [routerLink]="['submissions']">Submission Activity</a>
-    </li>
-  </ul>
-</div>
-<div class='content-fluid'>
-  <router-outlet></router-outlet>
+<div [style.padding-top.px]="headerPaddingService.totalPadding$ | async"  >
+  <div class="navToolbar"  >
+    <ul class="nav nav-tabs nav-fill">
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Insured</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['submissions']">Submission Activity</a>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
 </div>
