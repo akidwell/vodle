@@ -69,15 +69,11 @@ export class InsuredContactComponent {
   async deleteContact() {
     if (this.contact.isNew) {
       setTimeout(() => {
-        this.contactForm.form.markAsPristine();
-        this.contactForm.form.markAsUntouched();
         this.deleteThisContact.emit(this.contact);
       });
     } else {
       this.deleteSub = this.insuredService.deleteInsureContact(this.contact).subscribe(result => {
         setTimeout(() => {
-          this.contactForm.form.markAsPristine();
-          this.contactForm.form.markAsUntouched();
           this.deleteThisContact.emit(this.contact);
         });
         return result;
