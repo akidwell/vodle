@@ -6,9 +6,11 @@ import { lastValueFrom, Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { Code } from 'src/app/core/models/code';
+import { HistoricRoute } from 'src/app/core/models/historic-route';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
@@ -56,7 +58,7 @@ export class SubmissionInformationComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private dropdowns: DropDownsService,
     private submissionService: SubmissionService, private userAuth: UserAuth, private navigationService: NavigationService,
     private messageDialogService: MessageDialogService, private notification: NotificationService,private formatDateService: FormatDateForDisplay,
-    private previousRouteService: PreviousRouteService) {
+    public pageDataService: PageDataService, private previousRouteService: PreviousRouteService) {
     this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
@@ -101,6 +103,8 @@ export class SubmissionInformationComponent implements OnInit {
   }
   routeToInsured(insuredCode: number) {
     this.navigationService.resetPolicy();
+    const subRoute: HistoricRoute = this.createRoute(this.submission);
+    this.pageDataService.lastSubmission = subRoute;
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
@@ -196,5 +200,11 @@ export class SubmissionInformationComponent implements OnInit {
   hideWarnings(): void {
     this.showWarnings = false;
   }
-
+  private createRoute(val: SubmissionClass): HistoricRoute {
+    return {
+      url: '/submission/' + val.submissionNumber?.toString() + '/information',
+      type: 'Submission',
+      description: 'Submission# ' + val.submissionNumber
+    };
+  }
 }

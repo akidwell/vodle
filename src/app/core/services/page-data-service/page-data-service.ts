@@ -1,20 +1,25 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
-import { Insured } from 'src/app/features/insured/models/insured';
-import { PolicyData } from 'src/app/features/policy/models/policy';
+import { AccountInformation, PolicyInformation } from 'src/app/features/policy/models/policy';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
+import { HistoricRoute } from '../../models/historic-route';
 
 @Injectable()
 export class PageDataService {
   private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
-  private _policyData: PolicyData | null = null;
+  private _policyData: PolicyInformation | null = null;
+  private _accountInfo: AccountInformation | null = null;
+  private _lastSubmission: HistoricRoute | null = null;
+  private _resetLastSubmission = true;
+
   private _noData = true;
 
   insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
   submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(this._submissionData);
-  policyData$: BehaviorSubject<PolicyData | null> = new BehaviorSubject(this._policyData);
+  policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
+  accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
 
   get insuredData(): InsuredClass | null {
@@ -39,17 +44,39 @@ export class PageDataService {
       this.isNoData = true;
     }
   }
-  get policyData(): PolicyData | null {
+  get policyData(): PolicyInformation | null {
     return this._policyData;
   }
 
-  set policyData(val: PolicyData | null) {
+  set policyData(val: PolicyInformation | null) {
     this._policyData = val;
     this.policyData$.next(this._policyData);
     if (val != null) {
       this.isNoData = false;
     }
   }
+  get accountInfo(): AccountInformation | null {
+    return this._accountInfo;
+  }
+
+  set accountInfo(val: AccountInformation | null) {
+    this._accountInfo = val;
+    this.accountInfo$.next(this._accountInfo);
+  }
+  get lastSubmission(): HistoricRoute | null {
+    return this._lastSubmission;
+  }
+  set lastSubmission(val: HistoricRoute | null) {
+    if (this._resetLastSubmission) {
+      this._lastSubmission = val;
+    } else {
+      this._resetLastSubmission = true;
+    }
+    if (val) {
+      this._resetLastSubmission = false;
+    }
+  }
+
   get isNoData(): boolean {
     return this._noData;
   }

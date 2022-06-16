@@ -1,4 +1,6 @@
-<div [style.padding-top.px]="headerPaddingService.totalPadding$ | async"  >
+<div class="navHolder"
+[style.height.px]="headerPaddingService.navRoutingHeight$ | async"
+[style.width.px]="headerPaddingService.totalBodyWidth$ | async"  >
   <div class="navToolbar"  >
     <ul class="nav nav-tabs nav-fill">
       <li class="nav-item">
@@ -9,7 +11,8 @@
       </li>
     </ul>
   </div>
-  <div>
-    <router-outlet></router-outlet>
-  </div>
 </div>
+<div [style.padding-top.px]="headerPaddingService.navRoutingHeight$ | async">
+  <router-outlet></router-outlet>
+</div>
+

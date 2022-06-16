@@ -21,7 +21,6 @@ import { InsuredAccountCenterComponent } from './components/insured-account-cent
 import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
-import { InsuredDuplicatesComponent } from './components/insured-duplicates/insured-duplicates.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
@@ -35,8 +34,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     InsuredAccountAddressComponent,
     InsuredAccountCenterComponent,
     InsuredAccountRightComponent,
-    InsuredSubmissionActivityComponent,
-    InsuredDuplicatesComponent
+    InsuredSubmissionActivityComponent
   ],
   imports: [
     CommonModule,

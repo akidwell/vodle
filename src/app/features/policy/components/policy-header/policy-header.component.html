@@ -1,32 +1,32 @@
 <div id="policyHeader">
   <div class="row">
     <div class="insured">
-      <u><h6>Insured</h6></u>
-      {{accountInfo.namedInsured}}
+      <u><div class="header-title">Insured</div></u>
+      <span class="header-field">{{accountInfo.namedInsured || ''}}</span>
     </div>
     <div class="policyNumber">
-      <u><h6>Policy Number</h6></u>
-      {{policyInfo.policySymbol.trim()}} {{policyInfo.formattedPolicyNo}}
+      <u><div class="header-title">Policy Number</div></u>
+      <span class="header-field">{{policyInfo.policySymbol.trim()}} {{policyInfo.formattedPolicyNo}}</span>
     </div>
     <div class="endorsement">
-      <u><h6>Endt</h6></u>
-      {{endorsementNumber}}
+      <u><div class="header-title">Endt</div></u>
+      <span class="header-field">{{endorsementNumber}}</span>
     </div>
     <div class="effectiveDate">
-      <u><h6>Eff Date</h6></u>
-      {{formatDateForDisplay.formatDateForDisplay(policyInfo.policyEffectiveDate) }}
+      <u><div class="header-title">Eff Date</div></u>
+      <span class="header-field">{{formatDateForDisplay.formatDateForDisplay(policyInfo.policyEffectiveDate) }}</span>
     </div>
     <div class="expirationDate">
-      <u><h6>Exp Date</h6></u>
-      {{policyInfo.policyExpirationDate  | date:'MM/dd/YYYY'}}
+      <u><div class="header-title">Exp Date</div></u>
+      <span class="header-field">{{policyInfo.policyExpirationDate  | date:'MM/dd/YYYY'}}</span>
     </div>
     <div class="extensionDate">
-      <u><h6>Ext Date</h6></u>
-      {{formatDateForDisplay.formatDateForDisplay(policyInfo.policyExtendedExpDate)}}
+      <u><div class="header-title">Ext Date</div></u>
+      <span class="header-field">{{formatDateForDisplay.formatDateForDisplay(policyInfo.policyExtendedExpDate)}}</span>
     </div>
     <div class="status">
-      <u><h6>Status</h6></u>
-      {{status}}
+      <u><div class="header-title">Status</div></u>
+      <span class="header-field">{{status}}</span>
     </div>
   </div>
 </div>

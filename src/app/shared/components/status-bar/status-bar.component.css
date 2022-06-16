@@ -10,6 +10,9 @@
     cursor: default;
     opacity: 0.6;
 }
+.route-description {
+  white-space: pre-line;
+}
 .status-bar {
   position: fixed;
 
@@ -20,8 +23,23 @@
   position: fixed;
   z-index: 2;
 }
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
 .button-bar {
   /* background-color: #f2f4f6; */
-  background-color: red;
+
+  width: 100%;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.8);
   margin: 0px;
+}
+.button-bar:after{
+  opacity: 0.5;
+}
+.button-bar button {
+  opacity: 1;
 }

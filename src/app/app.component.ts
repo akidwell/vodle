@@ -15,7 +15,7 @@ export class AppComponent {
   title = 'RSPS';
   loading = false;
   widthOffset = LayoutEnum.sidebar_width;
-
+  buttonBarOffset = LayoutEnum.button_bar_height;
   private previousUrl!: string;
   private currentUrl!: string;
 

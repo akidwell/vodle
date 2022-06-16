@@ -1,23 +1,24 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { map, filter, tap } from 'rxjs/operators';
 
 import { Subscription, lastValueFrom } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
-import { Insured } from 'src/app/features/insured/models/insured';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { LayoutEnum } from 'src/app/core/enums/layout-enum';
 import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
+import { PolicyInformation } from 'src/app/features/policy/models/policy';
+import { newInsuredDupeRequst } from 'src/app/features/insured/models/insured-dupe-request';
+import { InsuredService } from 'src/app/features/insured/services/insured-service/insured.service';
+import { InsuredDuplicatesComponent } from 'src/app/features/insured/components/insured-duplicates/insured-duplicates.component';
+import { NotificationService } from 'src/app/core/components/notification/notification-service';
+import { HistoricRoute } from 'src/app/core/models/historic-route';
 
-export interface HistoricRoute {
-  url: string,
-  description: string,
-  type: string
-}
+
 
 @Component({
   selector: 'rsps-status-bar',
@@ -29,14 +30,13 @@ export class StatusBarComponent implements OnInit {
   insuredAuthSub!: Subscription;
   submissionAuthSub!: Subscription;
   policyAuthSub!: Subscription;
+  lastSubmissionSub!: Subscription;
   disabled = true;
   history: HistoricRoute[] = [];
-  lastRoute: HistoricRoute | null = null;
   canEditSubmission = false;
   canEditInsured = false;
   canEditPolicy = false;
   currentUrl = '';
-  notification: any;
   messageDialogService: any;
   showBusy = false;
   userPanelSize = 0;
@@ -44,17 +44,18 @@ export class StatusBarComponent implements OnInit {
   widthOffset = 0;
   headerLeftMargin = LayoutEnum.sidebar_min_width;
   displayHeaderSub: Subscription;
-  @ViewChild('headerBar') headerBarElement!: ElementRef;
 
-
+  @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
   constructor(
     private userAuth: UserAuth,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private submissionService: SubmissionService,
+    private insuredService: InsuredService,
     public pageDataService: PageDataService,
     public headerPaddingService: HeaderPaddingService,
-    public elementRef: ElementRef
+    public elementRef: ElementRef,
+    private notification: NotificationService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
@@ -67,69 +68,35 @@ export class StatusBarComponent implements OnInit {
     );
     this.displayHeaderSub = this.pageDataService.noData$.subscribe(
       (displayHeader: boolean) => {
-        console.log(displayHeader);
         if(displayHeader){
           this.headerPaddingService.headerPadding = LayoutEnum.header_height;
-        } else {
-          //this.headerPaddingService.headerPadding = 0;
         }
       }
     );
-    this.activatedRoute.data.subscribe(data => {
-      console.log(data);
-    });
-    this.headerPaddingService.sidebarPadding$.subscribe(padding => {
-      console.log(padding);
-      this.widthOffset = padding;
-      this.resetHeaderWidth();
-    });
-    this.headerPaddingService.userFieldWidth$.subscribe(padding => {
-      console.log(padding);
-      this.userPanelSize = padding;
-      this.resetHeaderWidth();
-    });
-    console.log(this.activatedRoute, 'test');
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationStart) {
-    //     // Show progress spinner or progress bar
-    //     console.log('Route change detected');
-    //   }
-
-    //   if (event instanceof NavigationEnd) {
-    //     // Hide progress spinner or progress bar
-    //     console.log(event.url);
-    //     console.log(event);
-    //     this.history.push(event.url);
-    //     console.log(this.history);
-    //     this.activatedRoute.data.subscribe(data => {
-    //       console.log(data);
-    //     });
-    //   }
-
-    //   if (event instanceof NavigationError) {
-    //     // Hide progress spinner or progress bar
-
-    //     // Present error to user
-    //     console.log(event.error);
-    //   }
-    // });
   }
 
   ngOnInit() {
     //NavigationStart Hook
-    this.router
-      .events.pipe(
-        filter((event: any) => event instanceof NavigationStart),
-        tap(() => {
-          this.pageDataService.insuredData = null;
-          this.pageDataService.submissionData = null;
-        })).subscribe((customData: any) => {
-        console.log(customData);
-      });
+    // this.router
+    //   .events.pipe(
+    //     filter((event: any) => event instanceof NavigationStart),
+    //     tap(() => {
+    //       this.pageDataService.insuredData = null;
+    //       this.pageDataService.submissionData = null;
+    //     })).subscribe((customData: any) => {
+    //     console.log(customData);
+    //   });
     //NavigationEnd Hook
     this.router
       .events.pipe(
         filter((event: any) => event instanceof NavigationEnd),
+        tap(() => {
+          this.pageDataService.insuredData = null;
+          this.pageDataService.submissionData = null;
+          this.pageDataService.accountInfo = null;
+          this.pageDataService.policyData = null;
+          this.pageDataService.lastSubmission = null;
+        }),
         map((event) => {
           this.headerPaddingService.resetPadding();
           this.currentUrl = event.url;
@@ -150,32 +117,19 @@ export class StatusBarComponent implements OnInit {
         console.log(customData);
       });
   }
-  ngAfterViewInit(){
-    this.updateHeaderWidth();
-  }
   onResize() {
-    this.resetHeaderWidth();
-  }
-  resetHeaderWidth() {
-    setTimeout(() => this.headerWidth = 0,0);
-    this.updateHeaderWidth();
-  }
-  updateHeaderWidth(){
-    if (this.headerBarElement) {
-      //headerWidth = offsetWidth(100% width but need to get pixel count) - user info width - sidebar width - sidebar toggle width
-      setTimeout(() => this.headerWidth = this.headerBarElement.nativeElement.offsetWidth - this.userPanelSize - this.widthOffset - LayoutEnum.sidebar_min_width,0);
-    }
+    this.headerPaddingService.onResizeOrLoad();
   }
   checkData(child: ActivatedRoute): boolean {
     this.pageDataService.insuredData = this.checkInsuredData(child);
     this.pageDataService.submissionData = this.checkSubmissionData(child);
+    this.pageDataService.policyData = this.checkPolicyData(child);
     return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null);
   }
   private checkInsuredData(child: ActivatedRoute): InsuredClass | null {
     if (child.snapshot.data && child.snapshot.data['insuredData']) {
       const data: InsuredClass = child.snapshot.data['insuredData'].insured;
-      this.setInsuredPadding();
-      this.createInsuredHistory(data);
+      this.headerPaddingService.buttonBarPadding = LayoutEnum.nav_routing_height + LayoutEnum.button_bar_height;
       return data;
     } else {
       return this.pageDataService.insuredData;
@@ -184,48 +138,24 @@ export class StatusBarComponent implements OnInit {
   private checkSubmissionData(child: ActivatedRoute): SubmissionClass | null {
     if (child.snapshot.data && child.snapshot.data['submissionData']) {
       const data = child.snapshot.data['submissionData'].submission;
-      this.createSubmissionHistory(data);
+      this.headerPaddingService.buttonBarPadding = LayoutEnum.nav_routing_height;
       return data;
     } else {
       return this.pageDataService.submissionData;
     }
   }
-  private createInsuredHistory(data: Insured) {
-    const newRoute: HistoricRoute = {
-      type: 'Insured',
-      url: this.currentUrl,
-      description: data.name || ''
-    };
-    if (this.compareNewRouteToLast(newRoute)) {
-      this.history.splice(0,0,newRoute);
-
-      this.lastRoute = newRoute;
-    }
-  }
-  private createSubmissionHistory(data: SubmissionClass) {
-    const newRoute: HistoricRoute = {
-      type: 'Submission',
-      url: this.currentUrl,
-      description: 'Sub# ' + data.submissionNumber
-    };
-    if (this.compareNewRouteToLast(newRoute)) {
-      this.history.push(newRoute);
-      this.lastRoute = newRoute;
-    }
-  }
-  setInsuredPadding(){
-    //setTimeout(()=>this.headerPaddingService.incrementHeaderPadding(7),0);
-    setTimeout(()=>this.headerPaddingService.incrementButtonBarPadding(0),0);
-  }
-  compareNewRouteToLast(newRoute: HistoricRoute): boolean {
-    console.log('new: ', newRoute, 'last: ', this.lastRoute);
-    if (this.lastRoute == null || (newRoute.description != this.lastRoute.description || newRoute.type != this.lastRoute.type)) {
-      console.log('new');
-      return true;
+  private checkPolicyData(child: ActivatedRoute): PolicyInformation | null {
+    if (child.snapshot.data && child.snapshot.data['policyInfoData']) {
+      const data = child.snapshot.data['policyInfoData'].policyInfo;
+      this.pageDataService.accountInfo = child.snapshot.data['accountData'].accountInfo;
+      this.headerPaddingService.buttonBarPadding = 0;
+      return data;
     } else {
-      console.log('repeat');
-      return false;
+      return this.pageDataService.policyData;
     }
+  }
+  navigateToHistoricRoute(route: HistoricRoute){
+    this.router.navigate([route.url]);
   }
   async saveSubmission() {
     let sub: SubmissionClass;
@@ -267,6 +197,80 @@ export class StatusBarComponent implements OnInit {
       });
     }
     this.showBusy = false;
+  }
+  async preSaveInsured(): Promise<void> {
+    let insured: InsuredClass;
+    if (this.pageDataService.insuredData == null) {
+      return;
+    } else {
+      insured = this.pageDataService.insuredData;
+    }
+    let save: boolean | null = true;
+    if (insured.isNew && insured.isValid) {
+      save = await this.checkDuplicates(insured);
+    }
+    if (save) {
+      this.showBusy = true;
+      await this.saveInsured(insured);
+    }
+    this.showBusy = false;
+  }
+  private async checkDuplicates(insured: InsuredClass): Promise<boolean | null> {
+    const dupe = newInsuredDupeRequst(insured);
+    const results$ = this.insuredService.checkDuplicates(dupe);
+    const results = await lastValueFrom(results$);
+
+    if (results.length > 0) {
+      if (this.dupeComponent != null) {
+        return await this.dupeComponent.open(insured, results);
+      }
+    }
+    return true;
+  }
+  async saveInsured(insured: InsuredClass): Promise<boolean> {
+    if (insured.isValid) {
+      if (insured.isNew) {
+        const results$ = this.insuredService.addInsured(insured);
+        return await lastValueFrom(results$)
+          .then(async result => {
+            insured.isNew = false;
+            this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+            this.showBusy = false;
+            insured.markClean();
+            this.router.navigate(['/insured/' + result.insuredCode?.toString() + '/information']);
+            return true;
+          },
+          (error) => {
+            this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
+            const errorMessage = error.error?.Message ?? error.message;
+            this.messageDialogService.open('Insured Save Error', errorMessage);
+            return false;
+          });
+      }
+      else {
+        if (insured.isDirty) {
+          const results$ = this.insuredService.updateInsured(insured);
+          return await lastValueFrom(results$)
+            .then(async updated => {
+              insured.modifiedBy = updated.modifiedBy;
+              insured.modifiedDate = updated.modifiedDate;
+              insured.contacts = updated.contacts;
+              insured.additionalNamedInsureds = updated.additionalNamedInsureds;
+              insured.markClean();
+              this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+              return true;
+            },
+            (error) => {
+              this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
+              const errorMessage = error.error?.Message ?? error.message;
+              this.messageDialogService.open('Insured Save Error', errorMessage);
+              return false;
+            });
+        }
+        return true;
+      }
+    }
+    return false;
   }
 }
 

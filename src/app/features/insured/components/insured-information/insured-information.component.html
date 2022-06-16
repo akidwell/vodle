@@ -1,9 +1,4 @@
-<div id="saveHeader">
-  <button class="btn btn-md btn-primary" *ngIf="canEditInsured" style="margin: 5px;" [disabled]="!isDirty() || !this.insured.isValid" appPreventDoubleClick
-    (throttledClick)="save()" [throttleTime]="700">Save</button>
-    <button class="btn btn-md btn-primary" *ngIf="canEditInsured && this.previousUrl !== ''" style="margin: 5px;" appPreventDoubleClick
-    (throttledClick)="prev()" [throttleTime]="700">{{previousLabel}}</button>
-</div>
+
 <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
 </ngb-alert>
 <rsps-insured-account [insured]="insured"></rsps-insured-account>
@@ -12,8 +7,6 @@
 <rsps-shared-additional-named-insureds-group [aniData]="insured.additionalNamedInsureds" [newANI]="newInsuredANI"
   [canEdit]="canEditInsured">
 </rsps-shared-additional-named-insureds-group>
-
-<rsps-insured-duplicates #modal></rsps-insured-duplicates>
 
 <div *ngIf="showBusy">
   <rsps-busy></rsps-busy>

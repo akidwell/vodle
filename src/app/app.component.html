@@ -1,7 +1,7 @@
 <div class="header-container container-fluid"
-[style.height.px]="headerPaddingService.headerPadding$ | async"
+[style.height.px]="headerPaddingService.totalHeaderHeight$ | async"
 *ngIf="{value: pageDataService.noData$ | async} as context">
-  <div id="header" >
+  <div id="header" [style.height.px]="headerPaddingService.headerPadding$ | async">
     <a class="banner-label" *ngIf="context.value" routerLinkActive='active' routerLink='/home'>
       {{title}}
     </a>
@@ -11,16 +11,11 @@
   <div class="status-bar-container" >
     <rsps-status-bar></rsps-status-bar>
   </div>
-  {{context.value}}
 </div>
 <rsps-navigation></rsps-navigation>
-
-<body [style.padding-left.px]="headerPaddingService.sidebarPadding$ | async">
+<body [style.padding-left.px]="headerPaddingService.sidebarPadding$ | async" >
   <router-outlet></router-outlet>
 </body>
-<div class='footer'>
-  <rsps-version></rsps-version>
-</div>
 <app-notification aria-live="polite" aria-atomic="true"></app-notification>
 <div *ngIf="loading">
   <rsps-busy></rsps-busy>

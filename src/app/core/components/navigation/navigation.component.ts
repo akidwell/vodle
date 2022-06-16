@@ -38,10 +38,10 @@ export class NavigationComponent implements OnInit {
   policySub!: Subscription;
   showFav = false;
   canEditPolicy = false;
-  showFullSidebar = false;
+  showFullSidebar = localStorage.getItem('show-sidebar') === 'true' ? true : false;
   sidebarMinWidth = LayoutEnum.sidebar_min_width;
   sidebarMaxWidth = LayoutEnum.sidebar_width;
-  sidebarStartingWidth = 0;
+  sidebarStartingWidth: number;
 
   constructor(private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router, public headerPaddingService: HeaderPaddingService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
@@ -51,6 +51,9 @@ export class NavigationComponent implements OnInit {
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
     currentPolicy.loadInfo();
+    this.sidebarStartingWidth = this.showFullSidebar ? LayoutEnum.sidebar_width : 0;
+    this.headerPaddingService.sidebarPadding = this.showFullSidebar ? LayoutEnum.sidebar_width : 0;
+    this.headerPaddingService.sidebarWidthAndHeight = this.showFullSidebar ? 100 : 0;
   }
 
   async ngOnInit() {
@@ -94,6 +97,7 @@ export class NavigationComponent implements OnInit {
   }
   toggleSidebar() {
     this.showFullSidebar = !this.showFullSidebar;
+    localStorage.setItem('show-sidebar', this.showFullSidebar.toString());
     if (this.showFullSidebar) {
       this.headerPaddingService.sidebarPadding = LayoutEnum.sidebar_width;
       this.headerPaddingService.sidebarWidthAndHeight = 100;
