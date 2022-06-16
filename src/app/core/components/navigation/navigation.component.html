@@ -1,51 +1,120 @@
-<div class='sidebar'>
-  <img src="./assets/images/risk-solutions-logo-small.png">
-  <div *ngIf="isAuthenticated">
-    <a class='nav-link' routerLinkActive='active' routerLink='/home'>
-      <fa-icon [icon]="faHome"></fa-icon>
-      Home
-    </a>
-    <a class='nav-link' routerLinkActive='active' routerLink='/import'>
-      <fa-icon [icon]="faFileImport"></fa-icon>
-      Import
-    </a>
-    <a class='nav-link' (click)="createDirectPolicy()" *ngIf="canEditPolicy">
-      <fa-icon [icon]="faFolderPlus"></fa-icon>
-      New Direct Policy
-    </a>
-    <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1">
-    <div *ngFor="let policy of policyHistory">
-      <a class="nav-link" *ngIf="policy.policyId > 0" routerLinkActive='active'
-        [routerLink]="['/policy/' + policy.policyId + '/' + policy.endorsementNumber]"
-        (mouseover)="hoverFavorite(policy)" (mouseleave)="unhoverFavorite(policy)" (click)="openPolicy()"
-        #policyActive="routerLinkActive" [title]="policy.policyNumber + ':' + policy.endorsementNumber">
-        <fa-icon *ngIf="policyActive.isActive" [icon]="faFolderOpen"></fa-icon>
-        <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
-        {{ policy.policyNumber + ":" + policy.endorsementNumber}}
-        <fa-icon *ngIf="policy.favorite" style="float:right;" title="Unfavorite" [icon]="faSolidStar"
-          (click)="$event.preventDefault();unfavorite(policy)" click-stop-propagation></fa-icon>
-        <fa-icon *ngIf="!policy.favorite && policy.hover" style="float:right;" title="Favorite" [icon]="faStar"
-          (click)="$event.preventDefault();favorite(policy)" click-stop-propagation></fa-icon>
+<div class="sidebar"
+[ngStyle]="{'max-width.px': sidebarMaxWidth, 'width.px': sidebarStartingWidth}"
+[style.width.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
+[style.height.%]="headerPaddingService.sidebarWidthAndHeight$ | async">
+  <div *ngIf="showFullSidebar">
+    <img src="./assets/images/risk-solutions-logo-small.png" />
+    <div *ngIf="isAuthenticated">
+      <a class="nav-link" routerLinkActive="active" routerLink="/home">
+        <fa-icon [icon]="faHome"></fa-icon>
+        Home
       </a>
+      <a class="nav-link" routerLinkActive="active" routerLink="/import">
+        <fa-icon [icon]="faFileImport"></fa-icon>
+        Import
+      </a>
+      <a class="nav-link" (click)="createDirectPolicy()" *ngIf="canEditPolicy">
+        <fa-icon [icon]="faFolderPlus"></fa-icon>
+        New Direct Policy
+      </a>
+      <hr *ngIf="policyHistory.length > 0" class="rounded mt-1 mb-1" />
+      <div *ngFor="let policy of policyHistory">
+        <a
+          class="nav-link"
+          *ngIf="policy.policyId > 0"
+          routerLinkActive="active"
+          [routerLink]="[
+            '/policy/' + policy.policyId + '/' + policy.endorsementNumber
+          ]"
+          (mouseover)="hoverFavorite(policy)"
+          (mouseleave)="unhoverFavorite(policy)"
+          (click)="openPolicy()"
+          #policyActive="routerLinkActive"
+          [title]="policy.policyNumber + ':' + policy.endorsementNumber"
+        >
+          <fa-icon
+            *ngIf="policyActive.isActive"
+            [icon]="faFolderOpen"
+          ></fa-icon>
+          <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
+          {{ policy.policyNumber + ":" + policy.endorsementNumber }}
+          <fa-icon
+            *ngIf="policy.favorite"
+            style="float: right"
+            title="Unfavorite"
+            [icon]="faSolidStar"
+            (click)="$event.preventDefault(); unfavorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+          <fa-icon
+            *ngIf="!policy.favorite && policy.hover"
+            style="float: right"
+            title="Favorite"
+            [icon]="faStar"
+            (click)="$event.preventDefault(); favorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+        </a>
+      </div>
+      <hr class="rounded mt-1 mb-1" />
+      <a class="nav-link" (click)="toggleApplicationNavbar()">
+        <fa-icon [icon]="faToolbox"></fa-icon>
+        Apps
+        <fa-icon
+          style="float: right"
+          [icon]="faAngleDown"
+          *ngIf="!applicationNavbarOpen"
+        ></fa-icon>
+        <fa-icon
+          style="float: right"
+          [icon]="faAngleUp"
+          *ngIf="applicationNavbarOpen"
+        ></fa-icon>
+      </a>
+      <div
+        class="collapse navbar-collapse"
+        [ngClass]="{ show: applicationNavbarOpen }"
+      >
+        <rsps-applications></rsps-applications>
+      </div>
+      <a class="nav-link" (click)="toggleReportNavbar()">
+        <fa-icon [icon]="faFileAlt"></fa-icon>
+        Reports
+        <fa-icon
+          style="float: right"
+          [icon]="faAngleDown"
+          *ngIf="!reportNavbarOpen"
+        ></fa-icon>
+        <fa-icon
+          style="float: right"
+          [icon]="faAngleUp"
+          *ngIf="reportNavbarOpen"
+        ></fa-icon>
+      </a>
+      <div
+        class="collapse navbar-collapse"
+        [ngClass]="{ show: reportNavbarOpen }"
+      >
+        <rsps-reports></rsps-reports>
+      </div>
     </div>
-    <hr class="rounded mt-1 mb-1">
-    <a class='nav-link' (click)="toggleApplicationNavbar()">
-      <fa-icon [icon]="faToolbox"></fa-icon>
-      Apps
-      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!applicationNavbarOpen"></fa-icon>
-      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="applicationNavbarOpen"></fa-icon>
-    </a>
-    <div class="collapse navbar-collapse" [ngClass]="{ 'show': applicationNavbarOpen }">
-      <rsps-applications></rsps-applications>
+    <!-- <button style="width:100%"
+      type="button"
+      aria-label="Toggle navigation"
+      (click)="toggleSidebar()"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button> -->
+  </div>
+  <div class="sidebar-toggle"
+  [style.min-height.px]="headerPaddingService.headerPadding$ | async"
+  [style.width.px]="sidebarMinWidth"
+  [style.left.px]="headerPaddingService.sidebarPadding$ | async">
+    <div class="toggle" (click)="toggleSidebar()" >
+      <fa-icon *ngIf="!showFullSidebar" class="toggle-icon"[icon]="faBars"></fa-icon>
+      <fa-icon *ngIf="showFullSidebar" class="toggle-icon" [icon]="faX"></fa-icon>
     </div>
-    <a class='nav-link' (click)="toggleReportNavbar()">
-      <fa-icon [icon]="faFileAlt"></fa-icon>
-      Reports
-      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="!reportNavbarOpen"></fa-icon>
-      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="reportNavbarOpen"></fa-icon>
-    </a>
-    <div class="collapse navbar-collapse" [ngClass]="{ 'show': reportNavbarOpen }">
-      <rsps-reports></rsps-reports>
-    </div>
+
+
   </div>
 </div>

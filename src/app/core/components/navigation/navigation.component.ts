@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder, faStar as faSolidStar, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFileImport, faHome, faToolbox, faAngleDown, faAngleUp, faFolderOpen, faFolder, faStar as faSolidStar, faFolderPlus, faBars, faX } from '@fortawesome/free-solid-svg-icons';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { UserAuth } from '../../authorization/user-auth';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,8 @@ import { PolicyHistoryService } from '../../services/policy-history/policy-histo
 import { Router } from '@angular/router';
 import { PolicyHistory } from '../../services/policy-history/policy-history';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { HeaderPaddingService } from '../../services/header-padding-service/header-padding.service';
+import { LayoutEnum } from '../../enums/layout-enum';
 
 @Component({
   selector: 'rsps-navigation',
@@ -28,14 +30,20 @@ export class NavigationComponent implements OnInit {
   faSolidStar = faSolidStar;
   faStar = faStar;
   faFolderPlus = faFolderPlus;
+  faBars = faBars;
+  faX = faX;
   authSub: Subscription;
   editSub: Subscription;
   policyHistory: PolicyHistory[] = [];
   policySub!: Subscription;
   showFav = false;
   canEditPolicy = false;
+  showFullSidebar = localStorage.getItem('show-sidebar') === 'true' ? true : false;
+  sidebarMinWidth = LayoutEnum.sidebar_min_width;
+  sidebarMaxWidth = LayoutEnum.sidebar_width;
+  sidebarStartingWidth: number;
 
-  constructor(private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router) {
+  constructor(private userAuth: UserAuth, private currentPolicy: PolicyHistoryService, private navigationService: NavigationService, private router: Router, public headerPaddingService: HeaderPaddingService) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
     );
@@ -43,6 +51,9 @@ export class NavigationComponent implements OnInit {
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
     currentPolicy.loadInfo();
+    this.sidebarStartingWidth = this.showFullSidebar ? LayoutEnum.sidebar_width : 0;
+    this.headerPaddingService.sidebarPadding = this.showFullSidebar ? LayoutEnum.sidebar_width : 0;
+    this.headerPaddingService.sidebarWidthAndHeight = this.showFullSidebar ? 100 : 0;
   }
 
   async ngOnInit() {
@@ -84,7 +95,17 @@ export class NavigationComponent implements OnInit {
   unhoverFavorite(policy: PolicyHistory) {
     policy.hover = false;
   }
-
+  toggleSidebar() {
+    this.showFullSidebar = !this.showFullSidebar;
+    localStorage.setItem('show-sidebar', this.showFullSidebar.toString());
+    if (this.showFullSidebar) {
+      this.headerPaddingService.sidebarPadding = LayoutEnum.sidebar_width;
+      this.headerPaddingService.sidebarWidthAndHeight = 100;
+    } else {
+      this.headerPaddingService.sidebarPadding = 0;
+      this.headerPaddingService.sidebarWidthAndHeight = 0;
+    }
+  }
   createDirectPolicy() {
     this.router.navigate(['/home']).then(() => {
       setTimeout(() => {

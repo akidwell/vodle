@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { AuthService } from '../../authorization/auth.service';
 import { UserAuth } from '../../authorization/user-auth';
 import { faUser, faPowerOff, faKey, faIdBadge, faUserLock, faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { ConfigService } from '../../services/config/config.service';
 import { APIVersionService } from '../../services/api-version-service/api-version.service';
+import { HeaderPaddingService } from '../../services/header-padding-service/header-padding.service';
 
 @Component({
   selector: 'rsps-user',
@@ -41,8 +42,12 @@ export class UserComponent {
   apiOptions: string[] = ['1.0', '2.0'];
   activeAPIVersion = '1.0';
   apiSwitchActive = false;
+  @ViewChild('userSettings') userElement!: ElementRef;
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService, private apiService: APIVersionService, private authService: AuthService, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
+
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService,
+  private apiService: APIVersionService, private authService: AuthService, private policyHistoryService: PolicyHistoryService,
+  private confirmationDialogService: ConfirmationDialogService, public headerPaddingService: HeaderPaddingService, public elementRef:ElementRef) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated;
@@ -52,6 +57,7 @@ export class UserComponent {
           this.role = userAuth.userRole;
           this.isReadOnly = this.role == 'ReadOnly';
           this.environment = userAuth.environment;
+          setTimeout(() => this.headerPaddingService.userFieldWidth = this.userElement.nativeElement.offsetWidth, 0);
         }
       }
     );
@@ -72,7 +78,6 @@ export class UserComponent {
     this.activeAPIVersion = this.apiService.getApiVersion;
     this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
-
   ngOnDestroy() {
     this.authSub.unsubscribe();
     this.historySub.unsubscribe();

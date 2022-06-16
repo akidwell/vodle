@@ -1,70 +1,108 @@
-<div id="SubmissionHeader">
-  <div class="row">
-    <div class="col-lg-2">
-      <u>
-        <h6>Policy Eff Date</h6>
-      </u>
-      <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="polEffDateCalendar" class="form-control"
-                  [required]="submission.policyDateRequired"
-                  [readonly]="submission.policyDateReadonly"
-                  [(ngModel)]="submission.polEffDate"
-                  name="polEffDate" #polEffDate="ngModel">
-                  <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polEffDateCalendar">
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #polEffDateCalendar></mat-datepicker>
+<div class="row">
+  <div class="col-lg-2">
+    <label for="polEffDate" title="Policy Expiration Date"
+      >Policy Eff Date</label
+    >
+    <input
+      style="display: inline-block; max-width: 80%"
+      matInput
+      [matDatepicker]="polEffDateCalendar"
+      class="form-control"
+      [required]="submission.policyDateRequired"
+      [readonly]="!canEditSubmission || submission.policyDateReadonly"
+      [(ngModel)]="submission.polEffDate"
+      name="polEffDate"
+      #polEffDate="ngModel"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      style="display: inline-block; max-width: 20%"
+      [for]="polEffDateCalendar"
+    >
+    </mat-datepicker-toggle>
+    <mat-datepicker #polEffDateCalendar></mat-datepicker>
+  </div>
+  <div class="col-lg-2">
+    <label for="polExpDate" title="Policy Expiration Date"
+      >Policy Exp Date</label
+    >
+    <input
+      style="display: inline-block; max-width: 80%"
+      matInput
+      [matDatepicker]="polExpDateCalendar"
+      class="form-control"
+      [required]="submission.policyDateRequired"
+      [readonly]="!canEditSubmission || submission.policyDateReadonly"
+      [(ngModel)]="submission.polExpDate"
+      name="polExpDate"
+      #polExpDate="ngModel"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      style="display: inline-block; max-width: 20%"
+      [for]="polExpDateCalendar"
+    >
+    </mat-datepicker-toggle>
+    <mat-datepicker #polExpDateCalendar></mat-datepicker>
+  </div>
+  <div class="col-lg-2">
+    <label for="policyTerm" title="Policy Term">Policy Term</label>
+    <ng-select
+      id="policyTerm"
+      click-stop-propagation
+      [items]="policyTermOptions"
+      bindLabel="description"
+      bindValue="value"
+      [readonly]="submission.policyDateReadonly"
+      [clearable]="false"
+      name="policyTerm"
+      [(ngModel)]="submission.policyTerm"
+      #policyTerm="ngModel"
+    >
+    </ng-select>
+  </div>
+  <div class="col-lg-1">
+    <!-- placeholder -->
+  </div>
+  <div class="col-lg-1">
+    <label for="renewable" title="Renewable">Renewable</label>
+    <div>
+      <input
+        type="checkbox"
+        class="form-checkbox"
+        id="renewable"
+        [(ngModel)]="submission.renewablePolicy"
+        name="renewable"
+        [readonly]="!canEditSubmission || submission.renewablePolicyReadonly"
+      />
     </div>
-    <div class="col-lg-2">
-      <u>
-        <h6>Policy Exp Date</h6>
-      </u>
-      <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="polExpDateCalendar" class="form-control"
-                  [required]="submission.policyDateRequired"
-                  [readonly]="submission.policyDateReadonly"
-                  [(ngModel)]="submission.polExpDate"
-                  name="polExpDate" #polExpDate="ngModel">
-                  <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="polExpDateCalendar">
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #polExpDateCalendar></mat-datepicker>
-    </div>
-    <div class="col-lg-2">
-      <u>
-        <h6>Policy Term</h6>
-      </u>
-      <ng-select id="policyTerm"
-        click-stop-propagation
-        [items]="policyTermOptions"
-        bindLabel="description"
-        bindValue="value"
-        [readonly]="submission.policyDateReadonly"
-        [clearable]="false" name="policyTerm"
-        [(ngModel)]="submission.policyTerm" #policyTerm="ngModel">
-      </ng-select>
-
-    </div>
-    <div class="col-lg-2">
-      <!-- placeholder -->
-    </div>
-    <div class="col-lg-2">
-      <u>
-        <h6>Quote Due Date</h6>
-      </u>
-      <input style="display: inline-block; max-width: 80%;" matInput
-                  [matDatepicker]="quoteDueDateCalendar" class="form-control"
-                  [required]="submission.quoteDueDateRequired"
-                  [readonly]="submission.quoteDueDateReadonly"
-                  [(ngModel)]="submission.quoteDueDate"
-                  name="quoteDueDate" #quoteDueDate="ngModel">
-                  <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="quoteDueDateCalendar">
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #quoteDueDateCalendar></mat-datepicker>
-    </div>
-    <div class="col-lg-2">
-      <u>
-        <h6>Status</h6>
-      </u>
-      {{submission.statusCodeDesc}}
-    </div>
+  </div>
+  <div class="col-lg-1">
+    <!-- placeholder -->
+  </div>
+  <div class="col-lg-2">
+    <label for="quoteDueDate" title="Quote Due Date">Quote Due Date</label>
+    <input
+      style="display: inline-block; max-width: 80%"
+      matInput
+      [matDatepicker]="quoteDueDateCalendar"
+      class="form-control"
+      [required]="submission.quoteDueDateRequired"
+      [readonly]="!canEditSubmission || submission.quoteDueDateReadonly"
+      [(ngModel)]="submission.quoteDueDate"
+      name="quoteDueDate"
+      #quoteDueDate="ngModel"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      style="display: inline-block; max-width: 20%"
+      [for]="quoteDueDateCalendar"
+    >
+    </mat-datepicker-toggle>
+    <mat-datepicker #quoteDueDateCalendar></mat-datepicker>
+  </div>
+  <div class="col-lg-1">
+    <label for="status" title="Status">Status</label>
+    <div id="status">{{ submission.statusCodeDesc }}</div>
   </div>
 </div>

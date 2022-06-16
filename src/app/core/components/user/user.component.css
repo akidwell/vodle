@@ -2,7 +2,12 @@
   background-color: #001f3e;
   color: white;
 }
-
+#user-settings {
+right: 0;
+position: fixed;
+z-index: 9999 !important;
+background-color: #001f3e;
+}
 .ngbDropdown {
   z-index: 2;
 }

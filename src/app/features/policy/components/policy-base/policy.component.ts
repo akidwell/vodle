@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 
 @Component({
   selector: 'rsps-policy',
@@ -20,7 +21,8 @@ export class PolicyComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy: boolean = false;
 
-  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private router: Router, private config: ConfigService) {
+  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private router: Router,
+    private config: ConfigService, public headerPaddingService: HeaderPaddingService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
