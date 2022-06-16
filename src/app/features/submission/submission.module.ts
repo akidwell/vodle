@@ -24,7 +24,6 @@ import { EndorsementStoredValues } from '../policy/services/endorsement-stored-v
 import { SubmissionInformationComponent } from './components/submission-information/submission-information.component';
 import { SubmissionInfoPanelLeftComponent } from './components/submission-info-panel-left/submission-info-panel-left.component';
 import { SubmissionInfoPanelRightComponent } from './components/submission-info-panel-right/submission-info-panel-right.component';
-import { ProducerSearchService } from 'src/app/shared/components/producer-search/producer-search.component';
 import { ProducerSearchModule } from 'src/app/shared/components/producer-search/producer-search.module';
 import { ProducerContactSearchModule } from 'src/app/shared/components/producer-contact-search/producer-contact-search.module';
 

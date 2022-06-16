@@ -58,6 +58,5 @@ export interface Submission {
   submissionEvents: SubmissionEvent[] | null,
   policyTerm: PolicyTermEnum | number | null,
   underwriterName: string | null,
-  hasPostedInvoice: boolean,
-  hasQuoteWithCoverages: boolean
+  hasPostedInvoice: boolean
 }

@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { InsuredInformationComponent } from '../components/insured-information/insured-information.component';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<InsuredInformationComponent> {
 
-  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService) { }
+  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService, private pageDataService: PageDataService) { }
 
   canDeactivate(
     component: InsuredInformationComponent,
@@ -20,8 +21,9 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
         return true;
       }
-      if (component.isValid()) {
-        if (component.isDirty()) {
+      const insured = this.pageDataService.insuredData || null;
+      if (insured && insured.isValid) {
+        if (insured.isDirty) {
           if (this.checkLeavePolicy(state.url, nextState.url)) {
             return this.confirmLeave().then(confirm => {
               if (confirm) {
@@ -69,7 +71,11 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
+    const option = await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
+    if(option) {
+      this.pageDataService.insuredData?.markClean();
+      ///TODO: Need to reset class
+    }
+    return option;
   }
-
 }

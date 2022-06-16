@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from 'src/app/core/services/config/config.service';
+import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 
 @Component({
   selector: 'rsps-insured',
@@ -9,7 +10,7 @@ import { ConfigService } from 'src/app/core/services/config/config.service';
 })
 export class InsuredComponent implements OnInit {
 
-  constructor(private router: Router, private config: ConfigService) {
+  constructor(private router: Router, private config: ConfigService, public headerPaddingService: HeaderPaddingService) {
   }
 
   ngOnInit(): void {

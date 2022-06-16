@@ -84,10 +84,10 @@ export class ProducerContactSearch implements OnInit{
 
   leaveSearchBar() {
     console.log(this.model, this.allowSearching);
-    if (this.model?.display || !this.allowSearching) {
+    if ((this.model?.display || !this.allowSearching)) {
       this.showContactMaintenance = false;
     } else {
-      this.showContactMaintenance = true;
+      this.showContactMaintenance = this.searchResponse.length > 0 ? true : false;
     }
   }
   selectedProducerContact(producer: any){
@@ -112,7 +112,7 @@ export class ProducerContactSearch implements OnInit{
     console.log('reset');
     this.allowSearching = false;
     this.model = deepClone(this.originalModel);
-    if (this.producerContact.nativeElement != null){
+    if (this.producerContact && this.producerContact.nativeElement != null){
       this.producerContact.nativeElement.blur();
     }
     return [];

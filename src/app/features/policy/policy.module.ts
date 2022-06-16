@@ -11,7 +11,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { PolicyComponent } from './components/policy-base/policy.component';
-import { PolicyHeaderComponent } from './components/policy-header/policy-header.component';
 import { EndorsementCoverageLocationGroupComponent } from './components/coverages-endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { AccountInformationComponent } from './components/information-account/account-information.component';
 import { PolicyInformationComponent } from './components/information-policy/policy-information.component';
@@ -55,7 +54,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     PolicyComponent,
-    PolicyHeaderComponent,
     EndorsementCoverageLocationGroupComponent,
     AccountInformationComponent,
     InformationComponent,

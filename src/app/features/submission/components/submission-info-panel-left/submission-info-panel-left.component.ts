@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
 
 @Component({
@@ -17,7 +16,7 @@ export class SubmissionInfoPanelLeftComponent implements OnInit {
   newRenewalFlags = [{'value': 1, 'description': 'New'}, {'value': 2, 'description': 'Renewal'}, {'value': 3, 'description': 'Count as Renewal'}];
   @Input() public submission!: SubmissionClass;
 
-  constructor(private userAuth: UserAuth, private dropdowns: DropDownsService) {
+  constructor(private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );

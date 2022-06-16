@@ -1,52 +1,89 @@
-<div ngbDropdown class="d-inline-block" style="float: right;z-index: 9999!important;">
-  <button *ngIf='isAuthenticated && userName' class="btn" id="dropdownUser" ngbDropdownToggle>
-    <fa-icon [icon]="faUser" *ngIf="!isReadOnly"></fa-icon>
-    <fa-icon [icon]="faUserLock" *ngIf="isReadOnly"></fa-icon>
-    {{userName.toUpperCase()}}
-  </button>
-  <div ngbDropdownMenu aria-labelledby="dropdownUser" style="z-index: 9999!important;">
-    <form class="px-2 py-2" style="z-index: 9999!important;">
-      <button (click)="logout()" ngbDropdownItem>
-        <fa-icon [icon]="faPowerOff"></fa-icon>
-        Logout
-      </button>
-      <div class="dropdown-divider"></div>
-      <label for="historySize">History Size:</label>
-      <div class="input-group">
+<div id="user-settings" #userSettings
+[style.height.px]="headerPaddingService.headerPadding$ | async">
+  <div
+    ngbDropdown
+    class="d-inline-block"
+    style="padding:5px;"
+  >
+    <button
+      *ngIf="isAuthenticated && userName"
+      class="btn"
+      id="dropdownUser"
+      ngbDropdownToggle
+    >
+      <fa-icon [icon]="faUser" *ngIf="!isReadOnly"></fa-icon>
+      <fa-icon [icon]="faUserLock" *ngIf="isReadOnly"></fa-icon>
+      {{ userName.toUpperCase() }}
+    </button>
+    <div
+      ngbDropdownMenu
+      aria-labelledby="dropdownUser"
+      style="z-index: 9999 !important"
+    >
+      <form class="px-2 py-2" style="z-index: 9999 !important">
+        <button (click)="logout()" ngbDropdownItem>
+          <fa-icon [icon]="faPowerOff"></fa-icon>
+          Logout
+        </button>
+        <div class="dropdown-divider"></div>
+        <label for="historySize">History Size:</label>
+
         <div class="input-group">
-          <div class="input-group-prepend">
-            <button class="input-group-text" (click)="removeHistoryCount()">
-              <fa-icon [icon]="faMinus"></fa-icon>
-            </button>
-          </div>
-          <input class="form-control ml2" style="background: white;" type="text" name="historySize"
-            [(ngModel)]="historySize" disabled tabindex="-1" />
-          <button class="input-group-text" (click)="addHistoryCount()">
-            <fa-icon [icon]="faPlus"></fa-icon>
-          </button>
           <div class="input-group">
+            <div class="input-group-prepend">
+              <button class="input-group-text" (click)="removeHistoryCount()">
+                <fa-icon [icon]="faMinus"></fa-icon>
+              </button>
+            </div>
+            <input
+              class="form-control ml2"
+              style="background: white"
+              type="text"
+              name="historySize"
+              [(ngModel)]="historySize"
+              disabled
+              tabindex="-1"
+            />
+            <button class="input-group-text" (click)="addHistoryCount()">
+              <fa-icon [icon]="faPlus"></fa-icon>
+            </button>
+            <div class="input-group"></div>
           </div>
         </div>
-      </div>
-      <button (click)="clearHistory()" ngbDropdownItem>
-        <fa-icon [icon]="faTrash"></fa-icon>
-        Clear History
-      </button>
-      <div class="dropdown-divider"></div>
-      <div class="row">
-
-        <label for="apiSwitch">API Version</label>
-        <ng-select id="apiSwitch" *ngIf='apiSwitchActive' [items]="apiOptions" [searchable]="false" [clearable]="false"
-          name="apiSwitch" (change)="changeApiVersion()" [(ngModel)]="activeAPIVersion">
-        </ng-select>
-        <div *ngIf='!apiSwitchActive'>{{activeAPIVersion}}</div>
-      </div>
-      <div class="dropdown-divider"></div>
-      <span class="dropdown-item-text">{{environment}}</span>
-      <span class="dropdown-item-text">{{role}}</span>
-      <span class="dropdown-item-text">Edit Policy: {{canEditPolicy ? 'T' : 'F'}}</span>
-      <span class="dropdown-item-text">Edit Sub: {{canEditSubmission ? 'T' : 'F'}}</span>
-      <span class="dropdown-item-text">Edit Ins: {{canEditInsured ? 'T' : 'F'}}</span>
-    </form>
+        <button (click)="clearHistory()" ngbDropdownItem>
+          <fa-icon [icon]="faTrash"></fa-icon>
+          Clear History
+        </button>
+        <div class="dropdown-divider"></div>
+        <div class="row">
+          <label for="apiSwitch">API Version</label>
+          <ng-select
+            id="apiSwitch"
+            *ngIf="apiSwitchActive"
+            [items]="apiOptions"
+            [searchable]="false"
+            [clearable]="false"
+            name="apiSwitch"
+            (change)="changeApiVersion()"
+            [(ngModel)]="activeAPIVersion"
+          >
+          </ng-select>
+          <div *ngIf="!apiSwitchActive">{{ activeAPIVersion }}</div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <span class="dropdown-item-text">{{ environment }}</span>
+        <span class="dropdown-item-text">{{ role }}</span>
+        <span class="dropdown-item-text"
+          >Edit Policy: {{ canEditPolicy ? "T" : "F" }}</span
+        >
+        <span class="dropdown-item-text"
+          >Edit Sub: {{ canEditSubmission ? "T" : "F" }}</span
+        >
+        <span class="dropdown-item-text"
+          >Edit Ins: {{ canEditInsured ? "T" : "F" }}</span
+        >
+        <rsps-version></rsps-version>
+      </form>
+    </div>
   </div>
 </div>

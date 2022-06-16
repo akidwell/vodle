@@ -16,16 +16,13 @@ import { InsuredSubmissionActivityComponent } from './components/insured-submiss
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
-import { InsuredHeaderComponent } from './components/insured-header/insured-header.component';
 import { InsuredAccountAddressComponent } from './components/insured-account-address/insured-account-address.component';
 import { InsuredAccountCenterComponent } from './components/insured-account-center/insured-account-center.component';
 import { InsuredAccountRightComponent } from './components/insured-account-right/insured-account-right.component';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
-import { InsuredDuplicatesComponent } from './components/insured-duplicates/insured-duplicates.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
 
 @NgModule({
   declarations: [
@@ -34,12 +31,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     InsuredContactComponent,
     InsuredContactGroupComponent,
     InsuredInformationComponent,
-    InsuredHeaderComponent,
     InsuredAccountAddressComponent,
     InsuredAccountCenterComponent,
     InsuredAccountRightComponent,
-    InsuredSubmissionActivityComponent,
-    InsuredDuplicatesComponent
+    InsuredSubmissionActivityComponent
   ],
   imports: [
     CommonModule,

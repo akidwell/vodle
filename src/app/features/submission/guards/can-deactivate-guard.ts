@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { SubmissionInformationComponent } from '../components/submission-information/submission-information.component';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationComponent> {
 
-  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService) { }
+  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService, private pageDataService: PageDataService) { }
 
   canDeactivate(
     component: SubmissionInformationComponent,
@@ -20,8 +21,9 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
         return true;
       }
-      if (component.isValid()) {
-        if (component.isDirty()) {
+      const submission = this.pageDataService.submissionData || null;
+      if (submission && submission.isValid) {
+        if (submission.isDirty) {
           if (this.checkLeavePolicy(state.url, nextState.url)) {
             return this.confirmLeave().then(confirm => {
               if (confirm) {
@@ -68,7 +70,12 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open('Leave Confirmation', 'Unable to leave without saving?');
+    const option = await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
+    if(option) {
+      this.pageDataService.submissionData?.markClean();
+      ///TODO: Need to reset class
+    }
+    return option;
   }
 
 }
