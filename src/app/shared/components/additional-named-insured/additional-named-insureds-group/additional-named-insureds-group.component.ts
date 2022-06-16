@@ -76,8 +76,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   copyExistingAni(existingAni: AdditionalNamedInsured) {
-    const copyAni = existingAni.clone();
-    copyAni.name = 'CopyOf ' + existingAni.name;
+    const copyAni = existingAni.copy();
     copyAni.sequenceNo = this.getNextSequence();
     this.aniData.push(copyAni);
   }
@@ -111,7 +110,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
       let saveCount = 0;
       if (this.components != null) {
         for (const child of this.components) {
-          if (child.aniForm.dirty) {
+          if (child.aniData.isDirty) {
             const result = await child.save();
             if (result === false) {
               this.notification.show('Additional Named Insured ' + child.aniData.name + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
@@ -140,8 +139,6 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
     let sequence = 1;
     this.aniData.forEach(c => {
       if (c.sequenceNo != sequence) {
-        const match = this.components?.find(l => l.aniData.sequenceNo == c.sequenceNo);
-        match?.aniForm.form.markAsDirty();
         c.sequenceNo = sequence;
       }
       sequence++;

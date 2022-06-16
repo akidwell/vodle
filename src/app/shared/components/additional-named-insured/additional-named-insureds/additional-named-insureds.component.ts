@@ -42,13 +42,6 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
     this.aniRoles$ = this.dropdowns.getAdditonalNamedInsuredsRoles();
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this.aniData.isNew) {
-        this.aniForm.form.markAsDirty();
-      }
-    });
-  }
 
   ngOnDestroy(): void {
     this.deleteSub?.unsubscribe();
@@ -71,15 +64,11 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   async deleteAni() {
     if (this.aniData.isNew) {
       setTimeout(() => {
-        this.aniForm.form.markAsPristine();
-        this.aniForm.form.markAsUntouched();
         this.deleteExistingAni.emit(this.aniData);
       });
     } else {
       await this.aniData.delete().then(() => {
         setTimeout(() => {
-          this.aniForm.form.markAsPristine();
-          this.aniForm.form.markAsUntouched();
           this.deleteExistingAni.emit(this.aniData);
         });
       });
@@ -89,13 +78,8 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   async save(): Promise<boolean> {
     if (this.aniData.isNew) {
       return await this.aniData.save()
-        .then(result => {
-          if (result) {
-            this.aniForm.form.markAsPristine();
-            this.aniForm.form.markAsUntouched();
-            this.aniData.isNew = false;
-          }
-          return result;
+        .then(() => {
+          return true;
         })
         .catch(error => {
           this.messageDialogService.open('Add error', error.error.Message ?? error.message);
@@ -104,13 +88,8 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
         );
     } else {
       return await this.aniData.save()
-        .then(result => {
-          if (result) {
-            this.aniForm.form.markAsPristine();
-            this.aniForm.form.markAsUntouched();
-            this.aniData.isNew = false;
-          }
-          return result;
+        .then(() => {
+          return true;
         })
         .catch(error => {
           this.messageDialogService.open('Update error', error.error.Message ?? error.message);

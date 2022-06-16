@@ -52,13 +52,14 @@ export class InsuredContactGroupComponent {
   }
 
   copyExistingContact(contact: InsuredContactClass) {
-    const newContact: InsuredContactClass = deepClone(contact);
+    const newContact: InsuredContactClass = Object.create(contact);
     newContact.insuredContactId = null;
     newContact.sequence = this.getNextSequence();
     newContact.isNew = true;
     newContact.isPrimary = false;
     newContact.isPrimaryTracked = false;
     newContact.firstName = 'CopyOf ' + newContact.firstName;
+    newContact.markDirty();
     this.insuredContacts.push(newContact);
   }
 
@@ -66,7 +67,6 @@ export class InsuredContactGroupComponent {
     if (this.components != null) {
       for (const child of this.components) {
         if (child.contact.isPrimary) {
-          child.contactForm.form.markAsDirty();
           child.contact.isPrimary = false;
         }
       }
@@ -141,7 +141,6 @@ export class InsuredContactGroupComponent {
     this.insuredContacts.forEach(c => {
       if (c.sequence != sequence) {
         const match = this.components?.find(l => l.contact.sequence == c.sequence);
-        match?.contactForm.form.markAsDirty();
         c.sequence = sequence;
       }
       sequence++;
