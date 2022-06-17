@@ -16,6 +16,7 @@ export class HeaderPaddingService{
   private _totalPageWidth!: number;
   private _totalHeaderWidth = 0;
   private _totalBodyWidth = 0;
+  private _totalBodyHeight = 0;
 
   headerPadding$: BehaviorSubject<number> = new BehaviorSubject(this._headerPadding);
   buttonBarPadding$: BehaviorSubject<number> = new BehaviorSubject(this._buttonBarPadding);
@@ -31,6 +32,7 @@ export class HeaderPaddingService{
   totalPageWidth$: BehaviorSubject<number> = new BehaviorSubject(this._totalPageWidth);
   totalHeaderWidth$: BehaviorSubject<number> = new BehaviorSubject(this._totalHeaderWidth);
   totalBodyWidth$: BehaviorSubject<number> = new BehaviorSubject(this._totalBodyWidth);
+  totalBodyHeight$: BehaviorSubject<number> = new BehaviorSubject(this._totalBodyHeight);
   totalHeaderHeight$: BehaviorSubject<number> = new BehaviorSubject(this._totalHeaderHeight);
 
   constructor() {
@@ -109,6 +111,15 @@ export class HeaderPaddingService{
   set totalHeaderHeight(val: number) {
     this._totalHeaderHeight = val;
     this.totalHeaderHeight$.next(this._totalHeaderHeight);
+    this.totalBodyHeight = window.innerHeight - this._totalHeaderHeight;
+  }
+  get totalBodyHeight(): number {
+    return this._totalHeaderHeight;
+  }
+
+  set totalBodyHeight(val: number) {
+    this._totalBodyHeight = val;
+    this.totalBodyHeight$.next(this._totalBodyHeight);
   }
   get totalPageWidth(): number {
     return this._navRoutingHeight;
@@ -132,6 +143,7 @@ export class HeaderPaddingService{
   }
   onResizeOrLoad() {
     this.totalPageWidth = window.innerWidth - LayoutEnum.scroll_bar_width;
+    this.totalBodyHeight = window.innerHeight - this._totalHeaderHeight;
   }
   updateInnerWidth(){
     this._totalHeaderWidth = this._totalPageWidth - this._userFieldWidth - this._sidebarPadding - LayoutEnum.sidebar_min_width;

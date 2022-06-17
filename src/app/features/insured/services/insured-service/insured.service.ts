@@ -42,19 +42,18 @@ export class InsuredService {
           return new InsuredClass(receivedData);
         }));
   }
-  updateInsured(insured: InsuredClass): Observable<InsuredClass> {
+  updateInsured(insured: InsuredClass): Observable<Insured> {
     const subJSON = insured.toJSON();
-    return this.http.put<InsuredClass>(this.config.apiBaseUrl + 'api/insureds/', subJSON)
-      .pipe(
-        map((receivedData: Insured) => {
-          const data: insuredANI[] = [];
-          receivedData.additionalNamedInsureds.forEach(element => {
-            data.push(new insuredANI(this, element));
-          });
-          receivedData.additionalNamedInsureds = data;
-          receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null; });
-          return new InsuredClass(receivedData);
-        }));
+    return this.http.put<Insured>(this.config.apiBaseUrl + 'api/insureds/', subJSON).pipe(
+      map((receivedData: Insured) => {
+        const data: insuredANI[] = [];
+        receivedData.additionalNamedInsureds.forEach(element => {
+          data.push(new insuredANI(this, element));
+        });
+        receivedData.additionalNamedInsureds = data;
+        receivedData.contacts.forEach(c => { c.isPrimary ? c.isPrimaryTracked = true : null; });
+        return receivedData;
+      }));
   }
 
   deleteInsureContact(contact: InsuredContact): Observable<boolean> {

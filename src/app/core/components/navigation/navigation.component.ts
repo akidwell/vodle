@@ -38,7 +38,7 @@ export class NavigationComponent implements OnInit {
   policySub!: Subscription;
   showFav = false;
   canEditPolicy = false;
-  showFullSidebar = localStorage.getItem('show-sidebar') === 'true' ? true : false;
+  showFullSidebar = localStorage.getItem('show-sidebar') === 'false' ? false : true;
   sidebarMinWidth = LayoutEnum.sidebar_min_width;
   sidebarMaxWidth = LayoutEnum.sidebar_width;
   sidebarStartingWidth: number;

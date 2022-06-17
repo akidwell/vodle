@@ -78,4 +78,9 @@ ng-select .ng-dropdown-panel {
 
 .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
   background-color: white;
-} 
+}
+
+html, body{height:100%;}
+#outer{
+min-height:100%;
+}

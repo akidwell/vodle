@@ -72,8 +72,8 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
   async confirmLeave(): Promise<boolean> {
     const option = await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
     if(option) {
+      this.pageDataService.submissionData?.resetClass();
       this.pageDataService.submissionData?.markClean();
-      ///TODO: Need to reset class
     }
     return option;
   }

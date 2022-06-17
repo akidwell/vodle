@@ -24,7 +24,12 @@ export class SubmissionClass implements Submission {
   private _renewablePolicy: boolean | number = true;
   private _policyTerm: PolicyTermEnum | number | null = PolicyTermEnum.annual;
 
+  //Hold on to objects we use to build class to reinitialize if need be
+  private _submission: Submission | undefined;
+  private _insured: Insured | undefined;
+
   private _isDirty = false;
+  private _initializerIsStale = false;
 
   private _effectiveDatePastWarningRange = 89;
   private _effectiveDateFutureWarningRange = -180;
@@ -119,6 +124,11 @@ export class SubmissionClass implements Submission {
   hasPostedInvoice = false;
 
   constructor(sub?: Submission, insured?: Insured){
+    this._submission = sub;
+    this._insured = insured;
+    this.init(sub, insured);
+  }
+  init(sub?: Submission, insured?: Insured){
     this._departmentCode = sub?.departmentCode || null;
     this._producerCode = sub?.producerCode || null;
     this._producerContact = sub?.producerContactId || null;
@@ -178,7 +188,6 @@ export class SubmissionClass implements Submission {
     this.setRequiredFields();
     this.setWarnings();
   }
-
   get departmentCode() : number | null {
     return this._departmentCode;
   }
@@ -288,6 +297,12 @@ export class SubmissionClass implements Submission {
   set underwriter(code: number | null) {
     this._underwriter = code;
     this._isDirty = true;
+  }
+  get initializerIsStale() : boolean {
+    return this._initializerIsStale;
+  }
+  set initializerIsStale(bool: boolean) {
+    this._initializerIsStale = bool;
   }
   get isDirty() : boolean {
     return this._isDirty;
@@ -485,6 +500,13 @@ export class SubmissionClass implements Submission {
       this.invalidList.push('Policy effective and expiration dates must be set.');
     }
     return valid;
+  }
+  resetClass() {
+    this.init(this._submission, this._insured);
+  }
+  updateClass(submission?: Submission){
+    this._submission = submission;
+    this.init(this._submission);
   }
   toJSON() {
     return {
