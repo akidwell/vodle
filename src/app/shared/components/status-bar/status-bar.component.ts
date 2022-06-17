@@ -138,7 +138,7 @@ export class StatusBarComponent implements OnInit {
   private checkSubmissionData(child: ActivatedRoute): SubmissionClass | null {
     if (child.snapshot.data && child.snapshot.data['submissionData']) {
       const data = child.snapshot.data['submissionData'].submission;
-      this.headerPaddingService.buttonBarPadding = LayoutEnum.nav_routing_height;
+      this.headerPaddingService.buttonBarPadding = LayoutEnum.button_bar_height;
       return data;
     } else {
       return this.pageDataService.submissionData;
@@ -184,7 +184,8 @@ export class StatusBarComponent implements OnInit {
       });
     } else {
       const results$ = this.submissionService.updateSubmission(sub);
-      await lastValueFrom(results$).then(async () => {
+      await lastValueFrom(results$).then(async (result) => {
+        sub.updateClass(result);
         sub.markClean();
         this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
         return true;
@@ -252,10 +253,8 @@ export class StatusBarComponent implements OnInit {
           const results$ = this.insuredService.updateInsured(insured);
           return await lastValueFrom(results$)
             .then(async updated => {
-              insured.modifiedBy = updated.modifiedBy;
-              insured.modifiedDate = updated.modifiedDate;
-              insured.contacts = updated.contacts;
-              insured.additionalNamedInsureds = updated.additionalNamedInsureds;
+              console.log(updated);
+              insured.updateClass(updated);
               insured.markClean();
               this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
               return true;

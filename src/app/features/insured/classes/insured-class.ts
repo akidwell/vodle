@@ -25,7 +25,10 @@ export class InsuredClass implements Insured {
   private _fein: string | null = null;
   private _addressVerifiedDate: Date| null = null;
 
+  private _insured: Insured | undefined;
+
   private _isDirty = false;
+  private _initializerIsStale = false;
 
   isNew = false;
   contacts: InsuredContactClass[] = [];
@@ -241,7 +244,12 @@ export class InsuredClass implements Insured {
     valid = this.validate(valid);
     return valid;
   }
-
+  get initializerIsStale() : boolean {
+    return this._initializerIsStale;
+  }
+  set initializerIsStale(value: boolean) {
+    this._initializerIsStale = value;
+  }
   private datepipe = new DatePipe('en-US');
 
   get createUserFormatted(): string | null {
@@ -259,6 +267,10 @@ export class InsuredClass implements Insured {
   }
 
   constructor(insured?: Insured) {
+    this._insured = insured;
+    this.init(insured);
+  }
+  init(insured?: Insured){
     this._name = insured?.name || null;
     this._formerName1 = insured?.formerName1 || null;
     this._formerName2 = insured?.formerName2 || null;
@@ -292,11 +304,9 @@ export class InsuredClass implements Insured {
     this.contacts = contacts;
 
     this.additionalNamedInsureds = insured?.additionalNamedInsureds || [];
-
     this.setReadonlyFields();
     this.setRequiredFields();
   }
-
   markClean() {
     this._isDirty = false;
   }
@@ -455,7 +465,13 @@ export class InsuredClass implements Insured {
     });
     return !dupe;
   }
-
+  resetClass(){
+    this.init(this._insured);
+  }
+  updateClass(insured?: Insured){
+    this._insured = insured;
+    this.init(this._insured);
+  }
   toJSON() {
     const contacts: InsuredContact[] = [];
     this.contacts.forEach(c => contacts.push(c.toJSON()));
