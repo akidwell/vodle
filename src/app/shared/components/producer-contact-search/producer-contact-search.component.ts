@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable, of, OperatorFunction} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, filter} from 'rxjs/operators';
+import {merge, Observable, of, OperatorFunction, Subject} from 'rxjs';
+import {catchError, debounceTime, map, tap, switchMap, filter} from 'rxjs/operators';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { ProducerContact } from 'src/app/features/submission/models/producer-contact';
@@ -19,9 +19,6 @@ export class ProducerContactSearchService {
   constructor(private http: HttpClient, private config: ConfigService) {}
 
   search(query: string, producerCode: number) {
-    if (query === '') {
-      return of([]);
-    }
     const params = new HttpParams().append('query', query ).append('producerCode', producerCode);
     return this.http
       .get<FuzzyProducerContactSearchResponse>(this.config.apiBaseUrl + 'api/lookups/producer-contact/', {params}).pipe(
@@ -54,6 +51,7 @@ export class ProducerContactSearch implements OnInit{
   pcCollapsed = true;
   canEditSubmission = false;
   public _producerCode!: number | null;
+  focus$ = new Subject<string>();
   @Input() set producerCode(value: number | null) {
     this._producerCode = value;
     this.resetSearch();
@@ -93,8 +91,8 @@ export class ProducerContactSearch implements OnInit{
   selectedProducerContact(producer: any){
     console.log(producer);
     this.allowSearching = false;
-    this.model = producer;
-    this.originalModel = producer;
+    this.model = producer.item;
+    this.originalModel = producer.item;
     this.showContactMaintenance = false;
     this.producerContactSelected.emit(producer.item);
   }
@@ -109,9 +107,10 @@ export class ProducerContactSearch implements OnInit{
     return [];
   }
   resetDisplay(): never[] {
-    console.log('reset');
-    this.allowSearching = false;
-    this.model = deepClone(this.originalModel);
+    if (!this.allowSearching) {
+      this.model = deepClone(this.originalModel);
+    }
+
     if (this.producerContact && this.producerContact.nativeElement != null){
       this.producerContact.nativeElement.blur();
     }
@@ -125,34 +124,50 @@ export class ProducerContactSearch implements OnInit{
     console.log('add new');
   }
 
-  search: OperatorFunction<string, readonly ProducerContact[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
+  search: OperatorFunction<string, readonly ProducerContact[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(300));
+    const inputFocus$ = this.focus$;
+    return merge(debouncedText$, inputFocus$).pipe(
       tap(() => {
         this.searching = true;
         this.showContactMaintenance = false;
         this.pcCollapsed = true;
       }),
-      switchMap(term =>
-        term.length < 3 ? this.handleEmptyResultSet() : this.allowSearching == false ? this.resetDisplay() :
-          this._service.search(term, this.producerCode ? this.producerCode : 0).pipe(
-            tap((response) => {
-              this.searchFailed = false;
-              response.forEach((producerContact) => {
-                this.formatDisplay(producerContact);
-              });
-              this.searchResponse = response;
-            }),
-            map(obj => obj.filter(r => r.isActive)),
-            catchError(() => {
-              this.searchFailed = true;
-              return of([]);
-            }))
+      switchMap(term => {
+        if (term !== '') {
+          if (this.allowSearching) {
+            return this.performSearch(term);
+          } else {
+            return this.resetDisplay();
+          }
+        } else {
+          if (this.allowSearching) {
+            return this.performSearch(term);
+          } else {
+            this.allowSearching = true;
+            return this.performSearch(term);
+          }
+        }
+      }
       ),
-      tap((obj) => {
-        console.log(obj);
+      tap(() => {
         this.searching = false;
       })
     );
+  };
+  performSearch(term: string): Observable<ProducerContact[]> {
+    return this._service.search(term, this.producerCode ? this.producerCode : 0).pipe(
+      tap((response) => {
+        this.searchFailed = false;
+        response.forEach((producerContact) => {
+          this.formatDisplay(producerContact);
+        });
+        this.searchResponse = response;
+      }),
+      map(obj => obj.filter(r => r.isActive)),
+      catchError(() => {
+        this.searchFailed = true;
+        return of([]);
+      }));
+  }
 }
