@@ -103,6 +103,7 @@
   </div>
   <div class="col-lg-1">
     <label for="status" title="Status">Status</label>
-    <div id="status">{{ submission.statusCodeDesc }}</div>
+    <input type="text" class="form-control" id="policyEventCode" [readonly]="isReadOnly"
+                value="{{submission.statusCodeDesc}}">
   </div>
 </div>

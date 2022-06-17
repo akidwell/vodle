@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { Code } from 'src/app/core/models/code';
 import { SubmissionClass } from '../../classes/SubmissionClass';
 
 @Component({
@@ -13,7 +14,7 @@ export class SubmissionInfoPanelLeftComponent implements OnInit {
   canEditSubmission = false;
   lockSubmissionFields = false;
   isRenewable = true;
-  newRenewalFlags = [{'value': 1, 'description': 'New'}, {'value': 2, 'description': 'Renewal'}, {'value': 3, 'description': 'Count as Renewal'}];
+  newRenewalFlags: Code[] = [];
   @Input() public submission!: SubmissionClass;
 
   constructor(private userAuth: UserAuth) {
@@ -22,7 +23,7 @@ export class SubmissionInfoPanelLeftComponent implements OnInit {
     );
   }
   ngOnInit(): void {
-
+    this.newRenewalFlags = this.submission.newRenewalFlag === 2 ? [{'key': 2, 'description': 'Renewal', code: ''}] : [{'key': 1, 'description': 'New', code: ''}, {'key': 3, 'description': 'Count as Renewal', code: ''}];
     this.isRenewable = this.submission.renewablePolicy == 1 ? true : false;
   }
   isFieldReadOnly(checkSubmissionLockStatus: boolean): boolean {

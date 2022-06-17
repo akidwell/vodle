@@ -13,6 +13,7 @@ import { SubmissionClass } from '../../classes/SubmissionClass';
 export class SubmissionHeaderComponent {
   authSub: Subscription;
   canEditSubmission = false;
+  isReadOnly = true;
   @Input() public submission!: SubmissionClass;
   policyTermOptions = [{'value': PolicyTermEnum.three_months, 'description': '3 months'},{'value': PolicyTermEnum.six_months, 'description': '6 months'}, {'value': PolicyTermEnum.annual, 'description': 'Annual'}, {'value': PolicyTermEnum.eighteen_months, 'description': '18 months'}, {'value': PolicyTermEnum.custom, 'description': 'Custom'}];
   constructor(private route: ActivatedRoute, private userAuth: UserAuth) {
