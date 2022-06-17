@@ -13,7 +13,8 @@
   </div>
 </div>
 <rsps-navigation></rsps-navigation>
-<body [style.padding-left.px]="headerPaddingService.sidebarPadding$ | async" >
+<body [style.padding-left.px]="headerPaddingService.sidebarPadding$ | async"
+[style.height.px]="headerPaddingService.totalBodyHeight$ | async">
   <router-outlet></router-outlet>
 </body>
 <app-notification aria-live="polite" aria-atomic="true"></app-notification>

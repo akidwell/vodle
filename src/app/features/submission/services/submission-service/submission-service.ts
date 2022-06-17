@@ -22,10 +22,10 @@ export class SubmissionService {
           return new SubmissionClass(receivedData);
         }));
   }
-  updateSubmission(submission: SubmissionClass) {
+  updateSubmission(submission: SubmissionClass): Observable<Submission> {
     const subJSON = submission.toJSON();
     const headers = { 'Content-Type': 'application/json'};
-    return this.http.put<SubmissionEvent>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
+    return this.http.put<Submission>(this.config.apiBaseUrl + 'api/submissions/', subJSON, {headers});
   }
   postSubmission(submission: SubmissionClass) {
     const subJSON = submission.toJSON();
