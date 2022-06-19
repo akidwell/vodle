@@ -15,9 +15,10 @@
       [readonly]="!canEdit"
       [disabled]="this.producerCode == null"
       (selectItem)="selectedProducerContact($event)"
+      (focus)="focus$.next($any($event).target.value)"
       (focusout)="leaveSearchBar()"
       placement="bottom-start"
-      placeholder="Producer search" />
+      placeholder="Producer Contact search" />
   </div>
   <div *ngIf="canEdit && showContactMaintenance" class="card">
     <div class="card-header" (click)="collapse.toggle()">Producer Contact Maintenance
