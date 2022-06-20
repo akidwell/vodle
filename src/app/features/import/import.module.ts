@@ -9,6 +9,7 @@ import { DecimalPipe } from '@angular/common';
 import { ImportComponent } from './components/import/import.component';
 import { RemoveCommaPipe } from 'src/app/shared/pipes/remove-comma.pipe';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
+import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BusyModule } from 'src/app/core/components/busy/busy.module';
     FontAwesomeModule,
     NgbModule,
     ReactiveFormsModule,
-    BusyModule
+    BusyModule,
+    DirectivesModule
   ],
   providers: [DecimalPipe]
 })

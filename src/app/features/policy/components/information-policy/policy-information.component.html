@@ -46,7 +46,7 @@
 
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body top-bordered">
           <div class="row">
             <div class="col-lg-2 col-md-8">
               <label for="submissionNumber"  class="form-label" title="Submission Number">Submission No.</label>
@@ -108,7 +108,7 @@
                 [(ngModel)]="policyInfo.policyId" name="policyId" #policyNumber="ngModel" [readonly]="isReadOnly">
               </div>
           </div>
-          <div class="paddedRow"></div>
+          <div class="empty-row"></div>
           <div class="row">
             <div class="col-lg-3 col-md-4">
               <label for="riskCity"  class="form-label"  title="Policy City">Policy City</label>
@@ -129,7 +129,7 @@
                 #riskZipCode="ngModel" name="riskZipCode">
             </div>
           </div>
-          <div class="paddedRow"></div>
+          <div class="empty-row"></div>
           <div class="row">
             <div class="col-lg-3 col-md-6">
               <label for="policyEffectiveDate" class="form-label" title="Effective Date">Effective Date</label>
@@ -197,7 +197,7 @@
               </div>
             </div>
           </div>
-          <div class="paddedRow"></div>
+          <div class="empty-row"></div>
           <div class="row">
             <div class="col-lg-3 col-md-12">
               <label for="carrierCode"  class="form-label" title="Carrier">Carrier</label>
@@ -247,7 +247,7 @@
             </div>
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body top-bordered">
           <div class="row">
             <div class="col-lg-1 col-md-4">
               <label for="riskGradeCode"  class="form-label" title="Risk Grade">Risk Grade</label>
@@ -290,7 +290,7 @@
               </ng-select>
             </div>
           </div>
-          <div class="paddedRow"*ngIf="checkAssumed() || checkDereg()"></div>
+          <div class="empty-row"*ngIf="checkAssumed() || checkDereg()"></div>
           <div class="row" *ngIf="checkAssumed() || checkDereg()">
             <div class="col-lg-6"></div>
             <div class="col-lg-3" *ngIf="!checkDereg()"></div>
@@ -317,7 +317,7 @@
             </div>
           </div>
         </div>
-        <div class="card-body" *ngIf="productRecallCovCodes.includes(policyInfo.quoteData.coverageCode)">
+        <div class="card-body top-bordered" *ngIf="productRecallCovCodes.includes(policyInfo.quoteData.coverageCode)">
           <div class="row">
             <div class="col-lg-12">
               <h5>Product Recall</h5>

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -27,7 +26,6 @@ export class InsuredAccountComponent implements OnInit {
   loadingNaics = true;
 
   @Input() public insured!: InsuredClass;
-  @ViewChild(NgForm, { static: false }) accountInfoForm!: NgForm;
   @ViewChild(InsuredAccountAddressComponent) addressComp: InsuredAccountAddressComponent | undefined;
   @ViewChild(InsuredAccountCenterComponent) centerComp: InsuredAccountCenterComponent | undefined;
   @ViewChild(InsuredAccountRightComponent) rightComp: InsuredAccountRightComponent | undefined;
@@ -55,10 +53,6 @@ export class InsuredAccountComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  isDirty(): boolean {
-    return (this.accountInfoForm.form.dirty ?? false) || (this.addressComp?.addressPanel?.dirty ?? false) || (this.centerComp?.centerPanel?.dirty ?? false) || (this.rightComp?.rightPanel?.dirty ?? false);
-  }
-
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
@@ -74,16 +68,5 @@ export class InsuredAccountComponent implements OnInit {
     else {
       this.naicsCodes$ = new Observable<Code[]>();
     }
-  }
-
-  markClean() {
-    this.accountInfoForm.form.markAsPristine();
-    this.accountInfoForm.form.markAsUntouched();
-    this.addressComp?.addressPanel.form.markAsPristine();
-    this.centerComp?.centerPanel.form.markAsPristine();
-    this.rightComp?.rightPanel.form.markAsPristine();
-    this.addressComp?.addressPanel.form.markAsUntouched();
-    this.centerComp?.centerPanel.form.markAsUntouched();
-    this.rightComp?.rightPanel.form.markAsUntouched();
   }
 }

@@ -10,6 +10,7 @@ import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesG
 import { EndorsementCoverageLocationGroupComponent } from '../coverages-endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { PolicyService } from '../../services/policy/policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'rsps-endorsement-coverage-location',
@@ -41,7 +42,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>;
   private modalRef!: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -177,13 +178,11 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       });
   }
 
-  @ViewChild('modalConfirmation') modalConfirmation: any;
-
   openDeleteConfirmation() {
     this.confirmation = 'overlay';
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+    this.confirmationDialogService.open('Delete Location Confirmation','Are you sure you want to delete this location and all coverages?').then((result: boolean) => {
       this.confirmation = '';
-      if (result == 'Yes') {
+      if (result) {
         this.delete();
       }
     });

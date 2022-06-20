@@ -55,9 +55,11 @@ ng-select .ng-dropdown-panel {
 
 .drag:hover {
   background: white;
-  cursor: move;
+  cursor: move !important;
   box-sizing: border-box;
   border-radius: 4px;
+  border: 1px solid grey;
+  padding-top: 4px;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
     0 8px 10px 1px rgba(0, 0, 0, 0.14),
     0 3px 14px 2px rgba(0, 0, 0, 0.12);
@@ -80,7 +82,50 @@ ng-select .ng-dropdown-panel {
   background-color: white;
 }
 
-html, body{height:100%;}
-#outer{
-min-height:100%;
+html,
+body {
+  height: 100%;
+}
+
+#outer {
+  min-height: 100%;
+}
+
+/* Card Header & Footer */
+.card-header {
+  color: white;
+  background-color: #00274e;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.card-footer {
+  font-weight: bold;
+  text-align: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.footer-count {
+  float: right;
+}
+
+.footer-button {
+  float: left;
+  background: none;
+  border: none;
+}
+
+.footer-button:hover {
+  text-decoration: underline;
+}
+
+/* Standard blank row */
+.empty-row {
+  margin: 6px !important;
+}
+
+/* Standate distance between components in rows */
+.component-row {
+  padding-bottom: 4px;
 }
