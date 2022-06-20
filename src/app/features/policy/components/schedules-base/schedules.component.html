@@ -1,14 +1,10 @@
-<div class="content">
-  <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
-  </ngb-alert>
-  <!-- <rsps-additional-named-insureds-group></rsps-additional-named-insureds-group> -->
-  <rsps-shared-additional-named-insureds-group [aniData]="aniGroups" [newANI]="newInsuredANI"
-  [canEdit]="canEditPolicy">
+<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
+</ngb-alert>
+<rsps-shared-additional-named-insureds-group [aniData]="aniGroups" [newANI]="newInsuredANI" [canEdit]="canEditPolicy">
 </rsps-shared-additional-named-insureds-group>
-  <div>
-    <button class="btn btn-sm btn-primary pull-right" *ngIf="locationData.length > 1"
-      (click)="collapseAllLocations()">Collapse All</button>
-  </div>
-  <rsps-endorsement-location-group></rsps-endorsement-location-group>
-  <rsps-underlying-coverages></rsps-underlying-coverages>
+<div class="button-bar">
+  <button class="btn btn-sm btn-primary pull-right" *ngIf="locationData.length > 1"
+    (click)="collapseAllLocations()">Collapse All</button>
 </div>
+<rsps-endorsement-location-group></rsps-endorsement-location-group>
+<rsps-underlying-coverages></rsps-underlying-coverages>

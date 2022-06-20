@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent;
 
-
   searchSub!: Subscription;
   loadingSub!: Subscription;
   loading = false;

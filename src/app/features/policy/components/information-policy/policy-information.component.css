@@ -1,52 +1,46 @@
-.card-header {
-    color: white;
-    background-color: #00274e;
-}
 input[type="text"] {
-    display: inline-block;
-}
-input[type="date"] {
-    display: inline-block;
-}
-input[type="checkbox"] {
-    display: inline-block;
+  display: inline-block;
 }
 
-.card-body{
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
-    display: inline-block;
-    width: 100%;
+input[type="date"] {
+  display: inline-block;
 }
-.form-label{
+
+input[type="checkbox"] {
+  display: inline-block;
+}
+
+.form-label {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
   display: block;
+  margin-bottom: 0px;
 }
-.form-checkbox{
+
+.form-checkbox {
   height: 25px;
-  width: 25px; 
+  width: 25px;
 }
 
 input[type="checkbox"][readonly] {
-    pointer-events: none;
+  pointer-events: none;
 }
 
-.ng-valid[required], .ng-valid.required  {
-    border-left: 5px solid #42A948;
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
 }
 
-.ng-invalid:not(form)  {
-    border-left: 5px solid #a94442;
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
 }
 
 #coinsurancePercentage {
   text-align: right;
 }
 
-.paddedRow{
-    margin: 15px !important;
+.top-bordered {
+  border-top: 2px solid black;
 }

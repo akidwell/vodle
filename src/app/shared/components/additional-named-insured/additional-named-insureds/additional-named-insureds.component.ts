@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
@@ -31,7 +30,6 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   @Input() ani!: AdditionalNamedInsured[];
   @Input() public canEdit = false;
   @Input() canDrag = false;
-  @ViewChild(NgForm, { static: false }) aniForm!: NgForm;
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
 

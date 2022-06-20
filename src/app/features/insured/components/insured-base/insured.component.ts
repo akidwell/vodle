@@ -14,7 +14,7 @@ export class InsuredComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //If the policy module is loaded and the user is not trying to access policy information we need to redirect them to policy information
+    //If the policy module is loaded and the user is not trying to access policy information we need to redirect them to insured information
     if (this.router.url.split('/').slice(-1)[0] != 'information' && !this.config.preventForcedRedirect) {
       this.doRedirect();
     }

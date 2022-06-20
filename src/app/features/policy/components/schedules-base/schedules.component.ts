@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -18,20 +18,15 @@ import { UnderlyingCoveragesComponent } from '../schedules-underlying-coverages/
 })
 export class SchedulesComponent implements OnInit, PolicySave {
   aniGroups!: AdditionalNamedInsured[];
-  // formStatus: any;
   authSub: Subscription;
   canEditPolicy = false;
   invalidMessage = '';
   showInvalid = false;
-  // aniData!: AdditionalNamedInsureds[];
   aniSub!: Subscription;
-  // notification: any;
   locationData: EndorsementLocation[] = [];
   newInsuredANI!: coverageANI;
 
   @ViewChild(EndorsementLocationGroupComponent) locationComp!: EndorsementLocationGroupComponent;
-  @Output() status: EventEmitter<any> = new EventEmitter();
-  // @ViewChild(AdditionalNamedInsuredsGroupComponent) aniGroupComp!: AdditionalNamedInsuredsGroupComponent;
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniGroupComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(UnderlyingCoveragesComponent) underlyingCoveragesComp!: UnderlyingCoveragesComponent;
 
@@ -44,7 +39,6 @@ export class SchedulesComponent implements OnInit, PolicySave {
     this.route.parent?.data.subscribe(data => {
       this.aniGroups = data['aniData'].additionalNamedInsureds;
       this.locationData = data['endorsementLocationData'].endorsementLocation;
-      // const policy = data['policyInfoData'].policyInfo;
       const endorsement = data['endorsementData'].endorsement;
       this.newInsuredANI = new coverageANI(this.policyService);
       this.newInsuredANI.policyId = endorsement.policyId;

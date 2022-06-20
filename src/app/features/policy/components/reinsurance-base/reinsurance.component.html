@@ -1,11 +1,10 @@
-<div class="content">
-  <rsps-policy-layer-header></rsps-policy-layer-header>
-  <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
-  </ngb-alert>
-  <div class="col-lg-2">
-    <button class="btn btn-sm btn-primary pull-right" *ngIf="canEdit" [disabled]="loading" (click)="addPolicyLayer()">Add Policy Layer</button>
-  </div>
-  <div *ngFor="let item of policyLayerData; let i = index">
-    <rsps-policy-layer-group [policyLayerData]=item  (addReinsurance)=addReinsurance($event)></rsps-policy-layer-group>
-  </div>
+<rsps-policy-layer-header></rsps-policy-layer-header>
+<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
+</ngb-alert>
+<div class="button-bar">
+  <button class="btn btn-sm btn-primary pull-right" *ngIf="canEdit" [disabled]="loading" (click)="addPolicyLayer()">Add
+    Policy Layer</button>
+</div>
+<div *ngFor="let item of policyLayerData; let i = index">
+  <rsps-policy-layer-group [policyLayerData]=item (addReinsurance)=addReinsurance($event)></rsps-policy-layer-group>
 </div>

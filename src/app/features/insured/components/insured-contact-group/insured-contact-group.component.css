@@ -1,19 +1,27 @@
 .card-header {
   color: white;
   background-color: #00274e;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
-a:hover {
-  color: white;
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-.underline:hover {
-  text-decoration: underline;
-}
-
-#locationFooter {
+.card-footer {
   font-weight: bold;
   text-align: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.footer-count {
+  float: right;
+}
+
+.footer-button {
+  float: left;
+  background: none;
+  border: none;
+}
+
+.footer-button:hover {
+  text-decoration: underline;
 }

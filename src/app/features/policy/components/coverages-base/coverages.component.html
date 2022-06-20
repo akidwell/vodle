@@ -3,30 +3,29 @@
     <ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true"
       [innerHTML]="invalidMessage"></ngb-alert>
     <rsps-endorsement-header [policyInfo]="policyInfo" [endorsement]="endorsement"></rsps-endorsement-header>
-    <div>
-      <button class="btn btn-sm btn-primary pull-right" *ngIf="canEdit" (click)="newLocation()">Add Location</button>
-      &nbsp;
+    <div class="button-bar">
+      <button class="btn btn-sm btn-primary" *ngIf="canEdit" appPreventDoubleClick (throttledClick)="newLocation()" [throttleTime]="700">Add Location</button>
       <span *ngIf="!copyIsActive">
-        <button class="btn btn-sm btn-secondary pull-right" *ngIf="canEdit" (click)="startCopyLocations()">Copy Location(s)</button>
-        &nbsp;
+        <button class="btn btn-sm btn-secondary margin-left" *ngIf="canEdit" (click)="startCopyLocations();">Copy
+          Location(s)</button>
       </span>
       <span *ngIf="copyIsActive">
-        <button class="btn btn-sm btn-primary pull-right" appPreventDoubleClick (throttledClick)="saveCopyLocations()" [throttleTime]="700"
-        [disabled]="!saveCopyLocationsActive()" *ngIf="canEdit">Copy Selected</button>
-        &nbsp;
-        <button class="btn btn-sm btn-secondary pull-right" *ngIf="canEdit" (click)="endCopyLocations()">Cancel Copy</button>
-        &nbsp;
+        <button class="btn btn-sm btn-primary margin-left" appPreventDoubleClick (throttledClick)="saveCopyLocations()"
+          [throttleTime]="700" [disabled]="!saveCopyLocationsActive()" *ngIf="canEdit">Copy Selected</button>
+        <button class="btn btn-sm btn-secondary margin-left" *ngIf="canEdit" (click)="endCopyLocations()">Cancel
+          Copy</button>
       </span>
-      <button class="btn btn-sm btn-secondary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
+      <button class="btn btn-sm btn-secondary margin-left" *ngIf="endorsementCoveragesGroups.length > 1"
         (click)="expandAllLocations()">Expand All</button>
-        &nbsp;
-      <button class="btn btn-sm btn-secondary pull-right" *ngIf="endorsementCoveragesGroups.length > 1"
+      <button class="btn btn-sm btn-secondary margin-left" *ngIf="endorsementCoveragesGroups.length > 1"
         (click)="collapseAllLocations()">Collapse All</button>
     </div>
     <div *ngFor="let item of endorsementCoveragesGroups; index as i">
-      <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event) *ngIf="(item.coverages.length > 0) || (this.canEditEndorsement)"
-        (deleteThisGroup)=deleteGroup($event)  [copyCoverageGroupsActive]=copyIsActive [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
-        [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length" [endorsement]="endorsement" [policyInfo]="policyInfo"></rsps-endorsement-coverage-location-group>
+      <rsps-endorsement-coverage-location-group (incrementSequence)=onIncrement($event)
+        *ngIf="(item.coverages.length > 0) || (this.canEditEndorsement)" (deleteThisGroup)=deleteGroup($event)
+        [copyCoverageGroupsActive]=copyIsActive [endorsementCoveragesGroup]=item [currentSequence]=coveragesSequence
+        [locationIndex]="i" [groupCount]="endorsementCoveragesGroups.length" [endorsement]="endorsement"
+        [policyInfo]="policyInfo"></rsps-endorsement-coverage-location-group>
     </div>
   </div>
 </form>

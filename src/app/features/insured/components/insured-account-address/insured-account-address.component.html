@@ -8,6 +8,7 @@
           [(ngModel)]="insured.name" name="namedInsured" #namedInsured="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="street1" class="form-label" title="Street Address">Street Address</label>
@@ -16,6 +17,7 @@
           name="street1" [(ngModel)]="insured.street1" #street1="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="street2" class="form-label" title="Apt/Suit/Floor">Apt/Suit/Floor</label>
@@ -24,19 +26,21 @@
           name="street2" [(ngModel)]="insured.street2" #street2="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-6">
         <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
         <div class="inputspinner">
           <input type="text" class="form-control" id="zip" [readonly]="!canEditInsured || insured.zipReadonly"
             [required]="canEditInsured && insured.zipRequired" name="zip" [(ngModel)]="insured.zip" #zip="ngModel"
-            mask="00000||00000-0000" [ngClass]="zipUpdated" (ngModelChange)="changeZip()">
+            mask="00000||00000-0000" [ngClass]="zipUpdated">
           <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true">
           </div>
         </div>
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-6">
         <label for="city" class="form-label" title="City">City</label>
@@ -62,6 +66,7 @@
         </div>
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-6">
         <label for="county" class="form-label" title="County">County</label>
@@ -88,6 +93,7 @@
         </div>
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-2">
         <label for="override" class="form-label" title="Override">Override</label>

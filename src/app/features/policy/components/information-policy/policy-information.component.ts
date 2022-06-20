@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AccountInformation, Endorsement, PolicyInformation, QuoteData, RiskLocation } from 'src/app/features/policy/models/policy';
+import { AccountInformation, Endorsement, PolicyInformation } from 'src/app/features/policy/models/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
@@ -18,7 +18,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./policy-information.component.css']
 })
 export class PolicyInformationComponent implements OnInit {
-  isReadOnly: boolean = true;
+  isReadOnly = true;
   policyCollapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
@@ -37,26 +37,26 @@ export class PolicyInformationComponent implements OnInit {
   policySymbols$: Observable<Code[]> | undefined;
   claimsMadeOrOccurrence$: Code[] = [];
   authSub: Subscription;
-  productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 ']
+  productRecallCovCodes: string[] = ['20 ', '21 ', '22 ', '92 ', '93 ', '94 ', '98 '];
   policySub!: Subscription;
   dereg!: boolean;
   assumed!: boolean;
   //canEditEndorsement is a check to see if the endorsement is able to be edited
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   //canEditPolicy is a check to see if the user is able to edit
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   statusSub!: Subscription;
   coveragesSub!: Subscription;
-  endorsementChanged: boolean = false;
+  endorsementChanged = false;
   endorsementSub!: Subscription;
-  canSetRetroDate: boolean = false;
-  canSetClaimsMadeOccurrence: boolean = false;
+  canSetRetroDate = false;
+  canSetClaimsMadeOccurrence = false;
   coverageCodesList: Code[] = [];
 
-  isPolicyEffectiveDateInvalid: boolean = false;
-  PolicyEffectiveDateError: string = "";
-  isPolicyExpirationDateInvalid: boolean = false;
-  PolicyExpirationDateError: string = "";
+  isPolicyEffectiveDateInvalid = false;
+  PolicyEffectiveDateError = '';
+  isPolicyExpirationDateInvalid = false;
+  PolicyExpirationDateError = '';
 
   @ViewChild(NgForm, { static: false }) policyInfoForm!: NgForm;
   @ViewChild(NgForm) form: NgForm | undefined;
@@ -98,7 +98,7 @@ export class PolicyInformationComponent implements OnInit {
         this.coverageCodesList = codes;
         this.determineClaimsMadeOccurrence();
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
@@ -125,7 +125,7 @@ export class PolicyInformationComponent implements OnInit {
     const errorMessages: string[] = [];
 
     if (effectiveDate >= expirationDate) {
-      errorMessages.push("Expiration Date must be after the Effective Date");
+      errorMessages.push('Expiration Date must be after the Effective Date');
     }
     return errorMessages;
   }
@@ -138,7 +138,7 @@ export class PolicyInformationComponent implements OnInit {
   }
   allowSave(): boolean {
     if (this.canEditPolicy && this.policyInfoForm.dirty) {
-      if (this.policyInfoForm.status != "VALID") {
+      if (this.policyInfoForm.status != 'VALID') {
         this.notification.show('Policy Information not saved.', { classname: 'bg-danger text-light', delay: 5000 });
         return false;
       }
@@ -151,10 +151,10 @@ export class PolicyInformationComponent implements OnInit {
     return this.dereg = this.policyInfo.deregulationIndicator == 'F'? true : false;
   }
   checkAssumed(): boolean{
-   return this.assumed = this.policyInfo.riskType == 'A'? true : false;
+    return this.assumed = this.policyInfo.riskType == 'A'? true : false;
   }
   ChangePolicyNumber() {
-    this.policyInfo.formattedPolicyNo = this.policyInfo.policyNo + (this.policyInfo.formattedPolicyNo.charAt(this.policyInfo.formattedPolicyNo.length-3) == "-" ? this.policyInfo.formattedPolicyNo.slice(-3) : "");
+    this.policyInfo.formattedPolicyNo = this.policyInfo.policyNo + (this.policyInfo.formattedPolicyNo.charAt(this.policyInfo.formattedPolicyNo.length-3) == '-' ? this.policyInfo.formattedPolicyNo.slice(-3) : '');
   }
   changeEffectiveDate() {
     if (this.endorsement.endorsementNumber == 0) {
@@ -189,10 +189,10 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
   changeRetroDate() {
-    this.policyInfo.quoteData.retroDate = this.policyInfo.retroDate
+    this.policyInfo.quoteData.retroDate = this.policyInfo.retroDate;
   }
   private get isPrimaryPolicy(): boolean {
-    return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC')
+    return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC');
   }
 
   clearNYFTZ() {
@@ -203,8 +203,8 @@ export class PolicyInformationComponent implements OnInit {
   }
   populateClaimsMadeOccurrence() {
     this.claimsMadeOrOccurrence$ = [];
-    this.claimsMadeOrOccurrence$.push({ code: "C", key: 0, description: "Claims-Made" });
-    this.claimsMadeOrOccurrence$.push({ code: "O", key: 1, description: "Occurrence" });
+    this.claimsMadeOrOccurrence$.push({ code: 'C', key: 0, description: 'Claims-Made' });
+    this.claimsMadeOrOccurrence$.push({ code: 'O', key: 1, description: 'Occurrence' });
   }
 
   isExtensionDateActive(): boolean {
@@ -254,9 +254,9 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
   async determineClaimsMadeOccurrence(){
-    var coverageCode = this.policyInfo.quoteData.coverageCode;
-    var coverageDetermined = false;
-    var coverageDescription = this.findCoverageCodeDescription(coverageCode);
+    const coverageCode = this.policyInfo.quoteData.coverageCode;
+    let coverageDetermined = false;
+    const coverageDescription = this.findCoverageCodeDescription(coverageCode);
     coverageDetermined = (this.isCoverageCodeClaimsMade(coverageDescription) || this.isCoverageCodeOccurrence(coverageDescription));
     if (!coverageDetermined) {
       this.canSetClaimsMadeOccurrence = true;
@@ -298,7 +298,7 @@ export class PolicyInformationComponent implements OnInit {
     }
   }
   findCoverageCodeDescription(coverageCode: string): string {
-    return this.coverageCodesList.find(x => x.code == coverageCode)?.description || ''
+    return this.coverageCodesList.find(x => x.code == coverageCode)?.description || '';
   }
 
   get canEdit(): boolean {

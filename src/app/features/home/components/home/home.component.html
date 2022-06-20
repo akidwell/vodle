@@ -1,26 +1,26 @@
-
-<div  class="sticky">
+<div class="sticky search-bar">
   <rsps-search-bar></rsps-search-bar>
+</div>
+<div class="d-flex justify-content-center" style="padding-top:5px; margin-right: 20%" *ngIf="loading">
+  <strong>Loading...</strong>
+  <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+</div>
+<div class="content-fluid" style="padding-top:60px !important;">
+  <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'policy'}">
+    <rsps-policy-search-results *ngIf="(searchResults.policySearchResponses.length > 0) || (version == '1.0')"
+      [searchResults]="searchResults" [version]="version"></rsps-policy-search-results>
   </div>
-  <div class="d-flex justify-content-center" style="padding-top:5px; margin-right: 20%" *ngIf="loading">
-    <strong>Loading...</strong>
-    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+  <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'submission'}">
+    <shared-rsps-submission-activity *ngIf="version == '2.0' && searchResults.submissionSearchResponses.length > 0"
+      [submissionResults]='submissionResults'></shared-rsps-submission-activity>
   </div>
-  
-<div class="content-fluid" style="padding-top:0px !important;">
-      <div class="row">
-        <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'policy'}">
-          <rsps-policy-search-results *ngIf="(searchResults.policySearchResponses.length > 0) || (version == '1.0')" [searchResults]="searchResults" [version]="version"></rsps-policy-search-results> </div>
-
-          <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'submission'}">
-          <shared-rsps-submission-activity *ngIf="version == '2.0' && searchResults.submissionSearchResponses.length > 0" [submissionResults]='submissionResults'></shared-rsps-submission-activity></div>
-          
-          <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'insured'}">
-          <rsps-insured-search-results *ngIf="version == '2.0' && searchResults.searchType != null || ''" [insuredResults]="insuredResults"></rsps-insured-search-results> </div>
-
-          <div [ngClass]="{'col-12 order-last': searchResults.searchType == 'insured'}">
-            <rsps-pacer-search-results *ngIf="pacerSearchResults.length > 0" [pacerSearchResults]="pacerSearchResults"></rsps-pacer-search-results> </div>
-   
-      </div>
- </div>
+  <div [ngClass]="{'col-12 order-first': searchResults.searchType == 'insured'}">
+    <rsps-insured-search-results *ngIf="version == '2.0' && searchResults.searchType != null || ''"
+      [insuredResults]="insuredResults"></rsps-insured-search-results>
+  </div>
+  <div [ngClass]="{'col-12 order-last': searchResults.searchType == 'insured'}">
+    <rsps-pacer-search-results *ngIf="pacerSearchResults.length > 0" [pacerSearchResults]="pacerSearchResults">
+    </rsps-pacer-search-results>
+  </div>
+</div>
 <rsps-direct-policy #modal></rsps-direct-policy>
