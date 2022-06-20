@@ -24,7 +24,6 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy = false;
   setLocationOnInit = false;
-  formStatus!: string;
   anchorId!: string;
   locationCollapsed = true;
   collapsePanelSubscription!: Subscription;
@@ -42,7 +41,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   @Input() public groupCount!: number;
   @Input() public copyCoverageGroupsActive!: boolean;
   @Output() incrementSequence: EventEmitter<number> = new EventEmitter();
-  @Output() status: EventEmitter<any> = new EventEmitter();
+  @Output() status: EventEmitter<number> = new EventEmitter();
   @ViewChild('modal') private locationComponent!: EndorsementCoverageLocationComponent;
   @ViewChild(NgForm, { static: false }) endorsementCoveragesForm!: NgForm;
   @Output() deleteThisGroup: EventEmitter<EndorsementCoveragesGroup> = new EventEmitter();
@@ -59,7 +58,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     this.incrementSequence.emit(this.currentSequence + 1);
     this.endorsementCoveragesGroup.coverages.push(newCoverage);
     this.endorsementCoveragesGroup.coverages[0].isFirst = true;
-    this.addComponent(newCoverage, true);
+    this.addComponent(newCoverage);
   }
 
   copyExistingCoverage(existingCoverage: EndorsementCoverage) {
@@ -70,7 +69,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     newCoverage.isFirst = false;
     this.incrementSequence.emit(this.currentSequence + 1);
     this.endorsementCoveragesGroup.coverages.push(newCoverage);
-    this.addComponent(newCoverage, true);
+    this.addComponent(newCoverage);
   }
 
   deleteCoverage(existingCoverage: EndorsementCoverage) {
@@ -189,17 +188,16 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
       viewContainerRef.clear();
 
       for (const coverage of this.endorsementCoveragesGroup.coverages) {
-        this.addComponent(coverage, false);
+        this.addComponent(coverage);
       }
       this.loaded = true;
     }
     this.locationCollapsed = action;
   }
 
-  async addComponent(coverage: any, focus: boolean) {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(EndorsementCoverageComponent);
+  async addComponent(coverage: EndorsementCoverage) {
     const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
-    const componentRef = viewContainerRef.createComponent<EndorsementCoverageComponent>(componentFactory);
+    const componentRef = viewContainerRef.createComponent(EndorsementCoverageComponent);
     componentRef.instance.coverage = coverage;
     componentRef.instance.policyInfo = this.policyInfo;
     componentRef.instance.copyExistingCoverage.subscribe(evt => this.copyExistingCoverage(evt));

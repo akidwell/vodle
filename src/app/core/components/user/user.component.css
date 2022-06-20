@@ -1,13 +1,18 @@
 .btn {
   background-color: #001f3e;
   color: white;
+  box-shadow: none;
 }
+
 #user-settings {
-right: 0;
-position: fixed;
-z-index: 9999 !important;
-background-color: #001f3e;
+  right: 0;
+  position: fixed;
+  z-index: 997 !important;
+  background-color: #001f3e;
+  border-bottom-left-radius: 16px;
+  border-top-left-radius: 16px;
 }
+
 .ngbDropdown {
   z-index: 2;
 }

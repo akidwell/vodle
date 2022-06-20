@@ -35,7 +35,7 @@ export class EndorsementLocationComponent implements OnInit {
   saveSub!: Subscription;
   collapsePanelSubscription!: Subscription;
   statusSub!: Subscription;
-  addressReadOnly = '';
+  // addressReadOnly = '';
 
   @Input() location!: EndorsementLocation;
   @Input() index!: number;
@@ -48,9 +48,13 @@ export class EndorsementLocationComponent implements OnInit {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => {
         this.canEditPolicy = canEditPolicy;
-        this.addressReadOnly = canEditPolicy ? 'address' : '';
+        // this.addressReadOnly = (canEditPolicy && !this.canDrag) ? 'address' : '';
       }
     );
+  }
+
+  get addressReadOnly() {
+    return (this.canEditPolicy && !this.canDrag) ? 'address' : 'address-drag';
   }
 
   ngOnInit(): void {

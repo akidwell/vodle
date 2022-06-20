@@ -18,6 +18,7 @@
           <div *ngIf="isSearching" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
         </div>
       </div>
+      <div class="empty-row"></div>
       <div class="col-lg-6">
         <label for="policyEffectiveDate">Effective Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyEffectiveDateCalendar"
@@ -27,6 +28,7 @@
         </mat-datepicker-toggle>
         <mat-datepicker #policyEffectiveDateCalendar></mat-datepicker>
       </div>
+      <div class="empty-row"></div>
       <div class="col-lg-6">
         <label for="policyExpirationDate">Expiration Date</label>
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyExpirationDateCalendar"
@@ -40,6 +42,7 @@
           Expiration Date must be after Effective Date
         </div>
       </div>
+      <div class="empty-row"></div>
       <div class="col-lg-4">
         <label for="policySymbol">Symbol</label>
         <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description" [readonly]="isRewrite"
@@ -53,6 +56,7 @@
           </ng-template>
         </ng-select>
       </div>
+      <div class="empty-row"></div>
       <div class="col-lg-4">
         <label for="policyNumber">Policy Number</label>
         <input type="text" class="form-control" id="policyNumber" minlength="7" maxlength="7"
@@ -64,6 +68,7 @@
           Must be 7 chars
         </div>
       </div>
+      <div class="empty-row"></div>
       <div class="col-lg-4" *ngIf="isRenewal">
         <label for="endorsementNumber">Copy Endorsement</label>
         <ng-select id="endorsementNumber" [items]="endorsementNumbers$ | async" bindLabel="endorsementNumber" [readonly]="!isRenewal || isSearching || isRewrite" 
@@ -76,6 +81,7 @@
             {{item.endorsementNumber}} - Premium: {{item.premium | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}} Limit: {{item.limit | currency: 'USD' : 'symbol':'1.0-0'}} Type: {{item.transactionType}}
           </ng-template>
         </ng-select>
+        <div class="empty-row"></div>
         <label for="premium">Premium</label>
         <input type="text" class="form-control" id="premium" [required]="isRenewal" [readonly]="!isRenewal || isSearching"
             name="premium" [(ngModel)]="policyData.premium" #premium="ngModel" string-to-currency [allowNegative]="false" maxInt>

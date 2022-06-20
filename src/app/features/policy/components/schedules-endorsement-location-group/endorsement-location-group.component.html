@@ -2,8 +2,9 @@
   <div class="card-header" (click)="collapse.toggle()">Location Schedule
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="canEditPolicy && locationData.length > 1"
-      [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation
+      *ngIf="canEditPolicy && locationData.length > 1" [color]="color" [(ngModel)]="canDrag"
+      (change)="toggleDragDrop()">
       Sort: {{canDrag ? 'On' : 'Off'}}
     </mat-slide-toggle>
   </div>
@@ -24,10 +25,8 @@
     </div>
   </div>
   <div class="card-footer">
-    <div id="locationFooter">
-      <button *ngIf="canEditPolicy" [disabled]="canDrag" style="float:left; background:none; border:none;"
-        class="underline" (click)="addNewEndorsementLocation();">Add Location</button>
-      <div style="float:right;">Locations: {{locationData.length}}</div>
-    </div>
+    <button *ngIf="canEditPolicy" [disabled]="canDrag" class="footer-button" (click)="addNewEndorsementLocation();">Add
+      Location</button>
+    <div class="footer-count">Locations: {{locationData.length}}</div>
   </div>
 </div>

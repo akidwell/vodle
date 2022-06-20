@@ -1,6 +1,29 @@
 .card-header {
   color: white;
   background-color: #00274e;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.card-footer {
+  font-weight: bold;
+  text-align: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.footer-count {
+  float: right;
+}
+
+.footer-button {
+  float: left;
+  background: none;
+  border: none;
+}
+
+.footer-button:hover {
+  text-decoration: underline;
 }
 
 .ng-valid[required],
@@ -10,39 +33,4 @@
 
 .ng-invalid:not(form) {
   border-left: 5px solid #a94442;
-}
-
-.button {
-  background: none !important;
-  border: none;
-  padding: 0 !important;
-  /*optional*/
-  font-family: arial, sans-serif;
-  /*input has OS specific font-family*/
-  color: #069;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.button:hover {
-  color: blue;
-}
-
-.collapse.show {
-  background-color: white;
-}
-
-a:hover {
-  color: white;
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-.underline:hover {
-  text-decoration: underline;
-}
-
-#reinsuranceFooter {
-  font-weight: bold;
-  text-align: center;
 }

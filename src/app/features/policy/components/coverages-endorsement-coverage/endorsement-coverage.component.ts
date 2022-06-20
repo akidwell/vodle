@@ -257,7 +257,7 @@ export class EndorsementCoverageComponent implements OnInit {
   checkDeductibleTypeRequired(): boolean {
     if (this.canEdit && this.showDeductible && (this.subCodeDefaults && this.subCodeDefaults.subCode == 336) && (this.endorsementStoredValuesService.SIR == null || this.endorsementStoredValuesService.SIR == 0)) {
       return true;
-    } else if (this.coverage.deductible && this.coverage.deductible > 0) {
+    } else if (this.canEdit && this.coverage.deductible && this.coverage.deductible > 0) {
       return true;
     } else {
       return false;
