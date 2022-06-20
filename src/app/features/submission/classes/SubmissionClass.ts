@@ -403,7 +403,7 @@ export class SubmissionClass implements Submission {
     if (diff >= this._effectiveDatePastWarningRange) {
       this.warningsList.push('Policy Effective Date is effective ' + diff + ' days ago.');
     } else if (diff <= this._effectiveDateFutureWarningRange) {
-      this.warningsList.push('Policy Effective Date is effective ' + Math.abs(diff) + ' days in the future.');
+      this.warningsList.push('Policy Effective Date is effective ' + (Math.abs(diff) + 1) + ' days in the future.');
     }
   }
   setExpirationDateBeforeEffectiveDateWarning() {
