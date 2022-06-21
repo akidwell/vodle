@@ -1,0 +1,18 @@
+<form #addressPanel="ngForm">
+    <div class="panel">
+      <div class="row">
+        <div class="col-lg-12">
+          <label for="submissionNumber" class="form-label" title="First Named Insured">Submission Number</label>
+          <input type="text" class="form-control" id="submissionNumber" maxlength="40"
+            [(ngModel)]="quote.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+            <label for="quoteId" class="form-label" title="First Named Insured">QuoteId</label>
+            <input type="text" class="form-control" id="quoteId" maxlength="40"
+              [(ngModel)]="quote.quoteId" name="quoteId" #quoteId="ngModel">
+          </div>
+      </div>
+    </div>
+</form>
