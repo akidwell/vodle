@@ -108,6 +108,16 @@ export class SubmissionInformationComponent implements OnInit {
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
+  routeToQuote(submissionNumber: number) {
+    this.navigationService.resetPolicy();
+    this.router.navigate(['/quote/' + submissionNumber.toString() + '/information']);
+  }
+
+  routeToNewQuote() {
+    this.navigationService.resetPolicy();
+    this.router.navigate(['/quote/information']);
+  }
+
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;

@@ -16,11 +16,16 @@
     [accountInfo]="pageDataService.accountInfo"
     [policyInfo]="pageDataService.policyData">
   </rsps-policy-header>
+  <rsps-quote-header
+  *ngIf="pageDataService.quoteData != null"
+></rsps-quote-header>
   </div>
 
   <div class="button-bar"
   *ngIf="(pageDataService.submissionData != null && pageDataService.submissionData.isDirty)
-  || (pageDataService.insuredData != null && pageDataService.insuredData.isDirty) || pageDataService.lastSubmission !== null"
+  || (pageDataService.insuredData != null && pageDataService.insuredData.isDirty) || pageDataService.lastSubmission !== null
+  || (pageDataService.quoteData != null && pageDataService.quoteData.isDirty)"
+  
   [style.top.px]="headerPaddingService.buttonBarPadding$ | async"
   [style.height.px]="headerPaddingService.buttonBarHeight$ | async">
     <button
@@ -37,6 +42,7 @@
       Save
     </button>
     <button
+    style="margin-left: 50px;"
       class="btn btn-md btn-primary"
       *ngIf="(canEditInsured && pageDataService.insuredData != null && pageDataService.insuredData.isDirty) "
       style="margin: 5px"
@@ -49,6 +55,7 @@
     >
       Save
     </button>
+
     <button
       class="btn btn-md btn-primary"
       *ngIf="(pageDataService.lastSubmission != null) "
