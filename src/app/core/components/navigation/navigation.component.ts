@@ -39,7 +39,6 @@ export class NavigationComponent implements OnInit {
   showFav = false;
   canEditPolicy = false;
   showFullSidebar = localStorage.getItem('show-sidebar') === 'false' ? false : true;
-  sidebarMinWidth = LayoutEnum.sidebar_min_width;
   sidebarMaxWidth = LayoutEnum.sidebar_width;
   sidebarStartingWidth: number;
 
@@ -105,6 +104,9 @@ export class NavigationComponent implements OnInit {
       this.headerPaddingService.sidebarPadding = 0;
       this.headerPaddingService.sidebarWidthAndHeight = 0;
     }
+  }
+  routeToHome() {
+    this.router.navigate(['/home']);
   }
   createDirectPolicy() {
     this.router.navigate(['/home']).then(() => {

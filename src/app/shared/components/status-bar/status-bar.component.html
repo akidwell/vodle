@@ -5,7 +5,7 @@
   [style.height.px]="headerPaddingService.headerPadding$ | async"
   (window:resize)="onResize()"
   [style.width.px]="headerPaddingService.totalHeaderWidth$ | async"
-  [ngStyle]="{'margin-left.px': this.headerLeftMargin}"
+  [style.margin-left.px]="headerPaddingService.sidebarExpanderWidth$ | async"
   >
     <rsps-insured-header
     *ngIf="pageDataService.insuredData != null"

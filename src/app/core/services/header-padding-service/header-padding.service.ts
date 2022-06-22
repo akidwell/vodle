@@ -10,6 +10,7 @@ export class HeaderPaddingService{
   private _buttonBarHeight = LayoutEnum.button_bar_height;
   private _sidebarPadding = 210;
   private _sidebarWidthAndHeight = 100;
+  private _sidebarExpanderWidth = 50;
   private _sidebarExpanded = true;
   private _userFieldWidth = 0;
   private _navRoutingHeight = LayoutEnum.nav_routing_height;
@@ -26,6 +27,7 @@ export class HeaderPaddingService{
 
   sidebarPadding$: BehaviorSubject<number> = new BehaviorSubject(this._sidebarPadding);
   sidebarWidthAndHeight$: BehaviorSubject<number> = new BehaviorSubject(this._sidebarWidthAndHeight);
+  sidebarExpanderWidth$: BehaviorSubject<number> = new BehaviorSubject(this._sidebarExpanderWidth);
   sidebarExpanded$: BehaviorSubject<boolean> = new BehaviorSubject(this._sidebarExpanded);
   userFieldWidth$: BehaviorSubject<number> = new BehaviorSubject(this._userFieldWidth);
   navRoutingHeight$: BehaviorSubject<number> = new BehaviorSubject(this._navRoutingHeight);
@@ -83,10 +85,13 @@ export class HeaderPaddingService{
     this.sidebarWidthAndHeight$.next(this._sidebarWidthAndHeight);
     if (val > 0){
       this._sidebarExpanded = true;
+      this._sidebarExpanderWidth = LayoutEnum.sidebar_toggle_open_width;
     } else {
       this._sidebarExpanded = false;
+      this._sidebarExpanderWidth = LayoutEnum.sidebar_toggle_closed_width;
     }
     this.sidebarExpanded$.next(this._sidebarExpanded);
+    this.sidebarExpanderWidth$.next(this._sidebarExpanderWidth);
   }
   get userFieldWidth(): number {
     return this._userFieldWidth;
@@ -121,6 +126,14 @@ export class HeaderPaddingService{
     this._totalBodyHeight = val;
     this.totalBodyHeight$.next(this._totalBodyHeight);
   }
+  get sidebarExpanderWidth(): number {
+    return this._navRoutingHeight;
+  }
+
+  set sidebarExpanderWidth(val: number) {
+    this._sidebarExpanderWidth = val;
+    this.updateInnerWidth();
+  }
   get totalPageWidth(): number {
     return this._navRoutingHeight;
   }
@@ -146,7 +159,7 @@ export class HeaderPaddingService{
     this.totalBodyHeight = window.innerHeight - this._totalHeaderHeight;
   }
   updateInnerWidth(){
-    this._totalHeaderWidth = this._totalPageWidth - this._userFieldWidth - this._sidebarPadding - LayoutEnum.sidebar_min_width;
+    this._totalHeaderWidth = this._totalPageWidth - this._userFieldWidth - this._sidebarPadding - this._sidebarExpanderWidth;
     this._totalBodyWidth = this._totalPageWidth - this._sidebarPadding;
     setTimeout(() => this.totalHeaderWidth$.next(this._totalHeaderWidth),0);
     setTimeout(() => this.totalBodyWidth$.next(this._totalBodyWidth),0);

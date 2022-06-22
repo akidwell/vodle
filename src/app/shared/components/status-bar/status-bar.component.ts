@@ -42,7 +42,6 @@ export class StatusBarComponent implements OnInit {
   userPanelSize = 0;
   headerWidth = 0;
   widthOffset = 0;
-  headerLeftMargin = LayoutEnum.sidebar_min_width;
   displayHeaderSub: Subscription;
 
   @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
