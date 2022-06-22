@@ -1,7 +1,12 @@
-<div class="sidebar"
-[ngStyle]="{'max-width.px': sidebarMaxWidth, 'width.px': sidebarStartingWidth}"
-[style.width.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
-[style.height.%]="headerPaddingService.sidebarWidthAndHeight$ | async">
+<div
+  class="sidebar"
+  [ngStyle]="{
+    'max-width.px': sidebarMaxWidth,
+    'width.px': sidebarStartingWidth
+  }"
+  [style.width.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
+  [style.height.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
+>
   <div *ngIf="showFullSidebar">
     <img src="./assets/images/risk-solutions-logo-small.png" />
     <div *ngIf="isAuthenticated">
@@ -21,7 +26,7 @@
       <div *ngFor="let policy of policyHistory">
         <a
           class="nav-link"
-          *ngIf="policy.policyId > 0"
+          *ngIf="policy.policyId != null"
           routerLinkActive="active"
           [routerLink]="[
             '/policy/' + policy.policyId + '/' + policy.endorsementNumber
@@ -38,6 +43,66 @@
           ></fa-icon>
           <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
           {{ policy.policyNumber + ":" + policy.endorsementNumber }}
+          <fa-icon
+            *ngIf="policy.favorite"
+            style="float: right"
+            title="Unfavorite"
+            [icon]="faSolidStar"
+            (click)="$event.preventDefault(); unfavorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+          <fa-icon
+            *ngIf="!policy.favorite && policy.hover"
+            style="float: right"
+            title="Favorite"
+            [icon]="faStar"
+            (click)="$event.preventDefault(); favorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+        </a>
+        <a
+          class="nav-link"
+          *ngIf="policy.submissionNumber != null"
+          routerLinkActive="active"
+          [routerLink]="['/submission/' + policy.submissionNumber]"
+          (mouseover)="hoverFavorite(policy)"
+          (mouseleave)="unhoverFavorite(policy)"
+          (click)="openPolicy()"
+          #policyActive="routerLinkActive"
+          [title]="policy.submissionNumber"
+        >
+          <fa-icon [icon]="faFileAlt"></fa-icon>
+          {{ policy.submissionNumber }}
+          <fa-icon
+            *ngIf="policy.favorite"
+            style="float: right"
+            title="Unfavorite"
+            [icon]="faSolidStar"
+            (click)="$event.preventDefault(); unfavorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+          <fa-icon
+            *ngIf="!policy.favorite && policy.hover"
+            style="float: right"
+            title="Favorite"
+            [icon]="faStar"
+            (click)="$event.preventDefault(); favorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+        </a>
+        <a
+          class="nav-link"
+          *ngIf="policy.quoteId != null"
+          routerLinkActive="active"
+          [routerLink]="['/quote/' + policy.quoteId]"
+          (mouseover)="hoverFavorite(policy)"
+          (mouseleave)="unhoverFavorite(policy)"
+          (click)="openPolicy()"
+          #policyActive="routerLinkActive"
+          [title]="policy.submissionNumber"
+        >
+          <fa-icon [icon]="faCommentDollar"></fa-icon>
+          {{ policy.quoteId }}
           <fa-icon
             *ngIf="policy.favorite"
             style="float: right"
@@ -78,7 +143,7 @@
         <rsps-applications></rsps-applications>
       </div>
       <a class="nav-link" (click)="toggleReportNavbar()">
-        <fa-icon [icon]="faFileAlt"></fa-icon>
+        <fa-icon [icon]="faChartLine"></fa-icon>
         Reports
         <fa-icon
           style="float: right"
@@ -106,13 +171,23 @@
       <span class="navbar-toggler-icon"></span>
     </button> -->
   </div>
-  <div class="sidebar-toggle"
-  [style.min-height.px]="headerPaddingService.headerPadding$ | async"
-  [style.width.px]="sidebarMinWidth"
-  [style.left.px]="headerPaddingService.sidebarPadding$ | async">
-    <div class="toggle" (click)="toggleSidebar()" >
-      <fa-icon *ngIf="!showFullSidebar" class="toggle-icon"[icon]="faBars"></fa-icon>
-      <fa-icon *ngIf="showFullSidebar" class="toggle-icon" [icon]="faX"></fa-icon>
+  <div
+    class="sidebar-toggle"
+    [style.min-height.px]="headerPaddingService.headerPadding$ | async"
+    [style.width.px]="sidebarMinWidth"
+    [style.left.px]="headerPaddingService.sidebarPadding$ | async"
+  >
+    <div class="toggle" (click)="toggleSidebar()">
+      <fa-icon
+        *ngIf="!showFullSidebar"
+        class="toggle-icon"
+        [icon]="faBars"
+      ></fa-icon>
+      <fa-icon
+        *ngIf="showFullSidebar"
+        class="toggle-icon"
+        [icon]="faX"
+      ></fa-icon>
     </div>
   </div>
 </div>

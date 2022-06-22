@@ -5,6 +5,7 @@ export class QuoteClass implements Quote {
   private _submissionNumber: number | null = null;
   private _quoteId: number | null = null;
   private _cuspNumber: number | null = null;
+  private _quoteNumber: number | null = null;
 
   private _isDirty = false;
   isNew = false;
@@ -44,6 +45,15 @@ export class QuoteClass implements Quote {
     this._isDirty = true;
   }
 
+  get quoteNumber(): number | null{
+    return this._quoteNumber;
+  }
+
+  set quoteNumber(value: number | null){
+    this._quoteNumber = value;
+    this._isDirty = true;
+  }
+
   get isDirty(): boolean {
     return this._isDirty ;
   }
@@ -60,7 +70,7 @@ export class QuoteClass implements Quote {
     this._submissionNumber = quote?.submissionNumber || null;
     this._quoteId = quote?.quoteId || null;
     this._cuspNumber = quote?.cuspNumber || null;
-
+    this._quoteNumber = quote?.quoteNumber || null;
     this.setReadonlyFields();
     this.setRequiredFields();
   }

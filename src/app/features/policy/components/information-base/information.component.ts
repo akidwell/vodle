@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { deepClone } from 'src/app/core/utils/deep-clone';
-import { PolicyHistoryService } from 'src/app/core/services/policy-history/policy-history.service';
+import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { AccountInformation, Endorsement, PolicyInformation } from '../../models/policy';
 import { PolicySave } from '../../models/policy-save';
@@ -36,7 +36,7 @@ export class InformationComponent implements OnInit, PolicySave {
   statusSub!: Subscription;
 
   constructor(private endorsementStatusService: EndorsementStatusService, private route: ActivatedRoute, private notification: NotificationService,
-    private policyService: PolicyService, private policyHistoryService: PolicyHistoryService,private userAuth: UserAuth) {
+    private policyService: PolicyService, private historyService: HistoryService,private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -102,7 +102,7 @@ export class InformationComponent implements OnInit, PolicySave {
     if (this.policyInfoComp.allowSave()) {
       this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
         this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
-        this.policyHistoryService.updatePolicyHistory(this.policyInfo.policyId, this.policyInfo.policySymbol.trim() + ' ' + this.policyInfo.formattedPolicyNo, this.endorsement.endorsementNumber);
+        this.historyService.updatePolicyHistory(this.policyInfo.policyId, this.policyInfo.policySymbol.trim() + ' ' + this.policyInfo.formattedPolicyNo, this.endorsement.endorsementNumber);
         this.policyInfoComp.policyInfoForm.form.markAsPristine();
         this.policyInfoComp.policyInfoForm.form.markAsUntouched();
         this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });

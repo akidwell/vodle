@@ -13,7 +13,7 @@ import { InvoiceDetailComponent } from '../summary-invoice-detail/invoice-detail
 import { PolicyIssuanceRequest } from '../../models/policy-issuance-request';
 import { PolicyIssuanceService } from '../../services/policy-issuance-service/policy-issuance.service';
 import { ConfirmationDialogService } from '../../../../core/services/confirmation-dialog/confirmation-dialog.service';
-import { PolicyHistoryService } from 'src/app/core/services/policy-history/policy-history.service';
+import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { PolicyInformation } from '../../models/policy';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
@@ -46,7 +46,7 @@ export class InvoiceGroupComponent implements OnInit {
   @ViewChildren(InvoiceDetailComponent) components: QueryList<InvoiceDetailComponent> | undefined;
   @Output() resetInvoice: EventEmitter<null> = new EventEmitter();
 
-  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService, private policyHistoryService: PolicyHistoryService) {
+  constructor(private userAuth: UserAuth, private router: Router, private policyService: PolicyService, private notification: NotificationService, public datepipe: DatePipe, private endorsementStatusService: EndorsementStatusService, private policyIssuanceService: PolicyIssuanceService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService, private historyService: HistoryService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -320,7 +320,7 @@ export class InvoiceGroupComponent implements OnInit {
                   this.endorsementStatusService.invoiceSaving = true;
                   const results$ = this.policyService.deleteEndorsement(this.invoice.policyId, this.invoice.endorsementNumber);
                   await lastValueFrom(results$).then(() => {
-                    this.policyHistoryService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
+                    this.historyService.removePolicy(this.invoice.policyId, this.invoice.endorsementNumber);
                     this.messageDialogService.open('Invoice Voided', 'Transaction was deleted succesfully!');
                   },
                   error => {

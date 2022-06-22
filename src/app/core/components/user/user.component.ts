@@ -3,7 +3,7 @@ import { AuthService } from '../../authorization/auth.service';
 import { UserAuth } from '../../authorization/user-auth';
 import { faUser, faPowerOff, faKey, faIdBadge, faUserLock, faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { PolicyHistoryService } from '../../services/policy-history/policy-history.service';
+import { HistoryService } from '../../services/policy-history/policy-history.service';
 import { ConfirmationDialogService } from '../../services/confirmation-dialog/confirmation-dialog.service';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '@okta/okta-angular';
@@ -46,7 +46,7 @@ export class UserComponent {
 
 
   constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService,
-  private apiService: APIVersionService, private authService: AuthService, private policyHistoryService: PolicyHistoryService,
+  private apiService: APIVersionService, private authService: AuthService, private historyService: HistoryService,
   private confirmationDialogService: ConfirmationDialogService, public headerPaddingService: HeaderPaddingService, public elementRef:ElementRef) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
@@ -70,7 +70,7 @@ export class UserComponent {
     this.editIns = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
-    this.historySub = this.policyHistoryService.policyhistorySize$.subscribe(
+    this.historySub = this.historyService.policyhistorySize$.subscribe(
       (size: number) => {
         this.historySize = size;
       }
@@ -90,14 +90,14 @@ export class UserComponent {
   addHistoryCount() {
     if (this.historySize < 20) {
       this.historySize++;
-      this.policyHistoryService.policyhistorySize = this.historySize;
+      this.historyService.policyhistorySize = this.historySize;
     }
   }
 
   removeHistoryCount() {
     if (this.historySize > 1) {
       this.historySize--;
-      this.policyHistoryService.policyhistorySize = this.historySize;
+      this.historyService.policyhistorySize = this.historySize;
     }
   }
   changeApiVersion(){
@@ -106,7 +106,7 @@ export class UserComponent {
   async clearHistory() {
     const confirm = await this.confirmationDialogService.open('Confirmation', 'Are you sure you want to clear all Policies in your history? Have to refresh to get changes.');
     if (confirm) {
-      this.policyHistoryService.clearHistory();
+      this.historyService.clearHistory();
     }
   }
 }

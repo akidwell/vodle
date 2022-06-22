@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, map, Observable, of, tap } from 'rxjs';
+import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
 import { SubmissionResolved } from '../../models/submission-resolved';
 import { SubmissionService } from '../submission-service/submission-service';
@@ -10,7 +11,7 @@ import { SubmissionService } from '../submission-service/submission-service';
 })
 export class SubmissionResolver implements Resolve<SubmissionResolved> {
 
-  constructor(private router: Router, private submissionService: SubmissionService) { }
+  constructor(private router: Router, private submissionService: SubmissionService, private historyService: HistoryService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<SubmissionResolved> {
     const id = route.paramMap.get('id') ?? '';
@@ -37,7 +38,10 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
 
     return this.submissionService.getSubmission(Number(id))
       .pipe(
-        tap((submission) => console.log(submission)),
+        tap((submission) => {
+          // Update history for opened Submission
+          this.historyService.updateSubmissionHistory(submission.submissionNumber);
+        }),
         map(submission => ({ submission })),
         catchError((error) => {
           console.log(error);
@@ -47,55 +51,3 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
       );
   }
 }
-
-
-// @Injectable({
-//     providedIn: 'root'
-// })
-// export class InsuredContactResolver implements Resolve<InsuredContactsResolved> {
-
-//     constructor(private router: Router, private insuredService: InsuredService) { }
-
-//     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredContactsResolved> {
-//         const id = route.paramMap.get('id') ?? "";
-
-//         if (isNaN(+id)) {
-//             const message = `Insured id was not a number: ${id}`;
-//             return of({ insuredContacts: [], error: message });
-//         }
-
-//         return this.insuredService.getInsuredContacts(Number(id))
-//             .pipe(
-//                 map(insuredContacts => ({ insuredContacts })),
-//                 catchError((error) => {
-//                     return of({ insuredContacts: [], error: error });
-//                 })
-//             );
-//     }
-// }
-
-
-// @Injectable({
-//     providedIn: 'root'
-// })
-// export class InsuredAdditionalNamedInsuredsResolver implements Resolve<InsuredAdditionalNamedInsuredsResolved> {
-
-//     constructor(private router: Router, private insuredService: InsuredService) { }
-
-//     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredAdditionalNamedInsuredsResolved> {
-//         const id = route.paramMap.get('id') ?? "";
-
-//         if (isNaN(+id)) {
-//             const message = `Insured id was not a number: ${id}`;
-//             return of({ additionalNamedInsureds: null, error: message });
-//         }
-
-//         return this.insuredService.getInsuredAdditionalNamedInsured(Number(id))
-//             .pipe(
-//                 map(additionalNamedInsureds => ({ additionalNamedInsureds })),
-//                 catchError((error) => {
-//                     return of({ additionalNamedInsureds: null, error: error });
-//                 })
-//             );
-//     }
-// }

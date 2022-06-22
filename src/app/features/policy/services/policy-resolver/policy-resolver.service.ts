@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { PolicyHistoryService } from '../../../../core/services/policy-history/policy-history.service';
+import { HistoryService } from '../../../../core/services/policy-history/policy-history.service';
 import { EndorsementCoveragesResolved } from '../../components/coverages-base/coverages';
 import { AccountInformationResolved, AdditionalNamedInsuredsResolved, EndorsementLocationResolved, EndorsementResolved, EndorsementStatusResolved, PolicyInformationResolved, PolicyLayerDataResolved } from '../../models/policy';
 import { PolicyService } from '../policy/policy.service';
 import { ReinsuranceLookupService } from '../reinsurance-lookup/reinsurance-lookup.service';
 import { UnderlyingCoveragesResolved } from '../../models/schedules';
-import { InvoiceResolved } from '../../models/invoice';
 import { EndorsementStatusService } from '../endorsement-status/endorsement-status.service';
 
 @Injectable({
@@ -47,7 +46,7 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
 })
 export class PolicyInformationResolver implements Resolve<PolicyInformationResolved> {
 
-  constructor(private router: Router, private policyService: PolicyService, private policyHistoryService: PolicyHistoryService, private reinsuranceLookupService: ReinsuranceLookupService) { }
+  constructor(private router: Router, private policyService: PolicyService, private historyService: HistoryService, private reinsuranceLookupService: ReinsuranceLookupService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyInformationResolved> {
     const id = route.paramMap.get('id') ?? '';
@@ -67,7 +66,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
       .pipe(
         tap(async res => {
           // Update history for opened Policy
-          this.policyHistoryService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + ' ' + res.formattedPolicyNo, Number(end));
+          this.historyService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + ' ' + res.formattedPolicyNo, Number(end));
           // Preload aggreements
           const results$ = this.reinsuranceLookupService.getReinsurance(res.programId, res.policyEffectiveDate);
           await lastValueFrom(results$);
