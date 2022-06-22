@@ -1,17 +1,3 @@
-.card-header {
-  color: white;
-  background-color: #00274e;
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-
-.card-footer {
-  font-weight: bold;
-  text-align: center;
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-
 .top-bordered {
   border-top: 2px solid black;
 }

@@ -7,6 +7,7 @@
 .table th {
   background-color: #335271;
   color: white;
+  padding: 6px;
 }
 
 .search-bar {
