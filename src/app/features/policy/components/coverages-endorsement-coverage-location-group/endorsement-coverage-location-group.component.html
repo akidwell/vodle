@@ -1,32 +1,27 @@
 <form #endorsementCoveragesForm="ngForm">
-  <div class="content">
-    <div class="card">
-      <div class="card-header" (click)="collapsePanel(!locationCollapsed)">
-        <span class="col-lg-1" *ngIf="copyCoverageGroupsActive">
-          <input type="checkbox" click-stop-propagation class="form-checkbox" id="copyGroup" [(ngModel)]="endorsementCoveragesGroup.copyThisGroup"
-            name="copyGroup" [readonly]="!canEditPolicy">
-            &nbsp;
-        </span>
-        <a [routerLink]="[]" click-stop-propagation (click)="openLocation(endorsementCoveragesGroup);">ID #:
-          {{endorsementCoveragesGroup.location.locationId}}</a>
-        <span *ngIf="groupCount > 1"
-          style="margin-left: 5px;">{{endorsementCoveragesGroup.location.street ? (endorsementCoveragesGroup.location.street + ' '): ('') }}
-          {{endorsementCoveragesGroup.location.city + ', ' + endorsementCoveragesGroup.location.state + ' ' + endorsementCoveragesGroup.location.zip}}</span>
-        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
-        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
-      </div>
-      <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
-        <ng-template endorsement-coverage-directive></ng-template>
-      </div>
-      <div class="card-footer">
-        <div id="locationTotal">
-          <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
-            (click)="addNewCoverage();">Add Coverage</button>
-          <span class="float-center">Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
-          </span>
-          <div style="float:right;">Coverages: {{endorsementCoveragesGroup.coverages.length}}</div>
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-header" (click)="collapsePanel(!locationCollapsed)">
+      <span class="col-lg-1" *ngIf="copyCoverageGroupsActive">
+        <input type="checkbox" click-stop-propagation class="form-checkbox" id="copyGroup"
+          [(ngModel)]="endorsementCoveragesGroup.copyThisGroup" name="copyGroup" [readonly]="!canEditPolicy">
+      </span>
+      <a [routerLink]="[]" click-stop-propagation (click)="openLocation(endorsementCoveragesGroup);">ID #:
+        {{endorsementCoveragesGroup.location.locationId}}</a>
+      <span *ngIf="groupCount > 1" style="margin-left: 5px;">{{endorsementCoveragesGroup.location.street ?
+          (endorsementCoveragesGroup.location.street + ' '): ('') }}
+        {{endorsementCoveragesGroup.location.city + ', ' + endorsementCoveragesGroup.location.state + ' ' +
+          endorsementCoveragesGroup.location.zip}}</span>
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="locationCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!locationCollapsed"></fa-icon>
+    </div>
+    <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="locationCollapsed">
+      <ng-template endorsement-coverage-directive></ng-template>
+    </div>
+    <div class="card-footer">
+      <button *ngIf="canEdit" class="footer-button" (click)="addNewCoverage();">Add Coverage</button>
+      <span>Location Premium: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
+      </span>
+      <div class="footer-count">Coverages: {{endorsementCoveragesGroup.coverages.length}}</div>
     </div>
   </div>
   <rsps-endorsement-coverage-location #modal></rsps-endorsement-coverage-location>

@@ -10,8 +10,9 @@
       <label for="createDate">Create Date</label>
     </div>
   </div> -->
-  <div class="card-body" [ngClass]="{'expanded':!ucdCollapsed}">
-    <div class="row" style="padding-top: 10px; width: 100%" (click)="collapseExpand(false)">
+  <div class="component-row">
+  <div [ngClass]="ucdCollapsed ? 'collapsed' : 'expanded'">
+    <div class="row" (click)="collapseExpand(false)">
       <div *ngIf="isExcessUmbrella" class="col-lg-2">
         <div>Layer Type</div>
         <ng-select id="label" click-stop-propagation [items]="layerTypes" placeholder=""
@@ -58,8 +59,9 @@
           </div>
       </div>
     </div>
-  <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ucdCollapsed">
-    <div class="row" style="width: 100%" >
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="ucdCollapsed">
+    <div class="empty-row"></div>
+    <div class="row">
       <div class="col-lg-2">
         <div>Policy Number</div>
         <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
@@ -106,20 +108,20 @@
       </div>
       <button style="float:left; background:none; border:none;" class="underline" *ngIf="canEditPolicy" (click)="ucData.addUserDefinedLimit()">Add Limit</button>
     </div>
-    <div class="empty-space"></div>
-  <div class="row container">
+    <div class="empty-row"></div>
+  <div class="row">
     <div class="col-lg-2">
       <span class="btn btn-secondary" (click)=deleteThisUnderlyingCoverage() hover-class="btn-danger"
         *ngIf="!ucData.isNew">Delete</span>
       <span class="btn btn-secondary" (click)=deleteThisUnderlyingCoverage() hover-class="btn-warning"
         *ngIf="ucData.isNew">Remove</span>
     </div>
-    <span class='astext' (click)="collapseExpand(true)">
-      <fa-icon [icon]="faArrowUp" ></fa-icon>
-    </span>
+   
   </div>
+  <button *ngIf="!ucdCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse">
+    <fa-icon [icon]="faArrowUp"></fa-icon>
+  </button>
 </div>
-  </div>
-
-
+</div>
+</div>
 </form>

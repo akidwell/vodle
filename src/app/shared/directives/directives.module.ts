@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AutofocusDirective } from './autofocus.directive';
 import { ClickStopPropagation } from './click-stop-propagation.directive';
 import { HoverClassDirective } from './hover-class.directive';
 import { MaxIntegerValidator } from './max-integer.directive';
@@ -14,7 +15,8 @@ import { StringToCurrencyDirective } from './string-to-currency';
     StringToCurrencyDirective,
     ClickStopPropagation,
     PreventDoubleClickDirective,
-    HoverClassDirective
+    HoverClassDirective,
+    AutofocusDirective
   ],
   exports: [
     NullValueDirective,
@@ -22,7 +24,8 @@ import { StringToCurrencyDirective } from './string-to-currency';
     StringToCurrencyDirective,
     ClickStopPropagation,
     PreventDoubleClickDirective,
-    HoverClassDirective
+    HoverClassDirective,
+    AutofocusDirective
   ]
 })
 export class DirectivesModule { }

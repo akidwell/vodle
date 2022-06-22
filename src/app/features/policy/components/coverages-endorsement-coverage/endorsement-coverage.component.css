@@ -2,6 +2,7 @@
   color: white;
   background-color: #00274e;
 }
+
 input[type="text"] {
   display: inline-block;
 }
@@ -10,9 +11,10 @@ input[type="text"] {
 #premium,
 #deductible,
 #exposureBase,
-#rateBasis{
+#rateBasis {
   text-align: right;
 }
+
 input[type="date"] {
   display: inline-block;
 }
@@ -22,100 +24,83 @@ input[type="checkbox"] {
   width: 20px;
   height: 20px;
 }
-.card-body{
-  width: 100%;
-  padding: 5px;
-}
-.header-label {
-  padding-left: 5px;
-}
-.empty-space{
-  height: 15px;
-}
-.astext {
-  background:none;
-  border:none;
-  margin:0;
-  padding:0;
+
+.collapse-bar {
+  background: none;
+  padding: 0;
+  margin-left: -1px !important;
+  margin-bottom: -1px;
   color: #00274e;
+  text-align: center;
   cursor: pointer;
-  text-align: center;
-}
-.expanded{
-  border: solid #00274e;
-  border-width: 2px;
-  border-radius: 16px;
-  background-color: rgb(243, 240, 240);
-}
-.btn{
-  display: inline-block;
-  font-weight: 400;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: .25rem;
-  transition: color .15s;
-  margin-right: 5px;
-}
-.btn-link{
-  font-weight: 400;
-  color: #007bff;
-  background-color: transparent;
+  background-color: #e6e9ed;
+  border: 1px solid grey;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  width: calc(100% + 2px);
+  height: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
-.btn-secondary {
-  color: #fff;
-  background-color: #6c757d;
-  border-color: #6c757d;
+.collapse-bar:hover {
+  background-color: #ccd4dc;
 }
-.btn-primary {
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+
+.expanded {
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  margin-left: -6px;
+  margin-right: -6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  border-radius: 8px;
+  background-color: whitesmoke;
+  /* background-color: white; */
+  cursor: default;
+  border: 1px solid grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 12px 0 rgba(0, 0, 0, 0.19);
 }
-.btn-danger {
-  color: #fff;
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-.btn-warning {
-  color: #212529;
-  background-color: #ffc107;
-  border-color: #ffc107;
-}
-.row{
-  max-width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-label{
+
+label {
   white-space: nowrap;
   min-width: 100%;
 }
+
 input[type="checkbox"][readonly] {
   pointer-events: none;
 }
-.hidden-label{
+
+.hidden-label {
   visibility: hidden;
   height: 1px;
-  position:absolute;
+  position: absolute;
   top: 0;
   left: 0;
 }
 
-.ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid #42A948; /* green */
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
 }
 
-.ng-invalid:not(form)  {
-  border-left: 5px solid #a94442; /* red */
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
 }
 
 .alert {
-  padding: 5px;    
+  padding: 5px;
+}
+
+.collapsed {
+  position: relative;
+  cursor: row-resize;
+}
+
+.margin-left {
+  margin-left: 5px;
 }

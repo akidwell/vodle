@@ -7,7 +7,7 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { newAddressVerificationReques } from '../../models/address-verification-request';
 import { AddressVerificationService } from '../../services/address-verification/address-verification.service';
-import { faCheckCircle, faTimesCircle, faTruckMedical } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
 import { InsuredClass } from '../../classes/insured-class';
 

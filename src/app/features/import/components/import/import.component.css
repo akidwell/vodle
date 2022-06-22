@@ -1,8 +1,14 @@
-/* This enables newlines to be used in the modal */
-.modal-body {
-  white-space: pre-line;
-}
+
 
 .table {
   background-color: white;
+}
+
+.table th {
+  background-color: #335271;
+  color: white;
+}
+
+.search-bar {
+  padding:12px;
 }

@@ -1,4 +1,4 @@
-#submissionHeader {
+/* #submissionHeader {
   background-color: #335271;
   color: white;
   font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
@@ -8,12 +8,12 @@
   width: 100%;
   height: fit-content;
   padding: 0.25%;
-}
+} */
 
 /* Overwrite margin size */
-.row {
+/* .row {
   margin: 0;
-}
+} */
 .form-checkbox {
   height: 25px;
   width: 25px;
@@ -27,11 +27,13 @@ input[type="checkbox"] {
 input[type="checkbox"][readonly] {
   pointer-events: none;
 }
-.ng-valid[required],
-  .ng-valid.required {
-    border-left: 5px solid #42A948;
-  }
 
-  .ng-invalid:not(form)  {
-    border-left: 5px solid #a94442; /* red */
-  }
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+  /* red */
+}

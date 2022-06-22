@@ -12,16 +12,14 @@
     </div>
   </div>
   <div class="card-footer">
-    <div id="reinsuranceFooter">
-      <button *ngIf="canEdit" style="float:left; background:none; border:none;" class="underline"
+      <button class="footer-button" *ngIf="canEdit"
         (click)="addNewReinsuranceLayer();">Add Reinsurance Layer</button>
-      <span class="float-center">
+      <span>
         Policy Layer Limit: {{calcTotalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
         &nbsp;
         Policy Layer Premium: {{calcTotalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
       </span>
-      <div style="float:right;">Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}
+      <div class="footer-count">Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}
       </div>
-    </div>
   </div>
 </div>
