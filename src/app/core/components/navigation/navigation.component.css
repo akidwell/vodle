@@ -17,6 +17,9 @@
 .toggle {
   padding-left:12px;
   padding-top:4px;
+  width: 50%;
+  height: 100%;
+  float: left
 }
 .toggle-icon {
   color:white;
@@ -27,7 +30,16 @@
 .x-large {
   font-size: x-large;
 }
-
+.home-link {
+  width: 50%;
+  height:100%;
+  float:left;
+  padding-left:12px;
+  padding-top:10px;
+}
+.home-link {
+  width: 50%; height:100%; float:left;
+}
 hr.rounded {
   border-top: 3px solid white;
   border-radius: 5px;

@@ -1,7 +1,12 @@
-<div class="sidebar"
-[ngStyle]="{'max-width.px': sidebarMaxWidth, 'width.px': sidebarStartingWidth}"
-[style.width.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
-[style.height.%]="headerPaddingService.sidebarWidthAndHeight$ | async">
+<div
+  class="sidebar"
+  [ngStyle]="{
+    'max-width.px': sidebarMaxWidth,
+    'width.px': sidebarStartingWidth
+  }"
+  [style.width.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
+  [style.height.%]="headerPaddingService.sidebarWidthAndHeight$ | async"
+>
   <div *ngIf="showFullSidebar">
     <img src="./assets/images/risk-solutions-logo-small.png" />
     <div *ngIf="isAuthenticated">
@@ -106,19 +111,31 @@
       <span class="navbar-toggler-icon"></span>
     </button> -->
   </div>
-  <div class="sidebar-toggle"
-  [style.min-height.px]="headerPaddingService.headerPadding$ | async"
-  [style.width.px]="headerPaddingService.sidebarExpanderWidth$ | async"
-  [style.left.px]="headerPaddingService.sidebarPadding$ | async">
-  <div *ngIf="!showFullSidebar" style="width: 50%; height:100%; float:left; padding-left:12px; padding-top:10px;" (click)="routeToHome()">
-    <fa-icon  class="toggle-icon large" [icon]="faHome"></fa-icon></div>
-    <div *ngIf="!showFullSidebar" class="toggle" style="width: 50%; height:100%; float:left; "  (click)="toggleSidebar()" >
-      <fa-icon  class="toggle-icon x-large"[icon]="faBars"></fa-icon>
-      <fa-icon *ngIf="showFullSidebar" id="close-panel" class="toggle-icon large" [icon]="faX"></fa-icon>
+  <div
+    class="sidebar-toggle"
+    [style.min-height.px]="headerPaddingService.headerPadding$ | async"
+    [style.width.px]="headerPaddingService.sidebarExpanderWidth$ | async"
+    [style.left.px]="headerPaddingService.sidebarPadding$ | async"
+  >
+    <div *ngIf="!showFullSidebar" class="home-link" (click)="routeToHome()">
+      <fa-icon class="toggle-icon large" [icon]="faHome"></fa-icon>
+    </div>
+    <div
+      *ngIf="!showFullSidebar"
+      class="toggle"
+      (click)="toggleSidebar()"
+    >
+      <fa-icon class="toggle-icon x-large" [icon]="faBars"></fa-icon>
+      <fa-icon
+        *ngIf="showFullSidebar"
+        id="close-panel"
+        class="toggle-icon large"
+        [icon]="faX"
+      ></fa-icon>
     </div>
 
-    <div *ngIf="showFullSidebar"  id="close-panel"  (click)="toggleSidebar()" >
-      <fa-icon   class="toggle-icon large" [icon]="faX"></fa-icon>
+    <div *ngIf="showFullSidebar" id="close-panel" (click)="toggleSidebar()">
+      <fa-icon class="toggle-icon large" [icon]="faX"></fa-icon>
     </div>
   </div>
 </div>
