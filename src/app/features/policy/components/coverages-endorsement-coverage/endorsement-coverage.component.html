@@ -57,9 +57,9 @@
           </div>
           <div class="col-lg-1">
             <label class='hidden-label' for="includeExclude">Incl/Excl</label>
-            <ng-select id="includeExclude" [items]="includeExclude" bindValue="code" bindLabel="description"
-              name="includeExclude" (change)="changeIncludeExclude($event)" [readonly]="!canEdit || !showIncludeExlude"
-              [(ngModel)]="coverage.includeExclude">
+            <ng-select id="includeExclude" click-stop-propagation [items]="includeExclude" bindValue="code"
+              bindLabel="description" name="includeExclude" (change)="changeIncludeExclude($event)"
+              [readonly]="!canEdit || !showIncludeExlude" [(ngModel)]="coverage.includeExclude">
             </ng-select>
           </div>
           <div class="col-lg-1">
