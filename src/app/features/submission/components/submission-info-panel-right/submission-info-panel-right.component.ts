@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { ProducerContactClass } from '../../classes/ProducerContactClass';
 import { SubmissionClass } from '../../classes/SubmissionClass';
-import { Submission } from '../../models/submission';
+import { Producer } from '../../models/producer';
 
 @Component({
   selector: 'rsps-submission-info-panel-right',
@@ -28,7 +28,7 @@ export class SubmissionInfoPanelRightComponent {
     );
   }
 
-  updateProducer(model: any) {
+  updateProducer(model: Producer | null) {
     if (model == null) {
       this.submission.producerCode = null;
     } else {
@@ -38,11 +38,11 @@ export class SubmissionInfoPanelRightComponent {
     this.submission.producerContactId = null;
     this.submission.producerContact = null;
   }
-  updateProducerContact(model: any) {
+  updateProducerContact(model: ProducerContactClass | null) {
     if (model == null) {
       this.submission.producerContactId = null;
     } else {
-      this.submission.producerContactId = model.producerContactId;
+      this.submission.producerContactId = model.contactId;
     }
     this.submission.producerContact = model;
   }

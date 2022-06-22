@@ -1,8 +1,9 @@
+import { Moment } from 'moment';
 
 export interface ProducerContact {
-    insuredContactId: number | null,
-    insuredCode: number,
-    closedDate: Date | null,
+    contactId: number | null,
+    producerCode: number | null,
+    closedDate: Date | Moment | null,
     firstName: string,
     lastName: string,
     email: string,
@@ -11,19 +12,3 @@ export interface ProducerContact {
     display: string,
     isActive: boolean
 }
-
-
-export const newProducerContact = (): ProducerContact => {
-  return {
-    insuredContactId: null,
-    insuredCode: 0,
-    closedDate: null,
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    fax: '',
-    display: '',
-    isActive: true
-  };
-};

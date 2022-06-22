@@ -4,9 +4,9 @@ import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-d
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from '../models/producer';
-import { ProducerContact } from '../models/producer-contact';
 import { Submission } from '../models/submission';
 import { SubmissionEvent } from '../models/submission-event';
+import { ProducerContactClass } from './ProducerContactClass';
 
 export class SubmissionClass implements Submission {
   private _producerCode: number | null = null;
@@ -114,7 +114,7 @@ export class SubmissionClass implements Submission {
   submissionEventCode = '';
   insured: Insured | null = null;
   producer: Producer | null = null;
-  producerContact: ProducerContact | null = null;
+  producerContact: ProducerContactClass | null = null;
   submissionEvents: SubmissionEvent[] = [];
   underwriterName: string | null = null;
   statusCodeDesc: string | null = null;
@@ -172,7 +172,7 @@ export class SubmissionClass implements Submission {
     this.companyCode = sub?.companyCode || 3;
     this.underwriterName = sub?.underwriterName || null;
     this.submissionEvents = sub?.submissionEvents || [];
-    this.producerContact = sub?.producerContact || null;
+    this.producerContact = sub?.producerContact ? new ProducerContactClass(sub?.producerContact) : null;
     this.producer = sub?.producer || null;
     this.insured = sub?.insured || insured || null;
     this._extExpiringPolicyNo = sub?.extExpiringPolicyNo || null;
@@ -512,7 +512,6 @@ export class SubmissionClass implements Submission {
     return {
       producerCode: this._producerCode,
       departmentCode: this.departmentCode,
-      producerContact: this.producerContact,
       underwriter: this.underwriter,
       sicCode: this.sicCode,
       naicsCode: this.naicsCode,
@@ -539,6 +538,7 @@ export class SubmissionClass implements Submission {
       contractorCode: this.contractorCode,
       renewablePolicy: this._renewablePolicy === true ? 1 : 0,
       cancelDate: this.cancelDate,
+      producerContactId: this._producerContact,
       producerContactName: this.producerContactName,
       producerContactEmail: this.producerContactEmail,
       uwBranchCode: this.uwBranchCode,
