@@ -85,15 +85,27 @@ pipeline {
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
 					def devHash = jsonfile['/rsps/assets/config/config.dev.json'] 
 					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
-
-					jsonfile['/rsps/assets/config/config.dev.json'] = null
-					// def json = new groovy.json.JsonSlurper().parseText(jsonfile)
-					// json.remove('/rsps/assets/config/config.dev.json')
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
-					// def pjson = new groovy.json.JsonSlurper().parse(new File('./dist/rsps/ngsw.json'))
-					// pjson.remove('/rsps/assets/config/config.dev.json')
-					// writeJSON file: './dist/rsps/ngsw.dev.json', json: pjson
+					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def devHash = jsonfile['/rsps/assets/config/config.int.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
+
+					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def devHash = jsonfile['/rsps/assets/config/config.uat.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
+
+					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def devHash = jsonfile['/rsps/assets/config/config.cert.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					writeJSON file: './dist/rsps/ngsw.cert.json', json: jsonfile
+
+					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def devHash = jsonfile['/rsps/assets/config/config.prod.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					writeJSON file: './dist/rsps/ngsw.prod.json', json: jsonfile
 
 					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
 					// jsonIntfile['buildVersion'] = "${fileVersion}".toString()
