@@ -100,6 +100,7 @@ export class HeaderPaddingService{
   set userFieldWidth(val: number) {
     this._userFieldWidth = val;
     this.userFieldWidth$.next(this._userFieldWidth);
+    this.updateInnerWidth();
   }
   get navRoutingHeight(): number {
     return this._navRoutingHeight;

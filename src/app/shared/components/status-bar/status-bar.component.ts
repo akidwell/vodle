@@ -17,6 +17,7 @@ import { InsuredService } from 'src/app/features/insured/services/insured-servic
 import { InsuredDuplicatesComponent } from 'src/app/features/insured/components/insured-duplicates/insured-duplicates.component';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { HistoricRoute } from 'src/app/core/models/historic-route';
+import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
 
 
 
@@ -54,7 +55,8 @@ export class StatusBarComponent implements OnInit {
     public pageDataService: PageDataService,
     public headerPaddingService: HeaderPaddingService,
     public elementRef: ElementRef,
-    private notification: NotificationService
+    private notification: NotificationService,
+    public endorsementStatus: EndorsementStatusService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
@@ -112,9 +114,7 @@ export class StatusBarComponent implements OnInit {
             }
           }
           return null;
-        })).subscribe((customData: any) => {
-        console.log(customData);
-      });
+        })).subscribe();
   }
   onResize() {
     this.headerPaddingService.onResizeOrLoad();

@@ -11,22 +11,18 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./policy-header.component.css']
 })
 export class PolicyHeaderComponent implements OnInit {
-  endorsementNumber = 0;
   statusSub!: Subscription;
   status = '';
   formatDateForDisplay: FormatDateForDisplay;
   @Input() public policyInfo!: PolicyInformation;
   @Input() public accountInfo!: AccountInformation;
+  @Input() public endorsementNumber!: number | null;
 
   constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService, private formatDateService: FormatDateForDisplay) {
     this.formatDateForDisplay = formatDateService;
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(() => {
-      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
-    });
-
     this.statusSub = this.endorsementStatusService.status.subscribe({
       next: status => {
         this.status = status;

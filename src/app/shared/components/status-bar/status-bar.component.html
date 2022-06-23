@@ -14,7 +14,8 @@
     <rsps-policy-header
     *ngIf="pageDataService.policyData != null  && pageDataService.accountInfo != null"
     [accountInfo]="pageDataService.accountInfo"
-    [policyInfo]="pageDataService.policyData">
+    [policyInfo]="pageDataService.policyData"
+    [endorsementNumber]="endorsementStatus.endorsementNumber">
   </rsps-policy-header>
   </div>
 
