@@ -79,6 +79,52 @@ pipeline {
 				sh './build-dev.sh'
 			} 
 		}
+		stage("Build ngws.json"){
+			steps{
+				script {
+					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def devHash = jsonfile['/rsps/assets/config/config.dev.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = "${devHash}".toString()
+					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
+
+					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def intHash = jsonfile['/rsps/assets/config/config.int.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = "${intHash}".toString()
+					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
+
+					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def uatHash = jsonfile['/rsps/assets/config/config.uat.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = "${uatHash}".toString()
+					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
+
+					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def certHash = jsonfile['/rsps/assets/config/config.cert.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = "${certHash}".toString()
+					writeJSON file: './dist/rsps/ngsw.cert.json', json: jsonfile
+
+					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+					def prodHash = jsonfile['/rsps/assets/config/config.prod.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = "${prodHash}".toString()
+					writeJSON file: './dist/rsps/ngsw.prod.json', json: jsonfile
+
+					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
+					// jsonIntfile['buildVersion'] = "${fileVersion}".toString()
+					// writeJSON file: './src/assets/config/config.int.json', json: jsonIntfile
+
+					// def jsonUATfile = readJSON file: './src/assets/config/config.uat.json'
+					// jsonUATfile['buildVersion'] = "${fileVersion}".toString()
+					// writeJSON file: './src/assets/config/config.uat.json', json: jsonUATfile
+
+					// def jsonCertfile = readJSON file: './src/assets/config/config.cert.json'
+					// jsonCertfile['buildVersion'] = "${fileVersion}".toString()
+					// writeJSON file: './src/assets/config/config.cert.json', json: jsonCertfile
+
+					// def jsonProdfile = readJSON file: './src/assets/config/config.prod.json'
+					// jsonProdfile['buildVersion'] = "${fileVersion}".toString()
+					// writeJSON file: './src/assets/config/config.prod.json', json: jsonProdfile
+				}
+			}
+		}
 		stage("Build Release and Deploy"){
 			when {
 	      		expression { params.Environment == "RELEASE"}

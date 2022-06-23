@@ -205,7 +205,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     this.components.push(componentRef.instance);
   }
 
-  async deleteComponent(index: any) {
+  async deleteComponent(index: number) {
     const viewContainerRef = this.endorsementCoverageDirective.viewContainerRef;
     viewContainerRef.remove(index);
     this.components.splice(index,1);
@@ -213,7 +213,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
 
   focus(): void {
     setTimeout(() => {
-      document.getElementById(this.anchorId)!.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      document.getElementById(this.anchorId)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
     }, 250);
   }
 

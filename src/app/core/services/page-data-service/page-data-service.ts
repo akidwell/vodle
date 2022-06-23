@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
 import { AccountInformation, PolicyInformation } from 'src/app/features/policy/models/policy';
+import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { HistoricRoute } from '../../models/historic-route';
 
@@ -9,6 +10,7 @@ import { HistoricRoute } from '../../models/historic-route';
 export class PageDataService {
   private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
+  private _quoteData: QuoteClass | null = null;
   private _policyData: PolicyInformation | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
@@ -18,6 +20,7 @@ export class PageDataService {
 
   insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
   submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(this._submissionData);
+  quoteData$: BehaviorSubject<QuoteClass | null> = new BehaviorSubject(this._quoteData);
   policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
@@ -42,6 +45,18 @@ export class PageDataService {
     this.submissionData$.next(this._submissionData);
     if (val != null) {
       this.isNoData = true;
+    }
+  }
+
+  get quoteData(): QuoteClass | null {
+    return this._quoteData;
+  }
+
+  set quoteData(val: QuoteClass | null) {
+    this._quoteData = val;
+    this.quoteData$.next(this._quoteData);
+    if (val != null) {
+      this.isNoData = false;
     }
   }
   get policyData(): PolicyInformation | null {

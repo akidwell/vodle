@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
-import { newPolicyHistory, PolicyHistory } from './policy-history';
+import { newHistory, History } from './policy-history';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PolicyHistoryService {
+export class HistoryService {
 
-  private _policyHistory = new BehaviorSubject<PolicyHistory[]>([]);
+  private _policyHistory = new BehaviorSubject<History[]>([]);
   get policyHistory$() { return this._policyHistory.asObservable(); }
-
   private _policyhistorySize = new BehaviorSubject<number>(0);
   policyhistorySize$ = this._policyhistorySize.asObservable();
   get policyhistorySize(): number { return this._policyhistorySize.getValue(); }
@@ -21,31 +20,84 @@ export class PolicyHistoryService {
 
   constructor(private configService: ConfigService) { }
 
+  updateSubmissionHistory(submissionNumber: number) {
+    const previousHistory = this._policyHistory.getValue();
+    const history = newHistory();
+    history.submissionNumber = submissionNumber;
+    // Check to see if the submission already exists
+    const match = previousHistory.find(x => x.submissionNumber == submissionNumber);
+    // If exists than just update open date
+    if (match != null) {
+      match.openDate = new Date;
+    }
+    else {
+      history.id = Math.max(...previousHistory.map(o => o.id ?? 0)) + 1;
+      // if list is larger then maxPolicyHistorySize then remove item before adding new one to beginning
+      if (previousHistory.length >= this.policyhistorySize) {
+        previousHistory.pop();
+      }
+      // Add new policy at start of non favorited
+      let lastFavoriteIndex = 0;
+      previousHistory.forEach((value, index) => { if (value.favorite == true && lastFavoriteIndex < index) { lastFavoriteIndex = index; } });
+      previousHistory.splice(lastFavoriteIndex + 1, 0, history);
+    }
+    localStorage.setItem('policy-history', JSON.stringify(previousHistory, replacer));
+    this._policyHistory.next(previousHistory);
+  }
+
+  updateQuoteHistory(quoteId: number, quoteNumber: number) {
+    const previousHistory = this._policyHistory.getValue();
+    const history = newHistory();
+    history.quoteId = quoteId;
+    history.submissionNumber = quoteId;
+    history.quoteNumber = quoteNumber;
+    // Check to see if the submission already exists
+    const match = previousHistory.find(x => x.quoteId == quoteId);
+    // If exists than just update open date
+    if (match != null) {
+      match.openDate = new Date;
+    }
+    else {
+      history.id = Math.max(...previousHistory.map(o => o.id ?? 0)) + 1;
+      // if list is larger then maxPolicyHistorySize then remove item before adding new one to beginning
+      if (previousHistory.length >= this.policyhistorySize) {
+        previousHistory.pop();
+      }
+      // Add new policy at start of non favorited
+      let lastFavoriteIndex = 0;
+      previousHistory.forEach((value, index) => { if (value.favorite == true && lastFavoriteIndex < index) { lastFavoriteIndex = index; } });
+      previousHistory.splice(lastFavoriteIndex + 1, 0, history);
+    }
+    localStorage.setItem('policy-history', JSON.stringify(previousHistory, replacer));
+    this._policyHistory.next(previousHistory);
+  }
+
   updatePolicyHistory(policyId: number, policyNumber: string, endorsementNumber: number) {
-    const policy = newPolicyHistory();
-    policy.policyId = policyId;
-    policy.policyNumber = policyNumber;
-    policy.endorsementNumber = endorsementNumber;
-    const previousPolicies = this._policyHistory.getValue();
+    const previousHistory = this._policyHistory.getValue();
+    const history = newHistory();
+    history.policyId = policyId;
+    history.policyNumber = policyNumber;
+    history.endorsementNumber = endorsementNumber;
     // Check to see if the policy already exists
-    const match = previousPolicies.find(x => x.policyId == policyId && x.endorsementNumber == endorsementNumber);
+    const match = previousHistory.find(x => x.policyId == policyId && x.endorsementNumber == endorsementNumber);
     // If exists than just update open date
     if (match != null) {
       match.openDate = new Date;
       match.policyNumber = policyNumber;
     }
     else {
+      history.id = Math.max(...previousHistory.map(o => o.id ?? 0)) + 1;
       // if list is larger then maxPolicyHistorySize then remove item before adding new one to beginning
-      if (previousPolicies.length >= this.policyhistorySize) {
-        previousPolicies.pop();
+      if (previousHistory.length >= this.policyhistorySize) {
+        previousHistory.pop();
       }
       // Add new policy at start of non favorited
       let lastFavoriteIndex = 0;
-      previousPolicies.forEach((value, index) => { if (value.favorite == true && lastFavoriteIndex < index) { lastFavoriteIndex = index; } });
-      previousPolicies.splice(lastFavoriteIndex + 1, 0, policy);
+      previousHistory.forEach((value, index) => { if (value.favorite == true && lastFavoriteIndex < index) { lastFavoriteIndex = index; } });
+      previousHistory.splice(lastFavoriteIndex + 1, 0, history);
     }
-    localStorage.setItem('policy-history', JSON.stringify(previousPolicies, replacer));
-    this._policyHistory.next(previousPolicies);
+    localStorage.setItem('policy-history', JSON.stringify(previousHistory, replacer));
+    this._policyHistory.next(previousHistory);
   }
 
   removePolicy(policyId: number, endorsementNumber: number)
@@ -58,17 +110,17 @@ export class PolicyHistoryService {
     }
   }
 
-  favoritePolicyHistory(policyId: number, endorsementNumber: number, favorite: boolean): boolean {
+  favoriteHistory(id: number | null, favorite: boolean): boolean {
     let favCount = 0;
-    const previousPolicies = this._policyHistory.getValue();
-    // Check to see if the policy already exists
-    previousPolicies.forEach((value) => { if (value.favorite == true) { favCount++; } });
+    const previousHistory = this._policyHistory.getValue();
+    // Check to see if the item already exists
+    previousHistory.forEach((value) => { if (value.favorite == true) { favCount++; } });
     if (favCount < this.policyhistorySize - 1 || !favorite) {
-      const match = previousPolicies.find(x => x.policyId == policyId && x.endorsementNumber == endorsementNumber);
+      const match = previousHistory.find(x => x.id == id);
       if (match != null) {
         match.favorite = favorite;
       }
-      localStorage.setItem('policy-history', JSON.stringify(previousPolicies, replacer));
+      localStorage.setItem('policy-history', JSON.stringify(previousHistory, replacer));
       return favorite;
     }
     return !favorite;
@@ -76,24 +128,36 @@ export class PolicyHistoryService {
 
   loadInfo() {
     const currentPolicy = localStorage.getItem('policy-history');
-    this.loadPolicyHistorySize();
-
+    this.loadHistorySize();
     if (currentPolicy != null) {
-      const data: PolicyHistory[] = JSON.parse(currentPolicy);
+      const data: History[] = JSON.parse(currentPolicy);
       if (data != null) {
         const policyList = data.sort((a, b) => Number(b.favorite ?? 0) - Number(a.favorite ?? 0) || new Date(b.openDate).getTime() - new Date(a.openDate).getTime());
+        // Check to see if there is no id field, otherwise add, this should only run first time
+        let sequence = 1;
+        data.forEach(item => {
+          if (item.id == null) {
+            item.id = sequence;
+            console.log(item.id);
+            sequence++;
+          }
+        });
         if (policyList.length > this.policyhistorySize) {
           policyList.splice(this.policyhistorySize, policyList.length - this.policyhistorySize);
         }
         if (policyList.length == this.policyhistorySize && policyList[policyList.length - 1].favorite) {
           policyList[policyList.length - 1].favorite = false;
         }
+        // If populated id then save to storage
+        if (sequence != 1) {
+          localStorage.setItem('policy-history', JSON.stringify(policyList, replacer));
+        }
         this._policyHistory.next(policyList);
       }
     }
   }
 
-  loadPolicyHistorySize() {
+  loadHistorySize() {
     const sizeStorage = localStorage.getItem('policy-history-size');
     if (sizeStorage === null) {
       this._policyhistorySize.next(this.configService.defaultPolicyHistorySize);

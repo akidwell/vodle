@@ -18,6 +18,9 @@ import { InsuredDuplicatesComponent } from 'src/app/features/insured/components/
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { HistoricRoute } from 'src/app/core/models/historic-route';
 import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
+import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
+import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
+import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 
 
 
@@ -52,11 +55,13 @@ export class StatusBarComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private submissionService: SubmissionService,
     private insuredService: InsuredService,
+    private quoteService: QuoteService,
     public pageDataService: PageDataService,
     public headerPaddingService: HeaderPaddingService,
     public elementRef: ElementRef,
     private notification: NotificationService,
-    public endorsementStatus: EndorsementStatusService
+    public endorsementStatus: EndorsementStatusService,
+    private navigationService: NavigationService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
@@ -97,6 +102,8 @@ export class StatusBarComponent implements OnInit {
           this.pageDataService.accountInfo = null;
           this.pageDataService.policyData = null;
           this.pageDataService.lastSubmission = null;
+          this.pageDataService.quoteData = null;
+
         }),
         map((event) => {
           this.headerPaddingService.resetPadding();
@@ -123,6 +130,8 @@ export class StatusBarComponent implements OnInit {
     this.pageDataService.insuredData = this.checkInsuredData(child);
     this.pageDataService.submissionData = this.checkSubmissionData(child);
     this.pageDataService.policyData = this.checkPolicyData(child);
+    this.pageDataService.quoteData = this.checkQuoteData(child);
+
     return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null);
   }
   private checkInsuredData(child: ActivatedRoute): InsuredClass | null {
@@ -151,6 +160,15 @@ export class StatusBarComponent implements OnInit {
       return data;
     } else {
       return this.pageDataService.policyData;
+    }
+  }
+  private checkQuoteData(child: ActivatedRoute): QuoteClass | null {
+    if (child.snapshot.data && child.snapshot.data['quoteData']) {
+      const data = child.snapshot.data['quoteData'].quote;
+      this.headerPaddingService.buttonBarPadding = 0;
+      return data;
+    } else {
+      return this.pageDataService.quoteData;
     }
   }
   navigateToHistoricRoute(route: HistoricRoute){
@@ -227,6 +245,11 @@ export class StatusBarComponent implements OnInit {
     }
     return true;
   }
+  routeToNewQuote() {
+    this.navigationService.resetPolicy();
+    this.router.navigate(['/quote/information']);
+  }
+
   async saveInsured(insured: InsuredClass): Promise<boolean> {
     if (insured.isValid) {
       if (insured.isNew) {

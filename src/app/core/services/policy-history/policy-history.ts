@@ -1,16 +1,24 @@
-export interface PolicyHistory {
-    policyId: number;
-    policyNumber: string;
-    endorsementNumber: number;
-    openDate: Date;
-    favorite: boolean;
-    hover: boolean;
+export interface History {
+  id: number | null;
+  policyId: number | null;
+  policyNumber: string | null;
+  endorsementNumber: number | null;
+  submissionNumber: number | null;
+  quoteId: number | null;
+  quoteNumber: number | null;
+  openDate: Date;
+  favorite: boolean;
+  hover: boolean;
 }
 
-export const newPolicyHistory = (): PolicyHistory => ({
-  policyId: 0,
-  policyNumber: '',
-  endorsementNumber: 0,
+export const newHistory = (): History => ({
+  id: null,
+  policyId: null,
+  policyNumber: null,
+  endorsementNumber: null,
+  submissionNumber: null,
+  quoteId: null,
+  quoteNumber: null,
   openDate: new Date,
   favorite: false,
   hover: false

@@ -26,7 +26,7 @@
       <div *ngFor="let policy of policyHistory">
         <a
           class="nav-link"
-          *ngIf="policy.policyId > 0"
+          *ngIf="policy.policyId != null"
           routerLinkActive="active"
           [routerLink]="[
             '/policy/' + policy.policyId + '/' + policy.endorsementNumber
@@ -43,6 +43,66 @@
           ></fa-icon>
           <fa-icon *ngIf="!policyActive.isActive" [icon]="faFolder"></fa-icon>
           {{ policy.policyNumber + ":" + policy.endorsementNumber }}
+          <fa-icon
+            *ngIf="policy.favorite"
+            style="float: right"
+            title="Unfavorite"
+            [icon]="faSolidStar"
+            (click)="$event.preventDefault(); unfavorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+          <fa-icon
+            *ngIf="!policy.favorite && policy.hover"
+            style="float: right"
+            title="Favorite"
+            [icon]="faStar"
+            (click)="$event.preventDefault(); favorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+        </a>
+        <a
+          class="nav-link"
+          *ngIf="policy.submissionNumber != null"
+          routerLinkActive="active"
+          [routerLink]="['/submission/' + policy.submissionNumber]"
+          (mouseover)="hoverFavorite(policy)"
+          (mouseleave)="unhoverFavorite(policy)"
+          (click)="openPolicy()"
+          #policyActive="routerLinkActive"
+          [title]="policy.submissionNumber"
+        >
+          <fa-icon [icon]="faFileAlt"></fa-icon>
+          {{ policy.submissionNumber }}
+          <fa-icon
+            *ngIf="policy.favorite"
+            style="float: right"
+            title="Unfavorite"
+            [icon]="faSolidStar"
+            (click)="$event.preventDefault(); unfavorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+          <fa-icon
+            *ngIf="!policy.favorite && policy.hover"
+            style="float: right"
+            title="Favorite"
+            [icon]="faStar"
+            (click)="$event.preventDefault(); favorite(policy)"
+            click-stop-propagation
+          ></fa-icon>
+        </a>
+        <a
+          class="nav-link"
+          *ngIf="policy.quoteId != null"
+          routerLinkActive="active"
+          [routerLink]="['/quote/' + policy.quoteId]"
+          (mouseover)="hoverFavorite(policy)"
+          (mouseleave)="unhoverFavorite(policy)"
+          (click)="openPolicy()"
+          #policyActive="routerLinkActive"
+          [title]="policy.submissionNumber"
+        >
+          <fa-icon [icon]="faCommentDollar"></fa-icon>
+          {{ policy.quoteId }}
           <fa-icon
             *ngIf="policy.favorite"
             style="float: right"
@@ -83,7 +143,7 @@
         <rsps-applications></rsps-applications>
       </div>
       <a class="nav-link" (click)="toggleReportNavbar()">
-        <fa-icon [icon]="faFileAlt"></fa-icon>
+        <fa-icon [icon]="faChartLine"></fa-icon>
         Reports
         <fa-icon
           style="float: right"
