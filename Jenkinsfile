@@ -85,7 +85,6 @@ pipeline {
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
 					def devHash = jsonfile['/rsps/assets/config/config.dev.json'] 
 					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
-					def dev = jsonfile['/rsps/assets/config/config.dev.json']
 					def json = new JsonSlurper().parseText(jsonfile)
 					json.remove('/rsps/assets/config/config.dev.json')
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: json
