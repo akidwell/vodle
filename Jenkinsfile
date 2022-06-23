@@ -82,11 +82,11 @@ pipeline {
 		stage("Build ngws.json"){
 			steps{
 				script {
-					def jsonfile = readJSON file: './src/ngsw.json'
+					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
 					def test = jsonfile['/rsps/assets/config/config.dev.json'] 
 				    echo "Test: " + test
 					jsonfile['/rsps/assets/config/config.json'] = test.toString()
-					writeJSON file: './src/ngsw.dev.json', json: jsonfile
+					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
 					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
 					// jsonIntfile['buildVersion'] = "${fileVersion}".toString()
