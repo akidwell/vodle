@@ -4,7 +4,6 @@ import {catchError, debounceTime, map, tap, switchMap} from 'rxjs/operators';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { ProducerContact } from 'src/app/features/submission/models/producer-contact';
 import { faAngleDown, faAngleUp, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
-import { deepClone } from 'src/app/core/utils/deep-clone';
 import { ProducerContactService } from 'src/app/features/submission/services/producer-contact-service/producer-contact-service';
 import { ProducerContactClass } from 'src/app/features/submission/classes/ProducerContactClass';
 
@@ -43,7 +42,6 @@ export class ProducerContactSearch implements OnInit{
 
   @Input() set producerCode(value: number | null) {
     this._producerCode = value;
-    console.log('happens');
     this.newProducerContact = new ProducerContactClass(undefined, value || 0);
     this.resetSearch();
   }
@@ -71,7 +69,6 @@ export class ProducerContactSearch implements OnInit{
   displayFormatter = (producer: ProducerContactClass) => producer.display;
 
   leaveSearchBar() {
-    console.log(this.model, this.allowSearching);
     if ((this.model?.display || !this.allowSearching)) {
       this.showContactMaintenance = false;
     } else {
@@ -79,7 +76,6 @@ export class ProducerContactSearch implements OnInit{
     }
   }
   selectedProducerContact(producer: ProducerContactClass){
-    console.log(producer);
     this.allowSearching = false;
     this.model = producer;
     this.originalModel = producer;
@@ -88,16 +84,14 @@ export class ProducerContactSearch implements OnInit{
   }
 
   handleEmptyResultSet(): never[] {
-    console.log('empty');
     this.allowSearching = true;
     this.producerContactSelected.emit(null);
     return [];
   }
   resetDisplay(): never[] {
     if (!this.allowSearching) {
-      this.model = deepClone(this.originalModel);
+      this.model = this.originalModel;
     }
-
     if (this.producerContact && this.producerContact.nativeElement != null){
       this.producerContact.nativeElement.blur();
     }
