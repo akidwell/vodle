@@ -83,10 +83,12 @@ pipeline {
 			steps{
 				script {
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def test = jsonfile['/rsps/assets/config/config.dev.json'] 
-				    echo "Test: " + test
-					jsonfile['/rsps/assets/config/config.json'] = test.toString()
-					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
+					def devHash = jsonfile['/rsps/assets/config/config.dev.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					def dev = jsonfile['/rsps/assets/config/config.dev.json']
+					def json = new JsonSlurper().parseText(jsonfile)
+					json.remove('/rsps/assets/config/config.dev.json')
+					writeJSON file: './dist/rsps/ngsw.dev.json', json: json
 
 					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
 					// jsonIntfile['buildVersion'] = "${fileVersion}".toString()
