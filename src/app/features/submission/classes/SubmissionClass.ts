@@ -43,18 +43,18 @@ export class SubmissionClass implements Submission {
   // sicCodeRequiredStatus = SubmissionStatusEnum.Bound;
   // naicsCodeRequiredStatus = SubmissionStatusEnum.Bound;
 
-  producerCodeLockStatus = SubmissionStatusEnum.Bound;
-  producerContactLockStatus = SubmissionStatusEnum.Bound;
+  // producerCodeLockStatus = SubmissionStatusEnum.Bound;
+  // producerContactLockStatus = SubmissionStatusEnum.Bound;
   departmentCodeLockStatus = SubmissionStatusEnum.InQuote;
-  underwriterLockStatus = SubmissionStatusEnum.Bound;
-  sicCodeLockStatus = SubmissionStatusEnum.Bound;
-  naicsCodeLockStatus = SubmissionStatusEnum.Bound;
-  policyDateLockStatus = SubmissionStatusEnum.Bound;
-  quoteDueDateLockStatus = SubmissionStatusEnum.Bound;
-  newRenewalFlagLockStatus = SubmissionStatusEnum.Bound;
-  expiringPolicyLockStatus = SubmissionStatusEnum.Bound;
-  extExpiringPolicyLockStatus = SubmissionStatusEnum.Bound;
-  renewablePolicyLockStatus = SubmissionStatusEnum.Bound;
+  // underwriterLockStatus = SubmissionStatusEnum.Bound;
+  // sicCodeLockStatus = SubmissionStatusEnum.Bound;
+  // naicsCodeLockStatus = SubmissionStatusEnum.Bound;
+  // policyDateLockStatus = SubmissionStatusEnum.Bound;
+  // quoteDueDateLockStatus = SubmissionStatusEnum.Bound;
+  // newRenewalFlagLockStatus = SubmissionStatusEnum.Bound;
+  // expiringPolicyLockStatus = SubmissionStatusEnum.Bound;
+  // extExpiringPolicyLockStatus = SubmissionStatusEnum.Bound;
+  // renewablePolicyLockStatus = SubmissionStatusEnum.Bound;
 
   producerRequired = false;
   producerContactRequired = false;
@@ -342,8 +342,8 @@ export class SubmissionClass implements Submission {
   markDirty() {
     this._isDirty = true;
   }
-  private isFieldReadonly(statusLock: SubmissionStatusEnum) {
-    return (this.hasPostedInvoice || this.statusCode === SubmissionStatusEnum.Dead) ? true : (this.statusCode < statusLock) ? false : true;
+  private isFieldReadonly(statusLock?: SubmissionStatusEnum) {
+    return (this.hasPostedInvoice || this.statusCode === SubmissionStatusEnum.Dead) ? true : (statusLock && this.statusCode >= statusLock) ? true : false;
   }
   private isFieldRequired(statusRequired: SubmissionStatusEnum, fieldIsReadonly?: boolean) {
     return (fieldIsReadonly || this.statusCode === SubmissionStatusEnum.Dead) ? false : this.statusCode >= statusRequired;
@@ -378,19 +378,20 @@ export class SubmissionClass implements Submission {
     //this.producerContactRequired = this.isFieldRequired(this.producerContactRequiredStatus, this.producerContactReadonly);
   }
   setReadonlyFields(){
-    this.naicsReadonly = this.isFieldReadonly(this.naicsCodeLockStatus);
-    this.sicCodeReadonly = this.isFieldReadonly(this.sicCodeLockStatus);
-    this.policyDateReadonly = this.isFieldReadonly(this.policyDateLockStatus);
-    this.quoteDueDateReadonly = this.isFieldReadonly(this.quoteDueDateLockStatus);
     this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus);
-    this.producerContactReadonly = this.isFieldReadonly(this.producerContactLockStatus);
-    this.producerReadonly = this.isFieldReadonly(this.producerCodeLockStatus);
-    this.underwriterReadonly = this.isFieldReadonly(this.underwriterLockStatus);
-    this.newRenewalFlagReadonly = this.isFieldReadonly(this.newRenewalFlagLockStatus);
-    this.expiringPolicyReadonly = this.isFieldReadonly(this.expiringPolicyLockStatus);
-    this.extExpiringPolicyReadonly = this.isFieldReadonly(this.extExpiringPolicyLockStatus);
-    this.renewablePolicyReadonly = this.isFieldReadonly(this.renewablePolicyLockStatus);
+    this.naicsReadonly = this.isFieldReadonly();
+    this.sicCodeReadonly = this.isFieldReadonly();
+    this.policyDateReadonly = this.isFieldReadonly();
+    this.quoteDueDateReadonly = this.isFieldReadonly();
+    this.producerContactReadonly = this.isFieldReadonly();
+    this.producerReadonly = this.isFieldReadonly();
+    this.underwriterReadonly = this.isFieldReadonly();
+    this.newRenewalFlagReadonly = this.isFieldReadonly();
+    this.expiringPolicyReadonly = this.isFieldReadonly();
+    this.extExpiringPolicyReadonly = this.isFieldReadonly();
+    this.renewablePolicyReadonly = this.isFieldReadonly();
   }
+
   setWarnings(){
     this.warningsList = [];
     this.warningsMessage = '';

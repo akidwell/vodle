@@ -23,7 +23,7 @@
       placeholder="Producer Contact search"
     />
     <button class="form-control btn-secondary add-button"
-    *ngIf="!addNewProducer"
+    *ngIf="!addNewProducer && !(this.producerCode == null || !canEdit)"
     (click)="openPanelAndCreate()">
       <fa-icon [icon]="faPlus"></fa-icon>
     </button>
