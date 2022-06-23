@@ -88,23 +88,23 @@ pipeline {
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
 					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def devHash = jsonfile['/rsps/assets/config/config.int.json'] 
-					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					def intHash = jsonfile['/rsps/assets/config/config.int.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = intHash.toString()
 					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
 
 					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def devHash = jsonfile['/rsps/assets/config/config.uat.json'] 
-					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					def uatHash = jsonfile['/rsps/assets/config/config.uat.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = uatHash.toString()
 					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
 
 					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def devHash = jsonfile['/rsps/assets/config/config.cert.json'] 
-					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					def certHash = jsonfile['/rsps/assets/config/config.cert.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = certHash.toString()
 					writeJSON file: './dist/rsps/ngsw.cert.json', json: jsonfile
 
 					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def devHash = jsonfile['/rsps/assets/config/config.prod.json'] 
-					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
+					def prodHash = jsonfile['/rsps/assets/config/config.prod.json'] 
+					jsonfile['/rsps/assets/config/config.json'] = prodHash.toString()
 					writeJSON file: './dist/rsps/ngsw.prod.json', json: jsonfile
 
 					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
