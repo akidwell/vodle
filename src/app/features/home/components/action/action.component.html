@@ -33,22 +33,22 @@
             <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transEffectiveDateCalendar"
               class="form-control" required [disabled]="!canEdit" [(ngModel)]="endorsementActionInfo.transEffectiveDate" [readonly]="!canEdit || isRewrite" autocomplete="off"
               (blur)="checkTransEffectiveDate()" name="transEffectiveDate" #transEffectiveDate="ngModel">
-            <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="transEffectiveDateCalendar">
+            <mat-datepicker-toggle matSuffix [disabled]="!canEdit || isRewrite" style="display: inline-block; max-width: 20%;" [for]="transEffectiveDateCalendar">
             </mat-datepicker-toggle>
             <mat-datepicker #transEffectiveDateCalendar></mat-datepicker>
             <div [hidden]="isTransEffectiveValid" class="alert alert-danger">
-                Invalid Transactive Effective Date. 
+                Invalid Transactive Effective Date.
             </div>
             <label for="transExpirationDate">Transaction Expiration Date</label>
             <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="transExpirationDateCalendar"
               class="form-control" required [disabled]="!canEdit" [readonly]="!canEdit || isRewrite" autocomplete="off"
               [(ngModel)]="endorsementActionInfo.transExpirationDate" (blur)="checkExpirationDate()"
               name="transExpirationDate" #transExpirationDate="ngModel">
-            <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="transExpirationDateCalendar">
+            <mat-datepicker-toggle matSuffix [disabled]="!canEdit || isRewrite" style="display: inline-block; max-width: 20%;" [for]="transExpirationDateCalendar">
             </mat-datepicker-toggle>
             <mat-datepicker #transExpirationDateCalendar></mat-datepicker>
             <div [hidden]="isTransExpirationValid" class="alert alert-danger">
-                Invalid Transactive Expiration Date. 
+                Invalid Transactive Expiration Date.
             </div>
             <div>
                 <label for="premium">Premium</label>
@@ -56,7 +56,7 @@
                     name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" string-to-currency>
             </div>
         </div>
-        <div class="modal-footer">           
+        <div class="modal-footer">
              <button type="button"  class="btn btn-primary" (click)="submit()" [disabled]="!actionForm.form.valid">Submit</button>
                 <button type="button" class="btn btn-secondary" (click)="clearAndClose()" >Cancel</button>
         </div>

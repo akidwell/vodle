@@ -1,5 +1,5 @@
 <form #endorsementHeaderForm="ngForm">
- <div class="card-body"> 
+ <div class="card-body">
   <div class="row">
     <div class="col-lg-2">
       <div *ngIf="transactionEffectiveDateIsEditable()">
@@ -8,7 +8,7 @@
           class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
           [(ngModel)]="endorsement.transactionEffectiveDate" (dateChange)="changeEffectiveDate()"
           name="transactionEffectiveDate" #transactionEffectiveDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditTransactionDates" style="display: inline-block; max-width: 20%;"
           [for]="endorsementEffectiveDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #endorsementEffectiveDateCalendar></mat-datepicker>
@@ -30,7 +30,7 @@
           class="form-control" [required]="canEditTransactionDates" [disabled]="!canEditTransactionDates" [readonly]="isRewrite"
           [(ngModel)]="endorsement.transactionExpirationDate" (dateChange)="changeExpirationDate()"
           name="transactionExpirationDate" #transactionExpirationDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;"
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditTransactionDates" style="display: inline-block; max-width: 20%;"
           [for]="endorsementExpirationDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #endorsementExpirationDateCalendar></mat-datepicker>
