@@ -11,7 +11,7 @@ import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { SubmissionComponent } from './components/submission-base/submission.component';
-import { SubmissionHeaderComponent } from './components/submission-header.ts/submission-header.component';
+import { SubmissionHeaderComponent } from './components/submission-header/submission-header.component';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
