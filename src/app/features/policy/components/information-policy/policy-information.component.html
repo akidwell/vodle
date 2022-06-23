@@ -336,7 +336,7 @@
                 [matDatepicker]="productManufactureDateCalendar" class="form-control" [disabled]="isFieldReadOnly(true)"
                 [(ngModel)]="policyInfo.productManufactureDate" name="productManufactureDate"
                 #productManufactureDate="ngModel">
-              <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="productManufactureDateCalendar">
+              <mat-datepicker-toggle matSuffix [disabled]="isFieldReadOnly(true)" style="display: inline-block; max-width: 20%;" [for]="productManufactureDateCalendar">
               </mat-datepicker-toggle>
               <mat-datepicker #productManufactureDateCalendar></mat-datepicker>
             </div>

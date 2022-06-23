@@ -1,44 +1,27 @@
-import {Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {merge, Observable, of, OperatorFunction, Subject} from 'rxjs';
-import {catchError, debounceTime, map, tap, switchMap, filter} from 'rxjs/operators';
-import { ConfigService } from 'src/app/core/services/config/config.service';
+import {catchError, debounceTime, map, tap, switchMap} from 'rxjs/operators';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { ProducerContact } from 'src/app/features/submission/models/producer-contact';
-import * as moment from 'moment';
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { deepClone } from 'src/app/core/utils/deep-clone';
+import { faAngleDown, faAngleUp, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { ProducerContactService } from 'src/app/features/submission/services/producer-contact-service/producer-contact-service';
+import { ProducerContactClass } from 'src/app/features/submission/classes/ProducerContactClass';
 
 export interface FuzzyProducerContactSearchResponse {
   query: string,
   results: ProducerContact[]
 }
 
-@Injectable()
-export class ProducerContactSearchService {
-  constructor(private http: HttpClient, private config: ConfigService) {}
-
-  search(query: string, producerCode: number) {
-    const params = new HttpParams().append('query', query ).append('producerCode', producerCode);
-    return this.http
-      .get<FuzzyProducerContactSearchResponse>(this.config.apiBaseUrl + 'api/lookups/producer-contact/', {params}).pipe(
-        tap(response => {
-          console.log(response);
-        }),
-        map(response => response.results)
-      );
-  }
-}
 
 @Component({
   selector: 'producer-contact-fuzzy-search',
   templateUrl: './producer-contact-search.html',
-  providers: [ProducerContactSearchService],
+  providers: [ProducerContactService],
   styleUrls: ['./producer-contact-search.css']
 })
 export class ProducerContactSearch implements OnInit{
-  model!: ProducerContact | null;
-  originalModel!: ProducerContact;
+  model!: ProducerContactClass | null;
+  originalModel!: ProducerContactClass;
   allowSearching = true;
   searching = false;
   searchFailed = false;
@@ -46,14 +29,20 @@ export class ProducerContactSearch implements OnInit{
   faAngleUp = faAngleUp;
   showContactMaintenance = false;
   lockSubmissionFields = false;
-  searchResponse!: ProducerContact[];
+  searchResponse!: ProducerContactClass[];
   formatDateForDisplay: FormatDateForDisplay;
   pcCollapsed = true;
   canEditSubmission = false;
+  newProducerContact! : ProducerContactClass;
+  addNewProducer = false;
+  faPlus = faPlus;
+  faX = faX;
   public _producerCode!: number | null;
   focus$ = new Subject<string>();
+
   @Input() set producerCode(value: number | null) {
     this._producerCode = value;
+    this.newProducerContact = new ProducerContactClass(undefined, value || 0);
     this.resetSearch();
   }
   get producerCode(): number | null {
@@ -62,10 +51,10 @@ export class ProducerContactSearch implements OnInit{
   @ViewChild('producerContact') producerContact!: ElementRef;
   @Input() public canEdit!: boolean;
   @Input() public isRequired!: boolean;
-  @Input() public producerContactOnLoad!: ProducerContact | null;
-  @Output() producerContactSelected: EventEmitter<ProducerContact | null> = new EventEmitter();
+  @Input() public producerContactOnLoad!: ProducerContactClass | null;
+  @Output() producerContactSelected: EventEmitter<ProducerContactClass | null> = new EventEmitter();
 
-  constructor(private _service: ProducerContactSearchService, private formatDateService: FormatDateForDisplay) {
+  constructor(private _service: ProducerContactService, private formatDateService: FormatDateForDisplay) {
     this.formatDateForDisplay = formatDateService;
   }
 
@@ -74,43 +63,35 @@ export class ProducerContactSearch implements OnInit{
       this.allowSearching = false;
       this.model = this.producerContactOnLoad;
       this.originalModel = this.model;
-      this.formatDisplay(this.model);
     }
   }
   // formatter = (producer: ProducerContact) => producer.firstName + '\xa0' + producer.lastName;
-  displayFormatter = (producer: ProducerContact) => producer.display;
+  displayFormatter = (producer: ProducerContactClass) => producer.display;
 
   leaveSearchBar() {
-    console.log(this.model, this.allowSearching);
     if ((this.model?.display || !this.allowSearching)) {
       this.showContactMaintenance = false;
     } else {
       this.showContactMaintenance = this.searchResponse.length > 0 ? true : false;
     }
   }
-  selectedProducerContact(producer: any){
-    console.log(producer);
+  selectedProducerContact(producer: ProducerContactClass){
     this.allowSearching = false;
-    this.model = producer.item;
-    this.originalModel = producer.item;
+    this.model = producer;
+    this.originalModel = producer;
     this.showContactMaintenance = false;
-    this.producerContactSelected.emit(producer.item);
+    this.producerContactSelected.emit(producer);
   }
-  formatDisplay(producer: ProducerContact) {
-    producer.isActive = producer.closedDate == null || moment(producer.closedDate) > moment();
-    producer.display = producer.firstName + '\xa0' + producer.lastName + '\xa0\xa0\xa0' + producer.email + (producer.phone ? '\xa0\xa0\xa0' + producer.phone : '');
-  }
+
   handleEmptyResultSet(): never[] {
-    console.log('empty');
     this.allowSearching = true;
     this.producerContactSelected.emit(null);
     return [];
   }
   resetDisplay(): never[] {
     if (!this.allowSearching) {
-      this.model = deepClone(this.originalModel);
+      this.model = this.originalModel;
     }
-
     if (this.producerContact && this.producerContact.nativeElement != null){
       this.producerContact.nativeElement.blur();
     }
@@ -120,11 +101,42 @@ export class ProducerContactSearch implements OnInit{
     this.model = null;
     this.searchResponse = [];
   }
-  addNewProducerContact() {
-    console.log('add new');
+  openPanelAndCreate() {
+    this.performSearch('').subscribe();
+    this.addNewProducerContact();
+    this.showContactMaintenance = true;
   }
-
-  search: OperatorFunction<string, readonly ProducerContact[]> = (text$: Observable<string>) => {
+  closePanel() {
+    this.addNewProducer = false;
+    this.showContactMaintenance = false;
+  }
+  cancelAddProducer() {
+    this.addNewProducer = false;
+  }
+  addNewProducerContact() {
+    this.newProducerContact.resetClass(undefined, this._producerCode || 0);
+    this.addNewProducer = true;
+  }
+  saveNewProducerContact() {
+    this._service.addProducerContact(this.newProducerContact).subscribe(data => this.selectedProducerContact( new ProducerContactClass(data)));
+  }
+  async producerContactActions(contact: ProducerContactClass, event: any){
+    switch (event.target.value) {
+    case 'status':
+      await this.updateProducerContactStatus(contact);
+      break;
+    case 'select':
+      this.selectedProducerContact(contact);
+      break;
+    default:
+      break;
+    }
+  }
+  updateProducerContactStatus(contact: ProducerContactClass) {
+    contact.toggleActive();
+    this._service.updateProducerContact(contact).subscribe(data => contact.resetClass(data));
+  }
+  search: OperatorFunction<string, readonly ProducerContactClass[]> = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(debounceTime(300));
     const inputFocus$ = this.focus$;
     return merge(debouncedText$, inputFocus$).pipe(
@@ -155,13 +167,10 @@ export class ProducerContactSearch implements OnInit{
       })
     );
   };
-  performSearch(term: string): Observable<ProducerContact[]> {
-    return this._service.search(term, this.producerCode ? this.producerCode : 0).pipe(
+  performSearch(term: string): Observable<ProducerContactClass[]> {
+    return this._service.searchProducerContacts(term, this.producerCode ? this.producerCode : 0).pipe(
       tap((response) => {
         this.searchFailed = false;
-        response.forEach((producerContact) => {
-          this.formatDisplay(producerContact);
-        });
         this.searchResponse = response;
       }),
       map(obj => obj.filter(r => r.isActive)),

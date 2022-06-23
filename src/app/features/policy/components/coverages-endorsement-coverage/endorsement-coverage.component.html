@@ -57,9 +57,9 @@
           </div>
           <div class="col-lg-1">
             <label class='hidden-label' for="includeExclude">Incl/Excl</label>
-            <ng-select id="includeExclude" click-stop-propagation [items]="includeExclude" bindValue="code"
-              bindLabel="description" name="includeExclude" (change)="changeIncludeExclude($event)"
-              [readonly]="!canEdit || !showIncludeExlude" [(ngModel)]="coverage.includeExclude">
+            <ng-select id="includeExclude" [items]="includeExclude" bindValue="code" bindLabel="description"
+              name="includeExclude" (change)="changeIncludeExclude($event)" [readonly]="!canEdit || !showIncludeExlude"
+              [(ngModel)]="coverage.includeExclude">
             </ng-select>
           </div>
           <div class="col-lg-1">
@@ -84,7 +84,7 @@
               <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="retroDateCalendar"
                 class="form-control" [required]="canEdit && isRetroDateRequired" [readonly]="!canEdit"
                 [(ngModel)]="coverage.retroDate" (dateChange)="changeRetroDate()" name="retroDate" #retroDate="ngModel">
-              <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
+              <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
               </mat-datepicker-toggle>
               <mat-datepicker #retroDateCalendar></mat-datepicker>
             </div>

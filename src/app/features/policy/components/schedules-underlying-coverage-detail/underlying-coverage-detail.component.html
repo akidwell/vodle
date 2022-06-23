@@ -72,7 +72,7 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="effectiveDateCalendar"
           class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.effectiveDate" name="effectiveDate"
           #effectiveDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="effectiveDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="effectiveDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #effectiveDateCalendar></mat-datepicker>
       </div>
@@ -81,7 +81,7 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="expirationDateCalendar"
           class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.expirationDate" name="expirationDate"
           #expirationDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="expirationDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="expirationDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #expirationDateCalendar></mat-datepicker>
       </div>
@@ -90,7 +90,7 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="retroDateCalendar"
           class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.retroDate" name="retroDate"
           #retroDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #retroDateCalendar></mat-datepicker>
       </div>
@@ -116,7 +116,7 @@
       <span class="btn btn-secondary" (click)=deleteThisUnderlyingCoverage() hover-class="btn-warning"
         *ngIf="ucData.isNew">Remove</span>
     </div>
-   
+
   </div>
   <button *ngIf="!ucdCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse">
     <fa-icon [icon]="faArrowUp"></fa-icon>

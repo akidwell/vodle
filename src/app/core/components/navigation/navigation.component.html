@@ -174,20 +174,28 @@
   <div
     class="sidebar-toggle"
     [style.min-height.px]="headerPaddingService.headerPadding$ | async"
-    [style.width.px]="sidebarMinWidth"
+    [style.width.px]="headerPaddingService.sidebarExpanderWidth$ | async"
     [style.left.px]="headerPaddingService.sidebarPadding$ | async"
   >
-    <div class="toggle" (click)="toggleSidebar()">
-      <fa-icon
-        *ngIf="!showFullSidebar"
-        class="toggle-icon"
-        [icon]="faBars"
-      ></fa-icon>
+    <div *ngIf="!showFullSidebar" class="home-link" (click)="routeToHome()">
+      <fa-icon class="toggle-icon large" [icon]="faHome"></fa-icon>
+    </div>
+    <div
+      *ngIf="!showFullSidebar"
+      class="toggle"
+      (click)="toggleSidebar()"
+    >
+      <fa-icon class="toggle-icon x-large" [icon]="faBars"></fa-icon>
       <fa-icon
         *ngIf="showFullSidebar"
-        class="toggle-icon"
+        id="close-panel"
+        class="toggle-icon large"
         [icon]="faX"
       ></fa-icon>
+    </div>
+
+    <div *ngIf="showFullSidebar" id="close-panel" (click)="toggleSidebar()">
+      <fa-icon class="toggle-icon large" [icon]="faX"></fa-icon>
     </div>
   </div>
 </div>

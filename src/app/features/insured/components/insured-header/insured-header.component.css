@@ -13,10 +13,28 @@
 /* Overwrite margin size */
 .row {
   margin: 0;
+  margin-top: 7px;
 }
-.header-title {
-  font-size: 0.9rem;
+.header-row {
+  white-space: nowrap;
 }
 .header-field {
-  font-size: 0.8rem;
+  font-size: 1.1rem;
+  float: left;
+  margin-left: 1rem;
+}
+.address {
+  max-width: 50%;
+  min-width: 30%;
+}
+.header-field-container{
+  width:auto;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.name {
+  max-width: 50%;
+  min-width: 25%;
 }

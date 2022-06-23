@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Injectable, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of, OperatorFunction} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, filter} from 'rxjs/operators';
@@ -24,9 +24,6 @@ export class ProducerSearchService {
     const params = new HttpParams().append('query', query ).append('departmentCode', department).append('policyDate', policyDateString);
     return this.http
       .get<FuzzySearchResponse>(this.config.apiBaseUrl + 'api/lookups/producer-branch/', {params}).pipe(
-        tap(response => {
-          console.log(response);
-        }),
         map(response => response.results)
       );
   }
@@ -41,6 +38,7 @@ export class ProducerSearchService {
 export class ProducerSearch implements OnInit{
   model!: Producer | null;
   originalModel!: Producer;
+  allowSearching = true;
   searching = false;
   searchFailed = false;
   formatDateForDisplay: FormatDateForDisplay;
@@ -53,6 +51,7 @@ export class ProducerSearch implements OnInit{
   get department(): number | null {
     return this._department;
   }
+  @ViewChild('producer') producer!: ElementRef;
   @Input() public canEdit!: boolean;
   @Input() public isRequired!: boolean;
   @Input() public producerOnLoad!: Producer | null;
@@ -63,6 +62,7 @@ export class ProducerSearch implements OnInit{
   }
   ngOnInit(): void {
     if (this.producerOnLoad) {
+      this.allowSearching = false;
       this.model = this.producerOnLoad;
       this.originalModel = this.model;
       this.formatDisplay(this.model);
@@ -73,7 +73,6 @@ export class ProducerSearch implements OnInit{
   displayFormatter = (producer: Producer) => producer.display;
 
   selectedProducer(producer: any){
-    console.log(producer);
     this.originalModel = producer;
     this.producerSelected.emit(producer.item);
   }
@@ -81,12 +80,23 @@ export class ProducerSearch implements OnInit{
     producer.display = producer.name + '\xa0\xa0\xa0\xa0\xa0\xa0' + producer.city + '\xa0\xa0\xa0' + producer.state + '\xa0\xa0\xa0' + producer.profitCenter+ '\xa0\xa0\xa0' + this.formatDateForDisplay.formatDateForDisplay(producer.createdDate) + '\xa0\xa0\xa0' + '(' + producer.producerCode + ')';
   }
   handleEmptyResultSet(): never[] {
+    this.allowSearching = true;
     this.producerSelected.emit(null);
+    return [];
+  }
+  resetDisplay(): never[] {
+    if (!this.allowSearching) {
+      this.model = this.originalModel;
+    }
+    if (this.producer && this.producer.nativeElement != null){
+      this.producer.nativeElement.blur();
+    }
     return [];
   }
   resetSearch(): void {
     this.model = null;
   }
+
   search: OperatorFunction<string, readonly Producer[]> = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(300),
@@ -94,23 +104,33 @@ export class ProducerSearch implements OnInit{
       tap(() => {
         this.searching = true;
       }),
-      switchMap(term =>
-        term.length < 3 ? this.handleEmptyResultSet() :
-          this._service.search(term, this.department ? this.department : 0, this.policyDate).pipe(
-            tap((response) => {
-              this.searchFailed = false;
-              response.forEach((producer) => {
-                this.formatDisplay(producer);
-              });
-            }),
-            catchError(() => {
-              this.searchFailed = true;
-              return of([]);
-            }))
+      switchMap(term =>{
+        if (term.length >= 3) {
+          if (this.allowSearching) {
+            return this.performSearch(term);
+          } else {
+            return this.resetDisplay();
+          }
+        } else {
+          return this.handleEmptyResultSet();
+        }
+      }
       ),
-      tap((obj) => {
-        console.log(obj);
+      tap(() => {
         this.searching = false;
       })
     );
+  performSearch(term: string): Observable<Producer[]> {
+    return this._service.search(term, this.department ? this.department : 0, this.policyDate).pipe(
+      tap((response) => {
+        this.searchFailed = false;
+        response.forEach((producer) => {
+          this.formatDisplay(producer);
+        });
+      }),
+      catchError(() => {
+        this.searchFailed = true;
+        return of([]);
+      }));
+  }
 }

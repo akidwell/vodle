@@ -1,12 +1,9 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Code } from 'src/app/core/models/code';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
-import { Producer } from '../../models/producer';
 import { Submission } from '../../models/submission';
-import { SubmissionEvent } from '../../models/submission-event';
 import { SubmissionStatus, SubmissionStatusResult } from '../../models/submission-status';
 
 @Injectable({
