@@ -86,12 +86,15 @@ pipeline {
 					def devHash = jsonfile['/rsps/assets/config/config.dev.json'] 
 					jsonfile['/rsps/assets/config/config.json'] = devHash.toString()
 
-					jsonfile['/rsps/assets/config/config.dev.json'].remove()
+					jsonfile['/rsps/assets/config/config.dev.json'] = null
 
-					//def json = new JsonSlurper().parseText(jsonfile)
-					//json.remove('/rsps/assets/config/config.dev.json')
+					def json = new groovy.json.JsonSlurper().parseText(jsonfile)
+					json.remove('/rsps/assets/config/config.dev.json')
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
+					// def pjson = new groovy.json.JsonSlurper().parse(new File('./dist/rsps/ngsw.json'))
+					// pjson.remove('/rsps/assets/config/config.dev.json')
+					
 					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
 					// jsonIntfile['buildVersion'] = "${fileVersion}".toString()
 					// writeJSON file: './src/assets/config/config.int.json', json: jsonIntfile
