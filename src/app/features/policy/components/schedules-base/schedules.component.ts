@@ -67,7 +67,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
     if (this.locationComp.components != null) {
       for (const child of this.locationComp.components) {
         if (!child.isZipCodeValid()) {
-          invalid.push('Invalid Zip Code - Location: #' + child.location.sequence.toString());
+          invalid.push('Zip Code is invalid for ' + child.location.countryCode + ' - Location: #' + child.location.sequence.toString());
         }
         for (const name in child.locationForm.controls) {
           if (child.locationForm.controls[name].invalid) {

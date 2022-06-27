@@ -29,7 +29,7 @@
           (ngModelChange)="changeZipCode()">
       </div>
       <div [hidden]="isZipCodeFormatValid" class="alert alert-danger">
-        Invalid Zip format
+        Zip Code is invalid for {{location.countryCode}}
       </div>
       <div class="empty-row"></div>
       <div class="col-lg-12">

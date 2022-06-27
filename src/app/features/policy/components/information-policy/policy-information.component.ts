@@ -136,7 +136,7 @@ export class PolicyInformationComponent implements OnInit {
       errorMessages.push('Expiration Date must be after the Effective Date');
     }
     if (this.policyInfoForm.controls['riskZipCode'].valid && ZipCodeCountry(this.policyInfo.riskLocation.zip) != this.policyInfo.riskLocation.countryCode) {
-      errorMessages.push('Invalid Zip Code');
+      errorMessages.push('Zip Code is invalid for ' + this.policyInfo.riskLocation.countryCode);
     }
     return errorMessages;
   }
