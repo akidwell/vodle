@@ -1,4 +1,4 @@
-<ngb-alert *ngIf="showInvalid" type=danger (closed)="hideInvalid()" [dismissible]="true" [innerHTML]="invalidMessage">
+<ngb-alert *ngIf="insured.showErrors" type=danger [innerHTML]="insured.errorMessage">
 </ngb-alert>
 <rsps-insured-account [insured]="insured"></rsps-insured-account>
 <rsps-insured-contact-group [insuredContacts]="insured.contacts">

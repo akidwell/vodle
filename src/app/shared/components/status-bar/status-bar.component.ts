@@ -182,37 +182,42 @@ export class StatusBarComponent implements OnInit {
       sub = this.pageDataService.submissionData;
     }
 
-    if (sub.submissionNumber === 0) {
-      const results$ = this.submissionService.postSubmission(sub);
-      await lastValueFrom(results$).then(async submission => {
-        sub.submissionNumber = submission.submissionNumber;
-        sub.markClean();
-        this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        if (sub.submissionNumber !== null) {
-          this.router.navigate(['/submission/' + sub.submissionNumber?.toString() + '/information']);
-        }
-        return true;
-      },
-      (error) => {
-        this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open('Submission Save Error', errorMessage);
-        return false;
-      });
+    if (sub.isValid) {
+      if (sub.submissionNumber === 0) {
+        const results$ = this.submissionService.postSubmission(sub);
+        await lastValueFrom(results$).then(async submission => {
+          sub.submissionNumber = submission.submissionNumber;
+          sub.markClean();
+          this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          if (sub.submissionNumber !== null) {
+            this.router.navigate(['/submission/' + sub.submissionNumber?.toString() + '/information']);
+          }
+          return true;
+        },
+        (error) => {
+          this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
+          const errorMessage = error.error?.Message ?? error.message;
+          this.messageDialogService.open('Submission Save Error', errorMessage);
+          return false;
+        });
+      } else {
+        const results$ = this.submissionService.updateSubmission(sub);
+        await lastValueFrom(results$).then(async (result) => {
+          sub.updateClass(result);
+          sub.markClean();
+          this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+          return true;
+        },
+        (error) => {
+          this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
+          const errorMessage = error.error?.Message ?? error.message;
+          this.messageDialogService.open('Submission Save Error', errorMessage);
+          return false;
+        });
+      }
     } else {
-      const results$ = this.submissionService.updateSubmission(sub);
-      await lastValueFrom(results$).then(async (result) => {
-        sub.updateClass(result);
-        sub.markClean();
-        this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        return true;
-      },
-      (error) => {
-        this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open('Submission Save Error', errorMessage);
-        return false;
-      });
+      sub.showErrorMessage();
+      window.scroll(0, 0);
     }
     this.showBusy = false;
   }
@@ -223,15 +228,21 @@ export class StatusBarComponent implements OnInit {
     } else {
       insured = this.pageDataService.insuredData;
     }
-    let save: boolean | null = true;
-    if (insured.isNew && insured.isValid) {
-      save = await this.checkDuplicates(insured);
+    if (insured.isValid) {
+      let save: boolean | null = true;
+      if (insured.isNew && insured.isValid) {
+        save = await this.checkDuplicates(insured);
+      }
+      if (save) {
+        this.showBusy = true;
+        await this.saveInsured(insured);
+      }
+      this.showBusy = false;
     }
-    if (save) {
-      this.showBusy = true;
-      await this.saveInsured(insured);
+    else {
+      insured.showErrorMessage();
+      window.scroll(0, 0);
     }
-    this.showBusy = false;
   }
   private async checkDuplicates(insured: InsuredClass): Promise<boolean | null> {
     const dupe = newInsuredDupeRequst(insured);
