@@ -136,6 +136,7 @@ export interface EndorsementLocation {
   state : string | null;
   county : string | null;
   zip: string;
+  countryCode: string | null;
   isNew: boolean;
 }
 export const newEndorsementLocation = (): EndorsementLocation => ({
@@ -148,6 +149,7 @@ export const newEndorsementLocation = (): EndorsementLocation => ({
   state: null,
   county: null,
   zip: '',
+  countryCode: null,
   isNew: true
 });
 

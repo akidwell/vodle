@@ -3,13 +3,14 @@ import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { EndorsementLocation } from 'src/app/features/policy/models/policy';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { NgForm } from '@angular/forms';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
+import { State } from 'src/app/core/models/state';
+import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 
 @Component({
   selector: 'rsps-endorsement-location',
@@ -23,7 +24,7 @@ export class EndorsementLocationComponent implements OnInit {
   firstExpand = true;
   faArrowUp = faAngleUp;
   isLoadingAddress = false;
-  states$: Observable<Code[]> | undefined;
+  states$: Observable<State[]> | undefined;
   counties: string[] = [];
   addressSub!: Subscription;
   isDirty = false;
@@ -102,6 +103,7 @@ export class EndorsementLocationComponent implements OnInit {
             this.location.city = address?.city;
             this.location.state = address?.state;
             this.location.county = address?.county[0];
+            this.location.countryCode = address?.country;
             this.counties = [];
             for (const county of address.county) {
               this.counties = this.counties.concat(county);
@@ -111,6 +113,10 @@ export class EndorsementLocationComponent implements OnInit {
         }
       });
     }
+  }
+
+  changeState(state: State) {
+    this.location.countryCode = state.countryCode;
   }
 
   copyLocation(): void {
@@ -134,6 +140,17 @@ export class EndorsementLocationComponent implements OnInit {
         return result;
       });
     }
+  }
+
+  isValid(): boolean {
+    return this.locationForm.status == 'VALID' && this.isZipCodeValid();
+  }
+
+  isZipCodeValid() {
+    if (this.locationForm.controls['zipCode'].valid) {
+      return ZipCodeCountry(this.location.zip) == this.location.countryCode;
+    }
+    return true;
   }
 
   async save(): Promise<boolean> {
