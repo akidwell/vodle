@@ -11,6 +11,8 @@ import { DatePipe } from '@angular/common';
 import { TransactionTypes } from '../../../../core/constants/transaction-types';
 import { ReinsuranceLookupService } from '../../services/reinsurance-lookup/reinsurance-lookup.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { State } from 'src/app/core/models/state';
+import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 
 @Component({
   selector: 'rsps-policy-information',
@@ -24,7 +26,7 @@ export class PolicyInformationComponent implements OnInit {
   faAngleUp = faAngleUp;
   pacCodes$: Observable<Code[]> | undefined;
   riskGrades$: Observable<Code[]> | undefined;
-  states$: Observable<Code[]> | undefined;
+  states$: Observable<State[]> | undefined;
   carrierCodes$: Observable<Code[]> | undefined;
   coverageCodes$: Observable<Code[]> | undefined;
   auditCodes$: Observable<Code[]> | undefined;
@@ -112,11 +114,17 @@ export class PolicyInformationComponent implements OnInit {
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
   }
 
+  changeState(state: State) {
+    console.log(state.countryCode);
+    this.policyInfo.riskLocation.countryCode = state.countryCode;
+  }
+
   isValid(): boolean {
     const effectiveDate = Number(this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd'));
     const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
 
-    return effectiveDate < expirationDate && this.policyInfoForm.status == 'VALID';
+    const validZip = ZipCodeCountry(this.policyInfo.riskLocation.zip) == this.policyInfo.riskLocation.countryCode;
+    return effectiveDate < expirationDate && validZip && this.policyInfoForm.status == 'VALID';
   }
 
   ErrorMessages(): string[] {
@@ -126,6 +134,9 @@ export class PolicyInformationComponent implements OnInit {
 
     if (effectiveDate >= expirationDate) {
       errorMessages.push('Expiration Date must be after the Effective Date');
+    }
+    if (this.policyInfoForm.controls['riskZipCode'].valid && ZipCodeCountry(this.policyInfo.riskLocation.zip) != this.policyInfo.riskLocation.countryCode) {
+      errorMessages.push('Zip Code is invalid for ' + this.policyInfo.riskLocation.countryCode);
     }
     return errorMessages;
   }

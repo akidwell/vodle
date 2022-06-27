@@ -36,7 +36,7 @@
           <div class="col-lg-3">
             <label for="zipCode">Zip Code</label>
             <input type="text" class="form-control" id="zipCode" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-              mask="00000||00000-0000" [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
+              zip-code [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
               (ngModelChange)="changeZipCode()">
           </div>
           <div class="col-lg-3">
@@ -57,9 +57,9 @@
               </div>
             </div>
             <div *ngIf="!isLoadingAddress">
-              <ng-select id="locationState" [items]="states$ | async" bindLabel="description" bindValue="code"
+              <ng-select id="locationState" [items]="states$ | async" bindLabel="name" bindValue="code"
                 [clearable]="false" [readonly]="!canEditPolicy || isLoadingAddress" name="locationState"
-                [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel">
+                [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel" (change)="changeState($event)">
               </ng-select>
             </div>
           </div>

@@ -31,9 +31,9 @@
       <div class="col-lg-6">
         <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
         <div class="inputspinner">
-          <input type="text" class="form-control" id="zip" [readonly]="!canEditInsured || insured.zipReadonly"
+          <input type="text" zip-code class="form-control" id="zip" [readonly]="!canEditInsured || insured.zipReadonly"
             [required]="canEditInsured && insured.zipRequired" name="zip" [(ngModel)]="insured.zip" #zip="ngModel"
-            mask="00000||00000-0000" [ngClass]="zipUpdated">
+            [ngClass]="zipUpdated" (ngModelChange)="changeZip()">
           <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true">
           </div>
@@ -56,9 +56,9 @@
       <div class="col-lg-6">
         <label for="state" class="form-label" title="State">State</label>
         <div class="inputspinner">
-          <ng-select id="state" [items]="states$ | async" bindLabel="description" bindValue="code" [clearable]="false"
+          <ng-select id="state" [items]="states$ | async" bindLabel="name" bindValue="code" [clearable]="false"
             [readonly]="!canEditInsured || insured.stateReadonly" [required]="canEditInsured && insured.stateRequired"
-            name="state" [(ngModel)]="insured.state" #state="ngModel" [ngClass]="stateUpdated">
+            name="state" [(ngModel)]="insured.state" #state="ngModel" [ngClass]="stateUpdated" (change)="changeState($event)">
           </ng-select>
           <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true">
@@ -85,7 +85,7 @@
           <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
             [readonly]="!canEditInsured || insured.countryReadonly"
             [required]="canEditInsured && insured.countryRequired" name="country" [(ngModel)]="insured.country"
-            #state="ngModel" [ngClass]="countryUpdated">
+            #state="ngModel" [ngClass]="countryUpdated" (ngModelChange)="changeCountry()">
           </ng-select>
           <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true">

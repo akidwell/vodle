@@ -4,7 +4,6 @@ import { lastValueFrom, Observable, of, Subscription } from 'rxjs';
 import { Endorsement, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from 'src/app/features/policy/models/policy';
 import { ReinsuranceLookup } from '../../services/reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from '../../services/reinsurance-lookup/reinsurance-lookup.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { NgForm } from '@angular/forms';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -47,7 +46,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService) {
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );

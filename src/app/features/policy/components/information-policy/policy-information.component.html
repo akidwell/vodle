@@ -117,15 +117,15 @@
             </div>
             <div class="col-lg-3 col-md-4">
               <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
-              <ng-select id="riskState" [items]="states$ | async" bindLabel="description" bindValue="code"
+              <ng-select id="riskState" [items]="states$ | async" bindLabel="name" bindValue="code"
                 [clearable]="false" [readonly]="isFieldReadOnly(false)" name="riskState"
-                [required]="!isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel">
+                [required]="!isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel" (change)="changeState($event)">
               </ng-select>
             </div>
             <div class="col-lg-2 col-md-4">
               <label for="riskZipCode"  class="form-label" title="Policy Zip Code">Policy Zip Code</label>
-              <input type="text" class="form-control" id="riskZipCode" [required]="!isFieldReadOnly(false)" minlength="5"
-                [readonly]="isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.zip" mask="00000||00000-0000"
+              <input type="text" class="form-control" id="riskZipCode" [required]="!isFieldReadOnly(false)"
+                [readonly]="isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.zip" zip-code
                 #riskZipCode="ngModel" name="riskZipCode">
             </div>
           </div>
