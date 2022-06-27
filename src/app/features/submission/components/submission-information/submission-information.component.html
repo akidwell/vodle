@@ -21,8 +21,7 @@
       {{ previousLabel }}
     </button>
   </div> -->
-  <ngb-alert *ngIf="showInvalid" type="danger" (closed)="hideInvalid()" [dismissible]="true"
-    [innerHTML]="invalidMessage"></ngb-alert>
+  <ngb-alert *ngIf="submission.showErrors" type="danger" [innerHTML]="submission.errorMessage"></ngb-alert>
   <ngb-alert *ngIf="
     submission.warningsList.length > 0 &&
     canEditSubmission &&

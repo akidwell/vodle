@@ -33,6 +33,7 @@ export class SubmissionClass implements Submission {
 
   private _effectiveDatePastWarningRange = 89;
   private _effectiveDateFutureWarningRange = -180;
+  private _showErrors = false;
 
   producerCodeRequiredStatus = SubmissionStatusEnum.Live;
   producerContactRequiredStatus = SubmissionStatusEnum.Live;
@@ -331,6 +332,9 @@ export class SubmissionClass implements Submission {
 
     return valid;
   }
+  get showErrors(): boolean {
+    return this._showErrors && this.invalidList.length > 0;
+  }
   applyPolicyTerm(){
     if (this._policyTerm != PolicyTermEnum.custom) {
       this._polExpDate = moment(this._polEffDate).add(this._policyTerm, 'M').toDate();
@@ -338,9 +342,16 @@ export class SubmissionClass implements Submission {
   }
   markClean() {
     this._isDirty = false;
+    this._showErrors = false;
   }
   markDirty() {
     this._isDirty = true;
+  }
+  showErrorMessage() {
+    this._showErrors = true;
+  }
+  hideErrorMessage() {
+    this._showErrors = false;
   }
   private isFieldReadonly(statusLock?: SubmissionStatusEnum) {
     return (this.hasPostedInvoice || this.statusCode === SubmissionStatusEnum.Dead) ? true : (statusLock && this.statusCode >= statusLock) ? true : false;
@@ -422,6 +433,14 @@ export class SubmissionClass implements Submission {
     }
 
   }
+  get errorMessage() {
+    let message = '';
+    this.invalidList.forEach(error => {
+      message += '<br><li>' + error;
+    });
+    return 'Following fields are invalid' + message;
+  }
+
   validateNew(valid: boolean): boolean {
     this.invalidList = [];
     if (!this.validateUnderwriter()) {

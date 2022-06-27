@@ -22,7 +22,7 @@ import { SubmissionInfoPanelRightComponent } from '../submission-info-panel-righ
 @Component({
   selector: 'rsps-submission-information',
   templateUrl: './submission-information.component.html',
-  styleUrls: ['./submission-information.component.css']
+  styleUrls: ['./submission-information.component.css'],
 })
 export class SubmissionInformationComponent implements OnInit {
   submission!: SubmissionClass;
@@ -52,16 +52,27 @@ export class SubmissionInformationComponent implements OnInit {
   invalidList = [];
 
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
-  @ViewChild(SubmissionInfoPanelRightComponent) submissionInfoPanelRight!: SubmissionInfoPanelRightComponent;
-  @ViewChild(SubmissionInfoPanelLeftComponent) submissionInfoPanelLeft!: SubmissionInfoPanelLeftComponent;
+  @ViewChild(SubmissionInfoPanelRightComponent)
+    submissionInfoPanelRight!: SubmissionInfoPanelRightComponent;
+  @ViewChild(SubmissionInfoPanelLeftComponent)
+    submissionInfoPanelLeft!: SubmissionInfoPanelLeftComponent;
 
-  constructor(private route: ActivatedRoute, private router: Router, private dropdowns: DropDownsService,
-    private submissionService: SubmissionService, private userAuth: UserAuth, private navigationService: NavigationService,
-    private messageDialogService: MessageDialogService, private notification: NotificationService,private formatDateService: FormatDateForDisplay,
-    public pageDataService: PageDataService, private previousRouteService: PreviousRouteService) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private dropdowns: DropDownsService,
+    private submissionService: SubmissionService,
+    private userAuth: UserAuth,
+    private navigationService: NavigationService,
+    private messageDialogService: MessageDialogService,
+    private notification: NotificationService,
+    private formatDateService: FormatDateForDisplay,
+    public pageDataService: PageDataService,
+    private previousRouteService: PreviousRouteService
+  ) {
     this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+      (canEditSubmission: boolean) => (this.canEditSubmission = canEditSubmission)
     );
     this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
       this.previousUrl = previousUrl;
@@ -72,27 +83,32 @@ export class SubmissionInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
+    this.route.parent?.data.subscribe((data) => {
       this.submission = data['submissionData'].submission;
     });
-    this.sicCodes$ = this.dropdowns.getSicCodes()
-      .pipe(tap(() => this.loadingSic = false));
+    this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
 
     if (this.submission.sicCode != null) {
-      this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.submission.sicCode)
-        .pipe(tap(() => this.loadingNaics = false));
-    }
-    else {
+      this.naicsCodes$ = this.dropdowns
+        .getNaicsCodes(this.submission.sicCode)
+        .pipe(tap(() => (this.loadingNaics = false)));
+    } else {
       this.loadingNaics = false;
     }
-    this.underwriters$ = this.dropdowns.getUnderwriters().pipe(tap(x => {
-      const foundCurrentUnderwriter = x.filter(p => p.key == this.submission.underwriter);
+    this.underwriters$ = this.dropdowns.getUnderwriters().pipe(
+      tap((x) => {
+        const foundCurrentUnderwriter = x.filter((p) => p.key == this.submission.underwriter);
 
-      if (foundCurrentUnderwriter.length == 0) {
-        const expiredUnderwriter = {key: this.submission.underwriter || 0, description: this.submission.underwriterName || '', code: this.submission.underwriterName || ''};
-        x.push(expiredUnderwriter);
-      }
-    }));
+        if (foundCurrentUnderwriter.length == 0) {
+          const expiredUnderwriter = {
+            key: this.submission.underwriter || 0,
+            description: this.submission.underwriterName || '',
+            code: this.submission.underwriterName || '',
+          };
+          x.push(expiredUnderwriter);
+        }
+      })
+    );
     this.departments$ = this.dropdowns.getDepartments();
   }
 
@@ -120,7 +136,11 @@ export class SubmissionInformationComponent implements OnInit {
 
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
-    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+    return (
+      item.code?.toLowerCase().indexOf(term) > -1 ||
+      item.key?.toString().toLowerCase().indexOf(term) > -1 ||
+      item.description?.toLowerCase().indexOf(term) > -1
+    );
   }
   prev() {
     this.router.navigate([this.previousUrl]);
@@ -129,10 +149,10 @@ export class SubmissionInformationComponent implements OnInit {
     if (this.submission.sicCode != null) {
       this.loadingNaics = true;
       this.submission.naicsCode = null;
-      this.naicsCodes$ = this.dropdowns.getNaicsCodes(this.submission.sicCode)
-        .pipe(tap(() => this.loadingNaics = false));
-    }
-    else {
+      this.naicsCodes$ = this.dropdowns
+        .getNaicsCodes(this.submission.sicCode)
+        .pipe(tap(() => (this.loadingNaics = false)));
+    } else {
       this.naicsCodes$ = new Observable<Code[]>();
     }
   }
@@ -143,70 +163,65 @@ export class SubmissionInformationComponent implements OnInit {
   isValid(): boolean {
     return this.submission.isValid;
   }
-  async save(): Promise<void> {
-    this.showBusy = true;
-    if (this.submission.isValid){
-      this.hideInvalid();
-    } else {
-      this.showInvalidControls();
-      return;
-    }
-    if (this.submission.submissionNumber === 0) {
-      const results$ = this.submissionService.postSubmission(this.submission);
-      await lastValueFrom(results$).then(async submission => {
-        this.submission.submissionNumber = submission.submissionNumber;
-        this.submission.markClean();
-        this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        if (this.submission.submissionNumber !== null) {
-          this.router.navigate(['/submission/' + this.submission.submissionNumber?.toString() + '/information']);
-        }
-        return true;
-      },
-      (error) => {
-        this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open('Submission Save Error', errorMessage);
-        return false;
-      });
-    } else {
-      const results$ = this.submissionService.updateSubmission(this.submission);
-      await lastValueFrom(results$).then(async (result) => {
-        this.submission.updateClass(result);
-        this.submission.markClean();
-        this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-        return true;
-      },
-      (error) => {
-        this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-        const errorMessage = error.error?.Message ?? error.message;
-        this.messageDialogService.open('Submission Save Error', errorMessage);
-        return false;
-      });
-    }
-    this.showBusy = false;
-  }
 
-  showInvalidControls(): void {
-    this.invalidMessage = '';
-    // Compile all invalide controls in a list
-    if (this.submission.invalidList.length > 0) {
-      this.showInvalid = true;
-      for (const error of this.submission.invalidList) {
-        this.invalidMessage += '<br><li>' + error;
-      }
-    }
+  // Don't think this is used anymore
+  // async save(): Promise<void> {
+  //   this.showBusy = true;
+  //   if (this.submission.isValid) {
+  //     if (this.submission.submissionNumber === 0) {
+  //       const results$ = this.submissionService.postSubmission(this.submission);
+  //       await lastValueFrom(results$).then(
+  //         async (submission) => {
+  //           this.submission.submissionNumber = submission.submissionNumber;
+  //           this.submission.markClean();
+  //           this.notification.show('Submission successfully saved.', {
+  //             classname: 'bg-success text-light',
+  //             delay: 5000,
+  //           });
+  //           if (this.submission.submissionNumber !== null) {
+  //             this.router.navigate([
+  //               '/submission/' + this.submission.submissionNumber?.toString() + '/information',
+  //             ]);
+  //           }
+  //           return true;
+  //         },
+  //         (error) => {
+  //           this.notification.show('Submission Not Saved.', {
+  //             classname: 'bg-danger text-light',
+  //             delay: 5000,
+  //           });
+  //           const errorMessage = error.error?.Message ?? error.message;
+  //           this.messageDialogService.open('Submission Save Error', errorMessage);
+  //           return false;
+  //         }
+  //       );
+  //     } else {
+  //       const results$ = this.submissionService.updateSubmission(this.submission);
+  //       await lastValueFrom(results$).then(
+  //         async (result) => {
+  //           this.submission.updateClass(result);
+  //           this.submission.markClean();
+  //           this.notification.show('Submission successfully saved.', {
+  //             classname: 'bg-success text-light',
+  //             delay: 5000,
+  //           });
+  //           return true;
+  //         },
+  //         (error) => {
+  //           this.notification.show('Submission Not Saved.', {
+  //             classname: 'bg-danger text-light',
+  //             delay: 5000,
+  //           });
+  //           const errorMessage = error.error?.Message ?? error.message;
+  //           this.messageDialogService.open('Submission Save Error', errorMessage);
+  //           return false;
+  //         }
+  //       );
+  //     }
+  //   }
+  //   this.showBusy = false;
+  // }
 
-    if (this.showInvalid) {
-      this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
-    }
-    else {
-      this.hideInvalid();
-    }
-  }
-
-  hideInvalid(): void {
-    this.showInvalid = false;
-  }
   hideWarnings(): void {
     this.showWarnings = false;
   }
@@ -214,7 +229,7 @@ export class SubmissionInformationComponent implements OnInit {
     return {
       url: '/submission/' + val.submissionNumber?.toString() + '/information',
       type: 'Submission',
-      description: 'Submission# ' + val.submissionNumber
+      description: 'Submission# ' + val.submissionNumber,
     };
   }
 }

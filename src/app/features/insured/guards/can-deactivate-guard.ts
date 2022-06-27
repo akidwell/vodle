@@ -22,41 +22,41 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
         return true;
       }
       const insured = this.pageDataService.insuredData || null;
-      if (insured && insured.isValid) {
-        if (insured.isDirty) {
-          if (this.checkLeavePolicy(state.url, nextState.url)) {
-            return this.confirmLeave().then(confirm => {
-              if (confirm) {
-                window.scroll(0, 0);
-                component.hideInvalid();
-              }
-              return confirm;
-            });
+      if (insured != null) {
+        if (insured && insured.isValid) {
+          if (insured.isDirty) {
+            if (this.checkLeaveInsured(state.url, nextState.url)) {
+              return this.confirmLeave().then(confirm => {
+                if (confirm) {
+                  insured.hideErrorMessage();
+                }
+                return confirm;
+              });
+            }
           }
+          // No error and no longer dirty then hide any errors and navigate to next route
+          insured.hideErrorMessage();
+          return true;
         }
-        // No error and no longer dirty then hide any errors and navigate to next route
-        component.hideInvalid();
-        return true;
+        // Show errors
+        insured.showErrorMessage();
+        window.scroll(0, 0);
+        // Check to see if trying to leave policy
+        if (this.checkLeaveInsured(state.url, nextState.url)) {
+          return this.confirmLeave().then(confirm => {
+            if (confirm) {
+              insured.hideErrorMessage();
+            }
+            return confirm;
+          });
+        }
       }
-      // Show errors
-      component.showInvalidControls();
-      window.scroll(0, 0);
-      // Check to see if trying to leave policy
-      if (this.checkLeavePolicy(state.url, nextState.url)) {
-        return this.confirmLeave().then(confirm => {
-          if (confirm) {
-            component.hideInvalid();
-          }
-          return confirm;
-        });
-      }
-
       return false;
     }
     return true;
   }
 
-  checkLeavePolicy(startUrl: string, endUrl: string): boolean {
+  checkLeaveInsured(startUrl: string, endUrl: string): boolean {
     const startRoute = startUrl.split('/');
     const endRoute = endUrl.split('/');
     // if nagivating outstide policy then open confirm leave dialog

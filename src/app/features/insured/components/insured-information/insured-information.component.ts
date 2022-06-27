@@ -31,7 +31,6 @@ export class InsuredInformationComponent implements OnInit {
   previousUrl = '';
   previousLabel = 'Previous';
 
-  // @Input() public insured!: InsuredClass;
   @ViewChild(SharedAdditionalNamedInsuredsGroupComponent) aniComp!: SharedAdditionalNamedInsuredsGroupComponent;
   @ViewChild(InsuredAccountComponent) accountInfoComp!: InsuredAccountComponent;
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
@@ -67,40 +66,11 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   isValid(): boolean {
-    if (!this.canEditInsured) {
-      return true;
-    }
-    if (this.insured.isValid) {
-      this.hideInvalid();
-    }
-    return this.insured.isValid;
+    return !this.canEditInsured || this.insured.isValid;
   }
 
   isDirty(): boolean {
     return this.insured.isDirty;
-  }
-
-
-
-  showInvalidControls(): void {
-    this.invalidMessage = '';
-    // Compile all invalid controls in a list
-    if (this.insured.invalidList.length > 0) {
-      this.showInvalid = true;
-      for (const error of this.insured.invalidList) {
-        this.invalidMessage += '<br><li>' + error;
-      }
-    }
-    if (this.showInvalid) {
-      this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
-    }
-    else {
-      this.hideInvalid();
-    }
-  }
-
-  hideInvalid(): void {
-    this.showInvalid = false;
   }
 
 }
