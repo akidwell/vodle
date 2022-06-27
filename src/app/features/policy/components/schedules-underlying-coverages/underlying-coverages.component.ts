@@ -87,7 +87,9 @@ export class UnderlyingCoveragesComponent implements OnInit {
       policyNumber: '',
       carrierCode: 0,
       underlyingScheduleLimitData: [],
-      isNew: true
+      isNew: true,
+      userDefinedCovDesc: null,
+      comment: null
     };
   }
   isValid(): boolean {

@@ -29,6 +29,11 @@
         [(ngModel)]="ucData.primaryCoverageCode" #limitsPattern="ngModel"  (change)="processValueChange()">
       </ng-select>
       </div>
+      <div *ngIf="ucData.primaryCoverageCode === 9999" class="col-lg-2">
+        <div>Description</div>
+        <input type="text" click-stop-propagation class="form-control" id="description" #description="ngModel" [readonly]="!canEditPolicy || canDrag" maxlength="50" [title]="ucData.userDefinedCovDesc"
+        name="description" [(ngModel)]="ucData.userDefinedCovDesc" >
+      </div>
       <div class="col-lg-2">
         <div>Carrier</div>
         <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy || canDrag" maxlength="79" [title]="ucData.carrierName"
@@ -93,6 +98,11 @@
         <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #retroDateCalendar></mat-datepicker>
+      </div>
+      <div class="col-lg-2">
+        <label for="comment">Comment</label>
+        <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy  || canDrag" maxlength="250"
+           name="comment" [(ngModel)]="ucData.comment" >
       </div>
     </div>
     <div><button style="background:none; border:none;" class="underline" (click)="ucbCollapsed = !ucbCollapsed;">{{ucbCollapsed == true ? 'Show Limit Basis Detail' : 'Hide Limit Basis Detail'}}</button></div>

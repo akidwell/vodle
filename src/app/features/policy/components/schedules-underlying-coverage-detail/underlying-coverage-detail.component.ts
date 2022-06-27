@@ -111,6 +111,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
   //handles both limitPatternGroupCode and CoverageCode changes
   processValueChange() {
     this.ucForm.controls['limitsPattern'].markAsDirty();
+    this.ucData.userDefinedCovDesc = null;
     if (this.readyToLoadLimitsBasis()) {
       this.limitBasisSubscription = this.dropdowns.getLimitBasisDescriptions(this.ucData.primaryCoverageCode || 0, this.policyInfo.programId, this.ucData.limitsPatternGroupCode || 0).subscribe(
         (limitBasisDescriptions: UnderlyingLimitBasis[]) =>

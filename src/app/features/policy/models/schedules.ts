@@ -7,11 +7,13 @@ export interface UnderlyingCoverage {
   limitsPattern?: string;
   effectiveDate?: Date;
   expirationDate?: Date;
-  policyNumber?: String;
-  carrierCode?: Number;
-  carrierName?: String;
+  policyNumber?: string;
+  carrierCode?: number;
+  carrierName?: string;
   retroDate?: Date;
-  label?: String;
+  label?: string;
+  userDefinedCovDesc: string | null;
+  comment: string | null;
   excessOfLimitsPattern?: string;
   underlyingScheduleLimitData: UnderlyingCoverageLimit[];
   isNew: boolean;
