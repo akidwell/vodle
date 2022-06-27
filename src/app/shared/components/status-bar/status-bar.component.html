@@ -5,7 +5,7 @@
   [style.height.px]="headerPaddingService.headerPadding$ | async"
   (window:resize)="onResize()"
   [style.width.px]="headerPaddingService.totalHeaderWidth$ | async"
-  [ngStyle]="{'margin-left.px': this.headerLeftMargin}"
+  [style.margin-left.px]="headerPaddingService.sidebarExpanderWidth$ | async"
   >
     <rsps-insured-header
     *ngIf="pageDataService.insuredData != null"
@@ -14,7 +14,8 @@
     <rsps-policy-header
     *ngIf="pageDataService.policyData != null  && pageDataService.accountInfo != null"
     [accountInfo]="pageDataService.accountInfo"
-    [policyInfo]="pageDataService.policyData">
+    [policyInfo]="pageDataService.policyData"
+    [endorsementNumber]="endorsementStatus.endorsementNumber">
   </rsps-policy-header>
   <!-- <rsps-quote-header
   *ngIf="pageDataService.quoteData != null"

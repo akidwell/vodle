@@ -17,6 +17,7 @@ import { InsuredService } from 'src/app/features/insured/services/insured-servic
 import { InsuredDuplicatesComponent } from 'src/app/features/insured/components/insured-duplicates/insured-duplicates.component';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { HistoricRoute } from 'src/app/core/models/historic-route';
+import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
@@ -45,7 +46,6 @@ export class StatusBarComponent implements OnInit {
   userPanelSize = 0;
   headerWidth = 0;
   widthOffset = 0;
-  headerLeftMargin = LayoutEnum.sidebar_min_width;
   displayHeaderSub: Subscription;
 
   @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
@@ -60,7 +60,8 @@ export class StatusBarComponent implements OnInit {
     public headerPaddingService: HeaderPaddingService,
     public elementRef: ElementRef,
     private notification: NotificationService,
-    private navigationService: NavigationService,
+    public endorsementStatus: EndorsementStatusService,
+    private navigationService: NavigationService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
@@ -120,9 +121,7 @@ export class StatusBarComponent implements OnInit {
             }
           }
           return null;
-        })).subscribe((customData: any) => {
-        console.log(customData);
-      });
+        })).subscribe();
   }
   onResize() {
     this.headerPaddingService.onResizeOrLoad();

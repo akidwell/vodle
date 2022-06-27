@@ -16,6 +16,7 @@
     />
     <mat-datepicker-toggle
       matSuffix
+      [disabled]="!canEditSubmission || submission.policyDateReadonly"
       style="display: inline-block; max-width: 20%"
       [for]="polEffDateCalendar"
     >
@@ -39,6 +40,7 @@
     />
     <mat-datepicker-toggle
       matSuffix
+      [disabled]="!canEditSubmission || submission.policyDateReadonly"
       style="display: inline-block; max-width: 20%"
       [for]="polExpDateCalendar"
     >
@@ -95,6 +97,7 @@
     />
     <mat-datepicker-toggle
       matSuffix
+      [disabled]="!canEditSubmission || submission.quoteDueDateReadonly"
       style="display: inline-block; max-width: 20%"
       [for]="quoteDueDateCalendar"
     >

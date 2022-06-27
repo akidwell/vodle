@@ -24,7 +24,7 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="policyEffectiveDateCalendar"
           class="form-control" required [disabled]="!isSubmissionNumberValid || isSearching" [(ngModel)]="policyData.policyEffectiveDate" (blur)="setExpirationDate()"
           (dateChange)="checkDates()" name="policyEffectiveDate" #policyEffectiveDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block;" [for]="policyEffectiveDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!isSubmissionNumberValid || isSearching" style="display: inline-block;" [for]="policyEffectiveDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #policyEffectiveDateCalendar></mat-datepicker>
       </div>
@@ -36,7 +36,7 @@
           [(ngModel)]="policyData.policyExpirationDate" (dateChange)="checkDates()"
           name="policyExpirationDate"
           #policyExpirationDate="ngModel">
-        <mat-datepicker-toggle matSuffix [for]="policyExpirationDateCalendar"></mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix [disabled]="!isSubmissionNumberValid || isSearching" [for]="policyExpirationDateCalendar"></mat-datepicker-toggle>
         <mat-datepicker #policyExpirationDateCalendar></mat-datepicker>
         <div *ngIf="showExpirationDateInvalid" class="alert alert-danger">
           Expiration Date must be after Effective Date
@@ -71,7 +71,7 @@
       <div class="empty-row"></div>
       <div class="col-lg-4" *ngIf="isRenewal">
         <label for="endorsementNumber">Copy Endorsement</label>
-        <ng-select id="endorsementNumber" [items]="endorsementNumbers$ | async" bindLabel="endorsementNumber" [readonly]="!isRenewal || isSearching || isRewrite" 
+        <ng-select id="endorsementNumber" [items]="endorsementNumbers$ | async" bindLabel="endorsementNumber" [readonly]="!isRenewal || isSearching || isRewrite"
           bindValue="endorsementNumber" [required]="isRenewal" [clearable]="false" name="endorsementNumber"
           [(ngModel)]="policyData.endorsementNumber" #endorsementNumber="ngModel">
           <ng-template ng-label-tmp let-item="item">

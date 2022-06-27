@@ -13,6 +13,7 @@ export class EndorsementStatusService {
   private _status!: EndorsementStatusData;
   authSub: Subscription;
   canEditPolicy = false;
+  private _endorsementNumber: number | null = null;
 
   status = new BehaviorSubject<string>('');
   canEditEndorsement = new BehaviorSubject<boolean>(false);
@@ -78,6 +79,12 @@ export class EndorsementStatusService {
   refreshInvoice$ = this._refreshInvoice.asObservable();
   public refreshInvoice() {
     this._refreshInvoice.next();
+  }
+  endorsementNumber$: BehaviorSubject<number | null> = new BehaviorSubject(this._endorsementNumber);
+  get endorsementNumber(): number | null { return this._endorsementNumber; }
+  set endorsementNumber(value: number | null) {
+    this._endorsementNumber = value;
+    this.endorsementNumber$.next(this._endorsementNumber);
   }
 
   isValidated(): boolean {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -15,13 +15,14 @@ export class PolicyComponent implements OnInit {
   policyTabvalidatedSub!: Subscription;
   coverageTabvalidatedSub!: Subscription;
   reinsuranceTabvalidatedSub!: Subscription;
-  isPolicyValidated: boolean = false;
-  isCoveragesValidated: boolean = false;
-  isReinsuranceValidated: boolean = false;
+  isPolicyValidated = false;
+  isCoveragesValidated = false;
+  isReinsuranceValidated = false;
   authSub: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
 
-  constructor(private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private router: Router,
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth,
+    private endorsementStatusService: EndorsementStatusService, private router: Router,
     private config: ConfigService, public headerPaddingService: HeaderPaddingService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -40,13 +41,19 @@ export class PolicyComponent implements OnInit {
   ngOnInit(): void {
     //If the policy module is loaded and the user is not trying to access policy information we need to redirect them to policy information
     if (this.router.url.split('/').slice(-1)[0] != 'information' && !this.config.preventForcedRedirect)
-      this.doRedirect()
+      this.doRedirect();
+
+    this.route.data.subscribe(() => {
+      setTimeout(() =>
+        this.endorsementStatusService.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0)
+      ,0);
+    });
   }
   doRedirect() {
-    var urlString = this.router.url.split('/').slice(0,-1).join('/')+'/information'
+    const urlString = this.router.url.split('/').slice(0,-1).join('/')+'/information';
     setTimeout(()=> {
-      this.router.navigate([urlString], { state: { bypassFormGuard: true } })
-    })
+      this.router.navigate([urlString], { state: { bypassFormGuard: true } });
+    });
   }
 
   ngOnDestroy(): void {

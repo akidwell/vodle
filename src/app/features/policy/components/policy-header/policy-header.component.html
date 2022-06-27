@@ -1,31 +1,19 @@
 <div id="policyHeader">
-  <div class="row">
-    <div class="insured">
-      <u><div class="header-title">Insured</div></u>
+  <div class="row header-row">
+    <div class="insured header-field-container">
       <span class="header-field">{{accountInfo.namedInsured || ''}}</span>
     </div>
-    <div class="policyNumber">
-      <u><div class="header-title">Policy Number</div></u>
-      <span class="header-field">{{policyInfo.policySymbol.trim()}} {{policyInfo.formattedPolicyNo}}</span>
+    <div class="policyNumber header-field-container">
+      <span class="header-field">{{policyInfo.policySymbol.trim()}} {{policyInfo.formattedPolicyNo}}:{{endorsementNumber}}</span>
     </div>
-    <div class="endorsement">
-      <u><div class="header-title">Endt</div></u>
-      <span class="header-field">{{endorsementNumber}}</span>
+
+    <div class="effectiveDate header-field-container">
+      <span class="header-field">{{formatDateForDisplay.formatDateForDisplay(policyInfo.policyEffectiveDate) }} - {{policyInfo.policyExpirationDate  | date:'MM/dd/YYYY'}}</span>
     </div>
-    <div class="effectiveDate">
-      <u><div class="header-title">Eff Date</div></u>
-      <span class="header-field">{{formatDateForDisplay.formatDateForDisplay(policyInfo.policyEffectiveDate) }}</span>
+    <div class="extensionDate header-field-container" *ngIf="policyInfo.policyExtendedExpDate">
+      <span class="header-field">Ext: {{formatDateForDisplay.formatDateForDisplay(policyInfo.policyExtendedExpDate)}}</span>
     </div>
-    <div class="expirationDate">
-      <u><div class="header-title">Exp Date</div></u>
-      <span class="header-field">{{policyInfo.policyExpirationDate  | date:'MM/dd/YYYY'}}</span>
-    </div>
-    <div class="extensionDate">
-      <u><div class="header-title">Ext Date</div></u>
-      <span class="header-field">{{formatDateForDisplay.formatDateForDisplay(policyInfo.policyExtendedExpDate)}}</span>
-    </div>
-    <div class="status">
-      <u><div class="header-title">Status</div></u>
+    <div class="status header-field-container">
       <span class="header-field">{{status}}</span>
     </div>
   </div>

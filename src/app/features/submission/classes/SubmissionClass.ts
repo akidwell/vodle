@@ -4,9 +4,9 @@ import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-d
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from '../models/producer';
-import { ProducerContact } from '../models/producer-contact';
 import { Submission } from '../models/submission';
 import { SubmissionEvent } from '../models/submission-event';
+import { ProducerContactClass } from './ProducerContactClass';
 
 export class SubmissionClass implements Submission {
   private _producerCode: number | null = null;
@@ -43,18 +43,18 @@ export class SubmissionClass implements Submission {
   // sicCodeRequiredStatus = SubmissionStatusEnum.Bound;
   // naicsCodeRequiredStatus = SubmissionStatusEnum.Bound;
 
-  producerCodeLockStatus = SubmissionStatusEnum.Bound;
-  producerContactLockStatus = SubmissionStatusEnum.Bound;
+  // producerCodeLockStatus = SubmissionStatusEnum.Bound;
+  // producerContactLockStatus = SubmissionStatusEnum.Bound;
   departmentCodeLockStatus = SubmissionStatusEnum.InQuote;
-  underwriterLockStatus = SubmissionStatusEnum.Bound;
-  sicCodeLockStatus = SubmissionStatusEnum.Bound;
-  naicsCodeLockStatus = SubmissionStatusEnum.Bound;
-  policyDateLockStatus = SubmissionStatusEnum.Bound;
-  quoteDueDateLockStatus = SubmissionStatusEnum.Bound;
-  newRenewalFlagLockStatus = SubmissionStatusEnum.Bound;
-  expiringPolicyLockStatus = SubmissionStatusEnum.Bound;
-  extExpiringPolicyLockStatus = SubmissionStatusEnum.Bound;
-  renewablePolicyLockStatus = SubmissionStatusEnum.Bound;
+  // underwriterLockStatus = SubmissionStatusEnum.Bound;
+  // sicCodeLockStatus = SubmissionStatusEnum.Bound;
+  // naicsCodeLockStatus = SubmissionStatusEnum.Bound;
+  // policyDateLockStatus = SubmissionStatusEnum.Bound;
+  // quoteDueDateLockStatus = SubmissionStatusEnum.Bound;
+  // newRenewalFlagLockStatus = SubmissionStatusEnum.Bound;
+  // expiringPolicyLockStatus = SubmissionStatusEnum.Bound;
+  // extExpiringPolicyLockStatus = SubmissionStatusEnum.Bound;
+  // renewablePolicyLockStatus = SubmissionStatusEnum.Bound;
 
   producerRequired = false;
   producerContactRequired = false;
@@ -114,7 +114,7 @@ export class SubmissionClass implements Submission {
   submissionEventCode = '';
   insured: Insured | null = null;
   producer: Producer | null = null;
-  producerContact: ProducerContact | null = null;
+  producerContact: ProducerContactClass | null = null;
   submissionEvents: SubmissionEvent[] = [];
   underwriterName: string | null = null;
   statusCodeDesc: string | null = null;
@@ -172,7 +172,7 @@ export class SubmissionClass implements Submission {
     this.companyCode = sub?.companyCode || 3;
     this.underwriterName = sub?.underwriterName || null;
     this.submissionEvents = sub?.submissionEvents || [];
-    this.producerContact = sub?.producerContact || null;
+    this.producerContact = sub?.producerContact ? new ProducerContactClass(sub?.producerContact) : null;
     this.producer = sub?.producer || null;
     this.insured = sub?.insured || insured || null;
     this._extExpiringPolicyNo = sub?.extExpiringPolicyNo || null;
@@ -342,8 +342,8 @@ export class SubmissionClass implements Submission {
   markDirty() {
     this._isDirty = true;
   }
-  private isFieldReadonly(statusLock: SubmissionStatusEnum) {
-    return (this.hasPostedInvoice || this.statusCode === SubmissionStatusEnum.Dead) ? true : (this.statusCode < statusLock) ? false : true;
+  private isFieldReadonly(statusLock?: SubmissionStatusEnum) {
+    return (this.hasPostedInvoice || this.statusCode === SubmissionStatusEnum.Dead) ? true : (statusLock && this.statusCode >= statusLock) ? true : false;
   }
   private isFieldRequired(statusRequired: SubmissionStatusEnum, fieldIsReadonly?: boolean) {
     return (fieldIsReadonly || this.statusCode === SubmissionStatusEnum.Dead) ? false : this.statusCode >= statusRequired;
@@ -378,19 +378,20 @@ export class SubmissionClass implements Submission {
     //this.producerContactRequired = this.isFieldRequired(this.producerContactRequiredStatus, this.producerContactReadonly);
   }
   setReadonlyFields(){
-    this.naicsReadonly = this.isFieldReadonly(this.naicsCodeLockStatus);
-    this.sicCodeReadonly = this.isFieldReadonly(this.sicCodeLockStatus);
-    this.policyDateReadonly = this.isFieldReadonly(this.policyDateLockStatus);
-    this.quoteDueDateReadonly = this.isFieldReadonly(this.quoteDueDateLockStatus);
     this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus);
-    this.producerContactReadonly = this.isFieldReadonly(this.producerContactLockStatus);
-    this.producerReadonly = this.isFieldReadonly(this.producerCodeLockStatus);
-    this.underwriterReadonly = this.isFieldReadonly(this.underwriterLockStatus);
-    this.newRenewalFlagReadonly = this.isFieldReadonly(this.newRenewalFlagLockStatus);
-    this.expiringPolicyReadonly = this.isFieldReadonly(this.expiringPolicyLockStatus);
-    this.extExpiringPolicyReadonly = this.isFieldReadonly(this.extExpiringPolicyLockStatus);
-    this.renewablePolicyReadonly = this.isFieldReadonly(this.renewablePolicyLockStatus);
+    this.naicsReadonly = this.isFieldReadonly();
+    this.sicCodeReadonly = this.isFieldReadonly();
+    this.policyDateReadonly = this.isFieldReadonly();
+    this.quoteDueDateReadonly = this.isFieldReadonly();
+    this.producerContactReadonly = this.isFieldReadonly();
+    this.producerReadonly = this.isFieldReadonly();
+    this.underwriterReadonly = this.isFieldReadonly();
+    this.newRenewalFlagReadonly = this.isFieldReadonly();
+    this.expiringPolicyReadonly = this.isFieldReadonly();
+    this.extExpiringPolicyReadonly = this.isFieldReadonly();
+    this.renewablePolicyReadonly = this.isFieldReadonly();
   }
+
   setWarnings(){
     this.warningsList = [];
     this.warningsMessage = '';
@@ -512,7 +513,6 @@ export class SubmissionClass implements Submission {
     return {
       producerCode: this._producerCode,
       departmentCode: this.departmentCode,
-      producerContact: this.producerContact,
       underwriter: this.underwriter,
       sicCode: this.sicCode,
       naicsCode: this.naicsCode,
@@ -539,6 +539,7 @@ export class SubmissionClass implements Submission {
       contractorCode: this.contractorCode,
       renewablePolicy: this._renewablePolicy === true ? 1 : 0,
       cancelDate: this.cancelDate,
+      producerContactId: this._producerContact,
       producerContactName: this.producerContactName,
       producerContactEmail: this.producerContactEmail,
       uwBranchCode: this.uwBranchCode,
