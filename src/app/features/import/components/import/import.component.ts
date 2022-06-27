@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { ImportPolicy } from '../../models/import-policy';
 import { ImportResult } from '../../models/import-response';
-import { State } from '../../models/state';
+import { PageState } from '../../models/state';
 import { SearchResult } from '../../models/search-result';
 import { ImportService } from '../../services/import/import.service';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -50,13 +50,13 @@ export class ImportComponent implements OnInit {
   set searchTerm(searchTerm: string) { this._set({searchTerm}); }
 
   // Defaul pagination settings
-  private _state: State = {
+  private _state: PageState = {
     page: 1,
     pageSize: 15,
     searchTerm: ''
   };
 
-  private _set(patch: Partial<State>) {
+  private _set(patch: Partial<PageState>) {
     Object.assign(this._state, patch);
     this._search$.next();
   }

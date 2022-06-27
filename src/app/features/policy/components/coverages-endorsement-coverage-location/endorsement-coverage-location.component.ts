@@ -11,6 +11,8 @@ import { EndorsementCoverageLocationGroupComponent } from '../coverages-endorsem
 import { PolicyService } from '../../services/policy/policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
+import { State } from 'src/app/core/models/state';
+import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 
 @Component({
   selector: 'rsps-endorsement-coverage-location',
@@ -24,7 +26,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy = false;
   canDeleteLocation = false;
-  states$: Observable<Code[]> | undefined;
+  states$: Observable<State[]> | undefined;
   showLocationId = false;
   locationSub!: Subscription;
   isDirty = false;
@@ -49,7 +51,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.states$ = this.dropdowns.getStates();
+    this.states$ = this.dropdowns.getStates(null);
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
         this.canEditEndorsement = canEdit;
@@ -118,6 +120,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
             this.location.city = address?.city;
             this.location.state = address?.state;
             this.location.county = address?.county[0];
+            this.location.countryCode = address?.country;
             this.counties = [];
             for (const county of address.county) {
               this.counties = this.counties.concat(county);
@@ -127,6 +130,15 @@ export class EndorsementCoverageLocationComponent implements OnInit {
         }
       });
     }
+  }
+
+  changeState(state: State) {
+    this.location.countryCode = state.countryCode;
+  }
+
+  // Only show error if valid zip
+  get isZipCodeFormatValid(): boolean {
+    return !this.locationForm.controls['zipCode']?.valid || this.isLoadingAddress || (this.locationForm.controls['zipCode']?.valid && ZipCodeCountry(this.location.zip) == this.location.countryCode);
   }
 
   async save(): Promise<void> {

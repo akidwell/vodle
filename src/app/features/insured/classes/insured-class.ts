@@ -1,4 +1,7 @@
 import { DatePipe } from '@angular/common';
+import { CountryEnum } from 'src/app/core/enums/country-enum';
+import { State } from 'src/app/core/models/state';
+import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 import { AdditionalNamedInsuredData, insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { Insured } from '../models/insured';
 import { InsuredContact } from '../models/insured-contact';
@@ -33,7 +36,6 @@ export class InsuredClass implements Insured {
   isNew = false;
   contacts: InsuredContactClass[] = [];
   additionalNamedInsureds: insuredANI[] = [];
-
   insuredCode: number | null = null;
   customerCode: number | null = null;
   //addressVerifiedDate: Date | null = null;
@@ -385,13 +387,14 @@ export class InsuredClass implements Insured {
   }
   validateZip(): boolean {
     let valid = true;
+
     if (!this.zip) {
       valid = false;
       this.invalidList.push('Zip code is required.');
     }
-    else if (this.zip?.length != 5 && this.zip?.length != 9) {
+    else if (this.country != ZipCodeCountry(this.zip)) {
       valid = false;
-      this.invalidList.push('Zip Code is invalid.');
+      this.invalidList.push('Zip Code is invalid for ' +this.country);
     }
     return valid;
   }

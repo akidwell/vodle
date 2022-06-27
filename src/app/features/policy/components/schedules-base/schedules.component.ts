@@ -66,6 +66,9 @@ export class SchedulesComponent implements OnInit, PolicySave {
     // Loop through each child component to see it any of them have invalid controls
     if (this.locationComp.components != null) {
       for (const child of this.locationComp.components) {
+        if (!child.isZipCodeValid()) {
+          invalid.push('Invalid Zip Code - Location: #' + child.location.sequence.toString());
+        }
         for (const name in child.locationForm.controls) {
           if (child.locationForm.controls[name].invalid) {
             invalid.push(name + ' - Location: #' + child.location.sequence.toString());
@@ -78,7 +81,7 @@ export class SchedulesComponent implements OnInit, PolicySave {
       invalid = invalid.concat(this.aniGroupComp.invalidList);
     }
     this.invalidMessage = '';
-    // Compile all invalide controls in a list
+    // Compile all invalid controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
       for (const error of invalid) {
