@@ -97,6 +97,7 @@ export class EndorsementLocationComponent implements OnInit {
       this.location.city = '';
       this.location.state = '';
       this.location.county = '';
+      this.location.countryCode = '';
       this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
         next: address => {
           if (address != null) {

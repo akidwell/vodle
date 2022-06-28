@@ -283,6 +283,14 @@ export class DropDownsService {
     );
   }
 
+  getCountryByState(state: string): string {
+    if (this.cacheStates != null) {
+      const match = this.cacheStates.find(c => c.code == state);
+      return match?.countryCode ?? '';
+    }
+    return 'USA';
+  }
+
   ////////////////////////////////////////
   // Countries
   private cacheCountries: any;
