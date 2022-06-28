@@ -122,8 +122,7 @@ export class PolicyInformationComponent implements OnInit {
   isValid(): boolean {
     const effectiveDate = Number(this.datePipe.transform(this.policyInfo.policyEffectiveDate, 'yyyyMMdd'));
     const expirationDate = Number(this.datePipe.transform(this.policyInfo.policyExpirationDate, 'yyyyMMdd'));
-
-    const validZip = ZipCodeCountry(this.policyInfo.riskLocation.zip) == this.policyInfo.riskLocation.countryCode;
+    const validZip = ZipCodeCountry(this.policyInfo.riskLocation.zip) == this.dropdowns.getCountryByState(this.policyInfo.riskLocation.state);
     return effectiveDate < expirationDate && validZip && this.policyInfoForm.status == 'VALID';
   }
 
@@ -135,7 +134,7 @@ export class PolicyInformationComponent implements OnInit {
     if (effectiveDate >= expirationDate) {
       errorMessages.push('Expiration Date must be after the Effective Date');
     }
-    if (this.policyInfoForm.controls['riskZipCode'].valid && ZipCodeCountry(this.policyInfo.riskLocation.zip) != this.policyInfo.riskLocation.countryCode) {
+    if (this.policyInfoForm.controls['riskZipCode'].valid && ZipCodeCountry(this.policyInfo.riskLocation.zip) != this.dropdowns.getCountryByState(this.policyInfo.riskLocation.state)) {
       errorMessages.push('Zip Code is invalid for ' + this.policyInfo.riskLocation.countryCode);
     }
     return errorMessages;
