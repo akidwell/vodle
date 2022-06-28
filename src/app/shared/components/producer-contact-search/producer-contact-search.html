@@ -17,7 +17,7 @@
       [readonly]="!canEdit"
       [disabled]="this.producerCode == null"
       (selectItem)="selectedProducerContact($event.item)"
-      (focus)="focus$.next($any($event).target.value)"
+      (focus)="canEdit ? focus$.next($any($event).target.value) : null"
       (focusout)="leaveSearchBar()"
       placement="bottom-start"
       placeholder="Producer Contact search"
@@ -141,9 +141,11 @@
             type="text"
             class="form-control"
             id="phone"
+            #phone="ngModel"
             autocomplete="off"
             name="phone"
             [(ngModel)]="newProducerContact.phone"
+            mask="(000) 000-0000"
           />
         </div>
       </div>
