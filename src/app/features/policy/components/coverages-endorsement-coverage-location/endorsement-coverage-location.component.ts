@@ -114,6 +114,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.city = '';
       this.location.state = '';
       this.location.county = '';
+      this.location.countryCode = '';
       this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
         next: address => {
           if (address != null) {
@@ -138,7 +139,8 @@ export class EndorsementCoverageLocationComponent implements OnInit {
 
   // Only show error if valid zip
   get isZipCodeFormatValid(): boolean {
-    return !this.locationForm.controls['zipCode']?.valid || this.isLoadingAddress || (this.locationForm.controls['zipCode']?.valid && ZipCodeCountry(this.location.zip) == this.location.countryCode);
+    const country = this.dropdowns.getCountryByState(this.location.state);
+    return !this.locationForm.controls['zipCode']?.valid || this.location.state == null|| this.isLoadingAddress || (this.locationForm.controls['zipCode']?.valid && ZipCodeCountry(this.location.zip) == country);
   }
 
   async save(): Promise<void> {
@@ -167,6 +169,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.zip = this.originallocation.zip;
       this.location.state = this.originallocation.state;
       this.location.county = this.originallocation.county;
+      this.location.countryCode = this.originallocation.countryCode;
     }
     this.modalRef.close(LocationResult.cancel);
   }
