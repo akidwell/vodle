@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit {
         this.version = this.apiService.getApiVersion;
         this.insuredResults = [];
         this.pacerSearchResults = [];
+        console.log(this.searchResults.searchType);
         this.searchResults.insuredSearchResponses.forEach((element) => {
           if (element.isPacerResult) {
             this.pacerSearchResults.push(element);
@@ -70,6 +71,11 @@ export class HomeComponent implements OnInit {
         });
       },
     });
+  }
+
+  checkToDisplayInsuredPanel(): boolean {
+    return (this.version == '2.0' && this.searchResults.insuredSearchResponses.length > 0)
+    || (this.searchResults.searchType != null && this.searchResults.submissionSearchResponses.length == 0 && this.searchResults.policySearchResponses.length == 0 && this.searchResults.insuredSearchResponses.length == 0);
   }
 
   ngOnDestroy(): void {

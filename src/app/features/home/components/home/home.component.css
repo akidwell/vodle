@@ -8,3 +8,9 @@
  .search-bar {
   padding:12px;
 }
+
+/* Overwrite margin size */
+.row {
+  margin: 0;
+  margin-top: 7px;
+}

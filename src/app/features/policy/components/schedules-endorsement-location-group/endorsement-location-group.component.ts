@@ -96,11 +96,12 @@ export class EndorsementLocationGroupComponent implements OnInit {
   isValid(): boolean {
     if (this.components != null) {
       for (const child of this.components) {
-        if (child.locationForm.status != 'VALID') {
+        if (!child.isValid()) {
           return false;
         }
       }
     }
+
     return true;
   }
 

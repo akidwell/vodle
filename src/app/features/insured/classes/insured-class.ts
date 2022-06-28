@@ -1,4 +1,7 @@
 import { DatePipe } from '@angular/common';
+import { CountryEnum } from 'src/app/core/enums/country-enum';
+import { State } from 'src/app/core/models/state';
+import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 import { AdditionalNamedInsuredData, insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { Insured } from '../models/insured';
 import { InsuredContact } from '../models/insured-contact';
@@ -24,24 +27,20 @@ export class InsuredClass implements Insured {
   private _isAddressOverride = false;
   private _fein: string | null = null;
   private _addressVerifiedDate: Date| null = null;
-
   private _insured: Insured | undefined;
-
   private _isDirty = false;
   private _initializerIsStale = false;
+  private _showErrors = false;
 
   isNew = false;
   contacts: InsuredContactClass[] = [];
   additionalNamedInsureds: insuredANI[] = [];
-
   insuredCode: number | null = null;
   customerCode: number | null = null;
-  //addressVerifiedDate: Date | null = null;
   createdBy: string | null = null;
   createdDate: Date | null = null;
   modifiedBy: string | null = null;
   modifiedDate: Date | null = null;
-  //lockAddress = false;
   isZipLookup = false;
   isVerifying = false;
 
@@ -235,9 +234,11 @@ export class InsuredClass implements Insured {
     this._addressVerifiedDate = value;
     this._isDirty = true;
   }
-
   get isDirty(): boolean {
     return this._isDirty || this.additionalNamedInsureds.some(item => item.isDirty) || this.contacts.some(item => item.isDirty);
+  }
+  get showErrors(): boolean {
+    return this._showErrors && this.invalidList.length > 0;
   }
   get isValid(): boolean {
     let valid = true;
@@ -309,9 +310,16 @@ export class InsuredClass implements Insured {
   }
   markClean() {
     this._isDirty = false;
+    this._showErrors = false;
   }
   markDirty() {
     this._isDirty = true;
+  }
+  showErrorMessage() {
+    this._showErrors = true;
+  }
+  hideErrorMessage() {
+    this._showErrors = false;
   }
   setRequiredFields() {
     // No special rules
@@ -367,6 +375,14 @@ export class InsuredClass implements Insured {
     return valid;
   }
 
+  get errorMessage() {
+    let message = '';
+    this.invalidList.forEach(error => {
+      message += '<br><li>' + error;
+    });
+    return 'Following fields are invalid' + message;
+  }
+
   validateName(): boolean {
     let valid = true;
     if (!this.name) {
@@ -385,13 +401,14 @@ export class InsuredClass implements Insured {
   }
   validateZip(): boolean {
     let valid = true;
+
     if (!this.zip) {
       valid = false;
       this.invalidList.push('Zip code is required.');
     }
-    else if (this.zip?.length != 5 && this.zip?.length != 9) {
+    else if (this.country != ZipCodeCountry(this.zip)) {
       valid = false;
-      this.invalidList.push('Zip Code is invalid.');
+      this.invalidList.push('Zip Code is invalid for ' +this.country);
     }
     return valid;
   }
