@@ -82,7 +82,10 @@ export class StringToCurrencyDirective {
   @HostListener('keydown', ['$event'])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onKeyDown(event: any) {
-
+    if (event.key === undefined) {
+      event.preventDefault();
+      return false;
+    }
     // Handle Backspace around commas
     if (event.keyCode === 8) {
       if (
