@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { ZipCodePipe } from '../pipes/zip-code.pipe';
 
@@ -25,7 +25,10 @@ export class ZipCodeDirective {
   onKeyDown(event: KeyboardEvent) {
     const numberPattern = /^[0-9]\d*$/;
     const pattern = /^[a-zA-Z0-9]+$/;
-
+    if (event.key === undefined) {
+      event.preventDefault();
+      return false;
+    }
     if (event.ctrlKey && (event.key === 'C' || event.key === 'V')) {
       return true;
     } else if (
@@ -37,17 +40,21 @@ export class ZipCodeDirective {
     ) {
       return true;
     } else if (!event.key.match(pattern)){
+      event.preventDefault();
       return false;
     }
+
 
     // Prevent typing once max length is reached
     if (this.el.nativeElement.value.replaceAll('-', '').replaceAll(' ', '').match(numberPattern)) {
       if (this.el.nativeElement.selectionStart >= 10) {
+        event.preventDefault();
         return false;
       }
       return true;
     } else if (!this.el.nativeElement.value.replaceAll('-', '').replaceAll(' ', '').match(numberPattern)) {
       if (this.el.nativeElement.selectionStart >= 7) {
+        event.preventDefault();
         return false;
       }
       return true;

@@ -82,7 +82,10 @@ export class StringToCurrencyDirective {
   @HostListener('keydown', ['$event'])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onKeyDown(event: any) {
-
+    if (event.key === undefined) {
+      event.preventDefault();
+      return false;
+    }
     // Handle Backspace around commas
     if (event.keyCode === 8) {
       if (
@@ -126,7 +129,7 @@ export class StringToCurrencyDirective {
       // Handle minus sign
       if (this.allowNegative && !this.control.value.toString().includes('-')) {
         return true;
-      }-
+      }
       event.preventDefault();
       return false;
     } else if (event.ctrlKey && (event.keyCode === 67 || event.keyCode === 86)) {
@@ -185,13 +188,12 @@ export class StringToCurrencyDirective {
     // Check position of decimal
     if (position >= 0) {
       const test = input.length - 1 - position;
-
       decimalLen = Math.min(this.decimalPlaces,test);
     }
     const format = '1.' + decimalLen.toString() + '-' + decimalLen.toString();
     let currency = currencyPipe.transform(input, 'USD', '', format);
 
-    if (position > 0 && decimalLen == 0 ) {
+    if (position > 0 && decimalLen == 0 && this.decimalPlaces > 0) {
       currency = currency + '.';
     }
     return currency ?? '';
