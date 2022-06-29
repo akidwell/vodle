@@ -87,32 +87,28 @@ pipeline {
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
 
 					def hash = jsonfile['hashTable']
-					echo "hash: " + "${hash}"
+					//echo "hash: " + "${hash}"
 
 					//def devHash = jsonfile['/rsps/assets/config/config.dev.json']
 					def devHash = hash['/rsps/assets/config/config.dev.json']
 					echo "Dev Hash: " + "${devHash}"
+					hash.remove(hash.indexOf('/rsps/assets/config/config.int.json'))
 					jsonfile['/rsps/assets/config/config.json'] = "${devHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
-					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def intHash = jsonfile['/rsps/assets/config/config.int.json'] 
-					echo "Int Hash: " + "${intHash}"
+					def intHash = hash['/rsps/assets/config/config.int.json']
 					jsonfile['/rsps/assets/config/config.json'] = "${intHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
 
-					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def uatHash = jsonfile['/rsps/assets/config/config.uat.json'] 
+					def intHash = hash['/rsps/assets/config/config.int.json']
 					jsonfile['/rsps/assets/config/config.json'] = "${uatHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
 
-					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def certHash = jsonfile['/rsps/assets/config/config.cert.json'] 
+					def certHash = hash['/rsps/assets/config/config.cert.json'] 
 					jsonfile['/rsps/assets/config/config.json'] = "${certHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.cert.json', json: jsonfile
 
-					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def prodHash = jsonfile['/rsps/assets/config/config.prod.json'] 
+					def prodHash = hash['/rsps/assets/config/config.prod.json'] 
 					jsonfile['/rsps/assets/config/config.json'] = "${prodHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.prod.json', json: jsonfile
 
