@@ -100,7 +100,7 @@ pipeline {
 					jsonfile['/rsps/assets/config/config.json'] = "${intHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
 
-					def intHash = hash['/rsps/assets/config/config.int.json']
+					def uatHash = hash['/rsps/assets/config/config.int.json']
 					jsonfile['/rsps/assets/config/config.json'] = "${uatHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
 
