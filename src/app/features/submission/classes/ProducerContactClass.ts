@@ -71,7 +71,7 @@ export class ProducerContactClass implements ProducerContact {
     this._contactId = contact?.contactId || null;
     this._producerCode = contact?.producerCode || producer || null;
     this._closedDate = contact?.closedDate || null;
-    this._display = this._firstName + '\xa0' + this._lastName + '\xa0\xa0\xa0' + this._email + (this._phone ? '\xa0\xa0\xa0' + this._phone : '');
+    this._display = this._firstName + '\xa0' + this._lastName + '\xa0\xa0\xa0' + this._email + (this._phone ? '\xa0\xa0\xa0' + this.createPhoneDisplay() : '');
     this._isActive = contact?.closedDate == null || moment(contact?.closedDate) > moment();
   }
   get isValid(): boolean {
@@ -109,6 +109,10 @@ export class ProducerContactClass implements ProducerContact {
     } else {
       this.reactivate();
     }
+  }
+  createPhoneDisplay() {
+    const phoneMask = this.phone.match(/(\d{3})(\d{3})(\d{4})/) || '';
+    return '(' + phoneMask[1] + ') ' + phoneMask[2] + '-' + phoneMask[3];
   }
   resetClass(contact?: ProducerContact, producer?: number) {
     this.init(contact, producer);

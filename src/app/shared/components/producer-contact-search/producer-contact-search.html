@@ -17,19 +17,23 @@
       [readonly]="!canEdit"
       [disabled]="this.producerCode == null"
       (selectItem)="selectedProducerContact($event.item)"
-      (focus)="focus$.next($any($event).target.value)"
+      (focus)="canEdit ? focus$.next($any($event).target.value) : null"
       (focusout)="leaveSearchBar()"
       placement="bottom-start"
       placeholder="Producer Contact search"
     />
-    <button class="form-control btn-secondary add-button"
-    *ngIf="!addNewProducer && !(this.producerCode == null || !canEdit)"
-    (click)="openPanelAndCreate()">
+    <button
+      class="form-control btn-secondary add-button"
+      *ngIf="!addNewContact && !(this.producerCode == null || !canEdit)"
+      (click)="openPanelAndCreate()"
+    >
       <fa-icon [icon]="faPlus"></fa-icon>
     </button>
-    <button class="form-control btn-secondary add-button"
-    *ngIf="addNewProducer"
-    (click)="closePanel()">
+    <button
+      class="form-control btn-secondary add-button"
+      *ngIf="addNewContact"
+      (click)="closePanel()"
+    >
       <fa-icon [icon]="faX"></fa-icon>
     </button>
   </div>
@@ -50,51 +54,65 @@
     <div #collapse="ngbCollapse" [(ngbCollapse)]="pcCollapsed">
       <table class="table table-striped table-bordered narrow">
         <tbody>
-          <tr  *ngFor="let producerContact of searchResponse; let i = index">
+          <tr *ngFor="let producerContact of searchResponse; let i = index">
             <ng-container>
-                <td>{{producerContact.firstName + ' ' + producerContact.lastName}}</td>
-                <td >{{producerContact.email}}</td>
-                <td>{{producerContact.phone}}</td>
-                <td>{{producerContact.isActive ? 'Active' : 'Inactive'}}</td>
-                <td>
+              <td>
+                {{producerContact.firstName + ' ' + producerContact.lastName}}
+              </td>
+              <td>{{producerContact.email}}</td>
+              <td>{{producerContact.phone | mask: '(000) 000-0000'}}</td>
+              <td>{{producerContact.isActive ? 'Active' : 'Inactive'}}</td>
+              <td>
+                <div
+                  ngbDropdown
+                  container="body"
+                  placement="bottom-end"
+                  class="d-inline-block"
+                >
+                  <button
+                    class="btn btn-outline-primary"
+                    id="action"
+                    ngbDropdownToggle
+                  ></button>
                   <div
-                    ngbDropdown
+                    ngbDropdownMenu
                     container="body"
-                    placement="bottom-end"
-                    class="d-inline-block"
+                    aria-labelledby="action"
                   >
                     <button
+                      *ngIf="producerContact.isActive"
+                      ngbDropdownItem
                       class="btn btn-outline-primary"
-                      id="action"
-                      ngbDropdownToggle
-                    ></button>
-                    <div ngbDropdownMenu container="body" aria-labelledby="action">
-                      <button
-                        *ngIf="producerContact.isActive"
-                        ngbDropdownItem
-                        class="btn btn-outline-primary"
-                        (click)="producerContactActions(producerContact, $event)"
-                        value="select"
-                      >
-                        Select
-                      </button>
-                      <button
-                        ngbDropdownItem
-                        class="btn btn-outline-primary"
-                        (click)="producerContactActions(producerContact, $event)"
-                        value="status"
-                      >
-                        {{producerContact.isActive ? 'Inactivate' : 'Activate'}}
-                      </button>
-                    </div>
-                  </div></td>
-          </ng-container>
+                      (click)="producerContactActions(producerContact, $event)"
+                      value="select"
+                    >
+                      Select
+                    </button>
+                    <button
+                      ngbDropdownItem
+                      class="btn btn-outline-primary"
+                      (click)="producerContactActions(producerContact, $event)"
+                      value="edit"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      ngbDropdownItem
+                      class="btn btn-outline-primary"
+                      (click)="producerContactActions(producerContact, $event)"
+                      value="status"
+                    >
+                      {{producerContact.isActive ? 'Inactivate' : 'Activate'}}
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
           </tr>
         </tbody>
       </table>
-
     </div>
-    <div *ngIf="addNewProducer" style="border-top: 2px solid black;">
+    <div *ngIf="addNewContact" style="border-top: 2px solid black">
       <div class="row">
         <div class="col-lg-6">
           <label for="firstName">First Name</label>
@@ -141,9 +159,67 @@
             type="text"
             class="form-control"
             id="phone"
+            #phone="ngModel"
             autocomplete="off"
             name="phone"
             [(ngModel)]="newProducerContact.phone"
+            mask="(000) 000-0000"
+          />
+        </div>
+      </div>
+    </div>
+    <div *ngIf="editContact" style="border-top: 2px solid black">
+      <div class="row">
+        <div class="col-lg-6">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            [required]="canEdit"
+            autocomplete="off"
+            name="firstName"
+            [(ngModel)]="producerContactInEdit.firstName"
+          />
+        </div>
+
+        <div class="col-lg-6">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            [required]="canEdit"
+            autocomplete="off"
+            name="lastName"
+            [(ngModel)]="producerContactInEdit.lastName"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="email"
+            [required]="canEdit"
+            autocomplete="off"
+            name="email"
+            [(ngModel)]="producerContactInEdit.email"
+          />
+        </div>
+        <div class="col-lg-6">
+          <label for="phone">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            id="phone"
+            #phone="ngModel"
+            autocomplete="off"
+            name="phone"
+            [(ngModel)]="producerContactInEdit.phone"
+            mask="(000) 000-0000"
           />
         </div>
       </div>
@@ -151,7 +227,7 @@
     <div class="card-footer">
       <div id="producerContactFooter">
         <button
-        *ngIf="!addNewProducer"
+          *ngIf="!addNewContact && !editContact"
           style="float: left; background: none; border: none"
           class="underline"
           (click)="addNewProducerContact();"
@@ -159,22 +235,22 @@
           Add Producer Contact
         </button>
         <button
-        *ngIf="addNewProducer"
-        [disabled]="!newProducerContact.isValid"
-        style="float: left; background: none; border: none"
-        class="underline"
-        (click)="saveNewProducerContact();"
-      >
-        Save Producer Contact
-      </button>
-      <button
-        *ngIf="addNewProducer"
-        style="float: left; background: none; border: none"
-        class="underline"
-        (click)="cancelAddProducer();"
-      >
-        Cancel
-      </button>
+          *ngIf="addNewContact || editContact"
+          [disabled]="addNewContact ? !newProducerContact.isValid : !producerContactInEdit.isValid"
+          style="float: left; background: none; border: none"
+          class="underline"
+          (click)="saveProducerContact();"
+        >
+          Save Producer Contact
+        </button>
+        <button
+          *ngIf="addNewContact || editContact"
+          style="float: left; background: none; border: none"
+          class="underline"
+          (click)="cancelAddProducer();"
+        >
+          Cancel
+        </button>
         <div style="float: right">
           Producer Contacts: {{searchResponse.length}}
         </div>

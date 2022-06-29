@@ -34,7 +34,9 @@ export class ProducerContactSearch implements OnInit{
   pcCollapsed = true;
   canEditSubmission = false;
   newProducerContact! : ProducerContactClass;
-  addNewProducer = false;
+  producerContactInEdit!: ProducerContactClass;
+  addNewContact = false;
+  editContact = false;
   faPlus = faPlus;
   faX = faX;
   public _producerCode!: number | null;
@@ -107,18 +109,35 @@ export class ProducerContactSearch implements OnInit{
     this.showContactMaintenance = true;
   }
   closePanel() {
-    this.addNewProducer = false;
+    this.addNewContact = false;
     this.showContactMaintenance = false;
+    this.editContact = false;
   }
   cancelAddProducer() {
-    this.addNewProducer = false;
+    this.addNewContact = false;
+    this.editContact = false;
   }
   addNewProducerContact() {
     this.newProducerContact.resetClass(undefined, this._producerCode || 0);
-    this.addNewProducer = true;
+    this.addNewContact = true;
+    this.editContact = false;
   }
-  saveNewProducerContact() {
-    this._service.addProducerContact(this.newProducerContact).subscribe(data => this.selectedProducerContact( new ProducerContactClass(data)));
+  editProducerContact(contact: ProducerContactClass) {
+    this.producerContactInEdit = contact;
+    this.addNewContact = false;
+    this.editContact = true;
+    this.pcCollapsed = true;
+  }
+  saveProducerContact() {
+    if (this.addNewContact) {
+      this._service.addProducerContact(this.newProducerContact).subscribe(data => this.selectedProducerContact( new ProducerContactClass(data)));
+    }
+    if (this.editContact) {
+      this._service.updateProducerContact(this.producerContactInEdit).subscribe(data =>{
+        this.producerContactInEdit.resetClass(data);
+        this.selectedProducerContact(this.producerContactInEdit);
+      } );
+    }
   }
   async producerContactActions(contact: ProducerContactClass, event: any){
     switch (event.target.value) {
@@ -127,6 +146,9 @@ export class ProducerContactSearch implements OnInit{
       break;
     case 'select':
       this.selectedProducerContact(contact);
+      break;
+    case 'edit':
+      this.editProducerContact(contact);
       break;
     default:
       break;
