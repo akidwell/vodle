@@ -53,7 +53,7 @@
             <div>
                 <label for="premium">Premium</label>
                 <input [readonly]="!canEdit || isRewrite || isBackout" type="text" class="form-control" id="premium" [required]="canEdit" autocomplete="off"
-                    name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" string-to-currency>
+                    name="premium" [(ngModel)]="endorsementActionInfo.premium" #premium="ngModel" string-to-currency maxInt maxlength="15">
             </div>
         </div>
         <div class="modal-footer">

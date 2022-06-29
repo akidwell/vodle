@@ -59,7 +59,7 @@ export class ZipCodeDirective {
 
   @HostListener('input', ['$event'])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  change(event: { target: any }) {
+  change(event: any ) {
     const original = event.target.value;
     const target = event.target;
     const posStart = target.selectionStart;
