@@ -83,12 +83,14 @@ pipeline {
 			steps{
 				script {
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
-					def devHash = jsonfile['/rsps/assets/config/config.dev.json'] 
+					def devHash = jsonfile['/rsps/assets/config/config.dev.json']
+					echo "Dev Hash: " + "${devHash}"
 					jsonfile['/rsps/assets/config/config.json'] = "${devHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
 					//def jsonfile = readJSON file: './dist/rsps/ngsw.json'
 					def intHash = jsonfile['/rsps/assets/config/config.int.json'] 
+					echo "Dev Hash: " + "${intHash}"
 					jsonfile['/rsps/assets/config/config.json'] = "${intHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
 
