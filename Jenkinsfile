@@ -82,7 +82,13 @@ pipeline {
 		stage("Build ngws.json"){
 			steps{
 				script {
+
+				
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
+
+					def hash = jsonfile['hashTable']
+					echo "hash: " + "${hash}"
+
 					def devHash = jsonfile['/rsps/assets/config/config.dev.json']
 					echo "Dev Hash: " + "${devHash}"
 					jsonfile['/rsps/assets/config/config.json'] = "${devHash}".toString()
