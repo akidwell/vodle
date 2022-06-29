@@ -96,20 +96,20 @@ pipeline {
 					hash.remove('/rsps/assets/config/config.cert.json')
 					hash.remove('/rsps/assets/config/config.prod.json')
 
-					jsonfile['/rsps/assets/config/config.json'] = "${devHash}".toString()
+					hash['/rsps/assets/config/config.json'] = "${devHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
-					jsonfile['/rsps/assets/config/config.json'] = "${intHash}".toString()
+					hash['/rsps/assets/config/config.json'] = "${intHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
 
-					jsonfile['/rsps/assets/config/config.json'] = "${uatHash}".toString()
+					hash['/rsps/assets/config/config.json'] = "${uatHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
 
-					jsonfile['/rsps/assets/config/config.json'] = "${certHash}".toString()
+					hash['/rsps/assets/config/config.json'] = "${certHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.cert.json', json: jsonfile
 
 					
-					jsonfile['/rsps/assets/config/config.json'] = "${prodHash}".toString()
+					hash['/rsps/assets/config/config.json'] = "${prodHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.prod.json', json: jsonfile
 
 					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
