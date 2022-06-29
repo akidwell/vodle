@@ -92,7 +92,7 @@ pipeline {
 					//def devHash = jsonfile['/rsps/assets/config/config.dev.json']
 					def devHash = hash['/rsps/assets/config/config.dev.json']
 					echo "Dev Hash: " + "${devHash}"
-					hash.remove(hash.indexOf('/rsps/assets/config/config.int.json'))
+					hash.remove('/rsps/assets/config/config.int.json')
 					jsonfile['/rsps/assets/config/config.json'] = "${devHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
 
