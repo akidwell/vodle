@@ -79,58 +79,47 @@ pipeline {
 				sh './build-dev.sh'
 			} 
 		}
+		stage("Build Release"){
+			when {
+	      		expression { params.Environment == "RELEASE"}
+	    	}
+			steps{
+				sh 'chmod +x ./build-release.sh'
+				sh './build-release.sh'
+			}
+		}	
 		stage("Build ngws.json"){
 			steps{
 				script {
 					def jsonfile = readJSON file: './dist/rsps/ngsw.json'
 					def hash = jsonfile['hashTable']
+					// Copy each environment hash
 					def devHash = hash['/rsps/assets/config/config.dev.json']
 					def intHash = hash['/rsps/assets/config/config.int.json']
-					def uatHash = hash['/rsps/assets/config/config.int.json']
+					def uatHash = hash['/rsps/assets/config/config.uat.json']
 					def certHash = hash['/rsps/assets/config/config.cert.json'] 
 					def prodHash = hash['/rsps/assets/config/config.prod.json'] 
-
+					// Remove all reference to environment config hashes
 					hash.remove('/rsps/assets/config/config.dev.json')
 					hash.remove('/rsps/assets/config/config.int.json')
 					hash.remove('/rsps/assets/config/config.uat.json')
 					hash.remove('/rsps/assets/config/config.cert.json')
 					hash.remove('/rsps/assets/config/config.prod.json')
-
+					// Copy file for each environment
 					hash['/rsps/assets/config/config.json'] = "${devHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.dev.json', json: jsonfile
-
 					hash['/rsps/assets/config/config.json'] = "${intHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.int.json', json: jsonfile
-
 					hash['/rsps/assets/config/config.json'] = "${uatHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.uat.json', json: jsonfile
-
 					hash['/rsps/assets/config/config.json'] = "${certHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.cert.json', json: jsonfile
-
-					
 					hash['/rsps/assets/config/config.json'] = "${prodHash}".toString()
 					writeJSON file: './dist/rsps/ngsw.prod.json', json: jsonfile
-
-					// def jsonIntfile = readJSON file: './src/assets/config/config.int.json'
-					// jsonIntfile['buildVersion'] = "${fileVersion}".toString()
-					// writeJSON file: './src/assets/config/config.int.json', json: jsonIntfile
-
-					// def jsonUATfile = readJSON file: './src/assets/config/config.uat.json'
-					// jsonUATfile['buildVersion'] = "${fileVersion}".toString()
-					// writeJSON file: './src/assets/config/config.uat.json', json: jsonUATfile
-
-					// def jsonCertfile = readJSON file: './src/assets/config/config.cert.json'
-					// jsonCertfile['buildVersion'] = "${fileVersion}".toString()
-					// writeJSON file: './src/assets/config/config.cert.json', json: jsonCertfile
-
-					// def jsonProdfile = readJSON file: './src/assets/config/config.prod.json'
-					// jsonProdfile['buildVersion'] = "${fileVersion}".toString()
-					// writeJSON file: './src/assets/config/config.prod.json', json: jsonProdfile
 				}
 			}
 		}
-		stage("Build Release and Deploy"){
+		stage("Deploy To Int"){
 			when {
 	      		expression { params.Environment == "RELEASE"}
 	    	}
@@ -176,7 +165,7 @@ pipeline {
 				archiveArtifacts artifacts: "rsps_${fileVersion}.zip", fingerprint: true
 			}
 		}
-    		stage("Deploy to UAT"){
+    	stage("Deploy to UAT"){
 			when {
 	      		expression { params.Environment == "RELEASE"}
 	    	}
