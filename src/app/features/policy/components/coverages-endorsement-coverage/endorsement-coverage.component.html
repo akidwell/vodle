@@ -202,7 +202,7 @@
               *ngIf="coverage.isNew">Remove</button>
           </div>
         </div>
-        <button *ngIf="!ecCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse">
+        <button *ngIf="!ecCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse" [openDelay]="1000">
           <fa-icon [icon]="faArrowUp"></fa-icon>
         </button>
       </div>

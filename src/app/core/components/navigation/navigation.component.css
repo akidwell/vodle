@@ -13,6 +13,8 @@
   top:0;
   position:fixed;
   background-color: #00274e;
+  border-bottom-right-radius: 16px;
+  border-top-right-radius: 16px;
 }
 .toggle {
   padding-left:12px;
@@ -23,6 +25,7 @@
 }
 .toggle-icon {
   color:white;
+  cursor: pointer;
 }
 .large {
   font-size: large;
