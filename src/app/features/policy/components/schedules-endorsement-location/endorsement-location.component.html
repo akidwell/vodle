@@ -96,7 +96,7 @@
           </div>
           <div [id]='anchorId'></div>
         </div>
-        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse">
+        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse" [openDelay]="1000">
           <fa-icon [icon]="faArrowUp"></fa-icon>
         </button>
       </div>
