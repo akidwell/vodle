@@ -23,7 +23,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: ':id',
+    path: ':seq',
     component: QuoteComponent,
     resolve: {
       quoteData: QuoteResolver

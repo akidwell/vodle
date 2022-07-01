@@ -4,6 +4,7 @@ import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-d
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from '../models/producer';
+import { QuoteActivity } from '../models/quote-activity';
 import { Submission } from '../models/submission';
 import { SubmissionEvent } from '../models/submission-event';
 import { ProducerContactClass } from './ProducerContactClass';
@@ -123,6 +124,8 @@ export class SubmissionClass implements Submission {
   warningsList: string[] = [];
   warningsMessage = '';
   hasPostedInvoice = false;
+  quoteActivity: QuoteActivity[] = [];
+
 
   constructor(sub?: Submission, insured?: Insured){
     this._submission = sub;
@@ -173,6 +176,7 @@ export class SubmissionClass implements Submission {
     this.companyCode = sub?.companyCode || 3;
     this.underwriterName = sub?.underwriterName || null;
     this.submissionEvents = sub?.submissionEvents || [];
+    this.quoteActivity = sub?.quoteActivity || [];
     this.producerContact = sub?.producerContact ? new ProducerContactClass(sub?.producerContact) : null;
     this.producer = sub?.producer || null;
     this.insured = sub?.insured || insured || null;

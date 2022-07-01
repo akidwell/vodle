@@ -5,7 +5,9 @@ export class QuoteClass implements Quote {
   private _submissionNumber: number | null = null;
   private _quoteId: number | null = null;
   private _cuspNumber: number | null = null;
-  private _quoteNumber: number | null = null;
+  private _quoteNo: number | null = null;
+  private _sequenceNumber: number | null = null;
+
 
   private _isDirty = false;
   isNew = false;
@@ -28,6 +30,15 @@ export class QuoteClass implements Quote {
     this._isDirty = true;
   }
 
+  get sequenceNumber(): number | null{
+    return this._sequenceNumber;
+  }
+  set sequenceNumber(value: number | null) {
+    this._sequenceNumber = value;
+    this._isDirty = true;
+  }
+
+
   get quoteId(): number | null {
     return this._quoteId;
   }
@@ -45,12 +56,12 @@ export class QuoteClass implements Quote {
     this._isDirty = true;
   }
 
-  get quoteNumber(): number | null{
-    return this._quoteNumber;
+  get quoteNo(): number | null{
+    return this._quoteNo;
   }
 
-  set quoteNumber(value: number | null){
-    this._quoteNumber = value;
+  set quoteNo(value: number | null){
+    this._quoteNo = value;
     this._isDirty = true;
   }
 
@@ -70,7 +81,8 @@ export class QuoteClass implements Quote {
     this._submissionNumber = quote?.submissionNumber || null;
     this._quoteId = quote?.quoteId || null;
     this._cuspNumber = quote?.cuspNumber || null;
-    this._quoteNumber = quote?.quoteNumber || null;
+    this._sequenceNumber = quote?.sequenceNumber || null;
+    this._quoteNo = quote?.quoteNo || null;
     this.setReadonlyFields();
     this.setRequiredFields();
   }

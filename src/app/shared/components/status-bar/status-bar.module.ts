@@ -8,10 +8,9 @@ import { PolicyHeaderComponent } from 'src/app/features/policy/components/policy
 import { DirectivesModule } from '../../directives/directives.module';
 import { InsuredDuplicatesComponent } from 'src/app/features/insured/components/insured-duplicates/insured-duplicates.component';
 import { PipesModule } from '../../pipes/pipes.module';
-import { QuoteHeaderComponent } from 'src/app/features/quote/components/quote-header/quote-header.component';
 
 @NgModule({
-  declarations: [ StatusBarComponent, InsuredHeaderComponent, PolicyHeaderComponent, InsuredDuplicatesComponent, QuoteHeaderComponent],
+  declarations: [ StatusBarComponent, InsuredHeaderComponent, PolicyHeaderComponent, InsuredDuplicatesComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,

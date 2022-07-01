@@ -16,7 +16,7 @@ import { QuoteClass } from '../../classes/quote-class';
 })
 
 export class QuoteInformationComponent implements OnInit {
-  quote!: QuoteClass;
+  quote: QuoteClass[] = [];
   submissionCollapsed = false;
   seCollapsed = false;
   formatDateForDisplay!: FormatDateForDisplay;
@@ -44,42 +44,43 @@ export class QuoteInformationComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.quote = data['quoteData'].quote;
     });
+    console.log(this.quote);
   }
 
 
-  isValid(): boolean {
-    if (!this.canEditSubmission) {
-      return true;
-    }
-    if (this.quote.isValid) {
-      this.hideInvalid();
-    }
-    return this.quote.isValid;
-  }
+  // isValid(): boolean {
+  //   if (!this.canEditSubmission) {
+  //     return true;
+  //   }
+  //   if (this.quote.isValid) {
+  //     this.hideInvalid();
+  //   }
+  //   return this.quote.isValid;
+  // }
 
-  isDirty(): boolean {
-    return this.quote.isDirty;
-  }
+  // isDirty(): boolean {
+  //   return this.quote.isDirty;
+  // }
 
-  hideInvalid(): void {
-    this.showInvalid = false;
-  }
+  // hideInvalid(): void {
+  //   this.showInvalid = false;
+  // }
 
-  showInvalidControls(): void {
-    this.invalidMessage = '';
-    // Compile all invalide controls in a list
-    if (this.quote.invalidList.length > 0) {
-      this.showInvalid = true;
-      for (const error of this.quote.invalidList) {
-        this.invalidMessage += '<br><li>' + error;
-      }
-    }
+  // showInvalidControls(): void {
+  //   this.invalidMessage = '';
+  //   // Compile all invalide controls in a list
+  //   if (this.quote.invalidList.length > 0) {
+  //     this.showInvalid = true;
+  //     for (const error of this.quote.invalidList) {
+  //       this.invalidMessage += '<br><li>' + error;
+  //     }
+  //   }
 
-    if (this.showInvalid) {
-      this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
-    }
-    else {
-      this.hideInvalid();
-    }
-  }
+  //   if (this.showInvalid) {
+  //     this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
+  //   }
+  //   else {
+  //     this.hideInvalid();
+  //   }
+  // }
 }
