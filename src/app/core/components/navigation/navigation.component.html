@@ -178,14 +178,15 @@
     [style.left.px]="headerPaddingService.sidebarPadding$ | async"
   >
     <div *ngIf="!showFullSidebar" class="home-link" (click)="routeToHome()">
-      <fa-icon class="toggle-icon large" [icon]="faHome"></fa-icon>
+      <fa-icon class="toggle-icon large" [icon]="faHome" ngbTooltip="Home" placement="bottom" container="body" [openDelay]="1000"></fa-icon>
     </div>
     <div
       *ngIf="!showFullSidebar"
       class="toggle"
       (click)="toggleSidebar()"
+      ngbTooltip="Hide Sidebar" placement="bottom"
     >
-      <fa-icon class="toggle-icon x-large" [icon]="faBars"></fa-icon>
+      <fa-icon class="toggle-icon x-large" [icon]="faBars" ngbTooltip="Show Sidebar" placement="bottom" container="body" [openDelay]="1000"></fa-icon>
       <fa-icon
         *ngIf="showFullSidebar"
         id="close-panel"
@@ -193,9 +194,8 @@
         [icon]="faX"
       ></fa-icon>
     </div>
-
     <div *ngIf="showFullSidebar" id="close-panel" (click)="toggleSidebar()">
-      <fa-icon class="toggle-icon large" [icon]="faX"></fa-icon>
+      <fa-icon class="toggle-icon large" [icon]="faX" ngbTooltip="Hide Sidebar" placement="bottom" container="body" [openDelay]="1000"></fa-icon>   
     </div>
   </div>
 </div>

@@ -603,6 +603,28 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
+  // Quote Status Codes
+  private cacheQuoteStatus: any;
+  private cacheQuoteStatus$!: Observable<any> | null;
+
+  getQuoteStatus(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cachePACCodes) {
+      observable = of(this.cacheQuoteStatus);
+    } else if (this.cacheQuoteStatus$) {
+      observable = this.cacheQuoteStatus$;
+    } else {
+      this.cacheQuoteStatus$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/UW_WKS_STATUS')
+        .pipe(
+          tap(res => this.cacheQuoteStatus = res),
+          share(),
+          finalize(() => this.cacheQuoteStatus$ = null)
+        );
+      observable = this.cacheQuoteStatus$;
+    }
+    return observable;
+  }
+  ////////////////////////////////////////
   // Terrorism Codes
   private cacheTerrorismCodes: any;
   private cacheTerrorismCodes$!: Observable<any> | null;

@@ -49,7 +49,7 @@
       </div>
       <div class="cededPremium">
         <input type="text" style="text-align: right" class="form-control" id="cededPremium" #cededPremium="ngModel"
-          [readonly]="!canEdit" [required]="canEdit" name="cededPremium" string-to-currency maxInt
+          [readonly]="!canEdit" [required]="canEdit" name="cededPremium" string-to-currency maxInt maxlength="15"
           [(ngModel)]="reinsuranceLayer.reinsCededPremium">
       </div>
       <div class="commissionRate">

@@ -221,17 +221,17 @@ export class EndorsementCoverageComponent implements OnInit {
             if (!this.showClaimsMade) {
               this.coverage.claimsMadeOrOccurrence = null;
             }
+            if (!this.isNotExcluded()) {
+              this.coverage.limitsPattern = '';
+            }
+            if (this.coverage.includeExclude == 'E') {
+              this.coverage.premium = 0;
+            }
           }
           this.populateExcludeInclude();
           this.isLimitsPatternValid = this.checkLimitsPatternValid();
           this.canEditLimitPattern = this.isNotExcluded();
           this.canEditPremium = this.coverage.includeExclude != 'E';
-          if (!this.isNotExcluded()) {
-            this.coverage.limitsPattern = '';
-          }
-          if (this.coverage.includeExclude == 'E') {
-            this.coverage.premium = null;
-          }
           this.coverage.limitsPatternGroupCode = subCodeDefaults.defaultLimitPatternGroupCode;
           this.isDeductibleRequired = this.checkDeductibleRequired();
           this.showEachEmployeeDeductible = this.showEachEmployeeDeductibles();

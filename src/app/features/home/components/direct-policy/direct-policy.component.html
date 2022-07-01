@@ -84,7 +84,7 @@
         <div class="empty-row"></div>
         <label for="premium">Premium</label>
         <input type="text" class="form-control" id="premium" [required]="isRenewal" [readonly]="!isRenewal || isSearching"
-            name="premium" [(ngModel)]="policyData.premium" #premium="ngModel" string-to-currency [allowNegative]="false" maxInt>
+            name="premium" [(ngModel)]="policyData.premium" #premium="ngModel" string-to-currency [allowNegative]="false" maxInt maxlength="15">
       </div>
     </div>
     <div class="modal-footer">

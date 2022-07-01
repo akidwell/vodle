@@ -9,10 +9,15 @@
   position: fixed;
   z-index: 997 !important;
   background-color: #001f3e;
+  /* background-color: #335271; */
   border-bottom-left-radius: 16px;
   border-top-left-radius: 16px;
 }
 
+.left-rounded {
+  border-bottom-left-radius: 16px;
+  border-top-left-radius: 16px;
+}
 .ngbDropdown {
   z-index: 2;
 }

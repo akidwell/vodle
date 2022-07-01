@@ -40,7 +40,7 @@
           </div>
           <div class="col-lg-2">
             <label class='hidden-label' for="premium">Premium</label>
-            <input type="text" click-stop-propagation class="form-control" id="premium" name="premium"
+            <input type="text" click-stop-propagation class="form-control" id="premium" name="premium" maxlength="15"
               string-to-currency maxInt [readonly]="!canEdit || !canEditPremium" [required]="canEdit && canEditPremium"
               [(ngModel)]="coverage.premium" #premium="ngModel">
           </div>
@@ -125,7 +125,7 @@
             <label for="deductible">Deductible</label>
             <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible" nullValue
               [required]="this.checkDeductibleRequired()" [(ngModel)]="coverage.deductible" name="deductible"
-              #deductible="ngModel" string-to-currency [allowNegative]="false">
+              #deductible="ngModel" string-to-currency [allowNegative]="false" maxInt maxlength="15">
           </div>
           <div class="col-lg-2">
             <label for="deductibleType">Deductible Type</label>
@@ -144,7 +144,7 @@
             <input type="text" class="form-control" id="rate" [readonly]="!canEdit" string-to-currency
               [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" nullValue
               [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel">
-          </div>
+          </div>    
           <div class="col-lg-6">
             <label for="limitsPattern">Limits Pattern</label>
             <div *ngIf="canEditLimitPattern">
@@ -182,13 +182,13 @@
           <div class="col-lg-1">
             <label for="rateBasis">Rate Basis</label>
             <input type="text" class="form-control" id="rateBasis" [readonly]="!canEdit" nullValue
-              [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel" string-to-currency
+              [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel" string-to-currency maxInt maxlength="15"
               [allowNegative]="false">
           </div>
           <div class="col-lg-2">
             <label for="exposureBase">Exposure</label>
             <input type="text" class="form-control" id="exposureBase" [readonly]="!canEdit" nullValue
-              [(ngModel)]="coverage.exposureBase" name="exposureBase" #exposureBase="ngModel" string-to-currency
+              [(ngModel)]="coverage.exposureBase" name="exposureBase" #exposureBase="ngModel" string-to-currency maxInt maxlength="15"
               [allowNegative]="false">
           </div>
         </div>
@@ -202,7 +202,7 @@
               *ngIf="coverage.isNew">Remove</button>
           </div>
         </div>
-        <button *ngIf="!ecCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse">
+        <button *ngIf="!ecCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse" [openDelay]="1000">
           <fa-icon [icon]="faArrowUp"></fa-icon>
         </button>
       </div>

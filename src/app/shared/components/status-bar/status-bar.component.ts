@@ -102,7 +102,6 @@ export class StatusBarComponent implements OnInit {
           this.pageDataService.accountInfo = null;
           this.pageDataService.policyData = null;
           this.pageDataService.lastSubmission = null;
-          this.pageDataService.quoteData = null;
 
         }),
         map((event) => {
@@ -130,9 +129,8 @@ export class StatusBarComponent implements OnInit {
     this.pageDataService.insuredData = this.checkInsuredData(child);
     this.pageDataService.submissionData = this.checkSubmissionData(child);
     this.pageDataService.policyData = this.checkPolicyData(child);
-    this.pageDataService.quoteData = this.checkQuoteData(child);
 
-    return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null);
+    return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null || this.pageDataService.quoteData != null);
   }
   private checkInsuredData(child: ActivatedRoute): InsuredClass | null {
     if (child.snapshot.data && child.snapshot.data['insuredData']) {
@@ -162,15 +160,7 @@ export class StatusBarComponent implements OnInit {
       return this.pageDataService.policyData;
     }
   }
-  private checkQuoteData(child: ActivatedRoute): QuoteClass | null {
-    if (child.snapshot.data && child.snapshot.data['quoteData']) {
-      const data = child.snapshot.data['quoteData'].quote;
-      this.headerPaddingService.buttonBarPadding = 0;
-      return data;
-    } else {
-      return this.pageDataService.quoteData;
-    }
-  }
+
   navigateToHistoricRoute(route: HistoricRoute){
     this.router.navigate([route.url]);
   }
@@ -255,10 +245,6 @@ export class StatusBarComponent implements OnInit {
       }
     }
     return true;
-  }
-  routeToNewQuote() {
-    this.navigationService.resetPolicy();
-    this.router.navigate(['/quote/information']);
   }
 
   async saveInsured(insured: InsuredClass): Promise<boolean> {
