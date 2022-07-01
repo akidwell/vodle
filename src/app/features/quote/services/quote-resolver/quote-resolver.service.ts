@@ -28,7 +28,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
       .pipe(
         tap((quote) => {
           // Update history for opened Quote
-          this.historyService.updateQuoteHistory(Number(subNumber));
+          this.historyService.updateQuoteHistory(Number(sequenceNumber), quote[0].submissionNumber);
         }),
         map(quote => ({ quote })),
         catchError((error) => {

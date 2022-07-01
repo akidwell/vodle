@@ -45,11 +45,12 @@ export class HistoryService {
     this._policyHistory.next(previousHistory);
   }
 
-  updateQuoteHistory(groupSequence: number) {
+  updateQuoteHistory(groupSequence: number, submissionNumber: number | null) {
     const previousHistory = this._policyHistory.getValue();
     const history = newHistory();
+    history.submissionNumber = submissionNumber;
     history.groupSequence = groupSequence;
-    // Check to see if the submission already exists
+    // Check to see if the quote already exists
     const match = previousHistory.find(x => x.groupSequence == groupSequence);
     // If exists than just update open date
     if (match != null) {

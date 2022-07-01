@@ -62,7 +62,7 @@
         </a>
         <a
           class="nav-link"
-          *ngIf="policy.submissionNumber != null"
+          *ngIf="policy.submissionNumber != null && policy.groupSequence === null"
           routerLinkActive="active"
           [routerLink]="['/submission/' + policy.submissionNumber]"
           (mouseover)="hoverFavorite(policy)"
@@ -102,7 +102,7 @@
           [title]="policy.submissionNumber"
         >
           <fa-icon [icon]="faCommentDollar"></fa-icon>
-          {{ policy.groupSequence }}
+          {{ policy.submissionNumber }}
           <fa-icon
             *ngIf="policy.favorite"
             style="float: right"
