@@ -16,13 +16,15 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
+import { QuoteHeaderComponent } from './components/quote-header/quote-header.component';
 
 
 @NgModule({
   declarations: [
     QuoteComponent,
     QuoteInformationComponent,
-    QuoteNotFoundComponent ],
+    QuoteNotFoundComponent,
+    QuoteHeaderComponent ],
   imports: [
     CommonModule,
     QuoteRoutingModule,

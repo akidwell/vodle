@@ -1,18 +1,40 @@
-<form #addressPanel="ngForm">
-    <div class="panel">
-      <div class="row">
+<rsps-quote-header></rsps-quote-header>
+
+
+    <tbody>
+      <tr *ngFor="let quoteActivity of quote let i = index">
+        <ng-container>
+          <td>  
+            <div class="row" >
+            <div class="col-lg-12">
+              <label style="margin-top: 60px;" for="submissionNumber" class="form-label" >Submission Number</label>
+              <input type="text" class="form-control" id="submissionNumber" maxlength="40"
+                [(ngModel)]="quoteActivity.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
+            </div>
+          </div>
+        </td>
+        <td>  
+          <div class="row" >
+          <div class="col-lg-12">
+            <label style="margin-top: 60px;" for="quoteNo" class="form-label" >Quote No</label>
+            <input type="text" class="form-control" id="quoteNo" maxlength="40"
+              [(ngModel)]="quoteActivity.quoteNo" name="quoteNo" #quoteNo="ngModel">
+          </div>
+        </div>
+      </td>
+      <td>  
+        <div class="row" >
         <div class="col-lg-12">
-          <label for="submissionNumber" class="form-label" title="First Named Insured">Submission Number</label>
-          <input type="text" class="form-control" id="submissionNumber" maxlength="40"
-            [(ngModel)]="quote.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
+          <label style="margin-top: 60px;" for="quoteNo" class="form-label" >Sequence No</label>
+          <input type="text" class="form-control" id="sequenceNumber" maxlength="40"
+            [(ngModel)]="quoteActivity.sequenceNumber" name="sequenceNumber" #sequenceNumber="ngModel">
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-12">
-            <label for="quoteId" class="form-label" title="First Named Insured">QuoteId</label>
-            <input type="text" class="form-control" id="quoteId" maxlength="40"
-              [(ngModel)]="quote.quoteId" name="quoteId" #quoteId="ngModel">
-          </div>
-      </div>
-    </div>
-</form>
+    </td>
+          
+      
+          <td></td>
+        </ng-container>
+      </tr>
+    </tbody>
+

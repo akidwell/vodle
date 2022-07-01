@@ -11,7 +11,7 @@ export class QuoteHeaderComponent {
 
   constructor(private route: ActivatedRoute) {
   }
-    @Input() public quoteData!: QuoteClass;
+    @Input() public quoteData!: QuoteClass[];
 
 
 }

@@ -14,17 +14,17 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
   constructor(private router: Router, private quoteService: QuoteService, private historyService: HistoryService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<QuoteResolved> {
-    const subNumber = route.paramMap.get('id') ?? '';
-    if (subNumber == '') {
-      return of({ quote: new QuoteClass()});
+    const sequenceNumber = route.paramMap.get('seq') ?? '';
+    if (sequenceNumber == '') {
+      return of({ quote: null});
     }
-    if (isNaN(+subNumber)) {
-      const message = `SubmissionNumber  was not a number: ${subNumber}`;
+    if (isNaN(+sequenceNumber)) {
+      const message = `SequenceNumber  was not a number: ${sequenceNumber}`;
       this.router.navigate(['/quote/quote-not-found'], { state: { error: message } });
       return of({ quote: null, error: message });
     }
 
-    return this.quoteService.getQuote(Number(subNumber))
+    return this.quoteService.getQuotes(Number(sequenceNumber))
       .pipe(
         // Comment until we decode on routing
         // tap((quote) => {

@@ -2,6 +2,7 @@ import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from './producer';
 import { ProducerContact } from './producer-contact';
+import { QuoteActivity } from './quote-activity';
 import { SubmissionEvent } from './submission-event';
 
 export interface Submission {
@@ -56,6 +57,7 @@ export interface Submission {
   producer: Producer | null,
   producerContact: ProducerContact | null,
   submissionEvents: SubmissionEvent[] | null,
+  quoteActivity: QuoteActivity[] | null,
   policyTerm: PolicyTermEnum | number | null,
   underwriterName: string | null,
   hasPostedInvoice: boolean

@@ -60,6 +60,7 @@ export interface InsuredSearchResponses{
     country: string;
     zip: string;
     formerName: string;
+    formerName2: string;
     streetAddress: string;
     isPacerResult: boolean;
     pacerId: string;
