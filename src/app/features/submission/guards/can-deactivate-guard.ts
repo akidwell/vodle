@@ -9,6 +9,7 @@ import {
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { SubmissionInformationComponent } from '../components/submission-information/submission-information.component';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationComponent> {
@@ -44,6 +45,9 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
           }
           // No error and no longer dirty then hide any errors and navigate to next route
           submission.hideErrorMessage();
+          return true;
+          //submission will never be valid when a submission is marked DEAD
+        } else if (submission && submission.statusCode == SubmissionStatusEnum.Dead) {
           return true;
         }
         // Show errors
