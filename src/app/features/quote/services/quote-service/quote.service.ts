@@ -12,11 +12,15 @@ export class QuoteService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
-  getQuote(submissionNumber: number): Observable<QuoteClass> {
-    return this.http.get<Quote>(this.config.apiBaseUrl + 'api/quote/' + submissionNumber)
+  getQuotes(sequenceNumber: number): Observable<QuoteClass[]> {
+    return this.http.get<Quote[]>(this.config.apiBaseUrl + 'api/quotes/' + sequenceNumber)
       .pipe(
-        map((receivedData: Quote) => {
-          return new QuoteClass(receivedData);
+        map((receivedData: Quote[]) => {
+          const data: QuoteClass[] = [];
+          receivedData.forEach( x => {
+            data.push(new QuoteClass(x));
+          });
+          return data;
         }));
   }
 }

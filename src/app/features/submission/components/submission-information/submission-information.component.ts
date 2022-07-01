@@ -50,6 +50,11 @@ export class SubmissionInformationComponent implements OnInit {
   previousUrl = '';
   previousLabel = 'Previous';
   invalidList = [];
+  quoteStatus$: Observable<Code[]> | undefined;
+  programs$: Observable<Code[]> | undefined;
+
+
+
 
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
   @ViewChild(SubmissionInfoPanelRightComponent)
@@ -86,7 +91,17 @@ export class SubmissionInformationComponent implements OnInit {
     this.route.parent?.data.subscribe((data) => {
       this.submission = data['submissionData'].submission;
     });
+
+    let group = 0;
+    for (const x of this.submission.quoteActivity) {
+      if (x.sequenceNumber != group) {
+        x.firstRow = true;
+        group = x.sequenceNumber;
+      }
+    }
     this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
+    this.quoteStatus$ = this.dropdowns.getQuoteStatus();
+    this.programs$ = this.dropdowns.getPrograms();
 
     if (this.submission.sicCode != null) {
       this.naicsCodes$ = this.dropdowns
@@ -124,9 +139,10 @@ export class SubmissionInformationComponent implements OnInit {
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
-  routeToQuote(submissionNumber: number) {
+  routeToQuote(submissionGroupId: number, sequenceNumber: number) {
     this.navigationService.resetPolicy();
-    this.router.navigate(['/quote/' + submissionNumber.toString() + '/information']);
+    console.log(submissionGroupId, sequenceNumber);
+    this.router.navigate(['/quote/' + sequenceNumber.toString() + '/information']);
   }
 
   routeToNewQuote() {
