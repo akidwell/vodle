@@ -92,9 +92,9 @@
         </a>
         <a
           class="nav-link"
-          *ngIf="policy.quoteId != null"
+          *ngIf="policy.groupSequence != null"
           routerLinkActive="active"
-          [routerLink]="['/quote/' + policy.quoteId]"
+          [routerLink]="['/quote/' + policy.groupSequence]"
           (mouseover)="hoverFavorite(policy)"
           (mouseleave)="unhoverFavorite(policy)"
           (click)="openPolicy()"
@@ -102,7 +102,7 @@
           [title]="policy.submissionNumber"
         >
           <fa-icon [icon]="faCommentDollar"></fa-icon>
-          {{ policy.quoteId }}
+          {{ policy.groupSequence }}
           <fa-icon
             *ngIf="policy.favorite"
             style="float: right"
