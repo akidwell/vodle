@@ -85,11 +85,6 @@ export class ProducerContactSearch implements OnInit{
     this.producerContactSelected.emit(producer);
   }
 
-  handleEmptyResultSet(): never[] {
-    this.allowSearching = true;
-    this.producerContactSelected.emit(null);
-    return [];
-  }
   resetDisplay(): never[] {
     if (!this.allowSearching) {
       this.model = this.originalModel;
@@ -179,6 +174,7 @@ export class ProducerContactSearch implements OnInit{
             return this.performSearch(term);
           } else {
             this.allowSearching = true;
+            this.producerContactSelected.emit(null);
             return this.performSearch(term);
           }
         }
