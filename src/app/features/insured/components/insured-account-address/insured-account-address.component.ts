@@ -55,7 +55,6 @@ export class InsuredAccountAddressComponent implements OnInit {
 
   changeState(state: State) {
     if (this.insured.country != state.countryCode) {
-      console.log('repop: ' + state.code);
       this.insured.country = state.countryCode;
       this.populateStates(state.code);
     }
@@ -73,7 +72,6 @@ export class InsuredAccountAddressComponent implements OnInit {
       tap((c) => {
         const map = c.filter((c) => c.code == state);
         if (map.length == 0 && reset) {
-          console.log('reset');
           setTimeout(() => this.insured.state = null);
         }
       })
