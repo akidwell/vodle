@@ -26,11 +26,10 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
 
     return this.quoteService.getQuotes(Number(sequenceNumber))
       .pipe(
-        // Comment until we decode on routing
-        // tap((quote) => {
-        //   // Update history for opened Quote
-        //   this.historyService.updateQuoteHistory(quote.submissionNumber ?? 0, quote.quoteNumber ?? 0);
-        // }),
+        tap((quote) => {
+          // Update history for opened Quote
+          this.historyService.updateQuoteHistory(Number(sequenceNumber), quote[0].submissionNumber);
+        }),
         map(quote => ({ quote })),
         catchError((error) => {
           this.router.navigate(['/quote/quote-not-found'], { state: { error: error.message } });

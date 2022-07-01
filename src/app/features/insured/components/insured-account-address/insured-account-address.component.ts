@@ -54,18 +54,24 @@ export class InsuredAccountAddressComponent implements OnInit {
   }
 
   changeState(state: State) {
-    this.insured.country = state.countryCode;
+    if (this.insured.country != state.countryCode) {
+      this.insured.country = state.countryCode;
+      this.populateStates(state.code);
+    }
+    else {
+      this.insured.country = state.countryCode;
+    }
   }
 
   changeCountry() {
-    this.populateStates(this.insured.state);
+    this.populateStates(this.insured.state, true);
   }
 
-  populateStates(state: string | null) {
+  populateStates(state: string | null, reset = false) {
     this.states$ = this.dropdowns.getStates(this.insured.country).pipe(
       tap((c) => {
         const map = c.filter((c) => c.code == state);
-        if (map.length == 0) {
+        if (map.length == 0 && reset) {
           setTimeout(() => this.insured.state = null);
         }
       })

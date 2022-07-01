@@ -4,8 +4,7 @@ export interface History {
   policyNumber: string | null;
   endorsementNumber: number | null;
   submissionNumber: number | null;
-  quoteId: number | null;
-  quoteNumber: number | null;
+  groupSequence: number | null;
   openDate: Date;
   favorite: boolean;
   hover: boolean;
@@ -17,8 +16,7 @@ export const newHistory = (): History => ({
   policyNumber: null,
   endorsementNumber: null,
   submissionNumber: null,
-  quoteId: null,
-  quoteNumber: null,
+  groupSequence: null,
   openDate: new Date,
   favorite: false,
   hover: false
