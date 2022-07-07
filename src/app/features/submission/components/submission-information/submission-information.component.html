@@ -33,7 +33,7 @@
       <div class="card-header" (click)="collapse.toggle()">
         Submission Information <span *ngIf="submission.submissionNumber > 0"> -{{ submission.submissionNumber }} </span>
           <span *ngIf="submission.submissionNumber > 0"> -<a [routerLink]="[]" 
-            (click)="routeToNewQuote()">Add New Quote</a> </span>
+            (click)="routeToNewQuote()" style="pointer-events: none">Add New Quote</a> </span>
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="submissionCollapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!submissionCollapsed"></fa-icon>
       </div>
@@ -139,6 +139,49 @@
       </div>
     </div>
 
+    <div *ngIf="submission.quoteActivity" class="card">
+      <div class="card-header" (click)="collapse.toggle()">
+        Quote Activity
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="qaCollapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!qaCollapsed"></fa-icon>
+      </div>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="qaCollapsed">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Quote Id</th>
+              <th>Quote No</th>
+              <th>Coverage Type</th>
+              <th>Quote Status</th>
+              <th>Quote Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let quoteActivity of submission.quoteActivity let i = index">
+              <tr [ngClass]="{'white': quoteActivity.rowcolor == 'white', 'gray': quoteActivity.rowcolor == 'gray'}">
+                <td><a [routerLink]="[]" *ngIf="quoteActivity.firstRow" style="pointer-events: none"
+                  (click)="routeToQuote(quoteActivity.submissionGroupNumber, quoteActivity.sequenceNumber)">Select</a></td>
+                <td >{{ quoteActivity.quoteId }}</td>
+                <td>{{ quoteActivity.quoteNo }}</td>
+                <td>
+                  {{quoteActivity.coverageType}}
+                </td>
+                <td>
+                   {{quoteActivity.quoteStatus}}
+                </td>
+                <td >
+                  {{ formatDateForDisplay.formatDateTimeForDisplay(quoteActivity.quoteDate) }}
+                </td>
+                <td></td>
+              </tr>
+              </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 
     <div *ngIf="submission.submissionEvents" class="card">
       <div class="card-header" (click)="collapse.toggle()">
@@ -176,52 +219,7 @@
       </div>
     </div>
 
-    <div *ngIf="submission.quoteActivity" class="card">
-      <div class="card-header" (click)="collapse.toggle()">
-        Quote Activity
-        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="seCollapsed"></fa-icon>
-        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!seCollapsed"></fa-icon>
-      </div>
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="seCollapsed">
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Quote Id</th>
-              <th>Quote No</th>
-              <th>Coverage Type</th>
-              <th>Quote Status</th>
-              <th>Quote Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let quoteActivity of submission.quoteActivity let i = index">
-              <ng-container>
-                <td><a [routerLink]="[]" *ngIf="quoteActivity.firstRow"
-                  (click)="routeToQuote(quoteActivity.submissionGroupNumber, quoteActivity.sequenceNumber)">Select</a></td>
-                  <td>{{ quoteActivity.quoteId }}</td>
-                <td>{{ quoteActivity.quoteNo }}</td>
-                <td>
-                <ng-select id="coverageType" [items]="programs$ | async" bindLabel="description"
-               bindValue="key"  [readonly]="true" [(ngModel)]="quoteActivity.coverageType" name="coverageType" >
-              </ng-select>
-            </td>
-            <td>
-               <ng-select id="quoteStatus" [items]="quoteStatus$ | async" [readonly]="true"
-                bindLabel="description" bindValue="code" name="quoteStatus"  [(ngModel)]="quoteActivity.quoteStatus">
-              </ng-select>
-            </td>
-                <td>
-                  {{ formatDateForDisplay.formatDateTimeForDisplay(quoteActivity.quoteDate) }}
-                </td>
-                <td></td>
-              </ng-container>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+
   </form>
 
   <div *ngIf="showBusy">
