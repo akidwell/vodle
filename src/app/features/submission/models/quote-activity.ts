@@ -9,4 +9,5 @@ export interface QuoteActivity {
   sequenceNumber: number;
   submissionGroupNumber: number;
   firstRow: boolean;
+  rowcolor: string;
 }

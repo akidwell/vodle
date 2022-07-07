@@ -42,10 +42,25 @@
 .first-card {
   margin-top: 0;
 }
-
-.table-striped>tbody>tr:is(.voidStatus):nth-of-type(odd)>* {
-  color: #ed0139 !important;
+.white{
+  background-color: #f2f2f2 !important;
 }
+
+.gray {
+  background-color: white !important;
+}
+.table-striped>tbody>tr:is(.white):nth-of-type(odd)>* {
+  background-color: #f2f2f2 !important;
+}
+
+.table-striped>tbody>tr:is(.gray):nth-of-type(odd)>* {
+  background-color: white !important;
+}
+
+.table-striped>tbody>tr:is(.gray):nth-of-type(even)>* {
+  background-color: white !important;
+}
+
 
 .table th {
   background-color: #335271;
