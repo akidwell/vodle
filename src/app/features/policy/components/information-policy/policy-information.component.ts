@@ -115,7 +115,6 @@ export class PolicyInformationComponent implements OnInit {
   }
 
   changeState(state: State) {
-    console.log(state.countryCode);
     this.policyInfo.riskLocation.countryCode = state.countryCode;
   }
 
