@@ -43,6 +43,7 @@ export class SubmissionInformationComponent implements OnInit {
   naicsCodes$: Observable<Code[]> | undefined;
   loadingNaics = false;
   seCollapsed = false;
+  qaCollapsed = false;
   formatDateForDisplay: FormatDateForDisplay;
   underwriters$: Observable<Code[]> | undefined;
   departments$: Observable<Code[]> | undefined;
@@ -93,12 +94,35 @@ export class SubmissionInformationComponent implements OnInit {
     });
 
     let group = 0;
+    let prevSeq = null;
+    let strClass = '';
     for (const x of this.submission.quoteActivity) {
+      const currentSeq = x.sequenceNumber;
       if (x.sequenceNumber != group) {
         x.firstRow = true;
         group = x.sequenceNumber;
       }
+      x.rowcolor = strClass;
+      if(currentSeq != prevSeq){
+        switch (strClass) {
+        case 'white':
+          x.rowcolor = 'gray';
+          strClass = 'gray';
+          break;
+        case 'gray':
+          x.rowcolor = 'white';
+          strClass = 'white';
+          break;
+        default:
+          x.rowcolor = 'white';
+          strClass = 'white';
+          break;
+        }
+      }
+      prevSeq = currentSeq;
+      console.log(x.rowcolor);
     }
+
     this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
     this.quoteStatus$ = this.dropdowns.getQuoteStatus();
     this.programs$ = this.dropdowns.getPrograms();
