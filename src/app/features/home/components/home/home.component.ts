@@ -61,7 +61,6 @@ export class HomeComponent implements OnInit {
         this.version = this.apiService.getApiVersion;
         this.insuredResults = [];
         this.pacerSearchResults = [];
-        console.log(this.searchResults.searchType);
         this.searchResults.insuredSearchResponses.forEach((element) => {
           if (element.isPacerResult) {
             this.pacerSearchResults.push(element);
