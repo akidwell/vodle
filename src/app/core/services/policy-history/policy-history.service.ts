@@ -137,7 +137,6 @@ export class HistoryService {
         data.forEach(item => {
           if (item.id == null) {
             item.id = sequence;
-            console.log(item.id);
             sequence++;
           }
         });

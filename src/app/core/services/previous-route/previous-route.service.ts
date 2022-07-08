@@ -18,7 +18,7 @@ export class PreviousRouteService {
   }
 
   public getPreviousUrlFormatted() {
-    if (this.previousUrl != undefined) {
+    if (this.previousUrl.value != '') {
       const path = this.previousUrl.value.split('/');
       if (path.length > 1) {
         return 'Previous - ' + path[1][0].toUpperCase() + path[1].slice(1) + (path[2] !== undefined ? ' #' + path[2] : '');

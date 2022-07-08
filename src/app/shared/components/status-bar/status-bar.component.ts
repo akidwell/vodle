@@ -272,7 +272,6 @@ export class StatusBarComponent implements OnInit {
           const results$ = this.insuredService.updateInsured(insured);
           return await lastValueFrom(results$)
             .then(async updated => {
-              console.log(updated);
               insured.updateClass(updated);
               insured.markClean();
               this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
