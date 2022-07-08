@@ -9,7 +9,7 @@
         (producerSelected)=updateProducer($event)
         [department]="submission.departmentCode || 0"
         [canEdit]="canEditSubmission && !submission.producerReadonly && submission.polEffDate != null"
-        [isRequired]="submission.producerRequired"
+        [isRequired]="canEditSubmission && submission.producerRequired"
         [policyDate]="submission.polEffDate || currentDate"
         [producerOnLoad]="submission.producer"
         ></producer-fuzzy-search>
@@ -23,7 +23,7 @@
         (producerContactSelected)=updateProducerContact($event)
         [producerCode]="submission.producerCode || 0"
         [canEdit]="canEditSubmission && !submission.producerContactReadonly && submission.producerCode != null"
-        [isRequired]="submission.producerContactRequired"
+        [isRequired]="canEditSubmission && submission.producerContactRequired"
         [producerContactOnLoad]="submission.producerContactId != null ? submission.producerContact : null"
         ></producer-contact-fuzzy-search>
       </div>

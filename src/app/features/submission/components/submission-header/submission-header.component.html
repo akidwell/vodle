@@ -8,7 +8,7 @@
       matInput
       [matDatepicker]="polEffDateCalendar"
       class="form-control"
-      [required]="submission.policyDateRequired"
+      [required]="canEditSubmission && submission.policyDateRequired"
       [readonly]="!canEditSubmission || submission.policyDateReadonly"
       [(ngModel)]="submission.polEffDate"
       name="polEffDate"
@@ -32,7 +32,7 @@
       matInput
       [matDatepicker]="polExpDateCalendar"
       class="form-control"
-      [required]="submission.policyDateRequired"
+      [required]="canEditSubmission && submission.policyDateRequired"
       [readonly]="!canEditSubmission || submission.policyDateReadonly"
       [(ngModel)]="submission.polExpDate"
       name="polExpDate"
@@ -55,7 +55,7 @@
       [items]="policyTermOptions"
       bindLabel="description"
       bindValue="value"
-      [readonly]="submission.policyDateReadonly"
+      [readonly]="!canEditSubmission || submission.policyDateReadonly"
       [clearable]="false"
       name="policyTerm"
       [(ngModel)]="submission.policyTerm"

@@ -32,7 +32,7 @@
     <div class="card first-card">
       <div class="card-header" (click)="collapse.toggle()">
         Submission Information <span *ngIf="submission.submissionNumber > 0"> -{{ submission.submissionNumber }} </span>
-          <span *ngIf="submission.submissionNumber > 0"> -<a [routerLink]="[]" 
+          <span *ngIf="submission.submissionNumber > 0"> -<a [routerLink]="[]"
             (click)="routeToNewQuote()" style="pointer-events: none">Add New Quote</a> </span>
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="submissionCollapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!submissionCollapsed"></fa-icon>
@@ -73,7 +73,7 @@
                     <ng-select id="department" [items]="departments$ | async" bindLabel="description" bindValue="key"
                       [clearable]="false" [readonly]="
                         !canEditSubmission || submission.departmentReadonly
-                      " name="department" [required]="submission.departmentRequired"
+                      " name="department" [required]="canEditSubmission && submission.departmentRequired"
                       [(ngModel)]="submission.departmentCode" #department="ngModel">
                     </ng-select>
                   </div>
@@ -82,7 +82,7 @@
                     <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key"
                       [clearable]="false" [readonly]="
                         !canEditSubmission || submission.underwriterReadonly
-                      " name="underwriter" [required]="submission.underwriterRequired"
+                      " name="underwriter" [required]="canEditSubmission && submission.underwriterRequired"
                       [(ngModel)]="submission.underwriter" #underwriter="ngModel">
                     </ng-select>
                   </div>
