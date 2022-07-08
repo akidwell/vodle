@@ -21,13 +21,13 @@
           <tbody>
             <tr *ngFor="let insured of searchResults; let i = index">
               <ng-container>
-                <td><a [routerLink]="[]" (click)="routeToInsured(insured.insuredCode)">
+                <td><a (click)="routeToInsured(insured.insuredCode)">
                 <td nowrap>{{ insured.name }}</td></a></td>
                 <td>{{ insured.street1 }}</td>
                 <td>{{ insured.street2 }}</td>
                 <td>{{ insured.city }}</td>
                 <td>{{ insured.state }}</td>
-                <td nowrap>{{ insured.zip | zipCode }}</td>
+                <td nowrap>{{ insured.zip  }}</td>
                 <td>{{ insured.fein | fein }}</td>
                 <td>{{ insured.matchScore | percent}}</td>
               </ng-container>

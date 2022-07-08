@@ -4,12 +4,12 @@ import { lastValueFrom, Observable, of, Subscription } from 'rxjs';
 import { Endorsement, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from 'src/app/features/policy/models/policy';
 import { ReinsuranceLookup } from '../../services/reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from '../../services/reinsurance-lookup/reinsurance-lookup.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { NgForm } from '@angular/forms';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 
 
 @Component({
@@ -18,7 +18,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./reinsurance-layer.component.css']
 })
 export class ReinsuranceLayerComponent implements OnInit {
-  programId: number = 0;
+  programId = 0;
   effectiveDate: Date = new Date();
   reinsuranceSub!: Subscription;
   reinsuranceCodes$: Observable<ReinsuranceLookup[]> | undefined;
@@ -29,25 +29,24 @@ export class ReinsuranceLayerComponent implements OnInit {
   deleteSub!: Subscription;
   policyLayer!: PolicyLayerData[];
   updateSub!: Subscription;
-  isDirty: boolean = false;
+  isDirty = false;
   treatyNo!: number;
   commRate!: number;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   authSub: Subscription;
   endorsement!: Endorsement;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   reinsuranceRefreshedSub!: Subscription;
 
   @Input() policyLayerData!: PolicyLayerData;
   @Input() reinsuranceLayer!: ReinsuranceLayerData;
   @Input() index!: number;
-  @ViewChild('modalConfirmation') modalConfirmation: any;
   @Output() deleteExistingReinsuranceLayer: EventEmitter<ReinsuranceLayerData> = new EventEmitter();
   @Output() deleteExistingPolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
   @ViewChild(NgForm, { static: false }) reinsuranceForm!: NgForm;
 
-  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private modalService: NgbModal, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService) { 
+  constructor(private route: ActivatedRoute, private reinsuranceLookupService: ReinsuranceLookupService, private policyService: PolicyService, private userAuth: UserAuth, private endorsementStatusService: EndorsementStatusService, private messageDialogService: MessageDialogService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -91,7 +90,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   async populateReinsuranceCodes(): Promise<void> {
@@ -116,10 +115,10 @@ export class ReinsuranceLayerComponent implements OnInit {
   async save(policyLayerData: PolicyLayerData[]): Promise<boolean> {
     const results$ = this.policyService.putPolicyAndReinsuranceLayers(policyLayerData);
     return await lastValueFrom(results$)
-      .then(x => {
+      .then(() => {
         return true;
       }).catch((error) => {
-        this.messageDialogService.open("Reinsurance Save Error!", error.error.Message)
+        this.messageDialogService.open('Reinsurance Save Error!', error.error.Message);
         this.endorsementStatusService.reinsuranceValidated = false;
         return false;
       });
@@ -150,12 +149,13 @@ export class ReinsuranceLayerComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
-      if (result == 'Yes') {
+    this.confirmationDialogService.open('Delete Confirmation', 'Are you sure you want to delete this Reinsurance Layer?').then((result: boolean) => {
+      if (result) {
         this.deleteReinsuranceLayer();
       }
     });
   }
+
   async deleteReinsuranceLayer() {
     if (this.reinsuranceLayer.isNew) {
       this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
@@ -164,14 +164,13 @@ export class ReinsuranceLayerComponent implements OnInit {
         this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
         return result;
       }));
-      ;
     } else if (this.index == 0 && this.policyLayerData.reinsuranceData.length == 1) {
       this.save(this.policyLayer).then(() => this.deleteSub = this.policyService.deletePolicyAndReinsuranceLayers(this.reinsuranceLayer).subscribe(result => {
         this.deleteExistingReinsuranceLayer.emit(this.reinsuranceLayer);
-        this.deleteExistingPolicyLayer.emit(this.policyLayerData)
+        this.deleteExistingPolicyLayer.emit(this.policyLayerData);
         return result;
       }));
-      this.save(this.policyLayer)
+      this.save(this.policyLayer);
     }
   }
 

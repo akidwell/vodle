@@ -15,18 +15,17 @@ const routes: Routes = [
     path: 'submission-not-found',
     component: SubmissionNotFoundComponent
   },
-  // {
-  //   path: '',
-  //   component: SubmissionComponent,
-  //   resolve: {
-  //     submissionData: SubmissionResolver
-  //   },
-  //   // children: [
-  //   //   { path: '', redirectTo: 'information',pathMatch: 'full' },
-  //   //   { path: 'information', component: InsuredInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
-  //   //   { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
-  //   // ]
-  // },
+  {
+    path: '',
+    component: SubmissionComponent,
+    resolve: {
+      submissionData: SubmissionResolver
+    },
+    children: [
+      { path: '', redirectTo: 'information', pathMatch: 'full' },
+      { path: 'information', component: SubmissionInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } }
+    ]
+  },
   {
     path: ':id',
     component: SubmissionComponent,

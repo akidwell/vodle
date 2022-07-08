@@ -1,5 +1,5 @@
 #header {
-  background-color: #001f3e;
+  background-color: #335271;
   color: white;
   font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
     sans-serif;
@@ -7,24 +7,31 @@
   font-size: 32px;
   text-align: center;
   position: fixed;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
+}
+::ng-deep ngb-typeahead-window {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body {
-  width: calc(100% - 210px);
-  margin-left: 210px;
-  padding-top: 48px;
+  width: 100%;
   font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
     sans-serif;
   background-color: #f2f4f6;
-  min-height: 100vh;
 }
 
-.content-fluid {
-  padding: 20px;
+.header-container {
+  padding-left: 0;
+  padding-right: 0;
 }
-
+.status-bar-container {
+  position:fixed;
+  z-index:3;
+  width:100%;
+}
 .error-message {
   color: red;
   text-align: center;
@@ -33,12 +40,12 @@ body {
 .sidebar {
   margin: 0;
   padding: 0;
+  top:0;
   background-color: #00274e;
   position: fixed;
   height: 100%;
-  width: 210px;
   overflow: auto;
-  z-index: 2;
+  z-index: 3;
 }
 
 .banner-label {
@@ -98,6 +105,7 @@ body {
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 2;
 }
 
 .ngb-toasts {
@@ -107,4 +115,5 @@ body {
   right: 0!important;
   left: center!important;
   margin: 0.5em;
+  z-index: 2;
 }

@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/search-results';
-import { AdditionalNamedInsured, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsured, AdditionalNamedInsuredData, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages-base/coverages';
 import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
@@ -35,14 +35,14 @@ export class PolicyService {
   }
   getUnderlyingCoverages(policyId: number, endorsementNo: number): Observable<UCCoverage[]> {
     return this.http.get<UnderlyingCoverage[]>(this.config.apiBaseUrl + 'api/policies/' + policyId.toString() + '/endorsements/' + endorsementNo + '/underlying-schedule')
-    .pipe(
-      map((receivedData: UnderlyingCoverage[]) => {
-          var data: UCCoverage[] = [];
+      .pipe(
+        map((receivedData: UnderlyingCoverage[]) => {
+          const data: UCCoverage[] = [];
           receivedData.forEach(element => {
-            data.push(new UCCoverage(element))
+            data.push(new UCCoverage(element));
           });
           return data;
-      }));
+        }));
   }
   updateUnderlyingCoverages(underlyingCoverages: UnderlyingCoverage[]): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/underlying-schedule', underlyingCoverages);
@@ -69,7 +69,7 @@ export class PolicyService {
   }
   deleteEndorsementCoverageLocation(location: EndorsementCoverageLocation): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + location.policyId.toString()
-      + '/endorsement-coverage-locations/' + location.locationId.toString())
+      + '/endorsement-coverage-locations/' + location.locationId.toString());
   }
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/policyinfo', policyInfo);
@@ -81,9 +81,22 @@ export class PolicyService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + coverage.policyId.toString()
       + '/endorsements/' + coverage.endorsementNumber.toString() + '/coverages/' + coverage.sequence.toString());
   }
-  getAdditionalNamedInsureds(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsureds[]> {
-    return this.http.get<AdditionalNamedInsureds[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
+  getAdditionalNamedInsureds(policyId: number, endorsementNo: number): Observable<AdditionalNamedInsured[]> {
+    return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds')
+      .pipe(
+        map((receivedData: AdditionalNamedInsured[]) => {
+          const data: coverageANI[] = [];
+          receivedData.forEach(element => {
+            data.push(new coverageANI(this, element));
+          });
+          //  receivedData.additionalNamedInsureds = data;
+
+          return data;
+        }));
+
+    //return this.http.get<AdditionalNamedInsureds[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds');
   }
+
   updateAdditionalNamedInsureds(aniData: AdditionalNamedInsureds): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
@@ -149,23 +162,23 @@ export class PolicyService {
   // Component research
   getAdditionalNamedInsured(policyId: number, endorsementNo: number): Observable<coverageANI[]> {
     return this.http.get<AdditionalNamedInsured[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/' + endorsementNo + '/additional-insureds')
-    .pipe(
-      map((receivedData: AdditionalNamedInsured[]) => {
-          var data: coverageANI[] = [];
+      .pipe(
+        map((receivedData: AdditionalNamedInsured[]) => {
+          const data: coverageANI[] = [];
           receivedData.forEach(element => {
-            data.push(new coverageANI(this,element))
+            data.push(new coverageANI(this,element));
           });
           return data;
-      }));
+        }));
   }
 
-  addAdditionalNamedInsured(aniData: coverageANI): Observable<coverageANI> {
+  addAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<coverageANI> {
     return this.http.post<coverageANI>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
-  updateAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+  updateAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/endorsements/additional-insureds/', aniData);
   }
-  deleteAdditionalNamedInsured(aniData: coverageANI): Observable<boolean> {
+  deleteAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + aniData.policyId + '/endorsements/' + aniData.endorsementNo + '/additional-insureds/' + aniData.sequenceNo);
   }
 }

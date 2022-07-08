@@ -23,7 +23,6 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 })
 export class CoveragesComponent implements OnInit, PolicySave {
   endorsementCoveragesGroups!: EndorsementCoveragesGroup[];
-  formStatus: any;
   authSub: Subscription;
   canEditPolicy = false;
   policyInfo!: PolicyInformation;
@@ -94,7 +93,6 @@ export class CoveragesComponent implements OnInit, PolicySave {
         let coverage: EndorsementCoverage = ({} as EndorsementCoverage) as EndorsementCoverage;
         const group: EndorsementCoveragesGroup = { coverages: [], location: location };
         coverage = newEndorsementCoverage();
-
         coverage.sequence = this.coveragesSequence;
         this.coveragesSequence++;
         coverage.locationId = location.locationId;

@@ -5,7 +5,7 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { SearchResults } from '../../models/search-results';
+import { InsuredSearchResponses, SearchResults } from '../../models/search-results';
 
 @Component({
   selector: 'rsps-insured-search-results',
@@ -24,8 +24,10 @@ export class InsuredSearchResultsComponent implements OnInit {
     policySearchResponses: [],
     submissionSearchResponses: [],
     insuredSearchResponses: [],
-    searchType: ''
+    searchType: null
   };
+
+  @Input('insuredResults') insuredResults: InsuredSearchResponses[] = [];
 
   constructor(private router: Router, private navigationService: NavigationService, private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
@@ -34,7 +36,6 @@ export class InsuredSearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   routeToInsured(insuredCode: number) {
@@ -44,6 +45,6 @@ export class InsuredSearchResultsComponent implements OnInit {
 
   routeToNewInsured() {
     this.navigationService.resetPolicy();
-    this.router.navigate(['/insured/information'],{ state: { insuredName: 'test' } });
+    this.router.navigate(['/insured/information']);
   }
 }

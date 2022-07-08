@@ -1,4 +1,6 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { AdditionalNamedInsured } from '../additional-named-insured';
@@ -10,17 +12,21 @@ import { SharedAdditionalNamedInsuredsComponent } from '../additional-named-insu
   styleUrls: ['./additional-named-insureds-group.component.css']
 })
 export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
-  invalidMessage: string = "";
-  showInvalid: boolean = false;
+  invalidMessage = '';
+  showInvalid = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   aniCollapsed = false;
+  color: ThemePalette = 'warn';
+  canDrag = false;
+  dragDropClass = '';
+  invalidList: string[] = [];
 
   @ViewChild(SharedAdditionalNamedInsuredsComponent) aniComp!: SharedAdditionalNamedInsuredsComponent;
   @ViewChildren(SharedAdditionalNamedInsuredsComponent) components: QueryList<SharedAdditionalNamedInsuredsComponent> | undefined;
   @Input() public aniData!: AdditionalNamedInsured[];
   @Input() public newANI!: AdditionalNamedInsured;
-  @Input() public canEdit: boolean = false;
+  @Input() public canEdit = false;
 
   constructor(private notification: NotificationService) {
   }
@@ -30,33 +36,47 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   isValid(): boolean {
-    if (this.components != null) {
-      for (let child of this.components) {
-        if (child.aniForm.status != 'VALID') {
-          return false;
+    let valid = true;
+    this.invalidList = [];
+    this.aniData.forEach(c => {
+      if (!c.isValid) {
+        valid = false;
+        this.invalidList = this.invalidList.concat(c.invalidList);
+      }
+    });
+
+    if (!this.validateANI()) {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  validateANI(): boolean {
+    let dupe = false;
+    this.aniData.forEach(a => a.isDuplicate = false);
+    this.aniData.forEach(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.aniData.filter(c => c.role == x.role && c.name == x.name);
+        if (dupes.length > 1) {
+          dupes.forEach(d => d.isDuplicate = true);
+          dupe = true;
+          this.invalidList.push('Additional Named Insured: ' + x.name?.trim() + ' is duplicated.');
         }
       }
-    }
-    return true;
+    });
+    return !dupe;
   }
 
   isDirty() {
-    if (this.components != null) {
-      for (let child of this.components) {
-        if (child.aniForm.dirty) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return this.aniData.some(item => item.isDirty);
   }
   hideInvalid(): void {
     this.showInvalid = false;
   }
 
   copyExistingAni(existingAni: AdditionalNamedInsured) {
-    var copyAni = existingAni.clone();
-    copyAni.name = 'CopyOf ' + existingAni.name
+    const copyAni = existingAni.copy();
     copyAni.sequenceNo = this.getNextSequence();
     this.aniData.push(copyAni);
   }
@@ -80,18 +100,18 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   addNewAdditionalNamedInsured(): void {
-   var clone = this.newANI.clone();
-   clone.sequenceNo = this.getNextSequence();
-   this.aniData.push(clone);
+    const clone = this.newANI.clone();
+    clone.sequenceNo = this.getNextSequence();
+    this.aniData.push(clone);
   }
 
   async saveAdditionalNamedInsureds(): Promise<boolean> {
     if (this.canEdit && this.isDirty()) {
-      let saveCount: number = 0;
+      let saveCount = 0;
       if (this.components != null) {
-        for (let child of this.components) {
-          if (child.aniForm.dirty) {         
-            let result = await child.save();
+        for (const child of this.components) {
+          if (child.aniData.isDirty) {
+            const result = await child.save();
             if (result === false) {
               this.notification.show('Additional Named Insured ' + child.aniData.name + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
             }
@@ -111,4 +131,28 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
     }
     return false;
   }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.aniData, event.previousIndex, event.currentIndex);
+    }
+    let sequence = 1;
+    this.aniData.forEach(c => {
+      if (c.sequenceNo != sequence) {
+        c.sequenceNo = sequence;
+      }
+      sequence++;
+    });
+  }
+
+  toggleDragDrop() {
+    this.aniCollapsed = false;
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
+  }
+
 }

@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {
+  CanDeactivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+} from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { SubmissionInformationComponent } from '../components/submission-information/submission-information.component';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationComponent> {
-
-  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService) { }
+  constructor(
+    private router: Router,
+    private navigationConfirmationService: NavigationConfirmationService,
+    private pageDataService: PageDataService
+  ) {}
 
   canDeactivate(
     component: SubmissionInformationComponent,
@@ -20,40 +30,45 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
         return true;
       }
-      if (component.isValid()) {
-        if (component.isDirty()) {
-          if (this.checkLeavePolicy(state.url, nextState.url)) {
-            return this.confirmLeave().then(confirm => {
-              if (confirm) {
-                component.hideInvalid();
-              }
-              return confirm;
-            });
+      const submission = this.pageDataService.submissionData || null;
+      if (submission != null) {
+        if (submission && submission.isValid) {
+          if (submission.isDirty) {
+            if (this.checkLeaveSubmission(state.url, nextState.url)) {
+              return this.confirmLeave().then((confirm) => {
+                if (confirm) {
+                  submission.hideErrorMessage();
+                }
+                return confirm;
+              });
+            }
           }
+          // No error and no longer dirty then hide any errors and navigate to next route
+          submission.hideErrorMessage();
+          return true;
+          //submission will never be valid when a submission is marked DEAD
+        } else if (submission && submission.statusCode == SubmissionStatusEnum.Dead) {
+          return true;
         }
-        // No error and no longer dirty then hide any errors and navigate to next route
-        component.hideInvalid();
-        return true;
+        // Show errors
+        submission.showErrorMessage();
+        window.scroll(0, 0);
+        // Check to see if trying to leave policy
+        if (this.checkLeaveSubmission(state.url, nextState.url)) {
+          return this.confirmLeave().then((confirm) => {
+            if (confirm) {
+              submission.hideErrorMessage();
+            }
+            return confirm;
+          });
+        }
       }
-      // Show errors
-      component.showInvalidControls();
-      window.scroll(0, 0);
-      // Check to see if trying to leave policy
-      if (this.checkLeavePolicy(state.url, nextState.url)) {
-        return this.confirmLeave().then(confirm => {
-          if (confirm) {
-            component.hideInvalid();
-          }
-          return confirm;
-        });
-      }
-
       return false;
     }
     return true;
   }
 
-  checkLeavePolicy(startUrl: string, endUrl: string): boolean {
+  checkLeaveSubmission(startUrl: string, endUrl: string): boolean {
     const startRoute = startUrl.split('/');
     const endRoute = endUrl.split('/');
     // if nagivating outstide policy then open confirm leave dialog
@@ -68,7 +83,14 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open('Leave Confirmation', 'Unable to leave without saving?');
+    const option = await this.navigationConfirmationService.open(
+      'Leave Confirmation',
+      'Do you want to leave without saving?'
+    );
+    if (option) {
+      this.pageDataService.submissionData?.resetClass();
+      this.pageDataService.submissionData?.markClean();
+    }
+    return option;
   }
-
 }

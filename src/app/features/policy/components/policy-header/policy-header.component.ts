@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AccountInformation, PolicyInformation } from '../../models/policy';
@@ -11,23 +11,18 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./policy-header.component.css']
 })
 export class PolicyHeaderComponent implements OnInit {
-  accountInfo!: AccountInformation;
-  policyInfo!: PolicyInformation;
-  endorsementNumber: number = 0;
   statusSub!: Subscription;
-  status: string = "";
+  status = '';
   formatDateForDisplay: FormatDateForDisplay;
+  @Input() public policyInfo!: PolicyInformation;
+  @Input() public accountInfo!: AccountInformation;
+  @Input() public endorsementNumber!: number | null;
+
   constructor(private route: ActivatedRoute, private endorsementStatusService: EndorsementStatusService, private formatDateService: FormatDateForDisplay) {
     this.formatDateForDisplay = formatDateService;
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      this.accountInfo = data['accountData'].accountInfo;
-      this.policyInfo = data['policyInfoData'].policyInfo;
-      this.endorsementNumber = Number(this.route.snapshot.paramMap.get('end') ?? 0);
-    });
-
     this.statusSub = this.endorsementStatusService.status.subscribe({
       next: status => {
         this.status = status;

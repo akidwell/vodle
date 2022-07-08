@@ -7,13 +7,15 @@
           readonly #insuredCode="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="customerCode" class="form-label" title="Customer Code">Customer Code</label>
-        <input type="number" class="form-control" id="customerCode" [readonly]="!canEditInsured" maxInt nullValue
+        <input type="number" class="form-control" id="customerCode" readonly maxInt nullValue
           [(ngModel)]="insured.customerCode" name="customerCode" #customerCode="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="entityType" class="form-label" title="Entity Type">Entity Type</label>
@@ -22,6 +24,7 @@
         </ng-select>
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="fein" class="form-label" title="FEIN">FEIN</label>
@@ -29,6 +32,7 @@
           [(ngModel)]="insured.fein" #fein="ngModel" mask="00-0000000">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="website" class="form-label" title="Website">Website</label>
@@ -36,17 +40,19 @@
           [(ngModel)]="insured.website" #website="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="createdBy" class="form-label" title="Created">Created</label>
-        <input type="text" class="form-control" id="createdBy" readonly [ngModel]="createdUserFormatted"
+        <input type="text" class="form-control" id="createdBy" readonly [ngModel]="insured.createUserFormatted"
           name="createdBy" #createdBy="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="modifiedBy" class="form-label" title="Modified">Modified</label>
-        <input type="text" class="form-control" id="modifiedBy" readonly [ngModel]="modifiedUserFormatted"
+        <input type="text" class="form-control" id="modifiedBy" readonly [ngModel]="insured.modifiedUserFormatted"
           name="modifiedBy" #modifiedBy="ngModel">
       </div>
     </div>

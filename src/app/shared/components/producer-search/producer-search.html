@@ -1,0 +1,18 @@
+
+<div>
+  <div>
+    <label>Producer</label>
+      <input id="producer-search" type="text" class="form-control"
+      [class.is-invalid]="searchFailed"
+      [(ngModel)]="model"
+      [required]="isRequired"
+      [readonly]="!canEdit"
+      #producer (click)="producer.select()"
+      [inputFormatter]="displayFormatter"
+      [resultFormatter]="displayFormatter"
+      [ngbTypeahead]="search"
+      (selectItem)="selectedProducer($event)"
+      placement="bottom-start"
+      placeholder="Producer search" />
+  </div>
+</div>

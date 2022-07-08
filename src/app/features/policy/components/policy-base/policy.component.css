@@ -29,14 +29,13 @@
   left: center!important;
   margin: 0.5em;
 }
-
-.navToolbar {
-  z-index: 1;
-  width: calc(100% - 205px);
+.navHolder {
+  z-index: 2;
   position: fixed;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 10px;
+}
+.navToolbar {
+  width: 100%;
+  position: absolute;
   background-color:  #f2f4f6;
 }
 

@@ -10,8 +10,9 @@
       <label for="createDate">Create Date</label>
     </div>
   </div> -->
-  <div class="card-body" [ngClass]="{'expanded':!ucdCollapsed}">
-    <div class="row" style="padding-top: 10px; width: 100%" (click)="collapseExpand(false)">
+  <div class="component-row">
+  <div [ngClass]="ucdCollapsed ? 'collapsed' : 'expanded'">
+    <div class="row" (click)="collapseExpand(false)">
       <div *ngIf="isExcessUmbrella" class="col-lg-2">
         <div>Layer Type</div>
         <ng-select id="label" click-stop-propagation [items]="layerTypes" placeholder=""
@@ -24,18 +25,23 @@
       <div class="col-lg-2">
         <div>Coverage Type</div>
         <ng-select id="primaryCoverageCode" click-stop-propagation [items]="coverageTypes$ | async" bindLabel="description" bindValue="key" placeholder=""
-        [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy" name="primaryCoverageCode"
+        [clearable]="false" [readonly]="!canEditPolicy || canDrag" [required]="canEditPolicy" name="primaryCoverageCode"
         [(ngModel)]="ucData.primaryCoverageCode" #limitsPattern="ngModel"  (change)="processValueChange()">
       </ng-select>
       </div>
+      <div *ngIf="ucData.primaryCoverageCode === 9999" class="col-lg-2">
+        <div>Description</div>
+        <input type="text" click-stop-propagation class="form-control" id="description" #description="ngModel" [readonly]="!canEditPolicy || canDrag" maxlength="50" [title]="ucData.userDefinedCovDesc"
+        name="description" [(ngModel)]="ucData.userDefinedCovDesc" >
+      </div>
       <div class="col-lg-2">
         <div>Carrier</div>
-        <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79" [title]="ucData.carrierName"
+        <input type="text" click-stop-propagation class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy || canDrag" maxlength="79" [title]="ucData.carrierName"
           name="name" [(ngModel)]="ucData.carrierName" >
       </div>
       <div class="col-lg-2">
         <div>Limits {{ucData.userAddedCount > 0 ? '+ ' + ucData.userAddedCount : ''}}</div>
-        <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy" maxlength="79"
+        <input click-stop-propagation type="text" class="form-control" id="limitsPattern" #limitsPattern="ngModel" [readonly]="!canEditPolicy || canDrag" maxlength="79"
           [required]="(canEditPolicy && !isAPPolicy)" name="limitsPattern" [(ngModel)]="ucData.limitsPattern" (change)="processLimitsChange()" [title]="ucData.limitsPattern">
           <div [hidden]="isLimitsPatternValid || !canEditPolicy" class="alert alert-danger">
             Invalid Pattern
@@ -44,7 +50,7 @@
       <div class="col-lg-2">
         <div>Limits Pattern</div>
         <ng-select click-stop-propagation *ngIf="!isAPPolicy" id="limitsPatternGroupCode" [items]="this.allLimitsPatternDescription" bindLabel="description" bindValue="key" placeholder=""
-          [clearable]="false" [readonly]="!canEditPolicy" [required]="canEditPolicy && !isAPPolicy" name="limitsPatternGroupCode" [title]="ucData.limitsPatternString"
+          [clearable]="false" [readonly]="!canEditPolicy || canDrag" [required]="canEditPolicy && !isAPPolicy" name="limitsPatternGroupCode" [title]="ucData.limitsPatternString"
           [(ngModel)]="ucData.limitsPatternGroupCode" #limitsPatternGroupCode="ngModel"  (change)="processValueChange()">
         </ng-select>
         <div *ngIf="isAPPolicy">{{this.ucData.limitsPatternString}}</div>
@@ -58,10 +64,9 @@
           </div>
       </div>
     </div>
-
-  <div class="card-body" #collapse="ngbCollapse" [(ngbCollapse)]="ucdCollapsed">
-    <div class="row" style="width: 100%" >
-
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="ucdCollapsed">
+    <div class="empty-row"></div>
+    <div class="row">
       <div class="col-lg-2">
         <div>Policy Number</div>
         <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy" maxlength="79"
@@ -72,7 +77,7 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="effectiveDateCalendar"
           class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.effectiveDate" name="effectiveDate"
           #effectiveDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="effectiveDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="effectiveDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #effectiveDateCalendar></mat-datepicker>
       </div>
@@ -81,7 +86,7 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="expirationDateCalendar"
           class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.expirationDate" name="expirationDate"
           #expirationDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="expirationDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="expirationDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #expirationDateCalendar></mat-datepicker>
       </div>
@@ -90,9 +95,14 @@
         <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="retroDateCalendar"
           class="form-control" [disabled]="!canEditPolicy" [(ngModel)]="ucData.retroDate" name="retroDate"
           #retroDate="ngModel">
-        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditPolicy" style="display: inline-block; max-width: 20%;" [for]="retroDateCalendar">
         </mat-datepicker-toggle>
         <mat-datepicker #retroDateCalendar></mat-datepicker>
+      </div>
+      <div class="col-lg-2">
+        <label for="comment">Comment</label>
+        <input type="text" class="form-control" id="name" #name="ngModel" [readonly]="!canEditPolicy  || canDrag" maxlength="250"
+           name="comment" [(ngModel)]="ucData.comment" >
       </div>
     </div>
     <div><button style="background:none; border:none;" class="underline" (click)="ucbCollapsed = !ucbCollapsed;">{{ucbCollapsed == true ? 'Show Limit Basis Detail' : 'Hide Limit Basis Detail'}}</button></div>
@@ -108,20 +118,20 @@
       </div>
       <button style="float:left; background:none; border:none;" class="underline" *ngIf="canEditPolicy" (click)="ucData.addUserDefinedLimit()">Add Limit</button>
     </div>
-    <div class="empty-space"></div>
-  <div class="row container">
+    <div class="empty-row"></div>
+  <div class="row">
     <div class="col-lg-2">
       <span class="btn btn-secondary" (click)=deleteThisUnderlyingCoverage() hover-class="btn-danger"
         *ngIf="!ucData.isNew">Delete</span>
       <span class="btn btn-secondary" (click)=deleteThisUnderlyingCoverage() hover-class="btn-warning"
         *ngIf="ucData.isNew">Remove</span>
     </div>
-    <span class='astext' (click)="collapseExpand(true)">
-      <fa-icon [icon]="faArrowUp" ></fa-icon>
-    </span>
+
   </div>
+  <button *ngIf="!ucdCollapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse" [openDelay]="1000">
+    <fa-icon [icon]="faArrowUp"></fa-icon>
+  </button>
 </div>
-  </div>
-
-
+</div>
+</div>
 </form>

@@ -1,0 +1,88 @@
+ .ng-valid[required],
+ .ng-valid.required {
+   border-left: 5px solid #42A948;
+ }
+
+ .ng-invalid:not(form) {
+   border-left: 5px solid #a94442;
+ }
+ /* .panel {
+  box-sizing: border-box;
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 32px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+ } */
+ /* .form-checkbox {
+   height: 25px;
+   width: 25px;
+   margin-left: 6px;
+ }
+
+ input[type="checkbox"] {
+   display: inline-block;
+ }
+
+ input[type="checkbox"][readonly] {
+   pointer-events: none;
+ } */
+
+
+ .form-label {
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   width: 100%;
+   display: block;
+   /* margin-bottom: 0px; */
+ }
+/* 
+ .updated {
+   border-right: 5px double orange;
+ }
+
+
+ .faCheckCircle {
+   color: #42A948;
+   size: 10px;
+ }
+
+ .faTimesCircle {
+   color: #a94442;
+ }
+
+
+ .inputImage fa-icon {
+   float: left;
+   margin-left: 5px;
+   margin-top: 25px;
+ }
+
+ .verified {
+   margin-top: 25px;
+   margin-left: 5px;
+   float: left;
+   color: #42A948;
+   font-weight: bold;
+ }
+
+ .unverified {
+   margin-top: 25px;
+   margin-left: 5px;
+   float: left;
+   color: #a94442;
+   font-weight: bold;
+ }
+
+ .inputspinner {
+  position: relative;
+}
+
+#spinner {
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 10px);
+} */

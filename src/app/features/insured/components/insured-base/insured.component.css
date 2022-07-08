@@ -6,11 +6,11 @@
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
   }
-  
+
   .nav-tabs a:hover:not(.active) {
     background-color: #ccd4dc;
   }
-  
+
   .nav-tabs .nav-link.active {
     color: #000000;
     border-radius: 0;
@@ -20,7 +20,7 @@
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
   }
-  
+
   .ngb-toasts {
     position: fixed;
     top: auto!important;
@@ -29,19 +29,15 @@
     left: center!important;
     margin: 0.5em;
   }
-  
-  .navToolbar {
-    z-index: 1;
-    width: calc(100% - 205px);
+
+  .navHolder {
+    z-index: 2;
     position: fixed;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 10px;
-    background-color:  #f2f4f6;
   }
-  
-  .content-fluid {
-    padding-top: 50px;
+  .navToolbar {
+    width: 100%;
+    position: absolute;
+    background-color:  #f2f4f6;
   }
 
   .primary {

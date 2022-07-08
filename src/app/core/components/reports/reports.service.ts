@@ -5,14 +5,14 @@ import { ConfigService } from '../../services/config/config.service';
 import { IReport } from './report';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ReportsService {
 
-    constructor(private http: HttpClient, private config: ConfigService) { }
+  constructor(private http: HttpClient, private config: ConfigService) { }
 
-    getReports(): Observable<IReport[]> {
-        return this.http.get<IReport[]>(this.config.apiBaseUrl + 'api/lookups/reports');
-    }
+  getReports(): Observable<IReport[]> {
+    return this.http.get<IReport[]>(this.config.apiBaseUrl + 'api/lookups/reports');
+  }
 
 }

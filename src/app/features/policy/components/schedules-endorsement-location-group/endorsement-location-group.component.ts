@@ -8,6 +8,9 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { EndorsementLocation, newEndorsementLocation, PolicyInformation } from '../../models/policy';
 import { EndorsementLocationComponent } from '../schedules-endorsement-location/endorsement-location.component';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { UpdatePolicyChild } from '../../services/update-child/update-child.service';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'rsps-endorsement-location-group',
@@ -17,18 +20,21 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 export class EndorsementLocationGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  locationCollapsed: boolean = false;
+  locationCollapsed = false;
   locationData: EndorsementLocation[] = [];
   policyInfo!: PolicyInformation;
   endorsementNumber!: number;
   authSub!: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
+  color: ThemePalette = 'warn';
+  canDrag = false;
+  dragDropClass = '';
 
   @ViewChildren(EndorsementLocationComponent) components: QueryList<EndorsementLocationComponent> | undefined;
 
-  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService) { 
+  constructor(private route: ActivatedRoute, private userAuth: UserAuth, private notification: NotificationService, private endorsementStatusService: EndorsementStatusService, private updatePolicyChild: UpdatePolicyChild) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
@@ -42,7 +48,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -53,7 +59,7 @@ export class EndorsementLocationGroupComponent implements OnInit {
   }
 
   addNewEndorsementLocation(): void {
-    let newLocation = newEndorsementLocation();
+    const newLocation = newEndorsementLocation();
     newLocation.policyId = this.policyInfo.policyId;
     newLocation.endorsementNumber = this.endorsementNumber;
     newLocation.sequence = this.getNextSequence();
@@ -89,18 +95,19 @@ export class EndorsementLocationGroupComponent implements OnInit {
 
   isValid(): boolean {
     if (this.components != null) {
-      for (let child of this.components) {
-        if (child.locationForm.status != 'VALID') {
+      for (const child of this.components) {
+        if (!child.isValid()) {
           return false;
         }
       }
     }
+
     return true;
   }
 
   isDirty() {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.locationForm.dirty) {
           return true;
         }
@@ -111,11 +118,11 @@ export class EndorsementLocationGroupComponent implements OnInit {
 
   async save(): Promise<boolean> {
     if (this.canEditPolicy && this.isDirty()) {
-      let saveCount: number = 0;
+      let saveCount = 0;
       if (this.components != null) {
-        for (let child of this.components) {
+        for (const child of this.components) {
           if (child.locationForm.dirty) {
-            let result = await child.save();
+            const result = await child.save();
             if (result === false) {
               this.notification.show('Endorsesement Locations ' + child.location.sequence.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
             }
@@ -135,5 +142,33 @@ export class EndorsementLocationGroupComponent implements OnInit {
     }
     return false;
   }
-  
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.locationData, event.previousIndex, event.currentIndex);
+    }
+    let sequence = 1;
+
+    this.locationData.forEach(c => {
+      if (c.sequence != sequence) {
+        const match = this.components?.find(l => l.location.sequence == c.sequence);
+        match?.locationForm.form.markAsDirty();
+        c.sequence = sequence;
+      }
+      sequence++;
+    });
+  }
+
+  toggleDragDrop() {
+    this.locationCollapsed = false;
+    // Collapse all locations
+    this.updatePolicyChild.collapseEndorsementLocations();
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
+  }
+
 }

@@ -1,36 +1,66 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { finalize, share, tap } from 'rxjs/operators';
+import { finalize, map, share, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { UnderlyingLimitBasis } from '../../../features/policy/models/schedules';
 import { Code } from '../../models/code';
+import { State } from '../../models/state';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DropDownsService {
   private readonly refreshSubject = new Subject();
 
-  constructor(private http: HttpClient, private config: ConfigService) { }
+  constructor(private http: HttpClient, private config: ConfigService) {}
 
   // Non static drop downs
-  getLimitBasisDescriptions(coverageCode: number,programId: number, limitsPatternGroupCode: number){
-    const params = new HttpParams().append('primaryCoverageCode', coverageCode).append('limitsPatternGroupCode', limitsPatternGroupCode).append('programId', programId);
-    return this.http.get<UnderlyingLimitBasis[]>(this.config.apiBaseUrl + 'api/lookups/limit-basis', { params });
+  getLimitBasisDescriptions(
+    coverageCode: number,
+    programId: number,
+    limitsPatternGroupCode: number
+  ) {
+    const params = new HttpParams()
+      .append('primaryCoverageCode', coverageCode)
+      .append('limitsPatternGroupCode', limitsPatternGroupCode)
+      .append('programId', programId);
+    return this.http.get<UnderlyingLimitBasis[]>(
+      this.config.apiBaseUrl + 'api/lookups/limit-basis',
+      { params }
+    );
   }
 
-  getCoverageDescriptions(coverageCode: string, policySymbol: string, programId: number, classCode?: number | null, coverageID?: number | null): Observable<Code[]> {
-    let params = new HttpParams().append('coverageCode', coverageCode).append('classCode', classCode ?? '').append('policySymbol', policySymbol).append('programId', programId);
+  getCoverageDescriptions(
+    coverageCode: string,
+    policySymbol: string,
+    programId: number,
+    classCode?: number | null,
+    coverageID?: number | null
+  ): Observable<Code[]> {
+    let params = new HttpParams()
+      .append('coverageCode', coverageCode)
+      .append('classCode', classCode ?? '')
+      .append('policySymbol', policySymbol)
+      .append('programId', programId);
     if (coverageID != null) {
       params = params.append('coverageID', coverageID);
     }
-    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', { params });
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-descriptions', {
+      params,
+    });
   }
 
   getNaicsCodes(sicCode: string) {
     const params = new HttpParams().append('sicCode', sicCode);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
+  }
+
+  getMarkDeadReasons(isNew: boolean) {
+    const params = new HttpParams().append('isNew', isNew);
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-dead-reasons', {
+      params,
+    });
   }
 
   // Policy specific drop downs
@@ -41,13 +71,13 @@ export class DropDownsService {
   getRiskGrades(programId?: number): Observable<Code[]> {
     if (programId) {
       const params = new HttpParams().append('programId', programId);
-      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades', { params });
-    }
-    else {
+      return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades', {
+        params,
+      });
+    } else {
       return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-grades');
     }
   }
-
 
   ////////////////////////////////////////
   // Class Codes
@@ -61,12 +91,15 @@ export class DropDownsService {
     } else if (this.cacheClassCodes$) {
       observable = this.cacheClassCodes$;
     } else {
-      const params = new HttpParams().append('programId', programId).append('coverageCode', coverageCode);
-      this.cacheClassCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/class-codes', { params })
+      const params = new HttpParams()
+        .append('programId', programId)
+        .append('coverageCode', coverageCode);
+      this.cacheClassCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/class-codes', { params })
         .pipe(
-          tap(res => this.cacheClassCodes = res),
+          tap((res) => (this.cacheClassCodes = res)),
           share(),
-          finalize(() => this.cacheClassCodes$ = null)
+          finalize(() => (this.cacheClassCodes$ = null))
         );
       observable = this.cacheClassCodes$;
     }
@@ -92,17 +125,64 @@ export class DropDownsService {
     } else if (this.cachePACCodes$) {
       observable = this.cachePACCodes$;
     } else {
-      this.cachePACCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/pac-codes')
+      this.cachePACCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/pac-codes')
         .pipe(
-          tap(res => this.cachePACCodes = res),
+          tap((res) => (this.cachePACCodes = res)),
           share(),
-          finalize(() => this.cachePACCodes$ = null)
+          finalize(() => (this.cachePACCodes$ = null))
         );
       observable = this.cachePACCodes$;
     }
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Departments
+  private cacheDepartments: any;
+  private cacheDepartments$!: Observable<any> | null;
+
+  getDepartments(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheDepartments) {
+      observable = of(this.cacheDepartments);
+    } else if (this.cacheDepartments$) {
+      observable = this.cacheDepartments$;
+    } else {
+      this.cacheDepartments$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/lookups/departments')
+        .pipe(
+          tap((res) => (this.cacheDepartments = res)),
+          share(),
+          finalize(() => (this.cacheDepartments$ = null))
+        );
+      observable = this.cacheDepartments$;
+    }
+    return observable;
+  }
+  ////////////////////////////////////////
+  // Departments
+  private cacheUnderwriters: any;
+  private cacheUnderwriters$!: Observable<any> | null;
+
+  getUnderwriters(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheUnderwriters) {
+      observable = of(this.cacheUnderwriters);
+    } else if (this.cacheUnderwriters$) {
+      observable = this.cacheUnderwriters$;
+    } else {
+      this.cacheUnderwriters$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/lookups/underwriters')
+        .pipe(
+          tap((res) => (this.cacheUnderwriters = res)),
+          share(),
+          finalize(() => (this.cacheUnderwriters$ = null))
+        );
+      observable = this.cacheUnderwriters$;
+    }
+    return observable;
+  }
   ////////////////////////////////////////
   // Programs
   private cachePrograms: any;
@@ -115,11 +195,12 @@ export class DropDownsService {
     } else if (this.cachePrograms$) {
       observable = this.cachePrograms$;
     } else {
-      this.cachePrograms$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/programs')
+      this.cachePrograms$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/programs')
         .pipe(
-          tap(res => this.cachePrograms = res),
+          tap((res) => (this.cachePrograms = res)),
           share(),
-          finalize(() => this.cachePrograms$ = null)
+          finalize(() => (this.cachePrograms$ = null))
         );
       observable = this.cachePrograms$;
     }
@@ -138,11 +219,12 @@ export class DropDownsService {
     } else if (this.cacheCoverageCodes$) {
       observable = this.cacheCoverageCodes$;
     } else {
-      this.cacheCoverageCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-codes')
+      this.cacheCoverageCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/coverage-codes')
         .pipe(
-          tap(res => this.cacheCoverageCodes = res),
+          tap((res) => (this.cacheCoverageCodes = res)),
           share(),
-          finalize(() => this.cacheCoverageCodes$ = null)
+          finalize(() => (this.cacheCoverageCodes$ = null))
         );
       observable = this.cacheCoverageCodes$;
     }
@@ -161,39 +243,52 @@ export class DropDownsService {
     } else if (this.cachePolicySymbolsCodes$) {
       observable = this.cachePolicySymbolsCodes$;
     } else {
-      this.cachePolicySymbolsCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/policy-symbols')
+      this.cachePolicySymbolsCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/policy-symbols')
         .pipe(
-          tap(res => this.cachePolicySymbolsCodes = res),
+          tap((res) => (this.cachePolicySymbolsCodes = res)),
           share(),
-          finalize(() => this.cachePolicySymbolsCodes$ = null)
+          finalize(() => (this.cachePolicySymbolsCodes$ = null))
         );
       observable = this.cachePolicySymbolsCodes$;
     }
     return observable;
   }
 
-
   ////////////////////////////////////////
   // States
-  private cacheStates: any;
-  private cacheStates$!: Observable<any> | null;
+  private cacheStates: State[] | null = null;
+  private cacheStates$!: Observable<State[]> | null;
 
-  getStates(): Observable<Code[]> {
-    let observable: Observable<any>;
+  getStates(countryCode: string | null = null): Observable<State[]> {
+    let observable: Observable<State[]>;
     if (this.cacheStates) {
       observable = of(this.cacheStates);
     } else if (this.cacheStates$) {
       observable = this.cacheStates$;
     } else {
-      this.cacheStates$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/states')
+      this.cacheStates$ = this.http
+        .get<State[]>(this.config.apiBaseUrl + 'api/dropdowns/states')
         .pipe(
-          tap(res => this.cacheStates = res),
+          tap((res) => (this.cacheStates = res)),
           share(),
-          finalize(() => this.cacheStates$ = null)
+          finalize(() => (this.cacheStates$ = null))
         );
       observable = this.cacheStates$;
     }
-    return observable;
+    return observable.pipe(
+      map((projects) =>
+        projects.filter((proj) => proj.countryCode === countryCode || countryCode === null)
+      )
+    );
+  }
+
+  getCountryByState(state: string): string {
+    if (this.cacheStates != null) {
+      const match = this.cacheStates.find(c => c.code == state);
+      return match?.countryCode ?? '';
+    }
+    return 'USA';
   }
 
   ////////////////////////////////////////
@@ -208,11 +303,12 @@ export class DropDownsService {
     } else if (this.cacheCountries$) {
       observable = this.cacheCountries$;
     } else {
-      this.cacheCountries$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/countries')
+      this.cacheCountries$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/countries')
         .pipe(
-          tap(res => this.cacheCountries = res),
+          tap((res) => (this.cacheCountries = res)),
           share(),
-          finalize(() => this.cacheCountries$ = null)
+          finalize(() => (this.cacheCountries$ = null))
         );
       observable = this.cacheCountries$;
     }
@@ -231,11 +327,12 @@ export class DropDownsService {
     } else if (this.cacheLimitsPattern$) {
       observable = this.cacheLimitsPattern$;
     } else {
-      this.cacheLimitsPattern$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
+      this.cacheLimitsPattern$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
         .pipe(
-          tap(res => this.cacheLimitsPattern = res),
+          tap((res) => (this.cacheLimitsPattern = res)),
           share(),
-          finalize(() => this.cacheLimitsPattern$ = null)
+          finalize(() => (this.cacheLimitsPattern$ = null))
         );
       observable = this.cacheLimitsPattern$;
     }
@@ -254,11 +351,12 @@ export class DropDownsService {
     } else if (this.cacheLimitsBasis$) {
       observable = this.cacheLimitsBasis$;
     } else {
-      this.cacheLimitsBasis$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-basis')
+      this.cacheLimitsBasis$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-basis')
         .pipe(
-          tap(res => this.cacheLimitsBasis = res),
+          tap((res) => (this.cacheLimitsBasis = res)),
           share(),
-          finalize(() => this.cacheLimitsBasis$ = null)
+          finalize(() => (this.cacheLimitsBasis$ = null))
         );
       observable = this.cacheLimitsBasis$;
     }
@@ -277,11 +375,12 @@ export class DropDownsService {
     } else if (this.cacheCarrierCodes$) {
       observable = this.cacheCarrierCodes$;
     } else {
-      this.cacheCarrierCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/carrier-codes')
+      this.cacheCarrierCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/carrier-codes')
         .pipe(
-          tap(res => this.cacheCarrierCodes = res),
+          tap((res) => (this.cacheCarrierCodes = res)),
           share(),
-          finalize(() => this.cacheCarrierCodes$ = null)
+          finalize(() => (this.cacheCarrierCodes$ = null))
         );
       observable = this.cacheCarrierCodes$;
     }
@@ -300,11 +399,12 @@ export class DropDownsService {
     } else if (this.cacheAuditCodes$) {
       observable = this.cacheAuditCodes$;
     } else {
-      this.cacheAuditCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/audit-codes')
+      this.cacheAuditCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/audit-codes')
         .pipe(
-          tap(res => this.cacheAuditCodes = res),
+          tap((res) => (this.cacheAuditCodes = res)),
           share(),
-          finalize(() => this.cacheAuditCodes$ = null)
+          finalize(() => (this.cacheAuditCodes$ = null))
         );
       observable = this.cacheAuditCodes$;
     }
@@ -323,11 +423,12 @@ export class DropDownsService {
     } else if (this.cacheAssumedCarriers$) {
       observable = this.cacheAssumedCarriers$;
     } else {
-      this.cacheAssumedCarriers$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/assumed-carriers')
+      this.cacheAssumedCarriers$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/assumed-carriers')
         .pipe(
-          tap(res => this.cacheAssumedCarriers = res),
+          tap((res) => (this.cacheAssumedCarriers = res)),
           share(),
-          finalize(() => this.cacheAssumedCarriers$ = null)
+          finalize(() => (this.cacheAssumedCarriers$ = null))
         );
       observable = this.cacheAssumedCarriers$;
     }
@@ -346,11 +447,12 @@ export class DropDownsService {
     } else if (this.cacheNyFreeTradeZones$) {
       observable = this.cacheNyFreeTradeZones$;
     } else {
-      this.cacheNyFreeTradeZones$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/ny-free-trade-zones')
+      this.cacheNyFreeTradeZones$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/ny-free-trade-zones')
         .pipe(
-          tap(res => this.cacheNyFreeTradeZones = res),
+          tap((res) => (this.cacheNyFreeTradeZones = res)),
           share(),
-          finalize(() => this.cacheNyFreeTradeZones$ = null)
+          finalize(() => (this.cacheNyFreeTradeZones$ = null))
         );
       observable = this.cacheNyFreeTradeZones$;
     }
@@ -369,11 +471,12 @@ export class DropDownsService {
     } else if (this.cacheDeregulationIndicators$) {
       observable = this.cacheDeregulationIndicators$;
     } else {
-      this.cacheDeregulationIndicators$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/deregulation-indicators')
+      this.cacheDeregulationIndicators$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/deregulation-indicators')
         .pipe(
-          tap(res => this.cacheDeregulationIndicators = res),
+          tap((res) => (this.cacheDeregulationIndicators = res)),
           share(),
-          finalize(() => this.cacheDeregulationIndicators$ = null)
+          finalize(() => (this.cacheDeregulationIndicators$ = null))
         );
       observable = this.cacheDeregulationIndicators$;
     }
@@ -392,11 +495,12 @@ export class DropDownsService {
     } else if (this.cachePaymentFrequencies$) {
       observable = this.cachePaymentFrequencies$;
     } else {
-      this.cachePaymentFrequencies$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/payment-frequencies')
+      this.cachePaymentFrequencies$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/payment-frequencies')
         .pipe(
-          tap(res => this.cachePaymentFrequencies = res),
+          tap((res) => (this.cachePaymentFrequencies = res)),
           share(),
-          finalize(() => this.cachePaymentFrequencies$ = null)
+          finalize(() => (this.cachePaymentFrequencies$ = null))
         );
       observable = this.cachePaymentFrequencies$;
     }
@@ -415,11 +519,12 @@ export class DropDownsService {
     } else if (this.cacheRiskTypes$) {
       observable = this.cacheRiskTypes$;
     } else {
-      this.cacheRiskTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-types')
+      this.cacheRiskTypes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/risk-types')
         .pipe(
-          tap(res => this.cacheRiskTypes = res),
+          tap((res) => (this.cacheRiskTypes = res)),
           share(),
-          finalize(() => this.cacheRiskTypes$ = null)
+          finalize(() => (this.cacheRiskTypes$ = null))
         );
       observable = this.cacheRiskTypes$;
     }
@@ -438,11 +543,12 @@ export class DropDownsService {
     } else if (this.cacheUnderlyingCoverageDescriptions$) {
       observable = this.cacheUnderlyingCoverageDescriptions$;
     } else {
-      this.cacheUnderlyingCoverageDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/underlying-coverage-descriptions')
+      this.cacheUnderlyingCoverageDescriptions$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/underlying-coverage-descriptions')
         .pipe(
-          tap(res => this.cacheUnderlyingCoverageDescriptions = res),
+          tap((res) => (this.cacheUnderlyingCoverageDescriptions = res)),
           share(),
-          finalize(() => this.cacheUnderlyingCoverageDescriptions$ = null)
+          finalize(() => (this.cacheUnderlyingCoverageDescriptions$ = null))
         );
       observable = this.cacheUnderlyingCoverageDescriptions$;
     }
@@ -460,12 +566,13 @@ export class DropDownsService {
       observable = of(this.cacheTransationTypes);
     } else if (this.cacheTransationTypes$) {
       observable = this.cacheTransationTypes$;
-    }else {
-      this.cacheTransationTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/transaction-types')
+    } else {
+      this.cacheTransationTypes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/transaction-types')
         .pipe(
-          tap(res => this.cacheTransationTypes = res),
+          tap((res) => (this.cacheTransationTypes = res)),
           share(),
-          finalize(() => this.cacheTransationTypes$ = null)
+          finalize(() => (this.cacheTransationTypes$ = null))
         );
       observable = this.cacheTransationTypes$;
     }
@@ -476,25 +583,47 @@ export class DropDownsService {
   ///Endorsement Reasons
   private cacheEndorsementReasons: any;
   private cacheEndorsementReasons$!: Observable<any> | null;
-  getEndorsementReasons(): Observable<Code[]>{
-
+  getEndorsementReasons(): Observable<Code[]> {
     let observable: Observable<any>;
     if (this.cacheEndorsementReasons) {
       observable = of(this.cacheEndorsementReasons);
     } else if (this.cacheEndorsementReasons$) {
       observable = this.cacheEndorsementReasons$;
     } else {
-      this.cacheEndorsementReasons$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/pro_reason_code')
+      this.cacheEndorsementReasons$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/pro_reason_code')
         .pipe(
-          tap(res => this.cacheEndorsementReasons = res),
+          tap((res) => (this.cacheEndorsementReasons = res)),
           share(),
-          finalize(() => this.cacheEndorsementReasons$ = null)
+          finalize(() => (this.cacheEndorsementReasons$ = null))
         );
       observable = this.cacheEndorsementReasons$;
     }
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Quote Status Codes
+  private cacheQuoteStatus: any;
+  private cacheQuoteStatus$!: Observable<any> | null;
+
+  getQuoteStatus(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cachePACCodes) {
+      observable = of(this.cacheQuoteStatus);
+    } else if (this.cacheQuoteStatus$) {
+      observable = this.cacheQuoteStatus$;
+    } else {
+      this.cacheQuoteStatus$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/UW_WKS_STATUS')
+        .pipe(
+          tap(res => this.cacheQuoteStatus = res),
+          share(),
+          finalize(() => this.cacheQuoteStatus$ = null)
+        );
+      observable = this.cacheQuoteStatus$;
+    }
+    return observable;
+  }
   ////////////////////////////////////////
   // Terrorism Codes
   private cacheTerrorismCodes: any;
@@ -507,11 +636,12 @@ export class DropDownsService {
     } else if (this.cacheTerrorismCodes$) {
       observable = this.cacheTerrorismCodes$;
     } else {
-      this.cacheTerrorismCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/terrorism_code')
+      this.cacheTerrorismCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/terrorism_code')
         .pipe(
-          tap(res => this.cacheTerrorismCodes = res),
+          tap((res) => (this.cacheTerrorismCodes = res)),
           share(),
-          finalize(() => this.cacheTerrorismCodes$ = null)
+          finalize(() => (this.cacheTerrorismCodes$ = null))
         );
       observable = this.cacheTerrorismCodes$;
     }
@@ -530,11 +660,12 @@ export class DropDownsService {
     } else if (this.cacheActions$) {
       observable = this.cacheActions$;
     } else {
-      this.cacheActions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/coverage_action')
+      this.cacheActions$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/coverage_action')
         .pipe(
-          tap(res => this.cacheActions = res),
+          tap((res) => (this.cacheActions = res)),
           share(),
-          finalize(() => this.cacheActions$ = null)
+          finalize(() => (this.cacheActions$ = null))
         );
       observable = this.cacheActions$;
     }
@@ -553,11 +684,12 @@ export class DropDownsService {
     } else if (this.cacheClaimsMade$) {
       observable = this.cacheClaimsMade$;
     } else {
-      this.cacheClaimsMade$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/claimsmade')
+      this.cacheClaimsMade$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/claimsmade')
         .pipe(
-          tap(res => this.cacheClaimsMade = res),
+          tap((res) => (this.cacheClaimsMade = res)),
           share(),
-          finalize(() => this.cacheClaimsMade$ = null)
+          finalize(() => (this.cacheClaimsMade$ = null))
         );
       observable = this.cacheClaimsMade$;
     }
@@ -576,11 +708,12 @@ export class DropDownsService {
     } else if (this.cacheDeductibleType$) {
       observable = this.cacheDeductibleType$;
     } else {
-      this.cacheDeductibleType$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
+      this.cacheDeductibleType$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
         .pipe(
-          tap(res => this.cacheDeductibleType = res),
+          tap((res) => (this.cacheDeductibleType = res)),
           share(),
-          finalize(() => this.cacheDeductibleType$ = null)
+          finalize(() => (this.cacheDeductibleType$ = null))
         );
       observable = this.cacheDeductibleType$;
     }
@@ -599,11 +732,12 @@ export class DropDownsService {
     } else if (this.cacheEachEmployee$) {
       observable = this.cacheEachEmployee$;
     } else {
-      this.cacheEachEmployee$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/eachemployee')
+      this.cacheEachEmployee$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/eachemployee')
         .pipe(
-          tap(res => this.cacheEachEmployee = res),
+          tap((res) => (this.cacheEachEmployee = res)),
           share(),
-          finalize(() => this.cacheEachEmployee$ = null)
+          finalize(() => (this.cacheEachEmployee$ = null))
         );
       observable = this.cacheEachEmployee$;
     }
@@ -622,11 +756,12 @@ export class DropDownsService {
     } else if (this.cacheEntityType$) {
       observable = this.cacheEntityType$;
     } else {
-      this.cacheEntityType$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/insured_entity_type')
+      this.cacheEntityType$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/insured_entity_type')
         .pipe(
-          tap(res => this.cacheEntityType = res),
+          tap((res) => (this.cacheEntityType = res)),
           share(),
-          finalize(() => this.cacheEntityType$ = null)
+          finalize(() => (this.cacheEntityType$ = null))
         );
       observable = this.cacheEntityType$;
     }
@@ -645,11 +780,12 @@ export class DropDownsService {
     } else if (this.cacheExposureCodes$) {
       observable = this.cacheExposureCodes$;
     } else {
-      this.cacheExposureCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/exposure-codes')
+      this.cacheExposureCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/exposure-codes')
         .pipe(
-          tap(res => this.cacheExposureCodes = res),
+          tap((res) => (this.cacheExposureCodes = res)),
           share(),
-          finalize(() => this.cacheExposureCodes$ = null)
+          finalize(() => (this.cacheExposureCodes$ = null))
         );
       observable = this.cacheExposureCodes$;
     }
@@ -668,11 +804,12 @@ export class DropDownsService {
     } else if (this.cachePremTypes$) {
       observable = this.cachePremTypes$;
     } else {
-      this.cachePremTypes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
+      this.cachePremTypes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/premtype')
         .pipe(
-          tap(res => this.cachePremTypes = res),
+          tap((res) => (this.cachePremTypes = res)),
           share(),
-          finalize(() => this.cachePremTypes$ = null)
+          finalize(() => (this.cachePremTypes$ = null))
         );
       observable = this.cachePremTypes$;
     }
@@ -691,11 +828,12 @@ export class DropDownsService {
     } else if (this.cacheLimitsPatternDescriptions$) {
       observable = this.cacheLimitsPatternDescriptions$;
     } else {
-      this.cacheLimitsPatternDescriptions$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
+      this.cacheLimitsPatternDescriptions$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/limits-patterns')
         .pipe(
-          tap(res => this.cacheLimitsPatternDescriptions = res),
+          tap((res) => (this.cacheLimitsPatternDescriptions = res)),
           share(),
-          finalize(() => this.cacheLimitsPatternDescriptions$ = null)
+          finalize(() => (this.cacheLimitsPatternDescriptions$ = null))
         );
       observable = this.cacheLimitsPatternDescriptions$;
     }
@@ -714,11 +852,12 @@ export class DropDownsService {
     } else if (this.cacheAdditonalNamedInsuredsRoles$) {
       observable = this.cacheAdditonalNamedInsuredsRoles$;
     } else {
-      this.cacheAdditonalNamedInsuredsRoles$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ani_role')
+      this.cacheAdditonalNamedInsuredsRoles$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/ani_role')
         .pipe(
-          tap(res => this.cacheAdditonalNamedInsuredsRoles = res),
+          tap((res) => (this.cacheAdditonalNamedInsuredsRoles = res)),
           share(),
-          finalize(() => this.cacheAdditonalNamedInsuredsRoles$ = null)
+          finalize(() => (this.cacheAdditonalNamedInsuredsRoles$ = null))
         );
       observable = this.cacheAdditonalNamedInsuredsRoles$;
     }
@@ -737,16 +876,87 @@ export class DropDownsService {
     } else if (this.cacheSicCodes$) {
       observable = this.cacheSicCodes$;
     } else {
-      this.cacheSicCodes$ = this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes')
+      this.cacheSicCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes')
         .pipe(
-          tap(res => this.cacheSicCodes = res),
+          tap((res) => (this.cacheSicCodes = res)),
           share(),
-          finalize(() => this.cacheSicCodes$ = null)
+          finalize(() => (this.cacheSicCodes$ = null))
         );
       observable = this.cacheSicCodes$;
     }
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Submission Events
+  private cacheSubmissionEvents: Code[] | null = null;
+  private cacheSubmissionEvents$!: Observable<Code[]> | null;
 
+  getSubmissionEvents(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheSubmissionEvents) {
+      observable = of(this.cacheSubmissionEvents);
+    } else if (this.cacheSubmissionEvents$) {
+      observable = this.cacheSubmissionEvents$;
+    } else {
+      this.cacheSubmissionEvents$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/submission-events')
+        .pipe(
+          tap((res) => (this.cacheSubmissionEvents = res)),
+          share(),
+          finalize(() => (this.cacheSubmissionEvents$ = null))
+        );
+      observable = this.cacheSubmissionEvents$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Mark Decline Reasons
+  private cacheMarkDeclineReasons: Code[] | null = null;
+  private cacheMarkDeclineReasons$!: Observable<Code[]> | null;
+
+  getMarkDeclineReasons(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheMarkDeclineReasons) {
+      observable = of(this.cacheMarkDeclineReasons);
+    } else if (this.cacheMarkDeclineReasons$) {
+      observable = this.cacheMarkDeclineReasons$;
+    } else {
+      this.cacheMarkDeclineReasons$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-decline-reasons')
+        .pipe(
+          tap((res) => (this.cacheMarkDeclineReasons = res)),
+          share(),
+          finalize(() => (this.cacheMarkDeclineReasons$ = null))
+        );
+      observable = this.cacheMarkDeclineReasons$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Reactivate Reasons
+  private cacheReactivateReasons: Code[] | null = null;
+  private cacheReactivateReasons$!: Observable<Code[]> | null;
+
+  getReactivateReasons(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheReactivateReasons) {
+      observable = of(this.cacheReactivateReasons);
+    } else if (this.cacheReactivateReasons$) {
+      observable = this.cacheReactivateReasons$;
+    } else {
+      this.cacheReactivateReasons$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/reactivate-reasons')
+        .pipe(
+          tap((res) => (this.cacheReactivateReasons = res)),
+          share(),
+          finalize(() => (this.cacheReactivateReasons$ = null))
+        );
+      observable = this.cacheReactivateReasons$;
+    }
+    return observable;
+  }
 }

@@ -1,29 +1,24 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { AuthService } from '../../authorization/auth.service';
 import { UserAuth } from '../../authorization/user-auth';
 import { faUser, faPowerOff, faKey, faIdBadge, faUserLock, faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { PolicyHistoryService } from '../../services/policy-history/policy-history.service';
+import { HistoryService } from '../../services/policy-history/policy-history.service';
 import { ConfirmationDialogService } from '../../services/confirmation-dialog/confirmation-dialog.service';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { ConfigService } from '../../services/config/config.service';
-import { APIVersionService } from '../../services/API-version-service/api-version.service';
+import { APIVersionService } from '../../services/api-version-service/api-version.service';
+import { HeaderPaddingService } from '../../services/header-padding-service/header-padding.service';
 
 @Component({
   selector: 'rsps-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
-  userName: string = "";
-  environment: string = "";
-  modalHeader: string = "";
-  modalBody: string = "";
-  oktaToken: string | undefined;
-  apiToken: string | undefined;
-  modalToken: string | undefined;
+export class UserComponent {
+  userName = '';
+  environment = '';
   faUser = faUser;
   faPowerOff = faPowerOff;
   faKey = faKey;
@@ -32,34 +27,37 @@ export class UserComponent implements OnInit {
   faPlus = faPlus;
   faMinus = faMinus;
   faTrash = faTrash;
-  isAuthenticated: boolean = false;
-  role: string = "";
+  isAuthenticated = false;
+  role = '';
   authSub: Subscription;
   historySub: Subscription;
-  isReadOnly: boolean = false;
-  historySize: number = 1;
+  isReadOnly = false;
+  historySize = 1;
   editPol: Subscription;
   editSub: Subscription;
   editIns: Subscription;
-  canEditInsured: boolean = false;
-  canEditSubmission: boolean = false;
-  canEditPolicy: boolean = false;
+  canEditInsured = false;
+  canEditSubmission = false;
+  canEditPolicy = false;
   apiOptions: string[] = ['1.0', '2.0'];
-  activeAPIVersion: string = '1.0';
-  apiSwitchActive: boolean = false;
+  activeAPIVersion = '1.0';
+  apiSwitchActive = false;
+  @ViewChild('userSettings') userElement!: ElementRef;
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService, private apiService: APIVersionService, private authService: AuthService, private modalService: NgbModal, private policyHistoryService: PolicyHistoryService, private confirmationDialogService: ConfirmationDialogService) {
+
+  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService,
+  private apiService: APIVersionService, private authService: AuthService, private historyService: HistoryService,
+  private confirmationDialogService: ConfirmationDialogService, public headerPaddingService: HeaderPaddingService, public elementRef:ElementRef) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
-        this.isAuthenticated = isAuthenticated
+        this.isAuthenticated = isAuthenticated;
         if (isAuthenticated) {
           const userClaims = await this.oktaAuth.getUser();
-          this.userName = userClaims.preferred_username ?? "";
-          this.oktaToken = this.oktaAuth.getAccessToken();
-          this.apiToken = userAuth.ApiBearerToken;
+          this.userName = userClaims.preferred_username ?? '';
           this.role = userAuth.userRole;
-          this.isReadOnly = this.role == "ReadOnly";
+          this.isReadOnly = this.role == 'ReadOnly';
           this.environment = userAuth.environment;
+          setTimeout(() => this.headerPaddingService.userFieldWidth = this.userElement.nativeElement.offsetWidth, 0);
         }
       }
     );
@@ -72,7 +70,7 @@ export class UserComponent implements OnInit {
     this.editIns = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
-    this.historySub = this.policyHistoryService.policyhistorySize$.subscribe(
+    this.historySub = this.historyService.policyhistorySize$.subscribe(
       (size: number) => {
         this.historySize = size;
       }
@@ -80,9 +78,6 @@ export class UserComponent implements OnInit {
     this.activeAPIVersion = this.apiService.getApiVersion;
     this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
-
-  async ngOnInit(): Promise<void> { }
-
   ngOnDestroy() {
     this.authSub.unsubscribe();
     this.historySub.unsubscribe();
@@ -92,42 +87,26 @@ export class UserComponent implements OnInit {
     this.authService.logout();
   }
 
-  openOktaModal(content: any) {
-    this.modalHeader = "Okta Token";
-    this.modalBody = this.oktaToken ?? "";
-    this.triggerModal(content);
-  }
-
-  openApiModal(content: any) {
-    this.modalHeader = "Api Token";
-    this.modalBody = this.apiToken ?? "";
-    this.triggerModal(content);
-  }
-
-  triggerModal(content: any) {
-    this.modalService.open(content, { scrollable: true, size: 'xl', ariaLabelledBy: 'modal-basic-title' });
-  }
-
   addHistoryCount() {
     if (this.historySize < 20) {
       this.historySize++;
-      this.policyHistoryService.policyhistorySize = this.historySize;
+      this.historyService.policyhistorySize = this.historySize;
     }
   }
 
   removeHistoryCount() {
     if (this.historySize > 1) {
       this.historySize--;
-      this.policyHistoryService.policyhistorySize = this.historySize;
+      this.historyService.policyhistorySize = this.historySize;
     }
   }
   changeApiVersion(){
     this.apiService.setApiVersion = this.activeAPIVersion;
   }
   async clearHistory() {
-    const confirm = await this.confirmationDialogService.open("Confirmation", "Are you sure you want to clear all Policies in your history? Have to refresh to get changes.");
+    const confirm = await this.confirmationDialogService.open('Confirmation', 'Are you sure you want to clear all Policies in your history? Have to refresh to get changes.');
     if (confirm) {
-      this.policyHistoryService.clearHistory();
+      this.historyService.clearHistory();
     }
   }
 }

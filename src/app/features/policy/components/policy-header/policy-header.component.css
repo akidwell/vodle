@@ -3,51 +3,62 @@
   color: white;
   font-family: "Arial", "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
     sans-serif;
-  position: sticky;
-  z-index: 1;
+  position: absolute;
+  height: 100%;
+  z-index: 2;
   width: 100%;
-  top: 48px;
-  height: fit-content;
   padding: 0.25%;
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
-
+.header-title {
+  font-size: 0.9rem;
+}
+.header-field {
+  font-size: 1.1rem;
+  float: left;
+  margin-left: 1rem;
+}
 /* Overwrite margin size */
 .row {
   margin: 0;
+  margin-top: 7px;
 }
-
+.header-row {
+  white-space: nowrap;
+}
 .insured {
-  width: 34%;
+  min-width: 25%;
+  width:auto;
+  max-width: 50%;
 }
-
-.policyNumber {
+.header-field-container{
+  width:auto;
+  display: inline-block;
   white-space: nowrap;
   overflow: hidden;
-  width: 12%;
+  text-overflow: ellipsis;
 }
+.policyNumber {
 
-.endorsement {
-  width: 6%;
+  max-width: 25%;
+  min-width: 10%;
+
 }
 
 .effectiveDate {
-  width: 10%;
-  overflow: hidden;
-}
-
-.expirationDate {
-  width: 10%;
-  overflow: hidden;
+  max-width:25%;
+  min-width: 10%;
 }
 
 .extensionDate {
-  width: 10%;
-  overflow: hidden;
+  min-width: 0;
+  max-width: 17.5%;
+
 }
 
 .status {
-  width: 18%;
+  max-width: 20%;
+  min-width: 0;
 }
 
 h6{

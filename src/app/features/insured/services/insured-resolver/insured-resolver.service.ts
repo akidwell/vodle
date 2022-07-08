@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
-import { newInsured } from '../../models/insured';
+import { InsuredClass } from '../../classes/insured-class';
+import { newInsuredFromPacer } from '../../models/insured';
 import { InsuredResolved } from '../../models/insured-resolved';
 import { InsuredService } from '../insured-service/insured.service';
 
@@ -14,8 +15,12 @@ export class InsuredResolver implements Resolve<InsuredResolved> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InsuredResolved> {
     const id = route.paramMap.get('id') ?? '';
+    const pacerInsured = this.router.getCurrentNavigation()?.extras?.state?.pacerInsured;
+    if (pacerInsured != null){
+      return of({ insured: new InsuredClass(newInsuredFromPacer(pacerInsured))});
+    }
     if (id == '') {
-      return of({ insured: newInsured() });
+      return of({ insured: new InsuredClass()});
     }
     if (isNaN(+id)) {
       const message = `Insured id was not a number: ${id}`;

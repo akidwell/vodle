@@ -16,20 +16,20 @@ import { PolicyService } from '../../services/policy/policy.service';
 })
 export class AdditionalNamedInsuredsComponent implements OnInit {
   authSub: Subscription;
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   aniRoles$: Observable<Code[]> | undefined;
-  collapsed: boolean = true;
+  collapsed = true;
   deleteSub!: Subscription;
   addSub!: Subscription;
   updateSub!: Subscription;
   saveSub!: Subscription;
   aniCollapsed = false;
-  isReadOnly: boolean = true;
+  isReadOnly = true;
   ani!: AdditionalNamedInsureds[];
-  nameRoleArray: string[] = new Array;
-  nameRoleDuplicates: string[] = new Array;
-  isNameRoleValid: boolean = true;
-  canEditEndorsement: boolean = false;
+  nameRoleArray: string[] = [];
+  nameRoleDuplicates: string[] = [];
+  isNameRoleValid = true;
+  canEditEndorsement = false;
 
   @Input() index!: number;
   @Input() aniData!: AdditionalNamedInsureds;
@@ -64,17 +64,17 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();
   }
-  
+
   copyAni(): void {
     this.copyExistingAni.emit(this.aniData);
   }
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open("Delete Confirmation","Are you sure you want to delete this Additional Named Insured?").then((result: boolean) => {
-        if (result) {
-          this.deleteAni();
-        }
-      });
+    this.confirmationDialogService.open('Delete Confirmation','Are you sure you want to delete this Additional Named Insured?').then((result: boolean) => {
+      if (result) {
+        this.deleteAni();
+      }
+    });
   }
 
   async deleteAni() {
@@ -105,7 +105,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
           resolve(result);
         });
       }
-    })
+    });
   }
 
   checkDuplicateNameRoleCombo(): void {

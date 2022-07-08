@@ -10,7 +10,7 @@ describe('ErrorDialogComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ MessageDialogComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

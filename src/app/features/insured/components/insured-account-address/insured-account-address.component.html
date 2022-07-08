@@ -3,88 +3,109 @@
     <div class="row">
       <div class="col-lg-12">
         <label for="namedInsured" class="form-label" title="First Named Insured">First Named Insured</label>
-        <input type="text" class="form-control" id="namedInsured" maxlength="40" [readonly]="!canEditInsured"
-          [required]="canEditInsured" [(ngModel)]="insured.name" name="namedInsured" #namedInsured="ngModel">
+        <input type="text" class="form-control" id="namedInsured" maxlength="40"
+          [readonly]="!canEditInsured || insured.nameReadonly" [required]="canEditInsured && insured.nameRequired"
+          [(ngModel)]="insured.name" name="namedInsured" #namedInsured="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="street1" class="form-label" title="Street Address">Street Address</label>
-        <input type="text" class="form-control" id="street1" maxlength="40" [readonly]="!canEditAddress"
-          [required]="canEditInsured" name="street1" [(ngModel)]="insured.street1" #street1="ngModel"
-          (ngModelChange)="changeStreet1()">
+        <input type="text" class="form-control" id="street1" maxlength="40"
+          [readonly]="!canEditInsured || insured.street1Readonly" [required]="canEditInsured && insured.street1Required"
+          name="street1" [(ngModel)]="insured.street1" #street1="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-12">
         <label for="street2" class="form-label" title="Apt/Suit/Floor">Apt/Suit/Floor</label>
-        <input type="text" class="form-control" id="street2" nullValue maxlength="40" [readonly]="!canEditAddress" name="street2"
-          [(ngModel)]="insured.street2" #street2="ngModel" (ngModelChange)="changeStreet2()">
+        <input type="text" class="form-control" id="street2" nullValue maxlength="40"
+          [readonly]="!canEditInsured || insured.street2Readonly" [required]="canEditInsured && insured.street2Required"
+          name="street2" [(ngModel)]="insured.street2" #street2="ngModel">
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
-      <div class="col-lg-12">
-        <label for="city" class="form-label" title="City">City</label>
-        <div class="inputspinner">
-          <input type="text" class="form-control" id="city" [readonly]="!canEditAddress" maxlength="40"
-            [required]="canEditInsured" name="city" [(ngModel)]="insured.city" #city="ngModel" [ngClass]="cityUpdated"
-            (ngModelChange)="changeCity()">
-          <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-6">
-        <label for="state" class="form-label" title="State">State</label>
-        <div class="inputspinner">
-          <ng-select id="state" [items]="states$ | async" bindLabel="description" bindValue="code" [clearable]="false"
-            [readonly]="!canEditAddress" [required]="canEditInsured" name="state" [(ngModel)]="insured.state"
-            #state="ngModel" [ngClass]="stateUpdated" (ngModelChange)="changeState()">   
-          </ng-select>
-          <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-        </div>
-      </div>
       <div class="col-lg-6">
         <label for="zip" class="form-label" title="ZipCode">Zipcode</label>
         <div class="inputspinner">
-          <input type="text" class="form-control" id="zip" [readonly]="!canEditAddress"
-            [required]="canEditInsured" name="zip" [(ngModel)]="insured.zip" #zip="ngModel" mask="00000||00000-0000"
+          <input type="text" zip-code class="form-control" id="zip" [readonly]="!canEditInsured || insured.zipReadonly"
+            [required]="canEditInsured && insured.zipRequired" name="zip" [(ngModel)]="insured.zip" #zip="ngModel"
             [ngClass]="zipUpdated" (ngModelChange)="changeZip()">
-          <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+          <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
+          </div>
         </div>
       </div>
     </div>
+    <div class="empty-row"></div>
+    <div class="row">
+      <div class="col-lg-6">
+        <label for="city" class="form-label" title="City">City</label>
+        <div class="inputspinner">
+          <input type="text" class="form-control" id="city" [readonly]="!canEditInsured || insured.cityReadonly"
+            maxlength="40" [required]="canEditInsured  && insured.cityRequired" name="city" [(ngModel)]="insured.city"
+            #city="ngModel" [ngClass]="cityUpdated">
+          <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <label for="state" class="form-label" title="State">State</label>
+        <div class="inputspinner">
+          <ng-select id="state" [items]="states$ | async" bindLabel="name" bindValue="code" [clearable]="false"
+            [readonly]="!canEditInsured || insured.stateReadonly" [required]="canEditInsured && insured.stateRequired"
+            name="state" [(ngModel)]="insured.state" #state="ngModel" [ngClass]="stateUpdated" (change)="changeState($event)">
+          </ng-select>
+          <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-6">
         <label for="county" class="form-label" title="County">County</label>
         <div class="inputspinner">
-          <input type="text" class="form-control" id="county" nullValue maxlength="100" [readonly]="!canEditAddress" name="county"
-            [(ngModel)]="insured.county" #county="ngModel" [ngClass]="countyUpdated" (ngModelChange)="changeCounty()">
-          <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+          <input type="text" class="form-control" id="county" nullValue maxlength="100"
+            [readonly]="!canEditInsured || insured.countyReadonly" [required]="canEditInsured && insured.countyRequired"
+            name="county" [(ngModel)]="insured.county" #county="ngModel" [ngClass]="countyUpdated">
+          <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
+          </div>
         </div>
       </div>
       <div class="col-lg-6">
         <label for="country" class="form-label" title="Country">Country</label>
         <div class="inputspinner">
-        <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
-          [readonly]="!canEditAddress" [required]="canEditInsured" name="country" [(ngModel)]="insured.country"
-          #state="ngModel" [ngClass]="countryUpdated" (ngModelChange)="changeCountry()">
-        </ng-select>
-        <div *ngIf="zipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-      </div>
+          <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
+            [readonly]="!canEditInsured || insured.countryReadonly"
+            [required]="canEditInsured && insured.countryRequired" name="country" [(ngModel)]="insured.country"
+            #state="ngModel" [ngClass]="countryUpdated" (ngModelChange)="changeCountry()">
+          </ng-select>
+          <div *ngIf="insured.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
+          </div>
+        </div>
       </div>
     </div>
+    <div class="empty-row"></div>
     <div class="row">
       <div class="col-lg-2">
         <label for="override" class="form-label" title="Override">Override</label>
         <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.isAddressOverride"
-          name="override" [readonly]="!canEditInsured" (change)="addressOverride()">
+          name="override" [readonly]="!canEditInsured || insured.isAddressOverrideReadonly"
+          [required]="canEditInsured && insured.isAddressOverrideRequired" (change)="addressOverride()">
       </div>
       <div class="col-lg-10">
         <button class="btn btn-md btn-primary" (click)="verify()" name="verify" style="margin-top: 20px;float: left;"
-          *ngIf="canEditInsured" [disabled]="insured.isAddressOverride || isVerifying">Verify</button>
+          *ngIf="canEditInsured" [disabled]="insured.isAddressOverride || insured.isVerifying">Verify</button>
         <div class="d-flex justify-content-center" style="float:left; margin-top: 25px; margin-left: 5px;"
-          *ngIf="isVerifying">
+          *ngIf="insured.isVerifying">
           <strong>Loading...</strong>
           <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </div>

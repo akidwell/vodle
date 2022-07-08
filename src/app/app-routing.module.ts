@@ -34,13 +34,18 @@ const routes: Routes = [
   {
     path: 'insured', loadChildren: () => import('./features/insured/insured.module').then(m => m.InsuredModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
   },
+  {
+    path: 'quote', loadChildren: () => import('./features/quote/quote.module').then(m => m.QuoteModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
   { path: 'access-denied', component: AccessDeniedComponent },
   { path: 'logged-out', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'enabled'
+  })
   ],
   exports: [RouterModule],
 })

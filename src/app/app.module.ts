@@ -26,6 +26,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PipesModule } from './shared/pipes/pipes.module';
 import { MessageDialogService } from './core/services/message-dialog/message-dialog-service';
 import { NotificationComponent } from './core/components/notification/notification-container.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from 'src/environments/environment';
+import { UpdateService } from './core/services/update/update.service';
+import { StatusModule } from './shared/components/status-bar/status-bar.module';
+import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
+import { PageDataService } from './core/services/page-data-service/page-data-service';
 
 @NgModule({
   declarations: [
@@ -54,14 +60,22 @@ import { NotificationComponent } from './core/components/notification/notificati
     NgbAlertModule,
     FormsModule,
     NgSelectModule,
+    StatusModule,
     BusyModule,
     DirectivesModule,
     NoopAnimationsModule,
-    PipesModule
+    PipesModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerImmediately'
+    })
   ],
   providers: [
     PreInitService,
     MessageDialogService,
+    HeaderPaddingService,
+    PageDataService,
+    UpdateService,
     {
       provide: APP_INITIALIZER,
       multi: true,
@@ -77,7 +91,7 @@ import { NotificationComponent } from './core/components/notification/notificati
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
-    ],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

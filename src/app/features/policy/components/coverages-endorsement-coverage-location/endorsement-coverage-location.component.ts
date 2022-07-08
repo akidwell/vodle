@@ -10,6 +10,9 @@ import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesG
 import { EndorsementCoverageLocationGroupComponent } from '../coverages-endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { PolicyService } from '../../services/policy/policy.service';
 import { EndorsementStatusService } from '../../services/endorsement-status/endorsement-status.service';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
+import { State } from 'src/app/core/models/state';
+import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 
 @Component({
   selector: 'rsps-endorsement-coverage-location',
@@ -23,7 +26,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   authSub: Subscription;
   canEditPolicy = false;
   canDeleteLocation = false;
-  states$: Observable<Code[]> | undefined;
+  states$: Observable<State[]> | undefined;
   showLocationId = false;
   locationSub!: Subscription;
   isDirty = false;
@@ -41,14 +44,14 @@ export class EndorsementCoverageLocationComponent implements OnInit {
   @ViewChild('modal') private modalContent!: TemplateRef<EndorsementCoverageLocationComponent>;
   private modalRef!: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService) {
+  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private userAuth: UserAuth, private policyService: PolicyService, private addressLookupService: AddressLookupService, private endorsementStatusService: EndorsementStatusService, private confirmationDialogService: ConfirmationDialogService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
     );
   }
 
   ngOnInit(): void {
-    this.states$ = this.dropdowns.getStates();
+    this.states$ = this.dropdowns.getStates(null);
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
         this.canEditEndorsement = canEdit;
@@ -111,12 +114,14 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.city = '';
       this.location.state = '';
       this.location.county = '';
+      this.location.countryCode = '';
       this.addressSub = this.addressLookupService.getAddress(this.location.zip).subscribe({
         next: address => {
           if (address != null) {
             this.location.city = address?.city;
             this.location.state = address?.state;
             this.location.county = address?.county[0];
+            this.location.countryCode = address?.country;
             this.counties = [];
             for (const county of address.county) {
               this.counties = this.counties.concat(county);
@@ -126,6 +131,16 @@ export class EndorsementCoverageLocationComponent implements OnInit {
         }
       });
     }
+  }
+
+  changeState(state: State) {
+    this.location.countryCode = state.countryCode;
+  }
+
+  // Only show error if valid zip
+  get isZipCodeFormatValid(): boolean {
+    const country = this.dropdowns.getCountryByState(this.location.state);
+    return !this.locationForm.controls['zipCode']?.valid || this.location.state == null|| this.isLoadingAddress || (this.locationForm.controls['zipCode']?.valid && ZipCodeCountry(this.location.zip) == country);
   }
 
   async save(): Promise<void> {
@@ -154,6 +169,7 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       this.location.zip = this.originallocation.zip;
       this.location.state = this.originallocation.state;
       this.location.county = this.originallocation.county;
+      this.location.countryCode = this.originallocation.countryCode;
     }
     this.modalRef.close(LocationResult.cancel);
   }
@@ -177,13 +193,11 @@ export class EndorsementCoverageLocationComponent implements OnInit {
       });
   }
 
-  @ViewChild('modalConfirmation') modalConfirmation: any;
-
   openDeleteConfirmation() {
     this.confirmation = 'overlay';
-    this.modalService.open(this.modalConfirmation, { backdrop: 'static', centered: true }).result.then((result) => {
+    this.confirmationDialogService.open('Delete Location Confirmation','Are you sure you want to delete this location and all coverages?').then((result: boolean) => {
       this.confirmation = '';
-      if (result == 'Yes') {
+      if (result) {
         this.delete();
       }
     });

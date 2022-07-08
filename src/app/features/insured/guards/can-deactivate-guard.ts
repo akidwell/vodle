@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { InsuredInformationComponent } from '../components/insured-information/insured-information.component';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<InsuredInformationComponent> {
 
-  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService) { }
+  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService, private pageDataService: PageDataService) { }
 
   canDeactivate(
     component: InsuredInformationComponent,
@@ -20,41 +21,42 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
         return true;
       }
-      if (component.isValid()) {
-        if (component.isDirty()) {
-          if (this.checkLeavePolicy(state.url, nextState.url)) {
-            return this.confirmLeave().then(confirm => {
-              if (confirm) {
-                window.scroll(0, 0);
-                component.hideInvalid();
-              }
-              return confirm;
-            });
+      const insured = this.pageDataService.insuredData || null;
+      if (insured != null) {
+        if (insured && insured.isValid) {
+          if (insured.isDirty) {
+            if (this.checkLeaveInsured(state.url, nextState.url)) {
+              return this.confirmLeave().then(confirm => {
+                if (confirm) {
+                  insured.hideErrorMessage();
+                }
+                return confirm;
+              });
+            }
           }
+          // No error and no longer dirty then hide any errors and navigate to next route
+          insured.hideErrorMessage();
+          return true;
         }
-        // No error and no longer dirty then hide any errors and navigate to next route
-        component.hideInvalid();
-        return true;
+        // Show errors
+        insured.showErrorMessage();
+        window.scroll(0, 0);
+        // Check to see if trying to leave policy
+        if (this.checkLeaveInsured(state.url, nextState.url)) {
+          return this.confirmLeave().then(confirm => {
+            if (confirm) {
+              insured.hideErrorMessage();
+            }
+            return confirm;
+          });
+        }
       }
-      // Show errors
-      component.showInvalidControls();
-      window.scroll(0, 0);
-      // Check to see if trying to leave policy
-      if (this.checkLeavePolicy(state.url, nextState.url)) {
-        return this.confirmLeave().then(confirm => {
-          if (confirm) {
-            component.hideInvalid();
-          }
-          return confirm;
-        });
-      }
-
       return false;
     }
     return true;
   }
 
-  checkLeavePolicy(startUrl: string, endUrl: string): boolean {
+  checkLeaveInsured(startUrl: string, endUrl: string): boolean {
     const startRoute = startUrl.split('/');
     const endRoute = endUrl.split('/');
     // if nagivating outstide policy then open confirm leave dialog
@@ -69,7 +71,11 @@ export class CanDeactivateGuard implements CanDeactivate<InsuredInformationCompo
   }
 
   async confirmLeave(): Promise<boolean> {
-    return await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
+    const option = await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
+    if(option) {
+      this.pageDataService.insuredData?.resetClass();
+      this.pageDataService.insuredData?.markClean();
+    }
+    return option;
   }
-
 }

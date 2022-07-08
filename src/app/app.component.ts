@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
-import { PreviousRouteService } from './features/insured/services/previous-route/previous-route.service';
+import { UpdateService } from './core/services/update/update.service';
+import { PreviousRouteService } from './core/services/previous-route/previous-route.service';
+import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
+import { PageDataService } from './core/services/page-data-service/page-data-service';
+import { LayoutEnum } from './core/enums/layout-enum';
 
 @Component({
   selector: 'rsps-root',
@@ -9,44 +13,57 @@ import { PreviousRouteService } from './features/insured/services/previous-route
 })
 export class AppComponent {
   title = 'RSPS';
-  loading: boolean = false;
-
+  loading = false;
+  widthOffset = LayoutEnum.sidebar_width;
+  buttonBarOffset = LayoutEnum.button_bar_height;
   private previousUrl!: string;
   private currentUrl!: string;
 
-  constructor(private router: Router, private previousRouteService: PreviousRouteService) {
+  constructor(private router: Router, private previousRouteService: PreviousRouteService, private updateService: UpdateService,
+    public headerPaddingService: HeaderPaddingService, public pageDataService: PageDataService) {
+    this.updateService.startTimer();
+    this.updateService.startConfirmation();
+    this.updateService.startLogging();
+    this.updateService.startUnrecoverableStateCheck();
+
+    this.headerPaddingService.sidebarPadding$.subscribe(padding => {
+      this.widthOffset = padding;
+    });
+
     this.router.events.subscribe(event => {
       switch (true) {
-        case event instanceof NavigationStart: {
-          var nav = event as NavigationStart;
-          if (nav.url.startsWith('/policy') && !nav.url.endsWith('/summary')) {
-            this.loading = true;
-          }
-          if (nav.url.startsWith('/insured')) {
-            this.loading = true;
-          }
-          break;
+      case event instanceof NavigationStart: {
+        const nav = event as NavigationStart;
+        if (nav.url.startsWith('/policy') && !nav.url.endsWith('/summary')) {
+          this.loading = true;
         }
-        case event instanceof NavigationEnd: {
-          var navEnd = event as NavigationEnd;
-          this.previousUrl = this.currentUrl;
-          this.currentUrl = navEnd.url;
-          if (this.previousUrl !== undefined && !this.previousUrl?.startsWith('/insured')) {
-            this.previousRouteService.setPreviousUrl(this.previousUrl);
-          }
-          this.loading = false;
-          break;
+        if (nav.url.startsWith('/insured')) {
+          this.loading = true;
         }
-        case event instanceof NavigationCancel:
-        case event instanceof NavigationError: {
-          this.loading = false;
-          break;
-        }
-        default: {
-          break;
-        }
+        break;
       }
-    })
+      case event instanceof NavigationEnd: {
+        const navEnd = event as NavigationEnd;
+        this.previousUrl = this.currentUrl;
+        this.currentUrl = navEnd.url;
+        const previousPath = this.previousUrl?.split('/');
+        const currentPath = this.currentUrl?.split('/');
+        if (this.previousUrl !== undefined && previousPath[1] != currentPath[1]) {
+          this.previousRouteService.setPreviousUrl(this.previousUrl);
+        }
+        this.loading = false;
+        break;
+      }
+      case event instanceof NavigationCancel:
+      case event instanceof NavigationError: {
+        this.loading = false;
+        break;
+      }
+      default: {
+        break;
+      }
+      }
+    });
   }
 
 }

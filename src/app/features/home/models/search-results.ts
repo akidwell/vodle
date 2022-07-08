@@ -2,7 +2,7 @@ export interface SearchResults {
   policySearchResponses: PolicySearchResponses[];
   submissionSearchResponses: SubmissionSearchResponses[];
   insuredSearchResponses: InsuredSearchResponses[];
-  searchType: string;
+  searchType: string | null;
 }
 
 export interface PolicySearchResponses {
@@ -26,11 +26,11 @@ export interface PolicySearchResponses {
     action: string;
     firstPolicyRow : boolean;
     masterPolicy: string;
-    canBackOut:  boolean;
-    isRewrite: boolean;   
+    canBackOut: boolean;
+    isRewrite: boolean;
   }
 
-  export interface SubmissionSearchResponses{
+export interface SubmissionSearchResponses{
     submissionNumber: number;
     quoteNumber: number;
     underwriter: string;
@@ -38,26 +38,42 @@ export interface PolicySearchResponses {
     submissionStatus: string;
     insuredName: string;
     policyNumber: string;
+    policyNo: string;
     effectiveDate: Date;
     expirationDate: Date;
     submissionDate: Date;
-    renewalFlag: boolean;
+    newBusinessOrRenewalFlag: string;
+    isRenewablePolicyFlag: boolean;
     coverageType: string;
     profitCenter: string;
+    cancelDate: Date;
+    status: number;
+    invoiceCount: number;
   }
 
-  export interface InsuredSearchResponses{
+export interface InsuredSearchResponses{
     insuredName: string;
     insuredCode: number;
     name: string;
     insuredCity: string;
     insuredState: string;
+    country: string;
     zip: string;
     formerName: string;
+    formerName2: string;
     streetAddress: string;
+    isPacerResult: boolean;
+    pacerId: string;
+    effectiveDate: Date | null;
+    recievedDate: Date;
+    subStatus: string;
+    policyNumber: string;
+    type: string;
+    producer: string;
+    stateName: string;
   }
 
-  export interface NewEndorsementData {
+export interface NewEndorsementData {
     endorsementNumber: number;
     sourcePolicyId: number;
     destinationPolicyId: number;

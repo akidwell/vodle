@@ -6,12 +6,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule } from 'ngx-mask';
-import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { PolicyComponent } from './components/policy-base/policy.component';
-import { PolicyHeaderComponent } from './components/policy-header/policy-header.component';
 import { EndorsementCoverageLocationGroupComponent } from './components/coverages-endorsement-coverage-location-group/endorsement-coverage-location-group.component';
 import { AccountInformationComponent } from './components/information-account/account-information.component';
 import { PolicyInformationComponent } from './components/information-policy/policy-information.component';
@@ -48,11 +47,13 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { EndorsementStoredValues } from './services/endorsement-stored-values/endorsement-stored-values.service';
 import { ConfirmationDialogService } from '../../core/services/confirmation-dialog/confirmation-dialog.service';
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
+import { AdditionalNamedInsuredModule } from 'src/app/shared/components/additional-named-insured/additional-named-insured.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
     PolicyComponent,
-    PolicyHeaderComponent,
     EndorsementCoverageLocationGroupComponent,
     AccountInformationComponent,
     InformationComponent,
@@ -91,7 +92,10 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    AdditionalNamedInsuredModule,
     PipesModule,
+    DragDropModule,
+    MatSlideToggleModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

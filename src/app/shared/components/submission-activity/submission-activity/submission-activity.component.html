@@ -1,62 +1,69 @@
-  <!--Submission activity panel-->
-
-  <div class="card">
-    <div class="card-header" (click)="collapsed = !collapsed">Submission Activity
-      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
-      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
-    </div>
-    <div #collapse="ngbCollapse"   [(ngbCollapse)]="collapsed">
-      <div  style="overflow-x: scroll">
-        <table class="table table-striped table-bordered"
-          *ngIf="submissionResults && submissionResults.length">
-          <thead id="searchHeader">
-            <tr>
-              <th>Submission No</th>
-              <th>Quote No</th>
-              <th>Sub Date</th>
-              <th>Renewable</th>
-              <th>Sub Status</th>
-              <th>Profit Center</th>
-              <th>Effective Date</th>
-              <th>Expiration Date</th>
-              <th>Policy No</th>
-              <th>Producer Branch</th>
-              <th>Underwriter</th>           
-                <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let submission of submissionResults; let i = index">
-              <ng-container>
-                <td>{{ submission.submissionNumber }}</td>
-                <td>{{ submission.quoteNumber }}</td>
-                <td>{{ submission.submissionDate | date: 'MM/dd/yyyy'}}</td>
-                <td>{{submission.renewalFlag}}</td>
-                <td>{{ submission.submissionStatus}}</td>
-                <td>{{submission.profitCenter}}</td>
-                <td>{{submission.effectiveDate | date: 'MM/dd/yyyy'}}</td>
-                <td>{{submission.expirationDate | date: 'MM/dd/yyyy'}}</td>
-                <td>{{submission.policyNumber}}</td>
-                <td>{{ submission.producerBranch}}</td>
-                <td>{{ submission.underwriter}} </td>
-                <td  class="overflow-hidden" id="actionCell">
-                  <div ngbDropdown container="body" placement="bottom-end" class="d-inline-block">
-                    <button class="btn btn-outline-primary" id="action" ngbDropdownToggle>Actions</button>
-                    <div ngbDropdownMenu container="body" aria-labelledby="action">
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="clone">Clone</button>
-                      <button ngbDropdownItem class="btn btn-outline-primary" value="renew">Renew</button>
-                    </div>
+<div class="card">
+  <div class="card-header" (click)="collapsed = !collapsed">Submission Activity
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div style="overflow-x: scroll">
+      <table class="table table-striped table-bordered" *ngIf="submissionResults && submissionResults.length">
+        <thead>
+          <tr>
+            <th>Submission No</th>
+            <th>Quote No</th>
+            <th>Sub Date</th>
+            <th>N/R</th>
+            <th>Sub Status</th>
+            <th>Profit Center</th>
+            <th>Effective Date</th>
+            <th>Expiration Date</th>
+            <th>Cancel Date</th>
+            <th>Policy No</th>
+            <th>Producer Branch</th>
+            <th>Underwriter</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let submission of submissionResults; let i = index">
+            <ng-container>
+              <td><a [routerLink]="[]" (click)="routeToSubmission(submission.submissionNumber)">
+              <td>{{ submission.submissionNumber }}</td></a></td>
+              <td>{{ submission.quoteNumber }}</td>
+              <td>{{ submission.submissionDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{submission.newBusinessOrRenewalFlag}}</td>
+              <td>{{ submission.submissionStatus}}</td>
+              <td>{{submission.profitCenter}}</td>
+              <td>{{submission.effectiveDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{submission.expirationDate | date: 'MM/dd/yyyy'}}</td>
+              <td>{{submission.cancelDate | date: 'MM/dd/yyyy'}}</td>
+              <td><a [routerLink]="[]" (click)="search(submission.policyNo)">
+              <td>{{submission.policyNumber}}</td></a></td>
+              <td>{{ submission.producerBranch}}</td>
+              <td>{{ submission.underwriter}} </td>
+              <td class="overflow-hidden" id="actionCell">
+                <div ngbDropdown container="body" placement="bottom-end" class="d-inline-block">
+                  <button class="btn btn-outline-primary" id="action" ngbDropdownToggle>Actions</button>
+                  <div ngbDropdownMenu container="body" aria-labelledby="action">
+                    <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canClone(submission)"
+                      value="clone">Clone</button>
+                    <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canRenew(submission)"
+                      value="renew">Renew</button>
+                    <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canMarkDeadDecline(submission)"
+                      value="dead" (click)="markDeadDecline(submission)">Mark Dead/Decline</button>
+                    <button ngbDropdownItem class="btn btn-outline-primary" *ngIf="canReactivate(submission)"
+                      value="reactivate" (click)="markReactivate(submission)">Reactivate</button>
                   </div>
-                </td>
-              </ng-container>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="card-footer">
-      <div id="searchFooter">
-        <div style="float:left;"><a class="nav-link">Add Submission</a></div>
-        <div style="float:right;">Results:{{submissionResults.length}}</div>
-      </div>
-    </div>
+  </div>
+  <div class="card-footer">
+    <div *ngIf="canEditSubmission && checkIfHomeRoute()">
+      <button class="footer-button" *ngIf="insured" (click)="addNewSubmission()">Add Submission</button></div>
+    <div class="footer-count">Results:{{submissionResults.length}}</div>
+  </div>
+</div>

@@ -1,5 +1,4 @@
-import { NullVisitor } from "@angular/compiler/src/render3/r3_ast";
-import { BooleanLiteral } from "typescript";
+import { AdditionalNamedInsured } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 
 export interface AccountInformation {
   policyId: number;
@@ -105,7 +104,7 @@ export interface Endorsement {
 }
 
 export interface AdditionalNamedInsuredsResolved {
-  additionalNamedInsureds:  AdditionalNamedInsureds[] | null;
+  additionalNamedInsureds: AdditionalNamedInsured[] | null;
   error?: any;
 }
 
@@ -123,7 +122,7 @@ export interface AdditionalNamedInsureds {
 }
 
 export interface EndorsementLocationResolved {
-  endorsementLocation:  EndorsementLocation[] | null;
+  endorsementLocation: EndorsementLocation[] | null;
   error?: any;
 }
 
@@ -137,6 +136,7 @@ export interface EndorsementLocation {
   state : string | null;
   county : string | null;
   zip: string;
+  countryCode: string | null;
   isNew: boolean;
 }
 export const newEndorsementLocation = (): EndorsementLocation => ({
@@ -149,6 +149,7 @@ export const newEndorsementLocation = (): EndorsementLocation => ({
   state: null,
   county: null,
   zip: '',
+  countryCode: null,
   isNew: true
 });
 
@@ -165,7 +166,7 @@ export interface PolicyLayerData {
   transCode: number| null;
   transEffectiveDate: Date| null;
   transExpirationDate: Date| null;
-  isNew: Boolean;
+  isNew: boolean;
   reinsuranceData: ReinsuranceLayerData[];
 }
 
@@ -185,8 +186,8 @@ export const newPolicyLayer = (policyId: number, endorsementNumber: number, poli
     transExpirationDate: null,
     reinsuranceData: [],
     isNew: true
-  }
-}
+  };
+};
 
 export interface ReinsuranceLayerData {
   policyId: number;
@@ -217,11 +218,11 @@ export interface ReinsuranceLayerData {
   isFaculative: boolean | null;
   maxLayerLimit?: number | null;
   attachmentPoint?: number | null;
-  isNew: Boolean;
+  isNew: boolean;
 }
 
 export interface PolicyLayerDataResolved {
-  policyLayer:  PolicyLayerData[] | null;
+  policyLayer: PolicyLayerData[] | null;
   error?: any;
 }
 
@@ -255,8 +256,8 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     isFaculative: false,
     attachmentPoint: undefined,
     isNew: true
-    }
-}
+  };
+};
 
 export interface EndorsementStatusData {
   policyId: number;
@@ -290,15 +291,15 @@ export interface PolicyData {
 
 export const newPolicyData = (): PolicyData => {
   return {
-    policySymbol: "",
-    policyNumber: "",
+    policySymbol: '',
+    policyNumber: '',
     submissionNumber: null,
     policyEffectiveDate: null,
     policyExpirationDate: null,
     endorsementNumber: null,
     premium: null
-  }
-}
+  };
+};
 
 export interface PolicyAddResponse {
   isPolicyCreated: boolean;
@@ -306,8 +307,8 @@ export interface PolicyAddResponse {
 }
 
 export interface EndorsementNumberResponse {
-  endorsementNumber: Number;
-  premium: Number;
-  limit: Number;
+  endorsementNumber: number;
+  premium: number;
+  limit: number;
   transactionType: string
 }

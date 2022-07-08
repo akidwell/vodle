@@ -1,13 +1,11 @@
-import { Component, OnInit, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Router } from "@angular/router";
-import { DecimalPipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { ImportPolicy } from '../../models/import-policy';
 import { ImportResult } from '../../models/import-response';
-import { State } from '../../models/state';
+import { PageState } from '../../models/state';
 import { SearchResult } from '../../models/search-result';
 import { ImportService } from '../../services/import/import.service';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -15,7 +13,7 @@ import { NavigationService } from 'src/app/features/policy/services/navigation/n
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { ImportRequest } from '../../models/import-request';
 
-function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
+function matches(policy: ImportPolicy, term: string) {
   return policy.uwLastName.toLowerCase().includes(term.toLowerCase())
     || policy.policyNumber.toLowerCase().includes(term)
     || policy.submissionNumber.toString().replace(',','').includes(term);
@@ -29,13 +27,13 @@ function matches(policy: ImportPolicy, term: string, pipe: PipeTransform) {
 export class ImportComponent implements OnInit {
   errorMessage = '';
   sub!: Subscription;
-  importPolicies: ImportPolicy[] = []
-  openModal: boolean = false;
+  importPolicies: ImportPolicy[] = [];
+  openModal = false;
   importPolicyResponse!: ImportResult;
   faSearch = faSearch;
-  showBusy: boolean = false;
+  showBusy = false;
   authSub: Subscription;
-  canExecuteImport: boolean = false;
+  canExecuteImport = false;
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
@@ -45,32 +43,32 @@ export class ImportComponent implements OnInit {
   get total$() { return this._total$.asObservable(); }
   get loading$() { return this._loading$.asObservable(); }
   get page() { return this._state.page; }
-  get pageSize() { return this._state.pageSize; }
-  get searchTerm() { return this._state.searchTerm; }
   set page(page: number) { this._set({page}); }
+  get pageSize() { return this._state.pageSize; }
   set pageSize(pageSize: number) { this._set({pageSize}); }
+  get searchTerm() { return this._state.searchTerm; }
   set searchTerm(searchTerm: string) { this._set({searchTerm}); }
 
   // Defaul pagination settings
-  private _state: State = {
+  private _state: PageState = {
     page: 1,
     pageSize: 15,
     searchTerm: ''
   };
 
-  private _set(patch: Partial<State>) {
+  private _set(patch: Partial<PageState>) {
     Object.assign(this._state, patch);
     this._search$.next();
   }
 
   private _search(): Observable<SearchResult> {
     const {pageSize, page, searchTerm} = this._state;
-    
+
     // 1. Populate from source
     let policies = this.importPolicies;
 
     // 2. filter
-    policies = policies.filter(policy => matches(policy, searchTerm.trim().toLowerCase(), this.pipe));
+    policies = policies.filter(policy => matches(policy, searchTerm.trim().toLowerCase()));
     const total = policies.length;
 
     // 3. paginate
@@ -78,7 +76,7 @@ export class ImportComponent implements OnInit {
     return of({policies, total});
   }
 
-  constructor(private importService: ImportService, private userAuth: UserAuth, private modalService: NgbModal, private router: Router,private pipe: DecimalPipe, private navigationService: NavigationService, private messageDialogService: MessageDialogService) { 
+  constructor(private importService: ImportService, private userAuth: UserAuth, private router: Router, private navigationService: NavigationService, private messageDialogService: MessageDialogService) {
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       switchMap(() => this._search()),
@@ -98,7 +96,7 @@ export class ImportComponent implements OnInit {
     this.sub = this.importService.getImportPolicies().subscribe({
       next: importPolicies => {
         this.importPolicies = importPolicies;
-        this.searchTerm = "";
+        this.searchTerm = '';
       },
       error: err => this.errorMessage = err
     });
@@ -109,7 +107,7 @@ export class ImportComponent implements OnInit {
     this.authSub.unsubscribe();
   }
 
-  async import(selectedRow: any): Promise<void> {
+  async import(selectedRow: ImportPolicy): Promise<void> {
     const parm: ImportRequest = { submissionNumber: selectedRow.submissionNumber };
     this.showBusy = true;
     this.sub = this.importService.postImportPolicies(parm).subscribe({
@@ -117,10 +115,10 @@ export class ImportComponent implements OnInit {
         this.importPolicyResponse = importPolicyResponse;
         this.routeImport();
       },
-      error: err => { 
-        this.errorMessage = err; 
+      error: err => {
+        this.errorMessage = err;
         this.showBusy = false;
-        this.messageDialogService.open("Import Error", err.error.Message)
+        this.messageDialogService.open('Import Error', err.error.Message);
       }
     });
   }
@@ -128,12 +126,12 @@ export class ImportComponent implements OnInit {
   // Decide to either show errors or if succesful open up the policy
   routeImport() {
     this.showBusy = false;
-    if (this.importPolicyResponse?.isPolicyImported) {  
+    if (this.importPolicyResponse?.isPolicyImported) {
       this.navigationService.resetPolicy();
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {
-      this.messageDialogService.open("Import Error",  this.importPolicyResponse.errorMessage)
+      this.messageDialogService.open('Import Error', this.importPolicyResponse.errorMessage);
     }
   }
 }

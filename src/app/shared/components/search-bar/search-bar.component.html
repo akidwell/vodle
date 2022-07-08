@@ -1,4 +1,4 @@
-<div class="input-group">
+<div class="input-group"  >
   <div class="input-group">
     <div class="input-group-prepend">
       <button class="input-group-text" (click)="search()">
@@ -6,6 +6,5 @@
       </button>
     </div>
     <input style="z-index: 0;"  class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
-      placeholder="Search Policy Number or PolicyId" autofocus (keydown.enter)="search()" />
-  </div>
+      placeholder="Search Insured, Submission, or Policy" autofocus (keydown.enter)="search()" />
 </div>

@@ -50,9 +50,7 @@ export class DirectPolicyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.policySymbols$ = this.dropDownsService.getPolicySymbols();
-
     this.searchSub = this.searchThrottle.pipe(tap(() => this.isSearching = true), debounceTime(500)).subscribe(() => {
       this.submissionLookup();
     });
@@ -75,7 +73,6 @@ export class DirectPolicyComponent implements OnInit {
       this.modalRef.result.then(resolve, resolve);
     });
   }
-
 
   async openRewrite(policy: PolicySearchResponses): Promise<boolean> {
     return new Promise<boolean>(resolve => {
@@ -202,7 +199,6 @@ export class DirectPolicyComponent implements OnInit {
   async createRewrite() {
     this.showBusy = true;
     this.modalRef.close();
-    console.log(this.policyData);
     const response$ = this.policyService.addPolicy(this.policyData);
     await lastValueFrom(response$)
       .then((response) => {

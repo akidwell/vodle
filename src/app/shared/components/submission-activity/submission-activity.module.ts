@@ -6,22 +6,32 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
-
-
-
+import { SubmissionStatusComponent } from './submission-status/submission-status.component';
+import { SubmissionStatusService } from './submission-status/submission-status.service';
+import { BusyModule } from 'src/app/core/components/busy/busy.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    SharedSubmissionActivityComponent ],
+    SharedSubmissionActivityComponent,
+    SubmissionStatusComponent
+  ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
     NgSelectModule,
-    FormsModule,
-    DirectivesModule
+    DirectivesModule,
+    BusyModule,
+    RouterModule
   ],
-  exports: [SharedSubmissionActivityComponent]
+  providers: [
+    SubmissionStatusService
+  ],
+  exports: [
+    SharedSubmissionActivityComponent,
+    SubmissionStatusComponent
+  ]
 })
 export class SubmissionActivityModule { }
