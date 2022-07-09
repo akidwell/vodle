@@ -1,0 +1,67 @@
+<form #quoteInfoForm="ngForm">
+  <div class="card first-card">
+    <div class="card-header" (click)="collapse.toggle()">
+      Quote Details
+
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="quoteInfoCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!quoteInfoCollapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="quoteInfoCollapsed">
+      <div class="card-header info-header">
+        <div class="row">
+          <div class="col-lg-2">
+            <div class="row">
+              <div class="col-lg-12">Coverage Type</div>
+            </div>
+          </div>
+          <div class="col-lg-10">
+            <div class="row">
+              <div class="col-lg-3">Date</div>
+              <div class="col-lg-1">Sub No</div>
+              <div class="col-lg-1">Quote No</div>
+              <div class="col-lg-1">Status</div>
+              <div class="col-lg-1">Policy No</div>
+              <div class="col-lg-3">Carrier</div>
+              <div class="col-lg-2">PAC</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="card-body">
+        <div *ngFor="let program of department.programMappings" class="row">
+          <div class="col-lg-2">
+            <div class="row">
+              <div class="col-lg-12">{{program.programDesc}}</div>
+            </div>
+          </div>
+          <div class="col-lg-10" *ngIf="program.quoteData != null">
+            <div class="row">
+              <div class="col-lg-3">{{formatDateForDisplay.formatDateForDisplay(program.quoteData.effectiveDate)}} - {{formatDateForDisplay.formatDateForDisplay(program.quoteData.expirationDate)}}</div>
+              <div class="col-lg-1">{{program.quoteData.submissionNumber}}</div>
+              <div class="col-lg-1">{{program.quoteData.quoteNumber || 1}}</div>
+              <div class="col-lg-1">{{program.quoteData.status}}</div>
+              <div class="col-lg-1">{{program.quoteData.policyNumber || '--'}}</div>
+              <div class="col-lg-3">
+                <ng-select
+                id="submissionType"
+                click-stop-propagation
+                [items]="program.availableCarrierCodes"
+                bindLabel="description"
+                bindValue="code"
+                placeholder=""
+                [clearable]="false"
+                name="submissionType"
+                [(ngModel)]="program.quoteData.carrierCode"
+                #submissionType="ngModel"
+              ></ng-select></div>
+              <div class="col-lg-2">PAC</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+

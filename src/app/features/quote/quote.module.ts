@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 
 import { QuoteRoutingModule } from './quote-routing.module';
 import { QuoteComponent } from './components/quote-base/quote.component';
-import { QuoteInformationComponent } from './components/quote-information/quote-information.component';
+import { QuoteInformationComponent } from './components/quote-information-base/quote-information.component';
 import { CanDeactivateGuard } from '../policy/guards/can-deactivate-guard';
 import { NgxMaskModule } from 'ngx-mask';
 import { QuoteNotFoundComponent } from './components/quote-not-found/quote-not-found.component';
