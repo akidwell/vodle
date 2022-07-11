@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
-import { ProgramCoverageCarrierMapping } from '../models/program-coverage-carrier-mapping';
+import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
+import { ProgramClass } from './program-class';
 
 export class QuoteClass implements Quote {
 
@@ -19,8 +20,9 @@ export class QuoteClass implements Quote {
   policyNumber: string | number = '--';
   carrierCode = '';
   pacCode = '';
+  mappingError = false;
+  submission!: SubmissionClass;
 
-  activeCoverageCarrierMapping!: ProgramCoverageCarrierMapping;
   private _isDirty = false;
   isNew = false;
 
@@ -46,25 +48,38 @@ export class QuoteClass implements Quote {
   private datepipe = new DatePipe('en-US');
 
 
-  constructor(quote?: Quote) {
-    this.init(quote);
+  constructor(quote?: Quote, program?: ProgramClass) {
+    if (quote) {
+      this.existingInit(quote);
+    } else if (program) {
+      this.newInit(program);
+    }
   }
-  init(quote?: Quote) {
-    this.submissionNumber = quote?.submissionNumber || 0;
-    this.quoteId = quote?.quoteId || 0;
-    this.cuspNumber = quote?.cuspNumber || 0;
-    this.sequenceNumber = quote?.sequenceNumber || 0;
-    this.quoteNumber = quote?.quoteNumber || 1;
-    this.claimsMadeOrOccurrence = quote?.claimsMadeOrOccurrence || '';
-    this.admittedStatus = quote?.admittedStatus || '';
-    this.effectiveDate = quote?.effectiveDate || null;
-    this.expirationDate = quote?.expirationDate || null;
-    this.status = quote?.status || 0;
-    this.coverageCode = quote?.coverageCode || 0;
-    this.carrierCode = quote?.carrierCode || '';
-    this.pacCode = quote?.pacCode || '';
+  existingInit(quote: Quote) {
+    this.submissionNumber = quote.submissionNumber || 0;
+    this.quoteId = quote.quoteId || 0;
+    this.cuspNumber = quote.cuspNumber || 0;
+    this.sequenceNumber = quote.sequenceNumber || 0;
+    this.quoteNumber = quote.quoteNumber || 1;
+    this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
+    this.admittedStatus = quote.admittedStatus || '';
+    this.effectiveDate = quote.effectiveDate || null;
+    this.expirationDate = quote.expirationDate || null;
+    this.status = quote.status || 0;
+    this.coverageCode = quote.coverageCode || 0;
+    this.carrierCode = quote.carrierCode || '';
+    this.pacCode = quote.pacCode || '';
+    this.submission = new SubmissionClass(quote.submission);
     this.setReadonlyFields();
     this.setRequiredFields();
+    console.log(this.submission);
+  }
+  newInit(program: ProgramClass) {
+    //if first quote on group attach to existing submission
+    //else duplicate submission and attach to that
+    //quote data will be tied to tblCUSP_Quotes
+    //need to add record to tbl_SubmissionGroupQuotes
+    console.log(program);
   }
   markClean() {
     this._isDirty = false;

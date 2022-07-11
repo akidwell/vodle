@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { Submission } from '../../submission/models/submission';
 
 export interface Quote {
   submissionNumber: number | null;
@@ -15,4 +16,5 @@ export interface Quote {
   coverageCode: number | null;
   carrierCode: string;
   pacCode: string;
+  submission: Submission
 }

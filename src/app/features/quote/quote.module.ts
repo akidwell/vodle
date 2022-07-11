@@ -7,9 +7,7 @@ import { QuoteInformationComponent } from './components/quote-information-base/q
 import { CanDeactivateGuard } from '../policy/guards/can-deactivate-guard';
 import { NgxMaskModule } from 'ngx-mask';
 import { QuoteNotFoundComponent } from './components/quote-not-found/quote-not-found.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -17,14 +15,24 @@ import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { QuoteHeaderComponent } from './components/quote-header/quote-header.component';
-
+import { QuoteInformationDetailComponent } from './components/quote-information-detail/quote-information-detail.component';
+import { QuoteInformationDetailProgramComponent } from './components/quote-information-detail-program/quote-information-detail-program.component';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DATE_FORMATS } from 'src/app/core/constants/date-format';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
+import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 
 @NgModule({
   declarations: [
     QuoteComponent,
     QuoteInformationComponent,
     QuoteNotFoundComponent,
-    QuoteHeaderComponent ],
+    QuoteHeaderComponent,
+    QuoteInformationDetailComponent,
+    QuoteInformationDetailProgramComponent ],
   imports: [
     CommonModule,
     QuoteRoutingModule,
@@ -34,14 +42,23 @@ import { QuoteHeaderComponent } from './components/quote-header/quote-header.com
     NgSelectModule,
     DirectivesModule,
     BusyModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
     PipesModule,
-    DragDropModule,
-    MatSlideToggleModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
     CanDeactivateGuard,
-    DatePipe
+    DatePipe,
+    FormatDateForDisplay,
+    ConfirmationDialogService,
+    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
   ]
 })
 export class QuoteModule { }

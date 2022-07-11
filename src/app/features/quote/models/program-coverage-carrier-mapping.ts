@@ -5,11 +5,11 @@ export interface ProgramCoverageCarrierMapping {
   claimsMadeOrOccurrence: string;
   uwBranchCode: string;
   policySymbol: string;
-  defCarrierCode: number;
-  defPacCode: number;
+  defCarrierCode: string;
+  defPacCode: string;
   defCoverageForm: string;
   defTRIATemplateCode: string;
-  availableCarrierCodes: number[];
+  availableCarrierCodes: string[];
   availablePacCodes: string[];
   availableCoverageForms: string[];
   availableTRIATemplateCodes: string[];
