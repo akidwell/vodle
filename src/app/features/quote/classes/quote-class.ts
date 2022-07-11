@@ -1,5 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Quote } from '../models/quote';
+import { QuoteBuildingClass } from './quote-building-class';
+import { QuoteCoverageClass } from './quote-coverage-class';
+import { QuoteDeductibleClass } from './quote-deductible-class';
+import { QuoteLocationClass } from './quote-location-class';
+import { QuoteMortgageeClass } from './quote-mortgagee-class';
 
 export class QuoteClass implements Quote {
   private _submissionNumber: number | null = null;
@@ -8,18 +13,14 @@ export class QuoteClass implements Quote {
   private _quoteNo: number | null = null;
   private _sequenceNumber: number | null = null;
 
+  quoteBuilding: QuoteBuildingClass[] = [];
+  quoteCoverage: QuoteCoverageClass[] = [];
+  quoteDeductible: QuoteDeductibleClass[] = [];
+  quoteMortgagee: QuoteMortgageeClass[] = [];
+  quoteLocation: QuoteLocationClass[] = [];
 
   private _isDirty = false;
   isNew = false;
-
-  // nameRequired = true;
-  // street1Required = true;
-  // street2Required = false;
-
-  // nameReadonly = false;
-  // isAddressOverrideReadonly = false;
-  // formerName1Readonly = false;
-
   invalidList: string[] = [];
 
   get submissionNumber(): number | null{
@@ -116,7 +117,6 @@ export class QuoteClass implements Quote {
   //   }
   //   return valid;
   // }
-
 
 
   toJSON() {
