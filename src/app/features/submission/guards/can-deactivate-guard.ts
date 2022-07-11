@@ -7,12 +7,12 @@ import {
   Router,
 } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
-import { SubmissionInformationComponent } from '../components/submission-information/submission-information.component';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
+import { SubmissionInfoBaseComponent } from '../components/submission-info-base/submission-info-base.component';
 
 @Injectable()
-export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationComponent> {
+export class CanDeactivateGuard implements CanDeactivate<SubmissionInfoBaseComponent> {
   constructor(
     private router: Router,
     private navigationConfirmationService: NavigationConfirmationService,
@@ -20,12 +20,12 @@ export class CanDeactivateGuard implements CanDeactivate<SubmissionInformationCo
   ) {}
 
   canDeactivate(
-    component: SubmissionInformationComponent,
+    component: SubmissionInfoBaseComponent,
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ): Observable<boolean> | boolean | Promise<boolean> {
-    if (component instanceof SubmissionInformationComponent) {
+    if (component instanceof SubmissionInfoBaseComponent) {
       // Skip checks if bypassFormGuard is set
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
         return true;

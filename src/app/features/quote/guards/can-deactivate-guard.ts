@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
-import { QuoteInformationComponent } from '../components/quote-information/quote-information.component';
+import { QuoteInformationComponent } from '../components/quote-information-base/quote-information.component';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<QuoteInformationComponent> {

@@ -16,24 +16,25 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<QuoteResolved> {
     const sequenceNumber = route.paramMap.get('seq') ?? '';
     if (sequenceNumber == '') {
-      return of({ quote: null});
+      return of({ department: null});
     }
     if (isNaN(+sequenceNumber)) {
       const message = `SequenceNumber  was not a number: ${sequenceNumber}`;
       this.router.navigate(['/quote/quote-not-found'], { state: { error: message } });
-      return of({ quote: null, error: message });
+      return of({ department: null, error: message });
     }
 
     return this.quoteService.getQuotes(Number(sequenceNumber))
       .pipe(
-        tap((quote) => {
+        tap((department) => {
+          console.log(department);
           // Update history for opened Quote
-          this.historyService.updateQuoteHistory(Number(sequenceNumber), quote[0].submissionNumber);
+          //this.historyService.updateQuoteHistory(Number(sequenceNumber), quote[0].submissionNumber);
         }),
-        map(quote => ({ quote })),
+        map(department => ({ department })),
         catchError((error) => {
           this.router.navigate(['/quote/quote-not-found'], { state: { error: error.message } });
-          return of({ quote: null, error: error });
+          return of({ department: null, error: error });
         })
       );
   }

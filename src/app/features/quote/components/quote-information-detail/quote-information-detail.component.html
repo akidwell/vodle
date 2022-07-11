@@ -1,0 +1,62 @@
+<div class="card-header info-header">
+  <div class="row">
+    <div class="col-lg-2">
+      <div class="row">
+        <div class="col-lg-12">Coverage Type</div>
+      </div>
+    </div>
+    <div class="col-lg-10">
+      <div class="row">
+        <div class="col-lg-2">Eff Date</div>
+        <div class="col-lg-2">Exp Date</div>
+        <div class="col-lg-1">Sub No</div>
+        <div class="col-lg-1">Quote No</div>
+        <div class="col-lg-1">Status</div>
+        <div class="col-lg-1">Policy No</div>
+        <div class="col-lg-3">Carrier</div>
+        <div class="col-lg-1">PAC</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="card-body">
+  <div *ngFor="let program of department.programMappings">
+    <rsps-quote-information-detail-program [program]="program"></rsps-quote-information-detail-program>
+  </div>
+  <div class="row top-bordered">
+    <div class="col-lg-6">
+      <ng-select
+            id="admittedStatus"
+            click-stop-propagation
+            [items]="availableAdmittedOptions"
+            bindLabel="description"
+            bindValue="code"
+            placeholder=""
+            [readonly]="!canEditSubmission"
+            [clearable]="false"
+            name="admittedStatus"
+            [(ngModel)]="department.activeAdmittedStatus"
+            #admittedStatus="ngModel"
+            (change)="updateGlobalSettings()"
+          ></ng-select>
+    </div>
+    <div class="col-lg-6">
+      <ng-select
+            id="claimsMadeOccurrenceStatus"
+            click-stop-propagation
+            [items]="availableClaimsMadeOccurrenceOptions"
+            bindLabel="description"
+            bindValue="code"
+            placeholder=""
+            [readonly]="!canEditSubmission"
+            [clearable]="false"
+            name="claimsMadeOccurrenceStatus"
+            [(ngModel)]="department.activeClaimsMadeOrOccurrence"
+            (change)="updateGlobalSettings()"
+            #claimsMadeOccurrenceStatus="ngModel"
+          ></ng-select>
+    </div>
+  </div>
+
+</div>

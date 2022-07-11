@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
-import { QuoteClass } from '../../classes/quote-class';
+import { DepartmentClass } from '../../classes/department-class';
 
 
 @Component({
@@ -16,9 +17,9 @@ import { QuoteClass } from '../../classes/quote-class';
 })
 
 export class QuoteInformationComponent implements OnInit {
-  quote: QuoteClass[] = [];
+  department!: DepartmentClass;
   submissionCollapsed = false;
-  seCollapsed = false;
+  quoteInfoCollapsed = false;
   formatDateForDisplay!: FormatDateForDisplay;
   prevSub!: Subscription;
   previousUrl = '';
@@ -28,8 +29,12 @@ export class QuoteInformationComponent implements OnInit {
   canEditSubmission = false;
   showInvalid = false;
   invalidMessage = '';
+  faAngleDown = faAngleDown;
+  faAngleUp = faAngleUp;
 
-  constructor(private route: ActivatedRoute, private router: Router, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService, private previousRouteService: PreviousRouteService) {
+  constructor(private route: ActivatedRoute, private router: Router, private formatDateService: FormatDateForDisplay,
+    private userAuth: UserAuth, private messageDialogService: MessageDialogService,
+    private notification: NotificationService, private previousRouteService: PreviousRouteService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
@@ -38,13 +43,14 @@ export class QuoteInformationComponent implements OnInit {
       this.previousUrl = previousUrl;
       this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
     });
+    this.formatDateForDisplay = formatDateService;
   }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
-      this.quote = data['quoteData'].quote;
+      this.department = data['quoteData'].department;
     });
-    console.log(this.quote);
+    console.log(this.department);
   }
 
 

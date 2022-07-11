@@ -1,26 +1,3 @@
-  <!-- <div id="saveHeader">
-    <button
-      class="btn btn-md btn-primary"
-      *ngIf="canEditSubmission"
-      style="margin: 5px"
-      [disabled]="!isDirty() || !isValid()"
-      appPreventDoubleClick
-      (throttledClick)="save()"
-      [throttleTime]="700"
-    >
-      Save
-    </button>
-    <button
-      class="btn btn-md btn-primary"
-      *ngIf="canEditSubmission && this.previousUrl !== ''"
-      style="margin: 5px"
-      appPreventDoubleClick
-      (throttledClick)="prev()"
-      [throttleTime]="700"
-    >
-      {{ previousLabel }}
-    </button>
-  </div> -->
   <ngb-alert *ngIf="submission.showErrors" type="danger" [innerHTML]="submission.errorMessage"></ngb-alert>
   <ngb-alert *ngIf="
     submission.warningsList.length > 0 &&
@@ -31,9 +8,9 @@
   <form #submissionInfoForm="ngForm">
     <div class="card first-card">
       <div class="card-header" (click)="collapse.toggle()">
-        Submission Information <span *ngIf="submission.submissionNumber > 0"> -{{ submission.submissionNumber }} </span>
-          <span *ngIf="submission.submissionNumber > 0"> -<a [routerLink]="[]"
-            (click)="routeToNewQuote()" style="pointer-events: none">Add New Quote</a> </span>
+        Submission Information <span *ngIf="submission.submissionNumber > 0"> - {{ submission.submissionNumber }}</span>
+          <span *ngIf="submission.submissionNumber > 0"><span *ngIf="quoteDescription"> - {{quoteDescription}}</span><span *ngIf="submission.quoteActivity.length == 0"> - <a
+            (click)="routeToNewQuote()" style="pointer-events: none">Add New Quote</a></span> </span>
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="submissionCollapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!submissionCollapsed"></fa-icon>
       </div>
@@ -52,7 +29,7 @@
             <div class="row">
               <div *ngIf="submission.insured != null" class="col-lg-4">
                 <div class="col-lg-12">
-                  <a [routerLink]="[]" (click)="
+                  <a (click)="
                       submission.insured.insuredCode != null
                         ? routeToInsured(submission.insured.insuredCode)
                         : null
@@ -138,88 +115,6 @@
         </div>
       </div>
     </div>
-
-    <div *ngIf="submission.quoteActivity" class="card">
-      <div class="card-header" (click)="collapse.toggle()">
-        Quote Activity
-        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="qaCollapsed"></fa-icon>
-        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!qaCollapsed"></fa-icon>
-      </div>
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="qaCollapsed">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Quote Id</th>
-              <th>Quote No</th>
-              <th>Coverage Type</th>
-              <th>Quote Status</th>
-              <th>Quote Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let quoteActivity of submission.quoteActivity let i = index">
-              <tr [ngClass]="{'white': quoteActivity.rowcolor == 'white', 'gray': quoteActivity.rowcolor == 'gray'}">
-                <td><a [routerLink]="[]" *ngIf="quoteActivity.firstRow" 
-                  (click)="routeToQuote(quoteActivity.sequenceNumber)">Select</a></td>
-                <td >{{ quoteActivity.quoteId }}</td>
-                <td>{{ quoteActivity.quoteNo }}</td>
-                <td>
-                  {{quoteActivity.coverageType}}
-                </td>
-                <td>
-                   {{quoteActivity.quoteStatus}}
-                </td>
-                <td >
-                  {{ formatDateForDisplay.formatDateTimeForDisplay(quoteActivity.quoteDate) }}
-                </td>
-                <td></td>
-              </tr>
-              </ng-container>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-
-    <div *ngIf="submission.submissionEvents" class="card">
-      <div class="card-header" (click)="collapse.toggle()">
-        Event History
-        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="seCollapsed"></fa-icon>
-        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!seCollapsed"></fa-icon>
-      </div>
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="seCollapsed">
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Event Description</th>
-              <th>Reason</th>
-              <th>Remarks</th>
-              <th>Event Date</th>
-              <th>Created By</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let subEvent of submission.submissionEvents; let i = index">
-              <ng-container>
-                <td>{{ subEvent.eventDescription }}</td>
-                <td>{{ subEvent.reasonDescription }}</td>
-                <td>{{ subEvent.remarks }}</td>
-                <td>
-                  {{
-                  formatDateForDisplay.formatDateTimeForDisplay(subEvent.eventDate)
-                }}
-                </td>
-                <td>{{ subEvent.createdByUserName || "--" }}</td>
-              </ng-container>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-
   </form>
 
   <div *ngIf="showBusy">

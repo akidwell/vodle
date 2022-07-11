@@ -1,0 +1,80 @@
+<rsps-submission-information [overrideSubmission]="submission"></rsps-submission-information>
+<div *ngIf="submission.quoteActivity" class="card">
+  <div class="card-header" (click)="collapse.toggle()">
+    Quote Activity
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="qaCollapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!qaCollapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="qaCollapsed">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Quote Id</th>
+          <th>Quote No</th>
+          <th>Coverage Type</th>
+          <th>Quote Status</th>
+          <th>Quote Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let quoteActivity of submission.quoteActivity let i = index">
+          <tr [ngClass]="{'white': quoteActivity.rowcolor == 'white', 'gray': quoteActivity.rowcolor == 'gray'}">
+            <td><a *ngIf="quoteActivity.firstRow"
+              (click)="routeToQuote(quoteActivity.sequenceNumber)">Select</a></td>
+            <td >{{ quoteActivity.quoteId }}</td>
+            <td>{{ quoteActivity.quoteNo }}</td>
+            <td>
+              {{quoteActivity.coverageType}}
+            </td>
+            <td>
+               {{quoteActivity.quoteStatus}}
+            </td>
+            <td >
+              {{ formatDateForDisplay.formatDateTimeForDisplay(quoteActivity.quoteDate) }}
+            </td>
+            <td></td>
+          </tr>
+          </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div *ngIf="submission.submissionEvents" class="card">
+  <div class="card-header" (click)="collapse.toggle()">
+    Event History
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="seCollapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!seCollapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="seCollapsed">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Event Description</th>
+          <th>Reason</th>
+          <th>Remarks</th>
+          <th>Event Date</th>
+          <th>Created By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subEvent of submission.submissionEvents; let i = index">
+          <ng-container>
+            <td>{{ subEvent.eventDescription }}</td>
+            <td>{{ subEvent.reasonDescription }}</td>
+            <td>{{ subEvent.remarks }}</td>
+            <td>
+              {{
+              formatDateForDisplay.formatDateTimeForDisplay(subEvent.eventDate)
+            }}
+            </td>
+            <td>{{ subEvent.createdByUserName || "--" }}</td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,5 +1,8 @@
 import { DatePipe } from '@angular/common';
+import { Moment } from 'moment';
+import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
+import { ProgramClass } from './program-class';
 import { QuoteBuildingClass } from './quote-building-class';
 import { QuoteCoverageClass } from './quote-coverage-class';
 import { QuoteDeductibleClass } from './quote-deductible-class';
@@ -7,12 +10,23 @@ import { QuoteLocationClass } from './quote-location-class';
 import { QuoteMortgageeClass } from './quote-mortgagee-class';
 
 export class QuoteClass implements Quote {
-  private _submissionNumber: number | null = null;
-  private _quoteId: number | null = null;
-  private _cuspNumber: number | null = null;
-  private _quoteNo: number | null = null;
-  private _sequenceNumber: number | null = null;
 
+  submissionNumber = 0;
+  quoteId = 0;
+  cuspNumber = 0;
+  quoteNumber = 0;
+  sequenceNumber = 0;
+  effectiveDate: Date | Moment | null = null;
+  expirationDate: Date | Moment | null = null;
+  status = 0;
+  coverageCode = 0;
+  claimsMadeOrOccurrence = '';
+  admittedStatus = '';
+  policyNumber: string | number = '--';
+  carrierCode = '';
+  pacCode = '';
+  mappingError = false;
+  submission!: SubmissionClass;
   quoteBuilding: QuoteBuildingClass[] = [];
   quoteCoverage: QuoteCoverageClass[] = [];
   quoteDeductible: QuoteDeductibleClass[] = [];
@@ -22,49 +36,6 @@ export class QuoteClass implements Quote {
   private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
-
-  get submissionNumber(): number | null{
-    return this._submissionNumber;
-  }
-  set submissionNumber(value: number | null) {
-    this._submissionNumber = value;
-    this._isDirty = true;
-  }
-
-  get sequenceNumber(): number | null{
-    return this._sequenceNumber;
-  }
-  set sequenceNumber(value: number | null) {
-    this._sequenceNumber = value;
-    this._isDirty = true;
-  }
-
-
-  get quoteId(): number | null {
-    return this._quoteId;
-  }
-  set quoteId(value: number | null){
-    this._quoteId = value;
-    this._isDirty = true;
-  }
-
-  get cuspNumber(): number | null{
-    return this._cuspNumber;
-  }
-
-  set cuspNumber(value: number | null){
-    this._cuspNumber = value;
-    this._isDirty = true;
-  }
-
-  get quoteNo(): number | null{
-    return this._quoteNo;
-  }
-
-  set quoteNo(value: number | null){
-    this._quoteNo = value;
-    this._isDirty = true;
-  }
 
   get isDirty(): boolean {
     return this._isDirty ;
@@ -78,16 +49,39 @@ export class QuoteClass implements Quote {
   private datepipe = new DatePipe('en-US');
 
 
-  constructor(quote?: Quote) {
-    this._submissionNumber = quote?.submissionNumber || null;
-    this._quoteId = quote?.quoteId || null;
-    this._cuspNumber = quote?.cuspNumber || null;
-    this._sequenceNumber = quote?.sequenceNumber || null;
-    this._quoteNo = quote?.quoteNo || null;
+  constructor(quote?: Quote, program?: ProgramClass) {
+    if (quote) {
+      this.existingInit(quote);
+    } else if (program) {
+      this.newInit(program);
+    }
+  }
+  existingInit(quote: Quote) {
+    this.submissionNumber = quote.submissionNumber || 0;
+    this.quoteId = quote.quoteId || 0;
+    this.cuspNumber = quote.cuspNumber || 0;
+    this.sequenceNumber = quote.sequenceNumber || 0;
+    this.quoteNumber = quote.quoteNumber || 1;
+    this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
+    this.admittedStatus = quote.admittedStatus || '';
+    this.effectiveDate = quote.effectiveDate || null;
+    this.expirationDate = quote.expirationDate || null;
+    this.status = quote.status || 0;
+    this.coverageCode = quote.coverageCode || 0;
+    this.carrierCode = quote.carrierCode || '';
+    this.pacCode = quote.pacCode || '';
+    this.submission = new SubmissionClass(quote.submission);
     this.setReadonlyFields();
     this.setRequiredFields();
+    console.log(this.submission);
   }
-
+  newInit(program: ProgramClass) {
+    //if first quote on group attach to existing submission
+    //else duplicate submission and attach to that
+    //quote data will be tied to tblCUSP_Quotes
+    //need to add record to tbl_SubmissionGroupQuotes
+    console.log(program);
+  }
   markClean() {
     this._isDirty = false;
   }

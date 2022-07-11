@@ -19,8 +19,8 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { HistoricRoute } from 'src/app/core/models/historic-route';
 import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
-import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
 
 
 
@@ -102,7 +102,7 @@ export class StatusBarComponent implements OnInit {
           this.pageDataService.accountInfo = null;
           this.pageDataService.policyData = null;
           this.pageDataService.lastSubmission = null;
-
+          this.pageDataService.quoteData = null;
         }),
         map((event) => {
           this.headerPaddingService.resetPadding();
@@ -128,6 +128,7 @@ export class StatusBarComponent implements OnInit {
   checkData(child: ActivatedRoute): boolean {
     this.pageDataService.insuredData = this.checkInsuredData(child);
     this.pageDataService.submissionData = this.checkSubmissionData(child);
+    this.pageDataService.quoteData = this.checkQuoteData(child);
     this.pageDataService.policyData = this.checkPolicyData(child);
 
     return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null || this.pageDataService.quoteData != null);
@@ -148,6 +149,15 @@ export class StatusBarComponent implements OnInit {
       return data;
     } else {
       return this.pageDataService.submissionData;
+    }
+  }
+  private checkQuoteData(child: ActivatedRoute): DepartmentClass | null {
+    if (child.snapshot.data && child.snapshot.data['quoteData']) {
+      const data = child.snapshot.data['quoteData'].department;
+      this.headerPaddingService.buttonBarPadding = LayoutEnum.button_bar_height;
+      return data;
+    } else {
+      return this.pageDataService.quoteData;
     }
   }
   private checkPolicyData(child: ActivatedRoute): PolicyInformation | null {
