@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
 import { lastValueFrom, Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
@@ -42,7 +42,7 @@ export class SubmissionInformationComponent implements OnInit {
   loadingSic = false;
   naicsCodes$: Observable<Code[]> | undefined;
   loadingNaics = false;
-  seCollapsed = false;
+  seCollapsed = true;
   qaCollapsed = false;
   formatDateForDisplay: FormatDateForDisplay;
   underwriters$: Observable<Code[]> | undefined;
@@ -92,6 +92,7 @@ export class SubmissionInformationComponent implements OnInit {
     this.route.parent?.data.subscribe((data) => {
       this.submission = data['submissionData'].submission;
     });
+    this.qaCollapsed = this.submission.quoteActivity.length == 0 ? true : false;
 
     console.log(this.submission.quoteActivity);
     let group = 0;
