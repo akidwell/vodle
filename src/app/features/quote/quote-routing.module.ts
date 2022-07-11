@@ -36,60 +36,10 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: QuoteInformationComponent },
-    ]
-  },
-  {
-    path: ':submission',
-    component: QuoteComponent,
-    resolve: {
-      quoteData: QuoteResolver
-    },
-    children: [
-      { path: '', redirectTo: 'submission', pathMatch: 'full' },
-      { path: 'submission', component: QuoteSubmissionComponent }
-    ]
-  },
-  {
-    path: ':mortgagee',
-    component: QuoteComponent,
-    resolve: {
-      quoteData: QuoteResolver
-    },
-    children: [
-      { path: '', redirectTo: 'mortgagee', pathMatch: 'full' },
-      { path: 'mortgagee', component: QuoteMortgageeComponent }
-    ]
-  },
-  {
-    path: ':premium',
-    component: QuoteComponent,
-    resolve: {
-      quoteData: QuoteResolver
-    },
-    children: [
-      { path: '', redirectTo: 'premium', pathMatch: 'full' },
-      { path: 'premium', component: QuotePremiumComponent }
-    ]
-  },
-  {
-    path: ':conditions',
-    component: QuoteComponent,
-    resolve: {
-      quoteData: QuoteResolver
-    },
-    children: [
-      { path: '', redirectTo: 'conditions', pathMatch: 'full' },
-      { path: 'conditions', component: QuoteTermsConditionsComponent }
-    ]
-  },
-  {
-    path: ':summary',
-    component: QuoteComponent,
-    resolve: {
-      quoteData: QuoteResolver
-    },
-    children: [
-      { path: '', redirectTo: 'summary', pathMatch: 'full' },
+      { path: 'submission', component: QuoteSubmissionComponent },
+      { path: 'mortgagee', component: QuoteMortgageeComponent },
+      { path: 'premium', component: QuotePremiumComponent },
+      { path: 'conditions', component: QuoteTermsConditionsComponent },
       { path: 'summary', component: QuoteSummaryComponent }
     ]
   }

@@ -7,8 +7,8 @@ import { SubmissionNotFoundComponent } from './components/submission-not-found/s
 // import { InsuredResolver } from './services/insured-resolver/insured-resolver.service';
 import { SubmissionComponent } from './components/submission-base/submission.component';
 import { SubmissionResolver } from './services/submisson-resolver/submission-resolver.service';
-import { SubmissionInformationComponent } from './components/submission-information/submission-information.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
+import { SubmissionInfoBaseComponent } from './components/submission-info-base/submission-info-base.component';
 
 const routes: Routes = [
   {
@@ -23,7 +23,7 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: SubmissionInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } }
+      { path: 'information', component: SubmissionInfoBaseComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } }
     ]
   },
   {
@@ -34,7 +34,7 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: SubmissionInformationComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
+      { path: 'information', component: SubmissionInfoBaseComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
       // { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
     ]
   }

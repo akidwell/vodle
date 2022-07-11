@@ -30,6 +30,7 @@ import { QuotePremiumComponent } from './components/quote-premium/quote-premium.
 import { QuoteTermsConditionsComponent } from './components/quote-terms-conditions/quote-terms-conditions.component';
 import { QuoteSummaryComponent } from './components/quote-summary/quote-summary.component';
 import { QuoteSubmissionComponent } from './components/quote-submission/quote-submission.component';
+import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import { QuoteSubmissionComponent } from './components/quote-submission/quote-su
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    SubmissionInformationModule,
     PipesModule,
     NgxMaskModule.forRoot()
   ],

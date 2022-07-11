@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleDown, faAngleUp, faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
@@ -13,10 +13,10 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { SubmissionClass } from '../../classes/SubmissionClass';
-import { SubmissionService } from '../../services/submission-service/submission-service';
-import { SubmissionInfoPanelLeftComponent } from '../submission-info-panel-left/submission-info-panel-left.component';
-import { SubmissionInfoPanelRightComponent } from '../submission-info-panel-right/submission-info-panel-right.component';
+import { SubmissionClass } from '../../../features/submission/classes/SubmissionClass';
+import { SubmissionService } from '../../../features/submission/services/submission-service/submission-service';
+import { SubmissionInfoPanelLeftComponent } from '../../../features/submission/components/submission-info-panel-left/submission-info-panel-left.component';
+import { SubmissionInfoPanelRightComponent } from '../../../features/submission/components/submission-info-panel-right/submission-info-panel-right.component';
 
 
 @Component({
@@ -42,8 +42,6 @@ export class SubmissionInformationComponent implements OnInit {
   loadingSic = false;
   naicsCodes$: Observable<Code[]> | undefined;
   loadingNaics = false;
-  seCollapsed = true;
-  qaCollapsed = false;
   formatDateForDisplay: FormatDateForDisplay;
   underwriters$: Observable<Code[]> | undefined;
   departments$: Observable<Code[]> | undefined;
@@ -53,9 +51,8 @@ export class SubmissionInformationComponent implements OnInit {
   invalidList = [];
   quoteStatus$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
-
-
-
+  @Input() public overrideSubmission!: SubmissionClass;
+  @Input() public quoteDescription!: string;
 
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
   @ViewChild(SubmissionInfoPanelRightComponent)
@@ -89,40 +86,7 @@ export class SubmissionInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.parent?.data.subscribe((data) => {
-      this.submission = data['submissionData'].submission;
-    });
-    this.qaCollapsed = this.submission.quoteActivity.length == 0 ? true : false;
-
-    console.log(this.submission.quoteActivity);
-    let group = 0;
-    let prevSeq = null;
-    let strClass = '';
-    for (const x of this.submission.quoteActivity) {
-      const currentSeq = x.sequenceNumber;
-      if (x.sequenceNumber != group) {
-        x.firstRow = true;
-        group = x.sequenceNumber;
-      }
-      x.rowcolor = strClass;
-      if(currentSeq != prevSeq){
-        switch (strClass) {
-        case 'white':
-          x.rowcolor = 'gray';
-          strClass = 'gray';
-          break;
-        case 'gray':
-          x.rowcolor = 'white';
-          strClass = 'white';
-          break;
-        default:
-          x.rowcolor = 'white';
-          strClass = 'white';
-          break;
-        }
-      }
-      prevSeq = currentSeq;
-    }
+    this.submission = this.overrideSubmission;
 
     this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
     this.quoteStatus$ = this.dropdowns.getQuoteStatus();
@@ -162,11 +126,6 @@ export class SubmissionInformationComponent implements OnInit {
     const subRoute: HistoricRoute = this.createRoute(this.submission);
     this.pageDataService.lastSubmission = subRoute;
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
-  }
-
-  routeToQuote(sequenceNumber: number) {
-    this.navigationService.resetPolicy();
-    this.router.navigate(['/quote/' + sequenceNumber.toString() + '/information']);
   }
 
   routeToNewQuote() {
