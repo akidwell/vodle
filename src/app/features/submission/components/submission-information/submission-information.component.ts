@@ -93,6 +93,7 @@ export class SubmissionInformationComponent implements OnInit {
       this.submission = data['submissionData'].submission;
     });
 
+    console.log(this.submission.quoteActivity);
     let group = 0;
     let prevSeq = null;
     let strClass = '';
@@ -120,7 +121,6 @@ export class SubmissionInformationComponent implements OnInit {
         }
       }
       prevSeq = currentSeq;
-      console.log(x.rowcolor);
     }
 
     this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
@@ -163,9 +163,8 @@ export class SubmissionInformationComponent implements OnInit {
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
-  routeToQuote(submissionGroupId: number, sequenceNumber: number) {
+  routeToQuote(sequenceNumber: number) {
     this.navigationService.resetPolicy();
-    console.log(submissionGroupId, sequenceNumber);
     this.router.navigate(['/quote/' + sequenceNumber.toString() + '/information']);
   }
 
