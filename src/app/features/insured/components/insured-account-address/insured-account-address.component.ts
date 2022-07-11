@@ -149,9 +149,7 @@ export class InsuredAccountAddressComponent implements OnInit {
   }
 
   changeZip(): void {
-    console.log('pre change zip: ' + this.addressPanel.controls['zip'].valid);
     if (this.addressPanel.controls['zip'].valid) {
-      console.log('change zip');
       this.insured.isZipLookup = true;
       this.addressSub = this.addressLookupService.getAddress(this.insured.zip).subscribe({
         next: (address) => {

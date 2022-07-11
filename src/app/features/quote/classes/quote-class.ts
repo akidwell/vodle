@@ -3,6 +3,11 @@ import { Moment } from 'moment';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
+import { QuoteBuildingClass } from './quote-building-class';
+import { QuoteCoverageClass } from './quote-coverage-class';
+import { QuoteDeductibleClass } from './quote-deductible-class';
+import { QuoteLocationClass } from './quote-location-class';
+import { QuoteMortgageeClass } from './quote-mortgagee-class';
 
 export class QuoteClass implements Quote {
 
@@ -22,18 +27,14 @@ export class QuoteClass implements Quote {
   pacCode = '';
   mappingError = false;
   submission!: SubmissionClass;
+  quoteBuilding: QuoteBuildingClass[] = [];
+  quoteCoverage: QuoteCoverageClass[] = [];
+  quoteDeductible: QuoteDeductibleClass[] = [];
+  quoteMortgagee: QuoteMortgageeClass[] = [];
+  quoteLocation: QuoteLocationClass[] = [];
 
   private _isDirty = false;
   isNew = false;
-
-  // nameRequired = true;
-  // street1Required = true;
-  // street2Required = false;
-
-  // nameReadonly = false;
-  // isAddressOverrideReadonly = false;
-  // formerName1Readonly = false;
-
   invalidList: string[] = [];
 
   get isDirty(): boolean {
@@ -110,7 +111,6 @@ export class QuoteClass implements Quote {
   //   }
   //   return valid;
   // }
-
 
 
   toJSON() {

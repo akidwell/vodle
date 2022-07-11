@@ -24,6 +24,13 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/mat
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
+import { QuotePropertyDetailComponent } from './components/quote-property-detail/quote-property-detail.component';
+import { QuoteMortgageeComponent } from './components/quote-mortgagee/quote-mortgagee.component';
+import { QuotePremiumComponent } from './components/quote-premium/quote-premium.component';
+import { QuoteTermsConditionsComponent } from './components/quote-terms-conditions/quote-terms-conditions.component';
+import { QuoteSummaryComponent } from './components/quote-summary/quote-summary.component';
+import { QuoteSubmissionComponent } from './components/quote-submission/quote-submission.component';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +39,13 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
     QuoteNotFoundComponent,
     QuoteHeaderComponent,
     QuoteInformationDetailComponent,
-    QuoteInformationDetailProgramComponent ],
+    QuoteInformationDetailProgramComponent,
+    QuotePropertyDetailComponent,
+    QuoteMortgageeComponent,
+    QuotePremiumComponent,
+    QuoteTermsConditionsComponent,
+    QuoteSummaryComponent,
+    QuoteSubmissionComponent ],
   imports: [
     CommonModule,
     QuoteRoutingModule,
