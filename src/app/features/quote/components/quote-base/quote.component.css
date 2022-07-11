@@ -34,9 +34,7 @@ ngb-typeahead-window { max-height: 200px !important; overflow-y: auto;}
   z-index: 1;
   width: calc(100% - 205px);
   position: fixed;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 10px;
+
   background-color:  #f2f4f6;
 }
 
