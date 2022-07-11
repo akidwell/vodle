@@ -174,8 +174,6 @@ pipeline {
 	      		expression { params.Environment == "RELEASE"}
 	    	}
 			steps{
-				sh 'chmod +x ./build-release.sh'
-				sh './build-release.sh'
 				sh """
 				rm -rf SoftwareReleases
 				mkdir -p SoftwareReleases/rspsUI/rsps_${fileVersion}
