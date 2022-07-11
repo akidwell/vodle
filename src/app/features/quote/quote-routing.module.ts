@@ -56,8 +56,8 @@ const routes: Routes = [
       quoteData: QuoteResolver
     },
     children: [
-      { path: '', redirectTo: 'mortgagge', pathMatch: 'full' },
-      { path: 'mortgagge', component: QuoteMortgageeComponent }
+      { path: '', redirectTo: 'mortgagee', pathMatch: 'full' },
+      { path: 'mortgagee', component: QuoteMortgageeComponent }
     ]
   },
   {
