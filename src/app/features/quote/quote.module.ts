@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 
 import { QuoteRoutingModule } from './quote-routing.module';
-import { QuoteComponent } from './components/quote-base/quote.component';
-import { QuoteInformationComponent } from './components/quote-information-base/quote-information.component';
+import { QuoteComponent } from './components/common/quote-base/quote.component';
+import { QuoteInformationComponent } from './components/common/quote-information-base/quote-information.component';
 import { CanDeactivateGuard } from '../policy/guards/can-deactivate-guard';
 import { NgxMaskModule } from 'ngx-mask';
-import { QuoteNotFoundComponent } from './components/quote-not-found/quote-not-found.component';
+import { QuoteNotFoundComponent } from './components/common/quote-not-found/quote-not-found.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,9 +14,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
-import { QuoteHeaderComponent } from './components/quote-header/quote-header.component';
-import { QuoteInformationDetailComponent } from './components/quote-information-detail/quote-information-detail.component';
-import { QuoteInformationDetailProgramComponent } from './components/quote-information-detail-program/quote-information-detail-program.component';
+import { QuoteHeaderComponent } from './components/common/quote-header/quote-header.component';
+import { QuoteInformationDetailComponent } from './components/common/quote-information-detail/quote-information-detail.component';
+import { QuoteInformationDetailProgramComponent } from './components/common/quote-information-detail-program/quote-information-detail-program.component';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,13 +24,13 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/mat
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
-import { QuotePropertyDetailComponent } from './components/quote-property-detail/quote-property-detail.component';
+import { QuotePropertyDetailComponent } from './components/property/quote-property-detail/quote-property-detail.component';
 import { QuoteMortgageeComponent } from './components/quote-mortgagee/quote-mortgagee.component';
-import { QuotePremiumComponent } from './components/quote-premium/quote-premium.component';
-import { QuoteTermsConditionsComponent } from './components/quote-terms-conditions/quote-terms-conditions.component';
-import { QuoteSummaryComponent } from './components/quote-summary/quote-summary.component';
-import { QuoteSubmissionComponent } from './components/quote-submission/quote-submission.component';
+import { QuoteSubmissionComponent } from './components/common/quote-submission-base/quote-submission.component';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
+import { TermsConditionsComponent } from './components/common/terms-conditions-base/terms-conditions.component';
+import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
+import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 
 
 @NgModule({
@@ -44,7 +44,7 @@ import { SubmissionInformationModule } from 'src/app/shared/components/submissio
     QuotePropertyDetailComponent,
     QuoteMortgageeComponent,
     QuotePremiumComponent,
-    QuoteTermsConditionsComponent,
+    TermsConditionsComponent,
     QuoteSummaryComponent,
     QuoteSubmissionComponent ],
   imports: [

@@ -3,12 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
-import { Department } from '../../models/department';
+import { Department } from '../../../models/department';
 
 @Component({
   selector: 'rsps-quote',
   templateUrl: './quote.component.html',
-  styleUrls: ['../../../../app.component.css', './quote.component.css']
+  styleUrls: ['../../../../../app.component.css', './quote.component.css']
 })
 export class QuoteComponent implements OnInit {
   prevSub!: Subscription;

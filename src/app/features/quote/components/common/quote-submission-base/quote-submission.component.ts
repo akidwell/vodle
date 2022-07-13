@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -7,23 +7,18 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
-import { DepartmentClass } from '../../classes/department-class';
-
+import { DepartmentClass } from '../../../classes/department-class';
 
 @Component({
-  selector: 'rsps-quote-information',
-  templateUrl: './quote-information.component.html',
-  styleUrls: ['./quote-information.component.css']
+  selector: 'rsps-quote-submission',
+  templateUrl: './quote-submission.component.html',
+  styleUrls: ['./quote-submission.component.css']
 })
-
-export class QuoteInformationComponent implements OnInit {
+export class QuoteSubmissionComponent implements OnInit {
   department!: DepartmentClass;
   submissionCollapsed = false;
   quoteInfoCollapsed = false;
   formatDateForDisplay!: FormatDateForDisplay;
-  prevSub!: Subscription;
-  previousUrl = '';
-  previousLabel = 'Previous';
   invalidList = [];
   authSub: Subscription;
   canEditSubmission = false;
@@ -39,10 +34,10 @@ export class QuoteInformationComponent implements OnInit {
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
 
-    this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
-      this.previousUrl = previousUrl;
-      this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
-    });
+    // this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
+    //   this.previousUrl = previousUrl;
+    //   this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
+    // });
     this.formatDateForDisplay = formatDateService;
   }
 
@@ -50,43 +45,5 @@ export class QuoteInformationComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.department = data['quoteData'].department;
     });
-    console.log(this.department);
   }
-
-
-  // isValid(): boolean {
-  //   if (!this.canEditSubmission) {
-  //     return true;
-  //   }
-  //   if (this.quote.isValid) {
-  //     this.hideInvalid();
-  //   }
-  //   return this.quote.isValid;
-  // }
-
-  // isDirty(): boolean {
-  //   return this.quote.isDirty;
-  // }
-
-  // hideInvalid(): void {
-  //   this.showInvalid = false;
-  // }
-
-  // showInvalidControls(): void {
-  //   this.invalidMessage = '';
-  //   // Compile all invalide controls in a list
-  //   if (this.quote.invalidList.length > 0) {
-  //     this.showInvalid = true;
-  //     for (const error of this.quote.invalidList) {
-  //       this.invalidMessage += '<br><li>' + error;
-  //     }
-  //   }
-
-  //   if (this.showInvalid) {
-  //     this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
-  //   }
-  //   else {
-  //     this.hideInvalid();
-  //   }
-  // }
 }

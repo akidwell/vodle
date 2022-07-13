@@ -10,7 +10,7 @@ describe('QuoteSummaryComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ QuoteSummaryComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
