@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
+import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { ProgramClass } from '../../../classes/program-class';
+import { QuoteClass } from '../../../classes/quote-class';
+import { QuoteService } from '../../../services/quote-service/quote.service';
 
 @Component({
   selector: 'rsps-quote-information-detail-program',
