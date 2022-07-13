@@ -129,8 +129,11 @@ export class SubmissionInformationComponent implements OnInit {
   }
 
   routeToNewQuote() {
+    console.log('happens');
     this.navigationService.resetPolicy();
-    this.router.navigate(['/quote/information']);
+    this.router.navigate(['/quote/information'], {
+      state: { submission: this.submission }
+    });
   }
 
   dropDownSearch(term: string, item: Code) {

@@ -31,9 +31,7 @@ export class ProgramClass implements Program {
     this.availableCarrierCodes = availableCarrierCodes || [];
     this.availablePacCodes = availablePacCodes || [];
     this.programCoverageCarrierMappings = program.programCoverageCarrierMappings;
-    if (this.quoteData != null) {
-      this.setCoverageCarrierMapping();
-    }
+    this.setCoverageCarrierMapping();
   }
   updateGlobalSettings(admittedStatus: string, claimsMadeOrOccurrence: string) {
     if (this.quoteData != null) {
@@ -58,10 +56,13 @@ export class ProgramClass implements Program {
       console.log('selected: ',this.selectedCoverageCarrierMapping);
       this.availableCarrierCodes = this.allCarrierCodes.filter(carrier => this.selectedCoverageCarrierMapping != null ? this.selectedCoverageCarrierMapping.availableCarrierCodes.includes(carrier.code.trim()) : carrier);
       this.availablePacCodes = this.allPacCodes.filter(pac => this.selectedCoverageCarrierMapping != null ? this.selectedCoverageCarrierMapping.availablePacCodes.includes(pac.code.trim()) : pac);
+      if (this.selectedCoverageCarrierMapping == null) {
+        this.quoteData.mappingError = true;
+      }
+    } else {
+      this.selectedCoverageCarrierMapping = this.programCoverageCarrierMappings[0];
     }
-    if (this.quoteData != null &&this.selectedCoverageCarrierMapping == null) {
-      this.quoteData.mappingError = true;
-    }
+
   }
   setCoverageCarrierDefaults() {
     if (this.quoteData != null && this.selectedCoverageCarrierMapping != null) {

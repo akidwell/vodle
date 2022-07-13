@@ -1,4 +1,5 @@
 import { Code } from 'src/app/core/models/code';
+import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Department } from '../models/department';
 import { ProgramClass } from './program-class';
 
@@ -10,7 +11,7 @@ export class DepartmentClass implements Department {
   availableCarrierCodes: Code[] = [];
   availablePacCodes: Code[] = [];
   programMappings: ProgramClass[] = [];
-
+  submissionForQuote: SubmissionClass | null = null;
   //Admitted - NonAdmitted Flags
   admittedAvailable = false;
   nonAdmittedAvailable = false;
