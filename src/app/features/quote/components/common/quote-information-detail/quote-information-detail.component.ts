@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
-import { DepartmentClass } from '../../classes/department-class';
+import { DepartmentClass } from '../../../classes/department-class';
 
 @Component({
   selector: 'rsps-quote-information-detail',

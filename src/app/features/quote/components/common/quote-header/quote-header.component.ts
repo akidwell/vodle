@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { QuoteClass } from '../../classes/quote-class';
+import { QuoteClass } from '../../../classes/quote-class';
 
 @Component({
   selector: 'rsps-quote-header',
