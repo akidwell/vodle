@@ -17,6 +17,7 @@ import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     PipesModule,
     BusyModule,
     ProducerSearchModule,
-    ProducerContactSearchModule
+    ProducerContactSearchModule,
+    RouterModule
   ],
   exports: [SubmissionInformationComponent]
 

@@ -25,6 +25,95 @@ export class QuoteClass implements Quote {
   policyNumber: string | number = '--';
   carrierCode = '';
   pacCode = '';
+  quoteName = null;
+  policySymbol = '';
+  formName = '';
+  terrorismCoverageSelected = false;
+  terrorismPremium = null;
+  terrorismTemplateCode = '';
+  grossPremium = null;
+  grossLimits = null;
+  partOf = null;
+  attachmentPoint = null;
+  underlyingLimits = null;
+  commissionRate = null;
+  ratingBasis = null;
+  riskSelectionComments = null;
+  approvalRequired = false;
+  approvalStatus = null;
+  approvalUserName = null;
+  approvalDate = null;
+  comments = null;
+  createdBy = null;
+  createdDate = null;
+  modifiedUserName = null;
+  modifiedDate = null;
+  groupId = 3;
+  programId = 0;
+  validated = false;
+  ratedPremium = null;
+  auditCode = null;
+  umuimAccepted = false;
+  retainedLimit = null;
+  approvalReason = null;
+  retroDate = null;
+  quoteExpirationDate = null;
+  projectSpecific = false;
+  generalAggregateLimits = null;
+  productAggregateLimits = null;
+  persInjAdvertInjLimits = null;
+  fireDamageLimits = null;
+  medicalPayments = null;
+  fullPriorActs = false;
+  validatedRisk = null;
+  triaFormReceived = null;
+  annualizedPremium = null;
+  manualApprovalRequired = false;
+  submissionGroupsStatusId = 1;
+  modifiedUserId = null;
+  approvalUserId = null;
+  terrorismCoverage = null;
+  minimumPremiumRequired = false;
+  userFacultativeReins = false;
+  excessOfAuto = false;
+  underlyingUMLimit1Mil = false;
+  umuimAcceptedLastYear = false;
+  indicationPremium = null;
+  printedAt = null;
+  facTreatyType = null;
+  premiumRate = null;
+  ownerId = null;
+  ownerUserId = null;
+  flatRateIndicator = false;
+  sinceInception = false;
+  formsVersion = null; //intVersion in PAUL
+  specPlusEndorsement = false;
+  proRatePremium = false;
+  overridePremium = false;
+  ratingDataChanged = null;
+  rated = null;
+  overrideTRIAPremium = false;
+  coinsurancePercentage = null;
+  productManufactureDate = null;
+  discontinuedProducts = null;
+  autoCalcMiscPremium = false;
+  minimumPremium = null;
+  advancePremium = null;
+  earnedPremiumPct = null;
+  variesByLoc = false;
+  pcfCharge = null;
+  pcfChargeDesc = null;
+  professionalAggregateLimits = null;
+  professionalLiabilityLimits = null;
+  qsPercentTotalTRIPRAPremium = null;
+  quotaShare = false;
+  qsPartOfLimits = null;
+  qsPercentTotalPremium = null;
+  quotaSharePercent = null;
+  maxPolicyAggregate = null;
+  displayCommissionRate = false;
+  supportedStatus = null;
+  ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
   quoteBuilding: QuoteBuildingClass[] = [];
@@ -49,11 +138,11 @@ export class QuoteClass implements Quote {
   private datepipe = new DatePipe('en-US');
 
 
-  constructor(quote?: Quote, program?: ProgramClass) {
+  constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
       this.existingInit(quote);
-    } else if (program) {
-      this.newInit(program);
+    } else if (program && submission) {
+      this.newInit(program, submission);
     }
   }
   existingInit(quote: Quote) {
@@ -70,17 +159,37 @@ export class QuoteClass implements Quote {
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
+    this.policySymbol = quote.policySymbol || '';
+    this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this.submission = new SubmissionClass(quote.submission);
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
   }
-  newInit(program: ProgramClass) {
+  newInit(program: ProgramClass, submission: SubmissionClass) {
     //if first quote on group attach to existing submission
     //else duplicate submission and attach to that
     //quote data will be tied to tblCUSP_Quotes
     //need to add record to tbl_SubmissionGroupQuotes
     console.log(program);
+    this.submissionNumber = submission.submissionNumber;
+    this.quoteNumber = 1;
+    this.cuspNumber = 0; //Need to set on save
+    this.quoteId = 0; //Need to set on save
+    this.sequenceNumber = 0; //Need to set on save
+    this.submission = submission;
+    this.claimsMadeOrOccurrence = program.selectedCoverageCarrierMapping?.claimsMadeOrOccurrence || '';
+    this.pacCode = program.selectedCoverageCarrierMapping?.defPacCode || '';
+    this.carrierCode = program.selectedCoverageCarrierMapping?.defCarrierCode || '';
+    this.policySymbol = program.selectedCoverageCarrierMapping?.policySymbol || '';
+    this.formName = program.selectedCoverageCarrierMapping?.defCoverageForm || '';
+    this.terrorismTemplateCode = program.selectedCoverageCarrierMapping?.defTRIATemplateCode || '';
+    this.coverageCode = program.selectedCoverageCarrierMapping?.coverageCode || 0;
+    this.admittedStatus = program.selectedCoverageCarrierMapping?.admittedStatus || '';
+    this.effectiveDate = submission.polEffDate;
+    this.expirationDate = submission.polExpDate;
+    this.programId = program.programId;
+    this.status = 1;
   }
   markClean() {
     this._isDirty = false;
@@ -118,6 +227,21 @@ export class QuoteClass implements Quote {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
       cuspNumber: this.cuspNumber,
+      quoteNumber: this.quoteNumber,
+      sequenceNumber: this.sequenceNumber,
+      effectiveDate: this.effectiveDate,
+      expirationDate: this.expirationDate,
+      status: this.status,
+      claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
+      admittedStatus: this.admittedStatus,
+      policyNumber: this.policyNumber,
+      coverageCode: this.coverageCode,
+      carrierCode: this.carrierCode,
+      pacCode: this.pacCode,
+      submission: this.submission.toJSON(),
+      policySymbol: this.policySymbol,
+      formName: this.formName,
+      programId: this.programId,
     };
   }
 }

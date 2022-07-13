@@ -22,7 +22,7 @@
 </div>
 <div class="card-body">
   <div *ngFor="let program of department.programMappings">
-    <rsps-quote-information-detail-program [program]="program"></rsps-quote-information-detail-program>
+    <rsps-quote-information-detail-program [program]="program" [submissionForQuote]="department.submissionForQuote"></rsps-quote-information-detail-program>
   </div>
   <div class="row top-bordered">
     <div class="col-lg-6">
