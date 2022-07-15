@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
-import { ProgramClass } from '../../classes/program-class';
+import { ProgramClass } from '../../../classes/program-class';
 
 @Component({
   selector: 'rsps-quote-premium',

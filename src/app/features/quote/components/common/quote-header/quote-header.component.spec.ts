@@ -10,7 +10,7 @@ describe('QuoteHeaderComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ QuoteHeaderComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

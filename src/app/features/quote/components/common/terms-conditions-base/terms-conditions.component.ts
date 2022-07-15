@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
-import { ProgramClass } from '../../classes/program-class';
+import { ProgramClass } from '../../../classes/program-class';
 
 @Component({
-  selector: 'rsps-quote-terms-conditions',
-  templateUrl: './quote-terms-conditions.component.html',
-  styleUrls: ['./quote-terms-conditions.component.css']
+  selector: 'rsps-terms-conditions',
+  templateUrl: './terms-conditions.component.html',
+  styleUrls: ['./terms-conditions.component.css']
 })
-export class QuoteTermsConditionsComponent implements OnInit {
+export class TermsConditionsComponent implements OnInit {
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;

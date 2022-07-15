@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
     <h1>Quote Not Found!</h1>
     <h4>{{errorMessage}}</h4>
     </div>`,
-  styleUrls: ['../../../../app.component.css']
+  styleUrls: ['../../../../../app.component.css']
 })
 export class QuoteNotFoundComponent {
   errorMessage = '';

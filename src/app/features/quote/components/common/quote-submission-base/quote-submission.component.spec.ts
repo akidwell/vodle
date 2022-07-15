@@ -10,7 +10,7 @@ describe('QuoteSubmissionComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ QuoteSubmissionComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
