@@ -57,3 +57,4 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
       );
   }
 }
+

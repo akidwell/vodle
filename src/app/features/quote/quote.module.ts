@@ -28,6 +28,8 @@ import { QuotePropertyDetailComponent } from './components/property/quote-proper
 import { QuoteMortgageeComponent } from './components/quote-mortgagee/quote-mortgagee.component';
 import { QuoteSubmissionComponent } from './components/common/quote-submission-base/quote-submission.component';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
+import { QuoteProgramBaseComponent } from './components/quote-program-base/quote-program-base.component';
+import { QuotePropertyLocationCoverageComponent } from './components/quote-property-location-coverage/quote-property-location-coverage.component';
 import { TermsConditionsComponent } from './components/common/terms-conditions-base/terms-conditions.component';
 import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
@@ -46,7 +48,9 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
-    QuoteSubmissionComponent ],
+    QuoteSubmissionComponent,
+    QuoteProgramBaseComponent,
+    QuotePropertyLocationCoverageComponent ],
   imports: [
     CommonModule,
     QuoteRoutingModule,
