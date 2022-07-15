@@ -14,7 +14,7 @@ export class QuoteComponent implements OnInit {
   prevSub!: Subscription;
   previousUrl = '';
   previousLabel = 'Previous';
-  quote: Department[] = [];
+  department!: Department;
 
   constructor(public headerPaddingService: HeaderPaddingService,private route: ActivatedRoute, private previousRouteService: PreviousRouteService, private router: Router) {
   }
@@ -25,7 +25,7 @@ export class QuoteComponent implements OnInit {
       this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
     });
     this.route?.data.subscribe(data => {
-      this.quote = data['quoteData'].department;
+      this.department = data['quoteData'].department;
     });
   }
 }

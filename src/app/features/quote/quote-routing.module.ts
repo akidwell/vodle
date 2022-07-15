@@ -9,6 +9,8 @@ import { QuotePremiumComponent } from './components/quote-premium/quote-premium.
 import { QuoteTermsConditionsComponent } from './components/quote-terms-conditions/quote-terms-conditions.component';
 import { QuoteSummaryComponent } from './components/quote-summary/quote-summary.component';
 import { QuoteSubmissionComponent } from './components/quote-submission/quote-submission.component';
+import { QuoteProgramBaseComponent } from './components/quote-program-base/quote-program-base.component';
+import { QuotePropertyLocationCoverageComponent } from './components/quote-property-location-coverage/quote-property-location-coverage.component';
 
 
 const routes: Routes = [
@@ -37,9 +39,16 @@ const routes: Routes = [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: QuoteInformationComponent },
       { path: 'submission', component: QuoteSubmissionComponent },
-      { path: 'mortgagee', component: QuoteMortgageeComponent },
-      { path: 'premium', component: QuotePremiumComponent },
-      { path: 'conditions', component: QuoteTermsConditionsComponent },
+      { path: 'program/:quoteId',
+        component: QuoteProgramBaseComponent,
+        children: [
+          { path: '', redirectTo: 'location', pathMatch: 'full' },
+          { path: 'location', component: QuotePropertyLocationCoverageComponent },
+          { path: 'mortgagee', component: QuoteMortgageeComponent },
+          { path: 'premium', component: QuotePremiumComponent },
+          { path: 'conditions', component: QuoteTermsConditionsComponent },
+        ]
+      },
       { path: 'summary', component: QuoteSummaryComponent }
     ]
   }

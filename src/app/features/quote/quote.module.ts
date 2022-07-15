@@ -31,6 +31,8 @@ import { QuoteTermsConditionsComponent } from './components/quote-terms-conditio
 import { QuoteSummaryComponent } from './components/quote-summary/quote-summary.component';
 import { QuoteSubmissionComponent } from './components/quote-submission/quote-submission.component';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
+import { QuoteProgramBaseComponent } from './components/quote-program-base/quote-program-base.component';
+import { QuotePropertyLocationCoverageComponent } from './components/quote-property-location-coverage/quote-property-location-coverage.component';
 
 
 @NgModule({
@@ -46,7 +48,9 @@ import { SubmissionInformationModule } from 'src/app/shared/components/submissio
     QuotePremiumComponent,
     QuoteTermsConditionsComponent,
     QuoteSummaryComponent,
-    QuoteSubmissionComponent ],
+    QuoteSubmissionComponent,
+    QuoteProgramBaseComponent,
+    QuotePropertyLocationCoverageComponent ],
   imports: [
     CommonModule,
     QuoteRoutingModule,
