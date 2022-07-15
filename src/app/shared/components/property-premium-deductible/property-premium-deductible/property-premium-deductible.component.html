@@ -1,0 +1,83 @@
+<div class="component-row">
+    <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+        <div #locationInfo (click)="collapseExpand(false)">
+            <div class="row">
+                <div class="col-lg-2">
+                    <!-- <label for="deductible" class="form-label" title="Deductible">Deductible</label> -->
+                    <ng-select id="deductible" [items]="propertyDeductibles$ | async" bindLabel="description"
+                        bindValue="key" [required]="canEdit && deductible.deductibleRequired" name="deductible"
+                        click-stop-propagation [readonly]="!canEdit || deductible.deductibleReadonly"
+                        [(ngModel)]="deductible.propertyDeductibleId">
+                    </ng-select>
+                </div>
+                <div class="col-lg-2">
+                    <!-- <label for="amount" class="form-label" title="Amount">Amount</label> -->
+                    <input type="text" class="form-control right" id="policyCoverage"
+                        [readonly]="!canEdit || deductible.amountReadonly"
+                        [required]="canEdit && deductible.amountRequired" string-to-currency name="amount"
+                        click-stop-propagation [(ngModel)]="deductible.amount" #amount="ngModel">
+                </div>
+                <div class="col-lg-2">
+                    <!-- <label for="deductibleType" class="form-label" title="Deductible Type">Deductible Type</label> -->
+                    <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description"
+                        bindValue="code" [required]="canEdit && deductible.deductibleTypeRequired" name="deductibleType"
+                        click-stop-propagation [readonly]="!canEdit || deductible.isExcluded"
+                        [(ngModel)]="deductible.deductibleType">
+                    </ng-select>
+                </div>
+                <div class="col-lg-2">
+                    <!-- <label for="deductibleCode" class="form-label" title="Deductible Code">Deductible Code</label> -->
+                    <ng-select id="deductibleCode" [items]="deductibleCodes$ | async" bindLabel="description"
+                        bindValue="code" [required]="canEdit && deductible.deductibleCodeRequired" name="deductibleCode"
+                        click-stop-propagation [readonly]="!canEdit  || deductible.isExcluded"
+                        [(ngModel)]="deductible.deductibleCode">
+                    </ng-select>
+                </div>
+                <div class="col-lg-1" *ngIf="deductible.isExcludedVisible">
+                    <!-- <label for="excluded" class="form-label" title="Excluded">Excluded</label> -->
+                    <input type="checkbox" class="form-checkbox" id="excluded" [(ngModel)]="deductible.isExcluded"
+                        name="excluded" click-stop-propagation [readonly]="!canEdit" [required]="canEdit">
+                </div>
+                <div class="col-lg-1" *ngIf="deductible.isSubjectToMinVisible">
+                    <!-- <label for="subjectToMin" class="form-label" title="Subject to Min">Subject to Min</label> -->
+                    <input type="checkbox" class="form-checkbox" id="subjectToMin"
+                        [(ngModel)]="deductible.isSubjectToMin" name="subjectToMin"
+                        [readonly]="!canEdit || deductible.isExcluded" [required]="canEdit">
+                </div>
+            </div>
+        </div>
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <label for="comment" class="form-label" title="Comment">Comment</label>
+                    <input type="text" class="form-control right" id="totalLimit"
+                        [readonly]="!canEdit || deductible.isExcluded" click-stop-propagation name="comment"
+                        [(ngModel)]="deductible.comment" #comment="ngModel">
+                </div>
+                <div class="col-lg-1" *ngIf="deductible.subjectToMinVisible">
+                    <label for="subjectToMinPercent" class="form-label" title="%">%</label>
+                    <input type="text" class="form-control right" id="subjectToMinPercent" click-stop-propagation
+                        [readonly]="!canEdit || deductible.isExcluded"
+                        [required]="canEdit && deductible.subjectToMinPercentRequired" string-to-currency
+                        [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" nullValue
+                        name="subjectToMinPercent" [(ngModel)]="deductible.subjectToMinPercent"
+                        #subjectToMinPercent="ngModel">
+                </div>
+                <div class="col-lg-2" *ngIf="deductible.subjectToMinVisible">
+                    <label for="subjectToMinAmount" class="form-label" title="Subject to Min Amount">Subject to Min
+                        Amount</label>
+                    <input type="text" class="form-control right" id="subjectToMinAmount" click-stop-propagation
+                        [readonly]="!canEdit || deductible.isExcluded"
+                        [required]="canEdit && deductible.subjectToMinAmountRequired" string-to-currency
+                        name="subjectToMinAmount" [(ngModel)]="deductible.subjectToMinAmount"
+                        #subjectToMinAmount="ngModel">
+                </div>
+            </div>
+            <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+                [openDelay]="1000">
+                <fa-icon [icon]="faAngleUp"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>

@@ -721,6 +721,30 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
+  // Deductibe Code
+  private cacheDeductibleCode: Code[] | null = null;
+  private cacheDeductibleCode$!: Observable<Code[]> | null;
+
+  getDeductibleCodes(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheDeductibleCode) {
+      observable = of(this.cacheDeductibleCode);
+    } else if (this.cacheDeductibleCode$) {
+      observable = this.cacheDeductibleCode$;
+    } else {
+      this.cacheDeductibleCode$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deductiblecode')
+        .pipe(
+          tap((res) => (this.cacheDeductibleCode = res)),
+          share(),
+          finalize(() => (this.cacheDeductibleCode$ = null))
+        );
+      observable = this.cacheDeductibleCode$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
   // EachEmployee Deductible
   private cacheEachEmployee: any;
   private cacheEachEmployee$!: Observable<any> | null;
@@ -740,6 +764,30 @@ export class DropDownsService {
           finalize(() => (this.cacheEachEmployee$ = null))
         );
       observable = this.cacheEachEmployee$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Deductibes
+  private cachePropertyDeductibles: Code[] | null = null;
+  private cachePropertyDeductibles$!: Observable<Code[]> | null;
+
+  getPropertyDeductibles(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyDeductibles) {
+      observable = of(this.cachePropertyDeductibles);
+    } else if (this.cachePropertyDeductibles$) {
+      observable = this.cachePropertyDeductibles$;
+    } else {
+      this.cachePropertyDeductibles$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-deductibles')
+        .pipe(
+          tap((res) => (this.cachePropertyDeductibles = res)),
+          share(),
+          finalize(() => (this.cachePropertyDeductibles$ = null))
+        );
+      observable = this.cachePropertyDeductibles$;
     }
     return observable;
   }

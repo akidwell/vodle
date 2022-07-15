@@ -31,6 +31,8 @@ import { SubmissionInformationModule } from 'src/app/shared/components/submissio
 import { TermsConditionsComponent } from './components/common/terms-conditions-base/terms-conditions.component';
 import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
+import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
+import { PropertyPremiumDeductibleModule } from 'src/app/shared/components/property-premium-deductible/property-premium-deductible.module';
 
 
 @NgModule({
@@ -46,7 +48,8 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
-    QuoteSubmissionComponent ],
+    QuoteSubmissionComponent,
+    QuotePropertyPremiumComponent ],
   imports: [
     CommonModule,
     QuoteRoutingModule,
@@ -61,6 +64,7 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
     MatFormFieldModule,
     SubmissionInformationModule,
     PipesModule,
+    PropertyPremiumDeductibleModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

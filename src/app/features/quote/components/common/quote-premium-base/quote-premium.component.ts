@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DepartmentClass } from '../../../classes/department-class';
 
 @Component({
   selector: 'rsps-quote-premium',
@@ -6,10 +8,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./quote-premium.component.css']
 })
 export class QuotePremiumComponent implements OnInit {
+  department!: DepartmentClass;
 
-  constructor() { }
+
+
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.parent?.data.subscribe(data => {
+      this.department = data['quoteData'].department;
+    });
   }
 
 }
+
+

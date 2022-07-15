@@ -1,0 +1,83 @@
+.form-checkbox {
+    height: 25px;
+    width: 25px;
+    margin-bottom: 13px;
+    margin-left: 6px;
+  }
+  
+  input[type="checkbox"] {
+    display: inline-block;
+  }
+  
+  input[type="checkbox"][readonly] {
+    pointer-events: none;
+  }
+  
+  .form-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    margin-bottom: 0px;
+  }
+  
+  .right {
+    text-align: right;
+  }
+
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid #a94442;
+}
+
+.expanded {
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    margin-left: -6px;
+    margin-right: -6px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 10px;
+    padding-bottom: 25px;
+    border-radius: 8px;
+    background-color: whitesmoke;
+    /* background-color: white; */
+    cursor: default;
+    border: 1px solid grey;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 12px 0 rgba(0, 0, 0, 0.19);
+  }
+  
+  .collapsed {
+    position: relative;
+    cursor: row-resize;
+  }
+  
+  .collapse-bar {
+    background: none;
+    padding: 0;
+    margin-left: -1px !important;
+    margin-bottom: -1px;
+    color: #00274e;
+    text-align: center;
+    cursor: pointer;
+    background-color: #e6e9ed;
+    border: 1px solid grey;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    width: calc(100% + 2px);
+    height: 20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .collapse-bar:hover {
+    background-color: #ccd4dc;
+  }
+  
