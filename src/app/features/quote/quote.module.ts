@@ -34,7 +34,8 @@ import { TermsConditionsComponent } from './components/common/terms-conditions-b
 import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
-import { PropertyDeductibleModule } from 'src/app/shared/components/property-premium-deductible/property-deductible.module';
+import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
+import { PropertyPremiumModule } from 'src/app/shared/components/property-premium/property-premium.module';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { PropertyDeductibleModule } from 'src/app/shared/components/property-pre
     SubmissionInformationModule,
     PipesModule,
     PropertyDeductibleModule,
+    PropertyPremiumModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
