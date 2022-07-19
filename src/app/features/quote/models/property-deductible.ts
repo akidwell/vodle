@@ -11,6 +11,9 @@ export interface PropertyDeductibleData {
     isExcluded: boolean;
     isSubjectToMin: boolean | null;
     isNew: boolean;
+    isLocked: boolean;
+    canExclude: boolean;
+    canSubjectToMin: boolean;
 }
 
 export interface PropertyDeductible extends PropertyDeductibleData {

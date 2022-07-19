@@ -1,5 +1,7 @@
 import { Moment } from 'moment';
 import { Submission } from '../../submission/models/submission';
+import { PropertyQuote } from './property-quote';
+import { QuoteRate } from './quote-rate';
 
 export interface Quote {
   submissionNumber: number | null;
@@ -105,4 +107,6 @@ export interface Quote {
   maxPolicyAggregate: string | null;
   displayCommissionRate: boolean;
   supportedStatus: string | null;
+  quoteRates: QuoteRate[];
+  propertyQuote: PropertyQuote;
 }

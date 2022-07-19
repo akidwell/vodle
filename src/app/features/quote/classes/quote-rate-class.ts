@@ -48,7 +48,7 @@ export class QuoteRateClass implements QuoteRate {
     return valid;
   }
 
-  constructor(rate?: QuoteRateClass) {
+  constructor(rate?: QuoteRate) {
     if (rate) {
       this.existingInit(rate);
     } else {
@@ -56,7 +56,7 @@ export class QuoteRateClass implements QuoteRate {
     }
   }
 
-  existingInit(rate: QuoteRateClass) {
+  existingInit(rate: QuoteRate) {
     this._premiumRate = rate.premiumRate;
     this._premium = rate.premium;
     this._rateBasis = rate.rateBasis;

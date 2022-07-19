@@ -5,9 +5,9 @@ import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
 import { QuoteBuildingClass } from './quote-building-class';
 import { QuoteCoverageClass } from './quote-coverage-class';
-import { QuoteDeductibleClass } from './quote-deductible-class';
 import { QuoteLocationClass } from './quote-location-class';
 import { QuoteMortgageeClass } from './quote-mortgagee-class';
+import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
 
 export class QuoteClass implements Quote {
@@ -117,12 +117,12 @@ export class QuoteClass implements Quote {
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
-  quoteBuilding: QuoteBuildingClass[] = [];
-  quoteCoverage: QuoteCoverageClass[] = [];
-  quoteDeductible: QuoteDeductibleClass[] = [];
+  // quoteBuilding: QuoteBuildingClass[] = [];
+  // quoteCoverage: QuoteCoverageClass[] = [];
   quoteMortgagee: QuoteMortgageeClass[] = [];
-  quoteLocation: QuoteLocationClass[] = [];
-  quoteRate: QuoteRateClass[] = [];
+  // quoteLocation: QuoteLocationClass[] = [];
+  quoteRates: QuoteRateClass[] = [];
+  propertyQuote!: PropertyQuoteClass;
 
   private _isDirty = false;
   isNew = false;
@@ -164,15 +164,13 @@ export class QuoteClass implements Quote {
     this.policySymbol = quote.policySymbol || '';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this.submission = new SubmissionClass(quote.submission);
-    // TODO - GAM - temp logic hard coded logi for now
-    this.quoteRate.push(new QuoteRateClass());
-    const aop = new QuoteDeductibleClass();
-    aop.propertyDeductibleId = 1;
-    this.quoteDeductible.push(aop);
-    const wh = new QuoteDeductibleClass();
-    wh.propertyDeductibleId = 2;
-    this.quoteDeductible.push(wh);
-    // End TODO
+    const rates: QuoteRateClass[] = [];
+    quote.quoteRates?.forEach(element => {
+      rates.push(new QuoteRateClass(element));
+    });
+    this.quoteRates = rates;
+    this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
+
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
