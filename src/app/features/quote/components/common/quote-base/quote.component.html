@@ -7,17 +7,13 @@
         <a class="nav-link" routerLinkActive='active'  [routerLink]="['submission']" >Submission</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Quote Detail</a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Product Selection</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['mortgagee']">Mortgagee/Additional Interest</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['premium']">Coverage Premium</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['conditions']">Terms and Conditions</a>
-      </li>
+      <ng-container *ngFor="let program of department.programMappings">
+        <li class="nav-item" *ngIf="program.quoteData != null;" >
+          <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}}</a>
+        </li>
+      </ng-container>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
       </li>

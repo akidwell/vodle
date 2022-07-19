@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { DepartmentClass } from '../../../classes/department-class';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { ProgramClass } from '../../../classes/program-class';
 
 @Component({
   selector: 'rsps-quote-premium',
@@ -8,18 +9,22 @@ import { DepartmentClass } from '../../../classes/department-class';
   styleUrls: ['./quote-premium.component.css']
 })
 export class QuotePremiumComponent implements OnInit {
-  department!: DepartmentClass;
+  program!: ProgramClass;
+  quoteId = 0;
+  programSub!: Subscription;
 
-
-
-  constructor(private route: ActivatedRoute) { }
-
-  ngOnInit(): void {
-    this.route.parent?.data.subscribe(data => {
-      this.department = data['quoteData'].department;
-    });
+  constructor(private pageDataService: PageDataService) {
   }
 
+  ngOnInit(): void {
+    this.programSub = this.pageDataService.selectedProgram$.subscribe(
+      (selectedProgram: ProgramClass | null) => {
+        if (selectedProgram != null) {
+          this.program = selectedProgram;
+        }
+      }
+    );
+  }
 }
 
 

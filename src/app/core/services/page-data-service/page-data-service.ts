@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
 import { AccountInformation, PolicyInformation } from 'src/app/features/policy/models/policy';
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
+import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { HistoricRoute } from '../../models/historic-route';
 
@@ -14,13 +15,17 @@ export class PageDataService {
   private _policyData: PolicyInformation | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
+  private _selectedProgram: ProgramClass | null = null;
   private _resetLastSubmission = true;
 
   private _noData = true;
 
   insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
-  submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(this._submissionData);
+  submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(
+    this._submissionData
+  );
   quoteData$: BehaviorSubject<DepartmentClass | null> = new BehaviorSubject(this._quoteData);
+  selectedProgram$: BehaviorSubject<ProgramClass | null> = new BehaviorSubject(this._selectedProgram);
   policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
@@ -98,6 +103,25 @@ export class PageDataService {
 
   set isNoData(val: boolean) {
     this._noData = val;
-    setTimeout(() => this.noData$.next(this._noData),0);
+    setTimeout(() => this.noData$.next(this._noData), 0);
+  }
+
+  getProgramWithQuote(quoteId: number) {
+    let activeProgram = null;
+    if (this._quoteData) {
+      this._quoteData.programMappings.forEach((program) => {
+        if (program && program.quoteData && program.quoteData.quoteId == quoteId) {
+          activeProgram = program;
+        }
+      });
+    }
+    this.selectedProgram = activeProgram;
+  }
+  set selectedProgram(program: ProgramClass | null) {
+    this._selectedProgram = program;
+    this.selectedProgram$.next(this._selectedProgram);
+  }
+  get selectedProgram(): ProgramClass | null {
+    return this._selectedProgram;
   }
 }
