@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { ProgramClass } from '../../../classes/program-class';
 import { QuoteClass } from '../../../classes/quote-class';
 
@@ -18,6 +19,8 @@ export class QuotePropertyPremiumComponent implements OnInit {
   quote!: QuoteClass;
   canEditSubmission = false;
 
+  classType = ClassTypeEnum.Quote;
+
   @Input() public program!: ProgramClass;
 
   constructor(private userAuth: UserAuth) {
@@ -27,7 +30,7 @@ export class QuotePropertyPremiumComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.program.quoteData != null) {
+    if (this.program?.quoteData != null) {
       this.quote = this.program.quoteData;
     }
   }

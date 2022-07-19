@@ -1,6 +1,7 @@
-import { PropertyQuoteDeductible } from '../models/property-quote-deductible';
+import { PropertyDeductible } from '../models/property-deductible';
 
-export class QuoteDeductibleClass implements PropertyQuoteDeductible {
+
+export class QuoteDeductibleClass implements PropertyDeductible {
   propertyQuoteDeductibleId = 1;
   propertyQuoteId = 1;
 
@@ -14,6 +15,7 @@ export class QuoteDeductibleClass implements PropertyQuoteDeductible {
   private _isExcluded = false;
   private _isSubjectToMin: boolean | null = null;
   private _isDirty = false;
+  isNew = false;
   invalidList: string[] = [];
   isDuplicate = false;
 
@@ -103,7 +105,7 @@ export class QuoteDeductibleClass implements PropertyQuoteDeductible {
     return valid;
   }
 
-  constructor(deductible?: PropertyQuoteDeductible) {
+  constructor(deductible?: PropertyDeductible) {
     if (deductible) {
       this.existingInit(deductible);
     } else {
@@ -111,8 +113,7 @@ export class QuoteDeductibleClass implements PropertyQuoteDeductible {
     }
   }
 
-  existingInit(deductible: PropertyQuoteDeductible) {
-
+  existingInit(deductible: PropertyDeductible) {
     this._propertyDeductibleId = deductible.propertyQuoteDeductibleId;
     this._deductibleType = deductible.deductibleType;
     this._amount = deductible.amount;
@@ -127,8 +128,7 @@ export class QuoteDeductibleClass implements PropertyQuoteDeductible {
   }
 
   newInit() {
-
-
+    this.isNew = true;
   }
 
   markClean() {
@@ -142,6 +142,41 @@ export class QuoteDeductibleClass implements PropertyQuoteDeductible {
   }
   setReadonlyFields() {
     // No special rules
+  }
+
+  validate(valid: boolean): boolean {
+    this.invalidList = [];
+    if (!this.validateAmount()) {
+      valid = false;
+    }
+    return valid;
+  }
+
+  validateAmount(): boolean {
+    let valid = true;
+    if (!this.isExcluded && (this.amount ?? 0) > 0) {
+      valid = false;
+      this.invalidList.push('Amount is required');
+    }
+    return valid;
+  }
+
+  validateDeductibleType(): boolean {
+    let valid = true;
+    if (!this.isExcluded && !this.deductibleType) {
+      valid = false;
+      this.invalidList.push('Deductible Type is required');
+    }
+    return valid;
+  }
+
+  validateDeductibleCode(): boolean {
+    let valid = true;
+    if (!this.isExcluded && !this.deductibleCode) {
+      valid = false;
+      this.invalidList.push('Deductible Code is required');
+    }
+    return valid;
   }
 
   get deductibleReadonly(): boolean {
@@ -158,6 +193,9 @@ export class QuoteDeductibleClass implements PropertyQuoteDeductible {
   }
   get subjectToMinVisible(): boolean {
     return this._propertyDeductibleId != 1 && (this._isSubjectToMin ?? false);
+  }
+  get deleteVisible(): boolean {
+    return this._propertyDeductibleId != 1 && this._propertyDeductibleId != 2;
   }
   get deductibleRequired(): boolean {
     return !this.deductibleReadonly;

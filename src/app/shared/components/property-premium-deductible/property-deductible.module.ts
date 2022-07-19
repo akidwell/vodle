@@ -5,12 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
-import { PropertyPremiumDeductibleComponent } from './property-premium-deductible/property-premium-deductible.component';
-import { PropertyPremiumDeductibleGroupComponent } from './property-premium-deductible-group/property-premium-deductible-group.component';
+import { PropertyDeductibleComponent } from './property-deductible/property-deductible.component';
+import { PropertyDeductibleGroupComponent } from './property-deductible-group/property-deductible-group.component';
 
 @NgModule({
-  declarations: [PropertyPremiumDeductibleComponent,
-    PropertyPremiumDeductibleGroupComponent],
+  declarations: [PropertyDeductibleComponent,
+    PropertyDeductibleGroupComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
@@ -20,6 +20,6 @@ import { PropertyPremiumDeductibleGroupComponent } from './property-premium-dedu
     FormsModule,
     DirectivesModule
   ],
-  exports: [PropertyPremiumDeductibleGroupComponent]
+  exports: [PropertyDeductibleGroupComponent]
 })
-export class PropertyPremiumDeductibleModule { }
+export class PropertyDeductibleModule { }
