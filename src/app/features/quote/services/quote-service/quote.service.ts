@@ -34,4 +34,8 @@ export class QuoteService {
     const headers = { 'Content-Type': 'application/json'};
     return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/', quoteJSON, {headers});
   }
+
+  deleteDeductible(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'quotes/property-deductibles/' + id);
+  }
 }

@@ -9,7 +9,7 @@ import { ProgramClass } from '../../../classes/program-class';
   styleUrls: ['./quote-premium.component.css']
 })
 export class QuotePremiumComponent implements OnInit {
-  program!: ProgramClass | null;
+  program!: ProgramClass;
   quoteId = 0;
   programSub!: Subscription;
 
@@ -19,8 +19,12 @@ export class QuotePremiumComponent implements OnInit {
   ngOnInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
-        this.program = selectedProgram;
+        if (selectedProgram != null) {
+          this.program = selectedProgram;
+        }
       }
     );
   }
 }
+
+

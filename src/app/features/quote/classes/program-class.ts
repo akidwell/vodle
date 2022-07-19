@@ -1,6 +1,7 @@
 import { Code } from 'src/app/core/models/code';
 import { Program } from '../models/program';
 import { ProgramCoverageCarrierMapping } from '../models/program-coverage-carrier-mapping';
+import { ProgramDeductibleMapping } from '../models/program-deductible-mappings';
 import { QuoteClass } from './quote-class';
 
 export class ProgramClass implements Program {
@@ -21,6 +22,7 @@ export class ProgramClass implements Program {
   allPacCodes: Code[] = [];
   selectedCoverageCarrierMapping: ProgramCoverageCarrierMapping | null = null;
   programCoverageCarrierMappings: ProgramCoverageCarrierMapping[] = [];
+  programDeductibleMappings: ProgramDeductibleMapping[] = [];
 
   get quoteData() : QuoteClass | null {
     return this._quoteData;
@@ -44,6 +46,7 @@ export class ProgramClass implements Program {
     this.availableCarrierCodes = availableCarrierCodes || [];
     this.availablePacCodes = availablePacCodes || [];
     this.programCoverageCarrierMappings = program.programCoverageCarrierMappings;
+    this.programDeductibleMappings = program.programDeductibleMappings;
     this.setCoverageCarrierMapping();
   }
   updateGlobalSettings(admittedStatus: string, claimsMadeOrOccurrence: string) {
