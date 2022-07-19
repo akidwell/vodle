@@ -1,9 +1,12 @@
 import { PropertyDeductible } from '../models/property-deductible';
 
 
-export class QuoteDeductibleClass implements PropertyDeductible {
-  propertyQuoteDeductibleId = 1;
-  propertyQuoteId = 1;
+export class PropertyQuoteDeductibleClass implements PropertyDeductible {
+  propertyQuoteDeductibleId: number | null = null;
+  propertyQuoteId: number | null = null;
+  isLocked = false;
+  canExclude = true;
+  canSubjectToMin = true;
 
   private _propertyDeductibleId: number | null = null;
   private _deductibleType: string | null = null;
@@ -114,7 +117,7 @@ export class QuoteDeductibleClass implements PropertyDeductible {
   }
 
   existingInit(deductible: PropertyDeductible) {
-    this._propertyDeductibleId = deductible.propertyQuoteDeductibleId;
+    this._propertyDeductibleId = deductible.propertyDeductibleId;
     this._deductibleType = deductible.deductibleType;
     this._amount = deductible.amount;
     this._subjectToMinPercent = deductible.subjectToMinPercent;
@@ -123,12 +126,18 @@ export class QuoteDeductibleClass implements PropertyDeductible {
     this._comment = deductible.comment;
     this._isExcluded = deductible.isExcluded;
     this._isSubjectToMin = deductible.isSubjectToMin;
+    this.isLocked = deductible.isLocked;
+    this.canExclude = deductible.canExclude;
+    this.canSubjectToMin = deductible.canSubjectToMin;
     this.setReadonlyFields();
     this.setRequiredFields();
   }
 
   newInit() {
     this.isNew = true;
+    this.isLocked = false;
+    this.canExclude = true;
+    this.canSubjectToMin = true;
   }
 
   markClean() {
@@ -180,22 +189,22 @@ export class QuoteDeductibleClass implements PropertyDeductible {
   }
 
   get deductibleReadonly(): boolean {
-    return this._propertyDeductibleId == 1 || this._propertyDeductibleId == 2 || this._isExcluded;
+    return this.isLocked || this._isExcluded;
   }
   get amountReadonly(): boolean {
     return this._isSubjectToMin || this._isExcluded;
   }
   get isExcludedVisible(): boolean {
-    return this._propertyDeductibleId != 1;
+    return this.canExclude;
   }
   get isSubjectToMinVisible(): boolean {
-    return this._propertyDeductibleId != 1 && !this._isExcluded;
+    return this.canSubjectToMin && !this._isExcluded;
   }
   get subjectToMinVisible(): boolean {
-    return this._propertyDeductibleId != 1 && (this._isSubjectToMin ?? false);
+    return this._isSubjectToMin ?? false;
   }
   get deleteVisible(): boolean {
-    return this._propertyDeductibleId != 1 && this._propertyDeductibleId != 2;
+    return !this.isLocked;
   }
   get deductibleRequired(): boolean {
     return !this.deductibleReadonly;

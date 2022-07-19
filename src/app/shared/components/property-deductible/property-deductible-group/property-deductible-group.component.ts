@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
-import { QuoteDeductibleClass } from 'src/app/features/quote/classes/quote-deductible-class';
+import { PropertyQuoteDeductibleClass } from 'src/app/features/quote/classes/property-quote-deductible-class';
 import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 
@@ -25,7 +25,7 @@ export class PropertyDeductibleGroupComponent implements OnInit {
 
   addDeductible() {
     if (this.classType == ClassTypeEnum.Quote) {
-      const newDeductible = new QuoteDeductibleClass();
+      const newDeductible = new PropertyQuoteDeductibleClass();
       this.deductibles.push(newDeductible);
     }
     else if (this.classType == ClassTypeEnum.Policy) {

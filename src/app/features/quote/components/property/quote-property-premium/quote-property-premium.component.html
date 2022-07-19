@@ -8,7 +8,7 @@
         <div class="card-body" id="card-header">
             <rsps-property-premium [program]="program" [canEdit]="canEditSubmission"></rsps-property-premium>
             <div class="empty-row"></div>
-            <rsps-property-deductible-group [classType]="classType" [deductibles]="quote.quoteDeductible" [canEdit]="canEditSubmission">
+            <rsps-property-deductible-group [classType]="classType" [deductibles]="quote.propertyQuote.propertyQuoteDeductible" [canEdit]="canEditSubmission">
             </rsps-property-deductible-group>
         </div>
     </div>
