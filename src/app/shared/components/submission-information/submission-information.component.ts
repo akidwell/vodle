@@ -25,7 +25,6 @@ import { SubmissionInfoPanelRightComponent } from '../../../features/submission/
   styleUrls: ['./submission-information.component.css'],
 })
 export class SubmissionInformationComponent implements OnInit {
-  submission!: SubmissionClass;
   canEditSubmission = false;
   authSub: Subscription;
   addSub!: Subscription;
@@ -51,7 +50,7 @@ export class SubmissionInformationComponent implements OnInit {
   invalidList = [];
   quoteStatus$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
-  @Input() public overrideSubmission!: SubmissionClass;
+  @Input() public submission!: SubmissionClass;
   @Input() public quoteDescription!: string;
 
   @ViewChild(NgForm, { static: false }) submissionInfoForm!: NgForm;
@@ -61,14 +60,10 @@ export class SubmissionInformationComponent implements OnInit {
     submissionInfoPanelLeft!: SubmissionInfoPanelLeftComponent;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private dropdowns: DropDownsService,
-    private submissionService: SubmissionService,
     private userAuth: UserAuth,
     private navigationService: NavigationService,
-    private messageDialogService: MessageDialogService,
-    private notification: NotificationService,
     private formatDateService: FormatDateForDisplay,
     public pageDataService: PageDataService,
     private previousRouteService: PreviousRouteService
@@ -86,8 +81,6 @@ export class SubmissionInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.submission = this.overrideSubmission;
-
     this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
     this.quoteStatus$ = this.dropdowns.getQuoteStatus();
     this.programs$ = this.dropdowns.getPrograms();
