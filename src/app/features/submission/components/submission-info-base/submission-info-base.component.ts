@@ -5,13 +5,14 @@ import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { SubmissionClass } from '../../classes/SubmissionClass';
 
 @Component({
   selector: 'rsps-submission-info-base',
   templateUrl: './submission-info-base.component.html',
-  styleUrls: ['./submission-info-base.component.css']
+  styleUrls: ['./submission-info-base.component.css'],
 })
 export class SubmissionInfoBaseComponent implements OnInit {
   submission!: SubmissionClass;
@@ -29,7 +30,8 @@ export class SubmissionInfoBaseComponent implements OnInit {
     private userAuth: UserAuth,
     public formatDateService: FormatDateForDisplay,
     public pageDataService: PageDataService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private historyService: HistoryService
   ) {
     this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
@@ -41,11 +43,14 @@ export class SubmissionInfoBaseComponent implements OnInit {
     this.route.parent?.data.subscribe((data) => {
       if (data['submissionData'] && data['submissionData'].submission) {
         this.submission = data['submissionData'].submission;
+        this.setupQuoteAcitivityTable();
       }
       console.log(this.submission);
     });
-    this.qaCollapsed = this.submission.quoteActivity.length == 0 ? true : false;
+  }
 
+  setupQuoteAcitivityTable() {
+    this.qaCollapsed = this.submission.quoteActivity.length == 0 ? true : false;
     let group = 0;
     let prevSeq = null;
     let strClass = '';
@@ -56,7 +61,7 @@ export class SubmissionInfoBaseComponent implements OnInit {
         group = x.sequenceNumber;
       }
       x.rowcolor = strClass;
-      if(currentSeq != prevSeq){
+      if (currentSeq != prevSeq) {
         switch (strClass) {
         case 'white':
           x.rowcolor = 'gray';
@@ -75,8 +80,11 @@ export class SubmissionInfoBaseComponent implements OnInit {
       prevSeq = currentSeq;
     }
   }
+
   routeToQuote(sequenceNumber: number) {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
+    // Update history for opened Quote
+    this.historyService.updateQuoteHistory(Number(sequenceNumber), this.submission.submissionNumber);
     this.router.navigate(['/quote/' + sequenceNumber.toString() + '/information']);
   }
 }

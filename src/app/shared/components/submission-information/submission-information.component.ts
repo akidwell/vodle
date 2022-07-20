@@ -115,15 +115,14 @@ export class SubmissionInformationComponent implements OnInit {
     this.updateSub?.unsubscribe();
   }
   routeToInsured(insuredCode: number) {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     const subRoute: HistoricRoute = this.createRoute(this.submission);
     this.pageDataService.lastSubmission = subRoute;
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
   routeToNewQuote() {
-    console.log('happens');
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     this.router.navigate(['/quote/information'], {
       state: { submission: this.submission }
     });
