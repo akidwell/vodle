@@ -39,12 +39,12 @@ export class InsuredSearchResultsComponent implements OnInit {
   }
 
   routeToInsured(insuredCode: number) {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
   routeToNewInsured() {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     this.router.navigate(['/insured/information']);
   }
 }

@@ -19,14 +19,7 @@ export class NavigationService {
     this.createDirectPolicy.next();
   }
 
-  public resetPolicy() {
-    // (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('information');
-    // (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('coverages');
-    // (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('schedules');
-    // (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('reinsurance');
-    // (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('summary');
-    // (this.routeReuseStrategy as CustomReuseStrategy).clearSavedHandle('submissions');
-
+  public clearReuse() {
     (this.routeReuseStrategy as CustomReuseStrategy).clearAllHandles();
     this.dropDownService.clearPolicyDropDowns();
     this.reinsuranceLookupService.clearReinsuranceCodes();

@@ -38,7 +38,7 @@ export class InsuredDuplicatesComponent {
 
   routeToInsured(insuredCode: number) {
     this.modalRef.close(null);
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
   }
 
