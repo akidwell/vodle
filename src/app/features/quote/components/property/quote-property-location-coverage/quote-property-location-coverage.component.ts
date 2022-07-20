@@ -12,4 +12,7 @@ export class QuotePropertyLocationCoverageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  import() {
+    
+  }
 }
