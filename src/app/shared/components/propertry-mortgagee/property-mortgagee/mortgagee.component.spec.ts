@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { QuoteMortgageeComponent } from './quote-mortgagee.component';
+import { MortgageeComponent } from './mortgagee.component';
 
 
 describe('QuoteMortgageeComponent', () => {
-  let component: QuoteMortgageeComponent;
-  let fixture: ComponentFixture<QuoteMortgageeComponent>;
+  let component: MortgageeComponent;
+  let fixture: ComponentFixture<MortgageeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ QuoteMortgageeComponent ]
+      declarations: [ MortgageeComponent ]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuoteMortgageeComponent);
+    fixture = TestBed.createComponent(MortgageeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
