@@ -119,7 +119,9 @@ export class PageDataService {
   }
   set selectedProgram(program: ProgramClass | null) {
     this._selectedProgram = program;
-    this.selectedProgram$.next(this._selectedProgram);
+    setTimeout(()=>{
+      this.selectedProgram$.next(this._selectedProgram);
+    });
   }
   get selectedProgram(): ProgramClass | null {
     return this._selectedProgram;

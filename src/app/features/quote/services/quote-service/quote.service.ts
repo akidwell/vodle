@@ -29,9 +29,16 @@ export class QuoteService {
           }));
     }
   }
-  postQuote(quote: QuoteClass) {
-    const quoteJSON = quote.toJSON();
+  updateAllQuotes(department: DepartmentClass) {
+    const departmentJSON = department.toJSON();
+    console.log(departmentJSON);
     const headers = { 'Content-Type': 'application/json'};
-    return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/', quoteJSON, {headers});
+    return this.http.put<number>(this.config.apiBaseUrl + 'api/quotes/full', departmentJSON, {headers});
+  }
+  updateQuote(quote: QuoteClass) {
+    const quoteJSON = quote.toJSON();
+    console.log(quoteJSON);
+    const headers = { 'Content-Type': 'application/json'};
+    return this.http.put<number>(this.config.apiBaseUrl + 'api/quotes/', quoteJSON, {headers});
   }
 }

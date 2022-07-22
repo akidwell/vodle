@@ -89,7 +89,7 @@ import { SubmissionInformationModule } from './shared/components/submission-info
       multi: true,
       useClass: AuthInterceptor
     },
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    //{ provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
+import { QuoteChildValidation } from '../models/quote-child-validation';
 import { ProgramClass } from './program-class';
 import { QuoteBuildingClass } from './quote-building-class';
 import { QuoteCoverageClass } from './quote-coverage-class';
@@ -10,14 +11,14 @@ import { QuoteLocationClass } from './quote-location-class';
 import { QuoteMortgageeClass } from './quote-mortgagee-class';
 
 export class QuoteClass implements Quote {
-
+  coverageTabValidation!: QuoteChildValidation;
   submissionNumber = 0;
   quoteId = 0;
   cuspNumber = 0;
   quoteNumber = 0;
   sequenceNumber = 0;
-  effectiveDate: Date | Moment | null = null;
-  expirationDate: Date | Moment | null = null;
+  policyEffectiveDate: Date | Moment | null = null;
+  policyExpirationDate: Date | Moment | null = null;
   status = 0;
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
@@ -44,8 +45,8 @@ export class QuoteClass implements Quote {
   approvalUserName = null;
   approvalDate = null;
   comments = null;
-  createdBy = null;
-  createdDate = null;
+  createdBy = '';
+  createdDate: Date | Moment | null = null;
   modifiedUserName = null;
   modifiedDate = null;
   groupId = 3;
@@ -117,11 +118,10 @@ export class QuoteClass implements Quote {
   mappingError = false;
   submission!: SubmissionClass;
   quoteBuilding: QuoteBuildingClass[] = [];
-  quoteCoverage: QuoteCoverageClass[] = [];
+  quoteCoverages: QuoteCoverageClass[] = [];
   quoteDeductible: QuoteDeductibleClass[] = [];
   quoteMortgagee: QuoteMortgageeClass[] = [];
   quoteLocation: QuoteLocationClass[] = [];
-
   private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
@@ -153,18 +153,28 @@ export class QuoteClass implements Quote {
     this.quoteNumber = quote.quoteNumber || 1;
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
     this.admittedStatus = quote.admittedStatus || '';
-    this.effectiveDate = quote.effectiveDate || null;
-    this.expirationDate = quote.expirationDate || null;
+    this.policyEffectiveDate = quote.policyEffectiveDate || null;
+    this.policyExpirationDate = quote.policyExpirationDate || null;
     this.status = quote.status || 0;
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
     this.policySymbol = quote.policySymbol || '';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
+    this.autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
+    this.programId = quote.programId || 0;
+    this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
+    this.submissionNumber = quote.submissionNumber || 0;
+    this.displayCommissionRate = quote.displayCommissionRate || true;
+    this.createdBy = quote.createdBy || '';
+    this.createdDate = quote.createdDate || null;
     this.submission = new SubmissionClass(quote.submission);
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
+    //for demo purposes add empty coverage classes
+    this.quoteCoverages.push(new QuoteCoverageClass());
+    this.quoteCoverages.push(new QuoteCoverageClass());
   }
   newInit(program: ProgramClass, submission: SubmissionClass) {
     //if first quote on group attach to existing submission
@@ -186,11 +196,12 @@ export class QuoteClass implements Quote {
     this.terrorismTemplateCode = program.selectedCoverageCarrierMapping?.defTRIATemplateCode || '';
     this.coverageCode = program.selectedCoverageCarrierMapping?.coverageCode || 0;
     this.admittedStatus = program.selectedCoverageCarrierMapping?.admittedStatus || '';
-    this.effectiveDate = submission.polEffDate;
-    this.expirationDate = submission.polExpDate;
+    this.policyEffectiveDate = submission.polEffDate;
+    this.policyExpirationDate = submission.polExpDate;
     this.programId = program.programId;
     this.status = 1;
   }
+
   markClean() {
     this._isDirty = false;
   }
@@ -203,7 +214,20 @@ export class QuoteClass implements Quote {
   setReadonlyFields() {
     // No special rules
   }
-
+  areChildrenValid() {
+    //TODO::Program specific validation
+  }
+  validateCoverageTab(): QuoteChildValidation {
+    const validation: QuoteChildValidation = {
+      className: 'CoverageClass',
+      isDirty: this.quoteCoverages.map(x => x.isDirty).includes(true),
+      isValid: this.quoteCoverages.map(x => x.isValid).includes(true),
+      canBeSaved: this.quoteCoverages.map(x => x.canBeSaved).includes(true),
+      isEmpty: this.quoteCoverages.length === 0,
+      errorMessages: this.quoteCoverages.flatMap(x => x.errorMessages)
+    };
+    return validation;
+  }
   // validate(valid: boolean): boolean {
   //   this.invalidList = [];
   //   if (!this.validateName()) {
@@ -229,8 +253,8 @@ export class QuoteClass implements Quote {
       cuspNumber: this.cuspNumber,
       quoteNumber: this.quoteNumber,
       sequenceNumber: this.sequenceNumber,
-      effectiveDate: this.effectiveDate,
-      expirationDate: this.expirationDate,
+      policyEffectiveDate: this.policyEffectiveDate,
+      policyExpirationDate: this.policyExpirationDate,
       status: this.status,
       claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
       admittedStatus: this.admittedStatus,
@@ -238,10 +262,13 @@ export class QuoteClass implements Quote {
       coverageCode: this.coverageCode,
       carrierCode: this.carrierCode,
       pacCode: this.pacCode,
+      createdBy: this.createdBy,
+      createdDate: this.createdDate,
       submission: this.submission.toJSON(),
       policySymbol: this.policySymbol,
       formName: this.formName,
       programId: this.programId,
+      autoCalcMiscPremium: this.autoCalcMiscPremium
     };
   }
 }

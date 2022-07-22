@@ -7,8 +7,8 @@ export interface Quote {
   cuspNumber: number | null;
   quoteNumber: number | null;
   sequenceNumber: number | null;
-  effectiveDate: Date | Moment | null;
-  expirationDate: Date | Moment | null;
+  policyEffectiveDate: Date | Moment | null;
+  policyExpirationDate: Date | Moment | null;
   status: number;
   claimsMadeOrOccurrence: string;
   admittedStatus: string;

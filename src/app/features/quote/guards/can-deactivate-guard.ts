@@ -21,30 +21,30 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
       if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
         return true;
       }
-      const submission = this.pageDataService.submissionData || null;
-      if (submission && submission.isValid) {
-        if (submission.isDirty) {
+      const department = this.pageDataService.quoteData || null;
+      if (department && department.isValid) {
+        if (department.isDirty) {
           if (this.checkLeavePolicy(state.url, nextState.url)) {
             return this.confirmLeave().then(confirm => {
               if (confirm) {
-                component.hideInvalid();
+                //component.hideInvalid();
               }
               return confirm;
             });
           }
         }
         // No error and no longer dirty then hide any errors and navigate to next route
-        component.hideInvalid();
+        //component.hideInvalid();
         return true;
       }
       // Show errors
-      component.showInvalidControls();
+      //component.showInvalidControls();
       window.scroll(0, 0);
       // Check to see if trying to leave policy
       if (this.checkLeavePolicy(state.url, nextState.url)) {
         return this.confirmLeave().then(confirm => {
           if (confirm) {
-            component.hideInvalid();
+            //component.hideInvalid();
           }
           return confirm;
         });
@@ -72,7 +72,7 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
   async confirmLeave(): Promise<boolean> {
     const option = await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
     if(option) {
-      this.pageDataService.submissionData?.markClean();
+      this.pageDataService.quoteData?.markClean();
       ///TODO: Need to reset class
     }
     return option;

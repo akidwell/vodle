@@ -35,21 +35,6 @@ export class QuoteInformationDetailProgramComponent implements OnInit {
     console.log(this.program);
     this.newQuote = true;
   }
-  async saveQuote() {
-    if (this.program.quoteData) {
-      console.log(this.program.quoteData);
-      console.log(this.program.quoteData.submission);
-      const results$ = this.quoteService.postQuote(this.program.quoteData);
-      await lastValueFrom(results$).then(async quote => {
-        console.log(quote);
-        if (quote !== null) {
-          this.router.navigate(['/quote/' + quote + '/information']);
-        }
-        this.newQuote = false;
-        return true;
-      });
-    }
-  }
 }
 
 
