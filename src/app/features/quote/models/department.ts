@@ -4,7 +4,7 @@ import { ProgramClass } from '../classes/program-class';
 export interface Department {
   departmentId: number;
   departmentName: string;
-  programMappings: ProgramClass[]
+  programMappings: ProgramClass[];
   availablePacCodes: Code[];
   availableCarrierCodes: Code[];
 }

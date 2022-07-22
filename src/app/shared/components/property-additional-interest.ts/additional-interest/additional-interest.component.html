@@ -1,0 +1,125 @@
+<div class="component-row">
+  <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+
+    <div (click)="collapseExpand(false)">
+      <div class="row" *ngIf="collapsed">
+        <div class="col-sm-1">
+          <label for="location" class="form-label" title="location">Location #</label>
+          <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+            [(ngModel)]="aiData.locationNumber" #locationNumber="ngModel" [readonly]="!canEditSubmission"
+            >
+        </div>
+
+        <div class="col-sm-1">
+          <label for="building" class="form-label" title="building">Building #</label>
+          <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+            [(ngModel)]="aiData.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEditSubmission">
+        </div>
+        <div class="col-lg-8" >
+          <label for="address" class="form-label" title="address">Address</label>
+          <input type="address" class="form-control" id="address" #address="ngModel" name="address"  [readonly]="!canEditSubmission"
+              [ngModel]=" (!aiData.interest? '' : aiData.interest) +
+                          (!aiData.street1 ? '' : ', ' + aiData.street1) + 
+                          (!aiData.street2 ? '' : ', ' + aiData.street2) + 
+                          (!aiData.city ? '' : ', ' + aiData.city ) + 
+                          (!aiData.state ? '' : ', ' + aiData.state) +
+                          (!aiData.zip ? '' : ' ' + aiData.zip)">
+        </div>
+        <div class="col-lg-2"  style="padding-top: 1.6%;">
+          <button class="btn btn-secondary" (click)=copyAdditionalInterest() hover-class="btn-primary" [disabled]="!canEditSubmission"
+            click-stop-propagation>Copy</button>
+          <button *ngIf="!aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation() [disabled]="!canEditSubmission"
+            hover-class="btn-danger" click-stop-propagation>Delete</button>
+          <button *ngIf="aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation() [disabled]="!canEditSubmission"
+            hover-class="btn-warning" click-stop-propagation>Remove</button>
+        </div>
+      </div>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-1">
+            <label for="locationNumber" class="form-label" title="locationNumber">Location #</label>
+            <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+              [(ngModel)]="aiData.locationNumber" #locationNumber="ngModel" [readonly]="!canEditSubmission">
+          </div>
+          <div class="col-sm-1">
+            <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>
+            <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+              [(ngModel)]="aiData.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEditSubmission">
+          </div>
+          <div class="col-sm-2">
+            <label for="interest" class="form-label" title="interest">Interest</label>
+            <input type="text" class="form-control" id="interest" name="interest" [(ngModel)]="aiData.interest"
+              #interest="ngModel" [readonly]="!canEditSubmission">
+          </div>
+          <div class="col-sm-1">
+            <label for="zip" class="form-label" title="zip">Zipcode</label>
+            <div class="inputspinner">
+              <input type="text" zip-code class="form-control" id="zip" [readonly]="aiData.isZipLookup || !canEditSubmission"
+                [(ngModel)]="aiData.zip" name="zipCode" #zip="ngModel" (ngModelChange)="changeZipCode()">
+              <div *ngIf="aiData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="zipCode"
+                aria-hidden="true" >
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <label for="street1" class="form-label" title="street1">Street Address 1</label>
+            <input type="text" class="form-control" id="street1" name="street1" [(ngModel)]="aiData.street1"
+              #street1="ngModel" [readonly]="!canEditSubmission">
+          </div>
+          <div class="col-sm-2">
+              <label for="street2" class="form-label" title="street2">Street Address 2</label>
+              <input type="text" class="form-control" id="street2" name="street2" [(ngModel)]="aiData.street2"
+              #street2="ngModel" [readonly]="!canEditSubmission">
+          </div>
+          <div class="col-sm-1">
+            <label for="city" class="form-label" title="city">City</label>
+            <input type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city"
+              [readonly]="aiData.isZipLookup || !canEditSubmission" #city="ngModel">
+          </div>
+          <div class="col-sm-2">
+            <label for="state" class="form-label" title="state">State</label>
+            <div *ngIf="isLoadingAddress">
+              <div class="spinner-border ml-auto" role="state" aria-hidden="true">
+              </div>
+            </div>
+            <div *ngIf="!isLoadingAddress">
+              <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code"
+                [clearable]="false" [readonly]="  aiData.isZipLookup || !canEditSubmission" name="mortgageeState"
+                [(ngModel)]="aiData.state" #mortgageeState="ngModel" (change)="changeState($event)">
+              </ng-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2">
+              <label for="attention" class="form-label" title="attention">Attention</label>
+              <input type="text" class="form-control" id="attention" name="attention"
+                [(ngModel)]="aiData.attention" #attention="ngModel"  [readonly]="!canEditSubmission">
+            </div>
+            <div class="col-sm-9">
+              <label for="comments" class="form-label" title="comments">Comments</label>
+              <input type="text" class="form-control" id="comments" name="comments"
+                [(ngModel)]="aiData.description" #comments="ngModel"  [readonly]="!canEditSubmission">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="empty-row"></div>
+      <div class="row">
+        <div class="col-lg-4">
+          <button class="btn btn-secondary" (click)=copyAdditionalInterest() hover-class="btn-primary"  [disabled]="!canEditSubmission">Copy</button>
+          <button *ngIf="!aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()  [disabled]="!canEditSubmission"
+            hover-class="btn-danger">Delete</button>
+          <button *ngIf="aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()  [disabled]="!canEditSubmission"
+            hover-class="btn-warning">Remove</button>
+        </div>
+        <div [id]='anchorId'></div>
+      </div>
+      <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+        [openDelay]="1000">
+        <fa-icon [icon]="faArrowUp"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>

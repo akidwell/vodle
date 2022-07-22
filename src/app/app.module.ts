@@ -33,6 +33,9 @@ import { StatusModule } from './shared/components/status-bar/status-bar.module';
 import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
 import { PageDataService } from './core/services/page-data-service/page-data-service';
 import { SubmissionInformationModule } from './shared/components/submission-information/submission-information.module';
+import { MortgageeModule } from './shared/components/propertry-mortgagee/mortgagee.module';
+import { AdditionalInterestModule } from './shared/components/property-additional-interest.ts/additional-interest.module';
+
 
 @NgModule({
   declarations: [
@@ -67,6 +70,8 @@ import { SubmissionInformationModule } from './shared/components/submission-info
     NoopAnimationsModule,
     PipesModule,
     SubmissionInformationModule,
+    MortgageeModule,
+    AdditionalInterestModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerImmediately'
@@ -89,7 +94,7 @@ import { SubmissionInformationModule } from './shared/components/submission-info
       multi: true,
       useClass: AuthInterceptor
     },
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    //  { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

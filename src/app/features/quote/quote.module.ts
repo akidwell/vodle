@@ -25,7 +25,6 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { QuotePropertyDetailComponent } from './components/property/quote-property-detail/quote-property-detail.component';
-import { QuoteMortgageeComponent } from './components/quote-mortgagee/quote-mortgagee.component';
 import { QuoteSubmissionComponent } from './components/common/quote-submission-base/quote-submission.component';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
 import { QuoteProgramBaseComponent } from './components/quote-program-base/quote-program-base.component';
@@ -36,6 +35,8 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
 import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
 import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
 import { PropertyPremiumModule } from 'src/app/shared/components/property-premium/property-premium.module';
+import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
+import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,6 @@ import { PropertyPremiumModule } from 'src/app/shared/components/property-premiu
     QuoteInformationDetailComponent,
     QuoteInformationDetailProgramComponent,
     QuotePropertyDetailComponent,
-    QuoteMortgageeComponent,
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
@@ -67,6 +67,8 @@ import { PropertyPremiumModule } from 'src/app/shared/components/property-premiu
     MatNativeDateModule,
     MatFormFieldModule,
     SubmissionInformationModule,
+    MortgageeModule,
+    AdditionalInterestModule,
     PipesModule,
     PropertyDeductibleModule,
     PropertyPremiumModule,

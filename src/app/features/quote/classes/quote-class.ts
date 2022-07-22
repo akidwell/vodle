@@ -1,12 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
+import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
-import { QuoteBuildingClass } from './quote-building-class';
-import { QuoteCoverageClass } from './quote-coverage-class';
-import { QuoteLocationClass } from './quote-location-class';
-import { QuoteMortgageeClass } from './quote-mortgagee-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
 
@@ -119,10 +117,12 @@ export class QuoteClass implements Quote {
   submission!: SubmissionClass;
   // quoteBuilding: QuoteBuildingClass[] = [];
   // quoteCoverage: QuoteCoverageClass[] = [];
-  quoteMortgagee: QuoteMortgageeClass[] = [];
   // quoteLocation: QuoteLocationClass[] = [];
   quoteRates: QuoteRateClass[] = [];
   propertyQuote!: PropertyQuoteClass;
+
+  propertyQuoteMortgagee: MortgageeClass[] = [];
+  propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
 
   private _isDirty = false;
   isNew = false;
@@ -171,6 +171,13 @@ export class QuoteClass implements Quote {
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
 
+    quote.propertyQuoteMortgagee?.forEach(x => {
+      this.propertyQuoteMortgagee.push(new MortgageeClass(x));
+    });
+
+    quote.propertyQuoteAdditionalInterest?.forEach(x => {
+      this.propertyQuoteAdditionalInterest.push( new AdditionalInterestClass(x));
+    });
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
