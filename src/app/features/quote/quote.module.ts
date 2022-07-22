@@ -34,7 +34,7 @@ import { QuoteSummaryComponent } from './components/common/quote-summary-base/qu
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
 import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
-import { PropertyPremiumModule } from 'src/app/shared/components/property-premium/property-premium.module';
+import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
 import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 
@@ -53,7 +53,8 @@ import { AdditionalInterestModule } from 'src/app/shared/components/property-add
     QuoteSubmissionComponent,
     QuoteProgramBaseComponent,
     QuotePropertyLocationCoverageComponent,
-    QuotePropertyPremiumComponent ],
+    QuotePropertyPremiumComponent,
+    PropertyPremiumRateComponent],
   imports: [
     CommonModule,
     QuoteRoutingModule,
@@ -71,7 +72,6 @@ import { AdditionalInterestModule } from 'src/app/shared/components/property-add
     AdditionalInterestModule,
     PipesModule,
     PropertyDeductibleModule,
-    PropertyPremiumModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

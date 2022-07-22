@@ -124,4 +124,8 @@ export class PageDataService {
   get selectedProgram(): ProgramClass | null {
     return this._selectedProgram;
   }
+
+  refreshProgram() {
+    this.selectedProgram$.next(this._selectedProgram);
+  }
 }

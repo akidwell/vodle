@@ -1,9 +1,11 @@
 import { PropertyQuote } from '../models/property-quote';
+import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
 
 export class PropertyQuoteClass implements PropertyQuote {
   quoteId = null;
   propertyQuoteDeductible: PropertyQuoteDeductibleClass[] = [];
+  propertyQuoteBuilding: PropertyQuoteBuildingClass[] = [];
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -32,6 +34,12 @@ export class PropertyQuoteClass implements PropertyQuote {
       deductibles.push(new PropertyQuoteDeductibleClass(element));
     });
     this.propertyQuoteDeductible = deductibles;
+
+    const buildings: PropertyQuoteBuildingClass[] = [];
+    propertyQuote.propertyQuoteBuilding.forEach(element => {
+      buildings.push(new PropertyQuoteBuildingClass(element));
+    });
+    this.propertyQuoteBuilding = buildings;
 
     this.setReadonlyFields();
     this.setRequiredFields();
