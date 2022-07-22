@@ -36,7 +36,6 @@ import { SubmissionInformationModule } from './shared/components/submission-info
 import { MortgageeModule } from './shared/components/propertry-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from './shared/components/property-additional-interest.ts/additional-interest.module';
 
-
 @NgModule({
   declarations: [
     AppComponent,

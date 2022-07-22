@@ -1,4 +1,3 @@
-<input type="file" style="display:none" accept=".xls, .xlsx" (change)="import($event)" #file>
-<button class="btn btn-md btn-primary" (click)="file.click()" name="verify" style="margin: 15px;float: left;"
-    *ngIf="true">Import
-</button>
+<rsps-property-import [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission"></rsps-property-import>
+<rsps-property-building-group [classType]="classType" [buildings]="quote.propertyQuote.propertyQuoteBuilding"
+    [canEdit]="canEditSubmission"></rsps-property-building-group>
