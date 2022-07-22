@@ -37,6 +37,8 @@ import { PropertyDeductibleModule } from 'src/app/shared/components/property-ded
 import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
 import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
+import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
+import { PropertyImportModule } from 'src/app/shared/components/property-import/property-building.module';
 
 @NgModule({
   declarations: [
@@ -72,6 +74,8 @@ import { AdditionalInterestModule } from 'src/app/shared/components/property-add
     AdditionalInterestModule,
     PipesModule,
     PropertyDeductibleModule,
+    PropertyBuildingModule,
+    PropertyImportModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

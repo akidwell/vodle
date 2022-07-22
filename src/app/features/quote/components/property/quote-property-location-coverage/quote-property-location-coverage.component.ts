@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
 import { QuoteClass } from '../../../classes/quote-class';
-import { QuoteService } from '../../../services/quote-service/quote.service';
 
 @Component({
   selector: 'rsps-quote-property-location-coverage',
@@ -14,42 +14,25 @@ import { QuoteService } from '../../../services/quote-service/quote.service';
 export class QuotePropertyLocationCoverageComponent implements OnInit {
   authSub: Subscription;
   canEditSubmission = false;
-  quote!: QuoteClass | null;
+  quote!: QuoteClass;
   programSub!: Subscription;
+  classType = ClassTypeEnum.Quote;
 
-  // @Input() public program!: ProgramClass;
-
-  constructor(private userAuth: UserAuth, private quoteService: QuoteService, private pageDataService: PageDataService) {
+  constructor(private userAuth: UserAuth, private pageDataService: PageDataService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
   }
 
   ngOnInit(): void {
-    // if (this.program?.quoteData != null) {
-    //   this.quote = this.program.quoteData;
-    // }
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
-          this.quote = selectedProgram.quoteData;
+          this.quote = selectedProgram.quoteData ?? new QuoteClass();
         }
       }
     );
   }
 
-  async import(e: any){
-    console.log('Change input file'+ e);
-    if (this.quote != null) {
-      const results$ = this.quoteService.import(this.quote.submission.quoteActivity[0].sequenceNumber, e.target.files[0]);
-      await lastValueFrom(results$).then((quote) => {
-        if (this.pageDataService.selectedProgram != null) {
-          this.pageDataService.selectedProgram.quoteData = new QuoteClass(quote);
-          console.log('refresh');
-          this.pageDataService.refreshProgram();
-        // this.quote = new QuoteClass(quote)
-        }
-      });
-    }
-  }
+ 
 }
