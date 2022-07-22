@@ -45,7 +45,7 @@ const routes: Routes = [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
           { path: 'location', component: QuotePropertyLocationCoverageComponent },
           { path: 'mortgagee', component: QuoteMortgageeComponent },
-          { path: 'premium', component: QuotePremiumComponent },
+          { path: 'premium', component: QuotePremiumComponent, data: { saveComponent: true } },
           { path: 'conditions', component: TermsConditionsComponent },
         ]
       },

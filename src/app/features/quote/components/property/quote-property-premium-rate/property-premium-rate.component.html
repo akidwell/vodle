@@ -8,29 +8,29 @@
         <label for="totalLimit" class="form-label" title="Total Limit Amount">Total Limit
             Amount</label>
         <input type="text" class="form-control right" id="totalLimit" readonly string-to-currency
-            name="totalLimit" [(ngModel)]="quote.quoteRates[0].premium" #totalLimit="ngModel">
+            name="totalLimit" [(ngModel)]="rate.premium" #totalLimit="ngModel">
     </div>
     <div class="col-lg-1">
         <label for="rateBasis" class="form-label" title="Rate Basis">Rate Basis</label>
         <input type="text" class="form-control right" id="rateBasis" readonly name="rateBasis"
-            [(ngModel)]="quote.quoteRates[0].rateBasis" #rateBasis="ngModel">
+            [(ngModel)]="rate.rateBasis" #rateBasis="ngModel">
     </div>
     <div class="col-lg-1">
         <label for="finalRate" class="form-label" title="Final Rate">Final Rate</label>
         <input type="text" class="form-control right" id="finalRate" [readonly]="!canEdit"
             name="finalRate" string-to-currency [decimalPlaces]="5" [hideDecimal]="true"
-            [allowNegative]="false" [(ngModel)]="quote.quoteRates[0].premiumRate" #finalRate="ngModel">
+            [allowNegative]="false" [(ngModel)]="rate.premiumRate" #finalRate="ngModel">
     </div>
     <div class="col-lg-1">
         <label for="flatRate" class="form-label" title="Flat Rate">Flat Rate</label>
         <input type="checkbox" class="form-checkbox" id="flatRate"
-            [(ngModel)]="quote.quoteRates[0].isFlatRate" name="flatRate" [readonly]="!canEdit"
+            [(ngModel)]="rate.isFlatRate" name="flatRate" [readonly]="!canEdit"
             [required]="canEdit">
     </div>
     <div class="col-lg-1"></div>
     <div class="col-lg-2">
         <label for="Premium" class="form-label" title="Premium">Premium</label>
         <input type="text" class="form-control right" id="Premium" [readonly]="!canEdit" [required]="canEdit"
-            string-to-currency [allowNegative]="false" name="Premium" [(ngModel)]="quote.quoteRates[0].premium" #Premium="ngModel">
+            string-to-currency [allowNegative]="false" name="Premium" [(ngModel)]="rate.premium" #Premium="ngModel">
     </div>
 </div>

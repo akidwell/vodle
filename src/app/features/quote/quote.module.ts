@@ -35,7 +35,7 @@ import { QuoteSummaryComponent } from './components/common/quote-summary-base/qu
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
 import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
-import { PropertyPremiumModule } from 'src/app/shared/components/property-premium/property-premium.module';
+import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +53,8 @@ import { PropertyPremiumModule } from 'src/app/shared/components/property-premiu
     QuoteSubmissionComponent,
     QuoteProgramBaseComponent,
     QuotePropertyLocationCoverageComponent,
-    QuotePropertyPremiumComponent ],
+    QuotePropertyPremiumComponent,
+    PropertyPremiumRateComponent],
   imports: [
     CommonModule,
     QuoteRoutingModule,
@@ -69,7 +70,6 @@ import { PropertyPremiumModule } from 'src/app/shared/components/property-premiu
     SubmissionInformationModule,
     PipesModule,
     PropertyDeductibleModule,
-    PropertyPremiumModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

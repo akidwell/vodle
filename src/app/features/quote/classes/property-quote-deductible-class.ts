@@ -20,7 +20,6 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible {
   private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
-  isDuplicate = false;
 
   get propertyDeductibleId() : number | null {
     return this._propertyDeductibleId;

@@ -1,2 +1,4 @@
-<button class="btn btn-md btn-primary" (click)="import()" name="verify" style="margin: 15px;float: left;"
-    *ngIf="true">Import</button>
+<input type="file" style="display:none" accept=".xls, .xlsx" (change)="import($event)" #file>
+<button class="btn btn-md btn-primary" (click)="file.click()" name="verify" style="margin: 15px;float: left;"
+    *ngIf="true">Import
+</button>
