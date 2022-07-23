@@ -127,7 +127,7 @@ export class ImportComponent implements OnInit {
   routeImport() {
     this.showBusy = false;
     if (this.importPolicyResponse?.isPolicyImported) {
-      this.navigationService.resetPolicy();
+      this.navigationService.clearReuse();
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {

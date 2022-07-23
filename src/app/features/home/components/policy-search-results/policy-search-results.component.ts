@@ -98,7 +98,7 @@ ngOnInit(): void {
 
 
 openPolicy(policy: PolicySearchResponses): void {
-  this.navigationService.resetPolicy();
+  this.navigationService.clearReuse();
   this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
 }
   @ViewChild('actionModal') private actionComponent: ActionComponent | undefined;

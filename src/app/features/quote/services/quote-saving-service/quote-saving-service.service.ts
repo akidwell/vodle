@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
@@ -6,10 +6,8 @@ import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
 import { QuoteService } from '../quote-service/quote.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class QuoteSavingServiceService {
+@Injectable()
+export class QuoteSavingService {
   programSub!: Subscription;
   departmentSub!: Subscription;
   program: ProgramClass | null = null;

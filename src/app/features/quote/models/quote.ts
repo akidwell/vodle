@@ -1,5 +1,9 @@
 import { Moment } from 'moment';
+import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { Submission } from '../../submission/models/submission';
+import { PropertyQuote } from './property-quote';
+import { QuoteRate } from './quote-rate';
 
 export interface Quote {
   submissionNumber: number | null;
@@ -17,6 +21,8 @@ export interface Quote {
   carrierCode: string;
   pacCode: string;
   submission: Submission;
+  propertyQuoteMortgagee: MortgageeClass[] | null;
+  propertyQuoteAdditionalInterest: AdditionalInterestClass[] | null;
   quoteName: string | null;
   policySymbol: string;
   formName: string;
@@ -105,4 +111,6 @@ export interface Quote {
   maxPolicyAggregate: string | null;
   displayCommissionRate: boolean;
   supportedStatus: string | null;
+  quoteRates: QuoteRate[];
+  propertyQuote: PropertyQuote;
 }

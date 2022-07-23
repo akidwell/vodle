@@ -1,0 +1,27 @@
+
+
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">
+   Mortgagee / Loss Payee
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div class="card-body" *ngIf="quoteData.length > 0">
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div  *ngFor="let item of quoteData; let i = index">
+        <rsps-mortgagee (copyExisitingMortgagee)=copyExisitingMortgagee($event) (deleteExistingMortgagee)=deleteExistingMortgagee($event)
+        [mortgagee]=quoteData [mortgageeData]=item ></rsps-mortgagee>
+        </div>
+    </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div id="mortgageeFooter">
+      <button style="float:left; background:none; border:none;" class="underline"
+        (click)="addNewMortgagee();">Add Mortgagee</button>
+    </div>
+  </div>
+</div>
+<rsps-additional-interest-group></rsps-additional-interest-group>
+

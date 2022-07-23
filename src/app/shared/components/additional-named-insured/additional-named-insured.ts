@@ -17,10 +17,6 @@ export interface AdditionalNamedInsuredData {
 }
 
 export interface AdditionalNamedInsured extends AdditionalNamedInsuredData {
-  // get key1(): number;
-  // set key1(value: number);
-  // get key2(): number;
-  // set key2(value: number);
   showActive: boolean;
   isDuplicate: boolean;
   save(): Promise<boolean>;

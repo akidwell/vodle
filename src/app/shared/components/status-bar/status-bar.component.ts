@@ -21,7 +21,7 @@ import { EndorsementStatusService } from 'src/app/features/policy/services/endor
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
-import { QuoteSavingServiceService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
+import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 
 
@@ -66,7 +66,7 @@ export class StatusBarComponent implements OnInit {
     private notification: NotificationService,
     public endorsementStatus: EndorsementStatusService,
     private navigationService: NavigationService,
-    public quoteSavingService: QuoteSavingServiceService
+    public quoteSavingService: QuoteSavingService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured

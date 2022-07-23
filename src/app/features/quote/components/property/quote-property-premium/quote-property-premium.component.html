@@ -1,0 +1,15 @@
+<div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+        Property Premium
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
+        <div class="card-body" id="card-header">
+            <rsps-property-premium-rate [program]="program" [rate]="rate" [canEdit]="canEditSubmission"></rsps-property-premium-rate>
+            <div class="empty-row"></div>
+            <rsps-property-deductible-group [classType]="classType" [deductibles]="quote.propertyQuote.propertyQuoteDeductible" [canEdit]="canEditSubmission">
+            </rsps-property-deductible-group>
+        </div>
+    </div>
+</div>

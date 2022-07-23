@@ -183,7 +183,7 @@ export class DirectPolicyComponent implements OnInit {
       .then((response) => {
         if (response.policyId != null) {
           this.modalRef.close();
-          this.navigationService.resetPolicy();
+          this.navigationService.clearReuse();
           this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
         }
       })
@@ -204,7 +204,7 @@ export class DirectPolicyComponent implements OnInit {
       .then((response) => {
         if (response.policyId != null) {
           this.modalRef.close();
-          this.navigationService.resetPolicy();
+          this.navigationService.clearReuse();
           this.router.navigate(['/policy/' + response.policyId.toString() + '/0']);
         }
       })

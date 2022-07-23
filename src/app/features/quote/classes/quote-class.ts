@@ -1,14 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
+import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
 import { QuoteChildValidation } from '../models/quote-child-validation';
 import { ProgramClass } from './program-class';
-import { QuoteBuildingClass } from './quote-building-class';
-import { QuoteCoverageClass } from './quote-coverage-class';
-import { QuoteDeductibleClass } from './quote-deductible-class';
-import { QuoteLocationClass } from './quote-location-class';
-import { QuoteMortgageeClass } from './quote-mortgagee-class';
+import { PropertyQuoteClass } from './property-quote-class';
+import { QuoteRateClass } from './quote-rate-class';
 
 export class QuoteClass implements Quote {
   coverageTabValidation!: QuoteChildValidation;
@@ -117,11 +116,15 @@ export class QuoteClass implements Quote {
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
-  quoteBuilding: QuoteBuildingClass[] = [];
-  quoteCoverages: QuoteCoverageClass[] = [];
-  quoteDeductible: QuoteDeductibleClass[] = [];
-  quoteMortgagee: QuoteMortgageeClass[] = [];
-  quoteLocation: QuoteLocationClass[] = [];
+  // quoteBuilding: QuoteBuildingClass[] = [];
+  // quoteCoverage: QuoteCoverageClass[] = [];
+  // quoteLocation: QuoteLocationClass[] = [];
+  quoteRates: QuoteRateClass[] = [];
+  propertyQuote!: PropertyQuoteClass;
+
+  propertyQuoteMortgagee: MortgageeClass[] = [];
+  propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
+
   private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
@@ -169,12 +172,26 @@ export class QuoteClass implements Quote {
     this.createdBy = quote.createdBy || '';
     this.createdDate = quote.createdDate || null;
     this.submission = new SubmissionClass(quote.submission);
+    const rates: QuoteRateClass[] = [];
+    quote.quoteRates?.forEach(element => {
+      rates.push(new QuoteRateClass(element));
+    });
+    this.quoteRates = rates;
+    this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
+
+    quote.propertyQuoteMortgagee?.forEach(x => {
+      this.propertyQuoteMortgagee.push(new MortgageeClass(x));
+    });
+
+    quote.propertyQuoteAdditionalInterest?.forEach(x => {
+      this.propertyQuoteAdditionalInterest.push( new AdditionalInterestClass(x));
+    });
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
     //for demo purposes add empty coverage classes
-    this.quoteCoverages.push(new QuoteCoverageClass());
-    this.quoteCoverages.push(new QuoteCoverageClass());
+    // this.quoteCoverages.push(new QuoteCoverageClass());
+    // this.quoteCoverages.push(new QuoteCoverageClass());
   }
   newInit(program: ProgramClass, submission: SubmissionClass) {
     //if first quote on group attach to existing submission
@@ -217,17 +234,17 @@ export class QuoteClass implements Quote {
   areChildrenValid() {
     //TODO::Program specific validation
   }
-  validateCoverageTab(): QuoteChildValidation {
-    const validation: QuoteChildValidation = {
-      className: 'CoverageClass',
-      isDirty: this.quoteCoverages.map(x => x.isDirty).includes(true),
-      isValid: this.quoteCoverages.map(x => x.isValid).includes(true),
-      canBeSaved: this.quoteCoverages.map(x => x.canBeSaved).includes(true),
-      isEmpty: this.quoteCoverages.length === 0,
-      errorMessages: this.quoteCoverages.flatMap(x => x.errorMessages)
-    };
-    return validation;
-  }
+  // validateCoverageTab(): QuoteChildValidation {
+  //   const validation: QuoteChildValidation = {
+  //     className: 'CoverageClass',
+  //     isDirty: this.quoteCoverages.map(x => x.isDirty).includes(true),
+  //     isValid: this.quoteCoverages.map(x => x.isValid).includes(true),
+  //     canBeSaved: this.quoteCoverages.map(x => x.canBeSaved).includes(true),
+  //     isEmpty: this.quoteCoverages.length === 0,
+  //     errorMessages: this.quoteCoverages.flatMap(x => x.errorMessages)
+  //   };
+  //   return validation;
+  //}
   // validate(valid: boolean): boolean {
   //   this.invalidList = [];
   //   if (!this.validateName()) {

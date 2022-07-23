@@ -5,7 +5,7 @@ export interface Department {
   departmentId: number;
   sequenceNumber: number;
   departmentName: string;
-  programMappings: ProgramClass[]
+  programMappings: ProgramClass[];
   availablePacCodes: Code[];
   availableCarrierCodes: Code[];
 }

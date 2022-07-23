@@ -1,0 +1,112 @@
+<div class="component-row">
+  <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+    <div (click)="collapseExpand(false)">
+      <div class="row" *ngIf="collapsed">
+        <div class="col-sm-1">
+          <label for="locationNumber" class="form-label" title="locationNumber">Location #</label>
+          <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+            [(ngModel)]="mortgageeData.locationNumber" #locationNumber="ngModel"  [readonly]="!canEditSubmission">
+        </div>
+        <div class="col-sm-1">
+          <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>
+          <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+            [(ngModel)]="mortgageeData.buildingNumber" #buildingNumber="ngModel"  [readonly]="!canEditSubmission">
+        </div>
+        <div class="col-lg-8">
+          <label for="address" class="form-label" title="address">Address</label>
+          <input type="address" class="form-control" id="address" #address="ngModel" name="address"  [readonly]="!canEditSubmission"
+              [ngModel]=" (!mortgageeData.mortgageHolder? '' : mortgageeData.mortgageHolder) +
+                          (!mortgageeData.street1 ? '' : ', ' + mortgageeData.street1) + 
+                          (!mortgageeData.street2 ? '' : ', ' + mortgageeData.street2) + 
+                          (!mortgageeData.city ? '' : ', ' + mortgageeData.city ) + 
+                          (!mortgageeData.state ? '' : ', ' + mortgageeData.state) +
+                          (!mortgageeData.zip ? '' : ' ' + mortgageeData.zip)">
+        </div>
+        <div class="col-lg-2"  style="padding-top: 1.6%;">
+          <button class="btn btn-secondary" (click)=copyMortgagee() hover-class="btn-primary"  [disabled]="!canEditSubmission"
+            click-stop-propagation>Copy</button>
+          <button *ngIf="!mortgageeData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()  [disabled]="!canEditSubmission"
+            hover-class="btn-danger" click-stop-propagation>Delete</button>
+          <button *ngIf="mortgageeData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()  [disabled]="!canEditSubmission"
+            hover-class="btn-warning" click-stop-propagation>Remove</button>
+        </div>
+      </div>
+    </div>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-2">
+              <label for="mortgageHolder" class="form-label" title="mortgageHolder">Mortgage Holder</label>
+              <input type="text" class="form-control" id="policyEventCode" name="mortgageHolder"  [readonly]="!canEditSubmission"
+                [(ngModel)]="mortgageeData.mortgageHolder" #mortgageHolder="ngModel">
+            </div>
+            <div class="col-sm-1">
+              <label for="zip" class="form-label" title="zip">Zipcode</label>   
+            <div class="inputspinner">
+              <input type="text" zip-code class="form-control" id="zipCode" [readonly]="mortgageeData.isZipLookup" [(ngModel)]="mortgageeData.zip"  [readonly]="!canEditSubmission"
+                name="zipCode" #zip="ngModel" (ngModelChange)="changeZipCode()"  >
+              <div *ngIf="mortgageeData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="zipCode"
+                aria-hidden="true">
+              </div>
+            </div>
+          </div>
+            <div class="col-sm-2">
+              <label for="street1" class="form-label" title="Status">Street Address 1</label>
+              <input type="text" class="form-control" id="street1" name="street1"  [readonly]="!canEditSubmission"
+                [(ngModel)]="mortgageeData.street1" #street1="ngModel">
+            </div>
+            <div class="col-sm-2">
+              <label for="street2" class="form-label" title="Status">Street Address 2</label>
+              <input type="text" class="form-control" id="street2" name="street2"  [readonly]="!canEditSubmission"
+                [(ngModel)]="mortgageeData.street2" #street2="ngModel">
+            </div>
+            <div class="col-sm-2">
+              <label for="city" class="form-label" title="city">City</label>
+              <input type="text" class="form-control" id="city" name="city" [(ngModel)]="mortgageeData.city" 
+              [readonly]="mortgageeData.isZipLookup || !canEditSubmission"  #city="ngModel">
+            </div>
+            <div class="col-sm-2">
+              <label for="policyEventCode" class="form-label" title="Status">State</label>
+              <div *ngIf="isLoadingAddress">
+                <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+                </div>
+              </div>
+              <div *ngIf="!isLoadingAddress">
+                <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code" 
+                  [clearable]="false" [readonly]="!canEditSubmission || mortgageeData.isZipLookup" name="mortgageeState"
+                  [(ngModel)]="mortgageeData.state" #mortgageeState="ngModel" (change)="changeState($event)">
+                </ng-select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-2">
+                <label for="attention" class="form-label" title="attention">Attention</label>
+                <input type="text" class="form-control" id="policyEventCode" name="attention"  [readonly]="!canEditSubmission"
+                  [(ngModel)]="mortgageeData.attention" #attention="ngModel">
+              </div>
+              <div class="col-sm-10">
+                <label for="comments" class="form-label" title="comments">Comments</label>
+                <input type="text" class="form-control" id="comments" name="comments"  [readonly]="!canEditSubmission"
+                  [(ngModel)]="mortgageeData.description" #comments="ngModel">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="empty-row"></div>
+        <div class="row">
+          <div class="col-lg-2">
+            <button class="btn btn-secondary" (click)=copyMortgagee() hover-class="btn-primary"  [disabled]="!canEditSubmission">Copy</button>
+            <button *ngIf="!mortgageeData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()  [disabled]="!canEditSubmission"
+              hover-class="btn-danger">Delete</button>
+            <button *ngIf="mortgageeData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()  [disabled]="!canEditSubmission"
+              hover-class="btn-warning">Remove</button>
+          </div>
+          <div [id]='anchorId'></div>
+        </div>
+        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+          [openDelay]="1000">
+          <fa-icon [icon]="faArrowUp"></fa-icon>
+        </button>
+      </div>
+  </div>
+</div>

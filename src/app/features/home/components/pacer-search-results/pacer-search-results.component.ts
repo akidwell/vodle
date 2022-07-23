@@ -34,7 +34,7 @@ export class PacerSearchResultsComponent implements OnInit {
   }
 
   routeToNewInsuredFromPacer(insured: InsuredSearchResponses) {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     this.router.navigate(['/insured/information'],{ state: { pacerInsured: insured } });
   }
 }

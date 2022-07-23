@@ -25,15 +25,20 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { QuotePropertyDetailComponent } from './components/property/quote-property-detail/quote-property-detail.component';
-import { QuoteMortgageeComponent } from './components/quote-mortgagee/quote-mortgagee.component';
 import { QuoteSubmissionComponent } from './components/common/quote-submission-base/quote-submission.component';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
 import { QuoteProgramBaseComponent } from './components/quote-program-base/quote-program-base.component';
-import { QuotePropertyLocationCoverageComponent } from './components/quote-property-location-coverage/quote-property-location-coverage.component';
+import { QuotePropertyLocationCoverageComponent } from './components/property/quote-property-location-coverage/quote-property-location-coverage.component';
 import { TermsConditionsComponent } from './components/common/terms-conditions-base/terms-conditions.component';
 import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
-
+import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
+import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
+import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
+import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
+import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
+import { QuoteSavingService } from './services/quote-saving-service/quote-saving-service.service';
+import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
 
 @NgModule({
   declarations: [
@@ -44,13 +49,14 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
     QuoteInformationDetailComponent,
     QuoteInformationDetailProgramComponent,
     QuotePropertyDetailComponent,
-    QuoteMortgageeComponent,
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
     QuoteSubmissionComponent,
     QuoteProgramBaseComponent,
-    QuotePropertyLocationCoverageComponent ],
+    QuotePropertyLocationCoverageComponent,
+    QuotePropertyPremiumComponent,
+    PropertyPremiumRateComponent],
   imports: [
     CommonModule,
     QuoteRoutingModule,
@@ -64,13 +70,18 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
     MatNativeDateModule,
     MatFormFieldModule,
     SubmissionInformationModule,
+    MortgageeModule,
+    AdditionalInterestModule,
     PipesModule,
+    PropertyDeductibleModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
     CanDeactivateGuard,
     DatePipe,
     FormatDateForDisplay,
+    QuoteSavingService,
+    QuoteDataValidationService,
     ConfirmationDialogService,
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     {

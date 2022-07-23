@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, map, catchError, of, tap } from 'rxjs';
-import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { QuoteResolved } from '../../models/quote-resolved';
 import { QuoteService } from '../quote-service/quote.service';
@@ -11,7 +10,7 @@ import { QuoteService } from '../quote-service/quote.service';
 })
 export class QuoteResolver implements Resolve<QuoteResolved> {
 
-  constructor(private router: Router, private quoteService: QuoteService, private historyService: HistoryService) { }
+  constructor(private router: Router, private quoteService: QuoteService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<QuoteResolved> {
     const sequenceNumber = route.paramMap.get('seq') ?? '';
@@ -23,8 +22,6 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
           tap((department) => {
             console.log(department);
             department.submissionForQuote = submission;
-          // Update history for opened Quote
-          //this.historyService.updateQuoteHistory(Number(sequenceNumber), quote[0].submissionNumber);
           }),
           map(department => ({ department })),
           catchError((error) => {
@@ -46,8 +43,6 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
       .pipe(
         tap((department) => {
           console.log(department);
-          // Update history for opened Quote
-          //this.historyService.updateQuoteHistory(Number(sequenceNumber), quote[0].submissionNumber);
         }),
         map(department => ({ department })),
         catchError((error) => {

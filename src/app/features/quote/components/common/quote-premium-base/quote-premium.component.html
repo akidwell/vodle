@@ -1,9 +1,7 @@
-<div>test</div>
-<p>quote-premium works!</p>
-<p>{{this.program?.quoteData?.quoteId }}</p>
-
+<!--
 <div><button (click)="this.coveragePremium.setIsDirtyFlag()">Dirty</button>{{this.coveragePremium.isDirty ? 'Is Dirty' : 'Is Clean'}}</div>
 <div><button (click)="this.coveragePremium.setIsValidFlag()">Valid</button>{{this.coveragePremium.isValid ? 'Is Valid' : 'Is Not Valid'}}</div>
-<div><button (click)="this.coveragePremium.setCanBeSavedFlag()">Can Be Saved</button>{{this.coveragePremium.canBeSaved ? 'Can Be Saved' : 'Cannot Be Saved'}}</div>
+<div><button (click)="this.coveragePremium.setCanBeSavedFlag()">Can Be Saved</button>{{this.coveragePremium.canBeSaved ? 'Can Be Saved' : 'Cannot Be Saved'}}</div> -->
 
 
+<rsps-quote-property-premium [program]="program" [quote]="quote" [rate]="rate" ></rsps-quote-property-premium>
