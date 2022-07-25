@@ -14,4 +14,5 @@ export interface AdditionalInterestData {
   zip: string | null;
   countryCode: string | null;
   isNew: boolean | null;
+  isAppliedToAll: boolean;
   }

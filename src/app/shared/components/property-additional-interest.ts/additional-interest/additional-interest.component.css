@@ -111,3 +111,19 @@ background-color: #ccd4dc;
   right: 10px;
   top: calc(50% - 10px);
 }
+
+.form-checkbox {
+  height: 45px;
+  width: 25px;
+  margin-bottom: 13px;
+  margin-left: 6px;
+}
+
+input[type="checkbox"] {
+  height: 25px;
+  width: 25px;
+}
+
+input[type="checkbox"][readonly] {
+  pointer-events: none;
+}
