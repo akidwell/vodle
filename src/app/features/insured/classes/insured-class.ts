@@ -77,7 +77,7 @@ export class InsuredClass implements Insured {
     return this.isZipLookup || this.isVerifying;
   }
   get zipReadonly(): boolean {
-    return this.isZipLookup || this.isVerifying;
+    return this.isVerifying;
   }
   get countyReadonly(): boolean {
     return this.isZipLookup || this.isVerifying;

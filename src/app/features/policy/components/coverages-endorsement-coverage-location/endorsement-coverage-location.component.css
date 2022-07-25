@@ -15,3 +15,13 @@
 .alert {
   padding: 5px;
 }
+
+.inputspinner {
+  position: relative;
+}
+
+#spinner {
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 10px);
+}

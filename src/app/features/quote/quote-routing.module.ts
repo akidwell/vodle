@@ -12,52 +12,58 @@ import { QuoteSummaryComponent } from './components/common/quote-summary-base/qu
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { MortgageeGroupComponent } from 'src/app/shared/components/propertry-mortgagee/property-mortgagee-group/mortgagee-group.component';
 
-
-
 const routes: Routes = [
   {
     path: 'quote-not-found',
-    component: QuoteNotFoundComponent
+    component: QuoteNotFoundComponent,
   },
   {
     path: '',
     component: QuoteComponent,
     resolve: {
-      quoteData: QuoteResolver
+      quoteData: QuoteResolver,
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: QuoteInformationComponent },
-    ]
+    ],
   },
   {
     path: ':seq',
     component: QuoteComponent,
     resolve: {
-      quoteData: QuoteResolver
+      quoteData: QuoteResolver,
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: QuoteInformationComponent },
       { path: 'submission', component: QuoteSubmissionComponent },
-      { path: 'program/:quoteId',
+      {
+        path: 'program/:quoteId',
         component: QuoteProgramBaseComponent,
         children: [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
-          { path: 'location', component: QuotePropertyLocationCoverageComponent },
-          { path: 'mortgagee', component: MortgageeGroupComponent },
+          {
+            path: 'location',
+            component: QuotePropertyLocationCoverageComponent,
+            data: { saveComponent: true },
+          },
+          { path: 'mortgagee', component: MortgageeGroupComponent, data: { saveComponent: true } },
           { path: 'premium', component: QuotePremiumComponent, data: { saveComponent: true } },
-          { path: 'conditions', component: TermsConditionsComponent },
-        ]
+          {
+            path: 'conditions',
+            component: TermsConditionsComponent,
+            data: { saveComponent: true },
+          },
+        ],
       },
-      { path: 'summary', component: QuoteSummaryComponent }
-    ]
-  }
-
+      { path: 'summary', component: QuoteSummaryComponent },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class QuoteRoutingModule { }
+export class QuoteRoutingModule {}

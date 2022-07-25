@@ -29,5 +29,14 @@ export interface PropertyBuildingData {
 }
 
 export interface PropertyBuilding extends PropertyBuildingData {
-
+    isZipLookup: boolean;
+    locationNumberRequired: boolean;
+    buildingNumberRequired: boolean;
+    street1Required: boolean;
+    zipRequired: boolean;
+    cityRequired: boolean;
+    stateRequired: boolean;
+    zipReadonly: boolean;
+    cityReadonly: boolean;
+    stateReadonly: boolean;
   }

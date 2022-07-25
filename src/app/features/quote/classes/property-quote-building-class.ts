@@ -32,7 +32,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
   private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
-
+  isZipLookup = false;
 
   get locationNumber() : number | null {
     return this._locationNumber;
@@ -225,6 +225,29 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
 
     this.setReadonlyFields();
     this.setRequiredFields();
+  }
+
+  locationNumberRequired = true;
+  buildingNumberRequired = true;
+  street1Required= true;
+  get zipRequired(): boolean {
+    return true;
+  }
+  get cityRequired(): boolean {
+    return true;
+  }
+  get stateRequired(): boolean {
+    return true;
+  }
+
+  get zipReadonly(): boolean {
+    return false;
+  }
+  get stateReadonly(): boolean {
+    return this.isZipLookup;
+  }
+  get cityReadonly(): boolean {
+    return this.isZipLookup;
   }
 
   newInit() {
