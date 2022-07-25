@@ -80,28 +80,13 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
 
-    // this._subjectNumber = building.locationNumber;
-    // this._limit = building.buildingNumber;
-    // this._coinsurancePct = building.street1;
-    // this._causeOfLossId = building.street2;
-    // this._city = building.city;
-    // this._state = building.state;
-    // this._zip = building.zip;
-    // this._countryCode = building.countryCode;
-    // this._classCode = building.classCode;
-    // this._description = building.description;
-    // this._occupancy = building.occupancy;
-    // this._yearBuilt = building.yearBuilt;
-    // this._sprinklered = building.sprinklered;
-    // this._construction = building.construction;
-    // this._stories = building.stories;
-    // this._protectionClass = building.protectionClass;
-    // this._roof = building.roof;
-    // this._wiring = building.wiring;
-    // this._plumbing = building.plumbing;
-    // this._hvac = building.hvac;
+    this._subjectNumber = coverage.subjectNumber;
+    this._limit = coverage.limit;
+    this._coinsurancePct = coverage.coinsurancePct;
+    this._causeOfLossId = coverage.causeOfLossId;
+    this._valuationId = coverage.valuationId;
+    this._additionalDetail = coverage.additionalDetail;
 
-    
     this.setReadonlyFields();
     this.setRequiredFields();
   }

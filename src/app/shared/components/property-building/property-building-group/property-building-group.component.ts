@@ -38,6 +38,13 @@ export class PropertyBuildingGroupComponent implements OnInit {
   }
 
   copyBuilding(building: PropertyBuilding) {
+    if (this.classType == ClassTypeEnum.Quote) {
+      const newBuilding: PropertyQuoteBuildingClass = Object.create(building);
+      newBuilding.propertyQuoteBuildingId = null;
+      newBuilding.isNew = true;
+      newBuilding.markDirty();
+      this.buildings.push(newBuilding);
+    }
   }
 
   deleteBuilding(building: PropertyBuilding) {
@@ -57,5 +64,4 @@ export class PropertyBuildingGroupComponent implements OnInit {
       }
     }
   }
-
 }
