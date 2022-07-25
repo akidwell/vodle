@@ -17,24 +17,10 @@ export class QuoteService {
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getQuotes(sequenceNumber?: number, departmentCode?: number): Observable<DepartmentClass> {
-    const propertyQuoteMortgagee: MortgageeClass[] = [];
-    const propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
     if (sequenceNumber) {
       return this.http.get<Department>(this.config.apiBaseUrl + 'api/quotes/full/' + sequenceNumber)
         .pipe(
           map((receivedData: Department) => {
-            receivedData?.programMappings[0]?.quoteData?.propertyQuoteMortgagee?.forEach(x => {
-              propertyQuoteMortgagee.push(new MortgageeClass(x));
-            });
-            receivedData?.programMappings[0]?.quoteData?.propertyQuoteAdditionalInterest?.forEach(x => {
-              propertyQuoteAdditionalInterest.push(new AdditionalInterestClass(x));
-            });
-            if(receivedData?.programMappings[0]?.quoteData?.propertyQuoteAdditionalInterest){
-              receivedData.programMappings[0].quoteData.propertyQuoteAdditionalInterest = propertyQuoteAdditionalInterest;
-            }
-            if(receivedData?.programMappings[0]?.quoteData?.propertyQuoteMortgagee){
-              receivedData.programMappings[0].quoteData.propertyQuoteMortgagee = propertyQuoteMortgagee;
-            }
             return new DepartmentClass(receivedData);
           }));
     } else {

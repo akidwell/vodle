@@ -2,8 +2,6 @@ import { AdditionalInterestData } from 'src/app/features/quote/models/additional
 
 export class AdditionalInterestClass implements AdditionalInterestData{
 
-  private _ai?: AdditionalInterestData;
-
   private _buildingNumber: string | null = null;
   private _attention: string | null = null;
   private _description: string | null = null;
@@ -18,6 +16,7 @@ export class AdditionalInterestClass implements AdditionalInterestData{
   private _zip: string | null = null;
   private _countryCode: string | null = null;
   private _isDirty = false;
+  private _isAppliedToAll = false;
 
   isNew = false;
   invalidList: string[] = [];
@@ -46,6 +45,7 @@ export class AdditionalInterestClass implements AdditionalInterestData{
     this._city = ai?.city || null;
     this._zip = ai?.zip || null;
     this._countryCode = ai?.countryCode || null;
+    this._isAppliedToAll = ai?.isAppliedToAll || false;
   }
 
   newInit() {
@@ -65,6 +65,14 @@ export class AdditionalInterestClass implements AdditionalInterestData{
   }
   set attention(value: string | null) {
     this._attention = value;
+    this._isDirty = true;
+  }
+
+  get isAppliedToAll() : boolean {
+    return this._isAppliedToAll;
+  }
+  set isAppliedToAll(value: boolean) {
+    this._isAppliedToAll = value;
     this._isDirty = true;
   }
 

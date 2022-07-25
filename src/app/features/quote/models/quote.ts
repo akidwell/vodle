@@ -21,8 +21,6 @@ export interface Quote {
   carrierCode: string;
   pacCode: string;
   submission: Submission;
-  propertyQuoteMortgagee: MortgageeClass[] | null;
-  propertyQuoteAdditionalInterest: AdditionalInterestClass[] | null;
   quoteName: string | null;
   policySymbol: string;
   formName: string;
