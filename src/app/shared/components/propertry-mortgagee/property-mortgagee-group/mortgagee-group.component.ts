@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -10,6 +10,7 @@ import { MortgageeComponent } from '../property-mortgagee/mortgagee.component';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'rsps-mortgagee-group',
@@ -34,20 +35,16 @@ export class MortgageeGroupComponent implements OnInit {
   constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
   }
 
-  @ViewChild(MortgageeComponent) mortgageeComp!: MortgageeComponent;
-  @Input() public quoteData: MortgageeClass[] = [];
+  @Input() public mortgageeData: MortgageeClass[] = [];
   @Input() public newMortgagee!: MortgageeClass;
   @Input() public canEdit = false;
 
   ngOnInit(): void {
-    this.route.parent?.params.subscribe(routeParams => {
-      this.pageDataService.getProgramWithQuote(routeParams.quoteId);
-    });
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuoteMortgagee){
-          this.quoteData = this.program?.quoteData?.propertyQuoteMortgagee;
+        if (this.program?.quoteData?.propertyQuote?.propertyQuoteMortgagee){
+          this.mortgageeData = this.program?.quoteData?.propertyQuote.propertyQuoteMortgagee;
         }
       });
     this.collapsed = false;
@@ -56,7 +53,7 @@ export class MortgageeGroupComponent implements OnInit {
   isValid(): boolean {
     let valid = true;
     this.invalidList = [];
-    this.quoteData?.forEach(c => {
+    this.mortgageeData?.forEach(c => {
       if (!c.isValid) {
         valid = false;
         this.invalidList = this.invalidList.concat(c.invalidList);
@@ -66,7 +63,7 @@ export class MortgageeGroupComponent implements OnInit {
   }
 
   isDirty() {
-    return this.quoteData?.some(item => item.isDirty);
+    return this.mortgageeData?.some(item => item.isDirty);
   }
 
   hideInvalid(): void {
@@ -78,13 +75,13 @@ export class MortgageeGroupComponent implements OnInit {
     copy.mortgageHolder = 'CopyOf ' + existingMortgagee.mortgageHolder;
     console.log(existingMortgagee);
     copy.isNew = true;
-    this.quoteData?.push(copy);
+    this.mortgageeData?.push(copy);
   }
 
   deleteExistingMortgagee(existingMortgagee: MortgageeClass) {
-    const index = this.quoteData?.indexOf(existingMortgagee, 0);
+    const index = this.mortgageeData?.indexOf(existingMortgagee, 0);
     if (index > -1) {
-      this.quoteData?.splice(index, 1);
+      this.mortgageeData?.splice(index, 1);
       if (!existingMortgagee.isNew) {
         this.notification.show('Mortgagee deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
@@ -94,10 +91,24 @@ export class MortgageeGroupComponent implements OnInit {
   addNewMortgagee(): void {
     const mort: MortgageeClass = new MortgageeClass();
     mort.isNew = true;
-    this.quoteData?.push(mort);
+    this.mortgageeData?.push(mort);
   }
 
 
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.mortgageeData, event.previousIndex, event.currentIndex);
+    }
+  }
 
 
+  toggleDragDrop() {
+    this.collapsed = false;
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
+  }
 }

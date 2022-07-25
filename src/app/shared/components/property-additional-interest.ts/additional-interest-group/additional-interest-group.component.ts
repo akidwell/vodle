@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -7,8 +7,8 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
-import { AdditionalInterestComponent } from '../additional-interest/additional-interest.component';
 import { AdditionalInterestClass } from '../additional-interest-class';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'rsps-additional-interest-group',
@@ -33,20 +33,17 @@ export class AdditionalInterestGroupComponent implements OnInit {
   constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
   }
 
-  @ViewChild(AdditionalInterestComponent) aiComp!: AdditionalInterestComponent;
-  @Input() public quoteData: AdditionalInterestClass[] = [];
+  @Input() public aiData: AdditionalInterestClass[] = [];
   @Input() public newAi!: AdditionalInterestClass;
   @Input() public canEdit = false;
 
   ngOnInit(): void {
-    this.route.parent?.params.subscribe(routeParams => {
-      this.pageDataService.getProgramWithQuote(routeParams.quoteId);
-    });
+
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuoteMortgagee){
-          this.quoteData = this.program?.quoteData?.propertyQuoteAdditionalInterest;
+        if (this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterest){
+          this.aiData = this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterest;
         }
       });
     this.collapsed = false;
@@ -55,7 +52,7 @@ export class AdditionalInterestGroupComponent implements OnInit {
   isValid(): boolean {
     let valid = true;
     this.invalidList = [];
-    this.quoteData?.forEach(c => {
+    this.aiData?.forEach(c => {
       if (!c.isValid) {
         valid = false;
         this.invalidList = this.invalidList.concat(c.invalidList);
@@ -65,7 +62,7 @@ export class AdditionalInterestGroupComponent implements OnInit {
   }
 
   isDirty() {
-    return this.quoteData?.some(item => item.isDirty);
+    return this.aiData?.some(item => item.isDirty);
   }
 
   hideInvalid(): void {
@@ -77,13 +74,13 @@ export class AdditionalInterestGroupComponent implements OnInit {
     copy.interest = 'CopyOf ' + existingAi.interest;
     console.log(existingAi);
     copy.isNew = true;
-    this.quoteData?.push(copy);
+    this.aiData?.push(copy);
   }
 
   deleteExistingAdditionalInterest(existingAi: AdditionalInterestClass) {
-    const index = this.quoteData?.indexOf(existingAi, 0);
+    const index = this.aiData?.indexOf(existingAi, 0);
     if (index > -1) {
-      this.quoteData?.splice(index, 1);
+      this.aiData?.splice(index, 1);
       if (!existingAi.isNew) {
         this.notification.show('Mortgagee deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
@@ -93,10 +90,26 @@ export class AdditionalInterestGroupComponent implements OnInit {
   addNewAdditionalInterest(): void {
     const mort: AdditionalInterestClass = new AdditionalInterestClass();
     mort.isNew = true;
-    this.quoteData?.push(mort);
+    this.aiData?.push(mort);
   }
 
 
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.aiData, event.previousIndex, event.currentIndex);
+    }
+  }
+
+
+  toggleDragDrop() {
+    this.collapsed = false;
+    if (this.canDrag) {
+      this.dragDropClass = 'drag';
+    }
+    else {
+      this.dragDropClass = '';
+    }
+  }
 
 
 }

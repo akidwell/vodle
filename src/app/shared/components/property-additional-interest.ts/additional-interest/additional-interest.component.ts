@@ -33,7 +33,8 @@ export class AdditionalInterestComponent {
   addressSub!: Subscription;
   isLoadingAddress = false;
   canEditSubmission = false;
-
+  isHover = false;
+  @Input() canDrag = false;
 
   private modalRef!: NgbModalRef;
   @Output() copyExisitingAdditionalInterest: EventEmitter<AdditionalInterestClass> = new EventEmitter();

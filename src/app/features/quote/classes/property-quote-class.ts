@@ -1,3 +1,5 @@
+import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { PropertyQuote } from '../models/property-quote';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
@@ -6,6 +8,9 @@ export class PropertyQuoteClass implements PropertyQuote {
   quoteId = null;
   propertyQuoteDeductible: PropertyQuoteDeductibleClass[] = [];
   propertyQuoteBuilding: PropertyQuoteBuildingClass[] = [];
+  propertyQuoteMortgagee: MortgageeClass[] = [];
+  propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
+
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -34,6 +39,19 @@ export class PropertyQuoteClass implements PropertyQuote {
       deductibles.push(new PropertyQuoteDeductibleClass(element));
     });
     this.propertyQuoteDeductible = deductibles;
+
+    const mortgagee: MortgageeClass[] = [];
+    propertyQuote.propertyQuoteMortgagee.forEach(element => {
+      mortgagee.push(new MortgageeClass(element));
+    });
+    this.propertyQuoteMortgagee = mortgagee;
+
+    const ai: AdditionalInterestClass[] = [];
+    propertyQuote.propertyQuoteAdditionalInterest.forEach(element => {
+      ai.push(new AdditionalInterestClass(element));
+    });
+    this.propertyQuoteMortgagee = mortgagee;
+    this.propertyQuoteAdditionalInterest = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
     propertyQuote.propertyQuoteBuilding.forEach(element => {

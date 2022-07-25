@@ -1,27 +1,45 @@
-
-
 <div class="card">
   <div class="card-header" (click)="collapse.toggle()">
-   Mortgagee / Loss Payee
+    Mortgagee / Loss Payee
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="mortgageeData.length > 1"
+      [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
+      Sort: {{canDrag ? 'On' : 'Off'}}
+    </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-    <div class="card-body" *ngIf="quoteData.length > 0">
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-        <div  *ngFor="let item of quoteData; let i = index">
-        <rsps-mortgagee (copyExisitingMortgagee)=copyExisitingMortgagee($event) (deleteExistingMortgagee)=deleteExistingMortgagee($event)
-        [mortgagee]=quoteData [mortgageeData]=item ></rsps-mortgagee>
+    <div class="card-body" *ngIf="mortgageeData.length > 0">
+      <div class="row">
+        <div class="col-sm-1">
+          <label for="address">Apply to all:</label>
         </div>
-    </div>
+        <div class="col-sm-1">
+          <label for="address">Location #:</label>
+        </div>
+        <div class="col-sm-1">
+          <label for="address">Building #:</label>
+        </div>
+        <div class="col-sm-1">
+          <label for="address">Address:</label>
+        </div>
+      </div>
+      <div cdkDropList class="drag-list" [cdkDropListDisabled]="!canDrag" (cdkDropListDropped)="drop($event)">
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+          <div class="drag-block" [ngClass]="dragDropClass" cdkDrag *ngFor="let item of mortgageeData; let i = index">
+            <rsps-mortgagee (copyExisitingMortgagee)=copyExisitingMortgagee($event)
+              (deleteExistingMortgagee)=deleteExistingMortgagee($event) [mortgagee]=mortgageeData [mortgageeData]=item>
+            </rsps-mortgagee>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="card-footer">
     <div id="mortgageeFooter">
-      <button style="float:left; background:none; border:none;" class="underline"
-        (click)="addNewMortgagee();">Add Mortgagee</button>
+      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewMortgagee();">Add
+        Mortgagee</button>
     </div>
   </div>
 </div>
 <rsps-additional-interest-group></rsps-additional-interest-group>
-
