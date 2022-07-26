@@ -123,7 +123,7 @@
           </div>
           <div class="col-lg-1">
             <label for="deductible">Deductible</label>
-            <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible" nullValue
+            <input type="text" class="form-control" id="deductible" [readonly]="!canEdit || !showDeductible"
               [required]="this.checkDeductibleRequired()" [(ngModel)]="coverage.deductible" name="deductible"
               #deductible="ngModel" string-to-currency [allowNegative]="false" maxInt maxlength="15">
           </div>
@@ -142,7 +142,7 @@
           <div class="col-lg-1">
             <label for="rate">Rate</label>
             <input type="text" class="form-control" id="rate" [readonly]="!canEdit" string-to-currency
-              [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" nullValue
+              [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false"
               [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel">
           </div>    
           <div class="col-lg-6">
@@ -181,13 +181,13 @@
           </div>
           <div class="col-lg-1">
             <label for="rateBasis">Rate Basis</label>
-            <input type="text" class="form-control" id="rateBasis" [readonly]="!canEdit" nullValue
+            <input type="text" class="form-control" id="rateBasis" [readonly]="!canEdit"
               [(ngModel)]="coverage.rateBasis" name="rateBasis" #rateBasis="ngModel" string-to-currency maxInt maxlength="15"
               [allowNegative]="false">
           </div>
           <div class="col-lg-2">
             <label for="exposureBase">Exposure</label>
-            <input type="text" class="form-control" id="exposureBase" [readonly]="!canEdit" nullValue
+            <input type="text" class="form-control" id="exposureBase" [readonly]="!canEdit"
               [(ngModel)]="coverage.exposureBase" name="exposureBase" #exposureBase="ngModel" string-to-currency maxInt maxlength="15"
               [allowNegative]="false">
           </div>
