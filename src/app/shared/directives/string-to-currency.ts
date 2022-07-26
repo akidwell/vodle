@@ -43,7 +43,7 @@ export class StringToCurrencyDirective {
     else {
       target.value = value;
     }
-    // calculcate cursor position
+    // calculate cursor position
     if (value.startsWith('.')) {
       target.selectionStart = +posStart + (posStart + 1);
       target.selectionEnd = +posEnd + (posEnd + 1);
@@ -62,11 +62,15 @@ export class StringToCurrencyDirective {
   @HostListener('blur', ['$event.target'])
   onLeaveEvent(target: HTMLInputElement) {
     if (!target.readOnly) {
-      const original = target.value.replace(/[^0-9.]+/g, '');
-      // target.value = this.formatToCurrency(target.value);
-      this.el.nativeElement.value = this.formatToDisplayCurrency(target.value);
-      if (original === '') {
-        this.control.reset(target.value);
+      const originalValue = target.value;
+      const cleanValue = this.formatToDisplayCurrency(target.value);
+      this.el.nativeElement.value = cleanValue;
+      // If leaving control and only thing is a symbol like - or . then it will automatically remove it
+      // need to push this change to control and model
+      if (cleanValue === '' && originalValue !== '') {
+        this.control.reset();
+        this.control.viewToModelUpdate(null);
+        this.control.control?.markAsDirty();
       }
     }
   }
@@ -120,14 +124,14 @@ export class StringToCurrencyDirective {
     }
     if (event.keyCode === 110 || event.keyCode === 190) {
       // Handle decimal place
-      if (this.decimalPlaces > 0 && !this.control.value.toString().includes('.')) {
+      if (this.decimalPlaces > 0 && (this.control.value === null || !this.control.value?.toString().includes('.'))) {
         return true;
       }
       event.preventDefault();
       return false;
     } else if (event.keyCode === 109 || event.keyCode === 189) {
       // Handle minus sign
-      if (this.allowNegative && !this.control.value.toString().includes('-')) {
+      if (this.allowNegative && (this.control.value === null || !this.control.value?.toString().includes('-'))) {
         return true;
       }
       event.preventDefault();
@@ -187,8 +191,13 @@ export class StringToCurrencyDirective {
     const position = input.indexOf('.');
     // Check position of decimal
     if (position >= 0) {
-      const test = input.length - 1 - position;
-      decimalLen = Math.min(this.decimalPlaces,test);
+      const currentDecimalLen = input.length - 1 - position;
+      decimalLen = Math.min(this.decimalPlaces, currentDecimalLen);
+    }
+    // Truncate now instead of rounding
+    if (input !== '') {
+      const fact = 10 ** decimalLen;
+      input = (Math.floor(Number(input) * fact) / fact).toString();
     }
     const format = '1.' + decimalLen.toString() + '-' + decimalLen.toString();
     let currency = currencyPipe.transform(input, 'USD', '', format);
