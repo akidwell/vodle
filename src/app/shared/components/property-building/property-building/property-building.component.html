@@ -5,16 +5,16 @@
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="locationNumber" name="locationNumber"
                         [(ngModel)]="building.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
-                        click-stop-propagation ngbTooltip="Location #" [openDelay]="1000">
+                        [required]="building.locationNumberRequired" click-stop-propagation ngbTooltip="Premises #" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
                         [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
-                        click-stop-propagation ngbTooltip="Building #" [openDelay]="1000">
+                        [required]="building.buildingNumberRequired" click-stop-propagation ngbTooltip="Building #" [openDelay]="1000">
                 </div>
                 <div class="col-lg-8">
                     <input type="address" class="form-control" id="address" #address="ngModel" name="address"
-                        [readonly]="!canEdit" [ngModel]=" (!building.street1 ? '' : building.street1) + 
+                    readonly [ngClass]="addressReadOnly" [ngModel]=" (!building.street1 ? '' : building.street1) + 
                             (!building.street2 ? '' : ', ' + building.street2) + 
                             (!building.city ? '' : ', ' + building.city ) + 
                             (!building.state ? '' : ', ' + building.state) +
@@ -35,7 +35,7 @@
         <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
             <div class="row">
                 <div class="col-lg-1">
-                    <label for="locationNumber" class="form-label" title="locationNumber">Location #</label>
+                    <label for="locationNumber" class="form-label" title="locationNumber">Premises #</label>
                     <input type="text" class="form-control" id="locationNumber" name="locationNumber"
                         [(ngModel)]="building.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
                         [required]="building.locationNumberRequired" click-stop-propagation>
@@ -47,12 +47,12 @@
                         [required]="building.buildingNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-4">
-                    <label for="street1" class="form-label" title="Status">Street Address 1</label>
+                    <label for="street1" class="form-label" title="Street Address 1">Street Address 1</label>
                     <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"
                         [required]="building.street1Required" [(ngModel)]="building.street1" #street1="ngModel">
                 </div>
                 <div class="col-lg-4">
-                    <label for="street2" class="form-label" title="Status">Street Address 2</label>
+                    <label for="street2" class="form-label" title="Street Address 2">Street Address 2</label>
                     <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit"
                         [(ngModel)]="building.street2" #street2="ngModel">
                 </div>

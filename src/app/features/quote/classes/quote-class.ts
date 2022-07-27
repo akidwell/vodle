@@ -113,9 +113,6 @@ export class QuoteClass implements Quote {
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
-  // quoteBuilding: QuoteBuildingClass[] = [];
-  // quoteCoverage: QuoteCoverageClass[] = [];
-  // quoteLocation: QuoteLocationClass[] = [];
   quoteRates: QuoteRateClass[] = [];
   propertyQuote!: PropertyQuoteClass;
 
@@ -200,6 +197,9 @@ export class QuoteClass implements Quote {
   }
   markDirty() {
     this._isDirty = true;
+  }
+  markImported() {
+    this.propertyQuote.propertyQuoteBuilding.forEach(c => c.markImported());
   }
   setRequiredFields() {
     // No special rules

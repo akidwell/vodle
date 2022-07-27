@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
-        locations/Building Schedule
+        Locations/Building Schedule
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
     </div>
@@ -8,7 +8,7 @@
         <div class="card-body" *ngIf="buildings.length > 0">
             <div class="row">
                 <div class="col-lg-1">
-                    <label for="address">Location #</label>
+                    <label for="address">Premises #</label>
                 </div>
                 <div class="col-lg-1">
                     <label for="address">Building #</label>
@@ -25,6 +25,7 @@
     </div>
     <div class="card-footer">
         <button class="footer-button" (click)="addBuilding();">Add
-            location/Building</button>
+            Location/Building</button>
+        <div class="footer-count">Buldings: {{buildings.length}}</div>
     </div>
 </div>

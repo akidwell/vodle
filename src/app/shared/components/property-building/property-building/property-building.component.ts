@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { State } from 'src/app/core/models/state';
@@ -33,7 +33,7 @@ export class PropertyBuildingComponent implements OnInit {
 
   ngOnInit(): void {
     this.anchorId = 'focusHere' + this.index;
-    if (this.building.isNew) {
+    if (this.building.isNew && !this.building.isImport) {
       this.collapseExpand(false);
       this.focus();
     }
@@ -65,6 +65,16 @@ export class PropertyBuildingComponent implements OnInit {
         },
       });
     }
+  }
+
+  get addressReadOnly() {
+    if (!this.canEdit){
+      return '';
+    }
+    else if (this.building.validateAddress) {
+      return 'address-valid';
+    }
+    return 'address-invalid';
   }
 
   collapseExpand(event: boolean) {

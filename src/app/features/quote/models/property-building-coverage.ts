@@ -1,5 +1,5 @@
 export interface PropertyBuildingCoverageData {
-  propertyQuoteCoverageId: number | null;
+  propertyQuoteBuildingCoverageId: number | null;
   propertyQuoteBuildingId: number | null;
   propertyCoverageId: number | null;
   subjectNumber: number | null;
@@ -12,5 +12,15 @@ export interface PropertyBuildingCoverageData {
 }
 
 export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
-
+  locationNumberRequired: boolean;
+  buildingNumberRequired: boolean;
+  propertyCoverageIdRequired: boolean;
+  causeOfLossIdRequired: boolean;
+  valuationIdRequired: boolean;
+  subjectNumberRequired: boolean;
+  propertyCoverageIdReadonly: boolean;
+  limitRequired: boolean
+  causeOfLossIdReadonly: boolean;
+  valuationIdReadonly: boolean;
+  isImport: boolean;
 }
