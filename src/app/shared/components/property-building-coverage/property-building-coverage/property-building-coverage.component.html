@@ -1,0 +1,115 @@
+<div class="component-row">
+    <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+        <div (click)="collapseExpand(false)">
+            <div class="row">
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
+                        [(ngModel)]="coverage.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit"
+                        [required]="canEdit && coverage.subjectNumberRequired" click-stop-propagation
+                        ngbTooltip="Subject #" [openDelay]="1000">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+                        [(ngModel)]="building.locationNumber" #locationNumber="ngModel" readonly click-stop-propagation
+                        ngbTooltip="Location #" [openDelay]="1000">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+                        [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" readonly click-stop-propagation
+                        ngbTooltip="Building #" [openDelay]="1000">
+                </div>
+                <div class="col-lg-2">
+                    <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="description" bindValue="key"
+                        [clearable]="false" click-stop-propagation
+                        [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
+                        [required]="canEdit && coverage.propertyCoverageIdRequired" name="coverageSelect"
+                        [(ngModel)]="coverage.propertyCoverageId" #coverageSelect="ngModel">
+                    </ng-select>
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control right" id="limit" name="limit" [(ngModel)]="coverage.limit"
+                        #subjectNumber="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.limitRequired" string-to-currency click-stop-propagation
+                        ngbTooltip="Limit" [openDelay]="1000">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control right" id="coinsurance" name="coinsurance" mask="separator.0"
+                        suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="coverage.coinsurancePct"
+                        #coinsurance="ngModel" [readonly]="!canEdit" click-stop-propagation ngbTooltip="Coinsurance"
+                        [openDelay]="1000">
+                </div>
+                <div class="col-lg-1">
+                    <ng-select id="coverageSelect" [items]="causeOfLoss$ | async" bindLabel="description"
+                        bindValue="key" [clearable]="false" click-stop-propagation
+                        [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
+                        [required]="canEdit && coverage.causeOfLossIdRequired" name="coverageSelect"
+                        [(ngModel)]="coverage.causeOfLossId" #coverageSelect="ngModel" ngbTooltip="Cause of Loss"
+                        [openDelay]="1000">
+                    </ng-select>
+                </div>
+                <div class="col-lg-1">
+                    <ng-select id="valuationId" [items]="valuations$ | async" bindLabel="description" bindValue="key"
+                        [clearable]="false" click-stop-propagation [readonly]="!canEdit || coverage.valuationIdReadonly"
+                        [required]="canEdit && coverage.valuationIdRequired" name="valuationId"
+                        [(ngModel)]="coverage.valuationId" #valuationId="ngModel" ngbTooltip="Valuation"
+                        [openDelay]="1000">
+                    </ng-select>
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="additionalDetail" name="additionalDetail"
+                        [(ngModel)]="coverage.additionalDetail" #additionalDetail="ngModel" [readonly]="!canEdit"
+                        click-stop-propagation ngbTooltip="Additional Detail #" [openDelay]="1000">
+                </div>
+                <div class="col-lg-2" *ngIf="collapsed">
+                    <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary" [disabled]="!canEdit"
+                        click-stop-propagation>Copy</button>
+                    <button *ngIf="!coverage.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-danger"
+                        click-stop-propagation>Delete</button>
+                    <button *ngIf="coverage.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-warning"
+                        click-stop-propagation>Remove</button>
+                </div>
+            </div>
+        </div>
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+            <div class="row">
+                <!-- <div class="col-lg-1">
+                    <label for="locationNumber" class="form-label" title="locationNumber">Location #</label>
+                    <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+                        [(ngModel)]="coverage.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
+                        [required]="coverage.locationNumberRequired" click-stop-propagation>
+                </div>
+                <div class="col-lg-1">
+                    <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>
+                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+                        [(ngModel)]="coverage.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
+                        [required]="coverage.buildingNumberRequired" click-stop-propagation>
+                </div> -->
+                <!-- <div class="col-lg-2">
+                    <label for="coverageSelect" class="form-label" title="Coverege">Coverage</label>
+                    <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="description" bindValue="key"
+                        [clearable]="false" [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
+                        [required]="canEdit && coverage.propertyCoverageIdRequired" name="coverageSelect"
+                        [(ngModel)]="coverage.propertyCoverageId" #coverageSelect="ngModel">
+                    </ng-select>
+                </div> -->
+            </div>
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
+                        [disabled]="!canEdit">Copy</button>
+                    <button *ngIf="!coverage.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
+                    <button *ngIf="coverage.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
+                </div>
+                <div [id]='anchorId'></div>
+            </div>
+            <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+                [openDelay]="1000">
+                <fa-icon [icon]="faAngleUp"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>

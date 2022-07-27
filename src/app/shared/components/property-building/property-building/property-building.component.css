@@ -78,3 +78,15 @@
   right: 10px;
   top: calc(50% - 10px);
 }
+
+.address-valid {
+  background-color: white;
+  cursor: row-resize;
+  border-left: 5px solid #42a948;
+}
+
+.address-invalid {
+  background-color: white;
+  cursor: row-resize;
+  border-left: 5px solid #a94442;
+}

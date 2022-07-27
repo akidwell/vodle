@@ -66,7 +66,7 @@
                     <input type="text" class="form-control right" id="subjectToMinPercent" click-stop-propagation
                         [readonly]="!canEdit || deductible.isExcluded"
                         [required]="canEdit && deductible.subjectToMinPercentRequired" string-to-currency
-                        [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" nullValue
+                        [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false"
                         name="subjectToMinPercent" [(ngModel)]="deductible.subjectToMinPercent"
                         #subjectToMinPercent="ngModel">
                 </div>

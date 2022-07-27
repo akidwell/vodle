@@ -1,11 +1,13 @@
 
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 
-export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
-  propertyQuoteCoverageId: number | null = null;
+export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage {
+  propertyQuoteBuildingCoverageId: number | null = null;
   propertyQuoteBuildingId: number | null = null;
   propertyCoverageId: number | null = null;
   isNew = false;
+  isImport = false;
+
   private _subjectNumber: number | null = null;
   private _limit: number | null = null;
   private _coinsurancePct: number | null = null;
@@ -67,16 +69,16 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
     return valid;
   }
 
-  constructor(coverage?: PropertyBuildingCoverage) {
+  constructor(coverage?: PropertyBuildingCoverage, isImport = false) {
     if (coverage) {
-      this.existingInit(coverage);
+      this.existingInit(coverage, isImport);
     } else {
       this.newInit();
     }
   }
 
-  existingInit(coverage: PropertyBuildingCoverage) {
-    this.propertyQuoteCoverageId = coverage.propertyQuoteCoverageId;
+  existingInit(coverage: PropertyBuildingCoverage, isImport = false) {
+    this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
 
@@ -91,10 +93,21 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
     this.setRequiredFields();
   }
 
+  locationNumberRequired = true;
+  buildingNumberRequired = true;
+  propertyCoverageIdRequired = true;
+  causeOfLossIdRequired = true;
+  valuationIdRequired = true;
+  subjectNumberRequired = true;
+  limitRequired = true;
+
+  propertyCoverageIdReadonly = false;
+  causeOfLossIdReadonly = false;
+  valuationIdReadonly = false;
+
   newInit() {
     this.isNew = true;
   }
-
   markClean() {
     this._isDirty = false;
   }

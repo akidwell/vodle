@@ -53,7 +53,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
       this.buildings.splice(index, 1);
       if (!building.isNew && building.propertyQuoteBuildingId != null) {
         this.deleteSub = this.quoteService
-          .deleteDeductible(building.propertyQuoteBuildingId)
+          .deleteBuilding(building.propertyQuoteBuildingId)
           .subscribe((result) => {
             if (result) {
               setTimeout(() => {

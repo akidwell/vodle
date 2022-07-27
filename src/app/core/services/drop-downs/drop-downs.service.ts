@@ -1007,4 +1007,77 @@ export class DropDownsService {
     }
     return observable;
   }
+
+  ////////////////////////////////////////
+  // Property Coverages
+  private cachePropertyCoverages: Code[] | null = null;
+  private cachePropertyCoverages$!: Observable<Code[]> | null;
+
+  getPropertyCoverages(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyCoverages) {
+      observable = of(this.cachePropertyCoverages);
+    } else if (this.cachePropertyCoverages$) {
+      observable = this.cachePropertyCoverages$;
+    } else {
+      this.cachePropertyCoverages$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coverages')
+        .pipe(
+          tap((res) => (this.cachePropertyCoverages = res)),
+          share(),
+          finalize(() => (this.cachePropertyCoverages$ = null))
+        );
+      observable = this.cachePropertyCoverages$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Cause of Loss
+  private cachePropertyCauseOfLoss: Code[] | null = null;
+  private cachePropertyCauseOfLoss$!: Observable<Code[]> | null;
+
+  getPropertyCauseOfLoss(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyCauseOfLoss) {
+      observable = of(this.cachePropertyCauseOfLoss);
+    } else if (this.cachePropertyCauseOfLoss$) {
+      observable = this.cachePropertyCauseOfLoss$;
+    } else {
+      this.cachePropertyCauseOfLoss$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-cause-of-loss')
+        .pipe(
+          tap((res) => (this.cachePropertyCauseOfLoss = res)),
+          share(),
+          finalize(() => (this.cachePropertyCauseOfLoss$ = null))
+        );
+      observable = this.cachePropertyCauseOfLoss$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Vsluations
+  private cachePropertyValuations: Code[] | null = null;
+  private cachePropertyValuations$!: Observable<Code[]> | null;
+
+  getPropertyValuations(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyValuations) {
+      observable = of(this.cachePropertyValuations);
+    } else if (this.cachePropertyValuations$) {
+      observable = this.cachePropertyValuations$;
+    } else {
+      this.cachePropertyValuations$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-valuations')
+        .pipe(
+          tap((res) => (this.cachePropertyValuations = res)),
+          share(),
+          finalize(() => (this.cachePropertyValuations$ = null))
+        );
+      observable = this.cachePropertyValuations$;
+    }
+    return observable;
+  }
+
 }

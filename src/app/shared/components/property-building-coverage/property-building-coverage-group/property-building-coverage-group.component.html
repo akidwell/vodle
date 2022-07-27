@@ -1,0 +1,53 @@
+<div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+        Coverages
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div class="card-body" *ngIf="coverageCount > 0">
+            <div class="row">
+                 <div class="col-lg-1">
+                    <label for="subject">Subject #</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="premises">Premises #</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="building">Building #</label>
+                </div>
+                <div class="col-lg-2">
+                    <label for="coveerageSelect">Coverage</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="limit">Limit</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="coinsurance">Coinsurance</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="causeOfLoss">Cause of Loss</label>
+                </div>
+                 <div class="col-lg-1">
+                    <label for="valuation">Valuation</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="additionalDetail">Additional Detail</label>
+                </div>
+            </div>
+            <div *ngFor="let item of buildings; let i = index">
+                <div *ngFor="let cov of item.propertyQuoteBuildingCoverage; let i = index">
+                    <rsps-property-building-coverage [building]="item" [coverage]="cov" [canEdit]="canEdit" [index]="i" (copyCoverage)=copyCoverage($event)
+                     (deleteCoverage)=deleteCoverage($event)></rsps-property-building-coverage>
+                        </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="footer-button" (click)="addCoverage();">Add
+            Coverage</button>
+            <span>Total Limit: {{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}
+            </span>
+        <div class="footer-count">Coverages: {{coverageCount}}</div>
+    </div>
+</div>
