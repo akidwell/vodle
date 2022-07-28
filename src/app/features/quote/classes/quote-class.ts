@@ -1,16 +1,24 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
-import { QuoteChildValidation } from '../models/quote-child-validation';
+import { QuoteValidation } from '../models/quote-validation';
 import { ProgramClass } from './program-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
+import { QuoteValidationClass } from './quote-validation-class';
 
-export class QuoteClass implements Quote {
-  coverageTabValidation!: QuoteChildValidation;
+export class QuoteClass implements Quote, QuoteValidation {
+  private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _isValid = true;
+
   submissionNumber = 0;
   quoteId = 0;
   cuspNumber = 0;
@@ -119,11 +127,25 @@ export class QuoteClass implements Quote {
   // quoteBuilding: QuoteBuildingClass[] = [];
   // quoteCoverage: QuoteCoverageClass[] = [];
   // quoteLocation: QuoteLocationClass[] = [];
+
+  //QuoteRates
   quoteRates: QuoteRateClass[] = [];
+  quoteRatesValidation: QuoteValidationClass | null = null;
+
   propertyQuote!: PropertyQuoteClass;
 
+  //Property - QuoteMortgagee
   propertyQuoteMortgagee: MortgageeClass[] = [];
+  propertyQuoteMortgageeValidation: QuoteValidationClass | null = null;
+
+  //Property - QuoteAdditionalInterest
   propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
+  propertyQuoteAdditionalInterestValidation: QuoteValidationClass | null = null;
+
+  quoteValidation!: QuoteValidationClass;
+  quoteChildValidations: QuoteValidationClass[] = [];
+
+  mortgageeAdditionalInterestValidation!: QuoteValidationClass;
 
   private _isDirty = false;
   isNew = false;
@@ -135,9 +157,17 @@ export class QuoteClass implements Quote {
   get isValid(): boolean {
     // let valid = true;
     // valid = this.validate(valid);
-    return true;
+    return this._isValid;
   }
-
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
   private datepipe = new DatePipe('en-US');
 
 
@@ -147,6 +177,8 @@ export class QuoteClass implements Quote {
     } else if (program && submission) {
       this.newInit(program, submission);
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, QuoteValidationTabNameEnum.CoveragePremium);
+    this.validate();
   }
   existingInit(quote: Quote) {
     this.submissionNumber = quote.submissionNumber || 0;
@@ -189,16 +221,13 @@ export class QuoteClass implements Quote {
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
-    //for demo purposes add empty coverage classes
-    // this.quoteCoverages.push(new QuoteCoverageClass());
-    // this.quoteCoverages.push(new QuoteCoverageClass());
+    this.validateQuoteChildren();
   }
   newInit(program: ProgramClass, submission: SubmissionClass) {
     //if first quote on group attach to existing submission
     //else duplicate submission and attach to that
     //quote data will be tied to tblCUSP_Quotes
     //need to add record to tbl_SubmissionGroupQuotes
-    console.log(program);
     this.submissionNumber = submission.submissionNumber;
     this.quoteNumber = 1;
     this.cuspNumber = 0; //Need to set on save
@@ -231,8 +260,45 @@ export class QuoteClass implements Quote {
   setReadonlyFields() {
     // No special rules
   }
-  areChildrenValid() {
-    //TODO::Program specific validation
+
+  // createPropertyLocationCoverageValidation() {
+  //   this.propertyQuoteValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+
+  // }
+  // createPropertyMortgageeAdditionalInterestValidation() {
+  //   this.mortgageeAdditionalInterestValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+  //   this.propertyQuoteAdditionalInterestValidation = this.propertyQuoteAdditionalInterest.length > 0 ? new QuoteValidationClass(QuoteValidationTypeEnum.Child, null) : null;
+  //   this.propertyQuoteAdditionalInterestValidation?.addValidationToChildGroup(this.quoteChildValidations);
+
+  //   this.propertyQuoteMortgageeValidation = this.propertyQuoteMortgagee.length > 0 ? new QuoteValidationClass(QuoteValidationTypeEnum.Child, null) : null;
+  //   this.propertyQuoteMortgageeValidation?.addValidationToChildGroup(this.quoteChildValidations);
+  // }
+  validateQuoteChildren() {
+    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
+    //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
+    //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
+  }
+  validateQuote() {
+    this._canBeSaved = true;
+    this._errorMessages = ['quote'];
+    this._isValid = true;
+    this.validationResults.mapValues(this);
+    this.validateQuoteChildren();
+  }
+  validate(){
+    this.validateQuote();
+    this.propertyQuote.validate();
+    this.validationResults.mapValues(this);
+    const childValidations: QuoteValidationClass[] = [];
+    childValidations.push(this.propertyQuote.validationResults);
+    if (this.quoteRatesValidation){
+      childValidations.push(this.quoteRatesValidation);
+    }
+    this.validationResults.validateChildrenAndMerge(childValidations);
+    console.log('final quote validation: ', this.validationResults);
+    //TODO: class based validation checks
+    this._validateOnLoad = false;
+    return this.validationResults;
   }
   // validateCoverageTab(): QuoteChildValidation {
   //   const validation: QuoteChildValidation = {

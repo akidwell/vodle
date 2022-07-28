@@ -4,7 +4,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { QuoteRoutingModule } from './quote-routing.module';
 import { QuoteComponent } from './components/common/quote-base/quote.component';
 import { QuoteInformationComponent } from './components/common/quote-information-base/quote-information.component';
-import { CanDeactivateGuard } from '../policy/guards/can-deactivate-guard';
 import { NgxMaskModule } from 'ngx-mask';
 import { QuoteNotFoundComponent } from './components/common/quote-not-found/quote-not-found.component';
 import { FormsModule } from '@angular/forms';
@@ -37,8 +36,8 @@ import { PropertyDeductibleModule } from 'src/app/shared/components/property-ded
 import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
 import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
-import { QuoteSavingService } from './services/quote-saving-service/quote-saving-service.service';
 import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
+import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 
 @NgModule({
   declarations: [
@@ -80,7 +79,6 @@ import { QuoteDataValidationService } from './services/quote-data-validation-ser
     CanDeactivateGuard,
     DatePipe,
     FormatDateForDisplay,
-    QuoteSavingService,
     QuoteDataValidationService,
     ConfirmationDialogService,
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },

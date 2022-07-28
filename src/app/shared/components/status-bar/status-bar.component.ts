@@ -102,7 +102,6 @@ export class StatusBarComponent implements OnInit {
       .events.pipe(
         filter((event: any) => event instanceof NavigationEnd),
         tap(() => {
-          console.log('end');
           this.pageDataService.insuredData = null;
           this.pageDataService.submissionData = null;
           this.pageDataService.accountInfo = null;

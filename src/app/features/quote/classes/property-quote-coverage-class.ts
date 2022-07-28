@@ -1,7 +1,13 @@
 
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
+import { QuoteValidation } from '../models/quote-validation';
 
-export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
+export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage, QuoteValidation {
+  private _isDirty = false;
+  private _isValid = false;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _validateOnLoad = true;
   propertyQuoteCoverageId: number | null = null;
   propertyQuoteBuildingId: number | null = null;
   propertyCoverageId: number | null = null;
@@ -56,15 +62,17 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
     this._isDirty = true;
   }
 
-  private _isDirty = false;
-
   get isDirty() : boolean {
     return this._isDirty;
   }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
   get isValid(): boolean {
-    const valid = true;
-    //valid = this.validate(valid);
-    return valid;
+    return this._isValid;
   }
 
   constructor(coverage?: PropertyBuildingCoverage) {
@@ -73,8 +81,17 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
     } else {
       this.newInit();
     }
+    this.validateClass();
   }
-
+  validateClass() {
+    if(this._validateOnLoad || this.isDirty) {
+      //implement rules
+      this._canBeSaved = true;
+      this._isValid = true;
+      this._errorMessages = ['property quote coverage'];
+      this._validateOnLoad = false;
+    }
+  }
   existingInit(coverage: PropertyBuildingCoverage) {
     this.propertyQuoteCoverageId = coverage.propertyQuoteCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
@@ -101,7 +118,7 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage {
     // this._plumbing = building.plumbing;
     // this._hvac = building.hvac;
 
-    
+
     this.setReadonlyFields();
     this.setRequiredFields();
   }
