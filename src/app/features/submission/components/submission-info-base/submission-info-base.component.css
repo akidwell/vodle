@@ -60,22 +60,12 @@
   
   .table-striped>tbody>tr:is(.gray):nth-of-type(even)>* {
     background-color: white !important;
-  }
-  
+  } 
   
   .table th {
     background-color: #335271;
     color: white;
     padding: 6px;
-  }
-  
-  .ng-valid[required],
-  .ng-valid.required {
-    border-left: 5px solid #42A948;
-  }
-  
-  .ng-invalid:not(form) {
-    border-left: 5px solid #a94442;
   }
   
   .table-header {

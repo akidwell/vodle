@@ -33,6 +33,10 @@ div.card {
   border-left: 5px solid #a94442;
 }
 
+/* Used to aligh right fields like amounts */
+.right {
+  text-align: right;
+}
 
 /* Added here to allow the drop downs show full width of values, only worked here*/
 ng-select .ng-dropdown-panel {
