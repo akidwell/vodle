@@ -272,14 +272,18 @@ export class QuoteClass implements Quote, QuoteValidation {
   }
   validate(){
     this.validateQuote();
-    this.propertyQuote.validate();
+    this.propertyQuote?.validate();
     this.validationResults.mapValues(this);
     const childValidations: QuoteValidationClass[] = [];
-    childValidations.push(this.propertyQuote.validationResults);
+    if (this.propertyQuote) {
+      childValidations.push(this.propertyQuote?.validationResults);
+    }
     if (this.quoteRatesValidation){
       childValidations.push(this.quoteRatesValidation);
     }
-    this.validationResults.validateChildrenAndMerge(childValidations);
+    if (childValidations.length > 0) {
+      this.validationResults.validateChildrenAndMerge(childValidations);
+    }
     console.log('final quote validation: ', this.validationResults);
     //TODO: class based validation checks
     this._validateOnLoad = false;
@@ -332,12 +336,12 @@ export class QuoteClass implements Quote, QuoteValidation {
       pacCode: this.pacCode,
       createdBy: this.createdBy,
       createdDate: this.createdDate,
-      submission: this.submission.toJSON(),
+      submission: this.submission?.toJSON(),
       policySymbol: this.policySymbol,
       formName: this.formName,
       programId: this.programId,
       autoCalcMiscPremium: this.autoCalcMiscPremium,
-      propertyQuote: this.propertyQuote.toJSON()
+      propertyQuote: this.propertyQuote?.toJSON()
     };
   }
 }
