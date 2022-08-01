@@ -51,7 +51,7 @@ export class QuoteInformationDetailProgramComponent implements OnInit {
     if (this.program.quoteData) {
       console.log(this.program.quoteData);
       console.log(this.program.quoteData.submission);
-      const results$ = this.quoteService.postQuote(this.program.quoteData);
+      const results$ = this.quoteService.updateQuote(this.program.quoteData);
       await lastValueFrom(results$).then(async (quote) => {
         console.log(quote);
         if (quote !== null) {

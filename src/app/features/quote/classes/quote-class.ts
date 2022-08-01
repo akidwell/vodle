@@ -1,20 +1,29 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Quote } from '../models/quote';
+import { QuoteValidation } from '../models/quote-validation';
 import { ProgramClass } from './program-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
+import { QuoteValidationClass } from './quote-validation-class';
 
-export class QuoteClass implements Quote {
+export class QuoteClass implements Quote, QuoteValidation {
+  private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _isValid = true;
 
   submissionNumber = 0;
   quoteId = 0;
   cuspNumber = 0;
   quoteNumber = 0;
   sequenceNumber = 0;
-  effectiveDate: Date | Moment | null = null;
-  expirationDate: Date | Moment | null = null;
+  policyEffectiveDate: Date | Moment | null = null;
+  policyExpirationDate: Date | Moment | null = null;
   status = 0;
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
@@ -41,8 +50,8 @@ export class QuoteClass implements Quote {
   approvalUserName = null;
   approvalDate = null;
   comments = null;
-  createdBy = null;
-  createdDate = null;
+  createdBy = '';
+  createdDate: Date | Moment | null = null;
   modifiedUserName = null;
   modifiedDate = null;
   groupId = 3;
@@ -114,7 +123,12 @@ export class QuoteClass implements Quote {
   mappingError = false;
   submission!: SubmissionClass;
   quoteRates: QuoteRateClass[] = [];
+  quoteRatesValidation: QuoteValidationClass | null = null;
+
   propertyQuote!: PropertyQuoteClass;
+
+  quoteValidation!: QuoteValidationClass;
+  quoteChildValidations: QuoteValidationClass[] = [];
 
   private _isDirty = false;
   isNew = false;
@@ -126,18 +140,29 @@ export class QuoteClass implements Quote {
   get isValid(): boolean {
     // let valid = true;
     // valid = this.validate(valid);
-    return true;
+    return this._isValid;
   }
-
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
   private datepipe = new DatePipe('en-US');
 
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
+    console.log('quote constructor')
     if (quote) {
       this.existingInit(quote);
     } else if (program && submission) {
       this.newInit(program, submission);
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, QuoteValidationTabNameEnum.CoveragePremium);
+    this.validate();
   }
   existingInit(quote: Quote) {
     this.submissionNumber = quote.submissionNumber || 0;
@@ -147,14 +172,21 @@ export class QuoteClass implements Quote {
     this.quoteNumber = quote.quoteNumber || 1;
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
     this.admittedStatus = quote.admittedStatus || '';
-    this.effectiveDate = quote.effectiveDate || null;
-    this.expirationDate = quote.expirationDate || null;
+    this.policyEffectiveDate = quote.policyEffectiveDate || null;
+    this.policyExpirationDate = quote.policyExpirationDate || null;
     this.status = quote.status || 0;
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
     this.policySymbol = quote.policySymbol || '';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
+    this.autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
+    this.programId = quote.programId || 0;
+    this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
+    this.submissionNumber = quote.submissionNumber || 0;
+    this.displayCommissionRate = quote.displayCommissionRate || true;
+    this.createdBy = quote.createdBy || '';
+    this.createdDate = quote.createdDate || null;
     this.submission = new SubmissionClass(quote.submission);
     const rates: QuoteRateClass[] = [];
     quote.quoteRates?.forEach(element => {
@@ -162,17 +194,17 @@ export class QuoteClass implements Quote {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
-
+    console.log(this.propertyQuote);
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
+    this.validateQuoteChildren();
   }
   newInit(program: ProgramClass, submission: SubmissionClass) {
     //if first quote on group attach to existing submission
     //else duplicate submission and attach to that
     //quote data will be tied to tblCUSP_Quotes
     //need to add record to tbl_SubmissionGroupQuotes
-    console.log(program);
     this.submissionNumber = submission.submissionNumber;
     this.quoteNumber = 1;
     this.cuspNumber = 0; //Need to set on save
@@ -187,11 +219,12 @@ export class QuoteClass implements Quote {
     this.terrorismTemplateCode = program.selectedCoverageCarrierMapping?.defTRIATemplateCode || '';
     this.coverageCode = program.selectedCoverageCarrierMapping?.coverageCode || 0;
     this.admittedStatus = program.selectedCoverageCarrierMapping?.admittedStatus || '';
-    this.effectiveDate = submission.polEffDate;
-    this.expirationDate = submission.polExpDate;
+    this.policyEffectiveDate = submission.polEffDate;
+    this.policyExpirationDate = submission.polExpDate;
     this.programId = program.programId;
     this.status = 1;
   }
+
   markClean() {
     this._isDirty = false;
   }
@@ -208,6 +241,56 @@ export class QuoteClass implements Quote {
     // No special rules
   }
 
+  // createPropertyLocationCoverageValidation() {
+  //   this.propertyQuoteValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+
+  // }
+  // createPropertyMortgageeAdditionalInterestValidation() {
+  //   this.mortgageeAdditionalInterestValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+  //   this.propertyQuoteAdditionalInterestValidation = this.propertyQuoteAdditionalInterest.length > 0 ? new QuoteValidationClass(QuoteValidationTypeEnum.Child, null) : null;
+  //   this.propertyQuoteAdditionalInterestValidation?.addValidationToChildGroup(this.quoteChildValidations);
+
+  //   this.propertyQuoteMortgageeValidation = this.propertyQuoteMortgagee.length > 0 ? new QuoteValidationClass(QuoteValidationTypeEnum.Child, null) : null;
+  //   this.propertyQuoteMortgageeValidation?.addValidationToChildGroup(this.quoteChildValidations);
+  // }
+  validateQuoteChildren() {
+    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
+    //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
+    //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
+  }
+  validateQuote() {
+    this._canBeSaved = true;
+    this._errorMessages = ['quote'];
+    this._isValid = true;
+    this.validationResults.mapValues(this);
+    this.validateQuoteChildren();
+  }
+  validate(){
+    this.validateQuote();
+    this.propertyQuote.validate();
+    this.validationResults.mapValues(this);
+    const childValidations: QuoteValidationClass[] = [];
+    childValidations.push(this.propertyQuote.validationResults);
+    if (this.quoteRatesValidation){
+      childValidations.push(this.quoteRatesValidation);
+    }
+    this.validationResults.validateChildrenAndMerge(childValidations);
+    console.log('final quote validation: ', this.validationResults);
+    //TODO: class based validation checks
+    this._validateOnLoad = false;
+    return this.validationResults;
+  }
+  // validateCoverageTab(): QuoteChildValidation {
+  //   const validation: QuoteChildValidation = {
+  //     className: 'CoverageClass',
+  //     isDirty: this.quoteCoverages.map(x => x.isDirty).includes(true),
+  //     isValid: this.quoteCoverages.map(x => x.isValid).includes(true),
+  //     canBeSaved: this.quoteCoverages.map(x => x.canBeSaved).includes(true),
+  //     isEmpty: this.quoteCoverages.length === 0,
+  //     errorMessages: this.quoteCoverages.flatMap(x => x.errorMessages)
+  //   };
+  //   return validation;
+  //}
   // validate(valid: boolean): boolean {
   //   this.invalidList = [];
   //   if (!this.validateName()) {
@@ -233,8 +316,8 @@ export class QuoteClass implements Quote {
       cuspNumber: this.cuspNumber,
       quoteNumber: this.quoteNumber,
       sequenceNumber: this.sequenceNumber,
-      effectiveDate: this.effectiveDate,
-      expirationDate: this.expirationDate,
+      policyEffectiveDate: this.policyEffectiveDate,
+      policyExpirationDate: this.policyExpirationDate,
       status: this.status,
       claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
       admittedStatus: this.admittedStatus,
@@ -242,10 +325,13 @@ export class QuoteClass implements Quote {
       coverageCode: this.coverageCode,
       carrierCode: this.carrierCode,
       pacCode: this.pacCode,
+      createdBy: this.createdBy,
+      createdDate: this.createdDate,
       submission: this.submission.toJSON(),
       policySymbol: this.policySymbol,
       formName: this.formName,
       programId: this.programId,
+      autoCalcMiscPremium: this.autoCalcMiscPremium
     };
   }
 }

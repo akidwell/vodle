@@ -4,7 +4,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { QuoteRoutingModule } from './quote-routing.module';
 import { QuoteComponent } from './components/common/quote-base/quote.component';
 import { QuoteInformationComponent } from './components/common/quote-information-base/quote-information.component';
-import { CanDeactivateGuard } from '../policy/guards/can-deactivate-guard';
 import { NgxMaskModule } from 'ngx-mask';
 import { QuoteNotFoundComponent } from './components/common/quote-not-found/quote-not-found.component';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +36,8 @@ import { PropertyDeductibleModule } from 'src/app/shared/components/property-ded
 import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
 import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
+import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
+import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
 import { PropertyImportModule } from 'src/app/shared/components/property-import/property-building.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
@@ -84,6 +85,7 @@ import { PropertyBuildingCoverageModule } from 'src/app/shared/components/proper
     CanDeactivateGuard,
     DatePipe,
     FormatDateForDisplay,
+    QuoteDataValidationService,
     ConfirmationDialogService,
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     {

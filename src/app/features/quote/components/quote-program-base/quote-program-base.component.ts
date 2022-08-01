@@ -9,20 +9,22 @@ import { ProgramClass } from '../../classes/program-class';
   templateUrl: './quote-program-base.component.html',
   styleUrls: ['./quote-program-base.component.css']
 })
-export class QuoteProgramBaseComponent implements OnInit {
+export class QuoteProgramBaseComponent {
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
   constructor(private pageDataService: PageDataService, private route: ActivatedRoute) {
-  }
-
-  ngOnInit(): void {
     this.route.params.subscribe(routeParams => {
       this.pageDataService.getProgramWithQuote(routeParams.quoteId);
     });
+  }
+
+  ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
-        this.program = selectedProgram;
+        setTimeout(() => {
+          this.program = selectedProgram;
+        });
       }
     );
   }
