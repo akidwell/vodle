@@ -7,6 +7,7 @@ import { UnderlyingLimitBasis } from '../../../features/policy/models/schedules'
 import { Code } from '../../models/code';
 import { State } from '../../models/state';
 import { PropertyDeductibleLookup } from '../../models/property-deductible-lookup';
+import { ClassCode } from 'src/app/features/quote/models/class-code';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,13 @@ export class DropDownsService {
   private readonly refreshSubject = new Subject();
 
   constructor(private http: HttpClient, private config: ConfigService) {}
+
+  postSicCode(sicCode: string): Observable<ClassCode[]>{
+    const params = new HttpParams().append('sicCode', sicCode);
+
+    return this.http.get<ClassCode[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes/class-code', {params} );
+
+  }
 
   // Non static drop downs
   getLimitBasisDescriptions(

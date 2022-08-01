@@ -34,7 +34,6 @@
       </div>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-      <div class="card-body">
         <div class="row">
           <div class="col-1">
             <label for="isAppliedToAll" class="form-label" title="isAppliedToAll">Apply to all:</label><br>
@@ -51,50 +50,54 @@
             <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
               [(ngModel)]="mortgageeData.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEditSubmission">
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-3">
             <label for="mortgageHolder" class="form-label" title="mortgageHolder">Mortgage Holder</label>
             <input type="text" class="form-control" id="policyEventCode" name="mortgageHolder"
               [readonly]="!canEditSubmission" [(ngModel)]="mortgageeData.mortgageHolder" #mortgageHolder="ngModel">
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-3">
             <label for="street1" class="form-label" title="Status">Street Address 1</label>
             <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEditSubmission"
               [(ngModel)]="mortgageeData.street1" #street1="ngModel">
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-3">
             <label for="street2" class="form-label" title="Status">Street Address 2</label>
             <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEditSubmission"
               [(ngModel)]="mortgageeData.street2" #street2="ngModel">
           </div>
-          <div class="col-sm-1">
-            <label for="zip" class="form-label" title="zip">Zipcode</label>
-            <div class="inputspinner">
-              <input type="text" zip-code class="form-control" id="zipCode" [readonly]="mortgageeData.isZipLookup"
-                [(ngModel)]="mortgageeData.zip" [readonly]="!canEditSubmission" name="zipCode" #zip="ngModel"
-                (ngModelChange)="changeZipCode()">
-              <div *ngIf="mortgageeData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
-                role="zipCode" aria-hidden="true">
+
+          <div class="row">
+            <div class="col-sm-2">
+              <label for="zip" class="form-label" title="zip">Zipcode</label>
+              <div class="inputspinner">
+                <input type="text" zip-code class="form-control" id="zipCode" [readonly]="mortgageeData.isZipLookup"
+                  [(ngModel)]="mortgageeData.zip" [readonly]="!canEditSubmission" name="zipCode" #zip="ngModel"
+                  (ngModelChange)="changeZipCode()">
+                <div *ngIf="mortgageeData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
+                  role="zipCode" aria-hidden="true">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <label for="city" class="form-label" title="city">City</label>
+              <input type="text" class="form-control" id="city" name="city" [(ngModel)]="mortgageeData.city"
+                [readonly]="mortgageeData.isZipLookup || !canEditSubmission" #city="ngModel">
+            </div>
+            <div class="col-sm-2">
+              <label for="policyEventCode" class="form-label" title="Status">State</label>
+              <div *ngIf="isLoadingAddress">
+                <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+                </div>
+              </div>
+              <div *ngIf="!isLoadingAddress">
+                <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code"
+                  [clearable]="false" [readonly]="!canEditSubmission || mortgageeData.isZipLookup" name="mortgageeState"
+                  [(ngModel)]="mortgageeData.state" #mortgageeState="ngModel" (change)="changeState($event)">
+                </ng-select>
               </div>
             </div>
           </div>
-          <div class="col-sm-2">
-            <label for="city" class="form-label" title="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" [(ngModel)]="mortgageeData.city"
-              [readonly]="mortgageeData.isZipLookup || !canEditSubmission" #city="ngModel">
-          </div>
-          <div class="col-sm-1">
-            <label for="policyEventCode" class="form-label" title="Status">State</label>
-            <div *ngIf="isLoadingAddress">
-              <div class="spinner-border ml-auto" role="status" aria-hidden="true">
-              </div>
-            </div>
-            <div *ngIf="!isLoadingAddress">
-              <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code"
-                [clearable]="false" [readonly]="!canEditSubmission || mortgageeData.isZipLookup" name="mortgageeState"
-                [(ngModel)]="mortgageeData.state" #mortgageeState="ngModel" (change)="changeState($event)">
-              </ng-select>
-            </div>
-          </div>
+          
           <div class="row">
             <div class="col-sm-2">
               <label for="attention" class="form-label" title="attention">Attention</label>
@@ -107,9 +110,9 @@
                 [(ngModel)]="mortgageeData.description" #comments="ngModel">
             </div>
           </div>
-        </div>
       </div>
       <div class="empty-row"></div>
+      
       <div class="row">
         <div class="col-lg-2">
           <button class="btn btn-secondary" (click)=copyMortgagee() hover-class="btn-primary"

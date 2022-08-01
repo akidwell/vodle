@@ -121,6 +121,9 @@ export class QuoteClass implements Quote, QuoteValidation {
   supportedStatus = null;
   importWarnings = [];
   importErrors = [];
+  naicsCode = null;
+  sicCode = null;
+  classCode = null;
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;

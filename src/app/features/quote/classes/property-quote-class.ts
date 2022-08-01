@@ -25,10 +25,10 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  get riskDescription(): string | null {
+  get riskDesciption() : string | null {
     return this._riskDescription;
   }
-  set riskDescription(value: string | null) {
+  set riskDesciption(value: string | null) {
     this._riskDescription = value;
     this._isDirty = true;
   }

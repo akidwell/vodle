@@ -41,6 +41,9 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
 import { PropertyImportModule } from 'src/app/shared/components/property-import/property-building.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
+import { QuotePropertyDetailLeftComponent } from './components/property/quote-property-detail/quote-property-detail-left/quote-property-detail-left.component';
+import { QuotePropertyDetailCenterComponent } from './components/property/quote-property-detail/quote-property-detail-center/quote-property-detail-center.component';
+import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,10 @@ import { PropertyBuildingCoverageModule } from 'src/app/shared/components/proper
     QuoteProgramBaseComponent,
     QuotePropertyLocationCoverageComponent,
     QuotePropertyPremiumComponent,
-    PropertyPremiumRateComponent],
+    PropertyPremiumRateComponent,
+    QuotePropertyDetailLeftComponent,
+    QuotePropertyDetailCenterComponent,
+    QuotePropertyDetailRightComponent],
   imports: [
     CommonModule,
     QuoteRoutingModule,
