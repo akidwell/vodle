@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { State } from 'src/app/core/models/state';
@@ -7,6 +7,8 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
+import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 
 @Component({
   selector: 'rsps-property-building',
@@ -25,6 +27,7 @@ export class PropertyBuildingComponent implements OnInit {
   @Input() public building!: PropertyBuilding;
   @Input() public canEdit = false;
   @Input() public index = 0;
+  @Input() public classType!: ClassTypeEnum;
   @Output() deleteBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
   @Output() copyBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
 
@@ -101,6 +104,15 @@ export class PropertyBuildingComponent implements OnInit {
     this.deleteBuilding.emit(this.building);
   }
 
+  addCoverage() {
+    if (this.classType == ClassTypeEnum.Quote) {
+      const newCoverage = new PropertyQuoteBuildingCoverageClass();
+      this.building.propertyQuoteBuildingCoverage.push(newCoverage);
+    }
+    else if (this.classType == ClassTypeEnum.Policy) {
+      //TODO
+    }
+  }
   focus(): void {
     this.collapsed = false;
     setTimeout(() => {

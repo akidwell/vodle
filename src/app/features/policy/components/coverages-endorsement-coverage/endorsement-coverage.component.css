@@ -14,11 +14,11 @@ input[type="date"] {
   display: inline-block;
 }
 
-input[type="checkbox"] {
+/* input[type="checkbox"] {
   display: inline-block;
   width: 20px;
   height: 20px;
-}
+} */
 
 .collapse-bar {
   background: none;
@@ -76,15 +76,6 @@ input[type="checkbox"][readonly] {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.ng-valid[required],
-.ng-valid.required {
-  border-left: 5px solid #42A948;
-}
-
-.ng-invalid:not(form) {
-  border-left: 5px solid #a94442;
 }
 
 .alert {

@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-header" (click)="collapsePanel(!locationCollapsed)">
       <span class="col-lg-1" *ngIf="copyCoverageGroupsActive">
-        <input type="checkbox" click-stop-propagation class="form-checkbox" id="copyGroup"
+        <input type="checkbox" click-stop-propagation class="form-check-input" id="copyGroup"
           [(ngModel)]="endorsementCoveragesGroup.copyThisGroup" name="copyGroup" [readonly]="!canEditPolicy">
       </span>
       <a [routerLink]="[]" click-stop-propagation (click)="openLocation(endorsementCoveragesGroup);">ID #:

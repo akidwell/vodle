@@ -15,6 +15,7 @@ export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
   locationNumberRequired: boolean;
   buildingNumberRequired: boolean;
   propertyCoverageIdRequired: boolean;
+  coinsuranceRequired: boolean;
   causeOfLossIdRequired: boolean;
   valuationIdRequired: boolean;
   subjectNumberRequired: boolean;

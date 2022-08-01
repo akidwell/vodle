@@ -69,15 +69,15 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     return valid;
   }
 
-  constructor(coverage?: PropertyBuildingCoverage, isImport = false) {
+  constructor(coverage?: PropertyBuildingCoverage) {
     if (coverage) {
-      this.existingInit(coverage, isImport);
+      this.existingInit(coverage);
     } else {
       this.newInit();
     }
   }
 
-  existingInit(coverage: PropertyBuildingCoverage, isImport = false) {
+  existingInit(coverage: PropertyBuildingCoverage) {
     this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
@@ -96,6 +96,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   locationNumberRequired = true;
   buildingNumberRequired = true;
   propertyCoverageIdRequired = true;
+  coinsuranceRequired = true;
   causeOfLossIdRequired = true;
   valuationIdRequired = true;
   subjectNumberRequired = true;

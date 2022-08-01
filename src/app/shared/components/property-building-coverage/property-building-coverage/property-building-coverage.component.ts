@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { State } from '@popperjs/core';
+import { NgOption, NgSelectComponent } from '@ng-select/ng-select';
 import { Observable, Subscription } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
@@ -12,7 +12,7 @@ import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property
 @Component({
   selector: 'rsps-property-building-coverage',
   templateUrl: './property-building-coverage.component.html',
-  styleUrls: ['./property-building-coverage.component.css']
+  styleUrls: ['./property-building-coverage.component.css'],
 })
 export class PropertyBuildingCoverageComponent implements OnInit {
   collapsed = true;
@@ -28,27 +28,40 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   @Input() public building!: PropertyBuilding;
   @Input() public coverage!: PropertyBuildingCoverage;
   @Input() public canEdit = false;
-  @Input() public index = 0;
+  @Input() public buildingIndex = 0;
+  @Input() public coverageIndex = 0;
   @Output() deleteCoverage: EventEmitter<PropertyBuildingCoverage> = new EventEmitter();
   @Output() copyCoverage: EventEmitter<PropertyBuildingCoverage> = new EventEmitter();
+  @ViewChild('coverageComp') coverageComp!: NgSelectComponent;
+  @ViewChild('causeOfLossComp') causeOfLossComp!: NgSelectComponent;
+  @ViewChild('valuationComp') valuationComp!: NgSelectComponent;
 
-  constructor(private confirmationDialogService: ConfirmationDialogService, private dropdowns: DropDownsService,
-    private messageDialogService: MessageDialogService) { }
+  constructor(
+    private confirmationDialogService: ConfirmationDialogService,
+    private dropdowns: DropDownsService,
+    private messageDialogService: MessageDialogService,
+    private ref: ChangeDetectorRef
+  ) {
+    this.ref.detach();
+  }
 
   ngOnInit(): void {
     this.coverages$ = this.dropdowns.getPropertyCoverages();
     this.causeOfLoss$ = this.dropdowns.getPropertyCauseOfLoss();
     this.valuations$ = this.dropdowns.getPropertyValuations();
-    this.anchorId = 'focusHere' + this.index;
+    this.anchorId = 'focusHere' + this.buildingIndex + '/' + this.coverageIndex;
     if (this.coverage.isNew && !this.coverage.isImport) {
       this.collapseExpand(false);
       this.focus();
     }
   }
 
+  ngAfterViewChecked(){
+    this.ref.detectChanges();
+  }
+
   collapseExpand(event: boolean) {
     if (this.firstExpand) {
-
       this.firstExpand = false;
     }
     this.collapsed = event;
@@ -59,11 +72,13 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   }
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open('Delete Confirmation','Are you sure you want to delete this coverage?').then((result: boolean) => {
-      if (result) {
-        this.delete();
-      }
-    });
+    this.confirmationDialogService
+      .open('Delete Confirmation', 'Are you sure you want to delete this coverage?')
+      .then((result: boolean) => {
+        if (result) {
+          this.delete();
+        }
+      });
   }
 
   async delete() {
@@ -90,5 +105,15 @@ export class PropertyBuildingCoverageComponent implements OnInit {
     setTimeout(() => {
       document.getElementById(this.anchorId)?.scrollIntoView();
     }, 250);
+  }
+
+  get coverageTooltip(): string | undefined {
+    return this.coverageComp?.selectedItems?.find((e: NgOption) => typeof e !== 'undefined')?.label;
+  }
+  get causeOfLossTooltip(): string {
+    return this.causeOfLossComp?.selectedItems?.find((e: NgOption) => typeof e !== 'undefined')?.label ?? '';
+  }
+  get valuationTooltip(): string {
+    return this.valuationComp?.selectedItems?.find((e: NgOption) => typeof e !== 'undefined')?.label ?? '';
   }
 }

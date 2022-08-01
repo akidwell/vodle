@@ -6,10 +6,6 @@ input[type="date"] {
   display: inline-block;
 }
 
-input[type="checkbox"] {
-  display: inline-block;
-}
-
 .form-label {
   overflow: hidden;
   white-space: nowrap;
@@ -17,24 +13,6 @@ input[type="checkbox"] {
   width: 100%;
   display: block;
   margin-bottom: 0px;
-}
-
-.form-checkbox {
-  height: 25px;
-  width: 25px;
-}
-
-input[type="checkbox"][readonly] {
-  pointer-events: none;
-}
-
-.ng-valid[required],
-.ng-valid.required {
-  border-left: 5px solid #42A948;
-}
-
-.ng-invalid:not(form) {
-  border-left: 5px solid #a94442;
 }
 
 #coinsurancePercentage {

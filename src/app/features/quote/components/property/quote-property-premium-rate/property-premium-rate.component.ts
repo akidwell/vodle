@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { QuoteRate } from 'src/app/features/quote/models/quote-rate';
 
 @Component({
@@ -10,7 +9,8 @@ import { QuoteRate } from 'src/app/features/quote/models/quote-rate';
 export class PropertyPremiumRateComponent implements OnInit {
   accountCollapsed = false;
 
-  @Input() public program!: ProgramClass;
+  @Input() public programDescription!: string;
+  @Input() public limitTotal!: number;
   @Input() public rate!: QuoteRate;
   @Input() public canEdit = false;
 

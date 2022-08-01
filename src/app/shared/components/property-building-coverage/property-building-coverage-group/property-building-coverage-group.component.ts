@@ -20,6 +20,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
 
+  @Input() public limitTotal!: number;
   @Input() public buildings!: PropertyBuilding[];
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;

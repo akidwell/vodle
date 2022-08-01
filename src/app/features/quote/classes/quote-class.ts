@@ -110,6 +110,8 @@ export class QuoteClass implements Quote {
   maxPolicyAggregate = null;
   displayCommissionRate = false;
   supportedStatus = null;
+  importWarnings = [];
+  importErrors = [];
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;

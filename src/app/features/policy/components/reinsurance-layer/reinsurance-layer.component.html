@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="isFaculative">
-        <input type="checkbox" id="isFaculative" [(ngModel)]="reinsuranceLayer.isFaculative" name="isFaculative"
+        <input type="checkbox" class="form-check-input" id="isFaculative" [(ngModel)]="reinsuranceLayer.isFaculative" name="isFaculative"
           [readonly]="!canEdit" (change)="changeFaculative()" [checked]="reinsuranceLayer.reinsCertificateNo !== null">
       </div>
       <div class="intermediary">

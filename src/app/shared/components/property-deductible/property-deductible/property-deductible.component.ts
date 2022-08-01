@@ -5,6 +5,7 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
+import { PropertyDeductibleLookup } from 'src/app/core/models/property-deductible-lookup';
 
 @Component({
   selector: 'rsps-property-deductible',
@@ -14,10 +15,11 @@ import { PropertyDeductible } from 'src/app/features/quote/models/property-deduc
 export class PropertyDeductibleComponent implements OnInit {
   deductibleTypes$: Observable<Code[]> | undefined;
   deductibleCodes$: Observable<Code[]> | undefined;
-  propertyDeductibles$: Observable<Code[]> | undefined;
+  propertyDeductibles$: Observable<PropertyDeductibleLookup[]> | undefined;
   collapsed = true;
   faAngleUp = faAngleUp;
 
+  @Input() public programId!: number;
   @Input() public deductible!: PropertyDeductible;
   @Input() public canEdit = false;
   @Output() deleteDeductible: EventEmitter<PropertyDeductible> = new EventEmitter();
@@ -25,8 +27,8 @@ export class PropertyDeductibleComponent implements OnInit {
   constructor( private dropdowns: DropDownsService, private confirmationDialogService: ConfirmationDialogService) { }
 
   ngOnInit(): void {
-    this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
-    this.deductibleCodes$ = this.dropdowns.getDeductibleCodes();
+    this.deductibleTypes$ = this.dropdowns.getDeductibleTypes(this.programId);
+    this.deductibleCodes$ = this.dropdowns.getDeductibleCodes(this.programId);
     this.propertyDeductibles$ = this.dropdowns.getPropertyDeductibles();
   }
 
@@ -46,4 +48,14 @@ export class PropertyDeductibleComponent implements OnInit {
     this.deleteDeductible.emit(this.deductible);
   }
 
+  changeDeductible(item: PropertyDeductibleLookup) {
+    if (item !== undefined) {
+      if (item?.defaultDeductibleType !== null) {
+        this.deductible.deductibleType = item.defaultDeductibleType;
+      }
+      if (item?.defaultDeductibleCode !== null) {
+        this.deductible.deductibleCode = item.defaultDeductibleCode;
+      }
+    }
+  }
 }

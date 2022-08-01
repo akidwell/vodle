@@ -3,6 +3,7 @@ import { PropertyBuildingCoverage } from './property-building-coverage';
 export interface PropertyBuildingData {
     propertyQuoteBuildingId: number | null;
     propertyQuoteId: number | null;
+    subjectNumber: number | null;
     locationNumber: number | null;
     buildingNumber: number | null;
     street1: string | null;
@@ -16,6 +17,7 @@ export interface PropertyBuildingData {
     description: string | null;
     occupancy: string | null;
     yearBuilt: string | null;
+    gutRehab: string | null;
     sprinklered: string | null;
     construction: string | null;
     stories: string | null;
@@ -30,6 +32,7 @@ export interface PropertyBuildingData {
 
 export interface PropertyBuilding extends PropertyBuildingData {
     isZipLookup: boolean;
+    subjectNumberRequired: boolean;
     locationNumberRequired: boolean;
     buildingNumberRequired: boolean;
     street1Required: boolean;
@@ -41,4 +44,6 @@ export interface PropertyBuilding extends PropertyBuildingData {
     stateReadonly: boolean;
     isImport: boolean;
     validateAddress: boolean;
+    buildingIndex: string;
+    address: string;
   }

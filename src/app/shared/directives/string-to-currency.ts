@@ -1,28 +1,29 @@
-import { NgControl } from '@angular/forms';
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Directive, ElementRef, forwardRef, HostListener, Input } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { MinusSignToParens } from '../pipes/minus-sign.pipe';
 
 @Directive({
-  selector: '[string-to-currency]',
+  selector: 'input[string-to-currency]',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => StringToCurrencyDirective),
+      multi: true,
+    },
+  ],
 })
-export class StringToCurrencyDirective {
+export class StringToCurrencyDirective implements ControlValueAccessor {
   @Input() decimalPlaces = 0;
   @Input() allowNegative = true;
   @Input() hideDecimal = false;
 
-  constructor(protected el: ElementRef, private control: NgControl) {}
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this.control.value != null) {
-        this.el.nativeElement.value = this.formatToDisplayCurrency(this.control.value.toString());
-      }
-    });
-  }
+  constructor(protected el: ElementRef) {}
 
   @HostListener('input', ['$event'])
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   change(event: any) {
     const target = event.target;
     const posStart = target.selectionStart ?? 0;
@@ -31,24 +32,21 @@ export class StringToCurrencyDirective {
 
     if (!this.allowNegative) {
       target.value = target.value.replace(/-/g, '');
-    }
-    else if (target.value.indexOf('-') >= 1 || target.value.match(/-/g)?.length > 1) {
+    } else if (target.value.indexOf('-') >= 1 || target.value.match(/-/g)?.length > 1) {
       // Move minus sign to front & remove extra minus signs
       target.value = '-' + target.value.replace(/-/g, '');
     }
     const value = target.value.replace(/[^0-9.-]+/g, '');
     if (!isNaN(Number(value))) {
       target.value = this.formatToEditCurrency(value);
-    }
-    else {
+    } else {
       target.value = value;
     }
     // calculate cursor position
     if (value.startsWith('.')) {
       target.selectionStart = +posStart + (posStart + 1);
       target.selectionEnd = +posEnd + (posEnd + 1);
-    }
-    else {
+    } else {
       const afterLength = target.value.split(',').length - 1;
       const offset = afterLength - beforeLength;
       target.selectionStart = +posStart + (posStart + offset < 0 ? 0 : offset);
@@ -56,22 +54,15 @@ export class StringToCurrencyDirective {
     }
     // Update model with clean version
     const clean = target.value.replace(/[^0-9.-]+/g, '');
-    this.control.viewToModelUpdate(target.value === '' ? null : isNaN(Number(clean)) ? null : Number(clean));
+    this.onChange(target.value === '' ? null : isNaN(Number(clean)) ? null : Number(clean));
   }
 
   @HostListener('blur', ['$event.target'])
   onLeaveEvent(target: HTMLInputElement) {
     if (!target.readOnly) {
-      const originalValue = target.value;
+      // If leaving control and only thing is a symbol like - or . then it will automatically remove it
       const cleanValue = this.formatToDisplayCurrency(target.value);
       this.el.nativeElement.value = cleanValue;
-      // If leaving control and only thing is a symbol like - or . then it will automatically remove it
-      // need to push this change to control and model
-      if (cleanValue === '' && originalValue !== '') {
-        this.control.reset();
-        this.control.viewToModelUpdate(null);
-        this.control.control?.markAsDirty();
-      }
     }
   }
 
@@ -84,8 +75,9 @@ export class StringToCurrencyDirective {
   }
 
   @HostListener('keydown', ['$event'])
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onKeyDown(event: any) {
+    const el: HTMLInputElement = event.target as HTMLInputElement;
+
     if (event.key === undefined) {
       event.preventDefault();
       return false;
@@ -124,19 +116,23 @@ export class StringToCurrencyDirective {
     }
     if (event.keyCode === 110 || event.keyCode === 190) {
       // Handle decimal place
-      if (this.decimalPlaces > 0 && (this.control.value === null || !this.control.value?.toString().includes('.'))) {
+      if (this.decimalPlaces > 0 && (el.value === null || !el.value?.toString().includes('.'))) {
         return true;
       }
       event.preventDefault();
       return false;
     } else if (event.keyCode === 109 || event.keyCode === 189) {
       // Handle minus sign
-      if (this.allowNegative && (this.control.value === null || !this.control.value?.toString().includes('-'))) {
+      if (this.allowNegative && (el.value === null || !el.value?.toString().includes('-'))) {
         return true;
       }
       event.preventDefault();
       return false;
-    } else if (event.ctrlKey && (event.keyCode === 67 || event.keyCode === 86)) {
+    } else if (
+      event.ctrlKey &&
+      (event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 90)
+    ) {
+      // Handle Ctrl+c, Ctrl+v and Ctrl+z (Copy,Paste,Undo)
       return true;
     } else if (
       (event.keyCode >= 48 && event.keyCode <= 57) || // Numbers
@@ -159,7 +155,8 @@ export class StringToCurrencyDirective {
     const minusPipe = new MinusSignToParens();
     let formattedValue = '';
     // Clean up value to removes anything not a number or decimal or a leading minus sign
-    let value: string = input.slice(0, 1).replace(/[^0-9.-]+/g, '') + input.slice(1).replace(/[^0-9.]+/g, '');
+    let value: string =
+      input.slice(0, 1).replace(/[^0-9.-]+/g, '') + input.slice(1).replace(/[^0-9.]+/g, '');
     // If only contains a minus or decimal just clear it out to prevent errors
     if (value.replace('-', '').replace('.', '') === '') {
       value = '';
@@ -206,5 +203,22 @@ export class StringToCurrencyDirective {
       currency = currency + '.';
     }
     return currency ?? '';
+  }
+
+  public async writeValue(value: any): Promise<void> {
+    if (value !== null) {
+      this.el.nativeElement.value = this.formatToDisplayCurrency(value?.toString());
+    }
+  }
+
+  public onChange = (_: any) => {};
+  public onTouch = () => {};
+
+  public registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: any): void {
+    this.onTouch = fn;
   }
 }

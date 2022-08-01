@@ -111,4 +111,6 @@ export interface Quote {
   supportedStatus: string | null;
   quoteRates: QuoteRate[];
   propertyQuote: PropertyQuote;
+  importWarnings: string[];
+  importErrors: string[];
 }

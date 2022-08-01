@@ -11,16 +11,23 @@ export class PropertyQuoteClass implements PropertyQuote {
   propertyQuoteMortgagee: MortgageeClass[] = [];
   propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
 
-
   private _riskDescription: string | null = null;
   private _isDirty = false;
 
-  get riskDescription() : string | null {
+  get riskDescription(): string | null {
     return this._riskDescription;
   }
   set riskDescription(value: string | null) {
     this._riskDescription = value;
     this._isDirty = true;
+  }
+
+  get limitTotal(): number {
+    let total = 0;
+    this.propertyQuoteBuilding.forEach((c) =>
+      c.propertyQuoteBuildingCoverage.forEach((coverage) => (total += coverage.limit ?? 0))
+    );
+    return total;
   }
 
   constructor(propertyQuote?: PropertyQuote) {
@@ -35,26 +42,26 @@ export class PropertyQuoteClass implements PropertyQuote {
     this.riskDescription = propertyQuote.riskDescription;
 
     const deductibles: PropertyQuoteDeductibleClass[] = [];
-    propertyQuote.propertyQuoteDeductible.forEach(element => {
+    propertyQuote.propertyQuoteDeductible.forEach((element) => {
       deductibles.push(new PropertyQuoteDeductibleClass(element));
     });
     this.propertyQuoteDeductible = deductibles;
 
     const mortgagee: MortgageeClass[] = [];
-    propertyQuote.propertyQuoteMortgagee.forEach(element => {
+    propertyQuote.propertyQuoteMortgagee.forEach((element) => {
       mortgagee.push(new MortgageeClass(element));
     });
     this.propertyQuoteMortgagee = mortgagee;
 
     const ai: AdditionalInterestClass[] = [];
-    propertyQuote.propertyQuoteAdditionalInterest.forEach(element => {
+    propertyQuote.propertyQuoteAdditionalInterest.forEach((element) => {
       ai.push(new AdditionalInterestClass(element));
     });
     this.propertyQuoteMortgagee = mortgagee;
     this.propertyQuoteAdditionalInterest = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
-    propertyQuote.propertyQuoteBuilding.forEach(element => {
+    propertyQuote.propertyQuoteBuilding.forEach((element) => {
       buildings.push(new PropertyQuoteBuildingClass(element));
     });
     this.propertyQuoteBuilding = buildings;
