@@ -35,7 +35,7 @@ export class AdditionalInterestClass implements AdditionalInterestData{
     this._buildingNumber = ai?.buildingNumber || null;
     this._attention = ai?.attention || null;
     this._description = ai?.description || null;
-    this._locationNumber = ai?.locationNumber || null;
+    this._locationNumber = ai?.premisesNumber || null;
     this._interest = ai?.interest || null;
     this._propertyQuoteId = ai?.propertyQuoteId || null;
     this._propertyQuoteAdditionalInterestId = ai?.propertyQuoteAdditionalInterestId || null;
@@ -84,10 +84,10 @@ export class AdditionalInterestClass implements AdditionalInterestData{
     this._isDirty = true;
   }
 
-  get locationNumber() : number | null {
+  get premisesNumber() : number | null {
     return this._locationNumber;
   }
-  set locationNumber(value: number | null) {
+  set premisesNumber(value: number | null) {
     this._locationNumber= value;
     this._isDirty = true;
   }
