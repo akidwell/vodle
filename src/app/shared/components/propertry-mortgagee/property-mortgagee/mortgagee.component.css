@@ -22,30 +22,11 @@
     padding: 0%;
     font-weight: normal;
   }
-
-  
-  .ng-valid[required],
-  .ng-valid.required {
-    border-left: 5px solid #42A948;
-  }
-  
-  .ng-invalid:not(form) {
-    border-left: 5px solid #a94442;
-  }
   
   .table-header {
     background-color: #335271;
     color: white;
   }
-
-  .ng-valid[required],
-.ng-valid.required {
-  border-left: 5px solid #42a948; /* green */
-}
-
-.ng-invalid:not(form) {
-  border-left: 5px solid #a94442; /* red */
-}
 
 .overlay {
   background-color: rgba(255, 255, 255, 0.5);

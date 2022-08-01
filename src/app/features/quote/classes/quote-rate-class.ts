@@ -80,6 +80,8 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation {
     return this._validationResults;
   }
   existingInit(rate: QuoteRate) {
+    this.quoteId = rate.quoteId;
+    this.sequenceNo = rate.sequenceNo;
     this._premiumRate = rate.premiumRate;
     this._premium = rate.premium;
     this._rateBasis = rate.rateBasis;
@@ -105,5 +107,16 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation {
   }
   setReadonlyFields() {
     // No special rules
+  }
+
+  toJSON() {
+    return {
+      quoteId: this.quoteId,
+      sequenceNo: this.sequenceNo,
+      rateBasis: this.rateBasis,
+      isFlatRate: this.isFlatRate,
+      premiumRate: this.premiumRate,
+      premium: this.premium
+    };
   }
 }

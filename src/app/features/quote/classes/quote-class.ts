@@ -9,6 +9,7 @@ import { ProgramClass } from './program-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
 import { QuoteValidationClass } from './quote-validation-class';
+import { QuoteRate } from '../models/quote-rate';
 
 export class QuoteClass implements Quote, QuoteValidation {
   private _validateOnLoad = true;
@@ -319,6 +320,9 @@ export class QuoteClass implements Quote, QuoteValidation {
 
 
   toJSON() {
+    const rates: QuoteRate[] = [];
+    this.quoteRates.forEach(c => rates.push(c.toJSON()));
+
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -341,7 +345,8 @@ export class QuoteClass implements Quote, QuoteValidation {
       formName: this.formName,
       programId: this.programId,
       autoCalcMiscPremium: this.autoCalcMiscPremium,
-      propertyQuote: this.propertyQuote?.toJSON()
+      propertyQuote: this.propertyQuote?.toJSON(),
+      quoteRates: rates
     };
   }
 }
