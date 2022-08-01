@@ -21,7 +21,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   taxCode: string | null = null;
 
   private _subjectNumber: number | null = null;
-  private _locationNumber: number | null = null;
+  private _premisesNumber: number | null = null;
   private _buildingNumber: number | null = null;
   private _street1: string | null = null;
   private _street2: string | null = null;
@@ -72,11 +72,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
   }
-  get locationNumber(): number | null {
-    return this._locationNumber;
+  get premisesNumber(): number | null {
+    return this._premisesNumber;
   }
-  set locationNumber(value: number | null) {
-    this._locationNumber = value;
+  set premisesNumber(value: number | null) {
+    this._premisesNumber = value;
     this._isDirty = true;
   }
   get buildingNumber(): number | null {
@@ -221,7 +221,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   get buildingIndex(): string {
-    return (this.subjectNumber ?? '') + '/' + (this.locationNumber ?? '')+ '/' + (this.buildingNumber ?? '');
+    return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
   }
   get address(): string {
     return (!this.street1 ? '' : this.street1) +
@@ -256,7 +256,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this.propertyQuoteId = building.propertyQuoteId;
     this.taxCode = building.taxCode;
     this._subjectNumber = building.subjectNumber;
-    this._locationNumber = building.locationNumber;
+    this._premisesNumber = building.premisesNumber;
     this._buildingNumber = building.buildingNumber;
     this._street1 = building.street1;
     this._street2 = building.street2;
@@ -297,7 +297,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   subjectNumberRequired = true;
-  locationNumberRequired = true;
+  premisesNumberRequired = true;
   buildingNumberRequired = true;
   street1Required = true;
   get zipRequired(): boolean {

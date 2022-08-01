@@ -111,8 +111,8 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.setRequiredFields();
   }
 
-  locationNumberRequired = true;
-  buildingNumberRequired = true;
+  // locationNumberRequired = true;
+  // buildingNumberRequired = true;
   propertyCoverageIdRequired = true;
   coinsuranceRequired = true;
   causeOfLossIdRequired = true;

@@ -9,9 +9,9 @@
                         ngbTooltip="Subject #" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="locationNumber" name="locationNumber"
-                        [(ngModel)]="building.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.locationNumberRequired" click-stop-propagation ngbTooltip="Premises #" [openDelay]="1000">
+                    <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
+                        [(ngModel)]="building.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEdit"
+                        [required]="building.premisesNumberRequired" click-stop-propagation ngbTooltip="Premises #" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
@@ -47,8 +47,8 @@
                 <div class="col-lg-1">
                     <label for="locationNumber" class="form-label" title="locationNumber">Premises #</label>
                     <input type="text" class="form-control" id="locationNumber" name="locationNumber"
-                        [(ngModel)]="building.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.locationNumberRequired" click-stop-propagation>
+                        [(ngModel)]="building.premisesNumber" #locationNumber="ngModel" [readonly]="!canEdit"
+                        [required]="building.premisesNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
                     <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>

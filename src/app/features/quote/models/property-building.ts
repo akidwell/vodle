@@ -4,7 +4,7 @@ export interface PropertyBuildingData {
     propertyQuoteBuildingId: number | null;
     propertyQuoteId: number | null;
     subjectNumber: number | null;
-    locationNumber: number | null;
+    premisesNumber: number | null;
     buildingNumber: number | null;
     street1: string | null;
     street2: string | null
@@ -33,7 +33,7 @@ export interface PropertyBuildingData {
 export interface PropertyBuilding extends PropertyBuildingData {
     isZipLookup: boolean;
     subjectNumberRequired: boolean;
-    locationNumberRequired: boolean;
+    premisesNumberRequired: boolean;
     buildingNumberRequired: boolean;
     street1Required: boolean;
     zipRequired: boolean;
