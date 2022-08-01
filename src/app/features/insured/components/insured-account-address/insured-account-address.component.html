@@ -82,7 +82,7 @@
       <div class="col-lg-6">
         <label for="country" class="form-label" title="Country">Country</label>
         <div class="inputspinner">
-          <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
+          <ng-select id="country" [items]="countries$ | async" bindLabel="description" bindValue="code"
             [readonly]="!canEditInsured || insured.countryReadonly"
             [required]="canEditInsured && insured.countryRequired" name="country" [(ngModel)]="insured.country"
             #state="ngModel" [ngClass]="countryUpdated" (ngModelChange)="changeCountry()">

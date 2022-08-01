@@ -140,7 +140,6 @@ export class StatusBarComponent implements OnInit {
     this.pageDataService.submissionData = this.checkSubmissionData(child);
     this.pageDataService.quoteData = this.checkQuoteData(child);
     this.pageDataService.policyData = this.checkPolicyData(child);
-
     return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null || this.pageDataService.quoteData != null);
   }
   private checkInsuredData(child: ActivatedRoute): InsuredClass | null {

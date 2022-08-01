@@ -14,12 +14,12 @@ export class QuoteProgramBaseComponent {
   quoteId = 0;
   programSub!: Subscription;
   constructor(private pageDataService: PageDataService, private route: ActivatedRoute) {
-  }
-
-  ngAfterViewInit(): void {
     this.route.params.subscribe(routeParams => {
       this.pageDataService.getProgramWithQuote(routeParams.quoteId);
     });
+  }
+
+  ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         setTimeout(() => {

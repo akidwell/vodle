@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { AddressLookupService } from '../../../../core/services/address-lookup/address-lookup.service';
 import { EndorsementCoverage, EndorsementCoverageLocation, EndorsementCoveragesGroup } from '../coverages-base/coverages';

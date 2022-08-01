@@ -1,0 +1,186 @@
+<div class="component-row">
+    <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+        <div (click)="collapseExpand(false)">
+            <div class="row" *ngIf="collapsed">
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+                        [(ngModel)]="building.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
+                        [required]="building.locationNumberRequired" click-stop-propagation ngbTooltip="Premises #" [openDelay]="1000">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+                        [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
+                        [required]="building.buildingNumberRequired" click-stop-propagation ngbTooltip="Building #" [openDelay]="1000">
+                </div>
+                <div class="col-lg-8">
+                    <input type="address" class="form-control" id="address" #address="ngModel" name="address"
+                    readonly [ngClass]="addressReadOnly" [ngModel]=" (!building.street1 ? '' : building.street1) + 
+                            (!building.street2 ? '' : ', ' + building.street2) + 
+                            (!building.city ? '' : ', ' + building.city ) + 
+                            (!building.state ? '' : ', ' + building.state) +
+                            (!building.zip ? '' : ' ' + building.zip)" ngbTooltip="Address" [openDelay]="1000">
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary" [disabled]="!canEdit"
+                        click-stop-propagation>Copy</button>
+                    <button *ngIf="!building.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-danger"
+                        click-stop-propagation>Delete</button>
+                    <button *ngIf="building.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-warning"
+                        click-stop-propagation>Remove</button>
+                </div>
+            </div>
+        </div>
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+            <div class="row">
+                <div class="col-lg-1">
+                    <label for="locationNumber" class="form-label" title="locationNumber">Premises #</label>
+                    <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+                        [(ngModel)]="building.locationNumber" #locationNumber="ngModel" [readonly]="!canEdit"
+                        [required]="building.locationNumberRequired" click-stop-propagation>
+                </div>
+                <div class="col-lg-1">
+                    <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>
+                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+                        [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
+                        [required]="building.buildingNumberRequired" click-stop-propagation>
+                </div>
+                <div class="col-lg-4">
+                    <label for="street1" class="form-label" title="Street Address 1">Street Address 1</label>
+                    <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"
+                        [required]="building.street1Required" [(ngModel)]="building.street1" #street1="ngModel">
+                </div>
+                <div class="col-lg-4">
+                    <label for="street2" class="form-label" title="Street Address 2">Street Address 2</label>
+                    <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit"
+                        [(ngModel)]="building.street2" #street2="ngModel">
+                </div>
+            </div>
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="zip" class="form-label" title="zip">Zip Code</label>
+                    <div class="inputspinner">
+                        <input type="text" zip-code class="form-control" id="zipCode"
+                            [readonly]="!canEdit || building.zipReadonly" [required]="canEdit && building.zipRequired"
+                            [(ngModel)]="building.zip" name="zipCode" #zip="ngModel" (ngModelChange)="changeZipCode()">
+                        <div *ngIf="building.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
+                            role="zipCode" aria-hidden="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label for="city" class="form-label" title="city">City</label>
+                    <div class="inputspinner">
+                        <input type="text" class="form-control" id="city" name="city" [(ngModel)]="building.city"
+                            [readonly]="!canEdit || building.cityReadonly" [required]="canEdit && building.cityRequired"
+                            #city="ngModel">
+                        <div *ngIf="building.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
+                            role="status" aria-hidden="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label for="state" class="form-label" title="Status">State</label>
+                    <div class="inputspinner">
+                        <ng-select id="state" [items]="states$ | async" bindLabel="name" bindValue="code"
+                            [clearable]="false" [readonly]="!canEdit || building.stateReadonly"
+                            [required]="canEdit && building.stateRequired" name="state" [(ngModel)]="building.state"
+                            #state="ngModel" (change)="changeState($event)">
+                        </ng-select>
+                        <div *ngIf="building.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
+                            role="status" aria-hidden="true">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="description" class="form-label" title="description">Class Code</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.description" #description="ngModel">
+                </div>
+                <div class="col-lg-4">
+                    <label for="description" class="form-label" title="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.description" #description="ngModel">
+                </div>
+                <div class="col-lg-4">
+                    <label for="description" class="form-label" title="description">Occupancy</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.occupancy" #description="ngModel">
+                </div>
+            </div>
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="description" class="form-label" title="description">Construction</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.construction" #description="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <label for="description" class="form-label" title="description">Sprinklered</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.sprinklered" #description="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <label for="description" class="form-label" title="description">Year Built</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.yearBuilt" #description="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <label for="description" class="form-label" title="description">Stories</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.stories" #description="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <label for="description" class="form-label" title="description">Protection Class</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.protectionClass" #description="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <label for="description" class="form-label" title="description">Roof</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.roof" #description="ngModel">
+                </div>
+            </div>
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="description" class="form-label" title="description">Wiring</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.wiring" #description="ngModel">
+                </div>
+                <div class="col-lg-2">
+                    <label for="description" class="form-label" title="description">Plumbing</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.plumbing" #description="ngModel">
+                </div>
+                <div class="col-lg-2">
+                    <label for="description" class="form-label" title="description">HVAC</label>
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                        [(ngModel)]="building.hvac" #description="ngModel">
+                </div>
+            </div>
+            <!-- </div> -->
+            <div class="empty-row"></div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
+                        [disabled]="!canEdit">Copy</button>
+                    <button *ngIf="!building.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
+                    <button *ngIf="building.isNew" class="btn btn-secondary margin-left"
+                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
+                </div>
+                <div [id]='anchorId'></div>
+            </div>
+            <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+                [openDelay]="1000">
+                <fa-icon [icon]="faAngleUp"></fa-icon>
+            </button>
+        </div>
+    </div>
+</div>

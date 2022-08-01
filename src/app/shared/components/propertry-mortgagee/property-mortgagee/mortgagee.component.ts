@@ -33,6 +33,8 @@ export class MortgageeComponent {
   states$: Observable<State[]> | undefined;
   addressSub!: Subscription;
   isLoadingAddress = false;
+  isHover = false;
+  @Input() canDrag = false;
 
 
   private modalRef!: NgbModalRef;
@@ -62,6 +64,7 @@ export class MortgageeComponent {
       this.collapseExpand(false);
       this.focus();
     }
+    console.log(this.mortgageeData.isAppliedToAll);
   }
 
   openDeleteConfirmation() {

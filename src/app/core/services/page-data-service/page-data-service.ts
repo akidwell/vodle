@@ -108,9 +108,12 @@ export class PageDataService {
 
   getProgramWithQuote(quoteId: number) {
     let activeProgram = null;
+    console.log('quote data: ', this._quoteData)
     if (this._quoteData) {
       this._quoteData.programMappings.forEach((program) => {
         if (program && program.quoteData && program.quoteData.quoteId == quoteId) {
+          console.log(program);
+
           activeProgram = program;
         }
       });
@@ -118,12 +121,14 @@ export class PageDataService {
     this.selectedProgram = activeProgram;
   }
   set selectedProgram(program: ProgramClass | null) {
+    console.log('setter: ', program);
     this._selectedProgram = program;
     setTimeout(()=>{
-      this.selectedProgram$.next(this._selectedProgram);
+      this.refreshProgram();
     });
   }
   get selectedProgram(): ProgramClass | null {
+    console.log('getter: ', this._selectedProgram);
     return this._selectedProgram;
   }
 

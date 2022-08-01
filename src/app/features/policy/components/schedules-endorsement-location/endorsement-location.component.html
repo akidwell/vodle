@@ -35,41 +35,41 @@
         <div class="row">
           <div class="col-lg-3">
             <label for="zipCode">Zip Code</label>
-            <input type="text" class="form-control" id="zipCode" [readonly]="!canEditPolicy" [required]="canEditPolicy"
-              zip-code [(ngModel)]="location.zip" name="zipCode" #zip="ngModel"
-              (ngModelChange)="changeZipCode()">
+            <div class="inputspinner">
+              <input type="text" zip-code class="form-control" id="zipCode"
+                  [readonly]="!canEditPolicy" [required]="canEditPolicy" [(ngModel)]="location.zip" 
+                  name="zipCode" #zip="ngModel" (ngModelChange)="changeZipCode()">
+              <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm"
+                  role="zipCode" aria-hidden="true">
+              </div>
           </div>
+          </div> 
           <div class="col-lg-3">
             <label for="city">City</label>
-            <div *ngIf="isLoadingAddress">
-              <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+            <div class="inputspinner">
+              <input type="text" class="form-control" id="city" name="city" [(ngModel)]="location.city" maxlength="25"
+                [readonly]="!canEditPolicy || isLoadingAddress" [required]="canEditPolicy" #city="ngModel">
+              <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true">
               </div>
-            </div>
-            <div *ngIf="!isLoadingAddress">
-              <input type="text" class="form-control" id="city" [readonly]="!canEditPolicy || isLoadingAddress"
-                maxlength="25" [required]="canEditPolicy" [(ngModel)]="location.city" name="city" #city="ngModel">
             </div>
           </div>
           <div class="col-lg-3">
             <label for="locationState">State</label>
-            <div *ngIf="isLoadingAddress">
-              <div class="spinner-border ml-auto" role="status" aria-hidden="true">
-              </div>
-            </div>
-            <div *ngIf="!isLoadingAddress">
+            <div class="inputspinner">
               <ng-select id="locationState" [items]="states$ | async" bindLabel="name" bindValue="code"
-                [clearable]="false" [readonly]="!canEditPolicy || isLoadingAddress" name="locationState"
-                [required]="canEditPolicy" [(ngModel)]="location.state" #locationState="ngModel" (change)="changeState($event)">
+                [clearable]="false" [readonly]="!canEditPolicy || isLoadingAddress" [required]="canEditPolicy"
+                name="locationState" [(ngModel)]="location.state" #locationState="ngModel"
+                (change)="changeState($event)">
               </ng-select>
+              <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true">
+              </div>
             </div>
           </div>
           <div class="col-lg-3">
             <label for="locationCounty">County</label>
-            <div *ngIf="isLoadingAddress">
-              <div class="spinner-border ml-auto" role="status" aria-hidden="true">
-              </div>
-            </div>
-            <div *ngIf="!isLoadingAddress">
+            <div class="inputspinner">
               <div *ngIf="counties.length <= 1">
                 <input type="text" class="form-control" id="locationCounty"
                   [readonly]="!canEditPolicy || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
@@ -80,6 +80,9 @@
                   [readonly]="!canEditPolicy || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
                   #locationCounty="ngModel">
                 </ng-select>
+              </div>
+              <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true">
               </div>
             </div>
           </div>
@@ -96,7 +99,8 @@
           </div>
           <div [id]='anchorId'></div>
         </div>
-        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse" [openDelay]="1000">
+        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+          [openDelay]="1000">
           <fa-icon [icon]="faArrowUp"></fa-icon>
         </button>
       </div>

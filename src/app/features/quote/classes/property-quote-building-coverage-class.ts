@@ -2,16 +2,18 @@
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { QuoteValidation } from '../models/quote-validation';
 
-export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage, QuoteValidation {
+export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage {
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
-  propertyQuoteCoverageId: number | null = null;
+  propertyQuoteBuildingCoverageId: number | null = null;
   propertyQuoteBuildingId: number | null = null;
   propertyCoverageId: number | null = null;
   isNew = false;
+  isImport = false;
+
   private _subjectNumber: number | null = null;
   private _limit: number | null = null;
   private _coinsurancePct: number | null = null;
@@ -75,9 +77,9 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage, Quo
     return this._isValid;
   }
 
-  constructor(coverage?: PropertyBuildingCoverage) {
+  constructor(coverage?: PropertyBuildingCoverage, isImport = false) {
     if (coverage) {
-      this.existingInit(coverage);
+      this.existingInit(coverage, isImport);
     } else {
       this.newInit();
     }
@@ -92,41 +94,38 @@ export class PropertyQuoteCoverageClass implements PropertyBuildingCoverage, Quo
       this._validateOnLoad = false;
     }
   }
-  existingInit(coverage: PropertyBuildingCoverage) {
-    this.propertyQuoteCoverageId = coverage.propertyQuoteCoverageId;
+
+  existingInit(coverage: PropertyBuildingCoverage, isImport = false) {
+    this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
 
-    // this._subjectNumber = building.locationNumber;
-    // this._limit = building.buildingNumber;
-    // this._coinsurancePct = building.street1;
-    // this._causeOfLossId = building.street2;
-    // this._city = building.city;
-    // this._state = building.state;
-    // this._zip = building.zip;
-    // this._countryCode = building.countryCode;
-    // this._classCode = building.classCode;
-    // this._description = building.description;
-    // this._occupancy = building.occupancy;
-    // this._yearBuilt = building.yearBuilt;
-    // this._sprinklered = building.sprinklered;
-    // this._construction = building.construction;
-    // this._stories = building.stories;
-    // this._protectionClass = building.protectionClass;
-    // this._roof = building.roof;
-    // this._wiring = building.wiring;
-    // this._plumbing = building.plumbing;
-    // this._hvac = building.hvac;
-
+    this._subjectNumber = coverage.subjectNumber;
+    this._limit = coverage.limit;
+    this._coinsurancePct = coverage.coinsurancePct;
+    this._causeOfLossId = coverage.causeOfLossId;
+    this._valuationId = coverage.valuationId;
+    this._additionalDetail = coverage.additionalDetail;
 
     this.setReadonlyFields();
     this.setRequiredFields();
   }
 
+  locationNumberRequired = true;
+  buildingNumberRequired = true;
+  propertyCoverageIdRequired = true;
+  causeOfLossIdRequired = true;
+  valuationIdRequired = true;
+  subjectNumberRequired = true;
+  limitRequired = true;
+
+  propertyCoverageIdReadonly = false;
+  causeOfLossIdReadonly = false;
+  valuationIdReadonly = false;
+
   newInit() {
     this.isNew = true;
   }
-
   markClean() {
     this._isDirty = false;
   }

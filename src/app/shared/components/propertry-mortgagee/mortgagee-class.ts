@@ -16,6 +16,7 @@ export class MortgageeClass implements MortgageeData{
   private _city: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
+  private _isAppliedToAll = false;
   private _isDirty = false;
 
   isNew = false;
@@ -46,6 +47,7 @@ export class MortgageeClass implements MortgageeData{
     this._city = mortgagee?.city || null;
     this._zip = mortgagee?.zip || null;
     this._countryCode = mortgagee?.countryCode || null;
+    this._isAppliedToAll = mortgagee?.isAppliedToAll || false;
   }
 
   newInit() {
@@ -67,6 +69,15 @@ export class MortgageeClass implements MortgageeData{
     this._attention = value;
     this._isDirty = true;
   }
+
+  get isAppliedToAll() : boolean{
+    return this._isAppliedToAll;
+  }
+  set isAppliedToAll(value: boolean) {
+    this._isAppliedToAll = value;
+    this._isDirty = true;
+  }
+
 
   get description() : string | null {
     return this._description;

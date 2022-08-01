@@ -1,10 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
+import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
-import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Quote } from '../models/quote';
 import { QuoteValidation } from '../models/quote-validation';
 import { ProgramClass } from './program-class';
@@ -124,28 +122,13 @@ export class QuoteClass implements Quote, QuoteValidation {
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
-  // quoteBuilding: QuoteBuildingClass[] = [];
-  // quoteCoverage: QuoteCoverageClass[] = [];
-  // quoteLocation: QuoteLocationClass[] = [];
-
-  //QuoteRates
   quoteRates: QuoteRateClass[] = [];
   quoteRatesValidation: QuoteValidationClass | null = null;
 
   propertyQuote!: PropertyQuoteClass;
 
-  //Property - QuoteMortgagee
-  propertyQuoteMortgagee: MortgageeClass[] = [];
-  propertyQuoteMortgageeValidation: QuoteValidationClass | null = null;
-
-  //Property - QuoteAdditionalInterest
-  propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
-  propertyQuoteAdditionalInterestValidation: QuoteValidationClass | null = null;
-
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
-
-  mortgageeAdditionalInterestValidation!: QuoteValidationClass;
 
   private _isDirty = false;
   isNew = false;
@@ -172,6 +155,7 @@ export class QuoteClass implements Quote, QuoteValidation {
 
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
+    console.log('quote constructor')
     if (quote) {
       this.existingInit(quote);
     } else if (program && submission) {
@@ -210,14 +194,7 @@ export class QuoteClass implements Quote, QuoteValidation {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
-
-    quote.propertyQuoteMortgagee?.forEach(x => {
-      this.propertyQuoteMortgagee.push(new MortgageeClass(x));
-    });
-
-    quote.propertyQuoteAdditionalInterest?.forEach(x => {
-      this.propertyQuoteAdditionalInterest.push( new AdditionalInterestClass(x));
-    });
+    console.log(this.propertyQuote);
     this.setReadonlyFields();
     this.setRequiredFields();
     console.log(this.submission);
@@ -253,6 +230,9 @@ export class QuoteClass implements Quote, QuoteValidation {
   }
   markDirty() {
     this._isDirty = true;
+  }
+  markImported() {
+    this.propertyQuote.propertyQuoteBuilding.forEach(c => c.markImported());
   }
   setRequiredFields() {
     // No special rules

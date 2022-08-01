@@ -2,8 +2,8 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enu
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyBuilding } from '../models/property-building';
 import { QuoteValidation } from '../models/quote-validation';
-import { PropertyQuoteCoverageClass } from './property-quote-coverage-class';
 import { QuoteValidationClass } from './quote-validation-class';
+import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
@@ -17,7 +17,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
 
   propertyQuoteBuildingId: number | null = null;
   propertyQuoteId: number | null = null;
-  propertyQuoteCoverage: PropertyQuoteCoverageClass[] = [];
+  propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
   taxCode: string | null = null;
 
   private _locationNumber: number | null = null;
@@ -43,6 +43,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
 
   isNew = false;
   invalidList: string[] = [];
+  isZipLookup = false;
+  isImport = false;
 
   get isDirty(): boolean {
     return this._isDirty ;
@@ -61,140 +63,140 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
   }
-  get locationNumber() : number | null {
+  get locationNumber(): number | null {
     return this._locationNumber;
   }
   set locationNumber(value: number | null) {
     this._locationNumber = value;
     this._isDirty = true;
   }
-  get buildingNumber() : number | null {
+  get buildingNumber(): number | null {
     return this._buildingNumber;
   }
   set buildingNumber(value: number | null) {
     this._buildingNumber = value;
     this._isDirty = true;
   }
-  get street1() : string | null {
+  get street1(): string | null {
     return this._street1;
   }
   set street1(value: string | null) {
     this._street1 = value;
     this._isDirty = true;
   }
-  get street2() : string | null {
+  get street2(): string | null {
     return this._street2;
   }
   set street2(value: string | null) {
     this._street2 = value;
     this._isDirty = true;
   }
-  get city() : string | null {
+  get city(): string | null {
     return this._city;
   }
   set city(value: string | null) {
     this._city = value;
     this._isDirty = true;
   }
-  get state() : string | null {
+  get state(): string | null {
     return this._state;
   }
   set state(value: string | null) {
     this._state = value;
     this._isDirty = true;
   }
-  get zip() : string | null {
+  get zip(): string | null {
     return this._zip;
   }
   set zip(value: string | null) {
     this._zip = value;
     this._isDirty = true;
   }
-  get countryCode() : string | null {
+  get countryCode(): string | null {
     return this._countryCode;
   }
   set countryCode(value: string | null) {
     this._countryCode = value;
     this._isDirty = true;
   }
-  get classCode() : string | null {
+  get classCode(): string | null {
     return this._classCode;
   }
   set classCode(value: string | null) {
     this._classCode = value;
     this._isDirty = true;
   }
-  get description() : string | null {
+  get description(): string | null {
     return this._description;
   }
   set description(value: string | null) {
     this._description = value;
     this._isDirty = true;
   }
-  get occupancy() : string | null {
+  get occupancy(): string | null {
     return this._occupancy;
   }
   set occupancy(value: string | null) {
     this._occupancy = value;
     this._isDirty = true;
   }
-  get yearBuilt() : string | null {
+  get yearBuilt(): string | null {
     return this._yearBuilt;
   }
   set yearBuilt(value: string | null) {
     this._yearBuilt = value;
     this._isDirty = true;
   }
-  get sprinklered() : string | null {
+  get sprinklered(): string | null {
     return this._sprinklered;
   }
   set sprinklered(value: string | null) {
     this._sprinklered = value;
     this._isDirty = true;
   }
-  get construction() : string | null {
+  get construction(): string | null {
     return this._construction;
   }
   set construction(value: string | null) {
     this._construction = value;
     this._isDirty = true;
   }
-  get stories() : string | null {
+  get stories(): string | null {
     return this._stories;
   }
   set stories(value: string | null) {
     this._stories = value;
     this._isDirty = true;
   }
-  get protectionClass() : string | null {
+  get protectionClass(): string | null {
     return this._protectionClass;
   }
   set protectionClass(value: string | null) {
     this._protectionClass = value;
     this._isDirty = true;
   }
-  get roof() : string | null {
+  get roof(): string | null {
     return this._roof;
   }
   set roof(value: string | null) {
     this._roof = value;
     this._isDirty = true;
   }
-  get wiring() : string | null {
+  get wiring(): string | null {
     return this._wiring;
   }
   set wiring(value: string | null) {
     this._wiring = value;
     this._isDirty = true;
   }
-  get plumbing() : string | null {
+  get plumbing(): string | null {
     return this._plumbing;
   }
   set plumbing(value: string | null) {
     this._plumbing = value;
     this._isDirty = true;
   }
-  get hvac() : string | null {
+  get hvac(): string | null {
     return this._hvac;
   }
   set hvac(value: string | null) {
@@ -203,6 +205,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   constructor(building?: PropertyBuilding) {
+    console.log('building')
     if (building) {
       this.existingInit(building);
     } else {
@@ -246,14 +249,46 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._plumbing = building.plumbing;
     this._hvac = building.hvac;
 
-    const coverages: PropertyQuoteCoverageClass[] = [];
-    building.propertyQuoteCoverage.forEach(element => {
-      coverages.push(new PropertyQuoteCoverageClass(element));
+    const coverages: PropertyQuoteBuildingCoverageClass[] = [];
+    building.propertyQuoteBuildingCoverage.forEach((element) => {
+      coverages.push(new PropertyQuoteBuildingCoverageClass(element));
     });
-    this.propertyQuoteCoverage = coverages;
+    this.propertyQuoteBuildingCoverage = coverages;
 
     this.setReadonlyFields();
     this.setRequiredFields();
+  }
+
+  markImported() {
+    this.isNew = true;
+    this.isImport = true;
+    this.propertyQuoteBuildingCoverage.forEach((c) => {
+      c.isNew = true;
+      c.isImport = true;
+    });
+  }
+
+  locationNumberRequired = true;
+  buildingNumberRequired = true;
+  street1Required = true;
+  get zipRequired(): boolean {
+    return true;
+  }
+  get cityRequired(): boolean {
+    return true;
+  }
+  get stateRequired(): boolean {
+    return true;
+  }
+
+  get zipReadonly(): boolean {
+    return false;
+  }
+  get stateReadonly(): boolean {
+    return this.isZipLookup;
+  }
+  get cityReadonly(): boolean {
+    return this.isZipLookup;
   }
 
   newInit() {
@@ -282,5 +317,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._canBeSaved = true;
     this._isValid = true;
   }
-
+  get validateAddress(): boolean {
+    return !(!this.street1 || !this.city);
+  }
 }

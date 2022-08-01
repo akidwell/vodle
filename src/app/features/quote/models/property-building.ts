@@ -25,9 +25,20 @@ export interface PropertyBuildingData {
     plumbing: string | null;
     hvac: string | null;
     isNew: boolean;
-    propertyQuoteCoverage: PropertyBuildingCoverage[];
+    propertyQuoteBuildingCoverage: PropertyBuildingCoverage[];
 }
 
 export interface PropertyBuilding extends PropertyBuildingData {
-
+    isZipLookup: boolean;
+    locationNumberRequired: boolean;
+    buildingNumberRequired: boolean;
+    street1Required: boolean;
+    zipRequired: boolean;
+    cityRequired: boolean;
+    stateRequired: boolean;
+    zipReadonly: boolean;
+    cityReadonly: boolean;
+    stateReadonly: boolean;
+    isImport: boolean;
+    validateAddress: boolean;
   }

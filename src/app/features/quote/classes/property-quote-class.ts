@@ -1,5 +1,7 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
@@ -10,6 +12,9 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   quoteId = null;
   propertyQuoteDeductible: PropertyQuoteDeductibleClass[] = [];
   propertyQuoteBuilding: PropertyQuoteBuildingClass[] = [];
+  propertyQuoteMortgagee: MortgageeClass[] = [];
+  propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
+
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -28,6 +33,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   }
 
   constructor(propertyQuote?: PropertyQuote) {
+    console.log('happens');
     if (propertyQuote) {
       this.existingInit(propertyQuote);
     } else {
@@ -63,6 +69,19 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
       deductibles.push(new PropertyQuoteDeductibleClass(element));
     });
     this.propertyQuoteDeductible = deductibles;
+
+    const mortgagee: MortgageeClass[] = [];
+    propertyQuote.propertyQuoteMortgagee.forEach(element => {
+      mortgagee.push(new MortgageeClass(element));
+    });
+    this.propertyQuoteMortgagee = mortgagee;
+
+    const ai: AdditionalInterestClass[] = [];
+    propertyQuote.propertyQuoteAdditionalInterest.forEach(element => {
+      ai.push(new AdditionalInterestClass(element));
+    });
+    this.propertyQuoteMortgagee = mortgagee;
+    this.propertyQuoteAdditionalInterest = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
     propertyQuote.propertyQuoteBuilding.forEach(element => {

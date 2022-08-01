@@ -1,0 +1,31 @@
+<div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+        Locations/Building Schedule
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div class="card-body" *ngIf="buildings.length > 0">
+            <div class="row">
+                <div class="col-lg-1">
+                    <label for="address">Premises #</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="address">Building #</label>
+                </div>
+                <div class="col-lg-8">
+                    <label for="address">Address</label>
+                </div>
+            </div>
+            <div *ngFor="let item of buildings; let i = index">
+                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" (copyBuilding)=copyBuilding($event)
+                    (deleteBuilding)=deleteBuilding($event)></rsps-property-building>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="footer-button" (click)="addBuilding();">Add
+            Location/Building</button>
+        <div class="footer-count">Buldings: {{buildings.length}}</div>
+    </div>
+</div>

@@ -38,6 +38,9 @@ import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/m
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
+import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
+import { PropertyImportModule } from 'src/app/shared/components/property-import/property-building.module';
+import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
 
 @NgModule({
   declarations: [
@@ -73,6 +76,9 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
     AdditionalInterestModule,
     PipesModule,
     PropertyDeductibleModule,
+    PropertyBuildingModule,
+    PropertyImportModule,
+    PropertyBuildingCoverageModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

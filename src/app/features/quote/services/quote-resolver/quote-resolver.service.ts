@@ -15,7 +15,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<QuoteResolved> {
     const sequenceNumber = route.paramMap.get('seq') ?? '';
     const submission: SubmissionClass = this.router.getCurrentNavigation()?.extras?.state?.submission;
-    console.log(state, submission);
+
     if (sequenceNumber == '' && submission.departmentCode != null){
       return this.quoteService.getQuotes(undefined, submission.departmentCode)
         .pipe(

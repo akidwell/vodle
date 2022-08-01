@@ -13,29 +13,27 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
 import { MortgageeGroupComponent } from 'src/app/shared/components/propertry-mortgagee/property-mortgagee-group/mortgagee-group.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 
-
-
 const routes: Routes = [
   {
     path: 'quote-not-found',
-    component: QuoteNotFoundComponent
+    component: QuoteNotFoundComponent,
   },
   {
     path: '',
     component: QuoteComponent,
     resolve: {
-      quoteData: QuoteResolver
+      quoteData: QuoteResolver,
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: QuoteInformationComponent },
-    ]
+    ],
   },
   {
     path: ':seq',
     component: QuoteComponent,
     resolve: {
-      quoteData: QuoteResolver
+      quoteData: QuoteResolver,
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
@@ -45,11 +43,19 @@ const routes: Routes = [
         component: QuoteProgramBaseComponent,
         children: [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
-          { path: 'location', component: QuotePropertyLocationCoverageComponent },
-          { path: 'mortgagee', component: MortgageeGroupComponent },
+          {
+            path: 'location',
+            component: QuotePropertyLocationCoverageComponent,
+            data: { saveComponent: true },
+          },
+          { path: 'mortgagee', component: MortgageeGroupComponent, data: { saveComponent: true } },
           { path: 'premium', component: QuotePremiumComponent, data: { saveComponent: true } },
-          { path: 'conditions', component: TermsConditionsComponent },
-        ]
+          {
+            path: 'conditions',
+            component: TermsConditionsComponent,
+            data: { saveComponent: true },
+          },
+        ],
       },
       { path: 'summary', canDeactivate: [CanDeactivateGuard], component: QuoteSummaryComponent }
     ]
@@ -59,6 +65,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class QuoteRoutingModule { }
+export class QuoteRoutingModule {}
