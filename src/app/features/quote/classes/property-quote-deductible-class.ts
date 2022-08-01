@@ -149,6 +149,10 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   }
 
   newInit() {
+    this.propertyQuoteDeductibleId = 0;
+    this.propertyQuoteId = 0;
+    this.isExcluded = false;
+    this.isSubjectToMin = false;
     this.isNew = true;
   }
 
