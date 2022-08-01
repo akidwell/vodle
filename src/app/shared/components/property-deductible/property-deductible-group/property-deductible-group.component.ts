@@ -39,9 +39,9 @@ export class PropertyDeductibleGroupComponent implements OnInit {
     const index = this.deductibles.indexOf(deductible, 0);
     if (index > -1) {
       this.deductibles.splice(index, 1);
-      if (!deductible.isNew && deductible.propertyDeductibleId != null) {
+      if (!deductible.isNew && deductible.propertyQuoteDeductibleId != null) {
         this.deleteSub = this.quoteService
-          .deleteDeductible(deductible.propertyDeductibleId)
+          .deleteDeductible(deductible.propertyQuoteDeductibleId)
           .subscribe((result) => {
             if (result) {
               setTimeout(() => {
