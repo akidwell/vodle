@@ -1,9 +1,20 @@
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyBuilding } from '../models/property-building';
+import { QuoteValidation } from '../models/quote-validation';
+import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
 
-export class PropertyQuoteBuildingClass implements PropertyBuilding {
-  [x: string]: any;
+export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
+  private _isDirty = false;
+  private _isValid = false;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
+
+
   propertyQuoteBuildingId: number | null = null;
   propertyQuoteId: number | null = null;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
@@ -32,7 +43,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
   private _plumbing: string | null = null;
   private _hvac: string | null = null;
 
-  private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
   isZipLookup = false;
@@ -44,6 +54,23 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
   set subjectNumber(value: number | null) {
     this._subjectNumber = value;
     this._isDirty = true;
+  }
+  get isDirty(): boolean {
+    return this._isDirty ;
+  }
+  get isValid(): boolean {
+    // let valid = true;
+    // valid = this.validate(valid);
+    return this._isValid;
+  }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
   }
   get locationNumber(): number | null {
     return this._locationNumber;
@@ -193,15 +220,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
     this._isDirty = true;
   }
 
-  get isDirty(): boolean {
-    return this._isDirty;
-  }
-  get isValid(): boolean {
-    const valid = true;
-    //valid = this.validate(valid);
-    return valid;
-  }
-
   get buildingIndex(): string {
     return (this.subjectNumber ?? '') + '/' + (this.locationNumber ?? '')+ '/' + (this.buildingNumber ?? '');
   }
@@ -210,17 +228,29 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
     (!this.street2 ? '' : ', ' + this.street2) +
     (!this.city ? '' : ', ' + this.city ) +
     (!this.state ? '' : ', ' + this.state) +
-    (!this.zip ? '' : ' ' + this.zip)
+    (!this.zip ? '' : ' ' + this.zip);
   }
 
   constructor(building?: PropertyBuilding) {
+    console.log('building')
     if (building) {
       this.existingInit(building);
     } else {
       this.newInit();
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this.validate();
   }
-
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      //TODO: class based validation checks
+      this.classValidation();
+      this._validateOnLoad = false;
+    }
+    const validation = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    validation.mapValues(this);
+    return validation;
+  }
   existingInit(building: PropertyBuilding) {
     this.propertyQuoteBuildingId = building.propertyQuoteBuildingId;
     this.propertyQuoteId = building.propertyQuoteId;
@@ -307,12 +337,14 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding {
     // No special rules
   }
 
-  validate(valid: boolean): boolean {
+  classValidation() {
     this.invalidList = [];
     // if (!this.validateAmount()) {
     //   valid = false;
     // }
-    return valid;
+    this._errorMessages = this.invalidList;
+    this._canBeSaved = true;
+    this._isValid = true;
   }
   get validateAddress(): boolean {
     return !(!this.street1 || !this.city);

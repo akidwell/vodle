@@ -6,6 +6,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { DepartmentClass } from '../../../classes/department-class';
 
@@ -33,7 +34,7 @@ export class QuoteInformationComponent implements OnInit {
   faAngleUp = faAngleUp;
 
   constructor(private route: ActivatedRoute, private router: Router, private formatDateService: FormatDateForDisplay,
-    private userAuth: UserAuth, private messageDialogService: MessageDialogService,
+    private userAuth: UserAuth, private messageDialogService: MessageDialogService, private pageDataService: PageDataService,
     private notification: NotificationService, private previousRouteService: PreviousRouteService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
@@ -50,6 +51,7 @@ export class QuoteInformationComponent implements OnInit {
     this.route.parent?.data.subscribe(data => {
       this.department = data['quoteData'].department;
     });
+    this.pageDataService.selectedProgram = null;
     console.log(this.department);
   }
 

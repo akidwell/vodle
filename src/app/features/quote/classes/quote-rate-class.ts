@@ -1,6 +1,10 @@
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { QuoteRate } from '../models/quote-rate';
+import { QuoteValidation } from '../models/quote-validation';
+import { QuoteValidationClass } from './quote-validation-class';
 
-export class QuoteRateClass implements QuoteRate {
+export class QuoteRateClass implements QuoteRate, QuoteValidation {
   quoteId: number | null = null;
   sequenceNo: number | null = 0;
 
@@ -8,7 +12,12 @@ export class QuoteRateClass implements QuoteRate {
   private _premium: number | null = null;
   private _rateBasis: number | null = null;
   private _isFlatRate: boolean | null = null;
+  private _isValid = true;
   private _isDirty = false;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
 
   get premiumRate() : number | null {
     return this._premiumRate;
@@ -42,10 +51,15 @@ export class QuoteRateClass implements QuoteRate {
   get isDirty() : boolean {
     return this._isDirty;
   }
+  get canBeSaved() : boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
   get isValid(): boolean {
-    let valid = true;
-    //valid = this.validate(valid);
-    return valid;
+    //this._isValid = this.validate(valid);
+    return this._isValid;
   }
 
   constructor(rate?: QuoteRate) {
@@ -54,8 +68,17 @@ export class QuoteRateClass implements QuoteRate {
     } else {
       this.newInit();
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    this.validate();
   }
-
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      //TODO: class based validation checks
+      this._validateOnLoad = false;
+    }
+    this._validationResults.mapValues(this);
+    return this._validationResults;
+  }
   existingInit(rate: QuoteRate) {
     this._premiumRate = rate.premiumRate;
     this._premium = rate.premium;

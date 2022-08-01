@@ -16,7 +16,6 @@ export class QuotePremiumComponent implements OnInit {
   rate!: QuoteRateClass;
   quoteId = 0;
   programSub!: Subscription;
-
   constructor(private pageDataService: PageDataService) {
   }
 

@@ -1,7 +1,12 @@
 import { PropertyDeductible } from '../models/property-deductible';
+import { QuoteValidation } from '../models/quote-validation';
 
 
-export class PropertyQuoteDeductibleClass implements PropertyDeductible {
+export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteValidation {
+  private _isDirty = false;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = ['Property Quote Deductible'];
+  private _validateOnLoad = true;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
   isDeductibleLocked = false;
@@ -18,7 +23,6 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible {
   private _comment: string | null = null;
   private _isExcluded = false;
   private _isSubjectToMin: boolean | null = null;
-  private _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
 
@@ -102,6 +106,12 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible {
   get isDirty() : boolean {
     return this._isDirty;
   }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
   get isValid(): boolean {
     const valid = true;
     //valid = this.validate(valid);
@@ -151,7 +161,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible {
     // No special rules
   }
 
-  validate(valid: boolean): boolean {
+  validation(valid: boolean): boolean {
     this.invalidList = [];
     if (!this.validateAmount()) {
       valid = false;

@@ -87,4 +87,9 @@ export class ProgramClass implements Program {
       this._quoteData.mappingError = true;
     }
   }
+  toJSON() {
+    return {
+      quoteData: this.quoteData?.toJSON()
+    };
+  }
 }

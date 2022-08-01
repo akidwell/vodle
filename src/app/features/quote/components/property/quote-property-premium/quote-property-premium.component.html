@@ -5,12 +5,12 @@
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
-        <div class="card-body">
+        <div *ngIf="quote" class="card-body">
             <rsps-property-premium-rate [programDescription]="program.programDesc"
                 [limitTotal]="quote.propertyQuote.limitTotal" [rate]="rate" [canEdit]="canEditSubmission">
             </rsps-property-premium-rate>
         </div>
-       <div class="card-body top-bordered" > 
+       <div *ngIf="quote" class="card-body top-bordered" > 
             <rsps-property-deductible-group [programId]="program.programId" [classType]="classType"
                 [deductibles]="quote.propertyQuote.propertyQuoteDeductible" [canEdit]="canEditSubmission">
             </rsps-property-deductible-group>

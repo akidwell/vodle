@@ -11,6 +11,7 @@ import { TermsConditionsComponent } from './components/common/terms-conditions-b
 import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { MortgageeGroupComponent } from 'src/app/shared/components/propertry-mortgagee/property-mortgagee-group/mortgagee-group.component';
+import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 
 const routes: Routes = [
   {
@@ -36,10 +37,9 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: QuoteInformationComponent },
+      { path: 'information', canDeactivate: [CanDeactivateGuard], component: QuoteInformationComponent },
       { path: 'submission', component: QuoteSubmissionComponent },
-      {
-        path: 'program/:quoteId',
+      { path: 'program/:quoteId', canDeactivate: [CanDeactivateGuard],
         component: QuoteProgramBaseComponent,
         children: [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
@@ -57,9 +57,10 @@ const routes: Routes = [
           },
         ],
       },
-      { path: 'summary', component: QuoteSummaryComponent },
-    ],
-  },
+      { path: 'summary', canDeactivate: [CanDeactivateGuard], component: QuoteSummaryComponent }
+    ]
+  }
+
 ];
 
 @NgModule({

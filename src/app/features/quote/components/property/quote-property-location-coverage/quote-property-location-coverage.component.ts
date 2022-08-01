@@ -11,7 +11,7 @@ import { QuoteClass } from '../../../classes/quote-class';
   templateUrl: './quote-property-location-coverage.component.html',
   styleUrls: ['./quote-property-location-coverage.component.css']
 })
-export class QuotePropertyLocationCoverageComponent implements OnInit {
+export class QuotePropertyLocationCoverageComponent {
   authSub: Subscription;
   canEditSubmission = false;
   quote!: QuoteClass;
@@ -24,9 +24,10 @@ export class QuotePropertyLocationCoverageComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
+        console.log(selectedProgram);
         if (selectedProgram != null) {
           this.quote = selectedProgram.quoteData ?? new QuoteClass();
         }
@@ -34,5 +35,5 @@ export class QuotePropertyLocationCoverageComponent implements OnInit {
     );
   }
 
- 
+
 }

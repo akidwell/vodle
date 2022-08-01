@@ -1,13 +1,22 @@
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { Code } from 'src/app/core/models/code';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Department } from '../models/department';
+import { QuoteValidation } from '../models/quote-validation';
 import { ProgramClass } from './program-class';
+import { QuoteClass } from './quote-class';
+import { QuoteValidationClass } from './quote-validation-class';
 
-export class DepartmentClass implements Department {
+export class DepartmentClass implements Department, QuoteValidation {
   private _isDirty = false;
-
+  private _isValid = true;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _showErrors = false;
+  private _validationResults: QuoteValidationClass;
   departmentId = 0;
   departmentName = '';
+  sequenceNumber = 0;
   availableCarrierCodes: Code[] = [];
   availablePacCodes: Code[] = [];
   programMappings: ProgramClass[] = [];
@@ -36,20 +45,38 @@ export class DepartmentClass implements Department {
     }
     this.activeAdmittedStatus = this.defaultAdmittedStatus;
     this.activeClaimsMadeOrOccurrence = this.defaultClaimsMadeOrOccurrence;
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Department, null);
   }
   get isDirty(): boolean {
-    return this._isDirty ;
+    return this._isDirty;
+  }
+  get isValid(): boolean {
+    // quotes.forEach(quote => {
+    //   if (!quote.isValid) {
+    //     valid = quote.isValid;
+    //   }
+    // });
+    return this._isValid;
+  }
+  get errorMessages() {
+    return this._errorMessages;
+  }
+  get validationResults() {
+    return this._validationResults;
+  }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
   }
   init(department: Department) {
     this.departmentId = department.departmentId;
     this.availableCarrierCodes = department.availableCarrierCodes;
     this.availablePacCodes = department.availablePacCodes;
+    this.sequenceNumber = department.sequenceNumber;
     const programs: ProgramClass[] = [];
     department.programMappings.forEach(element => {
       programs.push(new ProgramClass(element, department.availableCarrierCodes, department.availablePacCodes));
     });
     this.programMappings = programs;
-    console.log(this.programMappings);
   }
   setGlobalFlags(programs: ProgramClass[]) {
     programs.forEach(program => {
@@ -77,5 +104,34 @@ export class DepartmentClass implements Department {
         this.defaultClaimsMadeOrOccurrence = program.quoteData.claimsMadeOrOccurrence;
       }
     });
+  }
+  validate(){
+    this._validationResults.errorMessages = [];
+    this._validationResults.errorMessages.push('department');
+
+    const quotes = this.programMappings.map(x => x.quoteData).filter((x): x is QuoteClass => x !== null);
+    const quoteValidations: QuoteValidationClass[] = [];
+    quotes.forEach(quote => {
+      quote.validate();
+      quoteValidations.push(quote.validationResults);
+    });
+    this._validationResults.validateChildrenAndMerge(quoteValidations);
+    console.log('department validations: ', this._validationResults);
+    return this._validationResults;
+  }
+  markClean() {
+    this._isDirty = false;
+    this._isValid = false;
+  }
+  toJSON() {
+    const programs: any[] = [];
+    this.programMappings.forEach(program => {
+      programs.push(program.toJSON());
+    });
+    return {
+      departmentId: this.departmentId,
+      sequenceNumber: this.sequenceNumber,
+      programMappings: programs
+    };
   }
 }

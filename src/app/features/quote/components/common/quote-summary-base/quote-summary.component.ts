@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 
 @Component({
   selector: 'rsps-quote-summary',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QuoteSummaryComponent implements OnInit {
 
-  constructor() { }
+  constructor(private pageDataService: PageDataService) { }
 
   ngOnInit(): void {
+    this.pageDataService.selectedProgram = null;
   }
 
 }

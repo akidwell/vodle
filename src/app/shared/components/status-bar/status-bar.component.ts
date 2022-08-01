@@ -21,6 +21,8 @@ import { EndorsementStatusService } from 'src/app/features/policy/services/endor
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
+import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
+import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 
 
 
@@ -46,6 +48,8 @@ export class StatusBarComponent implements OnInit {
   userPanelSize = 0;
   headerWidth = 0;
   widthOffset = 0;
+  hasSelectedProgram = false;
+  selectedProgramSub!: Subscription;
   displayHeaderSub: Subscription;
 
   @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
@@ -61,7 +65,8 @@ export class StatusBarComponent implements OnInit {
     public elementRef: ElementRef,
     private notification: NotificationService,
     public endorsementStatus: EndorsementStatusService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    public quoteSavingService: QuoteSavingService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
@@ -122,6 +127,11 @@ export class StatusBarComponent implements OnInit {
           return null;
         })).subscribe();
   }
+  ngAfterViewInit(){
+    this.pageDataService.selectedProgram$.subscribe(
+      (program: ProgramClass | null) => this.hasSelectedProgram = program != null
+    );
+  }
   onResize() {
     this.headerPaddingService.onResizeOrLoad();
   }
@@ -130,7 +140,6 @@ export class StatusBarComponent implements OnInit {
     this.pageDataService.submissionData = this.checkSubmissionData(child);
     this.pageDataService.quoteData = this.checkQuoteData(child);
     this.pageDataService.policyData = this.checkPolicyData(child);
-
     return (this.pageDataService.insuredData != null || this.pageDataService.submissionData != null || this.pageDataService.quoteData != null);
   }
   private checkInsuredData(child: ActivatedRoute): InsuredClass | null {
@@ -221,6 +230,7 @@ export class StatusBarComponent implements OnInit {
     }
     this.showBusy = false;
   }
+
   async preSaveInsured(): Promise<void> {
     let insured: InsuredClass;
     if (this.pageDataService.insuredData == null) {
