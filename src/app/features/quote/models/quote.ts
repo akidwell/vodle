@@ -1,6 +1,4 @@
 import { Moment } from 'moment';
-import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
-import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteRate } from './quote-rate';
@@ -113,4 +111,7 @@ export interface Quote {
   propertyQuote: PropertyQuote;
   importWarnings: string[];
   importErrors: string[];
+  naicsCode: string | null;
+  sicCode: string | null;
+  classCode: string | null;
 }

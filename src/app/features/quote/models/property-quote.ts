@@ -5,7 +5,7 @@ import { PropertyDeductible } from './property-deductible';
 
 export interface PropertyQuote {
     quoteId: number | null;
-    riskDescription: string | null;
+    riskDesciption: string | null;
     propertyQuoteDeductible: PropertyDeductible[];
     propertyQuoteBuilding: PropertyBuilding[];
     propertyQuoteMortgagee: MortgageeData[];
