@@ -21,6 +21,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   faAngleUp = faAngleUp;
 
   @Input() public limitTotal!: number;
+  @Input() public coverageCount!: number;
   @Input() public buildings!: PropertyBuilding[];
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
@@ -28,22 +29,6 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   constructor(private notification: NotificationService, private quoteService: QuoteService) { }
 
   ngOnInit(): void {
-  }
-
-  get coverageCount(): number {
-    let count = 0;
-    this.buildings.forEach( c => count += c.propertyQuoteBuildingCoverage.length);
-    return count;
-  }
-
-  calcTotal(): number {
-    let total = 0;
-    this.buildings.forEach(building => {
-      building.propertyQuoteBuildingCoverage.forEach(coverage => {
-        total += Number.isNaN(Number(coverage.limit)) ? 0 : Number(coverage.limit);
-      });
-    });
-    return total;
   }
 
   addCoverage() {

@@ -1,5 +1,5 @@
 <rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission"></rsps-property-import>
 <rsps-property-building-group *ngIf="quote" [classType]="classType" [buildings]="quote.propertyQuote.propertyQuoteBuilding"
     [canEdit]="canEditSubmission"></rsps-property-building-group>
-<rsps-property-building-coverage-group *ngIf="quote" [classType]="classType" [buildings]="quote.propertyQuote.propertyQuoteBuilding" [limitTotal]="quote.propertyQuote.limitTotal"
+<rsps-property-building-coverage-group *ngIf="quote" [classType]="classType" [buildings]="quote.propertyQuote.propertyQuoteBuilding" [limitTotal]="quote.propertyQuote.limitTotal" [coverageCount]="quote.propertyQuote.coverageCount"
     [canEdit]="canEditSubmission"></rsps-property-building-coverage-group>

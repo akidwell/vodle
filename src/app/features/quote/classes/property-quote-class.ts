@@ -30,11 +30,16 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     this._riskDescription = value;
     this._isDirty = true;
   }
-
   get limitTotal(): number {
     let total = 0;
     this.propertyQuoteBuilding.forEach((c) =>
       c.propertyQuoteBuildingCoverage.forEach((coverage) => (total += coverage.limit ?? 0))
+    );
+    return total;
+  }
+  get coverageCount(): number {
+    let total = 0;
+    this.propertyQuoteBuilding.forEach((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
     );
     return total;
   }
