@@ -1,0 +1,33 @@
+<div class="panel">
+    <div class="row">
+        <div class="col-lg-6">
+            <label for="totalAccountLimit" class="panel-header" title="totalAccountLimit">Total Account Limit
+                Amount</label>
+            <input type="text" class="form-control" id="totalAccountLimit" maxlength="40" [readonly]="true" value="{{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}">
+        </div>
+        <div class="col-lg-6">
+            <label for="largestAmt" class="panel-header" title="largestAmt">Largest Amt Subject TIV</label>
+            <input type="text" class="form-control" id="largestAmt" maxlength="40" [readonly]="true"  value="{{findLargest() | currency: 'USD' : 'symbol':'1.0-0'}}">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-1"> </div>
+        <div class="col-lg-4">
+            <label for="subject" class="subj" title="subject">Subj #:</label>
+        </div>
+        <div class="col-lg-1"> </div>
+        <div class="col-lg-6">
+            <label for="subjectBreakdown" class="panel-header" title="subjectBreakdown">Subject Amount Breakdown:</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-1"> </div>
+        <div class="col-lg-4">
+            <input type="text" class="form-control" id="subject" maxlength="40" [readonly]="true">
+        </div>
+        <div class="col-lg-1"> </div>
+        <div class="col-lg-6">
+            <input type="text" class="form-control" id="subjectBreakdown" maxlength="40" [readonly]="true">
+        </div>
+    </div>

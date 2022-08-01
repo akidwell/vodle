@@ -1,0 +1,53 @@
+<div class="panel">
+    <div class="col-lg-12">
+        <label for="Classifications" class="panel-header" title="Classifications">Classifications</label>
+    </div>
+    <div class="empty-row"></div>
+    <div class="col-lg-12">
+        <label for="SIC" class="form-label" title="SIC">SIC</label>
+
+    </div>
+    <div class="col-lg-12">
+        <ng-select id="sicCode" [items]="sicCodes$ | async" bindLabel="description" bindValue="code"
+            [readonly]="!canEdit" name="sicCode" [(ngModel)]="quote.sicCode" [loading]="loadingSic"
+            loadingText="Loading..." [searchFn]="dropDownSearch" #sicCode="ngModel" (change)="changeSicCode()"
+            [virtualScroll]="true">
+            <ng-template ng-label-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.code}} - {{item.description}}
+            </ng-template>
+        </ng-select>
+    </div>
+    <div class="col-lg-12">
+        <label for="classCode" class="form-label" title="Class Code">Class Code</label>
+    </div>
+    <div class="col-lg-12">
+        <ng-select id="class" [items]="classCodes$ | async" bindLabel="description" bindValue="classCode"
+            [readonly]="!canEdit" name="class" [(ngModel)]="selectedAttribute" [loading]="loadingClass"
+            loadingText="Loading..." [searchFn]="classDropDownSearch" #class="ngModel">
+            <ng-template ng-label-tmp let-item="item">
+                {{item.classCode}} - {{item.description}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.classCode}} - {{item.description}}
+            </ng-template>
+        </ng-select>
+    </div>
+    <div class="col-lg-12">
+        <label for="NAICS" class="form-label" title="NAICS">NAICS</label>
+    </div>
+    <div class="col-lg-12">
+        <ng-select id="class" [items]="naicsCodes" bindLabel="longDescription" bindValue="naicsCode"
+            [readonly]="!canEdit" name="naics" [(ngModel)]="naicsSelectedAttribute" [loading]="loadingClass"
+            loadingText="Loading..." [searchFn]="naicsDropDownSearch" #naics="ngModel">
+            <ng-template ng-label-tmp let-item="item">
+                {{item.naicsCode}} - {{item.longDescription}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.naicsCode}} - {{item.longDescription}}
+            </ng-template>
+        </ng-select>
+    </div>
+</div>

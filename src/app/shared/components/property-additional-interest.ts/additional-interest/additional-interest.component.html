@@ -34,7 +34,6 @@
       </div>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-      <div class="card-body">
         <div class="row">
           <div class="col-1">
             <label for="isAppliedToAll" class="form-label" title="isAppliedToAll">Apply to all:</label><br>
@@ -51,22 +50,23 @@
             <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
               [(ngModel)]="aiData.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEditSubmission">
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-3">
             <label for="interest" class="form-label" title="interest">Interest</label>
             <input type="text" class="form-control" id="policyEventCode" name="interest"
               [readonly]="!canEditSubmission" [(ngModel)]="aiData.interest" #interest="ngModel">
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-3">
             <label for="street1" class="form-label" title="Status">Street Address 1</label>
             <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEditSubmission"
               [(ngModel)]="aiData.street1" #street1="ngModel">
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-3">
             <label for="street2" class="form-label" title="Status">Street Address 2</label>
             <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEditSubmission"
               [(ngModel)]="aiData.street2" #street2="ngModel">
           </div>
-          <div class="col-sm-1">
+          <div class="row">
+          <div class="col-sm-2">
             <label for="zip" class="form-label" title="zip">Zipcode</label>
             <div class="inputspinner">
               <input type="text" zip-code class="form-control" id="zipCode" [readonly]="aiData.isZipLookup"
@@ -77,12 +77,12 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-3">
             <label for="city" class="form-label" title="city">City</label>
             <input type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city"
               [readonly]="aiData.isZipLookup || !canEditSubmission" #city="ngModel">
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-2">
             <label for="policyEventCode" class="form-label" title="Status">State</label>
             <div *ngIf="isLoadingAddress">
               <div class="spinner-border ml-auto" role="status" aria-hidden="true">
@@ -94,6 +94,7 @@
                 [(ngModel)]="aiData.state" #mortgageeState="ngModel" (change)="changeState($event)">
               </ng-select>
             </div>
+          </div>
           </div>
           <div class="row">
             <div class="col-sm-2">
@@ -107,7 +108,6 @@
                 [(ngModel)]="aiData.description" #comments="ngModel">
             </div>
           </div>
-        </div>
       </div>
       <div class="empty-row"></div>
       <div class="row">
