@@ -9,6 +9,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   private _validateOnLoad = true;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
+  sequenceNo: number | null = null;
   isDeductibleLocked = false;
   isDeductibleTypeLocked = false;
   isExcludeLocked = false;
@@ -127,6 +128,9 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   }
 
   existingInit(deductible: PropertyDeductible) {
+    this.propertyQuoteDeductibleId = deductible.propertyQuoteDeductibleId;
+    this.propertyQuoteId = deductible.propertyQuoteId;
+    this.sequenceNo = deductible.sequenceNo;
     this._propertyDeductibleId = deductible.propertyDeductibleId;
     this._deductibleType = deductible.deductibleType;
     this._amount = deductible.amount;
@@ -237,5 +241,27 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   }
   get subjectToMinAmountRequired(): boolean {
     return this._isSubjectToMin ?? false;
+  }
+
+  toJSON() {
+    return {
+      propertyQuoteDeductibleId: this.propertyQuoteDeductibleId,
+      propertyQuoteId: this.propertyQuoteId,
+      propertyDeductibleId: this.propertyDeductibleId,
+      sequenceNo: this.sequenceNo,
+      deductibleType: this.deductibleType,
+      deductibleCode: this.deductibleCode,
+      comment: this.comment,
+      amount: this.amount,
+      subjectToMinPercent: this.subjectToMinPercent,
+      subjectToMinAmount: this.subjectToMinAmount,
+      isExcluded: this.isExcluded,
+      isSubjectToMin: this.isSubjectToMin,
+      isDeductibleLocked: this.isDeductibleLocked,
+      isDeductibleTypeLocked: this.isDeductibleTypeLocked,
+      isExcludeLocked: this.isExcludeLocked,
+      isSubjectToMinLocked: this.isSubjectToMinLocked,
+      isNew: this.isNew
+    };
   }
 }

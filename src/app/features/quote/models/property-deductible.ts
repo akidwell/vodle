@@ -2,6 +2,7 @@ export interface PropertyDeductibleData {
     propertyQuoteDeductibleId: number | null;
     propertyQuoteId: number | null;
     propertyDeductibleId: number | null;
+    sequenceNo: number | null;
     deductibleType: string | null;
     deductibleCode: string | null
     comment: string | null;
