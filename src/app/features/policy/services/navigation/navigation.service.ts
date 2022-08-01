@@ -21,7 +21,7 @@ export class NavigationService {
 
   public clearReuse() {
     (this.routeReuseStrategy as CustomReuseStrategy).clearAllHandles();
-    this.dropDownService.clearPolicyDropDowns();
+    this.dropDownService.clearDropDowns();
     this.reinsuranceLookupService.clearReinsuranceCodes();
   }
 }

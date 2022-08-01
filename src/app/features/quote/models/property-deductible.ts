@@ -11,13 +11,16 @@ export interface PropertyDeductibleData {
     isExcluded: boolean;
     isSubjectToMin: boolean | null;
     isNew: boolean;
-    isLocked: boolean;
-    canExclude: boolean;
-    canSubjectToMin: boolean;
+    isDeductibleLocked: boolean;
+    isDeductibleTypeLocked: boolean;
+    isExcludeLocked: boolean;
+    isSubjectToMinLocked: boolean;
 }
 
 export interface PropertyDeductible extends PropertyDeductibleData {
     deductibleReadonly: boolean;
+    deductibleTypeReadonly: boolean;
+    isExcludedReadonly: boolean;
     isSubjectToMinVisible: boolean;
     deleteVisible: boolean;
     subjectToMinVisible: boolean;

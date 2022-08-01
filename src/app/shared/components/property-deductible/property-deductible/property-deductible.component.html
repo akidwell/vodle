@@ -3,10 +3,10 @@
         <div #locationInfo (click)="collapseExpand(false)">
             <div class="row">
                 <div class="col-lg-2">
-                    <ng-select id="deductible" [items]="propertyDeductibles$ | async" bindLabel="description"
-                        bindValue="key" [required]="canEdit && deductible.deductibleRequired" name="deductible"
-                        click-stop-propagation [readonly]="!canEdit || deductible.deductibleReadonly"
-                        [(ngModel)]="deductible.propertyDeductibleId">
+                    <ng-select id="deductible" [items]="propertyDeductibles$ | async" bindLabel="name"
+                        bindValue="propertyDeductibleId" [required]="canEdit && deductible.deductibleRequired" name="deductible"
+                        click-stop-propagation [readonly]="!canEdit || deductible.deductibleReadonly" [clearable]="false"
+                        [(ngModel)]="deductible.propertyDeductibleId" (change)="changeDeductible($event)">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
@@ -20,27 +20,26 @@
                 <div class="col-lg-2">
                     <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description"
                         bindValue="code" [required]="canEdit && deductible.deductibleTypeRequired" name="deductibleType"
-                        click-stop-propagation [readonly]="!canEdit || deductible.isExcluded"
+                        click-stop-propagation [readonly]="!canEdit || deductible.deductibleTypeReadonly" [clearable]="false"
                         [(ngModel)]="deductible.deductibleType">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="deductibleCode" [items]="deductibleCodes$ | async" bindLabel="description"
                         bindValue="code" [required]="canEdit && deductible.deductibleCodeRequired" name="deductibleCode"
-                        click-stop-propagation [readonly]="!canEdit  || deductible.isExcluded"
+                        click-stop-propagation [readonly]="!canEdit || deductible.isExcluded" [clearable]="false"
                         [(ngModel)]="deductible.deductibleCode">
                     </ng-select>
                 </div>
                 <div class="col-lg-1">
-                    <input type="checkbox" class="form-checkbox" id="excluded" [(ngModel)]="deductible.isExcluded"
+                    <input type="checkbox" class="form-check-input" id="excluded" [(ngModel)]="deductible.isExcluded"
                         name="excluded" [hidden]="!deductible.isExcludedVisible" click-stop-propagation
-                        [readonly]="!canEdit" [required]="canEdit">
+                        [readonly]="!canEdit || deductible.isExcludedReadonly">
                 </div>
                 <div class="col-lg-1">
-                    <input type="checkbox" class="form-checkbox" id="subjectToMin"
+                    <input type="checkbox" class="form-check-input" id="subjectToMin"
                         [(ngModel)]="deductible.isSubjectToMin" name="subjectToMin"
-                        [hidden]="!deductible.isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded"
-                        [required]="canEdit">
+                        [hidden]="!deductible.isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded">
                 </div>
                 <div class="col-lg-1" *ngIf="collapsed">
                     <button class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()

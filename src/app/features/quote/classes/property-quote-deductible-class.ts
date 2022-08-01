@@ -9,9 +9,10 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   private _validateOnLoad = true;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
-  isLocked = false;
-  canExclude = true;
-  canSubjectToMin = true;
+  isDeductibleLocked = false;
+  isDeductibleTypeLocked = false;
+  isExcludeLocked = false;
+  isSubjectToMinLocked = false;
 
   private _propertyDeductibleId: number | null = null;
   private _deductibleType: string | null = null;
@@ -135,18 +136,16 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     this._comment = deductible.comment;
     this._isExcluded = deductible.isExcluded;
     this._isSubjectToMin = deductible.isSubjectToMin;
-    this.isLocked = deductible.isLocked;
-    this.canExclude = deductible.canExclude;
-    this.canSubjectToMin = deductible.canSubjectToMin;
+    this.isDeductibleLocked = deductible.isDeductibleLocked;
+    this.isDeductibleTypeLocked = deductible.isDeductibleTypeLocked;
+    this.isExcludeLocked = deductible.isExcludeLocked;
+    this.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
     this.setReadonlyFields();
     this.setRequiredFields();
   }
 
   newInit() {
     this.isNew = true;
-    this.isLocked = false;
-    this.canExclude = true;
-    this.canSubjectToMin = true;
   }
 
   markClean() {
@@ -198,22 +197,28 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   }
 
   get deductibleReadonly(): boolean {
-    return this.isLocked || this._isExcluded;
+    return this.isDeductibleLocked || this._isExcluded;
+  }
+  get deductibleTypeReadonly(): boolean {
+    return this.isDeductibleTypeLocked || this._isExcluded;
   }
   get amountReadonly(): boolean {
     return this._isSubjectToMin || this._isExcluded;
   }
+  get isExcludedReadonly(): boolean {
+    return this._propertyDeductibleId === null;
+  }
   get isExcludedVisible(): boolean {
-    return this.canExclude;
+    return !this.isExcludeLocked;
   }
   get isSubjectToMinVisible(): boolean {
-    return this.canSubjectToMin && !this._isExcluded;
+    return !this.isSubjectToMinLocked && !this._isExcluded;
   }
   get subjectToMinVisible(): boolean {
     return this._isSubjectToMin ?? false;
   }
   get deleteVisible(): boolean {
-    return !this.isLocked;
+    return !this.isDeductibleLocked;
   }
   get deductibleRequired(): boolean {
     return !this.deductibleReadonly;
@@ -222,7 +227,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     return !this._isSubjectToMin && !this._isExcluded;
   }
   get deductibleTypeRequired(): boolean {
-    return !this._isExcluded;
+    return !this.deductibleTypeReadonly && !this._isExcluded;
   }
   get deductibleCodeRequired(): boolean {
     return !this._isExcluded;

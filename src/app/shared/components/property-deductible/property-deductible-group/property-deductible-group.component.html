@@ -18,9 +18,9 @@
         <label for="subjectToMin" class="form-label" title="Subject to Min">Subject to Min</label>
     </div>
 </div>
-
 <div *ngFor="let item of deductibles; let i = index">
-    <rsps-property-deductible [deductible]=item [canEdit]=canEdit (deleteDeductible)=deleteDeductible($event) > 
+    <rsps-property-deductible [programId]="programId" [deductible]=item [canEdit]=canEdit
+        (deleteDeductible)=deleteDeductible($event)>
     </rsps-property-deductible>
 </div>
-<button *ngIf="canEdit" class="footer-button" (click)="addDeductible();">Add Deductible</button>
+<button *ngIf="canEdit" class="link-button" (click)="addDeductible();">Add Deductible</button>

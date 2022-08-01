@@ -20,6 +20,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
   taxCode: string | null = null;
 
+  private _subjectNumber: number | null = null;
   private _locationNumber: number | null = null;
   private _buildingNumber: number | null = null;
   private _street1: string | null = null;
@@ -32,6 +33,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _description: string | null = null;
   private _occupancy: string | null = null;
   private _yearBuilt: string | null = null;
+  private _gutRehab: string | null = null;
   private _sprinklered: string | null = null;
   private _construction: string | null = null;
   private _stories: string | null = null;
@@ -46,6 +48,13 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   isZipLookup = false;
   isImport = false;
 
+  get subjectNumber() : number | null {
+    return this._subjectNumber;
+  }
+  set subjectNumber(value: number | null) {
+    this._subjectNumber = value;
+    this._isDirty = true;
+  }
   get isDirty(): boolean {
     return this._isDirty ;
   }
@@ -147,6 +156,13 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._yearBuilt = value;
     this._isDirty = true;
   }
+  get gutRehab(): string | null {
+    return this._gutRehab;
+  }
+  set gutRehab(value: string | null) {
+    this._gutRehab = value;
+    this._isDirty = true;
+  }
   get sprinklered(): string | null {
     return this._sprinklered;
   }
@@ -204,6 +220,17 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._isDirty = true;
   }
 
+  get buildingIndex(): string {
+    return (this.subjectNumber ?? '') + '/' + (this.locationNumber ?? '')+ '/' + (this.buildingNumber ?? '');
+  }
+  get address(): string {
+    return (!this.street1 ? '' : this.street1) +
+    (!this.street2 ? '' : ', ' + this.street2) +
+    (!this.city ? '' : ', ' + this.city ) +
+    (!this.state ? '' : ', ' + this.state) +
+    (!this.zip ? '' : ' ' + this.zip);
+  }
+
   constructor(building?: PropertyBuilding) {
     console.log('building')
     if (building) {
@@ -228,6 +255,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this.propertyQuoteBuildingId = building.propertyQuoteBuildingId;
     this.propertyQuoteId = building.propertyQuoteId;
     this.taxCode = building.taxCode;
+    this._subjectNumber = building.subjectNumber;
     this._locationNumber = building.locationNumber;
     this._buildingNumber = building.buildingNumber;
     this._street1 = building.street1;
@@ -268,6 +296,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     });
   }
 
+  subjectNumberRequired = true;
   locationNumberRequired = true;
   buildingNumberRequired = true;
   street1Required = true;

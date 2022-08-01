@@ -119,6 +119,8 @@ export class QuoteClass implements Quote, QuoteValidation {
   maxPolicyAggregate = null;
   displayCommissionRate = false;
   supportedStatus = null;
+  importWarnings = [];
+  importErrors = [];
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;

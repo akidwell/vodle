@@ -14,6 +14,7 @@ import { QuoteService } from 'src/app/features/quote/services/quote-service/quot
 export class PropertyDeductibleGroupComponent implements OnInit {
   deleteSub!: Subscription;
 
+  @Input() public programId!: number;
   @Input() public deductibles!: PropertyDeductible[];
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
