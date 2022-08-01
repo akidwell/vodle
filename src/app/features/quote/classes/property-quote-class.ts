@@ -2,6 +2,7 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enu
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
+import { PropertyDeductible, PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
@@ -9,7 +10,8 @@ import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class'
 import { QuoteValidationClass } from './quote-validation-class';
 
 export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
-  quoteId = null;
+  propertyQuoteId: number | null = null;
+  quoteId: number | null = null;
   propertyQuoteDeductible: PropertyQuoteDeductibleClass[] = [];
   propertyQuoteBuilding: PropertyQuoteBuildingClass[] = [];
   propertyQuoteMortgagee: MortgageeClass[] = [];
@@ -23,10 +25,10 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  get riskDesciption() : string | null {
+  get riskDescription() : string | null {
     return this._riskDescription;
   }
-  set riskDesciption(value: string | null) {
+  set riskDescription(value: string | null) {
     this._riskDescription = value;
     this._isDirty = true;
   }
@@ -74,7 +76,9 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     return this._validationResults;
   }
   existingInit(propertyQuote: PropertyQuote) {
-    this.riskDesciption = propertyQuote.riskDesciption;
+    this.propertyQuoteId = propertyQuote.propertyQuoteId;
+    this.quoteId = propertyQuote.quoteId;
+    this.riskDescription = propertyQuote.riskDescription;
 
     const deductibles: PropertyQuoteDeductibleClass[] = [];
     propertyQuote.propertyQuoteDeductible.forEach((element) => {
@@ -132,5 +136,16 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   }
   setReadonlyFields() {
     // No special rules
+  }
+
+  toJSON() {
+    const deductibles: PropertyDeductibleData[] = [];
+    this.propertyQuoteDeductible.forEach(c => deductibles.push(c.toJSON()));
+    return {
+      propertyQuoteId: this.propertyQuoteId,
+      quoteId: this.quoteId,
+      riskDescription: this.riskDescription,
+      propertyQuoteDeductible: deductibles
+    };
   }
 }

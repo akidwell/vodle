@@ -336,7 +336,8 @@ export class QuoteClass implements Quote, QuoteValidation {
       policySymbol: this.policySymbol,
       formName: this.formName,
       programId: this.programId,
-      autoCalcMiscPremium: this.autoCalcMiscPremium
+      autoCalcMiscPremium: this.autoCalcMiscPremium,
+      propertyQuote: this.propertyQuote.toJSON()
     };
   }
 }
