@@ -37,7 +37,7 @@ export class MortgageeClass implements MortgageeData{
     this._buildingNumber = mortgagee?.buildingNumber || null;
     this._attention = mortgagee?.attention || null;
     this._description = mortgagee?.description || null;
-    this._locationNumber = mortgagee?.locationNumber || null;
+    this._locationNumber = mortgagee?.premisesNumber || null;
     this._mortgageHolder = mortgagee?.mortgageHolder || null;
     this._propertyQuoteId = mortgagee?.propertyQuoteId || null;
     this._propertyQuoteMortgageeId = mortgagee?.propertyQuoteMortgageeId || null;
@@ -87,10 +87,10 @@ export class MortgageeClass implements MortgageeData{
     this._isDirty = true;
   }
 
-  get locationNumber() : number | null {
+  get premisesNumber() : number | null {
     return this._locationNumber;
   }
-  set locationNumber(value: number | null) {
+  set premisesNumber(value: number | null) {
     this._locationNumber= value;
     this._isDirty = true;
   }
