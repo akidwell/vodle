@@ -1,12 +1,21 @@
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { MortgageeData } from 'src/app/features/quote/models/mortgagee';
+import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
 
-export class MortgageeClass implements MortgageeData{
-
+export class MortgageeClass implements MortgageeData, QuoteValidation{
+  private _isDirty = false;
+  private _isValid = false;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
 
   private _buildingNumber: string | null = null;
   private _attention: string | null = null;
   private _description: string | null = null;
-  private _locationNumber: number | null = null;
+  private _premisesNumber: number | null = null;
   private _mortgageHolder: string | null = null;
   private _propertyQuoteId: number | null = null;
   private _propertyQuoteMortgageeId: number | null = null;
@@ -17,7 +26,6 @@ export class MortgageeClass implements MortgageeData{
   private _zip: string | null = null;
   private _countryCode: string | null = null;
   private _isAppliedToAll = false;
-  private _isDirty = false;
 
   isNew = false;
   invalidList: string[] = [];
@@ -31,13 +39,36 @@ export class MortgageeClass implements MortgageeData{
     } else {
       this.newInit();
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this.validate();
+  }
+
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      //TODO: class based validation checks
+      this.classValidation();
+      this._validateOnLoad = false;
+    }
+    const validation = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    validation.mapValues(this);
+    return validation;
+  }
+
+  classValidation() {
+    this.invalidList = [];
+    // if (!this.validateAmount()) {
+    //   valid = false;
+    // }
+    this._errorMessages = this.invalidList;
+    this._canBeSaved = true;
+    this._isValid = true;
   }
 
   existingInit(mortgagee?: MortgageeData){
     this._buildingNumber = mortgagee?.buildingNumber || null;
     this._attention = mortgagee?.attention || null;
     this._description = mortgagee?.description || null;
-    this._locationNumber = mortgagee?.premisesNumber || null;
+    this._premisesNumber = mortgagee?.premisesNumber || null;
     this._mortgageHolder = mortgagee?.mortgageHolder || null;
     this._propertyQuoteId = mortgagee?.propertyQuoteId || null;
     this._propertyQuoteMortgageeId = mortgagee?.propertyQuoteMortgageeId || null;
@@ -51,7 +82,19 @@ export class MortgageeClass implements MortgageeData{
   }
 
   newInit() {
+    this.propertyQuoteId = 0;
+    this.propertyQuoteMortgageeId = 0;
     this.isNew = true;
+  }
+
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
   }
 
   get buildingNumber() : string | null {
@@ -88,10 +131,10 @@ export class MortgageeClass implements MortgageeData{
   }
 
   get premisesNumber() : number | null {
-    return this._locationNumber;
+    return this._premisesNumber;
   }
   set premisesNumber(value: number | null) {
-    this._locationNumber= value;
+    this._premisesNumber= value;
     this._isDirty = true;
   }
 
@@ -192,6 +235,25 @@ export class MortgageeClass implements MortgageeData{
   }
   markDirty() {
     this._isDirty = true;
+  }
+
+  toJSON() {
+    return {
+      buildingNumber: this.buildingNumber,
+      attention: this.attention,
+      description: this.description,
+      premisesNumber: this.premisesNumber,
+      mortgageHolder: this.mortgageHolder,
+      propertyQuoteId: this.propertyQuoteId,
+      propertyQuoteMortgageeId: this.propertyQuoteMortgageeId,
+      street1: this.street1,
+      street2: this.street2,
+      state: this.state,
+      city: this.city,
+      zip:this.zip,
+      countryCode: this.countryCode,
+      isAppliedToAll: this.isAppliedToAll
+    };
   }
 
 }

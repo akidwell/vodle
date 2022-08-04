@@ -10,8 +10,8 @@ import { QuoteSubmissionComponent } from './components/common/quote-submission-b
 import { TermsConditionsComponent } from './components/common/terms-conditions-base/terms-conditions.component';
 import { QuoteSummaryComponent } from './components/common/quote-summary-base/quote-summary.component';
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
-import { MortgageeGroupComponent } from 'src/app/shared/components/propertry-mortgagee/property-mortgagee-group/mortgagee-group.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
+import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 
 const routes: Routes = [
   {
@@ -48,7 +48,7 @@ const routes: Routes = [
             component: QuotePropertyLocationCoverageComponent,
             data: { saveComponent: true },
           },
-          { path: 'mortgagee', component: MortgageeGroupComponent, data: { saveComponent: true } },
+          { path: 'mortgagee', component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
           { path: 'premium', component: QuotePremiumComponent, data: { saveComponent: true } },
           {
             path: 'conditions',

@@ -3,14 +3,15 @@
         <div class="col-lg-6">
             <label for="totalAccountLimit" class="panel-header" title="totalAccountLimit">Total Account Limit
                 Amount</label>
-            <input type="text" class="form-control" id="totalAccountLimit" maxlength="40" [readonly]="true" value="{{calcTotal() | currency: 'USD' : 'symbol':'1.0-0'}}">
+            <input type="text" class="form-control right" id="totalAccountLimit" maxlength="40" [readonly]="true"  [value]="limitTotal | currency: 'USD' : 'symbol':'1.0-0'">
         </div>
         <div class="col-lg-6">
             <label for="largestAmt" class="panel-header" title="largestAmt">Largest Amt Subject TIV</label>
-            <input type="text" class="form-control" id="largestAmt" maxlength="40" [readonly]="true"  value="{{findLargest() | currency: 'USD' : 'symbol':'1.0-0'}}">
+            <input type="text" class="form-control right" id="largestAmt" maxlength="40" [readonly]="true"  [value]="largestTiv | currency: 'USD' : 'symbol':'1.0-0'">
         </div>
     </div>
     <br>
+    <div *ngFor="let sub of subjectAmount | keyvalue">
     <div class="row">
         <div class="col-lg-1"> </div>
         <div class="col-lg-4">
@@ -24,10 +25,11 @@
     <div class="row">
         <div class="col-lg-1"> </div>
         <div class="col-lg-4">
-            <input type="text" class="form-control" id="subject" maxlength="40" [readonly]="true">
+            <input type="text" class="form-control text-center" id="subject" maxlength="40" [readonly]="true" [value]="sub.key">
         </div>
         <div class="col-lg-1"> </div>
         <div class="col-lg-6">
-            <input type="text" class="form-control" id="subjectBreakdown" maxlength="40" [readonly]="true">
+            <input type="text" class="form-control right" id="subjectBreakdown" maxlength="40" [readonly]="true"  [value]="sub.value | currency: 'USD' : 'symbol':'1.0-0'">
         </div>
     </div>
+</div>

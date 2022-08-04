@@ -17,12 +17,12 @@ export class DropDownsService {
 
   constructor(private http: HttpClient, private config: ConfigService) {}
 
-  postSicCode(sicCode: string): Observable<ClassCode[]>{
-    const params = new HttpParams().append('sicCode', sicCode);
+  // postSicCode(sicCode: string): Observable<ClassCode[]>{
+  //   const params = new HttpParams().append('sicCode', sicCode);
 
-    return this.http.get<ClassCode[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes/class-code', {params} );
+  //   return this.http.get<ClassCode[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes/class-code', {params} );
 
-  }
+  // }
 
   // Non static drop downs
   getLimitBasisDescriptions(
