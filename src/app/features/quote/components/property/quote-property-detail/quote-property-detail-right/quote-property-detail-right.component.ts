@@ -31,52 +31,52 @@ export class QuotePropertyDetailRightComponent implements OnInit {
   constructor( private dropdowns: DropDownsService) { }
 
   ngOnInit(): void {
-    this.sicCodes$ = this.dropdowns.getSicCodes()
-      .pipe(tap(() => this.loadingSic = false));
+    // this.sicCodes$ = this.dropdowns.getSicCodes()
+    //   .pipe(tap(() => this.loadingSic = false));
 
   }
 
 
-  dropDownSearch(term: string, item: Code) {
-    term = term.toLowerCase();
-    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
-  }
+  // dropDownSearch(term: string, item: Code) {
+  //   term = term.toLowerCase();
+  //   return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  // }
 
-  classDropDownSearch(term: string, item: ClassCode) {
-    term = term.toLowerCase();
-    return item.classCode?.toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
-  }
+  // classDropDownSearch(term: string, item: ClassCode) {
+  //   term = term.toLowerCase();
+  //   return item.classCode?.toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  // }
 
-  naicsDropDownSearch(term: string, item: NaicsCode) {
-    term = term.toLowerCase();
-    return item.naicsCode?.toLowerCase().indexOf(term) > -1 || item.longDescription?.toLowerCase().indexOf(term) > -1;
-  }
+  // naicsDropDownSearch(term: string, item: NaicsCode) {
+  //   term = term.toLowerCase();
+  //   return item.naicsCode?.toLowerCase().indexOf(term) > -1 || item.longDescription?.toLowerCase().indexOf(term) > -1;
+  // }
 
 
-  changeSicCode() {
-    if (this.quote.sicCode != null) {
-      this.loadingNaics = true;
-      this.quote.naicsCode = null;
-      this.classCodes$ = this.dropdowns.postSicCode(this.quote.sicCode)
-        .pipe(tap(() => this.loadingClass = false))
-        .pipe(tap(() => this.loadingNaics = false))
-        .pipe(tap((x) => {
-          //to do: check values in DB once save is finished
-          this.naicsCodes = x.map(y => y.sicCode.map(z => z.naicsCodes).reduce((x,y) => x.concat(y), [])).reduce((x,y) => x.concat(y), []);
-          if (this.naicsCodes.length > 0){
-            this.naicsSelectedAttribute = this.naicsCodes[0].naicsCode;
-          }
-        }));
-      this.classCodes$.subscribe(classCode =>
-      {
-        if(classCode.length > 0)
-          this.selectedAttribute = classCode[0].classCode;
-        console.log(this.selectedAttribute);
-      });
+  // changeSicCode() {
+  //   if (this.quote.sicCode != null) {
+  //     this.loadingNaics = true;
+  //     this.quote.naicsCode = null;
+  //     this.classCodes$ = this.dropdowns.postSicCode(this.quote.sicCode)
+  //       .pipe(tap(() => this.loadingClass = false))
+  //       .pipe(tap(() => this.loadingNaics = false))
+  //       .pipe(tap((x) => {
+  //         //to do: check values in DB once save is finished
+  //         this.naicsCodes = x.map(y => y.sicCode.map(z => z.naicsCodes).reduce((x,y) => x.concat(y), [])).reduce((x,y) => x.concat(y), []);
+  //         if (this.naicsCodes.length > 0){
+  //           this.naicsSelectedAttribute = this.naicsCodes[0].naicsCode;
+  //         }
+  //       }));
+  //     this.classCodes$.subscribe(classCode =>
+  //     {
+  //       if(classCode.length > 0)
+  //         this.selectedAttribute = classCode[0].classCode;
+  //       console.log(this.selectedAttribute);
+  //     });
 
-    }
-    else {
-      this.classCodes$ = new Observable<ClassCode[]>();
-    }
-  }
+  //   }
+  //   else {
+  //     this.classCodes$ = new Observable<ClassCode[]>();
+  //   }
+  // }
 }

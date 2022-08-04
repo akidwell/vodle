@@ -14,5 +14,4 @@ export interface MortgageeData {
   zip: string | null;
   countryCode: string | null;
   isAppliedToAll: boolean;
-  isNew: boolean | null;
   }

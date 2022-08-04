@@ -1,7 +1,8 @@
 <div class="card-body">
     <div class="row">
       <div class="col-lg-4 panel-padding">
-        <rsps-quote-property-detail-left [quote]="quote"  [buildings]="quote.propertyQuote.propertyQuoteBuilding" [canEdit]="canEdit"></rsps-quote-property-detail-left>
+        <rsps-quote-property-detail-left [quote]="quote"  [buildings]="quote.propertyQuote.propertyQuoteBuilding" [limitTotal]="limitTotal" [largestTiv]="largestTiv"
+        [subjectAmount]="subjectAmount" [canEdit]="canEdit"></rsps-quote-property-detail-left>
       </div>
       <div class="col-lg-4 panel-padding">
         <rsps-quote-property-detail-center [quote]="quote"  [canEdit]="canEdit"></rsps-quote-property-detail-center>

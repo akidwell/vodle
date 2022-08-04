@@ -1,11 +1,21 @@
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { AdditionalInterestData } from 'src/app/features/quote/models/additional-interest';
+import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
 
-export class AdditionalInterestClass implements AdditionalInterestData{
+export class AdditionalInterestClass implements AdditionalInterestData, QuoteValidation{
+  private _isDirty = false;
+  private _isValid = false;
+  private _canBeSaved = true;
+  private _errorMessages: string[] = [];
+  private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
 
   private _buildingNumber: string | null = null;
   private _attention: string | null = null;
   private _description: string | null = null;
-  private _locationNumber: number | null = null;
+  private _premisesNumber: number | null = null;
   private _interest: string | null = null;
   private _propertyQuoteId: number | null = null;
   private _propertyQuoteAdditionalInterestId: number | null = null;
@@ -15,7 +25,6 @@ export class AdditionalInterestClass implements AdditionalInterestData{
   private _city: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
-  private _isDirty = false;
   private _isAppliedToAll = false;
 
   isNew = false;
@@ -29,13 +38,36 @@ export class AdditionalInterestClass implements AdditionalInterestData{
     } else {
       this.newInit();
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this.validate();
+  }
+
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      //TODO: class based validation checks
+      this.classValidation();
+      this._validateOnLoad = false;
+    }
+    const validation = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    validation.mapValues(this);
+    return validation;
+  }
+
+  classValidation() {
+    this.invalidList = [];
+    // if (!this.validateAmount()) {
+    //   valid = false;
+    // }
+    this._errorMessages = this.invalidList;
+    this._canBeSaved = true;
+    this._isValid = true;
   }
 
   existingInit(ai?: AdditionalInterestData){
     this._buildingNumber = ai?.buildingNumber || null;
     this._attention = ai?.attention || null;
     this._description = ai?.description || null;
-    this._locationNumber = ai?.premisesNumber || null;
+    this._premisesNumber = ai?.premisesNumber || null;
     this._interest = ai?.interest || null;
     this._propertyQuoteId = ai?.propertyQuoteId || null;
     this._propertyQuoteAdditionalInterestId = ai?.propertyQuoteAdditionalInterestId || null;
@@ -49,7 +81,19 @@ export class AdditionalInterestClass implements AdditionalInterestData{
   }
 
   newInit() {
+    this.propertyQuoteId = 0;
+    this.propertyQuoteAdditionalInterestId = 0;
     this.isNew = true;
+  }
+
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
   }
 
   get buildingNumber() : string | null {
@@ -85,10 +129,10 @@ export class AdditionalInterestClass implements AdditionalInterestData{
   }
 
   get premisesNumber() : number | null {
-    return this._locationNumber;
+    return this._premisesNumber;
   }
   set premisesNumber(value: number | null) {
-    this._locationNumber= value;
+    this._premisesNumber= value;
     this._isDirty = true;
   }
 
@@ -189,6 +233,25 @@ export class AdditionalInterestClass implements AdditionalInterestData{
   }
   markDirty() {
     this._isDirty = true;
+  }
+
+  toJSON() {
+    return {
+      buildingNumber: this.buildingNumber,
+      attention: this.attention,
+      description: this.description,
+      premisesNumber: this.premisesNumber,
+      interest: this.interest,
+      propertyQuoteId: this.propertyQuoteId,
+      propertyQuoteAdditionalInterestId: this.propertyQuoteAdditionalInterestId,
+      street1: this.street1,
+      street2: this.street2,
+      state: this.state,
+      city: this.city,
+      zip:this.zip,
+      countryCode: this.countryCode,
+      isAppliedToAll: this.isAppliedToAll
+    };
   }
 
 }

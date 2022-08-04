@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PropertyBuilding } from '../../../models/property-building';
-import { PropertyQuote } from '../../../models/property-quote';
 import { Quote } from '../../../models/quote';
 
 @Component({
@@ -14,7 +13,9 @@ export class QuotePropertyDetailComponent implements OnInit {
   @Input() public quote!: Quote;
   @Input() public classType!: ClassTypeEnum;
   @Input() public buildings!: PropertyBuilding[];
-
+  @Input() public subjectAmount!: Map<any,any>;
+  @Input() public limitTotal!: number;
+  @Input() public largestTiv!: number;
 
 
   constructor() {
