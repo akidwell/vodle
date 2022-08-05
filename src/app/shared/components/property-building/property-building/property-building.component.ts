@@ -9,6 +9,7 @@ import { AddressLookupService } from 'src/app/core/services/address-lookup/addre
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
+import { Code } from 'src/app/core/models/code';
 
 @Component({
   selector: 'rsps-property-building',
@@ -19,6 +20,7 @@ export class PropertyBuildingComponent implements OnInit {
   collapsed = true;
   faAngleUp = faAngleUp;
   states$: Observable<State[]> | undefined;
+  cspCodes$: Observable<Code[]> | undefined;
   firstExpand = true;
   anchorId!: string;
   isLoadingAddress = false;

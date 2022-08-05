@@ -30,6 +30,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _cspCode: string | null = null;
   private _description: string | null = null;
   private _occupancy: string | null = null;
+  private _squareFeet: number | null = null;
+  private _itv: number | null = null;
   private _yearBuilt: number | null = null;
   private _gutRehab: number | null = null;
   private _sprinklered: number | null = null;
@@ -147,6 +149,21 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._occupancy = value;
     this._isDirty = true;
   }
+  get squareFeet(): number | null {
+    return this._squareFeet;
+  }
+  set squareFeet(value: number | null) {
+    this._squareFeet = value;
+    this._isDirty = true;
+    this.calculateITV();
+  }
+  get itv(): number | null {
+    return this._itv;
+  }
+  set itv(value: number | null) {
+    this._itv = value;
+    this._isDirty = true;
+  }
   get yearBuilt(): number | null {
     return this._yearBuilt;
   }
@@ -229,6 +246,17 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     (!this.zip ? '' : ' ' + this.zip);
   }
 
+  calculateITV() {
+    const buildingLimit = this.propertyQuoteBuildingCoverage.find(c => c.propertyCoverageId == 1)?.limit;
+    if (this._squareFeet == null || buildingLimit == null) {
+      this._itv = null;
+    }
+    else {
+      this._itv = Math.round((buildingLimit ?? 0) / (this._squareFeet ?? 1));
+      this._isDirty = true;
+    }
+  }
+
   constructor(building?: PropertyBuilding) {
     if (building) {
       this.existingInit(building);
@@ -265,6 +293,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._description = building.description;
     this._occupancy = building.occupancy;
     this._yearBuilt = building.yearBuilt;
+    this._squareFeet = building.squareFeet;
     this._sprinklered = building.sprinklered;
     this._construction = building.construction;
     this._stories = building.stories;
@@ -273,6 +302,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._wiring = building.wiring;
     this._plumbing = building.plumbing;
     this._hvac = building.hvac;
+    this._itv = building.itv;
 
     const coverages: PropertyQuoteBuildingCoverageClass[] = [];
     building.propertyQuoteBuildingCoverage.forEach((element) => {

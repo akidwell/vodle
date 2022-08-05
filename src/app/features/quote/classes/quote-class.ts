@@ -237,7 +237,10 @@ export class QuoteClass implements Quote, QuoteValidation {
     this._isDirty = true;
   }
   markImported() {
-    this.propertyQuote.propertyQuoteBuilding.forEach(c => c.markImported());
+    this.propertyQuote.propertyQuoteBuilding.forEach(c => {
+      c.markImported();
+      c.calculateITV();
+    });
   }
   setRequiredFields() {
     // No special rules

@@ -11,27 +11,34 @@
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
                         [(ngModel)]="building.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.premisesNumberRequired" click-stop-propagation ngbTooltip="Premises #" [openDelay]="1000">
+                        [required]="building.premisesNumberRequired" click-stop-propagation ngbTooltip="Premises #"
+                        [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
                         [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.buildingNumberRequired" click-stop-propagation ngbTooltip="Building #" [openDelay]="1000">
+                        [required]="building.buildingNumberRequired" click-stop-propagation ngbTooltip="Building #"
+                        [openDelay]="1000">
                 </div>
                 <div class="col-lg-8">
-                    <input type="address" class="form-control" id="address" #address="ngModel" name="address"
-                    readonly [ngClass]="addressReadOnly" [ngModel]="building.address" [ngbTooltip]="building.address" [openDelay]="1000">
+                    <input type="address" class="form-control" id="address" #address="ngModel" name="address" readonly
+                        [ngClass]="addressReadOnly" [ngModel]="building.address" [ngbTooltip]="building.address"
+                        [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <div ngbDropdown class="d-inline-block">
-                        <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle click-stop-propagation>Actions</button>
+                        <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle
+                            click-stop-propagation>Actions</button>
                         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                          <button  *ngIf="canEdit"(click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
-                          <button *ngIf="!building.isNew && canEdit" hover-class="btn-danger" (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
-                          <button *ngIf="building.isNew && canEdit" hover-class="btn-warning" (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
-                          <button *ngIf="building.isNew && canEdit" (click)=addCoverage() click-stop-propagation ngbDropdownItem>Add Coverage</button>
+                            <button *ngIf="canEdit" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
+                            <button *ngIf="!building.isNew && canEdit" hover-class="btn-danger"
+                                (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
+                            <button *ngIf="building.isNew && canEdit" hover-class="btn-warning"
+                                (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
+                            <button *ngIf="building.isNew && canEdit" (click)=addCoverage() click-stop-propagation
+                                ngbDropdownItem>Add Coverage</button>
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -104,82 +111,128 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="empty-row"></div>
-            <div class="row">
-                <div class="col-lg-2">
-                    <label for="description" class="form-label" title="description">Class Code</label>
+                <div class="col-lg-6">
+                    <label for="description" class="form-label" title="Property Description">Property
+                        Description</label>
                     <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
                         [(ngModel)]="building.description" #description="ngModel">
-                </div>
-                <div class="col-lg-5">
-                    <label for="description" class="form-label" title="description">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
-                        [(ngModel)]="building.description" #description="ngModel">
-                </div>
-                <div class="col-lg-5">
-                    <label for="description" class="form-label" title="description">Occupancy</label>
-                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
-                        [(ngModel)]="building.occupancy" #description="ngModel">
                 </div>
             </div>
             <div class="empty-row"></div>
             <div class="row">
+                <div class="col-lg-5">
+                    <label for="cspCode" class="form-label" title=">CSP Code">CSP Code</label>
+                    <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="code"
+                        name="cspCode" click-stop-propagation [readonly]="!canEdit" [clearable]="false"
+                        [(ngModel)]="building.cspCode">
+                    </ng-select>
+                </div>
+                <div class="col-lg-4">
+                    <label for="occupancy" class="form-label" title="Occupancy">Occupancy</label>
+                    <input type="text" class="form-control" id="occupancy" name="occupancy" [readonly]="!canEdit"
+                        [(ngModel)]="building.occupancy" #occupancy="ngModel">
+                </div>
                 <div class="col-lg-3">
                     <label for="construction" class="form-label" title="Construction">Construction</label>
                     <input type="text" class="form-control" id="construction" name="construction" [readonly]="!canEdit"
                         [(ngModel)]="building.construction" #construction="ngModel">
                 </div>
+            </div>
+            <div class="empty-row"></div>
+            <div class="row">
                 <div class="col-lg-1">
-                    <label for="sprinklered" class="form-label" title="Sprinklered">Sprinklered</label>
-                    <input type="text" class="form-control" id="sprinklered" name="sprinklered" [readonly]="!canEdit"
+                    <label for="yearBuilt" class="form-label" title="Yr. Built">Year Built</label>
+                </div>    
+                <div class="col-lg-1">
+                    <label for="gutRehab" class="form-label" title="Yr. Gut Rehab">Year Gut Rehab</label>
+                </div>   
+                <div class="col-lg-1">
+                    <label for="squareFeet" class="form-label" title="Square Feet">Sq. Ft</label>
+                </div>   
+                <div class="col-lg-1">
+                    <label for="itv" class="form-label" title="ITV">ITV</label>
+                </div>   
+                <div class="col-lg-1">
+                    <label for="stories" class="form-label" title="Stories">Stories</label>
+                </div>   
+                <div class="col-lg-1">
+                    <label for="sprinklered" class="form-label" title="Sprinkler %">Sprinkler %</label>
+                </div>   
+                <div class="col-lg-1">
+                    <label for="protectionClass" class="form-label" title="Protection Class">Protection Class</label>
+                </div>   
+                <div class="col-lg-1">         
+                </div>   
+                <div class="col-lg-4">
+                    <div class="row" style="padding-right: 12px;padding-left: 10px;">
+                        <div class="col-lg-12" style="border-bottom: 2px solid black;">
+                            <label for="roof" style="text-align: center;" class="form-label" title="Yr. Roof">LATEST UPDATES (YEAR)</label>
+                        </div>   
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label for="roof" class="form-label" title="Roof">Roof</label>
+                        </div>   
+                        <div class="col-lg-3">
+                            <label for="wiring" class="form-label" title="Wiring">Wiring</label>
+                        </div>   
+                        <div class="col-lg-3">
+                            <label for="plumbing" class="form-label" title="Plumbing">Plumbing</label>
+                        </div>   
+                        <div class="col-lg-3">
+                            <label for="hvac" class="form-label" title="HVAC">HVAC</label>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit"
+                        mask="0000" [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
+                        mask="0000" [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="squareFeet" name="squareFeet" [readonly]="!canEdit"
+                        string-to-currency [allowNegative]="false" [(ngModel)]="building.squareFeet"
+                        #squareFeet="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control right" id="itv" name="itv" readonly string-to-currency
+                        [(ngModel)]="building.itv" #itv="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit"
+                        [(ngModel)]="building.stories" #stories="ngModel">
+                </div>       
+                <div class="col-lg-1">
+                    <input type="text" class="form-control right" id="sprinklered" name="sprinklered"
+                        [readonly]="!canEdit" mask="separator.0" suffix="%" [dropSpecialCharacters]="false"
                         [(ngModel)]="building.sprinklered" #sprinklered="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="yearBuilt" class="form-label" title="Yr. Built">Year Built</label>
-                    <input type="text" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit"
-                        [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
+                    <input type="text" class="form-control" id="protectionClass" name="protectionClass"
+                        [readonly]="!canEdit" [(ngModel)]="building.protectionClass" #protectionClass="ngModel">
                 </div>
-                <div class="col-lg-1">
-                    <label for="gutRehab" class="form-label" title="Yr. Gut Rehab">Gut Rehab</label>
-                    <input type="text" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
-                        [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="gutRehab" class="form-label" title="Square Feet">Sq. Ft</label>
-                    <input type="text" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
-                        [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="stories" class="form-label" title="Stories">Stories</label>
-                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit"
-                        [(ngModel)]="building.stories" #stories="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="protectionClass" class="form-label" title="Protection Class">Protection Class</label>
-                    <input type="text" class="form-control" id="protectionClass" name="protectionClass" [readonly]="!canEdit"
-                        [(ngModel)]="building.protectionClass" #protectionClass="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="roof" class="form-label" title="Yr. Roof">Roof</label>
-                    <input type="text" class="form-control" id="roof" name="roof" [readonly]="!canEdit"
-                        [(ngModel)]="building.roof" #roof="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="wiring" class="form-label" title="Yr. Wiring">Wiring</label>
-                    <input type="text" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit"
-                        [(ngModel)]="building.wiring" #wiring="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="plumbing" class="form-label" title="Yr. Plumbing">Plumbing</label>
-                    <input type="text" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit"
-                        [(ngModel)]="building.plumbing" #plumbing="ngModel">
-                </div>
-                <div class="col-lg-1">
-                    <label for="hvac" class="form-label" title="Yr. HVAC">HVAC</label>
-                    <input type="text" class="form-control" id="hvac" name="hvac" [readonly]="!canEdit"
-                        [(ngModel)]="building.hvac" #deschvacription="ngModel">
-                </div>
+                <div class="col-lg-1"></div>      
+                    <div class="col-lg-1">
+                        <input type="text" class="form-control" id="roof" name="roof" [readonly]="!canEdit" mask="0000"
+                            [(ngModel)]="building.roof" #roof="ngModel">
+                    </div>
+                    <div class="col-lg-1">
+                        <input type="text" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" mask="0000"
+                            [(ngModel)]="building.wiring" #wiring="ngModel">
+                    </div>
+                    <div class="col-lg-1">
+                        <input type="text" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit"
+                            mask="0000" [(ngModel)]="building.plumbing" #plumbing="ngModel">
+                    </div>
+                    <div class="col-lg-1">
+                        <input type="text" class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" mask="0000"
+                            [(ngModel)]="building.hvac" #hvac="ngModel">
+                    </div>
             </div>
             <div class="empty-row"></div>
             <div class="row">
@@ -190,8 +243,8 @@
                         (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
                     <button *ngIf="building.isNew" class="btn btn-secondary margin-left"
                         (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
-                    <button *ngIf="canEdit" class="btn btn-secondary margin-left"
-                        (click)=addCoverage() hover-class="btn-success">Add Coverage</button>
+                    <button *ngIf="canEdit" class="btn btn-secondary margin-left" (click)=addCoverage()
+                        hover-class="btn-success">Add Coverage</button>
                 </div>
                 <div [id]='anchorId'></div>
             </div>

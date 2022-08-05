@@ -16,6 +16,8 @@ export interface PropertyBuildingData {
     taxCode: string | null;
     description: string | null;
     occupancy: string | null;
+    squareFeet: number | null;
+    itv: number | null;
     yearBuilt: number | null;
     gutRehab: number | null;
     sprinklered: number | null;
