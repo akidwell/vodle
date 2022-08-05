@@ -4,6 +4,7 @@ import { lastValueFrom, Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
+import { PropertyDataService } from '../property-data.service';
 import { QuoteService } from '../quote-service/quote.service';
 
 @Injectable({
@@ -17,7 +18,8 @@ export class QuoteSavingService {
   constructor(
     private router: Router,
     private quoteService: QuoteService,
-    public pageDataService: PageDataService
+    public pageDataService: PageDataService,
+    private propertyDataService: PropertyDataService
   ) {
     console.log('init');
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
@@ -55,6 +57,7 @@ export class QuoteSavingService {
       await lastValueFrom(results$).then(async sequence => {
         console.log(sequence);
         quote.sequenceNumber = sequence;
+        this.propertyDataService.buildingList = quote.propertyQuote.buildingList;
         //this.newQuote = false;
         return true;
       });

@@ -2,7 +2,6 @@ export interface PropertyBuildingCoverageData {
   propertyQuoteBuildingCoverageId: number | null;
   propertyQuoteBuildingId: number | null;
   propertyCoverageId: number | null;
-  subjectNumber: number | null;
   limit: number | null;
   coinsurancePct: number | null;
   causeOfLossId: number | null;
@@ -18,7 +17,7 @@ export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
   coinsuranceRequired: boolean;
   causeOfLossIdRequired: boolean;
   valuationIdRequired: boolean;
-  subjectNumberRequired: boolean;
+  // subjectNumberRequired: boolean;
   propertyCoverageIdReadonly: boolean;
   limitRequired: boolean
   causeOfLossIdReadonly: boolean;

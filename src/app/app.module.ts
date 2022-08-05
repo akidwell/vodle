@@ -35,6 +35,7 @@ import { PageDataService } from './core/services/page-data-service/page-data-ser
 import { SubmissionInformationModule } from './shared/components/submission-information/submission-information.module';
 import { MortgageeModule } from './shared/components/propertry-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from './shared/components/property-additional-interest.ts/additional-interest.module';
+import { PropertyDataService } from './features/quote/services/property-data.service';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { AdditionalInterestModule } from './shared/components/property-additiona
     MessageDialogService,
     HeaderPaddingService,
     PageDataService,
+    PropertyDataService,
     UpdateService,
     {
       provide: APP_INITIALIZER,

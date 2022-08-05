@@ -29,10 +29,10 @@
                         [openDelay]="1000">
                 </div>
                 <div class="col-lg-3">
-                    <ng-select id="casueOfLoss" [items]="causeOfLoss$ | async" bindLabel="description"
+                    <ng-select id="causeOfLoss" [items]="causeOfLoss$ | async" bindLabel="description"
                         bindValue="key" [clearable]="false" click-stop-propagation [virtualScroll]="true"
                         [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
-                        [required]="canEdit && coverage.causeOfLossIdRequired" name="casueOfLoss"
+                        [required]="canEdit && coverage.causeOfLossIdRequired" name="casucauseOfLosseOfLoss"
                         [(ngModel)]="coverage.causeOfLossId" #causeOfLoss="ngModel" #causeOfLossComp [ngbTooltip]="causeOfLossTooltip"
                         [openDelay]="1000">
                     </ng-select>

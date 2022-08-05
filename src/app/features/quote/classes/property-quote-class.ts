@@ -1,8 +1,9 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { Code } from 'src/app/core/models/code';
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
-import { PropertyDeductible, PropertyDeductibleData } from '../models/property-deductible';
+import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
@@ -44,6 +45,19 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     this.propertyQuoteBuilding.forEach((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
     );
     return total;
+  }
+
+  get buildingList(): Code[] {
+    console.log('buildings');
+    const buildings: Code[] = [];
+    const all: Code = {key: 0, code: 'All', description: 'All'};
+    buildings.push(all);
+    this.propertyQuoteBuilding.forEach((c) => {
+      const building = (c.premisesNumber?.toString() ?? '') + '-' + (c.buildingNumber?.toString() ?? '');
+      const code: Code = {key: 0, code: building, description: building + ' : ' + c.address};
+      buildings.push(code);
+    });
+    return buildings;
   }
 
   constructor(propertyQuote?: PropertyQuote) {

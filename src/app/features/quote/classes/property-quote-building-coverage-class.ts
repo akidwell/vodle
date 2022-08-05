@@ -14,20 +14,12 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   isNew = false;
   isImport = false;
 
-  private _subjectNumber: number | null = null;
   private _limit: number | null = null;
   private _coinsurancePct: number | null = null;
   private _causeOfLossId: number | null = null;
   private _valuationId: number | null = null;
   private _additionalDetail: string | null = null;
 
-  get subjectNumber() : number | null {
-    return this._subjectNumber;
-  }
-  set subjectNumber(value: number | null) {
-    this._subjectNumber = value;
-    this._isDirty = true;
-  }
   get limit() : number | null {
     return this._limit;
   }
@@ -99,8 +91,6 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
-
-    this._subjectNumber = coverage.subjectNumber;
     this._limit = coverage.limit;
     this._coinsurancePct = coverage.coinsurancePct;
     this._causeOfLossId = coverage.causeOfLossId;
@@ -117,7 +107,6 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   coinsuranceRequired = true;
   causeOfLossIdRequired = true;
   valuationIdRequired = true;
-  subjectNumberRequired = true;
   limitRequired = true;
 
   propertyCoverageIdReadonly = false;
