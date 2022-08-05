@@ -58,7 +58,7 @@ export class QuoteService {
   }
   deleteAdditionalInterest(ai: AdditionalInterestClass): Observable<boolean> {
     console.log(ai);
-    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/mortgagee/' + ai.propertyQuoteAdditionalInterestId?.toString());
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/additional-interest/' + ai.propertyQuoteAdditionalInterestId?.toString());
   }
 
   import(sequenceNumber: number, file: any) {

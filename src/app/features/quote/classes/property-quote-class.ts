@@ -3,10 +3,14 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { Code } from 'src/app/core/models/code';
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
-import { PropertyDeductibleData } from '../models/property-deductible';
+import { AdditionalInterestData } from '../models/additional-interest';
+import { MortgageeData } from '../models/mortgagee';
+import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
+import { PropertyDeductible, PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
+import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
 import { QuoteValidationClass } from './quote-validation-class';
 
@@ -17,6 +21,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   propertyQuoteBuilding: PropertyQuoteBuildingClass[] = [];
   propertyQuoteMortgagee: MortgageeClass[] = [];
   propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
+
+
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -40,6 +46,45 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     );
     return total;
   }
+
+  get largestTiv(): number {
+    let largest = 0;
+    this.propertyQuoteBuilding.forEach(x => {
+      if (x.propertyQuoteBuildingCoverage.length == 0){
+        return 0;
+      } else {
+        const coverages: PropertyBuildingCoverage[] = [];
+        this.propertyQuoteBuilding.forEach(element => {
+          element.propertyQuoteBuildingCoverage.forEach(x => {
+            coverages.push(new PropertyQuoteBuildingCoverageClass(x));
+          });
+        });
+        console.log(coverages);
+        largest = Math.max(...coverages.map( c => c.limit? c.limit : 0));
+        return largest;
+      }
+    });
+    return largest;
+  }
+
+
+  get subjectAmount(): Map<any,any> {
+    const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
+
+    this.propertyQuoteBuilding.forEach((element) => {
+      element.propertyQuoteBuildingCoverage.forEach((x) => {
+        const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
+        subAm.subject = element.subjectNumber;
+        subAm.limit = x.limit;
+        subjectAmounts.push(subAm);
+      });
+    });
+    const res = subjectAmounts.reduce((a, b) =>
+      a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
+
+    return res;
+  }
+
   get coverageCount(): number {
     let total = 0;
     this.propertyQuoteBuilding.forEach((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
@@ -155,11 +200,22 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   toJSON() {
     const deductibles: PropertyDeductibleData[] = [];
     this.propertyQuoteDeductible.forEach(c => deductibles.push(c.toJSON()));
+
+    const mortgagee: MortgageeData[] = [];
+    this.propertyQuoteMortgagee.forEach(c => mortgagee.push(c.toJSON()));
+
+    const ai: AdditionalInterestData[] = [];
+    this.propertyQuoteAdditionalInterest.forEach(c => ai.push(c.toJSON()));
+
+    console.log(mortgagee);
+
     return {
       propertyQuoteId: this.propertyQuoteId,
       quoteId: this.quoteId,
       riskDescription: this.riskDescription,
-      propertyQuoteDeductible: deductibles
+      propertyQuoteDeductible: deductibles,
+      propertyQuoteMortgagee: mortgagee,
+      propertyQuoteAdditionalInterest: ai
     };
   }
 }

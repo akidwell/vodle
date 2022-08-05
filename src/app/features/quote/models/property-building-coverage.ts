@@ -24,3 +24,9 @@ export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
   valuationIdReadonly: boolean;
   isImport: boolean;
 }
+
+export interface PropertyBuildingCoverageSubjectAmountData {
+subject: number | null;
+limit: number | null;
+}
+

@@ -13,6 +13,5 @@ export interface AdditionalInterestData {
   city: string | null;
   zip: string | null;
   countryCode: string | null;
-  isNew: boolean | null;
   isAppliedToAll: boolean;
   }

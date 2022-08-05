@@ -44,6 +44,7 @@ import { PropertyBuildingCoverageModule } from 'src/app/shared/components/proper
 import { QuotePropertyDetailLeftComponent } from './components/property/quote-property-detail/quote-property-detail-left/quote-property-detail-left.component';
 import { QuotePropertyDetailCenterComponent } from './components/property/quote-property-detail/quote-property-detail-center/quote-property-detail-center.component';
 import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
+import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { QuotePropertyDetailRightComponent } from './components/property/quote-p
     PropertyPremiumRateComponent,
     QuotePropertyDetailLeftComponent,
     QuotePropertyDetailCenterComponent,
-    QuotePropertyDetailRightComponent],
+    QuotePropertyDetailRightComponent,
+    QuotePropertyMortgageeComponent],
   imports: [
     CommonModule,
     QuoteRoutingModule,
