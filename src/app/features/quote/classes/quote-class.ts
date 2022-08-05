@@ -161,7 +161,6 @@ export class QuoteClass implements Quote, QuoteValidation {
 
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
-    console.log('quote constructor')
     if (quote) {
       this.existingInit(quote);
     } else if (program && submission) {

@@ -2,7 +2,10 @@ export interface PropertyDeductibleData {
     propertyQuoteDeductibleId: number | null;
     propertyQuoteId: number | null;
     propertyDeductibleId: number | null;
-    sequenceNo: number | null;
+    isAppliedToAll: boolean | null;
+    premisesNumber: number | null;
+    buildingNumber: number | null;
+    sequence: number | null;
     deductibleType: string | null;
     deductibleCode: string | null
     comment: string | null;
@@ -33,4 +36,5 @@ export interface PropertyDeductible extends PropertyDeductibleData {
     amountRequired: boolean;
     amountReadonly: boolean;
     deductibleRequired: boolean;
+    building: string | null;
   }

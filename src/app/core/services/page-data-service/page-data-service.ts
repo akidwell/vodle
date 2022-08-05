@@ -4,6 +4,7 @@ import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
 import { AccountInformation, PolicyInformation } from 'src/app/features/policy/models/policy';
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
+import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { HistoricRoute } from '../../models/historic-route';
 
@@ -29,6 +30,9 @@ export class PageDataService {
   policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
+
+  constructor(private propertyDataService: PropertyDataService) {
+  }
 
   get insuredData(): InsuredClass | null {
     return this._insuredData;
@@ -113,7 +117,7 @@ export class PageDataService {
       this._quoteData.programMappings.forEach((program) => {
         if (program && program.quoteData && program.quoteData.quoteId == quoteId) {
           console.log(program);
-
+          this.propertyDataService.buildingList = program.quoteData.propertyQuote.buildingList;
           activeProgram = program;
         }
       });

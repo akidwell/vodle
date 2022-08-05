@@ -5,7 +5,6 @@ import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
-
 export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
   private _isDirty = false;
   private _isValid = false;
@@ -13,7 +12,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
-
 
   propertyQuoteBuildingId: number | null = null;
   propertyQuoteId: number | null = null;
@@ -29,19 +27,19 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _state: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
-  private _classCode: string | null = null;
+  private _cspCode: string | null = null;
   private _description: string | null = null;
   private _occupancy: string | null = null;
-  private _yearBuilt: string | null = null;
-  private _gutRehab: string | null = null;
-  private _sprinklered: string | null = null;
+  private _yearBuilt: number | null = null;
+  private _gutRehab: number | null = null;
+  private _sprinklered: number | null = null;
   private _construction: string | null = null;
-  private _stories: string | null = null;
-  private _protectionClass: string | null = null;
-  private _roof: string | null = null;
-  private _wiring: string | null = null;
-  private _plumbing: string | null = null;
-  private _hvac: string | null = null;
+  private _stories: number | null = null;
+  private _protectionClass: number | null = null;
+  private _roof: number | null = null;
+  private _wiring: number | null = null;
+  private _plumbing: number | null = null;
+  private _hvac: number | null = null;
 
   isNew = false;
   invalidList: string[] = [];
@@ -128,11 +126,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._countryCode = value;
     this._isDirty = true;
   }
-  get classCode(): string | null {
-    return this._classCode;
+  get cspCode(): string | null {
+    return this._cspCode;
   }
-  set classCode(value: string | null) {
-    this._classCode = value;
+  set cspCode(value: string | null) {
+    this._cspCode = value;
     this._isDirty = true;
   }
   get description(): string | null {
@@ -149,24 +147,24 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._occupancy = value;
     this._isDirty = true;
   }
-  get yearBuilt(): string | null {
+  get yearBuilt(): number | null {
     return this._yearBuilt;
   }
-  set yearBuilt(value: string | null) {
+  set yearBuilt(value: number | null) {
     this._yearBuilt = value;
     this._isDirty = true;
   }
-  get gutRehab(): string | null {
+  get gutRehab(): number | null {
     return this._gutRehab;
   }
-  set gutRehab(value: string | null) {
+  set gutRehab(value: number | null) {
     this._gutRehab = value;
     this._isDirty = true;
   }
-  get sprinklered(): string | null {
+  get sprinklered(): number | null {
     return this._sprinklered;
   }
-  set sprinklered(value: string | null) {
+  set sprinklered(value: number | null) {
     this._sprinklered = value;
     this._isDirty = true;
   }
@@ -177,45 +175,45 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._construction = value;
     this._isDirty = true;
   }
-  get stories(): string | null {
+  get stories(): number | null {
     return this._stories;
   }
-  set stories(value: string | null) {
+  set stories(value: number | null) {
     this._stories = value;
     this._isDirty = true;
   }
-  get protectionClass(): string | null {
+  get protectionClass(): number | null {
     return this._protectionClass;
   }
-  set protectionClass(value: string | null) {
+  set protectionClass(value: number | null) {
     this._protectionClass = value;
     this._isDirty = true;
   }
-  get roof(): string | null {
+  get roof(): number | null {
     return this._roof;
   }
-  set roof(value: string | null) {
+  set roof(value: number | null) {
     this._roof = value;
     this._isDirty = true;
   }
-  get wiring(): string | null {
+  get wiring(): number | null {
     return this._wiring;
   }
-  set wiring(value: string | null) {
+  set wiring(value: number | null) {
     this._wiring = value;
     this._isDirty = true;
   }
-  get plumbing(): string | null {
+  get plumbing(): number | null {
     return this._plumbing;
   }
-  set plumbing(value: string | null) {
+  set plumbing(value: number | null) {
     this._plumbing = value;
     this._isDirty = true;
   }
-  get hvac(): string | null {
+  get hvac(): number | null {
     return this._hvac;
   }
-  set hvac(value: string | null) {
+  set hvac(value: number | null) {
     this._hvac = value;
     this._isDirty = true;
   }
@@ -232,7 +230,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   constructor(building?: PropertyBuilding) {
-    console.log('building')
     if (building) {
       this.existingInit(building);
     } else {
@@ -264,7 +261,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._state = building.state;
     this._zip = building.zip;
     this._countryCode = building.countryCode;
-    this._classCode = building.classCode;
+    this._cspCode = building.cspCode;
     this._description = building.description;
     this._occupancy = building.occupancy;
     this._yearBuilt = building.yearBuilt;

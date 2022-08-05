@@ -136,12 +136,17 @@
                         [(ngModel)]="building.sprinklered" #sprinklered="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="yearBuilt" class="form-label" title="Year Built">Year Built</label>
+                    <label for="yearBuilt" class="form-label" title="Yr. Built">Year Built</label>
                     <input type="text" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit"
                         [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="gutRehab" class="form-label" title="Gut Rehab">Gut Rehab</label>
+                    <label for="gutRehab" class="form-label" title="Yr. Gut Rehab">Gut Rehab</label>
+                    <input type="text" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
+                        [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
+                </div>
+                <div class="col-lg-1">
+                    <label for="gutRehab" class="form-label" title="Square Feet">Sq. Ft</label>
                     <input type="text" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
                         [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
                 </div>
@@ -156,22 +161,22 @@
                         [(ngModel)]="building.protectionClass" #protectionClass="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="roof" class="form-label" title="Roof">Roof</label>
+                    <label for="roof" class="form-label" title="Yr. Roof">Roof</label>
                     <input type="text" class="form-control" id="roof" name="roof" [readonly]="!canEdit"
                         [(ngModel)]="building.roof" #roof="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="wiring" class="form-label" title="Wiring">Wiring</label>
+                    <label for="wiring" class="form-label" title="Yr. Wiring">Wiring</label>
                     <input type="text" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit"
                         [(ngModel)]="building.wiring" #wiring="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="plumbing" class="form-label" title="Plumbing">Plumbing</label>
+                    <label for="plumbing" class="form-label" title="Yr. Plumbing">Plumbing</label>
                     <input type="text" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit"
                         [(ngModel)]="building.plumbing" #plumbing="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <label for="hvac" class="form-label" title="HVAC">HVAC</label>
+                    <label for="hvac" class="form-label" title="Yr. HVAC">HVAC</label>
                     <input type="text" class="form-control" id="hvac" name="hvac" [readonly]="!canEdit"
                         [(ngModel)]="building.hvac" #deschvacription="ngModel">
                 </div>

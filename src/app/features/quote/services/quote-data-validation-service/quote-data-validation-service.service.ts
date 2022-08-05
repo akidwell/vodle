@@ -14,6 +14,7 @@ export class QuoteDataValidationService {
   private _propertyQuoteValidation: QuoteValidationClass | null = null;
 
   propertyQuoteValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteValidation);
+
   //propertyQuoteBuildingValidation$: BehaviorSubject<QuoteValidation | null> = new BehaviorSubject(this.propertyQuoteBuildingValidation);
   constructor(private pageDataService: PageDataService) {
     this.departmentSub = this.pageDataService.quoteData$.subscribe(

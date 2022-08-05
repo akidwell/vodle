@@ -27,7 +27,7 @@ export class PropertyDeductibleGroupComponent implements OnInit {
   addDeductible() {
     if (this.classType == ClassTypeEnum.Quote) {
       const newDeductible = new PropertyQuoteDeductibleClass();
-      newDeductible.sequenceNo = this.getNextSequence();
+      newDeductible.sequence = this.getNextSequence();
       this.deductibles.push(newDeductible);
     }
     else if (this.classType == ClassTypeEnum.Policy) {
@@ -58,7 +58,7 @@ export class PropertyDeductibleGroupComponent implements OnInit {
       return 1;
     }
     else {
-      return Math.max(...this.deductibles.map(o => o.sequenceNo ?? 0)) + 1;
+      return Math.max(...this.deductibles.map(o => o.sequence ?? 0)) + 1;
     }
   }
 

@@ -45,6 +45,10 @@ ng-select .ng-dropdown-panel {
   min-width: 100%;
 }
 
+.ng-select.max-width .ng-dropdown-panel {
+  width: 550px !important;
+}
+
 .ng-select.ng-select-disabled>.ng-select-container {
   background-color: #e9ecef !important;
 }
