@@ -188,6 +188,23 @@ body {
 
 
 /* Collapsable panel */
+.expanded {
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  margin-left: -6px;
+  margin-right: -6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  border-radius: 8px;
+  background-color: whitesmoke;
+  cursor: default;
+  border: 1px solid grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 12px 0 rgba(0, 0, 0, 0.19);
+}
+
 .collapsed {
   position: relative;
   cursor: row-resize;

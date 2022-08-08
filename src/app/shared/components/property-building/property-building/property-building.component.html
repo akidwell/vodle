@@ -114,7 +114,7 @@
                 <div class="col-lg-6">
                     <label for="description" class="form-label" title="Property Description">Property
                         Description</label>
-                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit" maxlength="250"
                         [(ngModel)]="building.description" #description="ngModel">
                 </div>
             </div>
@@ -129,59 +129,60 @@
                 </div>
                 <div class="col-lg-4">
                     <label for="occupancy" class="form-label" title="Occupancy">Occupancy</label>
-                    <input type="text" class="form-control" id="occupancy" name="occupancy" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="occupancy" name="occupancy" [readonly]="!canEdit" maxlength="250"
                         [(ngModel)]="building.occupancy" #occupancy="ngModel">
                 </div>
                 <div class="col-lg-3">
                     <label for="construction" class="form-label" title="Construction">Construction</label>
-                    <input type="text" class="form-control" id="construction" name="construction" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="construction" name="construction" [readonly]="!canEdit" maxlength="250"
                         [(ngModel)]="building.construction" #construction="ngModel">
                 </div>
             </div>
             <div class="empty-row"></div>
             <div class="row">
                 <div class="col-lg-1">
-                    <label for="yearBuilt" class="form-label" title="Yr. Built">Year Built</label>
-                </div>    
+                    <label for="yearBuilt" class="form-label" title="Year Built">Year Built</label>
+                </div>
                 <div class="col-lg-1">
-                    <label for="gutRehab" class="form-label" title="Yr. Gut Rehab">Year Gut Rehab</label>
-                </div>   
+                    <label for="gutRehab" class="form-label" title="Year Gut Rehab">Year Gut Rehab</label>
+                </div>
                 <div class="col-lg-1">
                     <label for="squareFeet" class="form-label" title="Square Feet">Sq. Ft</label>
-                </div>   
+                </div>
                 <div class="col-lg-1">
                     <label for="itv" class="form-label" title="ITV">ITV</label>
-                </div>   
+                </div>
                 <div class="col-lg-1">
                     <label for="stories" class="form-label" title="Stories">Stories</label>
-                </div>   
+                </div>
                 <div class="col-lg-1">
                     <label for="sprinklered" class="form-label" title="Sprinkler %">Sprinkler %</label>
-                </div>   
+                </div>
                 <div class="col-lg-1">
                     <label for="protectionClass" class="form-label" title="Protection Class">Protection Class</label>
-                </div>   
-                <div class="col-lg-1">         
-                </div>   
+                </div>
+                <div class="col-lg-1">
+                </div>
                 <div class="col-lg-4">
                     <div class="row" style="padding-right: 12px;padding-left: 10px;">
                         <div class="col-lg-12" style="border-bottom: 2px solid black;">
-                            <label for="roof" style="text-align: center;" class="form-label" title="Yr. Roof">LATEST UPDATES (YEAR)</label>
-                        </div>   
+                            <label for="roof" style="text-align: center;" class="form-label" title="Yr. Roof">LATEST
+                                UPDATES (YEAR)</label>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-3">
                             <label for="roof" class="form-label" title="Roof">Roof</label>
-                        </div>   
+                        </div>
                         <div class="col-lg-3">
                             <label for="wiring" class="form-label" title="Wiring">Wiring</label>
-                        </div>   
+                        </div>
                         <div class="col-lg-3">
                             <label for="plumbing" class="form-label" title="Plumbing">Plumbing</label>
-                        </div>   
+                        </div>
                         <div class="col-lg-3">
                             <label for="hvac" class="form-label" title="HVAC">HVAC</label>
-                        </div>   
+                        </div>
                     </div>
                 </div>
             </div>
@@ -204,54 +205,55 @@
                         [(ngModel)]="building.itv" #itv="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit" maxInt mask="0*"
                         [(ngModel)]="building.stories" #stories="ngModel">
-                </div>       
+                </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control right" id="sprinklered" name="sprinklered"
                         [readonly]="!canEdit" mask="separator.0" suffix="%" [dropSpecialCharacters]="false"
                         [(ngModel)]="building.sprinklered" #sprinklered="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="protectionClass" name="protectionClass"
-                        [readonly]="!canEdit" [(ngModel)]="building.protectionClass" #protectionClass="ngModel">
+                    <ng-select id="protectionClass" [items]="protectionClassList" [readonly]="!canEdit"
+                        name="protectionClass" [(ngModel)]="building.protectionClass" #protectionClass="ngModel">
+                    </ng-select>
                 </div>
-                <div class="col-lg-1"></div>      
-                    <div class="col-lg-1">
-                        <input type="text" class="form-control" id="roof" name="roof" [readonly]="!canEdit" mask="0000"
-                            [(ngModel)]="building.roof" #roof="ngModel">
-                    </div>
-                    <div class="col-lg-1">
-                        <input type="text" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" mask="0000"
-                            [(ngModel)]="building.wiring" #wiring="ngModel">
-                    </div>
-                    <div class="col-lg-1">
-                        <input type="text" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit"
-                            mask="0000" [(ngModel)]="building.plumbing" #plumbing="ngModel">
-                    </div>
-                    <div class="col-lg-1">
-                        <input type="text" class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" mask="0000"
-                            [(ngModel)]="building.hvac" #hvac="ngModel">
-                    </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="roof" name="roof" [readonly]="!canEdit" mask="0000"
+                    [(ngModel)]="building.roof" #roof="ngModel">
             </div>
-            <div class="empty-row"></div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
-                        [disabled]="!canEdit">Copy</button>
-                    <button *ngIf="!building.isNew" class="btn btn-secondary margin-left"
-                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
-                    <button *ngIf="building.isNew" class="btn btn-secondary margin-left"
-                        (click)=openDeleteConfirmation() [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
-                    <button *ngIf="canEdit" class="btn btn-secondary margin-left" (click)=addCoverage()
-                        hover-class="btn-success">Add Coverage</button>
-                </div>
-                <div [id]='anchorId'></div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" mask="0000"
+                    [(ngModel)]="building.wiring" #wiring="ngModel">
             </div>
-            <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
-                [openDelay]="1000">
-                <fa-icon [icon]="faAngleUp"></fa-icon>
-            </button>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit" mask="0000"
+                    [(ngModel)]="building.plumbing" #plumbing="ngModel">
+            </div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" mask="0000"
+                    [(ngModel)]="building.hvac" #hvac="ngModel">
+            </div>
         </div>
+        <div class="empty-row"></div>
+        <div class="row">
+            <div class="col-lg-12">
+                <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
+                    [disabled]="!canEdit">Copy</button>
+                <button *ngIf="!building.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+                    [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
+                <button *ngIf="building.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+                    [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
+                <button *ngIf="canEdit" class="btn btn-secondary margin-left" (click)=addCoverage()
+                    hover-class="btn-success">Add Coverage</button>
+            </div>
+            <div [id]='anchorId'></div>
+        </div>
+        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+            [openDelay]="1000">
+            <fa-icon [icon]="faAngleUp"></fa-icon>
+        </button>
     </div>
+</div>
 </div>
