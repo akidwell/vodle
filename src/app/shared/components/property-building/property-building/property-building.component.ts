@@ -25,6 +25,7 @@ export class PropertyBuildingComponent implements OnInit {
   anchorId!: string;
   isLoadingAddress = false;
   addressSub!: Subscription;
+  protectionClassList: number[] = [1,2,3,4,5,6,7,8,9,10];
 
   @Input() public building!: PropertyBuilding;
   @Input() public canEdit = false;
