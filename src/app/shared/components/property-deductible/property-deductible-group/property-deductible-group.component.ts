@@ -35,6 +35,20 @@ export class PropertyDeductibleGroupComponent implements OnInit {
     }
   }
 
+  copyDeductible(deductible: PropertyDeductible) {
+    if (this.classType == ClassTypeEnum.Quote) {
+      const newDeductible: PropertyQuoteDeductibleClass = Object.create(deductible);
+      newDeductible.propertyQuoteDeductibleId = null;
+      newDeductible.isNew = true;
+      newDeductible.isDeductibleLocked = false;
+      newDeductible.isDeductibleTypeLocked = false;
+      newDeductible.isExcludeLocked = false;
+      newDeductible.isSubjectToMinLocked = false;
+      newDeductible.markDirty();
+      this.deductibles.push(newDeductible);
+    }
+  }
+
   deleteDeductible(deductible: PropertyDeductible) {
     const index = this.deductibles.indexOf(deductible, 0);
     if (index > -1) {
