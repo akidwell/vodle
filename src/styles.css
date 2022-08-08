@@ -185,3 +185,33 @@ body {
 .top-bordered {
   border-top: 2px solid black;
 }
+
+
+/* Collapsable panel */
+.collapsed {
+  position: relative;
+  cursor: row-resize;
+}
+
+.collapse-bar {
+  background: none;
+  padding: 0;
+  margin-left: -1px !important;
+  margin-bottom: -1px;
+  color: #00274e;
+  text-align: center;
+  cursor: pointer;
+  background-color: #e6e9ed;
+  border: 1px solid grey;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  width: calc(100% + 2px);
+  height: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.collapse-bar:hover {
+  background-color: #ccd4dc;
+}

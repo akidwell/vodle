@@ -21,19 +21,27 @@ export class PropertyDeductibleComponent implements OnInit {
   collapsed = true;
   faAngleUp = faAngleUp;
   buildingsSub!: Subscription;
+  anchorId!: string;
 
+  @Input() public index = 0;
   @Input() public programId!: number;
   @Input() public deductible!: PropertyDeductible;
   @Input() public canEdit = false;
+  @Output() copyDeductible: EventEmitter<PropertyDeductible> = new EventEmitter();
   @Output() deleteDeductible: EventEmitter<PropertyDeductible> = new EventEmitter();
 
-  constructor( private dropdowns: DropDownsService, private confirmationDialogService: ConfirmationDialogService, private quoteDataValidationService: PropertyDataService) { }
+  constructor( private dropdowns: DropDownsService, private confirmationDialogService: ConfirmationDialogService, private propertyDataService: PropertyDataService) { }
 
   ngOnInit(): void {
+    this.anchorId = 'focusHere' + this.index;
+    if (this.deductible.isNew) {
+      this.collapseExpand(false);
+      this.focus();
+    }
     this.deductibleTypes$ = this.dropdowns.getDeductibleTypes(this.programId);
     this.deductibleCodes$ = this.dropdowns.getDeductibleCodes(this.programId);
     this.propertyDeductibles$ = this.dropdowns.getPropertyDeductibles();
-    this.buildingsSub = this.quoteDataValidationService.buildingList$.subscribe({
+    this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
         if (this.buildingList.find(c => c.code == this.deductible.building) == null) {
@@ -55,6 +63,10 @@ export class PropertyDeductibleComponent implements OnInit {
     });
   }
 
+  copy(): void {
+    this.copyDeductible.emit(this.deductible);
+  }
+
   async delete() {
     this.deleteDeductible.emit(this.deductible);
   }
@@ -73,5 +85,12 @@ export class PropertyDeductibleComponent implements OnInit {
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
+
+  focus(): void {
+    this.collapsed = false;
+    setTimeout(() => {
+      document.getElementById(this.anchorId)?.scrollIntoView();
+    }, 250);
   }
 }
