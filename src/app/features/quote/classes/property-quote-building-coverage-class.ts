@@ -1,6 +1,7 @@
 
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { QuoteValidation } from '../models/quote-validation';
+import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 
 export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage {
   private _isDirty = false;
@@ -10,21 +11,41 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   private _validateOnLoad = true;
   propertyQuoteBuildingCoverageId: number | null = null;
   propertyQuoteBuildingId: number | null = null;
-  propertyCoverageId: number | null = null;
   isNew = false;
   isImport = false;
+  focus = false;
+  expand = false;
+  subjectNumber: number | null = null;
+  premisesNumber: number | null = null;
+  buildingNumber: number | null = null;
+  building!: PropertyQuoteBuildingClass;
 
+  get buildingIndex(): string {
+    return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
+  }
+
+  private _propertyCoverageId: number | null = null;
   private _limit: number | null = null;
   private _coinsurancePct: number | null = null;
   private _causeOfLossId: number | null = null;
   private _valuationId: number | null = null;
   private _additionalDetail: string | null = null;
 
+  get propertyCoverageId() : number | null {
+    return this._propertyCoverageId;
+  }
+  set propertyCoverageId(value: number | null) {
+    this._propertyCoverageId = value;
+    this.building?.calculateITV();
+    this._isDirty = true;
+  }
+
   get limit() : number | null {
     return this._limit;
   }
   set limit(value: number | null) {
     this._limit = value;
+    this.building?.calculateITV();
     this._isDirty = true;
   }
   get coinsurancePct() : number | null {
@@ -115,6 +136,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
 
   newInit() {
     this.isNew = true;
+    this.expand = true;
   }
   markClean() {
     this._isDirty = false;
@@ -129,4 +151,17 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     // No special rules
   }
 
+  toJSON() {
+    return {
+      propertyQuoteBuildingCoverageId: this.propertyQuoteBuildingCoverageId,
+      propertyQuoteBuildingId: this.propertyQuoteBuildingId,
+      propertyCoverageId: this.propertyCoverageId,
+      limit: this.limit,
+      coinsurancePct: this.coinsurancePct,
+      causeOfLossId: this.causeOfLossId,
+      valuationId: this.valuationId,
+      additionalDetail: this.additionalDetail,
+      isNew: this.isNew
+    };
+  }
 }

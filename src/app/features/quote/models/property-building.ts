@@ -1,3 +1,4 @@
+import { PropertyQuoteClass } from '../classes/property-quote-class';
 import { PropertyBuildingCoverage } from './property-building-coverage';
 
 export interface PropertyBuildingData {
@@ -48,4 +49,12 @@ export interface PropertyBuilding extends PropertyBuildingData {
     validateAddress: boolean;
     buildingIndex: string;
     address: string;
+    isExpanded: boolean;
+    expand: boolean;
+    focus: boolean;
+    propertyQuote: PropertyQuoteClass;
+    addCoverage(): void;
+    copyCoverage(coverage: PropertyBuildingCoverage): void;
+    deleteCoverage(coverage: PropertyBuildingCoverage): void;
+    toJSON(): any;
   }

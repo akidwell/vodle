@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { ImportPolicy } from '../../models/import-policy';
 import { ImportResult } from '../../models/import-response';
-import { PageState } from '../../models/state';
+import { PageState } from '../../../../core/models/page-state';
 import { SearchResult } from '../../models/search-result';
 import { ImportService } from '../../services/import/import.service';
 import { UserAuth } from 'src/app/core/authorization/user-auth';

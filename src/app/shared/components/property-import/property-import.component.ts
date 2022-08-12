@@ -46,7 +46,7 @@ export class PropertyImportComponent {
               )
               .then(async (result: boolean) => {
                 if (result) {
-                  this.quote.propertyQuote.propertyQuoteBuilding = [];
+                  this.quote.propertyQuote.clearBuildings();
                   await this.importQuote(Number(quoteId), file);
                 }
               });

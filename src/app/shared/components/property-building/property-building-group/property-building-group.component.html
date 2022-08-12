@@ -1,8 +1,38 @@
+<div class="col-lg-12">
+    <button class="btn btn-sm btn-secondary margin-left" *ngIf="showCollapseAll" (click)="collapseAll()">Collapse
+        All</button>
+</div>
 <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
         Locations/Building Schedule
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+    </div>
+    <div class="card-body bottom-bordered">
+        <div class="row" *ngIf="true">
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
+                    [(ngModel)]="propertyQuote.searchSubject" #subjectNumber="ngModel" [readonly]="!canEdit">
+            </div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
+                    [(ngModel)]="propertyQuote.searchPremises" #premisesNumber="ngModel" [readonly]="!canEdit">
+            </div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+                    [(ngModel)]="propertyQuote.searchBuilding" #buildingNumber="ngModel" [readonly]="!canEdit">
+            </div>
+            <div class="col-lg-7">
+                <input type="address" class="form-control" id="address" #address="ngModel" name="address"
+                    [(ngModel)]="propertyQuote.searchAddress">
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-md btn-primary" (click)="clear()" name="verify">Clear
+                </button>
+                <button class="btn btn-md btn-primary margin-left" (click)="hide()" name="verify">Hide
+                </button>
+            </div>
+        </div>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div class="card-body" *ngIf="buildings.length > 0">
@@ -20,15 +50,27 @@
                     <label>Address</label>
                 </div>
             </div>
-            <div *ngFor="let item of buildings; let i = index">
-                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" (copyBuilding)=copyBuilding($event)
-                    (deleteBuilding)=deleteBuilding($event)></rsps-property-building>
+            <div *ngFor="let item of policies$ | async; let i = index">
+                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType"
+                    (copyBuilding)=copyBuilding($event) (deleteBuilding)=deleteBuilding($event)
+                    (addCoverage)=addCoverage($event)>
+                </rsps-property-building>
+            </div>
+            <div class="d-flex justify-content-between p-2">
+                <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                    [rotate]="true" [boundaryLinks]="true">
+                </ngb-pagination>
+                <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="pageSize">
+                    <option [ngValue]="8">8 items per page</option>
+                    <option [ngValue]="12">12 items per page</option>
+                    <option [ngValue]="15">15 items per page</option>
+                </select>
             </div>
         </div>
     </div>
     <div class="card-footer">
         <button class="footer-button" (click)="addBuilding();">Add
             Location/Building</button>
-        <div class="footer-count">Buldings: {{buildings.length}}</div>
+        <div class="footer-count">Buldings: {{(policies$ | async)?.length}}/{{buildingCount}}</div>
     </div>
 </div>
