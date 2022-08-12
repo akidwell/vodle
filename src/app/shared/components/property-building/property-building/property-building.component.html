@@ -1,24 +1,21 @@
 <div class="component-row">
-    <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+    <div [ngClass]="!building.isExpanded ? 'collapsed' : 'expanded'">
         <div (click)="collapseExpand(false)">
-            <div class="row" *ngIf="collapsed">
+            <div class="row" *ngIf="!building.isExpanded">
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
                         [(ngModel)]="building.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit"
-                        [required]="canEdit && building.subjectNumberRequired" click-stop-propagation
-                        ngbTooltip="Subject #" [openDelay]="1000">
+                        [required]="canEdit && building.subjectNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
                         [(ngModel)]="building.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.premisesNumberRequired" click-stop-propagation ngbTooltip="Premises #"
-                        [openDelay]="1000">
+                        [required]="building.premisesNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
                         [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.buildingNumberRequired" click-stop-propagation ngbTooltip="Building #"
-                        [openDelay]="1000">
+                        [required]="building.buildingNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-8">
                     <input type="address" class="form-control" id="address" #address="ngModel" name="address" readonly
@@ -35,14 +32,14 @@
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
                             <button *ngIf="building.isNew && canEdit" hover-class="btn-warning"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
-                            <button *ngIf="building.isNew && canEdit" (click)=addCoverage() click-stop-propagation
+                            <button *ngIf="building.isNew && canEdit" (click)=add() click-stop-propagation
                                 ngbDropdownItem>Add Coverage</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="!building.isExpanded">
             <div class="row">
                 <div class="col-lg-1">
                     <label for="subjectNumber" class="form-label" title="locationNumber">Subject #</label>
@@ -245,12 +242,12 @@
                     [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
                 <button *ngIf="building.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
                     [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
-                <button *ngIf="canEdit" class="btn btn-secondary margin-left" (click)=addCoverage()
+                <button *ngIf="canEdit" class="btn btn-secondary margin-left" (click)=add()
                     hover-class="btn-success">Add Coverage</button>
             </div>
-            <div [id]='anchorId'></div>
         </div>
-        <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+        <div [id]='anchorId'></div>
+        <button *ngIf="building.isExpanded" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
             [openDelay]="1000">
             <fa-icon [icon]="faAngleUp"></fa-icon>
         </button>

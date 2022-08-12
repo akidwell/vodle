@@ -1,3 +1,4 @@
+import { PropertyQuoteBuildingClass } from '../classes/property-quote-building-class';
 import { AdditionalInterestData } from './additional-interest';
 import { MortgageeData } from './mortgagee';
 import { PropertyBuilding } from './property-building';
@@ -14,5 +15,11 @@ export interface PropertyQuoteData {
 }
 
 export interface PropertyQuote extends PropertyQuoteData {
-
+  searchSubject: string;
+  searchPremises: string;
+  searchBuilding: string;
+  searchAddress: string;
+  addBuilding(building: PropertyBuilding): void;
+  deleteBuilding(building: PropertyBuilding): void;
+  clearBuildings(): void;
 }

@@ -199,10 +199,8 @@ export class QuoteClass implements Quote, QuoteValidation {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
-    console.log(this.propertyQuote);
     this.setReadonlyFields();
     this.setRequiredFields();
-    console.log(this.submission);
     this.validateQuoteChildren();
   }
   newInit(program: ProgramClass, submission: SubmissionClass) {

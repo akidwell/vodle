@@ -51,6 +51,10 @@ export class PropertyDeductibleComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.buildingsSub?.unsubscribe();
+  }
+  
   collapseExpand(event: boolean) {
     this.collapsed = event;
   }

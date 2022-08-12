@@ -7,7 +7,6 @@ import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.se
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
 
@@ -33,16 +32,22 @@ export class PropertyBuildingComponent implements OnInit {
   @Input() public classType!: ClassTypeEnum;
   @Output() deleteBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
   @Output() copyBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
+  @Output() addCoverage: EventEmitter<PropertyBuilding> = new EventEmitter();
 
   constructor(private confirmationDialogService: ConfirmationDialogService, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService,
     private messageDialogService: MessageDialogService) { }
 
   ngOnInit(): void {
-    this.anchorId = 'focusHere' + this.index;
-    if (this.building.isNew && !this.building.isImport) {
+    this.anchorId = 'focusBuilding' + this.index;
+    if (this.building.expand) {
+      this.building.expand = false;
       this.collapseExpand(false);
       this.focus();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.addressSub?.unsubscribe();
   }
 
   changeState(state: State) {
@@ -89,6 +94,7 @@ export class PropertyBuildingComponent implements OnInit {
       this.firstExpand = false;
     }
     this.collapsed = event;
+    this.building.isExpanded = !this.collapsed;
   }
 
   copy(): void {
@@ -107,19 +113,13 @@ export class PropertyBuildingComponent implements OnInit {
     this.deleteBuilding.emit(this.building);
   }
 
-  addCoverage() {
-    if (this.classType == ClassTypeEnum.Quote) {
-      const newCoverage = new PropertyQuoteBuildingCoverageClass();
-      this.building.propertyQuoteBuildingCoverage.push(newCoverage);
-    }
-    else if (this.classType == ClassTypeEnum.Policy) {
-      //TODO
-    }
+  add(): void {
+    this.addCoverage.emit(this.building);
   }
+
   focus(): void {
-    this.collapsed = false;
     setTimeout(() => {
-      document.getElementById(this.anchorId)?.scrollIntoView();
+      document.getElementById(this.anchorId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 250);
   }
 }

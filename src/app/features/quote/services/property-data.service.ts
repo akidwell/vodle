@@ -12,5 +12,4 @@ export class PropertyDataService {
     this._buildingList = value;
     this.buildingList$.next(this._buildingList);
   }
-
 }
