@@ -11,7 +11,7 @@
       </li>
       <ng-container *ngFor="let program of department.programMappings">
         <li class="nav-item" *ngIf="program.quoteData != null;" >
-          <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}}</a>
+          <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}} <span *ngIf="program.quoteData.validationResults.isDirty">*</span></a>
         </li>
       </ng-container>
       <li class="nav-item">

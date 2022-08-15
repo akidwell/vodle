@@ -11,7 +11,7 @@ export class QuoteSummaryComponent implements OnInit {
   constructor(private pageDataService: PageDataService) { }
 
   ngOnInit(): void {
-    this.pageDataService.selectedProgram = null;
+    //this.pageDataService.selectedProgram = null;
   }
 
 }

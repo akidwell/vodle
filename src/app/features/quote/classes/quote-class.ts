@@ -267,8 +267,8 @@ export class QuoteClass implements Quote, QuoteValidation {
     //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   }
   validateQuote() {
-    this._canBeSaved = true;
-    this._errorMessages = ['quote'];
+    //this._canBeSaved = true;
+    this._errorMessages = [];
     this._isValid = true;
     this.validationResults.mapValues(this);
     this.validateQuoteChildren();

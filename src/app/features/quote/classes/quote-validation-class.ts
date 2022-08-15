@@ -44,4 +44,10 @@ export class QuoteValidationClass implements QuoteValidation {
     this.isValid = item.isValid;
     this.errorMessages = item.errorMessages;
   }
+  resetValidation() {
+    this.isDirty = false;
+    this.isEmpty = false;
+    this.isValid = true;
+    this.errorMessages = [];
+  }
 }

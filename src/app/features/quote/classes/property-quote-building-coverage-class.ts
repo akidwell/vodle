@@ -82,7 +82,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
       //implement rules
       this._canBeSaved = true;
       this._isValid = true;
-      this._errorMessages = ['property quote coverage'];
+      //this._errorMessages = [];
       this._validateOnLoad = false;
     }
   }
