@@ -4,6 +4,9 @@ import { PropertyBuilding } from '../models/property-building';
 import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
+import { PropertyQuoteClass } from './property-quote-class';
+import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
+import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
   private _isDirty = false;
@@ -13,8 +16,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  propertyQuoteBuildingId: number | null = null;
-  propertyQuoteId: number | null = null;
+  propertyQuoteBuildingId = 0;
+  propertyQuoteId = 0;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
   taxCode: string | null = null;
 
@@ -47,6 +50,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   invalidList: string[] = [];
   isZipLookup = false;
   isImport = false;
+  isExpanded = false;
+  expand = false;
+  focus = false;
+  propertyQuote!: PropertyQuoteClass;
 
   get subjectNumber() : number | null {
     return this._subjectNumber;
@@ -54,6 +61,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   set subjectNumber(value: number | null) {
     this._subjectNumber = value;
     this._isDirty = true;
+    this.propertyQuoteBuildingCoverage.forEach(c => c.subjectNumber = value);
   }
   get isDirty(): boolean {
     return this._isDirty ;
@@ -78,6 +86,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   set premisesNumber(value: number | null) {
     this._premisesNumber = value;
     this._isDirty = true;
+    this.propertyQuoteBuildingCoverage.forEach(c => c.premisesNumber = value);
   }
   get buildingNumber(): number | null {
     return this._buildingNumber;
@@ -85,6 +94,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   set buildingNumber(value: number | null) {
     this._buildingNumber = value;
     this._isDirty = true;
+    this.propertyQuoteBuildingCoverage.forEach(c => c.buildingNumber = value);
   }
   get street1(): string | null {
     return this._street1;
@@ -243,13 +253,15 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     (!this.street2 ? '' : ', ' + this.street2) +
     (!this.city ? '' : ', ' + this.city ) +
     (!this.state ? '' : ', ' + this.state) +
-    (!this.zip ? '' : ' ' + this.zip);
+    (!this.zip ? '' : ' ' + this.zipPipe.transform(this.zip));
   }
+
+  private zipPipe = new ZipCodePipe();
 
   calculateITV() {
     const buildingLimit = this.propertyQuoteBuildingCoverage.find(c => c.propertyCoverageId == 1)?.limit;
     if (this._squareFeet == null || buildingLimit == null) {
-      this._itv = null;
+      this.itv = null;
     }
     else {
       this._itv = Math.round((buildingLimit ?? 0) / (this._squareFeet ?? 1));
@@ -317,8 +329,13 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._itv = building.itv;
 
     const coverages: PropertyQuoteBuildingCoverageClass[] = [];
-    building.propertyQuoteBuildingCoverage.forEach((element) => {
-      coverages.push(new PropertyQuoteBuildingCoverageClass(element));
+    building.propertyQuoteBuildingCoverage?.forEach((element) => {
+      const coverage = new PropertyQuoteBuildingCoverageClass(element);
+      coverage.building = this;
+      coverage.subjectNumber = this._subjectNumber;
+      coverage.premisesNumber = this._premisesNumber;
+      coverage.buildingNumber = this._buildingNumber;
+      coverages.push(coverage);
     });
     this.propertyQuoteBuildingCoverage = coverages;
 
@@ -333,6 +350,40 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       c.isNew = true;
       c.isImport = true;
     });
+  }
+
+  addCoverage() {
+    const newCoverage = new PropertyQuoteBuildingCoverageClass();
+    newCoverage.building = this;
+    newCoverage.focus = true;
+    newCoverage.subjectNumber = this._subjectNumber;
+    newCoverage.premisesNumber = this._premisesNumber;
+    newCoverage.buildingNumber = this._buildingNumber;
+    this.propertyQuoteBuildingCoverage.push(newCoverage);
+    this.propertyQuote.filterCoverages();
+  }
+
+  copyCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
+    coverage.building = this;
+    coverage.expand = true;
+    coverage.focus = true;
+    coverage.propertyQuoteBuildingCoverageId = 0;
+    coverage.propertyQuoteBuildingId = 0;
+    coverage.subjectNumber = this._subjectNumber;
+    coverage.premisesNumber = this._premisesNumber;
+    coverage.buildingNumber = this._buildingNumber;
+    coverage.isNew = true;
+    coverage.markDirty();
+    this.propertyQuoteBuildingCoverage.push(coverage);
+    this.propertyQuote.filterCoverages();
+  }
+
+  deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
+    const index = this.propertyQuoteBuildingCoverage.indexOf(coverage, 0);
+    if (index > -1) {
+      this.propertyQuoteBuildingCoverage.splice(index, 1);
+    }
+    this.propertyQuote.filterCoverages();
   }
 
   subjectNumberRequired = true;
@@ -360,6 +411,9 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   newInit() {
+    this.propertyQuoteBuildingId = 0;
+    this.propertyQuoteId = 0;
+    this.expand = true;
     this.isNew = true;
   }
 
@@ -386,5 +440,41 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
   get validateAddress(): boolean {
     return !(!this.street1 || !this.city);
+  }
+
+  toJSON() {
+    const coverages: PropertyBuildingCoverageData[] = [];
+    this.propertyQuoteBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
+
+    return {
+      propertyQuoteBuildingId: this.propertyQuoteBuildingId,
+      propertyQuoteId: this.propertyQuoteId,
+      subjectNumber: this.subjectNumber,
+      premisesNumber: this.premisesNumber,
+      buildingNumber: this.buildingNumber,
+      street1: this.street1,
+      street2: this.street2,
+      city: this.city,
+      state: this.state,
+      zip: this.zip,
+      countryCode: this.countryCode,
+      cspCode: this.cspCode,
+      taxCode: this.taxCode,
+      description: this.description,
+      occupancy: this.occupancy,
+      squareFeet: this.squareFeet,
+      itv: this.itv,
+      yearBuilt: this.yearBuilt,
+      gutRehab: this.gutRehab,
+      sprinklered: this.sprinklered,
+      construction: this.construction,
+      stories: this.stories,
+      protectionClass: this.protectionClass,
+      roof: this.roof,
+      wiring: this.wiring,
+      plumbing: this.plumbing,
+      hvac: this.hvac,
+      propertyQuoteBuildingCoverage: coverages
+    };
   }
 }

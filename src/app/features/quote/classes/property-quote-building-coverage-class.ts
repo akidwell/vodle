@@ -1,6 +1,8 @@
 
-import { PropertyBuildingCoverage } from '../models/property-building-coverage';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { QuoteValidation } from '../models/quote-validation';
+import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 
 export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage {
   private _isDirty = false;
@@ -8,23 +10,43 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
-  propertyQuoteBuildingCoverageId: number | null = null;
-  propertyQuoteBuildingId: number | null = null;
-  propertyCoverageId: number | null = null;
+  propertyQuoteBuildingCoverageId = 0;
+  propertyQuoteBuildingId = 0;
   isNew = false;
   isImport = false;
+  focus = false;
+  expand = false;
+  subjectNumber: number | null = null;
+  premisesNumber: number | null = null;
+  buildingNumber: number | null = null;
+  building!: PropertyQuoteBuildingClass;
 
+  get buildingIndex(): string {
+    return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
+  }
+
+  private _propertyCoverageId: number | null = null;
   private _limit: number | null = null;
   private _coinsurancePct: number | null = null;
   private _causeOfLossId: number | null = null;
   private _valuationId: number | null = null;
   private _additionalDetail: string | null = null;
 
+  get propertyCoverageId() : number | null {
+    return this._propertyCoverageId;
+  }
+  set propertyCoverageId(value: number | null) {
+    this._propertyCoverageId = value;
+    this.building?.calculateITV();
+    this._isDirty = true;
+  }
+
   get limit() : number | null {
     return this._limit;
   }
   set limit(value: number | null) {
     this._limit = value;
+    this.building?.calculateITV();
     this._isDirty = true;
   }
   get coinsurancePct() : number | null {
@@ -56,6 +78,16 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this._isDirty = true;
   }
 
+  private currencyPipe = new CurrencyPipe('en-US');
+  get limitFormatted(): string {
+    const currency = this.currencyPipe.transform(this.limit, 'USD', 'symbol', '1.0-0');
+    return currency ?? '';
+  }
+  private percentPipe = new PercentPipe('en-US');
+  get coinsurancePctFormatted(): string {
+    const percent = this.percentPipe.transform((this.coinsurancePct ?? 0) / 100);
+    return percent ?? '';
+  }
   get isDirty() : boolean {
     return this._isDirty;
   }
@@ -69,7 +101,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     return this._isValid;
   }
 
-  constructor(coverage?: PropertyBuildingCoverage) {
+  constructor(coverage?: PropertyBuildingCoverageData) {
     if (coverage) {
       this.existingInit(coverage);
     } else {
@@ -87,7 +119,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     }
   }
 
-  existingInit(coverage: PropertyBuildingCoverage) {
+  existingInit(coverage: PropertyBuildingCoverageData) {
     this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
@@ -114,7 +146,10 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   valuationIdReadonly = false;
 
   newInit() {
+    this.propertyQuoteBuildingCoverageId = 0;
+    this.propertyQuoteBuildingId = 0;
     this.isNew = true;
+    this.expand = true;
   }
   markClean() {
     this._isDirty = false;
@@ -129,4 +164,16 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     // No special rules
   }
 
+  toJSON() {
+    return {
+      propertyQuoteBuildingCoverageId: this.propertyQuoteBuildingCoverageId,
+      propertyQuoteBuildingId: this.propertyQuoteBuildingId,
+      propertyCoverageId: this.propertyCoverageId,
+      limit: this.limit,
+      coinsurancePct: this.coinsurancePct,
+      causeOfLossId: this.causeOfLossId,
+      valuationId: this.valuationId,
+      additionalDetail: this.additionalDetail
+    };
+  }
 }

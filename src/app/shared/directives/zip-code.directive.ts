@@ -95,6 +95,9 @@ export class ZipCodeDirective implements ControlValueAccessor {
     if (value !== null) {
       this.el.nativeElement.value = this.zipPipe.transform(value?.toString());
     }
+    else {
+      this.el.nativeElement.value = null;
+    }
   }
 
   public onChange = (_: any) => {};

@@ -5,6 +5,7 @@ import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mo
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
+import { PropertyBuildingData } from '../models/property-building';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
 import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
@@ -29,8 +30,6 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
   propertyQuoteMortgagee: MortgageeClass[] = [];
   propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
   propertyQuoteMortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
-
-
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -67,7 +66,6 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
             coverages.push(new PropertyQuoteBuildingCoverageClass(x));
           });
         });
-        console.log(coverages);
         largest = Math.max(...coverages.map( c => c.limit? c.limit : 0));
         return largest;
       }
@@ -93,6 +91,10 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     return res;
   }
 
+  get buildingCount(): number {
+    return this.propertyQuoteBuilding?.length ?? 0;
+  }
+
   get coverageCount(): number {
     let total = 0;
     this.propertyQuoteBuilding.forEach((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
@@ -110,6 +112,92 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
       buildings.push(code);
     });
     return buildings;
+  }
+
+  private _searchSubject = '';
+  get searchSubject() : string {
+    return this._searchSubject;
+  }
+  set searchSubject(value: string) {
+    this._searchSubject = value;
+    this.filterBuildingsCoverages();
+  }
+  private _searchPremises = '';
+  get searchPremises() : string {
+    return this._searchPremises;
+  }
+  set searchPremises(value: string) {
+    this._searchPremises = value;
+    this.filterBuildingsCoverages();
+  }
+  private _searchBuilding = '';
+  get searchBuilding() : string {
+    return this._searchBuilding;
+  }
+  set searchBuilding(value: string) {
+    this._searchBuilding = value;
+    this.filterBuildingsCoverages();
+  }
+  private _searchAddress = '';
+  get searchAddress() : string {
+    return this._searchAddress;
+  }
+  set searchAddress(value: string) {
+    this._searchAddress = value;
+    this.filterBuildingsCoverages();
+  }
+
+  addBuilding(building: PropertyQuoteBuildingClass) {
+    this.propertyQuoteBuilding.push(building);
+    // this.propertyQuoteBuilding.forEach(c => c.focus = false);
+    building.propertyQuote = this;
+    building.focus = true;
+    this.filterBuildings();
+  }
+
+  deleteBuilding(building: PropertyQuoteBuildingClass) {
+    const index = this.propertyQuoteBuilding.indexOf(building, 0);
+    if (index > -1) {
+      this.propertyQuoteBuilding.splice(index, 1);
+    }
+    this.filterBuildings();
+  }
+
+  clearBuildings() {
+    this.propertyQuoteBuilding = [];
+    this.filteredBuildings = [];
+    this.filteredCoverage = [];
+  }
+  filteredBuildings: PropertyQuoteBuildingClass[] = [];
+
+  filteredCoverage: PropertyQuoteBuildingCoverageClass[] = [];
+
+  filterBuildings() {
+    const allBuildings: PropertyQuoteBuildingClass[] = [];
+    this.propertyQuoteBuilding.forEach((element) => {
+      if ((this.searchSubject == '' || element.subjectNumber == Number(this.searchSubject)) &&
+      (this.searchPremises == '' || element.premisesNumber == Number(this.searchPremises)) &&
+      (this.searchBuilding == '' || element.buildingNumber == Number(this.searchBuilding)) &&
+      (this.searchAddress == '' || element.address.toLowerCase().includes(this.searchAddress.toLowerCase()))) {
+        allBuildings.push(element);
+      }
+    });
+    this.filteredBuildings = allBuildings;
+  }
+
+  filterCoverages() {
+    const allChildren: PropertyQuoteBuildingCoverageClass[] = [];
+    this.filteredBuildings.forEach((element) => {
+      element.propertyQuoteBuildingCoverage.forEach((x) => {
+        allChildren.push(x);
+      });
+    });
+    this.filteredCoverage = allChildren;
+  }
+
+  filterBuildingsCoverages() {
+    this.filterBuildings();
+    this.filterCoverages();
   }
 
   constructor(propertyQuote?: PropertyQuote) {
@@ -169,10 +257,12 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
 
     const buildings: PropertyQuoteBuildingClass[] = [];
     propertyQuote.propertyQuoteBuilding.forEach((element) => {
-      buildings.push(new PropertyQuoteBuildingClass(element));
+      const building = new PropertyQuoteBuildingClass(element);
+      building.propertyQuote = this;
+      buildings.push(building);
     });
     this.propertyQuoteBuilding = buildings;
-
+    this.filterBuildingsCoverages();
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -246,7 +336,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     const ai: AdditionalInterestData[] = [];
     this.propertyQuoteAdditionalInterest.forEach(c => ai.push(c.toJSON()));
 
-    console.log(mortgagee);
+    const buildings: PropertyBuildingData[] = [];
+    this.propertyQuoteBuilding.forEach(c => buildings.push(c.toJSON()));
 
     return {
       propertyQuoteId: this.propertyQuoteId,
@@ -254,7 +345,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
       riskDescription: this.riskDescription,
       propertyQuoteDeductible: deductibles,
       propertyQuoteMortgagee: mortgagee,
-      propertyQuoteAdditionalInterest: ai
+      propertyQuoteAdditionalInterest: ai,
+      propertyQuoteBuilding: buildings
     };
   }
 }

@@ -1,12 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgOption, NgSelectComponent } from '@ng-select/ng-select';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property-building-coverage';
 
 @Component({
@@ -23,9 +21,7 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   firstExpand = true;
   anchorId!: string;
   isLoadingAddress = false;
-  addressSub!: Subscription;
 
-  @Input() public building!: PropertyBuilding;
   @Input() public coverage!: PropertyBuildingCoverage;
   @Input() public canEdit = false;
   @Input() public buildingIndex = 0;
@@ -39,7 +35,6 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   constructor(
     private confirmationDialogService: ConfirmationDialogService,
     private dropdowns: DropDownsService,
-    private messageDialogService: MessageDialogService,
     private ref: ChangeDetectorRef
   ) {
     this.ref.detach();
@@ -49,8 +44,9 @@ export class PropertyBuildingCoverageComponent implements OnInit {
     this.coverages$ = this.dropdowns.getPropertyCoverages();
     this.causeOfLoss$ = this.dropdowns.getPropertyCauseOfLoss();
     this.valuations$ = this.dropdowns.getPropertyValuations();
-    this.anchorId = 'focusHere' + this.buildingIndex + '/' + this.coverageIndex;
-    if (this.coverage.isNew && !this.coverage.isImport) {
+    this.anchorId = 'focusCoverage' + this.buildingIndex + '/' + this.coverageIndex;
+    if (this.coverage.expand) {
+      this.coverage.expand = false;
       this.collapseExpand(false);
       this.focus();
     }
@@ -82,28 +78,12 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   }
 
   async delete() {
-    const index = this.building.propertyQuoteBuildingCoverage.indexOf(this.coverage, 0);
-    if (index > -1) {
-      this.building.propertyQuoteBuildingCoverage.splice(index, 1);
-      if (!this.coverage.isNew && this.coverage.propertyQuoteBuildingCoverageId != null) {
-        // this.deleteSub = this.quoteService
-        //   .deleteDeductible(coverage.propertyQuoteBuildingId)
-        //   .subscribe((result) => {
-        //     if (result) {
-        //       setTimeout(() => {
-        //         this.notification.show('Building deleted.', { classname: 'bg-success text-light', delay: 5000 });
-        //       });
-        //     }
-        //   });
-      }
-    }
-    //this.deleteCoverage.emit(this.coverage);
+    this.deleteCoverage.emit(this.coverage);
   }
 
   focus(): void {
-    this.collapsed = false;
     setTimeout(() => {
-      document.getElementById(this.anchorId)?.scrollIntoView();
+      document.getElementById(this.anchorId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 250);
   }
 

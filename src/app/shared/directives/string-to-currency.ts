@@ -209,6 +209,9 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
     if (value !== null) {
       this.el.nativeElement.value = this.formatToDisplayCurrency(value?.toString());
     }
+    else {
+      this.el.nativeElement.value = null;
+    }
   }
 
   public onChange = (_: any) => {};
