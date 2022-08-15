@@ -6,7 +6,7 @@
                     <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
                         [(ngModel)]="coverage.buildingIndex" #subjectNumber="ngModel" readonly
                         click-stop-propagation
-                        ngbTooltip="Subject #" [openDelay]="1000">
+                        [ngbTooltip]="coverage.buildingIndex" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="description" bindValue="key"
@@ -20,12 +20,12 @@
                 <div class="col-lg-1">
                     <input type="text" class="form-control right" id="limit" name="limit" [(ngModel)]="coverage.limit"
                         #subjectNumber="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.limitRequired" string-to-currency [allowNegative]="false" click-stop-propagation
-                        ngbTooltip="Limit" [openDelay]="1000">
+                        [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <input type="text" class="form-control right" id="coinsurance" name="coinsurance" mask="separator.0"
                         suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="coverage.coinsurancePct"
-                        #coinsurance="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.coinsuranceRequired" click-stop-propagation ngbTooltip="Coinsurance"
+                        #coinsurance="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.coinsuranceRequired" click-stop-propagation [ngbTooltip]="coverage.coinsurancePctFormatted"
                         [openDelay]="1000">
                 </div>
                 <div class="col-lg-3">

@@ -1,15 +1,14 @@
 import { PropertyBuilding } from './property-building';
 
 export interface PropertyBuildingCoverageData {
-  propertyQuoteBuildingCoverageId: number | null;
-  propertyQuoteBuildingId: number | null;
+  propertyQuoteBuildingCoverageId: number;
+  propertyQuoteBuildingId: number;
   propertyCoverageId: number | null;
   limit: number | null;
   coinsurancePct: number | null;
   causeOfLossId: number | null;
   valuationId: number | null;
   additionalDetail: string | null;
-  isNew: boolean;
 }
 
 export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
@@ -27,8 +26,11 @@ export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
   buildingNumber: number | null;
   buildingIndex: string;
   building: PropertyBuilding;
+  isNew: boolean;
   expand: boolean;
   focus: boolean;
+  limitFormatted: string;
+  coinsurancePctFormatted: string;
   toJSON(): any;
 }
 

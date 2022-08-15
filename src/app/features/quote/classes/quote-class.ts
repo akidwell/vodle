@@ -10,6 +10,9 @@ import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
 import { QuoteValidationClass } from './quote-validation-class';
 import { QuoteRate } from '../models/quote-rate';
+import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
+import { PropertyQuoteBuildingClass } from './property-quote-building-class';
+import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
 
 export class QuoteClass implements Quote, QuoteValidation {
   private _validateOnLoad = true;
@@ -318,6 +321,52 @@ export class QuoteClass implements Quote, QuoteValidation {
   //   return valid;
   // }
 
+
+  onSave(savedQuote: QuoteClass) {
+    this.onSaveBuilding(this.propertyQuote.propertyQuoteBuilding,savedQuote);
+    this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductible,savedQuote);
+  }
+
+  private onSaveDeductible(deductibles: PropertyQuoteDeductibleClass[], savedQuote: QuoteClass): void {
+    deductibles.forEach(deductible => {
+      if (deductible.isNew) {
+        const match = savedQuote.propertyQuote.propertyQuoteDeductible.find(c => c.sequence == deductible.sequence);
+        if (match != null) {
+          deductible.propertyQuoteDeductibleId = match.propertyQuoteDeductibleId;
+          deductible.propertyQuoteId = match.propertyQuoteId;
+        }
+        deductible.isNew = false;
+      }
+    });
+  }
+
+  private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: QuoteClass): void {
+    buildings.forEach(building => {
+      if (building.isNew) {
+        const match = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.subjectNumber == building.subjectNumber && c.premisesNumber == building.premisesNumber && c.buildingNumber == building.buildingNumber);
+        if (match != null) {
+          building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
+          building.propertyQuoteId = match.propertyQuoteId;
+        }
+        building.isNew = false;
+      }
+      this.onSaveCoverage(building.propertyQuoteBuildingCoverage, savedQuote);
+    });
+  }
+
+  private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: QuoteClass): void {
+    coverages.forEach(coverage => {
+      if (coverage.isNew) {
+        const buildingMatch = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.subjectNumber == coverage.building.subjectNumber && c.premisesNumber == coverage.building.premisesNumber && c.buildingNumber == coverage.building.buildingNumber);
+        const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.propertyCoverageId == coverage.propertyCoverageId);
+        if (coverageMatch != null) {
+          coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId;
+          coverage.propertyQuoteBuildingId = coverageMatch.propertyQuoteBuildingId;
+        }
+        coverage.isNew = false;
+      }
+    });
+  }
 
   toJSON() {
     const rates: QuoteRate[] = [];

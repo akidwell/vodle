@@ -1,7 +1,6 @@
-import { PropertyQuoteBuildingClass } from '../classes/property-quote-building-class';
 import { AdditionalInterestData } from './additional-interest';
 import { MortgageeData } from './mortgagee';
-import { PropertyBuilding } from './property-building';
+import { PropertyBuilding, PropertyBuildingData } from './property-building';
 import { PropertyDeductible } from './property-deductible';
 
 export interface PropertyQuoteData {

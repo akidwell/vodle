@@ -5,6 +5,7 @@ import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mo
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
+import { PropertyBuildingData } from '../models/property-building';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
 import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
@@ -141,6 +142,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
 
   addBuilding(building: PropertyQuoteBuildingClass) {
     this.propertyQuoteBuilding.push(building);
+    // this.propertyQuoteBuilding.forEach(c => c.focus = false);
     building.propertyQuote = this;
     building.focus = true;
     this.filterBuildings();
@@ -294,10 +296,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     const ai: AdditionalInterestData[] = [];
     this.propertyQuoteAdditionalInterest.forEach(c => ai.push(c.toJSON()));
 
-    console.log('save: ' + this.propertyQuoteBuilding.length);
-    console.log('save: ' + this.propertyQuoteBuilding[0]?.propertyQuoteBuildingCoverage.length);
-    console.log('save: ' + this.propertyQuoteBuilding[0]?.propertyQuoteBuildingCoverage[0]?.additionalDetail);
-    // console.log(mortgagee);
+    const buildings: PropertyBuildingData[] = [];
+    this.propertyQuoteBuilding.forEach(c => buildings.push(c.toJSON()));
 
     return {
       propertyQuoteId: this.propertyQuoteId,
@@ -305,7 +305,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
       riskDescription: this.riskDescription,
       propertyQuoteDeductible: deductibles,
       propertyQuoteMortgagee: mortgagee,
-      propertyQuoteAdditionalInterest: ai
+      propertyQuoteAdditionalInterest: ai,
+      propertyQuoteBuilding: buildings
     };
   }
 }

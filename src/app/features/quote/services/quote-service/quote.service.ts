@@ -41,17 +41,17 @@ export class QuoteService {
     const quoteJSON = quote.toJSON();
     console.log(quoteJSON);
     const headers = { 'Content-Type': 'application/json'};
-    return this.http.put<number>(this.config.apiBaseUrl + 'api/quotes/', quoteJSON, {headers});
+    return this.http.put<QuoteClass>(this.config.apiBaseUrl + 'api/quotes/', quoteJSON, {headers});
   }
-
   deleteDeductible(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-deductibles/' + id);
   }
-
   deleteBuilding(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-buildings/' + id);
   }
-
+  deleteCoverage(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-buildings/coverages/' + id);
+  }
   deleteMortgagee(mortgagee: MortgageeClass): Observable<boolean> {
     console.log(mortgagee);
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/mortgagee/' + mortgagee.propertyQuoteMortgageeId?.toString());
