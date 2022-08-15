@@ -5,6 +5,8 @@ import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteClass } from './property-quote-class';
+import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
+import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
   private _isDirty = false;
@@ -14,8 +16,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  propertyQuoteBuildingId: number | null = null;
-  propertyQuoteId: number | null = null;
+  propertyQuoteBuildingId = 0;
+  propertyQuoteId = 0;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
   taxCode: string | null = null;
 
@@ -251,13 +253,15 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     (!this.street2 ? '' : ', ' + this.street2) +
     (!this.city ? '' : ', ' + this.city ) +
     (!this.state ? '' : ', ' + this.state) +
-    (!this.zip ? '' : ' ' + this.zip);
+    (!this.zip ? '' : ' ' + this.zipPipe.transform(this.zip));
   }
+
+  private zipPipe = new ZipCodePipe();
 
   calculateITV() {
     const buildingLimit = this.propertyQuoteBuildingCoverage.find(c => c.propertyCoverageId == 1)?.limit;
     if (this._squareFeet == null || buildingLimit == null) {
-      this._itv = null;
+      this.itv = null;
     }
     else {
       this._itv = Math.round((buildingLimit ?? 0) / (this._squareFeet ?? 1));
@@ -351,10 +355,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     coverage.building = this;
     coverage.expand = true;
     coverage.focus = true;
+    coverage.propertyQuoteBuildingCoverageId = 0;
+    coverage.propertyQuoteBuildingId = 0;
     coverage.subjectNumber = this._subjectNumber;
     coverage.premisesNumber = this._premisesNumber;
     coverage.buildingNumber = this._buildingNumber;
-    coverage.propertyQuoteBuildingId = null;
     coverage.isNew = true;
     coverage.markDirty();
     this.propertyQuoteBuildingCoverage.push(coverage);
@@ -394,6 +399,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   newInit() {
+    this.propertyQuoteBuildingId = 0;
+    this.propertyQuoteId = 0;
     this.expand = true;
     this.isNew = true;
   }
@@ -425,8 +432,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   toJSON() {
+    const coverages: PropertyBuildingCoverageData[] = [];
+    this.propertyQuoteBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
+
     return {
-      propertyQuoteDeductibleId: this.propertyQuoteBuildingId,
+      propertyQuoteBuildingId: this.propertyQuoteBuildingId,
       propertyQuoteId: this.propertyQuoteId,
       subjectNumber: this.subjectNumber,
       premisesNumber: this.premisesNumber,
@@ -441,19 +451,19 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       taxCode: this.taxCode,
       description: this.description,
       occupancy: this.occupancy,
+      squareFeet: this.squareFeet,
+      itv: this.itv,
+      yearBuilt: this.yearBuilt,
+      gutRehab: this.gutRehab,
       sprinklered: this.sprinklered,
       construction: this.construction,
-      itv: this.itv,
-      squareFeet: this.squareFeet,
-      yearBuilt: this.yearBuilt,
       stories: this.stories,
       protectionClass: this.protectionClass,
       roof: this.roof,
       wiring: this.wiring,
       plumbing: this.plumbing,
       hvac: this.hvac,
-      gutRehab: this.gutRehab,
-      isNew: this.isNew
+      propertyQuoteBuildingCoverage: coverages
     };
   }
 }

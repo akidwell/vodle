@@ -3,22 +3,25 @@
         <div (click)="collapseExpand(false)">
             <div class="row" *ngIf="!building.isExpanded">
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
-                        [(ngModel)]="building.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit"
-                        [required]="canEdit && building.subjectNumberRequired" click-stop-propagation>
+                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
+                        [(ngModel)]="building.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit" autocomplete="off"
+                        [required]="canEdit && building.subjectNumberRequired" [ngbTooltip]="building.subjectNumber?.toString()"
+                        [openDelay]="1000" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
-                        [(ngModel)]="building.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.premisesNumberRequired" click-stop-propagation>
+                    <input type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
+                        [(ngModel)]="building.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEdit" autocomplete="off"
+                        [required]="canEdit && building.premisesNumberRequired" [ngbTooltip]="building.premisesNumber?.toString()"
+                        [openDelay]="1000" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
-                        [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
-                        [required]="building.buildingNumberRequired" click-stop-propagation>
+                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
+                        [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit" autocomplete="off"
+                        [required]="canEdit && building.buildingNumberRequired" [ngbTooltip]="building.buildingNumber?.toString()"
+                        [openDelay]="1000" click-stop-propagation>
                 </div>
                 <div class="col-lg-8">
-                    <input type="address" class="form-control" id="address" #address="ngModel" name="address" readonly
+                    <input type="address" class="form-control" id="address" #address="ngModel" name="address" readonly autocomplete="off"
                         [ngClass]="addressReadOnly" [ngModel]="building.address" [ngbTooltip]="building.address"
                         [openDelay]="1000">
                 </div>
@@ -32,8 +35,10 @@
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
                             <button *ngIf="building.isNew && canEdit" hover-class="btn-warning"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
-                            <button *ngIf="building.isNew && canEdit" (click)=add() click-stop-propagation
+                            <button *ngIf="canEdit" (click)=add() click-stop-propagation
                                 ngbDropdownItem>Add Coverage</button>
+                            <button (click)=filter() click-stop-propagation
+                                ngbDropdownItem>Filter</button>
                         </div>
                     </div>
                 </div>
@@ -42,39 +47,39 @@
         <div #collapse="ngbCollapse" [(ngbCollapse)]="!building.isExpanded">
             <div class="row">
                 <div class="col-lg-1">
-                    <label for="subjectNumber" class="form-label" title="locationNumber">Subject #</label>
-                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
+                    <label for="subjectNumber" class="form-label" title="Subject #">Subject #</label>
+                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
                         [(ngModel)]="building.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit"
                         [required]="canEdit && building.subjectNumberRequired" click-stop-propagation
                         ngbTooltip="Subject #" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
-                    <label for="locationNumber" class="form-label" title="locationNumber">Premises #</label>
-                    <input type="text" class="form-control" id="locationNumber" name="locationNumber"
+                    <label for="locationNumber" class="form-label" title="Premises #">Premises #</label>
+                    <input type="text" class="form-control" id="locationNumber" name="locationNumber" maxInt mask="0*"
                         [(ngModel)]="building.premisesNumber" #locationNumber="ngModel" [readonly]="!canEdit"
                         [required]="building.premisesNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
-                    <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>
-                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
+                    <label for="buildingNumber" class="form-label" title="Building #">Building #</label>
+                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
                         [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
                         [required]="building.buildingNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-4">
                     <label for="street1" class="form-label" title="Street Address 1">Street Address 1</label>
-                    <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit" maxlength="40"
                         [required]="building.street1Required" [(ngModel)]="building.street1" #street1="ngModel">
                 </div>
                 <div class="col-lg-4">
                     <label for="street2" class="form-label" title="Street Address 2">Street Address 2</label>
-                    <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
                         [(ngModel)]="building.street2" #street2="ngModel">
                 </div>
             </div>
             <div class="empty-row"></div>
             <div class="row">
                 <div class="col-lg-2">
-                    <label for="zip" class="form-label" title="zip">Zip Code</label>
+                    <label for="zip" class="form-label" title="Zip Code">Zip Code</label>
                     <div class="inputspinner">
                         <input type="text" zip-code class="form-control" id="zipCode"
                             [readonly]="!canEdit || building.zipReadonly" [required]="canEdit && building.zipRequired"
@@ -85,11 +90,11 @@
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <label for="city" class="form-label" title="city">City</label>
+                    <label for="city" class="form-label" title="City">City</label>
                     <div class="inputspinner">
                         <input type="text" class="form-control" id="city" name="city" [(ngModel)]="building.city"
                             [readonly]="!canEdit || building.cityReadonly" [required]="canEdit && building.cityRequired"
-                            #city="ngModel">
+                            maxlength="25" #city="ngModel">
                         <div *ngIf="building.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
                             role="status" aria-hidden="true">
                         </div>
@@ -236,14 +241,15 @@
         <div class="empty-row"></div>
         <div class="row">
             <div class="col-lg-12">
-                <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
-                    [disabled]="!canEdit">Copy</button>
-                <button *ngIf="!building.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-                    [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
-                <button *ngIf="building.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-                    [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
+                <button *ngIf="canEdit" class="btn btn-secondary" (click)=copy() hover-class="btn-primary">Copy</button>
+                <button *ngIf="!building.isNew && canEdit" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+                    hover-class="btn-danger">Delete</button>
+                <button *ngIf="building.isNew && canEdit" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+                    hover-class="btn-warning">Remove</button>
                 <button *ngIf="canEdit" class="btn btn-secondary margin-left" (click)=add()
                     hover-class="btn-success">Add Coverage</button>
+                <button class="btn btn-secondary margin-left" (click)=filter()
+                    hover-class="btn-primary">Filter</button>
             </div>
         </div>
         <div [id]='anchorId'></div>

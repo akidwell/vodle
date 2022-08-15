@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
+import { NotificationService } from 'src/app/core/components/notification/notification-service';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
@@ -19,7 +21,9 @@ export class QuoteSavingService {
     private router: Router,
     private quoteService: QuoteService,
     public pageDataService: PageDataService,
-    private propertyDataService: PropertyDataService
+    private propertyDataService: PropertyDataService,
+    private notification: NotificationService,
+    private messageDialogService: MessageDialogService
   ) {
     console.log('init');
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
@@ -54,13 +58,22 @@ export class QuoteSavingService {
     if (quote) {
       console.log('quotes: ', quote, 'id: ');
       const results$ = this.quoteService.updateQuote(quote);
-      await lastValueFrom(results$).then(async sequence => {
-        console.log(sequence);
-        quote.sequenceNumber = sequence;
-        this.propertyDataService.buildingList = quote.propertyQuote.buildingList;
-        //this.newQuote = false;
-        return true;
-      });
+      await lastValueFrom(results$)
+        .then(async (quoteData) => {
+          console.log('quoteData: ' + quoteData);
+          this.program?.quoteData?.onSave(quoteData);
+          quote.sequenceNumber = quoteData.sequenceNumber;
+          this.propertyDataService.buildingList = quote.propertyQuote.buildingList;
+          //this.newQuote = false;
+          this.notification.show('Quote Saved.', {
+            classname: 'bg-success text-light',
+            delay: 5000,
+          });
+          return true;
+        })
+        .catch((error) => {
+          this.messageDialogService.open('Quote Save Error!', error.error.Message);
+        });
     }
   }
 }

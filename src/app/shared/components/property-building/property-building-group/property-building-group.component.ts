@@ -6,11 +6,12 @@ import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/prope
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { faAngleDown, faAngleUp, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { switchMap, tap } from 'rxjs/operators';
-import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { PropertyQuote } from 'src/app/features/quote/models/property-quote';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { PageState } from 'src/app/core/models/page-state';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'rsps-property-building-group',
@@ -19,10 +20,15 @@ import { PageState } from 'src/app/core/models/page-state';
 })
 export class PropertyBuildingGroupComponent implements OnInit {
   deleteSub!: Subscription;
+  searchSub!: Subscription;
   collapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   faCircleXmark = faCircleXmark;
+  canFilter = false;
+  color: ThemePalette = 'warn';
+  searchThrottle = new Subject<void>();
+  searchAddress = '';
   private _buildings: PropertyBuilding[] = [];
 
   @Input() public propertyQuote!: PropertyQuote;
@@ -45,9 +51,12 @@ export class PropertyBuildingGroupComponent implements OnInit {
   get total$() { return this._total$.asObservable(); }
   get loading$() { return this._loading$.asObservable(); }
   get page() { return this._state.page; }
-  set page(page: number) { this._set({page}); }
+  set page(page: number) {this._set({page});}
   get pageSize() { return this._state.pageSize; }
-  set pageSize(pageSize: number) { this._set({pageSize}); }
+  set pageSize(pageSize: number) {
+    localStorage.setItem('building-page-size', pageSize.toString());
+    this._set({pageSize});
+  }
 
   // Default pagination settings
   private _state: PageState = {
@@ -56,33 +65,16 @@ export class PropertyBuildingGroupComponent implements OnInit {
     searchTerm: ''
   };
 
-  private _set(patch: Partial<PageState>) {
-    Object.assign(this._state, patch);
-    this._search$.next();
-  }
-
-  private _search(): Observable<SearchResult> {
-    const {pageSize, page } = this._state;
-
-    // 1. Populate from source
-    let buildings = this.buildings;
-
-    // 2.  Set Focus Page
-    const focusIndex = buildings.findIndex((c) => c.focus);
-    let focusPage = page;
-    if (focusIndex >= 0) {
-      buildings[focusIndex].focus = false;
-      focusPage = Math.floor((focusIndex + 1) / this.pageSize) + ((focusIndex + 1) % this.pageSize == 0 ? 0 : 1);
-      this._state.page = focusPage;
+  constructor(private notification: NotificationService, private quoteService: QuoteService, private messageDialogService: MessageDialogService) {
+    // Get the default size from local storage
+    let pageSize = localStorage.getItem('building-page-size');
+    if (pageSize == null) {
+      this.pageSize = this._state.pageSize;
+      pageSize = this.pageSize.toString();
     }
-
-    // 3. paginate
-    const total = buildings.length;
-    buildings = buildings.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
-    return of({buildings, total});
-  }
-
-  constructor(private notification: NotificationService, private quoteService: QuoteService, private propertyDataService: PropertyDataService) {
+    if (!isNaN(Number(pageSize))) {
+      this._state.pageSize = Number(pageSize);
+    }
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       switchMap(() => this._search()),
@@ -95,10 +87,39 @@ export class PropertyBuildingGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this._search$.next();
+    this.searchSub = this.searchThrottle.pipe(debounceTime(500)).subscribe(() => {
+      console.log('search');
+      this.propertyQuote.searchAddress = this.searchAddress;
+    });
+
   }
 
   ngOnDestroy(): void {
     this.deleteSub?.unsubscribe();
+    this.searchSub?.unsubscribe();
+  }
+
+  private _set(patch: Partial<PageState>) {
+    Object.assign(this._state, patch);
+    this._search$.next();
+  }
+
+  private _search(): Observable<SearchResult> {
+    const {pageSize, page } = this._state;
+    // 1. Populate from source
+    let buildings = this.buildings;
+    // 2.  Set Focus Page
+    const focusIndex = buildings.findIndex((c) => c.focus);
+    let focusPage = page;
+    if (focusIndex >= 0) {
+      buildings[focusIndex].focus = false;
+      focusPage = Math.floor((focusIndex + 1) / this.pageSize) + ((focusIndex + 1) % this.pageSize == 0 ? 0 : 1);
+      this._state.page = focusPage;
+    }
+    // 3. paginate
+    const total = buildings.length;
+    buildings = buildings.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
+    return of({buildings, total});
   }
 
   addBuilding() {
@@ -124,7 +145,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
     if (this.classType == ClassTypeEnum.Quote) {
       const clone = deepClone(building.toJSON());
       const newBuilding = new PropertyQuoteBuildingClass(clone);
-      newBuilding.propertyQuoteBuildingId = null;
+      newBuilding.propertyQuoteBuildingId = 0;
       newBuilding.isNew = true;
       newBuilding.expand = true;
       newBuilding.markDirty();
@@ -133,24 +154,42 @@ export class PropertyBuildingGroupComponent implements OnInit {
   }
 
   deleteBuilding(building: PropertyBuilding) {
-    this.propertyQuote.deleteBuilding(building);
-    // const index = this.buildings.indexOf(building, 0);
-    // if (index > -1) {
-    //   this.buildings.splice(index, 1);
-    //   //this.propertyQuote.filter();
-    //   this.refresh();
-    //   if (!building.isNew && building.propertyQuoteBuildingId != null) {
-    //     this.deleteSub = this.quoteService
-    //       .deleteBuilding(building.propertyQuoteBuildingId)
-    //       .subscribe((result) => {
-    //         if (result) {
-    //           setTimeout(() => {
-    //             this.notification.show('Building deleted.', { classname: 'bg-success text-light', delay: 5000 });
-    //           });
-    //         }
-    //       });
-    //   }
-    // }
+    const index = this.buildings.indexOf(building, 0);
+    if (index > -1) {
+      if (!building.isNew && building.propertyQuoteBuildingId > 0) {
+        this.deleteSub = this.quoteService
+          .deleteBuilding(building.propertyQuoteBuildingId)
+          .subscribe({
+            next: () => {
+              this.propertyQuote.deleteBuilding(building);
+              setTimeout(() => {
+                this.notification.show('Building deleted.', {
+                  classname: 'bg-success text-light',
+                  delay: 5000,
+                });
+              });
+            },
+            error: (error) => {
+              this.messageDialogService.open('Delete error', error.error.Message ?? error.message);
+              this.notification.show('Building not deleted.', {
+                classname: 'bg-danger text-light',
+                delay: 5000,
+              });
+            },
+          });
+      }
+      else {
+        this.propertyQuote.deleteBuilding(building);
+      }
+    }
+  }
+
+  filterBuilding(building: PropertyBuilding) {
+    this.canFilter = true;
+    this.propertyQuote.searchSubject = building.subjectNumber?.toString() ?? '';
+    this.propertyQuote.searchPremises = building.premisesNumber?.toString() ?? '';
+    this.propertyQuote.searchBuilding = building.buildingNumber?.toString() ?? '';
+    this.propertyQuote.searchAddress = '';
   }
 
   get showCollapseAll() {
@@ -169,9 +208,10 @@ export class PropertyBuildingGroupComponent implements OnInit {
   }
 
   hide() {
+    this.clear();
+    this.canFilter = false;
   }
 }
-
 
 export interface SearchResult {
   buildings: PropertyBuilding[];

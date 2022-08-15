@@ -16,7 +16,7 @@ import { Code } from 'src/app/core/models/code';
   styleUrls: ['./property-building.component.css']
 })
 export class PropertyBuildingComponent implements OnInit {
-  collapsed = true;
+  // collapsed = true;
   faAngleUp = faAngleUp;
   states$: Observable<State[]> | undefined;
   cspCodes$: Observable<Code[]> | undefined;
@@ -33,6 +33,7 @@ export class PropertyBuildingComponent implements OnInit {
   @Output() deleteBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
   @Output() copyBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
   @Output() addCoverage: EventEmitter<PropertyBuilding> = new EventEmitter();
+  @Output() filterBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
 
   constructor(private confirmationDialogService: ConfirmationDialogService, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService,
     private messageDialogService: MessageDialogService) { }
@@ -47,6 +48,7 @@ export class PropertyBuildingComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.building.isExpanded = false;
     this.addressSub?.unsubscribe();
   }
 
@@ -62,6 +64,9 @@ export class PropertyBuildingComponent implements OnInit {
           if (address != null) {
             if (address.city != null) {
               this.building.city = address?.city;
+            }
+            if (address.country != null) {
+              this.building.countryCode = address.country;
             }
             if (address.state != null) {
               this.building.state = address.state;
@@ -93,8 +98,10 @@ export class PropertyBuildingComponent implements OnInit {
       this.states$ = this.dropdowns.getStates();
       this.firstExpand = false;
     }
-    this.collapsed = event;
-    this.building.isExpanded = !this.collapsed;
+    // this.collapsed = event;
+    setTimeout(() => {
+      this.building.isExpanded = !event;
+    });
   }
 
   copy(): void {
@@ -115,6 +122,10 @@ export class PropertyBuildingComponent implements OnInit {
 
   add(): void {
     this.addCoverage.emit(this.building);
+  }
+
+  filter(): void {
+    this.filterBuilding.emit(this.building);
   }
 
   focus(): void {

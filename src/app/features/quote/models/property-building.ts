@@ -1,9 +1,9 @@
 import { PropertyQuoteClass } from '../classes/property-quote-class';
-import { PropertyBuildingCoverage } from './property-building-coverage';
+import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from './property-building-coverage';
 
 export interface PropertyBuildingData {
-    propertyQuoteBuildingId: number | null;
-    propertyQuoteId: number | null;
+    propertyQuoteBuildingId: number;
+    propertyQuoteId: number;
     subjectNumber: number | null;
     premisesNumber: number | null;
     buildingNumber: number | null;
@@ -29,8 +29,7 @@ export interface PropertyBuildingData {
     wiring: number | null;
     plumbing: number | null;
     hvac: number | null;
-    isNew: boolean;
-    propertyQuoteBuildingCoverage: PropertyBuildingCoverage[];
+    propertyQuoteBuildingCoverage: PropertyBuildingCoverageData[];
 }
 
 export interface PropertyBuilding extends PropertyBuildingData {
@@ -53,6 +52,7 @@ export interface PropertyBuilding extends PropertyBuildingData {
     expand: boolean;
     focus: boolean;
     propertyQuote: PropertyQuoteClass;
+    isNew: boolean;
     addCoverage(): void;
     copyCoverage(coverage: PropertyBuildingCoverage): void;
     deleteCoverage(coverage: PropertyBuildingCoverage): void;
