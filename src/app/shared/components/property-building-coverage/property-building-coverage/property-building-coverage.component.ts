@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property-building-coverage';
 
 @Component({
@@ -36,7 +35,6 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   constructor(
     private confirmationDialogService: ConfirmationDialogService,
     private dropdowns: DropDownsService,
-    private messageDialogService: MessageDialogService,
     private ref: ChangeDetectorRef
   ) {
     this.ref.detach();
@@ -80,21 +78,6 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   }
 
   async delete() {
-    // const index = this.building.propertyQuoteBuildingCoverage.indexOf(this.coverage, 0);
-    // if (index > -1) {
-    //   this.building.propertyQuoteBuildingCoverage.splice(index, 1);
-    //   if (!this.coverage.isNew && this.coverage.propertyQuoteBuildingCoverageId != null) {
-    //     // this.deleteSub = this.quoteService
-    //     //   .deleteDeductible(coverage.propertyQuoteBuildingId)
-    //     //   .subscribe((result) => {
-    //     //     if (result) {
-    //     //       setTimeout(() => {
-    //     //         this.notification.show('Building deleted.', { classname: 'bg-success text-light', delay: 5000 });
-    //     //       });
-    //     //     }
-    //     //   });
-    //   }
-    // }
     this.deleteCoverage.emit(this.coverage);
   }
 

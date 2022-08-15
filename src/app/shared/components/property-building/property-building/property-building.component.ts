@@ -124,6 +124,11 @@ export class PropertyBuildingComponent implements OnInit {
     this.addCoverage.emit(this.building);
   }
 
+  filterExpand(): void {
+    this.building.expand = true;
+    this.filterBuilding.emit(this.building);
+  }
+
   filter(): void {
     this.filterBuilding.emit(this.building);
   }

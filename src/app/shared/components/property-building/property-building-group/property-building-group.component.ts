@@ -204,6 +204,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
     this.propertyQuote.searchSubject = '';
     this.propertyQuote.searchPremises = '';
     this.propertyQuote.searchBuilding = '';
+    this.searchAddress = '';
     this.propertyQuote.searchAddress = '';
   }
 
