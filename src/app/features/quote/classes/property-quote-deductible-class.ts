@@ -28,6 +28,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   private _isExcluded = false;
   private _isSubjectToMin: boolean | null = null;
   isNew = false;
+  guid = '';
   invalidList: string[] = [];
 
   get propertyDeductibleId() : number | null {
@@ -215,6 +216,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     this.isExcluded = false;
     this.isSubjectToMin = false;
     this.isNew = true;
+    this.guid = crypto.randomUUID();
   }
 
   markClean() {
@@ -329,7 +331,8 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
       isDeductibleTypeLocked: this.isDeductibleTypeLocked,
       isExcludeLocked: this.isExcludeLocked,
       isSubjectToMinLocked: this.isSubjectToMinLocked,
-      isNew: this.isNew
+      isNew: this.isNew,
+      guid: this.guid
     };
   }
 }

@@ -2,6 +2,7 @@ import { PropertyQuoteClass } from '../classes/property-quote-class';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from './property-building-coverage';
 
 export interface PropertyBuildingData {
+    guid: string;
     propertyQuoteBuildingId: number;
     propertyQuoteId: number;
     subjectNumber: number | null;

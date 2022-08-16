@@ -9,12 +9,12 @@
                         [ngbTooltip]="coverage.buildingIndex" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
-                    <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="description" bindValue="key"
+                    <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="name" bindValue="propertyCoverageId"
                         [clearable]="false" click-stop-propagation
                         [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
                         [required]="canEdit && coverage.propertyCoverageIdRequired" name="coverageSelect"
                         [(ngModel)]="coverage.propertyCoverageId" #coverageSelect="ngModel" #coverageComp [ngbTooltip]="coverageTooltip"
-                        [openDelay]="1000">
+                        [openDelay]="1000" (change)="changeCoverage($event)">
                     </ng-select>
                 </div>
                 <div class="col-lg-1">
@@ -23,16 +23,19 @@
                         [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control right" id="coinsurance" name="coinsurance" mask="separator.0"
-                        suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="coverage.coinsurancePct"
-                        #coinsurance="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.coinsuranceRequired" click-stop-propagation [ngbTooltip]="coverage.coinsurancePctFormatted"
+                    <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description"
+                        bindValue="key" [clearable]="false" click-stop-propagation
+                        [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
+                        [required]="canEdit && coverage.coinsuranceRequired" name="coinsurance"
+                        [(ngModel)]="coverage.coinsuranceId" #coinsurance="ngModel" #causeOfLossComp [ngbTooltip]="causeOfLossTooltip"
                         [openDelay]="1000">
+                    </ng-select>
                 </div>
                 <div class="col-lg-3">
                     <ng-select id="causeOfLoss" [items]="causeOfLoss$ | async" bindLabel="description"
                         bindValue="key" [clearable]="false" click-stop-propagation [virtualScroll]="true"
                         [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
-                        [required]="canEdit && coverage.causeOfLossIdRequired" name="casucauseOfLosseOfLoss"
+                        [required]="canEdit && coverage.causeOfLossIdRequired" name="causeOfLoss"
                         [(ngModel)]="coverage.causeOfLossId" #causeOfLoss="ngModel" #causeOfLossComp [ngbTooltip]="causeOfLossTooltip"
                         [openDelay]="1000">
                     </ng-select>

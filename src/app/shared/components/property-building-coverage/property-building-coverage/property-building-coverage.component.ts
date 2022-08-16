@@ -3,6 +3,7 @@ import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgOption, NgSelectComponent } from '@ng-select/ng-select';
 import { Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
+import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lookup';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property-building-coverage';
@@ -15,9 +16,10 @@ import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property
 export class PropertyBuildingCoverageComponent implements OnInit {
   collapsed = true;
   faAngleUp = faAngleUp;
-  coverages$: Observable<Code[]> | undefined;
+  coverages$: Observable<PropertyCoverageLookup[]> | undefined;
   causeOfLoss$: Observable<Code[]> | undefined;
   valuations$: Observable<Code[]> | undefined;
+  coinsurance$: Observable<Code[]> | undefined;
   firstExpand = true;
   anchorId!: string;
   isLoadingAddress = false;
@@ -44,6 +46,7 @@ export class PropertyBuildingCoverageComponent implements OnInit {
     this.coverages$ = this.dropdowns.getPropertyCoverages();
     this.causeOfLoss$ = this.dropdowns.getPropertyCauseOfLoss();
     this.valuations$ = this.dropdowns.getPropertyValuations();
+    this.coinsurance$ = this.dropdowns.getPropertyCoinsurance();
     this.anchorId = 'focusCoverage' + this.buildingIndex + '/' + this.coverageIndex;
     if (this.coverage.expand) {
       this.coverage.expand = false;
@@ -85,6 +88,10 @@ export class PropertyBuildingCoverageComponent implements OnInit {
     setTimeout(() => {
       document.getElementById(this.anchorId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 250);
+  }
+
+  changeCoverage(coverage: PropertyCoverageLookup) {
+    this.coverage.valuationId = coverage.defaultValuationTypeId;
   }
 
   get coverageTooltip(): string | undefined {

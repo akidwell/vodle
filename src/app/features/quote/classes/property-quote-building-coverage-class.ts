@@ -13,6 +13,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   propertyQuoteBuildingCoverageId = 0;
   propertyQuoteBuildingId = 0;
   isNew = false;
+  guid = '';
   isImport = false;
   focus = false;
   expand = false;
@@ -27,7 +28,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
 
   private _propertyCoverageId: number | null = null;
   private _limit: number | null = null;
-  private _coinsurancePct: number | null = null;
+  private _coinsuranceId: number | null = null;
   private _causeOfLossId: number | null = null;
   private _valuationId: number | null = null;
   private _additionalDetail: string | null = null;
@@ -49,11 +50,11 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.building?.calculateITV();
     this._isDirty = true;
   }
-  get coinsurancePct() : number | null {
-    return this._coinsurancePct;
+  get coinsuranceId() : number | null {
+    return this._coinsuranceId;
   }
-  set coinsurancePct(value: number | null) {
-    this._coinsurancePct = value;
+  set coinsuranceId(value: number | null) {
+    this._coinsuranceId = value;
     this._isDirty = true;
   }
   get causeOfLossId() : number | null {
@@ -83,11 +84,11 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     const currency = this.currencyPipe.transform(this.limit, 'USD', 'symbol', '1.0-0');
     return currency ?? '';
   }
-  private percentPipe = new PercentPipe('en-US');
-  get coinsurancePctFormatted(): string {
-    const percent = this.percentPipe.transform((this.coinsurancePct ?? 0) / 100);
-    return percent ?? '';
-  }
+  // private percentPipe = new PercentPipe('en-US');
+  // get coinsurancePctFormatted(): string {
+  //   const percent = this.percentPipe.transform((this.coinsurancePct ?? 0) / 100);
+  //   return percent ?? '';
+  // }
   get isDirty() : boolean {
     return this._isDirty;
   }
@@ -124,7 +125,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this.propertyCoverageId = coverage.propertyCoverageId;
     this._limit = coverage.limit;
-    this._coinsurancePct = coverage.coinsurancePct;
+    this._coinsuranceId = coverage.coinsuranceId;
     this._causeOfLossId = coverage.causeOfLossId;
     this._valuationId = coverage.valuationId;
     this._additionalDetail = coverage.additionalDetail;
@@ -149,6 +150,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.propertyQuoteBuildingCoverageId = 0;
     this.propertyQuoteBuildingId = 0;
     this.isNew = true;
+    this.guid = crypto.randomUUID();
     this.expand = true;
   }
   markClean() {
@@ -170,10 +172,11 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
       propertyQuoteBuildingId: this.propertyQuoteBuildingId,
       propertyCoverageId: this.propertyCoverageId,
       limit: this.limit,
-      coinsurancePct: this.coinsurancePct,
+      coinsuranceId: this.coinsuranceId,
       causeOfLossId: this.causeOfLossId,
       valuationId: this.valuationId,
-      additionalDetail: this.additionalDetail
+      additionalDetail: this.additionalDetail,
+      guid: this.guid
     };
   }
 }

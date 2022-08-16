@@ -62,9 +62,9 @@
                             click-stop-propagation>Actions</button>
                         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                             <button *ngIf="canEdit" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
-                            <button *ngIf="!deductible.isNew && canEdit" hover-class="btn-danger"
+                            <button *ngIf="!deductible.isNew && canEdit && deductible.deleteVisible" hover-class="btn-danger"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
-                            <button *ngIf="deductible.isNew && canEdit" hover-class="btn-warning"
+                            <button *ngIf="deductible.isNew && canEdit && deductible.deleteVisible" hover-class="btn-warning"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
                         </div>
                     </div>

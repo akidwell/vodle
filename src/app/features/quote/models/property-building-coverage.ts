@@ -5,7 +5,7 @@ export interface PropertyBuildingCoverageData {
   propertyQuoteBuildingId: number;
   propertyCoverageId: number | null;
   limit: number | null;
-  coinsurancePct: number | null;
+  coinsuranceId: number | null;
   causeOfLossId: number | null;
   valuationId: number | null;
   additionalDetail: string | null;
@@ -30,7 +30,6 @@ export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {
   expand: boolean;
   focus: boolean;
   limitFormatted: string;
-  coinsurancePctFormatted: string;
   toJSON(): any;
 }
 

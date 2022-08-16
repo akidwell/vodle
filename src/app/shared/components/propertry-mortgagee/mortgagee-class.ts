@@ -28,6 +28,7 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
   private _isAppliedToAll = false;
 
   isNew = false;
+  guid = '';
   invalidList: string[] = [];
   isCopy = false;
   isZipLookup = false;
@@ -85,6 +86,7 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
     this.propertyQuoteId = 0;
     this.propertyQuoteMortgageeId = 0;
     this.isNew = true;
+    this.guid = crypto.randomUUID();
   }
 
   get validationResults(): QuoteValidationClass {
@@ -252,7 +254,8 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
       city: this.city,
       zip:this.zip,
       countryCode: this.countryCode,
-      isAppliedToAll: this.isAppliedToAll
+      isAppliedToAll: this.isAppliedToAll,
+      guid: this.guid
     };
   }
 

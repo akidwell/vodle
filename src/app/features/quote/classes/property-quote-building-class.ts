@@ -47,6 +47,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _hvac: number | null = null;
 
   isNew = false;
+  guid = '';
   invalidList: string[] = [];
   isZipLookup = false;
   isImport = false;
@@ -403,6 +404,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this.propertyQuoteId = 0;
     this.expand = true;
     this.isNew = true;
+    this.guid = crypto.randomUUID();
   }
 
   markClean() {
@@ -463,7 +465,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       wiring: this.wiring,
       plumbing: this.plumbing,
       hvac: this.hvac,
-      propertyQuoteBuildingCoverage: coverages
+      propertyQuoteBuildingCoverage: coverages,
+      guid: this.guid
     };
   }
 }
