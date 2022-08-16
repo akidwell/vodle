@@ -116,8 +116,6 @@ export class PageDataService {
     if (this._quoteData) {
       this._quoteData.programMappings.forEach((program) => {
         if (program && program.quoteData && program.quoteData.quoteId == quoteId) {
-          console.log(program);
-          this.propertyDataService.buildingList = program.quoteData.propertyQuote.buildingList;
           activeProgram = program;
         }
       });
@@ -125,14 +123,12 @@ export class PageDataService {
     this.selectedProgram = activeProgram;
   }
   set selectedProgram(program: ProgramClass | null) {
-    console.log('setter: ', program);
     this._selectedProgram = program;
     setTimeout(()=>{
       this.refreshProgram();
     });
   }
   get selectedProgram(): ProgramClass | null {
-    console.log('getter: ', this._selectedProgram);
     return this._selectedProgram;
   }
 

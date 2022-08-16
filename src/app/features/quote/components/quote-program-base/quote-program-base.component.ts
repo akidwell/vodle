@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../classes/program-class';
+import { QuoteValidationClass } from '../../classes/quote-validation-class';
+import { QuoteDataValidationService } from '../../services/quote-data-validation-service/quote-data-validation-service.service';
 
 @Component({
   selector: 'rsps-quote-program-base',
@@ -13,19 +15,62 @@ export class QuoteProgramBaseComponent {
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
-  constructor(private pageDataService: PageDataService, private route: ActivatedRoute) {
-    this.route.params.subscribe(routeParams => {
-      this.pageDataService.getProgramWithQuote(routeParams.quoteId);
-    });
+  propertyLocationTabValidationSub!: Subscription;
+  propertyLocationTabValidation: QuoteValidationClass | null = null;
+
+  mortgageeAdditionalInterestTabValidationSub!: Subscription;
+  mortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
+
+  coveragePremiumTabValidationSub!: Subscription;
+  coveragePremiumTabValidation: QuoteValidationClass | null = null;
+
+  termsAndConditionsTabValidationSub!: Subscription;
+  termsAndConditionsTabValidation: QuoteValidationClass | null = null;
+
+  constructor(private pageDataService: PageDataService, private route: ActivatedRoute, private quoteValidationService: QuoteDataValidationService) {
+
   }
 
   ngAfterViewInit(): void {
+    this.route.params.subscribe(routeParams => {
+      this.pageDataService.getProgramWithQuote(routeParams.quoteId);
+    });
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         setTimeout(() => {
           this.program = selectedProgram;
+          this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.program?.quoteData?.propertyQuote.propertyQuoteBuildingLocationTabValidation || null;
+          this.mortgageeAdditionalInterestTabValidation = this.program?.quoteData?.propertyQuote.propertyQuoteMortgageeAdditionalInterestTabValidation || null;
+          this.coveragePremiumTabValidation = this.program?.quoteData?.propertyQuote.coveragesTabValidation || null;
+          this.termsAndConditionsTabValidation = this.program?.quoteData?.propertyQuote.termsAndConditionsTabValidation || null;
         });
       }
     );
+    this.propertyLocationTabValidationSub = this.quoteValidationService.propertyQuoteLocationBuildingTabValidation$.subscribe(
+      (validation: QuoteValidationClass | null) => {
+        this.propertyLocationTabValidation = validation;
+      }
+    );
+    this.mortgageeAdditionalInterestTabValidationSub = this.quoteValidationService.propertyQuoteMortgageeAdditionalInterestTabValidation$.subscribe(
+      (validation: QuoteValidationClass | null) => {
+        this.mortgageeAdditionalInterestTabValidation = validation;
+      }
+    );
+    this.coveragePremiumTabValidationSub = this.quoteValidationService.coveragePremiumTabValidation$.subscribe(
+      (validation: QuoteValidationClass | null) => {
+        this.coveragePremiumTabValidation = validation;
+      }
+    );
+    this.termsAndConditionsTabValidationSub = this.quoteValidationService.termsAndConditionsTabValidation$.subscribe(
+      (validation: QuoteValidationClass | null) => {
+        this.termsAndConditionsTabValidation = validation;
+      }
+    );
+  }
+  ngOnDestroy(): void {
+    this.propertyLocationTabValidationSub.unsubscribe();
+    this.mortgageeAdditionalInterestTabValidationSub.unsubscribe();
+    this.coveragePremiumTabValidationSub.unsubscribe();
+    this.termsAndConditionsTabValidationSub.unsubscribe();
   }
 }

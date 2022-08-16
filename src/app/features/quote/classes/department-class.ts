@@ -106,15 +106,14 @@ export class DepartmentClass implements Department, QuoteValidation {
     });
   }
   validate(){
-    this._validationResults.errorMessages = [];
-    this._validationResults.errorMessages.push('department');
-
+    this._validationResults.resetValidation();
     const quotes = this.programMappings.map(x => x.quoteData).filter((x): x is QuoteClass => x !== null);
     const quoteValidations: QuoteValidationClass[] = [];
     quotes.forEach(quote => {
       quote.validate();
       quoteValidations.push(quote.validationResults);
     });
+    console.log(quoteValidations);
     this._validationResults.validateChildrenAndMerge(quoteValidations);
     console.log('department validations: ', this._validationResults);
     return this._validationResults;

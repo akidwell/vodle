@@ -268,8 +268,8 @@ export class QuoteClass implements Quote, QuoteValidation {
     //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   }
   validateQuote() {
-    this._canBeSaved = true;
-    this._errorMessages = ['quote'];
+    //this._canBeSaved = true;
+    this._errorMessages = [];
     this._isValid = true;
     this.validationResults.mapValues(this);
     this.validateQuoteChildren();
@@ -277,7 +277,6 @@ export class QuoteClass implements Quote, QuoteValidation {
   validate(){
     this.validateQuote();
     this.propertyQuote?.validate();
-    this.validationResults.mapValues(this);
     const childValidations: QuoteValidationClass[] = [];
     if (this.propertyQuote) {
       childValidations.push(this.propertyQuote?.validationResults);
@@ -285,8 +284,9 @@ export class QuoteClass implements Quote, QuoteValidation {
     if (this.quoteRatesValidation){
       childValidations.push(this.quoteRatesValidation);
     }
+    console.log(childValidations);
     if (childValidations.length > 0) {
-      this.validationResults.validateChildrenAndMerge(childValidations);
+      this.validationResults.validateChildValidations(childValidations);
     }
     console.log('final quote validation: ', this.validationResults);
     //TODO: class based validation checks

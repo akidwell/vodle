@@ -10,7 +10,7 @@ import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
   private _isDirty = false;
-  private _isValid = false;
+  private _isValid = true;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
@@ -284,9 +284,21 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       this.classValidation();
       this._validateOnLoad = false;
     }
-    const validation = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
-    validation.mapValues(this);
-    return validation;
+    this._validationResults.resetValidation();
+
+    this.callChildValidations();
+    this._validationResults.mapValues(this);
+    this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingCoverage);
+
+    return this._validationResults;
+  }
+  callChildValidations() {
+    this.childArrayValidate(this.propertyQuoteBuildingCoverage);
+  }
+  childArrayValidate(children: QuoteValidation[]) {
+    children.forEach(child => {
+      child.validate ? child.validate() : null;
+    });
   }
   existingInit(building: PropertyBuilding) {
     this.propertyQuoteBuildingId = building.propertyQuoteBuildingId;
@@ -419,13 +431,12 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   classValidation() {
-    this.invalidList = [];
+    //this.invalidList = [];
     // if (!this.validateAmount()) {
     //   valid = false;
     // }
-    this._errorMessages = this.invalidList;
-    this._canBeSaved = true;
-    this._isValid = true;
+    //this._errorMessages = this.invalidList;
+
   }
   get validateAddress(): boolean {
     return !(!this.street1 || !this.city);
