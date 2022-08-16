@@ -53,28 +53,6 @@
       Save
     </button>
     <button
-    style="margin-left: 50px;"
-      class="btn btn-md btn-primary"
-      *ngIf="(canEditSubmission && pageDataService.quoteData != null)"
-      style="margin: 5px"
-      appPreventDoubleClick
-      (throttledClick)="quoteSavingService.saveDepartment()"
-      [throttleTime]="700"
-    >
-      Save Department Quotes
-    </button>
-    <button
-    style="margin-left: 50px;"
-      class="btn btn-md btn-primary"
-      *ngIf="(canEditSubmission && hasSelectedProgram)"
-      style="margin: 5px"
-      appPreventDoubleClick
-      (throttledClick)="quoteSavingService.saveQuote()"
-      [throttleTime]="700"
-    >
-      Save Quote
-    </button>
-    <button
       class="btn btn-md btn-primary"
       *ngIf="(pageDataService.lastSubmission != null) "
       style="margin: 5px"

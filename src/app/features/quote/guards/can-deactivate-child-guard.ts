@@ -29,8 +29,10 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
     if (component instanceof QuotePropertyLocationCoverageComponent || component instanceof QuotePropertyMortgageeComponent ||
       component instanceof QuotePremiumComponent || component instanceof TermsConditionsComponent) {
       // Skip checks if bypassFormGuard is set
-
-      allowNavigate = this.validateAndSaveDepartment();
+      console.log(this.checkLeavePolicy(state.url, nextState.url));
+      if (!this.checkLeavePolicy(state.url, nextState.url)) {
+        allowNavigate = this.validateAndSaveDepartment();
+      }
       // // Show errors
       // //component.showInvalidControls();
       // window.scroll(0, 0);
@@ -62,28 +64,18 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
     //if isValid is false we prevent them from leaving tab
     return true;
   }
-  // validateQuote() {
-  //   const quoteId = route.paramMap.get('quoteId') ?? '';
-  //   if (quoteId && parseInt(quoteId)) {
-  //     const quote = this.quoteDataValidationService.validateSingleQuote(parseInt(quoteId));
-  //     console.log(quote);
-  //   }
-
-  //   if (department && department.isValid) {
-  //     if (department.isDirty) {
-
-  //       // if (component.isValid()) {
-  //       //   if (component.isDirty()) {
-  //       //     component.save();
-  //       //   }
-  //       //   // No error and no longer dirty then hide any errors and navigate to next route
-  //       //   component.hideInvalid();
-  //       //   return true;
-  //       // }
-  //     }
-  //     // No error and no longer dirty then hide any errors and navigate to next route
-  //     //component.hideInvalid();
-  //     return true;
-  //   }
-  // }:
+  checkLeavePolicy(startUrl: string, endUrl: string): boolean {
+    const startRoute = startUrl.split('/');
+    const endRoute = endUrl.split('/');
+    console.log(startRoute[4], endRoute[4]);
+    // if nagivating outstide policy then open confirm leave dialog
+    if (!endUrl.startsWith('/quote') || endUrl.endsWith('/quote')) {
+      return true;
+    }
+    // if nagivating different policy or endorsement then open confirm leave dialog
+    else if (startRoute[2] != endRoute[2] || startRoute[4] != endRoute[4]) {
+      return true;
+    }
+    return false;
+  }
 }

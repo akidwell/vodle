@@ -7,8 +7,9 @@ import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-co
 import { PropertyQuoteClass } from './property-quote-class';
 import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
+import { QuoteAfterSave } from '../models/quote-after-save';
 
-export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation {
+export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
@@ -289,7 +290,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this.callChildValidations();
     this._validationResults.mapValues(this);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingCoverage);
-
     return this._validationResults;
   }
   callChildValidations() {
@@ -298,6 +298,14 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   childArrayValidate(children: QuoteValidation[]) {
     children.forEach(child => {
       child.validate ? child.validate() : null;
+    });
+  }
+  markChildrenClean() {
+    this.cleanChildArray(this.propertyQuoteBuildingCoverage);
+  }
+  cleanChildArray(children: QuoteAfterSave[]) {
+    children.forEach(child => {
+      child.markStructureClean();
     });
   }
   existingInit(building: PropertyBuilding) {
@@ -419,6 +427,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
 
   markClean() {
     this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
+    this.markChildrenClean();
   }
   markDirty() {
     this._isDirty = true;

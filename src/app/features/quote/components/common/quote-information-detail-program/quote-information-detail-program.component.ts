@@ -7,6 +7,7 @@ import { HistoryService } from 'src/app/core/services/policy-history/policy-hist
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { ProgramClass } from '../../../classes/program-class';
 import { QuoteClass } from '../../../classes/quote-class';
+import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 import { QuoteService } from '../../../services/quote-service/quote.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { QuoteService } from '../../../services/quote-service/quote.service';
   templateUrl: './quote-information-detail-program.component.html',
   styleUrls: ['./quote-information-detail-program.component.css'],
 })
-export class QuoteInformationDetailProgramComponent implements OnInit {
+export class QuoteInformationDetailProgramComponent {
   formatDateForDisplay!: FormatDateForDisplay;
   authSub: Subscription;
   canEditSubmission = false;
@@ -27,7 +28,8 @@ export class QuoteInformationDetailProgramComponent implements OnInit {
     private userAuth: UserAuth,
     private quoteService: QuoteService,
     private router: Router,
-    private historyService: HistoryService
+    private historyService: HistoryService,
+    private quoteSavingService: QuoteSavingService
   ) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => (this.canEditSubmission = canEditSubmission)
@@ -35,9 +37,6 @@ export class QuoteInformationDetailProgramComponent implements OnInit {
     this.formatDateForDisplay = formatDateService;
   }
 
-  ngOnInit(): void {
-    console.log('test');
-  }
   createQuote() {
     this.program.quoteData = new QuoteClass(
       undefined,
@@ -46,25 +45,7 @@ export class QuoteInformationDetailProgramComponent implements OnInit {
     );
     console.log(this.program);
     this.newQuote = true;
+    this.quoteSavingService.saveDepartment();
   }
-  async saveQuote() {
-    if (this.program.quoteData) {
-      console.log(this.program.quoteData);
-      console.log(this.program.quoteData.submission);
-      const results$ = this.quoteService.updateQuote(this.program.quoteData);
-      await lastValueFrom(results$).then(async (quote) => {
-        console.log(quote);
-        if (quote !== null) {
-          // Update history for opened Quote
-          this.historyService.updateQuoteHistory(
-            Number(quote),
-            this.program.quoteData?.submission.submissionNumber ?? 0
-          );
-          this.router.navigate(['/quote/' + quote + '/information']);
-        }
-        this.newQuote = false;
-        return true;
-      });
-    }
-  }
+
 }

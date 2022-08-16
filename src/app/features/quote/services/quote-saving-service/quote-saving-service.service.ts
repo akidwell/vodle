@@ -40,7 +40,6 @@ export class QuoteSavingService {
   async saveDepartment() {
     const department = this.department;
     const isNew = this.department?.sequenceNumber === 0;
-    console.log('program: ', this.program, 'department: ', this.department);
     if(department) {
       const results$ = this.quoteService.updateAllQuotes(department);
       await lastValueFrom(results$).then(async sequence => {
@@ -48,7 +47,12 @@ export class QuoteSavingService {
         if (isNew && sequence !== null) {
           this.router.navigate(['/quote/' + sequence + '/information']);
         }
+        department.afterSave();
         //this.newQuote = false;
+        this.notification.show('Quote Saved.', {
+          classname: 'bg-success text-light',
+          delay: 5000,
+        });
         return true;
       });
     }
@@ -65,6 +69,7 @@ export class QuoteSavingService {
           quote.sequenceNumber = quoteData.sequenceNumber;
           this.propertyDataService.buildingList = quote.propertyQuote.buildingList;
           //this.newQuote = false;
+          quote.afterSave();
           this.notification.show('Quote Saved.', {
             classname: 'bg-success text-light',
             delay: 5000,

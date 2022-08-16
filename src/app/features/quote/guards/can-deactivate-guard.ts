@@ -89,7 +89,7 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
     department?.validate();
     //TODO: Add isDirty check as we don't want to save every tab change
     //if canBeSaved is false we skip the save
-    if (department?.validationResults.canBeSaved) {
+    if (department?.validationResults.isDirty && department?.validationResults.canBeSaved) {
       this.quoteSavingService.saveDepartment();
     }
     console.log(department?.validationResults);

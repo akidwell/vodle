@@ -13,8 +13,9 @@ import { QuoteRate } from '../models/quote-rate';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
+import { QuoteAfterSave } from '../models/quote-after-save';
 
-export class QuoteClass implements Quote, QuoteValidation {
+export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
   private _canBeSaved = true;
@@ -249,7 +250,27 @@ export class QuoteClass implements Quote, QuoteValidation {
   setReadonlyFields() {
     // No special rules
   }
-
+  markStructureClean() {
+    this.markClean();
+    this.markChildrenClean();
+  }
+  afterSave() {
+    if (this._validationResults.canBeSaved) {
+      this.markStructureClean();
+    }
+  }
+  markChildrenClean() {
+    console.log(this.propertyQuote);
+    if (this.propertyQuote) {
+      this.propertyQuote.markStructureClean();
+    }
+    this.cleanChildArray(this.quoteRates);
+  }
+  cleanChildArray(children: QuoteAfterSave[]) {
+    children.forEach(child => {
+      child.markStructureClean();
+    });
+  }
   // createPropertyLocationCoverageValidation() {
   //   this.propertyQuoteValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
 

@@ -32,9 +32,9 @@ export class QuoteValidationClass implements QuoteValidation {
   validateChildrenAndMerge(childGroup: QuoteValidation[]) {
     this.isEmpty = childGroup.length == 0;
     if (!this.isEmpty) {
-      this.isDirty = this.isDirty || childGroup.map(x => x.isDirty).includes(true);
-      this.canBeSaved = this.canBeSaved && !childGroup.map(x => x.canBeSaved).includes(false);
-      this.isValid = this.isValid && !childGroup.map(x => x.isValid).includes(false);
+      this.isDirty = this.isDirty || childGroup.map(x => x.validationResults?.isDirty).includes(true);
+      this.canBeSaved = this.canBeSaved && !childGroup.map(x => x.validationResults?.canBeSaved).includes(false);
+      this.isValid = this.isValid && !childGroup.map(x => x.validationResults?.isValid).includes(false);
       this.errorMessages = this.errorMessages.concat(childGroup.flatMap(x => x.validationResults?.errorMessages || []));
     }
   }

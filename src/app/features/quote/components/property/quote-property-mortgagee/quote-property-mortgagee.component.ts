@@ -28,7 +28,6 @@ export class QuotePropertyMortgageeComponent{
   ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
-        console.log(selectedProgram);
         if (selectedProgram != null) {
           this.quote = selectedProgram.quoteData ?? new QuoteClass();
         }

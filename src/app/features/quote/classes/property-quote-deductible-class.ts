@@ -1,8 +1,9 @@
 import { PropertyDeductible } from '../models/property-deductible';
+import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteValidation } from '../models/quote-validation';
 
 
-export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteValidation {
+export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteValidation, QuoteAfterSave {
   private _isDirty = false;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
@@ -219,6 +220,9 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
 
   markClean() {
     this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
   }
   markDirty() {
     this._isDirty = true;
