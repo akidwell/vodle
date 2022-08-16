@@ -16,7 +16,6 @@ import { Code } from 'src/app/core/models/code';
   styleUrls: ['./property-building.component.css']
 })
 export class PropertyBuildingComponent implements OnInit {
-  // collapsed = true;
   faAngleUp = faAngleUp;
   states$: Observable<State[]> | undefined;
   cspCodes$: Observable<Code[]> | undefined;
@@ -98,7 +97,6 @@ export class PropertyBuildingComponent implements OnInit {
       this.states$ = this.dropdowns.getStates();
       this.firstExpand = false;
     }
-    // this.collapsed = event;
     setTimeout(() => {
       this.building.isExpanded = !event;
     });

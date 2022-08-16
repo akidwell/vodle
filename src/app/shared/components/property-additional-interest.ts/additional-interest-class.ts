@@ -28,6 +28,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
   private _isAppliedToAll = false;
 
   isNew = false;
+  guid = '';
   invalidList: string[] = [];
   isCopy = false;
   isZipLookup = false;
@@ -90,6 +91,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this.propertyQuoteId = 0;
     this.propertyQuoteAdditionalInterestId = 0;
     this.isNew = true;
+    this.guid = crypto.randomUUID();
   }
 
   get validationResults(): QuoteValidationClass {
@@ -255,7 +257,8 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
       city: this.city,
       zip:this.zip,
       countryCode: this.countryCode,
-      isAppliedToAll: this.isAppliedToAll
+      isAppliedToAll: this.isAppliedToAll,
+      guid: this.guid
     };
   }
 

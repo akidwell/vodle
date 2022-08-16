@@ -13,6 +13,8 @@ import { QuoteRate } from '../models/quote-rate';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
+import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 
 export class QuoteClass implements Quote, QuoteValidation {
   private _validateOnLoad = true;
@@ -325,17 +327,48 @@ export class QuoteClass implements Quote, QuoteValidation {
   onSave(savedQuote: QuoteClass) {
     this.onSaveBuilding(this.propertyQuote.propertyQuoteBuilding,savedQuote);
     this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductible,savedQuote);
+    this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgagee,savedQuote);
+    this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterest,savedQuote);
+  }
+
+  private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: QuoteClass): void {
+    mortgagees.forEach(mortgagee => {
+      if (mortgagee.isNew) {
+        const match = savedQuote.propertyQuote.propertyQuoteMortgagee.find(c => c.guid == mortgagee.guid);
+        if (match != null) {
+          mortgagee.propertyQuoteMortgageeId = match.propertyQuoteMortgageeId;
+          mortgagee.propertyQuoteId = match.propertyQuoteId;
+        }
+        mortgagee.isNew = false;
+        mortgagee.guid = '';
+      }
+    });
+  }
+
+  private onSaveAdditionalInterest(additionalInterests: AdditionalInterestClass[], savedQuote: QuoteClass): void {
+    additionalInterests.forEach(additionalInterest => {
+      if (additionalInterest.isNew) {
+        const match = savedQuote.propertyQuote.propertyQuoteAdditionalInterest.find(c => c.guid == additionalInterest.guid);
+        if (match != null) {
+          additionalInterest.propertyQuoteAdditionalInterestId = match.propertyQuoteAdditionalInterestId;
+          additionalInterest.propertyQuoteId = match.propertyQuoteId;
+        }
+        additionalInterest.isNew = false;
+        additionalInterest.guid = '';
+      }
+    });
   }
 
   private onSaveDeductible(deductibles: PropertyQuoteDeductibleClass[], savedQuote: QuoteClass): void {
     deductibles.forEach(deductible => {
       if (deductible.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteDeductible.find(c => c.sequence == deductible.sequence);
+        const match = savedQuote.propertyQuote.propertyQuoteDeductible.find(c => c.guid == deductible.guid);
         if (match != null) {
           deductible.propertyQuoteDeductibleId = match.propertyQuoteDeductibleId;
           deductible.propertyQuoteId = match.propertyQuoteId;
         }
         deductible.isNew = false;
+        deductible.guid = '';
       }
     });
   }
@@ -343,12 +376,13 @@ export class QuoteClass implements Quote, QuoteValidation {
   private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: QuoteClass): void {
     buildings.forEach(building => {
       if (building.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.subjectNumber == building.subjectNumber && c.premisesNumber == building.premisesNumber && c.buildingNumber == building.buildingNumber);
+        const match = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.guid == building.guid);
         if (match != null) {
           building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
           building.propertyQuoteId = match.propertyQuoteId;
         }
         building.isNew = false;
+        building.guid = '';
       }
       this.onSaveCoverage(building.propertyQuoteBuildingCoverage, savedQuote);
     });
@@ -357,13 +391,14 @@ export class QuoteClass implements Quote, QuoteValidation {
   private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: QuoteClass): void {
     coverages.forEach(coverage => {
       if (coverage.isNew) {
-        const buildingMatch = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.subjectNumber == coverage.building.subjectNumber && c.premisesNumber == coverage.building.premisesNumber && c.buildingNumber == coverage.building.buildingNumber);
-        const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.propertyCoverageId == coverage.propertyCoverageId);
+        const buildingMatch = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
+        const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.guid == coverage.guid);
         if (coverageMatch != null) {
           coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId;
           coverage.propertyQuoteBuildingId = coverageMatch.propertyQuoteBuildingId;
         }
         coverage.isNew = false;
+        coverage.guid = '';
       }
     });
   }

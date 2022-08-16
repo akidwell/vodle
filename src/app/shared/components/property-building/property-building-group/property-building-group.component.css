@@ -6,3 +6,12 @@
     background-color: #e6e9ed;
     border-bottom: 2px solid black;
 }
+
+.form-label {
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    margin-bottom: 0px;
+  }

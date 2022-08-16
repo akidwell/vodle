@@ -7,7 +7,7 @@ import { UnderlyingLimitBasis } from '../../../features/policy/models/schedules'
 import { Code } from '../../models/code';
 import { State } from '../../models/state';
 import { PropertyDeductibleLookup } from '../../models/property-deductible-lookup';
-import { ClassCode } from 'src/app/features/quote/models/class-code';
+import { PropertyCoverageLookup } from '../../models/property-coverage-lookup';
 
 @Injectable({
   providedIn: 'root',
@@ -1083,18 +1083,18 @@ export class DropDownsService {
 
   ////////////////////////////////////////
   // Property Coverages
-  private cachePropertyCoverages: Code[] | null = null;
-  private cachePropertyCoverages$!: Observable<Code[]> | null;
+  private cachePropertyCoverages: PropertyCoverageLookup[] | null = null;
+  private cachePropertyCoverages$!: Observable<PropertyCoverageLookup[]> | null;
 
-  getPropertyCoverages(): Observable<Code[]> {
-    let observable: Observable<Code[]>;
+  getPropertyCoverages(): Observable<PropertyCoverageLookup[]> {
+    let observable: Observable<PropertyCoverageLookup[]>;
     if (this.cachePropertyCoverages) {
       observable = of(this.cachePropertyCoverages);
     } else if (this.cachePropertyCoverages$) {
       observable = this.cachePropertyCoverages$;
     } else {
       this.cachePropertyCoverages$ = this.http
-        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coverages')
+        .get<PropertyCoverageLookup[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coverages')
         .pipe(
           tap((res) => (this.cachePropertyCoverages = res)),
           share(),
@@ -1130,7 +1130,7 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Property Vsluations
+  // Property Valuations
   private cachePropertyValuations: Code[] | null = null;
   private cachePropertyValuations$!: Observable<Code[]> | null;
 
@@ -1149,6 +1149,30 @@ export class DropDownsService {
           finalize(() => (this.cachePropertyValuations$ = null))
         );
       observable = this.cachePropertyValuations$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Coinsurance
+  private cachePropertyCoinsurance: Code[] | null = null;
+  private cachePropertyCoinsurance$!: Observable<Code[]> | null;
+
+  getPropertyCoinsurance(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyCoinsurance) {
+      observable = of(this.cachePropertyCoinsurance);
+    } else if (this.cachePropertyCoinsurance$) {
+      observable = this.cachePropertyCoinsurance$;
+    } else {
+      this.cachePropertyCoinsurance$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coinsurance')
+        .pipe(
+          tap((res) => (this.cachePropertyCoinsurance = res)),
+          share(),
+          finalize(() => (this.cachePropertyCoinsurance$ = null))
+        );
+      observable = this.cachePropertyCoinsurance$;
     }
     return observable;
   }

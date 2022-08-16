@@ -46,16 +46,16 @@
         <div class="card-body" *ngIf="buildings.length > 0">
             <div class="row">
                 <div class="col-lg-1">
-                    <label>Subject #</label>
+                    <label class="form-label" title="Subject #">Subject #</label>
                 </div>
                 <div class="col-lg-1">
-                    <label>Premises #</label>
+                    <label class="form-label" title="Premises #">Premises #</label>
                 </div>
                 <div class="col-lg-1">
-                    <label>Building #</label>
+                    <label class="form-label" title="Building #">Building #</label>
                 </div>
                 <div class="col-lg-7">
-                    <label>Address</label>
+                    <label class="form-label" title="Address">Address</label>
                 </div>
             </div>
             <div *ngFor="let item of policies$ | async; let i = index">
@@ -79,6 +79,6 @@
     <div class="card-footer">
         <button class="footer-button" (click)="addBuilding();">Add
             Location/Building</button>
-        <div class="footer-count">Buldings: {{(policies$ | async)?.length}}/{{buildingCount}}</div>
+        <div class="footer-count">Buildings: {{(policies$ | async)?.length}}/{{buildingCount}}</div>
     </div>
 </div>
