@@ -12,6 +12,7 @@ import { QuoteSummaryComponent } from './components/common/quote-summary-base/qu
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
+import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 
 const routes: Routes = [
   {
@@ -45,13 +46,15 @@ const routes: Routes = [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
           {
             path: 'location',
+            canDeactivate: [CanDeactivateChildGuard],
             component: QuotePropertyLocationCoverageComponent,
             data: { saveComponent: true },
           },
-          { path: 'mortgagee', component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
-          { path: 'premium', component: QuotePremiumComponent, data: { saveComponent: true } },
+          { path: 'mortgagee', canDeactivate: [CanDeactivateChildGuard], component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
+          { path: 'premium', canDeactivate: [CanDeactivateChildGuard], component: QuotePremiumComponent, data: { saveComponent: true } },
           {
             path: 'conditions',
+            canDeactivate: [CanDeactivateChildGuard],
             component: TermsConditionsComponent,
             data: { saveComponent: true },
           },
