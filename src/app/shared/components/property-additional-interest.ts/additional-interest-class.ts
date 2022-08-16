@@ -56,14 +56,20 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
 
   classValidation() {
     this.invalidList = [];
+    this._canBeSaved = true;
+    this._isValid = true;
     // if (!this.validateAmount()) {
     //   valid = false;
     // }
+    if (this.emptyStringValueCheck(this._city)){
+      this._canBeSaved = false;
+      this._isValid = false;
+    }
     this._errorMessages = this.invalidList;
-    this._canBeSaved = true;
-    this._isValid = true;
   }
-
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
+  }
   existingInit(ai?: AdditionalInterestData){
     this._buildingNumber = ai?.buildingNumber || null;
     this._attention = ai?.attention || null;
@@ -216,14 +222,13 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     return this._isDirty;
   }
 
-  set isDity(value: boolean) {
+  set isDirty(value: boolean) {
     this._isDirty = value;
   }
 
   get isValid(): boolean {
-    const valid = true;
     //valid = this.validate(valid);
-    return valid;
+    return this._isValid;
   }
 
   set isValid(value: boolean){

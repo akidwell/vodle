@@ -4,5 +4,6 @@ export interface QuoteValidation {
   isDirty: boolean;
   canBeSaved: boolean;
   errorMessages: string[];
+  validationResults?: QuoteValidation;
   validate?(): QuoteValidation;
 }

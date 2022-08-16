@@ -129,7 +129,9 @@ export class StatusBarComponent implements OnInit {
   }
   ngAfterViewInit(){
     this.pageDataService.selectedProgram$.subscribe(
-      (program: ProgramClass | null) => this.hasSelectedProgram = program != null
+      (program: ProgramClass | null) => {
+        this.hasSelectedProgram = program != null;
+      }
     );
   }
   onResize() {
@@ -161,6 +163,7 @@ export class StatusBarComponent implements OnInit {
     }
   }
   private checkQuoteData(child: ActivatedRoute): DepartmentClass | null {
+
     if (child.snapshot.data && child.snapshot.data['quoteData']) {
       const data = child.snapshot.data['quoteData'].department;
       this.headerPaddingService.buttonBarPadding = LayoutEnum.button_bar_height;

@@ -9,6 +9,7 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { AdditionalInterestClass } from '../additional-interest-class';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { QuoteDataValidationService } from 'src/app/features/quote/services/quote-data-validation-service/quote-data-validation-service.service';
 
 @Component({
   selector: 'rsps-additional-interest-group',
@@ -30,7 +31,8 @@ export class AdditionalInterestGroupComponent implements OnInit {
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
-  constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
+  constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute,
+    private pageDataService: PageDataService, private quoteDataValidationService: QuoteDataValidationService) {
   }
 
   @Input() public aiData: AdditionalInterestClass[] = [];
@@ -48,7 +50,6 @@ export class AdditionalInterestGroupComponent implements OnInit {
       });
     this.collapsed = false;
   }
-
   isValid(): boolean {
     let valid = true;
     this.invalidList = [];
@@ -91,6 +92,8 @@ export class AdditionalInterestGroupComponent implements OnInit {
     const mort: AdditionalInterestClass = new AdditionalInterestClass();
     mort.isNew = true;
     this.aiData?.push(mort);
+    this.program?.quoteData?.validate();
+    this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
   }
 
 

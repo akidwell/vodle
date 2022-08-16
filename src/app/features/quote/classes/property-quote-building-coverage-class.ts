@@ -1,15 +1,18 @@
 
 import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from '../models/property-building-coverage';
-import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
+import { QuoteValidationClass } from './quote-validation-class';
 
 export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage {
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
-  private _errorMessages: string[] = [];
+  private _errorMessages: string[] = ['BuildingCoverage'];
   private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
+
   propertyQuoteBuildingCoverageId = 0;
   propertyQuoteBuildingId = 0;
   isNew = false;
@@ -21,6 +24,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   premisesNumber: number | null = null;
   buildingNumber: number | null = null;
   building!: PropertyQuoteBuildingClass;
+  invalidList: string[] = [];
 
   get buildingIndex(): string {
     return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
@@ -101,23 +105,36 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   get isValid(): boolean {
     return this._isValid;
   }
-
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
   constructor(coverage?: PropertyBuildingCoverageData) {
     if (coverage) {
       this.existingInit(coverage);
     } else {
       this.newInit();
     }
-    this.validateClass();
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, null);
+    this.validate();
   }
-  validateClass() {
-    if(this._validateOnLoad || this.isDirty) {
-      //implement rules
-      this._canBeSaved = true;
-      this._isValid = true;
-      this._errorMessages = ['property quote coverage'];
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      //TODO: class based validation checks
+      this.classValidation();
       this._validateOnLoad = false;
     }
+    this._validationResults.resetValidation();
+    this._validationResults.mapValues(this);
+    return this._validationResults;
+  }
+  classValidation() {
+    this.invalidList = [];
+    // if (!this.validateAmount()) {
+    //   valid = false;
+    // }
+    //this._errorMessages = this.invalidList;
+    this._canBeSaved = true;
+    this._isValid = true;
   }
 
   existingInit(coverage: PropertyBuildingCoverageData) {

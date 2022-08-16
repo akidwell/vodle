@@ -40,7 +40,7 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.validate();
   }
 
@@ -50,9 +50,9 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
       this.classValidation();
       this._validateOnLoad = false;
     }
-    const validation = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
-    validation.mapValues(this);
-    return validation;
+    this._validationResults.resetValidation();
+    this._validationResults.mapValues(this);
+    return this._validationResults;
   }
 
   classValidation() {

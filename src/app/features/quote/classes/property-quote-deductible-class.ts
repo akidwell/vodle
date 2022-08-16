@@ -5,7 +5,7 @@ import { QuoteValidation } from '../models/quote-validation';
 export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteValidation {
   private _isDirty = false;
   private _canBeSaved = true;
-  private _errorMessages: string[] = ['Property Quote Deductible'];
+  private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
@@ -190,9 +190,9 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     this.propertyQuoteDeductibleId = deductible.propertyQuoteDeductibleId;
     this.propertyQuoteId = deductible.propertyQuoteId;
     this.sequence = deductible.sequence;
-    this.isAppliedToAll = deductible.isAppliedToAll;
-    this.premisesNumber = deductible.premisesNumber;
-    this.buildingNumber = deductible.buildingNumber;
+    this._isAppliedToAll = deductible.isAppliedToAll;
+    this._premisesNumber = deductible.premisesNumber;
+    this._buildingNumber = deductible.buildingNumber;
     this._propertyDeductibleId = deductible.propertyDeductibleId;
     this._deductibleType = deductible.deductibleType;
     this._amount = deductible.amount;

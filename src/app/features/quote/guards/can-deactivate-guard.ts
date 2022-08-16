@@ -92,6 +92,7 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
     if (department?.validationResults.canBeSaved) {
       this.quoteSavingService.saveDepartment();
     }
+    console.log(department?.validationResults);
     //if isValid is false we prevent them from leaving tab
     return department?.validationResults.isValid || false;
   }

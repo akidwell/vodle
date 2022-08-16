@@ -20,19 +20,33 @@ export class QuoteValidationClass implements QuoteValidation {
     this.validationType = type;
     this.tabName = tabName;
   }
+  //used to validate an array of objects implementing QuoteValidation
   validateChildrenAsStandalone(childGroup: QuoteValidation[]) {
     this.isEmpty = childGroup.length == 0;
     this.isDirty = childGroup.map(x => x.isDirty).includes(true);
     this.canBeSaved = !childGroup.map(x => x.canBeSaved).includes(false);
     this.isValid = !childGroup.map(x => x.isValid).includes(false);
-    this.errorMessages = childGroup.flatMap(x => x.errorMessages);
+    this.errorMessages = childGroup.flatMap(x => x.validationResults?.errorMessages || []);
   }
+  //used to validate an array of objects implementing QuoteValidation and merging with the parent validation
   validateChildrenAndMerge(childGroup: QuoteValidation[]) {
     this.isEmpty = childGroup.length == 0;
-    this.isDirty = this.isDirty || childGroup.map(x => x.isDirty).includes(true);
-    this.canBeSaved = this.canBeSaved && !childGroup.map(x => x.canBeSaved).includes(false);
-    this.isValid = this.isValid && !childGroup.map(x => x.isValid).includes(false);
-    this.errorMessages = this.errorMessages.concat(childGroup.flatMap(x => x.errorMessages));
+    if (!this.isEmpty) {
+      this.isDirty = this.isDirty || childGroup.map(x => x.isDirty).includes(true);
+      this.canBeSaved = this.canBeSaved && !childGroup.map(x => x.canBeSaved).includes(false);
+      this.isValid = this.isValid && !childGroup.map(x => x.isValid).includes(false);
+      this.errorMessages = this.errorMessages.concat(childGroup.flatMap(x => x.validationResults?.errorMessages || []));
+    }
+  }
+  //used to validate an array of QuoteValidations
+  validateChildValidations(childGroup: QuoteValidation[]) {
+    this.isEmpty = childGroup.length == 0;
+    if (!this.isEmpty) {
+      this.isDirty = this.isDirty || childGroup.map(x => x.isDirty).includes(true);
+      this.canBeSaved = this.canBeSaved && !childGroup.map(x => x.canBeSaved).includes(false);
+      this.isValid = this.isValid && !childGroup.map(x => x.isValid).includes(false);
+      this.errorMessages = this.errorMessages.concat(childGroup.flatMap(x => x.errorMessages || []));
+    }
   }
   addValidationToChildGroup(childGroup: QuoteValidationClass[]) {
     childGroup.push(this);
@@ -42,6 +56,12 @@ export class QuoteValidationClass implements QuoteValidation {
     this.isDirty = item.isDirty;
     this.isEmpty = false;
     this.isValid = item.isValid;
-    this.errorMessages = item.errorMessages;
+    this.errorMessages = item.errorMessages || [];
+  }
+  resetValidation() {
+    this.isDirty = false;
+    this.isEmpty = false;
+    this.isValid = true;
+    this.errorMessages = [];
   }
 }
