@@ -45,6 +45,7 @@ import { QuotePropertyDetailLeftComponent } from './components/property/quote-pr
 import { QuotePropertyDetailCenterComponent } from './components/property/quote-property-detail/quote-property-detail-center/quote-property-detail-center.component';
 import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
+import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { QuotePropertyMortgageeComponent } from './components/property/quote-pro
   ],
   providers: [
     CanDeactivateGuard,
+    CanDeactivateChildGuard,
     DatePipe,
     FormatDateForDisplay,
     QuoteDataValidationService,

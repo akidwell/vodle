@@ -9,13 +9,14 @@ import { PropertyBuildingData } from '../models/property-building';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
 import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
+import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
 import { QuoteValidationClass } from './quote-validation-class';
 
-export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
+export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, QuoteAfterSave {
   propertyQuoteId: number | null = null;
   quoteId: number | null = null;
 
@@ -267,6 +268,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
     this.setRequiredFields();
   }
   validate(){
+    console.log('validate property quote');
     //on load or if dirty validate this
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
@@ -308,6 +310,17 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
       child.validate ? child.validate() : null;
     });
   }
+  markChildrenClean() {
+    this.cleanChildArray(this.propertyQuoteDeductible);
+    this.cleanChildArray(this.propertyQuoteMortgagee);
+    this.cleanChildArray(this.propertyQuoteAdditionalInterest);
+    this.cleanChildArray(this.propertyQuoteBuilding);
+  }
+  cleanChildArray(children: QuoteAfterSave[]) {
+    children.forEach(child => {
+      child.markStructureClean();
+    });
+  }
   newInit() {
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -315,6 +328,10 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation {
 
   markClean() {
     this._isDirty = false;
+  }
+  markStructureClean() {
+    this.markClean();
+    this.markChildrenClean();
   }
   markDirty() {
     this._isDirty = true;

@@ -2,9 +2,10 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enu
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { AdditionalInterestData } from 'src/app/features/quote/models/additional-interest';
+import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
 
-export class AdditionalInterestClass implements AdditionalInterestData, QuoteValidation{
+export class AdditionalInterestClass implements AdditionalInterestData, QuoteValidation, QuoteAfterSave{
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
@@ -39,7 +40,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.validate();
   }
 
@@ -49,9 +50,8 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
       this.classValidation();
       this._validateOnLoad = false;
     }
-    const validation = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
-    validation.mapValues(this);
-    return validation;
+    this._validationResults.mapValues(this);
+    return this._validationResults;
   }
 
   classValidation() {
@@ -237,6 +237,9 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
 
   markClean() {
     this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
   }
   markDirty() {
     this._isDirty = true;

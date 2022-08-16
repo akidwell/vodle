@@ -113,14 +113,28 @@ export class DepartmentClass implements Department, QuoteValidation {
       quote.validate();
       quoteValidations.push(quote.validationResults);
     });
-    console.log(quoteValidations);
-    this._validationResults.validateChildrenAndMerge(quoteValidations);
-    console.log('department validations: ', this._validationResults);
+    this._validationResults.validateChildValidations(quoteValidations);
     return this._validationResults;
   }
   markClean() {
     this._isDirty = false;
-    this._isValid = false;
+  }
+  markStructureClean() {
+    this.markClean();
+    this.markChildrenClean();
+  }
+  afterSave() {
+    this.markStructureClean();
+  }
+  markChildrenClean() {
+    this.cleanChildArray(this.programMappings);
+  }
+  cleanChildArray(children: ProgramClass[]) {
+    children.forEach(child => {
+      if(child.quoteData && child.quoteData.validationResults.canBeSaved) {
+        child.quoteData?.afterSave();
+      }
+    });
   }
   toJSON() {
     const programs: any[] = [];

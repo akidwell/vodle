@@ -2,14 +2,16 @@
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from '../models/property-building-coverage';
+import { QuoteAfterSave } from '../models/quote-after-save';
+import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { QuoteValidationClass } from './quote-validation-class';
 
-export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage {
+export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage, QuoteValidation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
-  private _errorMessages: string[] = ['BuildingCoverage'];
+  private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
@@ -140,7 +142,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   existingInit(coverage: PropertyBuildingCoverageData) {
     this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
-    this.propertyCoverageId = coverage.propertyCoverageId;
+    this._propertyCoverageId = coverage.propertyCoverageId;
     this._limit = coverage.limit;
     this._coinsuranceId = coverage.coinsuranceId;
     this._causeOfLossId = coverage.causeOfLossId;
@@ -172,6 +174,9 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   }
   markClean() {
     this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
   }
   markDirty() {
     this._isDirty = true;

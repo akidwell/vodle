@@ -2,9 +2,10 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enu
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { MortgageeData } from 'src/app/features/quote/models/mortgagee';
+import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
 
-export class MortgageeClass implements MortgageeData, QuoteValidation{
+export class MortgageeClass implements MortgageeData, QuoteValidation, QuoteAfterSave{
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
@@ -49,6 +50,7 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
       //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
+      console.log(this._canBeSaved);
     }
     this._validationResults.resetValidation();
     this._validationResults.mapValues(this);
@@ -57,12 +59,16 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
 
   classValidation() {
     this.invalidList = [];
+    this._canBeSaved = true;
     // if (!this.validateAmount()) {
     //   valid = false;
     // }
+    if (!this.city) {
+      this._canBeSaved = false;
+    }
     this._errorMessages = this.invalidList;
-    this._canBeSaved = true;
-    this._isValid = true;
+    // this._canBeSaved = true;
+    // this._isValid = true;
   }
 
   existingInit(mortgagee?: MortgageeData){
@@ -234,6 +240,9 @@ export class MortgageeClass implements MortgageeData, QuoteValidation{
 
   markClean() {
     this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
   }
   markDirty() {
     this._isDirty = true;
