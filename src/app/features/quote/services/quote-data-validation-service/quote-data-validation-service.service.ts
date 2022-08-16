@@ -27,7 +27,6 @@ export class QuoteDataValidationService {
   constructor(private pageDataService: PageDataService) {
     this.departmentSub = this.pageDataService.quoteData$.subscribe(
       (department: DepartmentClass | null) => {
-        console.log(department);
         this.department = department;
       }
     );
@@ -83,18 +82,16 @@ export class QuoteDataValidationService {
     }
   }
   //probably not needed
-  validateSingleTab(quoteId: number, tabName: QuoteValidationTabNameEnum) {
-    const quote = this.department?.programMappings.find(x => x.quoteData?.quoteId == quoteId)?.quoteData;
-    if (!quote) {
-      return; //TODO: Need to throw error
-    } else {
-      //quote.validateQuote();
-    }
-  }
+  // validateSingleTab(quoteId: number, tabName: QuoteValidationTabNameEnum) {
+  //   const quote = this.department?.programMappings.find(x => x.quoteData?.quoteId == quoteId)?.quoteData;
+  //   if (!quote) {
+  //     return; //TODO: Need to throw error
+  //   } else {
+  //     //quote.validateQuote();
+  //   }
+  // }
   updateQuoteValidations(quote: QuoteClass | null) {
-    console.log('happens: ', quote?.propertyQuote.propertyQuoteMortgageeAdditionalInterestTabValidation);
     if (quote) {
-      console.log('property quote: ', this.propertyQuoteValidation);
       this.propertyQuoteValidation = quote.propertyQuote.validationResults;
       this.propertyQuoteMortgageeAdditionalInterestTabValidation = quote.propertyQuote.propertyQuoteMortgageeAdditionalInterestTabValidation;
       this.propertyQuoteLocationBuildingTabValidation = quote.propertyQuote.propertyQuoteBuildingLocationTabValidation;

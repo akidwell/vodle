@@ -5,7 +5,6 @@ import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
 import { QuoteClass } from '../../../classes/quote-class';
-import { QuoteValidationClass } from '../../../classes/quote-validation-class';
 import { QuoteDataValidationService } from '../../../services/quote-data-validation-service/quote-data-validation-service.service';
 
 @Component({
@@ -18,7 +17,7 @@ export class QuotePropertyLocationCoverageComponent {
   canEditSubmission = false;
   quote!: QuoteClass;
   programSub!: Subscription;
-  tabValidationSub!: Subscription;
+  // tabValidationSub!: Subscription;
   classType = ClassTypeEnum.Quote;
 
   constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteValidationService: QuoteDataValidationService) {
@@ -30,7 +29,6 @@ export class QuotePropertyLocationCoverageComponent {
   ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
-        console.log(selectedProgram);
         if (selectedProgram != null) {
           setTimeout(() => {
             this.quote = selectedProgram.quoteData ?? new QuoteClass();
@@ -40,11 +38,10 @@ export class QuotePropertyLocationCoverageComponent {
         }
       }
     );
-    this.tabValidationSub = this.quoteValidationService.propertyQuoteLocationBuildingTabValidation$.subscribe(
-      (validation: QuoteValidationClass | null) => {
-        console.log(validation);
-      }
-    );
+    // this.tabValidationSub = this.quoteValidationService.propertyQuoteLocationBuildingTabValidation$.subscribe(
+    //   (validation: QuoteValidationClass | null) => {
+    //   }
+    // );
   }
 
 

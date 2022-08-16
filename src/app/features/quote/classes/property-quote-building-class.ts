@@ -284,12 +284,12 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       this.classValidation();
       this._validateOnLoad = false;
     }
-    this.callChildValidations();
-
     this._validationResults.resetValidation();
 
+    this.callChildValidations();
     this._validationResults.mapValues(this);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingCoverage);
+
     return this._validationResults;
   }
   callChildValidations() {
@@ -431,11 +431,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   classValidation() {
-    this.invalidList = [];
+    //this.invalidList = [];
     // if (!this.validateAmount()) {
     //   valid = false;
     // }
-    this._errorMessages = this.invalidList;
+    //this._errorMessages = this.invalidList;
 
   }
   get validateAddress(): boolean {
