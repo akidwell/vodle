@@ -9,6 +9,8 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { AdditionalInterestClass } from '../additional-interest-class';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { deepClone } from 'src/app/core/utils/deep-clone';
+
 import { QuoteDataValidationService } from 'src/app/features/quote/services/quote-data-validation-service/quote-data-validation-service.service';
 
 @Component({
@@ -71,11 +73,11 @@ export class AdditionalInterestGroupComponent implements OnInit {
   }
 
   copyExisitingAdditionalInterest(existingAi: AdditionalInterestClass) {
-    const copy: AdditionalInterestClass = Object.create(existingAi);
-    copy.interest = 'CopyOf ' + existingAi.interest;
-    console.log(existingAi);
-    copy.isNew = true;
-    this.aiData?.push(copy);
+    const clone = deepClone(existingAi.toJSON());
+    const newAi = new AdditionalInterestClass(clone);
+    newAi.interest = 'CopyOf ' + existingAi.interest;
+    newAi.isNew = true;
+    this.aiData?.push(newAi);
   }
 
   deleteExistingAdditionalInterest(existingAi: AdditionalInterestClass) {

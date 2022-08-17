@@ -1,6 +1,6 @@
 
 export interface MortgageeData {
-  buildingNumber: string | null| undefined;
+  buildingNumber: number | null| undefined;
   attention: string | null;
   description: string | null;
   premisesNumber: number | null;
@@ -14,4 +14,6 @@ export interface MortgageeData {
   zip: string | null;
   countryCode: string | null;
   isAppliedToAll: boolean;
+  building: string | null;
+  isNew: boolean | null;
   }

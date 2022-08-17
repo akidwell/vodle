@@ -42,7 +42,6 @@ import { PropertyBuildingModule } from 'src/app/shared/components/property-build
 import { PropertyImportModule } from 'src/app/shared/components/property-import/property-building.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
 import { QuotePropertyDetailLeftComponent } from './components/property/quote-property-detail/quote-property-detail-left/quote-property-detail-left.component';
-import { QuotePropertyDetailCenterComponent } from './components/property/quote-property-detail/quote-property-detail-center/quote-property-detail-center.component';
 import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
@@ -65,7 +64,6 @@ import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
     QuotePropertyPremiumComponent,
     PropertyPremiumRateComponent,
     QuotePropertyDetailLeftComponent,
-    QuotePropertyDetailCenterComponent,
     QuotePropertyDetailRightComponent,
     QuotePropertyMortgageeComponent],
   imports: [

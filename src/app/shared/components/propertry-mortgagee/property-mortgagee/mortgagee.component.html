@@ -2,17 +2,19 @@
   <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
     <div>
       <div class="row" *ngIf="collapsed">
-        <div class="col-sm-1">
-          <input type="checkbox" class="form-checkbox" id="isAppliedToAll" name="isAppliedToAll" [checked]="isAppliedToAll"
-            [(ngModel)]="mortgageeData.isAppliedToAll" #isAppliedToAll="ngModel" [readonly]="!canEditSubmission">
-        </div>
-        <div class="col-sm-1">
-          <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
-            [(ngModel)]="mortgageeData.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEditSubmission">
-        </div>
-        <div class="col-sm-1">
-          <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
-            [(ngModel)]="mortgageeData.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEditSubmission">
+          <div class="col-lg-1">
+            <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
+                bindValue="code" name="building"
+                [virtualScroll]="true" click-stop-propagation
+                [clearable]="false"
+                [searchFn]="dropDownSearch" [(ngModel)]="mortgageeData.building">
+                <ng-template ng-label-tmp let-item="item">
+                    {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                    {{item.description}}
+                </ng-template>
+            </ng-select>
         </div>
         <div (click)="collapseExpand(false)" class="col-lg-6">
           <input type="address" class="form-control" id="address" #address="ngModel" name="address"
@@ -35,21 +37,21 @@
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div class="row">
-          <div class="col-1">
-            <label for="isAppliedToAll" class="form-label" title="isAppliedToAll">Apply to all:</label><br>
-            <input type="checkbox" class="form-checkbox" id="isAppliedToAll" name="isAppliedToAll"
-              [(ngModel)]="mortgageeData.isAppliedToAll" #isAppliedToAll="ngModel" [readonly]="!canEditSubmission">
-          </div>
-          <div class="col-sm-1">
-            <label for="premisesNumber" class="form-label" title="premisesNumber">Premises #</label>
-            <input type="text" class="form-control" id="premisesNumber" name="premisesNumber"
-              [(ngModel)]="mortgageeData.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEditSubmission">
-          </div>
-          <div class="col-sm-1">
-            <label for="buildingNumber" class="form-label" title="buildingNumber">Building #</label>
-            <input type="text" class="form-control" id="buildingNumber" name="buildingNumber"
-              [(ngModel)]="mortgageeData.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEditSubmission">
-          </div>
+          <div class="col-lg-1">
+            <label for="building" class="form-label" title="building">Prem/Bldg:</label>
+            <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
+                bindValue="code" name="building"
+                [virtualScroll]="true" click-stop-propagation
+                [clearable]="false"
+                [searchFn]="dropDownSearch" [(ngModel)]="mortgageeData.building">
+                <ng-template ng-label-tmp let-item="item">
+                    {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                    {{item.description}}
+                </ng-template>
+            </ng-select>
+        </div>
           <div class="col-sm-3">
             <label for="mortgageHolder" class="form-label" title="mortgageHolder">Mortgage Holder</label>
             <input type="text" class="form-control" id="policyEventCode" name="mortgageHolder"

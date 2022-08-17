@@ -1,6 +1,6 @@
 
 export interface AdditionalInterestData {
-  buildingNumber: string | null| undefined;
+  buildingNumber: number | null| undefined;
   attention: string | null;
   description: string | null;
   premisesNumber: number | null;
@@ -14,4 +14,5 @@ export interface AdditionalInterestData {
   zip: string | null;
   countryCode: string | null;
   isAppliedToAll: boolean;
+  building: string | null;
   }
