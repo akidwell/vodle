@@ -4,12 +4,14 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { Code } from 'src/app/core/models/code';
 import { State } from 'src/app/core/models/state';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { AdditionalInterestClass } from '../additional-interest-class';
 
@@ -35,6 +37,8 @@ export class AdditionalInterestComponent {
   canEditSubmission = false;
   isHover = false;
   @Input() canDrag = false;
+  buildingList!: Code[];
+  buildingsSub!: Subscription;
 
   private modalRef!: NgbModalRef;
   @Output() copyExisitingAdditionalInterest: EventEmitter<AdditionalInterestClass> = new EventEmitter();
@@ -51,7 +55,8 @@ export class AdditionalInterestComponent {
     private dropdowns: DropDownsService, private route: ActivatedRoute,
     private quoteService: QuoteService,
     private addressLookupService: AddressLookupService,
-    private messageDialogService: MessageDialogService) {
+    private messageDialogService: MessageDialogService,
+    private propertyDataService: PropertyDataService) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
     );
@@ -62,8 +67,21 @@ export class AdditionalInterestComponent {
       this.collapseExpand(false);
       this.focus();
     }
+    this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
+      next: results => {
+        this.buildingList = results;
+        if (this.buildingList.find(c => c.code == this.aiData.building) == null) {
+          this.aiData.buildingNumber = null;
+        }
+      }
+    });
+    console.log(this.aiData.isAppliedToAll);
   }
 
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
   openDeleteConfirmation() {
     this.confirmation = 'overlay';
     this.confirmationDialogService.open('Delete Additional Interest Confirmation','Are you sure you want to delete Additional Interest?').then((result: boolean) => {

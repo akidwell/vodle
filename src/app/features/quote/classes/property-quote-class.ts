@@ -55,33 +55,13 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     return total;
   }
 
-  get largestTiv(): number {
-    let largest = 0;
-    this.propertyQuoteBuilding.forEach(x => {
-      if (x.propertyQuoteBuildingCoverage.length == 0){
-        return 0;
-      } else {
-        const coverages: PropertyBuildingCoverage[] = [];
-        this.propertyQuoteBuilding.forEach(element => {
-          element.propertyQuoteBuildingCoverage.forEach(x => {
-            coverages.push(new PropertyQuoteBuildingCoverageClass(x));
-          });
-        });
-        largest = Math.max(...coverages.map( c => c.limit? c.limit : 0));
-        return largest;
-      }
-    });
-    return largest;
-  }
-
-
   get subjectAmount(): Map<any,any> {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
     this.propertyQuoteBuilding.forEach((element) => {
       element.propertyQuoteBuildingCoverage.forEach((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
-        subAm.subject = element.subjectNumber;
+        subAm.subject = Number(element.subjectNumber);
         subAm.limit = x.limit;
         subjectAmounts.push(subAm);
       });
@@ -89,11 +69,48 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     const res = subjectAmounts.reduce((a, b) =>
       a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
 
+
     return res;
   }
 
   get buildingCount(): number {
     return this.propertyQuoteBuilding?.length ?? 0;
+  }
+  get largestTiv(): number {
+    let largest = 0;
+    this.propertyQuoteBuilding.forEach(x => {
+      if (x.propertyQuoteBuildingCoverage.length == 0){
+        return 0;
+      } else{
+
+        const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
+
+        this.propertyQuoteBuilding.forEach((element) => {
+          element.propertyQuoteBuildingCoverage.forEach((x) => {
+            const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
+            subAm.subject = element.premisesNumber;
+            subAm.limit = x.limit;
+            premAmounts.push(subAm);
+          });
+        });
+        const res = premAmounts.reduce((a, b) =>
+          a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
+
+        largest = Math.max(...res.values());
+        return largest;
+      }
+    });
+    return largest;
+  }
+
+  get lawLimits(): number {
+    return 0;
+  }
+
+  get largestExposure(): number {
+    const lawLimit = this.lawLimits;
+    const largestPremTiv = this.largestTiv;
+    return lawLimit + largestPremTiv;
   }
 
   get coverageCount(): number {
@@ -148,6 +165,16 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     this.filterBuildingsCoverages();
   }
 
+  private _cspCode! : Code;
+  get cspCode() : Code {
+    return this._cspCode;
+  }
+  set cspCode(value: Code) {
+    console.log(value);
+    this._cspCode = value;
+    this.propertyQuoteBuilding.forEach(x => x.cspCode = String(value));
+  }
+
   addBuilding(building: PropertyQuoteBuildingClass) {
     this.propertyQuoteBuilding.push(building);
     // this.propertyQuoteBuilding.forEach(c => c.focus = false);
@@ -162,6 +189,10 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
       this.propertyQuoteBuilding.splice(index, 1);
     }
     this.filterBuildings();
+  }
+
+  clearCspCodes() {
+    this.propertyQuoteBuilding.forEach(x => x.cspCode == null);
   }
 
   clearBuildings() {

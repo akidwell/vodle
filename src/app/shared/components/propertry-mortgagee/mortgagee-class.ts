@@ -13,7 +13,7 @@ export class MortgageeClass implements MortgageeData, QuoteValidation, QuoteAfte
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  private _buildingNumber: string | null = null;
+  private _buildingNumber: number | null = null;
   private _attention: string | null = null;
   private _description: string | null = null;
   private _premisesNumber: number | null = null;
@@ -27,6 +27,7 @@ export class MortgageeClass implements MortgageeData, QuoteValidation, QuoteAfte
   private _zip: string | null = null;
   private _countryCode: string | null = null;
   private _isAppliedToAll = false;
+  private _isNew!: boolean;
 
   isNew = false;
   guid = '';
@@ -105,12 +106,48 @@ export class MortgageeClass implements MortgageeData, QuoteValidation, QuoteAfte
     return this._errorMessages;
   }
 
-  get buildingNumber() : string | null {
+  get buildingNumber() : number | null {
     return this._buildingNumber;
   }
-  set buildingNumber(value: string | null) {
+  set buildingNumber(value: number | null) {
     this._buildingNumber = value;
     this._isDirty = true;
+  }
+
+  get building() : string | null {
+    if (this._isAppliedToAll) {
+      return 'All';
+    }
+    else if (this._premisesNumber == null || this._buildingNumber == null) {
+      return null;
+    }
+    return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
+  }
+
+  set building(value: string | null) {
+    if (value == 'All') {
+      this._isAppliedToAll = true;
+      this._premisesNumber = null;
+      this._buildingNumber = null;
+      this._isDirty = true;
+    }
+    else {
+      const parse = value?.split('-');
+      if (parse?.length == 2) {
+        const premises = parse[0] ?? '';
+        const building = parse[1] ?? '';
+        this._isAppliedToAll = false;
+        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
+        this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
+        this._isDirty = true;
+      }
+      else {
+        this._isAppliedToAll = false;
+        this._premisesNumber = null;
+        this._buildingNumber = null;
+        this._isDirty = true;
+      }
+    }
   }
 
   get attention() : string | null {
@@ -264,7 +301,9 @@ export class MortgageeClass implements MortgageeData, QuoteValidation, QuoteAfte
       zip:this.zip,
       countryCode: this.countryCode,
       isAppliedToAll: this.isAppliedToAll,
-      guid: this.guid
+      guid: this.guid,
+      building: this.building,
+      isNew: this.isNew
     };
   }
 
