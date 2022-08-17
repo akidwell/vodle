@@ -44,7 +44,7 @@ export class PropertyDeductibleComponent implements OnInit {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
-        if (this.buildingList.find(c => c.code == this.deductible.building) == null) {
+        if (this.buildingList?.find(c => c.code == this.deductible.building) == null) {
           this.deductible.building = null;
         }
       }
