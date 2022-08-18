@@ -115,13 +115,13 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   addPolicyLayer(): void {
-    let policyLayer = newPolicyLayer(this.policyId, this.endorsementNumber,this.getNextPolicyLayerSequence());
+    const policyLayer = newPolicyLayer(this.policyId, this.endorsementNumber,this.getNextPolicyLayerSequence());
     this.addReinsurance(policyLayer);
     this.policyLayerData.push(policyLayer);
   }
 
   async addReinsurance(policyLayerData: PolicyLayerData) {
-    let reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, policyLayerData.policyLayerNo, this.getNextReinsuranceLayerSequence(policyLayerData));
+    const reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, policyLayerData.policyLayerNo, this.getNextReinsuranceLayerSequence(policyLayerData));
     policyLayerData.reinsuranceData.push(reinsuranceLayer)
 
     // For first layer copy attachment point and limit

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgOption, NgSelectComponent } from '@ng-select/ng-select';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lookup';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
@@ -30,6 +30,7 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   @Input() public coverageIndex = 0;
   @Output() deleteCoverage: EventEmitter<PropertyBuildingCoverage> = new EventEmitter();
   @Output() copyCoverage: EventEmitter<PropertyBuildingCoverage> = new EventEmitter();
+  @ViewChild('coinsuranceComp') coinsuranceComp!: NgSelectComponent;
   @ViewChild('coverageComp') coverageComp!: NgSelectComponent;
   @ViewChild('causeOfLossComp') causeOfLossComp!: NgSelectComponent;
   @ViewChild('valuationComp') valuationComp!: NgSelectComponent;
@@ -44,6 +45,20 @@ export class PropertyBuildingCoverageComponent implements OnInit {
 
   ngOnInit(): void {
     this.coverages$ = this.dropdowns.getPropertyCoverages();
+    lastValueFrom(this.coverages$).then(
+      coverages => {
+        // Populate Coinsurance list depending if BI Coverage
+        if (this.coverage.propertyCoverageId != null) {
+          const match = coverages.find((c) => c.propertyCoverageId == this.coverage.propertyCoverageId);
+          if (match?.isBi) {
+            this.coinsurance$ = this.dropdowns.getPropertyBICoinsurance();
+          }
+          else {
+            this.coinsurance$ = this.dropdowns.getPropertyCoinsurance();
+          }
+        }
+      }
+    );
     this.causeOfLoss$ = this.dropdowns.getPropertyCauseOfLoss();
     this.valuations$ = this.dropdowns.getPropertyValuations();
     this.coinsurance$ = this.dropdowns.getPropertyCoinsurance();
@@ -92,8 +107,21 @@ export class PropertyBuildingCoverageComponent implements OnInit {
 
   changeCoverage(coverage: PropertyCoverageLookup) {
     this.coverage.valuationId = coverage.defaultValuationTypeId;
+    if (coverage.isBi) {
+      // Remove NIL if selected for a BI
+      if (this.coverage.coinsuranceId == 1) {
+        this.coverage.coinsuranceId = null;
+      }
+      this.coinsurance$ = this.dropdowns.getPropertyBICoinsurance();
+    }
+    else {
+      this.coinsurance$ = this.dropdowns.getPropertyCoinsurance();
+    }
   }
 
+  get coinsuranceTooltip(): string | undefined {
+    return this.coinsuranceComp?.selectedItems?.find((e: NgOption) => typeof e !== 'undefined')?.label;
+  }
   get coverageTooltip(): string | undefined {
     return this.coverageComp?.selectedItems?.find((e: NgOption) => typeof e !== 'undefined')?.label;
   }

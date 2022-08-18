@@ -1,5 +1,6 @@
 export interface PropertyCoverageLookup {
-    propertycoverageId: number;
+    propertyCoverageId: number;
     name: string;
+    isBi: boolean;
     defaultValuationTypeId: number;
 }

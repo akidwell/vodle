@@ -13,7 +13,7 @@
       [required]="canEdit" name="name" [(ngModel)]="aniData.name">
   </div>
   <div class="col-lg-1" *ngIf="aniData.showActive">
-    <input type="checkbox" class="form-checkbox" id="isActive" [(ngModel)]="aniData.isActive" name="isActive"
+    <input type="checkbox" class="form-check-input" id="isActive" [(ngModel)]="aniData.isActive" name="isActive"
       [readonly]="!canEdit || canDrag">
   </div>
   <div class="col-lg-2">

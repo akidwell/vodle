@@ -1165,14 +1165,40 @@ export class DropDownsService {
     } else if (this.cachePropertyCoinsurance$) {
       observable = this.cachePropertyCoinsurance$;
     } else {
+      const params = new HttpParams().append('isBI', false);
       this.cachePropertyCoinsurance$ = this.http
-        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coinsurance')
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coinsurance',{params})
         .pipe(
           tap((res) => (this.cachePropertyCoinsurance = res)),
           share(),
           finalize(() => (this.cachePropertyCoinsurance$ = null))
         );
       observable = this.cachePropertyCoinsurance$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  //  Property BI Coinsurance
+  private cachePropertyBICoinsurance: Code[] | null = null;
+  private cachePropertyBICoinsurance$!: Observable<Code[]> | null;
+
+  getPropertyBICoinsurance(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyBICoinsurance) {
+      observable = of(this.cachePropertyBICoinsurance);
+    } else if (this.cachePropertyBICoinsurance$) {
+      observable = this.cachePropertyBICoinsurance$;
+    } else {
+      const params = new HttpParams().append('isBI', true);
+      this.cachePropertyBICoinsurance$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coinsurance',{params})
+        .pipe(
+          tap((res) => (this.cachePropertyBICoinsurance = res)),
+          share(),
+          finalize(() => (this.cachePropertyBICoinsurance$ = null))
+        );
+      observable = this.cachePropertyBICoinsurance$;
     }
     return observable;
   }

@@ -8,7 +8,9 @@
                         click-stop-propagation
                         [ngbTooltip]="coverage.buildingIndex" [openDelay]="1000">
                 </div>
-                <div class="col-lg-1">
+                <div class="col-lg-3">
+                    <div class="row">
+                <div class="col-lg-6">
                     <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="name" bindValue="propertyCoverageId"
                         [clearable]="false" click-stop-propagation
                         [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
@@ -17,17 +19,19 @@
                         [openDelay]="1000" (change)="changeCoverage($event)">
                     </ng-select>
                 </div>
-                <div class="col-lg-1">
+                <div class="col-lg-6">
                     <input type="text" class="form-control right" id="limit" name="limit" [(ngModel)]="coverage.limit"
                         #subjectNumber="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.limitRequired" string-to-currency [allowNegative]="false" click-stop-propagation
                         [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
+                </div>
+                </div>
                 </div>
                 <div class="col-lg-1">
                     <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description"
                         bindValue="key" [clearable]="false" click-stop-propagation
                         [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
                         [required]="canEdit && coverage.coinsuranceRequired" name="coinsurance"
-                        [(ngModel)]="coverage.coinsuranceId" #coinsurance="ngModel" #causeOfLossComp [ngbTooltip]="causeOfLossTooltip"
+                        [(ngModel)]="coverage.coinsuranceId" #coinsurance="ngModel" #coinsuranceComp [ngbTooltip]="coinsuranceTooltip"
                         [openDelay]="1000">
                     </ng-select>
                 </div>
@@ -48,7 +52,7 @@
                         [openDelay]="1000">
                     </ng-select>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <input type="text" class="form-control" id="additionalDetail" name="additionalDetail"
                         [(ngModel)]="coverage.additionalDetail" #additionalDetail="ngModel" [readonly]="!canEdit"
                         click-stop-propagation ngbTooltip="Additional Detail #" [openDelay]="1000">

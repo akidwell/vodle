@@ -58,13 +58,3 @@ input[type="text"] {
 input[type="date"] {
   display: inline-block;
 }
-
-input[type="checkbox"] {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-}
-
-input[type="checkbox"][readonly] {
-  pointer-events: none;
-}
