@@ -116,6 +116,7 @@ export class PageDataService {
     if (this._quoteData) {
       this._quoteData.programMappings.forEach((program) => {
         if (program && program.quoteData && program.quoteData.quoteId == quoteId) {
+          this.propertyDataService.buildingList = program.quoteData.propertyQuote.buildingList;
           activeProgram = program;
         }
       });

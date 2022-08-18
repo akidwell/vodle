@@ -8,10 +8,6 @@
   margin: 6px;
 }
 
-input[type="checkbox"][readonly] {
-  pointer-events: none;
-}
-
 .alert {
   padding: 5px;    
 }
