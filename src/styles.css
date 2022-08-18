@@ -232,3 +232,8 @@ body {
 .collapse-bar:hover {
   background-color: #ccd4dc;
 }
+
+/* Page Item */
+.page-item.active {
+  z-index: 1 !important;
+}
