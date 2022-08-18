@@ -1,3 +1,4 @@
+import { Code } from 'src/app/core/models/code';
 import { AdditionalInterestData } from './additional-interest';
 import { MortgageeData } from './mortgagee';
 import { PropertyBuilding, PropertyBuildingData } from './property-building';
@@ -18,7 +19,10 @@ export interface PropertyQuote extends PropertyQuoteData {
   searchPremises: string;
   searchBuilding: string;
   searchAddress: string;
+  cspCode: Code | null;
+
   addBuilding(building: PropertyBuilding): void;
   deleteBuilding(building: PropertyBuilding): void;
   clearBuildings(): void;
+  clearCspCodes():void;
 }

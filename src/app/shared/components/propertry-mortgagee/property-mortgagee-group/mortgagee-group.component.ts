@@ -1,12 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
-
+import { deepClone } from 'src/app/core/utils/deep-clone';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { MortgageeClass } from '../mortgagee-class';
-import { MortgageeComponent } from '../property-mortgagee/mortgagee.component';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
@@ -71,11 +70,11 @@ export class MortgageeGroupComponent implements OnInit {
   }
 
   copyExisitingMortgagee(existingMortgagee: MortgageeClass) {
-    const copy: MortgageeClass = Object.create(existingMortgagee);
-    copy.mortgageHolder = 'CopyOf ' + existingMortgagee.mortgageHolder;
-    console.log(existingMortgagee);
-    copy.isNew = true;
-    this.mortgageeData?.push(copy);
+    const clone = deepClone(existingMortgagee.toJSON());
+    const newMortgagee = new MortgageeClass(clone);
+    newMortgagee.mortgageHolder = 'CopyOf ' + existingMortgagee.mortgageHolder;
+    newMortgagee.isNew = true;
+    this.mortgageeData?.push(newMortgagee);
   }
 
   deleteExistingMortgagee(existingMortgagee: MortgageeClass) {

@@ -14,12 +14,6 @@ input[type="date"] {
   display: inline-block;
 }
 
-/* input[type="checkbox"] {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-} */
-
 .collapse-bar {
   background: none;
   padding: 0;
@@ -64,10 +58,6 @@ input[type="date"] {
 label {
   white-space: nowrap;
   min-width: 100%;
-}
-
-input[type="checkbox"][readonly] {
-  pointer-events: none;
 }
 
 .hidden-label {

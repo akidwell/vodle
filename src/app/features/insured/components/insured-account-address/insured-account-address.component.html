@@ -97,7 +97,7 @@
     <div class="row">
       <div class="col-lg-2">
         <label for="override" class="form-label" title="Override">Override</label>
-        <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.isAddressOverride"
+        <input type="checkbox" class="form-check-input" id="override" [(ngModel)]="insured.isAddressOverride"
           name="override" [readonly]="!canEditInsured || insured.isAddressOverrideReadonly"
           [required]="canEditInsured && insured.isAddressOverrideRequired" (change)="addressOverride()">
       </div>
