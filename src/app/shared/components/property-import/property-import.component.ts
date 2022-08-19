@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { Quote } from 'src/app/features/quote/models/quote';
@@ -28,7 +29,8 @@ export class PropertyImportComponent {
     private quoteService: QuoteService,
     private pageDataService: PageDataService,
     private confirmationDialogService: ConfirmationDialogService,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private messageDialog: MessageDialogService
   ) { }
 
   async import(e: any) {
@@ -47,11 +49,15 @@ export class PropertyImportComponent {
               .then(async (result: boolean) => {
                 if (result) {
                   this.quote.propertyQuote.clearBuildings();
-                  await this.importQuote(Number(quoteId), file);
+                  if (this.quote.propertyQuote.propertyQuoteId !== null) {
+                    const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuote.propertyQuoteId);
+                    await lastValueFrom(result$);
+                  }
+                  await this.importQuote(this.quote, file);
                 }
               });
           } else {
-            await this.importQuote(Number(quoteId), file);
+            await this.importQuote(this.quote, file);
           }
         }
       } else if (this.classType == ClassTypeEnum.Policy) {
@@ -60,9 +66,9 @@ export class PropertyImportComponent {
     }
   }
 
-  async importQuote(quoteId: number, file: File) {
+  async importQuote(quote: Quote, file: File) {
     this.importing = true;
-    const results$ = this.quoteService.import(quoteId, file);
+    const results$ = this.quoteService.import(quote, file);
     await lastValueFrom(results$).then(
       async (quote) => {
         const newQuote = new QuoteClass(quote);
@@ -84,14 +90,14 @@ export class PropertyImportComponent {
   private async checkErrors(errors: string[]): Promise<boolean> {
     if (errors.length > 0 ) {
       let errorsMessage =errors.map(x=>x).join('<br>');
-      errorsMessage += '<br><br>Do you still want to import?';
-      return await this.confirmationDialogService
+      errorsMessage += '<br><br>Please fix errors and try again';
+      return await this.messageDialog
         .open(
           'Import Errors',
           errorsMessage
         )
-        .then((result) => {
-          return result;
+        .then(() => {
+          return false;
         });
     }
     return true;
