@@ -46,6 +46,9 @@ export class QuoteService {
   deleteDeductible(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-deductibles/' + id);
   }
+  deleteAllBuildings(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-quote/' + id + '/property-buildings');
+  }
   deleteBuilding(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-buildings/' + id);
   }
@@ -61,15 +64,11 @@ export class QuoteService {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/additional-interest/' + ai.propertyQuoteAdditionalInterestId?.toString());
   }
 
-  import(sequenceNumber: number, file: any) {
-    //const quoteJSON = quote.toJSON();
-    //const headers = { 'Content-Type': 'application/json'};
-
-    const params = new HttpParams().append('sequenceNumber', sequenceNumber);
+  import(quote: Quote, file: any) {
     const formData = new FormData();
+    formData.append('data', JSON.stringify(quote));
     formData.append('file', file);
-
-    return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/import', formData, { params });
+    return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/import', formData);
   }
 
 }
