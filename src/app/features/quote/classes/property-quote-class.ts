@@ -1,3 +1,4 @@
+import { AsyncSubject } from 'rxjs';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Code } from 'src/app/core/models/code';
@@ -31,6 +32,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   propertyQuoteMortgagee: MortgageeClass[] = [];
   propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
   propertyQuoteMortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
+  invalidList: string[] = [];
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -308,7 +310,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     //on load or if dirty validate this
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
-
+      this.classValidation();
       this._validateOnLoad = false;
     }
     //reset validation results
@@ -336,6 +338,16 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
 
   callChildValidations() {
+
+    // Validate all buildings
+    //if (this.propertyQuoteBuildingLocationTabValidation?.isDirty) {
+    if (this.validateBuildings()) {
+      // this._canBeSaved = false;
+      // this._isValid = false;
+      //this.propertyQuoteBuildingLocationTabValidation.canBeSaved = false;
+    }
+    //}
+
     this.childArrayValidate(this.propertyQuoteDeductible);
     this.childArrayValidate(this.propertyQuoteMortgagee);
     this.childArrayValidate(this.propertyQuoteAdditionalInterest);
@@ -377,6 +389,81 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
   setReadonlyFields() {
     // No special rules
+  }
+
+  classValidation() {
+    this.invalidList = [];
+    this._canBeSaved = true;
+    this._isValid = true;
+    this._errorMessages = this.invalidList;
+  }
+
+  validateBuildings(): boolean {
+
+    // const result = this.propertyQuoteBuilding.reduce(function (r, a) {
+    //   r[a.subjectNumber ?? 0] = r[a.subjectNumber ?? 0] || [];
+    //   r[a.subjectNumber ?? 0].push(a);
+    //   return r;
+    // }, Object.create(null));
+
+    // const test = this.propertyQuoteBuilding.reduce((result, currentValue) => {
+
+    //   const dupe = result.find(c => c.subjectNumber == currentValue.subjectNumber && c.premisesNumber == currentValue.premisesNumber && c.buildingNumber == currentValue.buildingNumber);
+
+    //   // If an array already present for key, push it to the array. Else create an array and push the object
+    //   (result[currentValue.subjectNumber ?? 0] = result[currentValue.subjectNumber ?? 0] || []).push(
+    //     currentValue
+    //   );
+    //   // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+    //   return result;
+    // }, {}); // empty object is the initial value for result object
+
+
+    // const duplicates2 = this.propertyQuoteBuilding.reduce(function(acc, el, i, arr) {
+    //   if (arr.indexOf(el) !== i && acc.indexOf(el) < 0)
+    //     acc.push(el);
+    //   return acc;
+    // }, []);
+
+    // const duplicates2 = this.propertyQuoteBuilding.reduce(function(acc, el, i, arr) {
+
+    //   const dupes = arr.filter(c => c.subjectNumber == el.subjectNumber && c.premisesNumber == el.premisesNumber && c.buildingNumber == el.buildingNumber);
+    //   if (dupes.length > 1) {
+    //     acc.push(el);
+    //   }
+
+    //   // if (arr.indexOf(el) !== i && acc.indexOf(el) < 0)
+    //   //   acc.push(el);
+    //   return acc;
+    // }, []);
+
+
+    // const darr: PropertyQuoteBuildingClass[] = [];
+    // const duplicates: PropertyQuoteBuildingClass[] = [];
+
+    // for(let i = 0; i < this.propertyQuoteBuilding.length; i++){
+    //   if(darr.includes(this.propertyQuoteBuilding[i]) && !duplicates.includes(this.propertyQuoteBuilding[i]))
+    //     duplicates.push(this.propertyQuoteBuilding[i]);
+    //   else
+    //     darr.push(this.propertyQuoteBuilding[i]);
+    // }
+
+    let dupe = false;
+    //this.propertyQuoteBuilding.forEach(c => c.isDuplicate = false);
+    this.propertyQuoteBuilding.forEach(c => c.isDuplicate = false);
+    this.propertyQuoteBuilding.map(x => {
+      // if (!x.isDuplicate) {
+      const dupes = this.propertyQuoteBuilding.filter(c => c.subjectNumber == x.subjectNumber && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber && !c.isDuplicate);
+
+      if (dupes.length > 1) {
+        dupe = true;
+        dupes.forEach(c => {
+          c.markDuplicate();
+        });
+        // this._errorMessages.push('Building: ' + (x.subjectNumber + '-' + x.premisesNumber + '-' + x.buildingNumber).trim() + ' is duplicated.');
+      }
+    });
+    return dupe;
   }
 
   toJSON() {

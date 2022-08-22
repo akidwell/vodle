@@ -1,6 +1,4 @@
 import { DatePipe } from '@angular/common';
-import { CountryEnum } from 'src/app/core/enums/country-enum';
-import { State } from 'src/app/core/models/state';
 import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 import { AdditionalNamedInsuredData, insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { Insured } from '../models/insured';

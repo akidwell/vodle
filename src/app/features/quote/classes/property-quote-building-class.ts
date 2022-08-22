@@ -56,6 +56,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   expand = false;
   focus = false;
   propertyQuote!: PropertyQuoteClass;
+  isDuplicate = false;
 
   get subjectNumber() : number | null {
     return this._subjectNumber;
@@ -445,12 +446,64 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
 
   classValidation() {
-    //this.invalidList = [];
+    this.invalidList = [];
+    this._canBeSaved = true;
+    this._isValid = true;
+
     // if (!this.validateAmount()) {
     //   valid = false;
     // }
     //this._errorMessages = this.invalidList;
+    if (this.emptyNumberValueCheck(this._subjectNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Subject Number is required');
+    }
+    if (this.emptyNumberValueCheck(this._premisesNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Premises Number is required');
+    }
+    if (this.emptyNumberValueCheck(this._buildingNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Building Number is required');
+    }
+    if (this.emptyStringValueCheck(this._street1)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Street is required');
+    }
+    if (this.emptyStringValueCheck(this._city)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('City is required');
+    }
+    if (this.emptyStringValueCheck(this._state)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('State is required');
+    }
+    if (this.emptyStringValueCheck(this._zip)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Zip is required');
+    }
 
+    this._errorMessages = this.invalidList;
+  }
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
+  }
+
+  markDuplicate() {
+    this._canBeSaved = false;
+    this._isValid = false;
+    this.isDuplicate = true;
+    this.invalidList.push('Is Duplicate');
   }
   get validateAddress(): boolean {
     return !(!this.street1 || !this.city);

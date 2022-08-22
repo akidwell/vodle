@@ -1,13 +1,18 @@
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyDeductible } from '../models/property-deductible';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteValidation } from '../models/quote-validation';
+import { QuoteValidationClass } from './quote-validation-class';
 
 
 export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteValidation, QuoteAfterSave {
   private _isDirty = false;
+  private _isValid = true;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
+  private _validationResults: QuoteValidationClass;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
   sequence: number | null = null;
@@ -174,9 +179,10 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     return this._errorMessages;
   }
   get isValid(): boolean {
-    const valid = true;
-    //valid = this.validate(valid);
-    return valid;
+    return this._isValid;
+  }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
   }
 
   constructor(deductible?: PropertyDeductible) {
@@ -185,6 +191,49 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     } else {
       this.newInit();
     }
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    this.validate();
+  }
+
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      this.classValidation();
+      this._validateOnLoad = false;
+    }
+    this._validationResults.resetValidation();
+    this._validationResults.mapValues(this);
+    return this._validationResults;
+  }
+
+  classValidation() {
+    this.invalidList = [];
+    this._canBeSaved = true;
+    // if (!this.validateAmount()) {
+    //   valid = false;
+    // }
+    if (this.isAppliedToAll || this.emptyNumberValueCheck(this.premisesNumber)) {
+      // this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Premises Number is required');
+    }
+
+    if (this.validateAmount()) {
+      this._isValid = false;
+    }
+    if (this.validateDeductibleType()) {
+      this._isValid = false;
+    }
+    if (this.validateDeductibleCode()) {
+      this._isValid = false;
+    }
+    this._errorMessages = this.invalidList;
+  }
+
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
   }
 
   existingInit(deductible: PropertyDeductible) {
@@ -236,39 +285,39 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     // No special rules
   }
 
-  validation(valid: boolean): boolean {
-    this.invalidList = [];
-    if (!this.validateAmount()) {
-      valid = false;
-    }
-    return valid;
-  }
+  // validation(valid: boolean): boolean {
+  //   this.invalidList = [];
+  //   if (!this.validateAmount()) {
+  //     valid = false;
+  //   }
+  //   return valid;
+  // }
 
   validateAmount(): boolean {
-    let valid = true;
-    if (!this.isExcluded && (this.amount ?? 0) > 0) {
-      valid = false;
+    let invalid = false;
+    if (!this.isExcluded && (this.amount ?? 0) == 0) {
+      invalid = true;
       this.invalidList.push('Amount is required');
     }
-    return valid;
+    return invalid;
   }
 
   validateDeductibleType(): boolean {
-    let valid = true;
+    let invalid = false;
     if (!this.isExcluded && !this.deductibleType) {
-      valid = false;
+      invalid = true;
       this.invalidList.push('Deductible Type is required');
     }
-    return valid;
+    return invalid;
   }
 
   validateDeductibleCode(): boolean {
-    let valid = true;
+    let invalid = false;
     if (!this.isExcluded && !this.deductibleCode) {
-      valid = false;
+      invalid = true;
       this.invalidList.push('Deductible Code is required');
     }
-    return valid;
+    return invalid;
   }
 
   get deductibleReadonly(): boolean {
