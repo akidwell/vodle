@@ -94,7 +94,7 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
     }
     console.log(department?.validationResults);
     //if isValid is false we prevent them from leaving tab
-    return department?.validationResults.isValid || false;
+    return department?.validationResults.canBeSaved || false;
   }
   // validateQuote() {
   //   const quoteId = route.paramMap.get('quoteId') ?? '';

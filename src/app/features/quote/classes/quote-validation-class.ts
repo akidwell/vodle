@@ -23,9 +23,9 @@ export class QuoteValidationClass implements QuoteValidation {
   //used to validate an array of objects implementing QuoteValidation
   validateChildrenAsStandalone(childGroup: QuoteValidation[]) {
     this.isEmpty = childGroup.length == 0;
-    this.isDirty = childGroup.map(x => x.isDirty).includes(true);
-    this.canBeSaved = !childGroup.map(x => x.canBeSaved).includes(false);
-    this.isValid = !childGroup.map(x => x.isValid).includes(false);
+    this.isDirty = childGroup.map(x => x.validationResults?.isDirty).includes(true);
+    this.canBeSaved = !childGroup.map(x => x.validationResults?.canBeSaved).includes(false);
+    this.isValid = !childGroup.map(x => x.validationResults?.isValid).includes(false);
     this.errorMessages = childGroup.flatMap(x => x.validationResults?.errorMessages || []);
   }
   //used to validate an array of objects implementing QuoteValidation and merging with the parent validation
