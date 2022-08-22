@@ -47,12 +47,13 @@ export class QuoteSavingService {
         if (isNew && sequence !== null) {
           this.router.navigate(['/quote/' + sequence + '/information']);
         }
-        department.afterSave();
         //this.newQuote = false;
         this.notification.show('Quote Saved.', {
           classname: 'bg-success text-light',
           delay: 5000,
         });
+        department.afterSave();
+
         return true;
       });
     }
