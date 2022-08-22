@@ -188,7 +188,12 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     if (index > -1) {
       this.propertyQuoteBuilding.splice(index, 1);
     }
-    this.filterBuildings();
+    if (building.propertyQuoteBuildingCoverage.length > 0) {
+      this.filterBuildingsCoverages();
+    }
+    else {
+      this.filterBuildings();
+    }
   }
 
   clearCspCodes() {
