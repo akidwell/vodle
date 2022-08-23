@@ -16,6 +16,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
+  private _isDuplicate = false;
 
   propertyQuoteBuildingId = 0;
   propertyQuoteId = 0;
@@ -56,7 +57,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   expand = false;
   focus = false;
   propertyQuote!: PropertyQuoteClass;
-  isDuplicate = false;
 
   get subjectNumber() : number | null {
     return this._subjectNumber;
@@ -70,8 +70,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     return this._isDirty ;
   }
   get isValid(): boolean {
-    // let valid = true;
-    // valid = this.validate(valid);
     return this._isValid;
   }
   get canBeSaved(): boolean {
@@ -82,6 +80,13 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
+  }
+  get isDuplicate(): boolean {
+    return this._isDuplicate;
+  }
+  set isDuplicate(value: boolean ) {
+    this._isDuplicate = value;
+    this._isDirty = true;
   }
   get premisesNumber(): number | null {
     return this._premisesNumber;
@@ -356,9 +361,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   markImported() {
     this.isNew = true;
     this.isImport = true;
+    this.guid = crypto.randomUUID();
     this.propertyQuoteBuildingCoverage.forEach((c) => {
       c.isNew = true;
       c.isImport = true;
+      c.guid = crypto.randomUUID();
     });
   }
 
@@ -489,7 +496,16 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       this._isValid = false;
       this.invalidList.push('Zip is required');
     }
-
+    if ((this._sprinklered ?? 0) > 100){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Sprinklered% mush be <= 100%');
+    }
+    if (this.isDuplicate){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Building: ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim() + ' is duplicated.');
+    }
     this._errorMessages = this.invalidList;
   }
   emptyNumberValueCheck(value: number | null | undefined) {
@@ -497,13 +513,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   }
   emptyStringValueCheck(value: string | null | undefined) {
     return !value;
-  }
-
-  markDuplicate() {
-    this._canBeSaved = false;
-    this._isValid = false;
-    this.isDuplicate = true;
-    this.invalidList.push('Is Duplicate');
   }
   get validateAddress(): boolean {
     return !(!this.street1 || !this.city);

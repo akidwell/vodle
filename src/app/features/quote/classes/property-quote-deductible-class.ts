@@ -208,10 +208,8 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   classValidation() {
     this.invalidList = [];
     this._canBeSaved = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-    if (this.isAppliedToAll || this.emptyNumberValueCheck(this.premisesNumber)) {
+
+    if (!this.isAppliedToAll && this.emptyNumberValueCheck(this.premisesNumber)) {
       // this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Premises Number is required');
@@ -222,8 +220,15 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     }
     if (this.validateDeductibleType()) {
       this._isValid = false;
+      // this._canBeSaved = false;
     }
     if (this.validateDeductibleCode()) {
+      this._isValid = false;
+    }
+    if (this.validateSubjectToMinPercent()) {
+      this._isValid = false;
+    }
+    if (this.validateSubjectToMinAmount()) {
       this._isValid = false;
     }
     this._errorMessages = this.invalidList;
@@ -285,17 +290,9 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     // No special rules
   }
 
-  // validation(valid: boolean): boolean {
-  //   this.invalidList = [];
-  //   if (!this.validateAmount()) {
-  //     valid = false;
-  //   }
-  //   return valid;
-  // }
-
   validateAmount(): boolean {
     let invalid = false;
-    if (!this.isExcluded && (this.amount ?? 0) == 0) {
+    if ((!this.isExcluded && !this.isSubjectToMin) && (this.amount ?? 0) == 0) {
       invalid = true;
       this.invalidList.push('Amount is required');
     }
@@ -316,6 +313,24 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     if (!this.isExcluded && !this.deductibleCode) {
       invalid = true;
       this.invalidList.push('Deductible Code is required');
+    }
+    return invalid;
+  }
+
+  validateSubjectToMinPercent(): boolean {
+    let invalid = false;
+    if (this.isSubjectToMin && !this.subjectToMinPercent) {
+      invalid = true;
+      this.invalidList.push('Subject to Min Percent is required');
+    }
+    return invalid;
+  }
+
+  validateSubjectToMinAmount(): boolean {
+    let invalid = false;
+    if (this.isSubjectToMin && (this.subjectToMinAmount ?? 0) == 0) {
+      invalid = true;
+      this.invalidList.push('Subject to Min Amount is required');
     }
     return invalid;
   }
