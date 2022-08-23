@@ -142,7 +142,7 @@
           <div class="col-lg-1">
             <label for="rate">Rate</label>
             <input type="text" class="form-control" id="rate" [readonly]="!canEdit" string-to-currency
-              [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="true"
+              [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false"
               [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel">
           </div>    
           <div class="col-lg-6">
