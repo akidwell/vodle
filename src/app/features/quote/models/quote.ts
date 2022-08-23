@@ -113,5 +113,5 @@ export interface Quote {
   importErrors: string[];
   naicsCode: string | null;
   sicCode: string | null;
-  classCode: string | null;
+  classCode: number | null;
 }

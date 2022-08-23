@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { State } from 'src/app/core/models/state';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
@@ -19,12 +19,15 @@ export class PropertyBuildingComponent implements OnInit {
   faAngleUp = faAngleUp;
   states$: Observable<State[]> | undefined;
   cspCodes$: Observable<Code[]> | undefined;
+  loadingCsp = true;
+
   firstExpand = true;
   anchorId!: string;
   isLoadingAddress = false;
   addressSub!: Subscription;
   protectionClassList: number[] = [1,2,3,4,5,6,7,8,9,10];
 
+  @Input() public programId!: number;
   @Input() public building!: PropertyBuilding;
   @Input() public canEdit = false;
   @Input() public index = 0;
@@ -44,6 +47,8 @@ export class PropertyBuildingComponent implements OnInit {
       this.collapseExpand(false);
       this.focus();
     }
+    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', '2020-01-01', this.programId.toString() ?? '*')
+      .pipe(tap(() => this.loadingCsp = false));
   }
 
   ngOnDestroy(): void {
@@ -54,6 +59,12 @@ export class PropertyBuildingComponent implements OnInit {
   changeState(state: State) {
     this.building.countryCode = state.countryCode;
   }
+
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
+
 
   changeZipCode(): void {
     if (this.building.zip?.length == 5 || this.building.zip?.length == 9) {

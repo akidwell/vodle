@@ -166,13 +166,13 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
 
   private _cspCode! : Code;
+
   get cspCode() : Code {
     return this._cspCode;
   }
   set cspCode(value: Code) {
-    console.log(value);
     this._cspCode = value;
-    this.propertyQuoteBuilding.forEach(x => x.cspCode = String(value));
+    this.propertyQuoteBuilding.forEach(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
   }
 
   addBuilding(building: PropertyQuoteBuildingClass) {

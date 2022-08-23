@@ -5,4 +5,5 @@ export interface QuoteRate {
     premiumRate: number | null;
     isFlatRate: boolean | null;
     premium: number | null;
+    classCode: number | null;
 }

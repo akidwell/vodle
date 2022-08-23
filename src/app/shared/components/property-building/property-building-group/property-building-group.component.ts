@@ -53,10 +53,9 @@ export class PropertyBuildingGroupComponent implements OnInit {
   get page() { return this._state.page; }
   set page(page: number) {this._set({page});}
   get pageSize() { return this._state.pageSize; }
-  set pageSize(pageSize: number) {
-    localStorage.setItem('building-page-size', pageSize.toString());
-    this._set({pageSize});
-  }
+  set pageSize(pageSize: number) { this._set({pageSize}); }
+  @Input() public programId!: number;
+
 
   // Default pagination settings
   private _state: PageState = {
@@ -88,7 +87,6 @@ export class PropertyBuildingGroupComponent implements OnInit {
   ngOnInit(): void {
     this._search$.next();
     this.searchSub = this.searchThrottle.pipe(debounceTime(500)).subscribe(() => {
-      console.log('search');
       this.propertyQuote.searchAddress = this.searchAddress;
     });
 
