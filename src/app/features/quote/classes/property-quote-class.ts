@@ -1,3 +1,4 @@
+import { AsyncSubject } from 'rxjs';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Code } from 'src/app/core/models/code';
@@ -31,6 +32,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   propertyQuoteMortgagee: MortgageeClass[] = [];
   propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
   propertyQuoteMortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
+  invalidList: string[] = [];
 
   private _riskDescription: string | null = null;
   private _isDirty = false;
@@ -308,7 +310,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     //on load or if dirty validate this
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
-      //Complex validation rules
+      this.classValidation();
       this._validateOnLoad = false;
     }
     //reset validation results
@@ -339,6 +341,16 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
 
   callChildValidations() {
+
+    // Validate all buildings
+    //if (this.propertyQuoteBuildingLocationTabValidation?.isDirty) {
+    if (this.validateBuildings()) {
+      // this._canBeSaved = false;
+      // this._isValid = false;
+      //this.propertyQuoteBuildingLocationTabValidation.canBeSaved = false;
+    }
+    //}
+
     this.childArrayValidate(this.propertyQuoteDeductible);
     this.childArrayValidate(this.propertyQuoteMortgagee);
     this.childArrayValidate(this.propertyQuoteAdditionalInterest);
@@ -380,6 +392,34 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
   setReadonlyFields() {
     // No special rules
+  }
+
+  classValidation() {
+    this.invalidList = [];
+    this._canBeSaved = true;
+    this._isValid = true;
+    this._errorMessages = this.invalidList;
+  }
+
+  validateBuildings(): boolean {
+    let dupe = false;
+    this.propertyQuoteBuilding.forEach(c => {
+      if (c.isDuplicate) {
+        c.isDuplicate = false;
+      }
+    });
+    this.propertyQuoteBuilding.map(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.propertyQuoteBuilding.filter(c => c.subjectNumber == x.subjectNumber && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
+        if (dupes.length > 1) {
+          dupe = true;
+          dupes.forEach(c => {
+            c.isDuplicate = true;
+          });
+        }
+      }
+    });
+    return dupe;
   }
 
   toJSON() {

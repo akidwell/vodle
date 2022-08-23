@@ -9,6 +9,7 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSav
   quoteId: number | null = null;
   sequenceNo: number | null = 0;
   classCode: number | null = 0;
+  invalidList: string[] = [];
 
   private _premiumRate: number | null = null;
   private _premium: number | null = null;
@@ -75,11 +76,29 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSav
   }
   validate(){
     if (this._validateOnLoad || this.isDirty){
-      //TODO: class based validation checks
+      this.classValidation();
       this._validateOnLoad = false;
     }
+    this._validationResults.resetValidation();
     this._validationResults.mapValues(this);
     return this._validationResults;
+  }
+  classValidation() {
+    this.invalidList = [];
+    this._canBeSaved = true;
+
+    if (this.validateAmount()) {
+      this._isValid = false;
+    }
+    this._errorMessages = this.invalidList;
+  }
+  validateAmount(): boolean {
+    let invalid = false;
+    if ((this.premium ?? 0) == 0) {
+      invalid = true;
+      this.invalidList.push('Amount is required');
+    }
+    return invalid;
   }
   existingInit(rate: QuoteRate) {
     this.quoteId = rate.quoteId;

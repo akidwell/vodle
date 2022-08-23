@@ -73,7 +73,7 @@ export class MortgageeComponent {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
-        if (this.buildingList.find(c => c.code == this.mortgageeData.building) == null) {
+        if (this.mortgageeData.building != null && this.buildingList.find(c => c.code == this.mortgageeData.building) == null) {
           this.mortgageeData.buildingNumber = null;
         }
       }
