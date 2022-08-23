@@ -72,7 +72,7 @@ export class InsuredContactComponent {
       });
     } else {
       this.deleteSub = this.insuredService
-        .deleteInsureContact(this.contact)
+        .deleteInsuredContact(this.contact)
         .subscribe((result) => {
           setTimeout(() => {
             this.deleteThisContact.emit(this.contact);

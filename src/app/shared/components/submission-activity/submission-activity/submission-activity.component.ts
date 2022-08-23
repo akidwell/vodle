@@ -51,7 +51,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
   }
 
   routeToSubmission(submissionNumber: number) {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     this.router.navigate(['/submission/' + submissionNumber.toString() + '/information']);
   }
 
@@ -83,7 +83,7 @@ export class SharedSubmissionActivityComponent implements OnInit {
     }
   }
   addNewSubmission() {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
     const insuredForSubmission = deepClone(this.insured);
     if (insuredForSubmission) {
       insuredForSubmission.additionalNamedInsureds = [];

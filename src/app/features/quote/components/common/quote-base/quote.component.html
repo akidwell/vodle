@@ -1,0 +1,25 @@
+<div class="navHolder"
+[style.height.px]="headerPaddingService.navRoutingHeight$ | async"
+[style.width.px]="headerPaddingService.totalBodyWidth$ | async"  >
+  <div class="navToolbar"  >
+    <ul class="nav nav-tabs nav-fill">
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive='active'  [routerLink]="['submission']" >Submission</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Product Selection</a>
+      </li>
+      <ng-container *ngFor="let program of department.programMappings">
+        <li class="nav-item" *ngIf="program.quoteData != null;" >
+          <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}} <span *ngIf="program.quoteData.validationResults.isDirty">*</span></a>
+        </li>
+      </ng-container>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['summary']">Summary</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div >
+  <router-outlet></router-outlet>
+</div>

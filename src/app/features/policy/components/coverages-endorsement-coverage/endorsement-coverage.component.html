@@ -163,7 +163,7 @@
           <div class="col-lg-7">
             <label for="classCode">Class Code</label>
             <ng-select id="classCode" [items]="classCodes$ | async" bindLabel="description" bindValue="key"
-              name="classCode" [required]="canEdit" [clearable]="false" [searchFn]="dropDownSearch"
+              name="classCode" [required]="canEdit" [clearable]="false" [searchFn]="dropDownSearch" [virtualScroll]="true"
               [readonly]="!canEdit" [(ngModel)]="coverage.glClassCode" (change)="changeClassCode()">
               <ng-template ng-label-tmp let-item="item">
                 {{item.key}} - {{item.description}}
@@ -176,7 +176,7 @@
           <div class="col-lg-2">
             <label for="exposureCode">Exposure Code</label>
             <ng-select id="exposureCode" [items]="exposureCodes$ | async" bindLabel="description" bindValue="code"
-              name="exposureCode" [readonly]="!canEdit" [(ngModel)]="coverage.exposureCode">
+              name="exposureCode" [virtualScroll]="true" [readonly]="!canEdit" [(ngModel)]="coverage.exposureCode">
             </ng-select>
           </div>
           <div class="col-lg-1">
@@ -188,7 +188,7 @@
           <div class="col-lg-2">
             <label for="exposureBase">Exposure</label>
             <input type="text" class="form-control" id="exposureBase" [readonly]="!canEdit"
-              [(ngModel)]="coverage.exposureBase" name="exposureBase" #exposureBase="ngModel" string-to-currency maxInt maxlength="15"
+              [(ngModel)]="coverage.exposureBase" name="exposureBase" #exposureBase="ngModel" string-to-currency maxlength="17"
               [allowNegative]="false">
           </div>
         </div>

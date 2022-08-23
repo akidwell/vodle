@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { ImportPolicy } from '../../models/import-policy';
 import { ImportResult } from '../../models/import-response';
-import { PageState } from '../../models/state';
+import { PageState } from '../../../../core/models/page-state';
 import { SearchResult } from '../../models/search-result';
 import { ImportService } from '../../services/import/import.service';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -127,7 +127,7 @@ export class ImportComponent implements OnInit {
   routeImport() {
     this.showBusy = false;
     if (this.importPolicyResponse?.isPolicyImported) {
-      this.navigationService.resetPolicy();
+      this.navigationService.clearReuse();
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }
     else if (this.importPolicyResponse!= null) {

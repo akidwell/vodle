@@ -2,7 +2,6 @@ import { Component, Input, QueryList, ViewChild, ViewChildren } from '@angular/c
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { deepClone } from 'src/app/core/utils/deep-clone';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { InsuredContactComponent } from '../insured-contact/insured-contact.component';
 import { NgForm } from '@angular/forms';
@@ -83,56 +82,6 @@ export class InsuredContactGroupComponent {
     }
   }
 
-  // isValid(): boolean {
-  //   if (this.hasDuplicates()) {
-  //     return false;
-  //   }
-  //   if (this.components != null) {
-  //     for (const child of this.components) {
-  //       if (child.contactForm.status != 'VALID') {
-  //         return false;
-  //       }
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  // isDirty() {
-  //   if (this.components != null) {
-  //     for (const child of this.components) {
-  //       if (child.contactForm.dirty) {
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // hasDuplicates(): boolean {
-  //   let dupe = false;
-  //   this.insuredContacts.forEach(x => {
-  //     if (!dupe) {
-  //       dupe = this.insuredContacts.filter(c => c.firstName == x.firstName && c.lastName == x.lastName && c.email == x.email && c.phone == x.phone && c.fax == x.fax).length > 1;
-  //     }
-  //   });
-  //   return dupe;
-  // }
-
-  // getDuplicateName(): string {
-  //   let dupe = false;
-  //   let dupeName = '';
-
-  //   this.insuredContacts.forEach(x => {
-  //     if (!dupe) {
-  //       dupe = this.insuredContacts.filter(c => c.firstName == x.firstName).length > 1;
-  //       if (dupe) {
-  //         dupeName = (x.firstName + ' ' + x.lastName).trim();
-  //       }
-  //     }
-  //   });
-  //   return dupeName;
-  // }
-
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.insuredContacts, event.previousIndex, event.currentIndex);
@@ -140,7 +89,6 @@ export class InsuredContactGroupComponent {
     let sequence = 1;
     this.insuredContacts.forEach(c => {
       if (c.sequence != sequence) {
-        const match = this.components?.find(l => l.contact.sequence == c.sequence);
         c.sequence = sequence;
       }
       sequence++;

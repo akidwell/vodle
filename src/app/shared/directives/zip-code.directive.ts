@@ -1,25 +1,22 @@
-import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
-import { NgControl } from '@angular/forms';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Directive, ElementRef, forwardRef, HostListener } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ZipCodePipe } from '../pipes/zip-code.pipe';
 
 @Directive({
   selector: '[zip-code]',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ZipCodeDirective),
+      multi: true,
+    },
+  ],
 })
-export class ZipCodeDirective {
-
-  constructor(
-    protected el: ElementRef,
-    protected control: NgControl,
-    private zipPipe: ZipCodePipe
-  ) {}
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this.control.value != null) {
-        this.el.nativeElement.value = this.zipPipe.transform(this.control.value.toString());
-      }
-    });
-  }
+export class ZipCodeDirective implements ControlValueAccessor {
+  constructor(protected el: ElementRef, private zipPipe: ZipCodePipe) {}
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
@@ -39,12 +36,10 @@ export class ZipCodeDirective {
       event.key === 'Delete'
     ) {
       return true;
-    } else if (!event.key.match(pattern)){
+    } else if (!event.key.match(pattern)) {
       event.preventDefault();
       return false;
     }
-
-
     // Prevent typing once max length is reached
     if (this.el.nativeElement.value.replaceAll('-', '').replaceAll(' ', '').match(numberPattern)) {
       if (this.el.nativeElement.selectionStart >= 10) {
@@ -52,7 +47,9 @@ export class ZipCodeDirective {
         return false;
       }
       return true;
-    } else if (!this.el.nativeElement.value.replaceAll('-', '').replaceAll(' ', '').match(numberPattern)) {
+    } else if (
+      !this.el.nativeElement.value.replaceAll('-', '').replaceAll(' ', '').match(numberPattern)
+    ) {
       if (this.el.nativeElement.selectionStart >= 7) {
         event.preventDefault();
         return false;
@@ -66,7 +63,7 @@ export class ZipCodeDirective {
 
   @HostListener('input', ['$event'])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  change(event: any ) {
+  change(event: any) {
     const original = event.target.value;
     const target = event.target;
     const posStart = target.selectionStart;
@@ -90,13 +87,27 @@ export class ZipCodeDirective {
     // Handle position to auto adjust for dash or space
     target.selectionStart = +posStart + (posStart + offset < 0 ? 0 : offset);
     target.selectionEnd = +posEnd + (posEnd + offset < 0 ? 0 : offset);
+    // Write back a clean version of teh zip code to the model
+    this.onChange(target.value === '' ? null : target.value.toString().replaceAll('-', ''));
+  }
 
-    // If value changed then force update
-    if (target.value != original) {
-      this.control.reset(target.value);
+  public async writeValue(value: any): Promise<void> {
+    if (value !== null) {
+      this.el.nativeElement.value = this.zipPipe.transform(value?.toString());
     }
-    this.control.viewToModelUpdate(
-      target.value === '' ? null : target.value.toString().replaceAll('-', '')
-    );
+    else {
+      this.el.nativeElement.value = null;
+    }
+  }
+
+  public onChange = (_: any) => {};
+  public onTouch = () => {};
+
+  public registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: any): void {
+    this.onTouch = fn;
   }
 }

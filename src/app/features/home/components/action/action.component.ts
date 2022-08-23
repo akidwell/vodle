@@ -293,7 +293,7 @@ export class ActionComponent implements OnInit {
   routeEndorsement() {
     this.showBusy = false;
     if (this.NewEndorsementResponse !== null) {
-      this.navigationService.resetPolicy();
+      this.navigationService.clearReuse();
       this.router.navigate(['/policy/' + this.NewEndorsementResponse.destinationPolicyId.toString() + '/' + this.NewEndorsementResponse.newEndorsementNumber]);
     }
     else {

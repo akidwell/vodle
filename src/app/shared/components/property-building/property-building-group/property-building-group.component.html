@@ -1,0 +1,84 @@
+<div class="col-lg-12">
+    <button class="btn btn-sm btn-secondary margin-left" *ngIf="showCollapseAll" (click)="collapseAll()">Collapse
+        All</button>
+</div>
+<div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+        Locations/Building Schedule
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+        <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation [color]="color"
+            [(ngModel)]="canFilter" (change)=clear()>
+            Filter: {{canFilter ? 'On' : 'Off'}}
+        </mat-slide-toggle>
+    </div>
+    <div class="card-body bottom-bordered" *ngIf="canFilter">
+        <div class="row">
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
+                    ngbTooltip="Subject Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchSubject"
+                    #subjectNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
+            </div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
+                    ngbTooltip="Premises Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchPremises"
+                    #premisesNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
+            </div>
+            <div class="col-lg-1">
+                <input type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
+                    ngbTooltip="Building Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchBuilding"
+                    #buildingNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
+            </div>
+            <div class="col-lg-7">
+                <input type="address" class="form-control" id="address" name="address" maxlength="250"
+                    ngbTooltip="Address" [openDelay]="1000" (input)="searchThrottle.next()" #address="ngModel"
+                    [(ngModel)]="searchAddress" autocomplete="off">
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-md btn-primary" (click)="clear()" name="verify">Clear
+                </button>
+                <button class="btn btn-md btn-primary margin-left" (click)="hide()" name="verify">Hide
+                </button>
+            </div>
+        </div>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div class="card-body" *ngIf="buildings.length > 0">
+            <div class="row">
+                <div class="col-lg-1">
+                    <label class="form-label" title="Subject #">Subject #</label>
+                </div>
+                <div class="col-lg-1">
+                    <label class="form-label" title="Premises #">Premises #</label>
+                </div>
+                <div class="col-lg-1">
+                    <label class="form-label" title="Building #">Building #</label>
+                </div>
+                <div class="col-lg-7">
+                    <label class="form-label" title="Address">Address</label>
+                </div>
+            </div>
+            <div *ngFor="let item of policies$ | async; let i = index">
+                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId"
+                    (copyBuilding)=copyBuilding($event) (deleteBuilding)=deleteBuilding($event)
+                    (addCoverage)=addCoverage($event) (filterBuilding)=filterBuilding($event)>
+                </rsps-property-building>
+            </div>
+            <div class="d-flex justify-content-between p-2">
+                <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                    [rotate]="true" [boundaryLinks]="true">
+                </ngb-pagination>
+                <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">
+                    <option [ngValue]="8">8 items per page</option>
+                    <option [ngValue]="12">12 items per page</option>
+                    <option [ngValue]="15">15 items per page</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="footer-button" (click)="addBuilding();">Add
+            Location/Building</button>
+        <div class="footer-count">Buildings: {{(policies$ | async)?.length}}/{{buildingCount}}</div>
+    </div>
+</div>

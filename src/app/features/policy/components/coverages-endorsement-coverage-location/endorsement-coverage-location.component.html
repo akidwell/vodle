@@ -34,46 +34,45 @@
       <div class="empty-row"></div>
       <div class="col-lg-12">
         <label for="city">City</label>
-        <div *ngIf="isLoadingAddress">
-          <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+        <div class="inputspinner">
+          <input type="text" class="form-control" id="city" name="city" [(ngModel)]="location.city" maxlength="25"
+            [readonly]="!canEdit || isLoadingAddress" [required]="canEdit" #city="ngModel">
+          <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
           </div>
-        </div>
-        <div *ngIf="!isLoadingAddress">
-          <input type="text" class="form-control" id="city" [readonly]="!canEdit || isLoadingAddress" maxlength="25"
-            [required]="canEdit" [(ngModel)]="location.city" name="city" #city="ngModel">
         </div>
       </div>
       <div class="empty-row"></div>
       <div class="col-lg-12">
         <label for="locationState">State</label>
-        <div *ngIf="isLoadingAddress">
-          <div class="spinner-border ml-auto" role="status" aria-hidden="true">
-          </div>
-        </div>
-        <div *ngIf="!isLoadingAddress">
+        <div class="inputspinner">
           <ng-select id="locationState" [items]="states$ | async" bindLabel="name" bindValue="code"
-            [clearable]="false" [readonly]="!canEdit || isLoadingAddress" name="locationState" [required]="canEdit"
-            [(ngModel)]="location.state" #locationState="ngModel" (change)="changeState($event)">
+            [clearable]="false" [readonly]="!canEdit || isLoadingAddress" [required]="canEdit"
+            name="locationState" [(ngModel)]="location.state" #locationState="ngModel"
+            (change)="changeState($event)">
           </ng-select>
+          <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
+          </div>
         </div>
       </div>
       <div class="empty-row"></div>
       <div class="col-lg-12">
         <label for="locationCounty">County</label>
-        <div *ngIf="isLoadingAddress">
-          <div class="spinner-border ml-auto" role="status" aria-hidden="true">
-          </div>
-        </div>
-        <div *ngIf="!isLoadingAddress">
+        <div class="inputspinner">
           <div *ngIf="counties.length <= 1">
-            <input type="text" class="form-control" id="locationCounty" [readonly]="!canEdit || isLoadingAddress"
-              maxlength="100" [(ngModel)]="location.county" name="locationCounty" #locationCounty="ngModel">
+            <input type="text" class="form-control" id="locationCounty"
+              [readonly]="!canEdit || isLoadingAddress" [(ngModel)]="location.county" name="locationCounty"
+              maxlength="100" #locationCounty="ngModel" nullValue>
           </div>
           <div *ngIf="counties.length > 1">
             <ng-select id="locationCounty" [items]="counties" [clearable]="false"
               [readonly]="!canEdit || isLoadingAddress" name="locationCounty" [(ngModel)]="location.county"
               #locationCounty="ngModel">
             </ng-select>
+          </div>
+          <div *ngIf="isLoadingAddress" id="spinner" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true">
           </div>
         </div>
       </div>

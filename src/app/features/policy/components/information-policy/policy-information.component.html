@@ -65,7 +65,7 @@
             </div>
             <div class="col-lg-1 col-md-4">
               <label for="policyType" class="form-label" title="Master Policy">Master Policy</label>
-              <input type="checkbox" class="form-checkbox" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
+              <input type="checkbox" class="form-check-input" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
                 [readonly]="isFieldReadOnly(true)" (ngModelChange)="policyInfo.policyType=$event?'1': null">
             </div>
             <div class="col-lg-1 col-md-4" *ngIf="isDirectQuoteFieldReadOnly()">

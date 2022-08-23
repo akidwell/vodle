@@ -3,61 +3,68 @@ import { Observable } from 'rxjs';
 import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
-import { QuoteInformationComponent } from '../components/quote-information/quote-information.component';
+import { QuoteInformationComponent } from '../components/common/quote-information-base/quote-information.component';
+import { QuoteSavingService } from '../services/quote-saving-service/quote-saving-service.service';
+import { QuoteDataValidationService } from '../services/quote-data-validation-service/quote-data-validation-service.service';
+import { QuoteProgramBaseComponent } from '../components/quote-program-base/quote-program-base.component';
+import { QuoteSummaryComponent } from '../components/common/quote-summary-base/quote-summary.component';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<QuoteInformationComponent> {
 
-  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService, private pageDataService: PageDataService) { }
+  constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService,
+    private pageDataService: PageDataService, private quoteDataValidationService: QuoteDataValidationService, private quoteSavingService: QuoteSavingService) { }
 
   canDeactivate(
-    component: QuoteInformationComponent,
+    component: QuoteInformationComponent | QuoteProgramBaseComponent | QuoteSummaryComponent,
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ): Observable<boolean> | boolean | Promise<boolean> {
-    if (component instanceof QuoteInformationComponent) {
-      // Skip checks if bypassFormGuard is set
-      if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
-        return true;
-      }
-      const submission = this.pageDataService.submissionData || null;
-      if (submission && submission.isValid) {
-        if (submission.isDirty) {
-          if (this.checkLeavePolicy(state.url, nextState.url)) {
-            return this.confirmLeave().then(confirm => {
-              if (confirm) {
-                component.hideInvalid();
-              }
-              return confirm;
-            });
-          }
-        }
-        // No error and no longer dirty then hide any errors and navigate to next route
-        component.hideInvalid();
-        return true;
-      }
-      // Show errors
-      component.showInvalidControls();
-      window.scroll(0, 0);
-      // Check to see if trying to leave policy
-      if (this.checkLeavePolicy(state.url, nextState.url)) {
-        return this.confirmLeave().then(confirm => {
-          if (confirm) {
-            component.hideInvalid();
-          }
-          return confirm;
-        });
-      }
-
-      return false;
+    let allowNavigate = true;
+    if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
+      return true;
     }
-    return true;
+    if (component instanceof QuoteInformationComponent || component instanceof QuoteSummaryComponent) {
+      // Skip checks if bypassFormGuard is set
+      console.log('can deactivate department');
+
+      allowNavigate = this.validateAndSaveDepartment();
+      // // Show errors
+      // //component.showInvalidControls();
+      // window.scroll(0, 0);
+      // // Check to see if trying to leave policy
+      // if (this.checkLeavePolicy(state.url, nextState.url)) {
+      //   return this.confirmLeave().then(confirm => {
+      //     if (confirm) {
+      //       //component.hideInvalid();
+      //     }
+      //     return confirm;
+      //   });
+      // }
+
+      // return true;
+    }
+    if (component instanceof QuoteProgramBaseComponent) {
+      // Skip checks if bypassFormGuard is set
+      console.log('can deactivate quote');
+      //TODO: implement specific quote save
+      allowNavigate = this.validateAndSaveDepartment();
+      // // Show errors
+      // //component.showInvalidControls();
+      // window.scroll(0, 0);
+      // // Check to see if trying to leave policy
+
+
+      // return true;
+    }
+    return allowNavigate;
   }
 
   checkLeavePolicy(startUrl: string, endUrl: string): boolean {
     const startRoute = startUrl.split('/');
     const endRoute = endUrl.split('/');
+    console.log(startRoute, endRoute);
     // if nagivating outstide policy then open confirm leave dialog
     if (!endUrl.startsWith('/quote') || endUrl.endsWith('/quote')) {
       return true;
@@ -72,10 +79,45 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
   async confirmLeave(): Promise<boolean> {
     const option = await this.navigationConfirmationService.open('Leave Confirmation', 'Do you want to leave without saving?');
     if(option) {
-      this.pageDataService.submissionData?.markClean();
+      this.pageDataService.quoteData?.markClean();
       ///TODO: Need to reset class
     }
     return option;
   }
+  validateAndSaveDepartment(): boolean {
+    const department = this.pageDataService.quoteData || null;
+    department?.validate();
+    //TODO: Add isDirty check as we don't want to save every tab change
+    //if canBeSaved is false we skip the save
+    if (department?.validationResults.isDirty && department?.validationResults.canBeSaved) {
+      this.quoteSavingService.saveDepartment();
+    }
+    console.log(department?.validationResults);
+    //if isValid is false we prevent them from leaving tab
+    return department?.validationResults.canBeSaved || false;
+  }
+  // validateQuote() {
+  //   const quoteId = route.paramMap.get('quoteId') ?? '';
+  //   if (quoteId && parseInt(quoteId)) {
+  //     const quote = this.quoteDataValidationService.validateSingleQuote(parseInt(quoteId));
+  //     console.log(quote);
+  //   }
 
+  //   if (department && department.isValid) {
+  //     if (department.isDirty) {
+
+  //       // if (component.isValid()) {
+  //       //   if (component.isDirty()) {
+  //       //     component.save();
+  //       //   }
+  //       //   // No error and no longer dirty then hide any errors and navigate to next route
+  //       //   component.hideInvalid();
+  //       //   return true;
+  //       // }
+  //     }
+  //     // No error and no longer dirty then hide any errors and navigate to next route
+  //     //component.hideInvalid();
+  //     return true;
+  //   }
+  // }:
 }

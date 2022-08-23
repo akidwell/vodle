@@ -1,0 +1,15 @@
+<form #quoteInfoForm="ngForm">
+  <div class="card first-card">
+    <div class="card-header" (click)="collapse.toggle()">
+      Quote Details
+
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="quoteInfoCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!quoteInfoCollapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="quoteInfoCollapsed">
+      <rsps-quote-information-detail [department]="department"></rsps-quote-information-detail>
+    </div>
+  </div>
+</form>
+
+

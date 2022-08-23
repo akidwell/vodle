@@ -80,7 +80,7 @@ export class NavigationComponent implements OnInit {
   }
 
   openPolicy(): void {
-    this.navigationService.resetPolicy();
+    this.navigationService.clearReuse();
   }
 
   favorite(history: History) {

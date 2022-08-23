@@ -103,7 +103,7 @@ export class EndorsementCoverageComponent implements OnInit {
 
     this.actionCodes$ = this.dropdowns.getActionCodes();
     this.premTypes$ = this.dropdowns.getPremTypes();
-    this.deductibleTypes$ = this.dropdowns.getDeductibleTypes();
+    this.deductibleTypes$ = this.dropdowns.getDeductibleTypes(this.coverage.programId);
     this.eachEmployeeDeductibleTypes$ = this.dropdowns.getEachEmployeeDeductible();
     this.classCodes$ = this.dropdowns.getClassCodes(
       this.coverage.programId,

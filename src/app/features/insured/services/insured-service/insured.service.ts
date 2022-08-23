@@ -56,7 +56,7 @@ export class InsuredService {
       }));
   }
 
-  deleteInsureContact(contact: InsuredContact): Observable<boolean> {
+  deleteInsuredContact(contact: InsuredContact): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/insureds/' + contact.insuredCode + '/contacts/' + contact.insuredContactId);
   }
 

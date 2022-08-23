@@ -6,6 +6,8 @@ import { ConfigService } from '../config/config.service';
 import { UnderlyingLimitBasis } from '../../../features/policy/models/schedules';
 import { Code } from '../../models/code';
 import { State } from '../../models/state';
+import { PropertyDeductibleLookup } from '../../models/property-deductible-lookup';
+import { PropertyCoverageLookup } from '../../models/property-coverage-lookup';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,13 @@ export class DropDownsService {
   private readonly refreshSubject = new Subject();
 
   constructor(private http: HttpClient, private config: ConfigService) {}
+
+  // postSicCode(sicCode: string): Observable<ClassCode[]>{
+  //   const params = new HttpParams().append('sicCode', sicCode);
+
+  //   return this.http.get<ClassCode[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes/class-code', {params} );
+
+  // }
 
   // Non static drop downs
   getLimitBasisDescriptions(
@@ -56,6 +65,15 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
   }
 
+  getCspCodes(sourceSystem: string, effectiveDate: string, programId: string) {
+    const params = new HttpParams()
+      .append('sourceSystem', sourceSystem)
+      .append('effectiveDate', effectiveDate)
+      .append('programId', programId);
+
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/csp-codes', { params });
+  }
+
   getMarkDeadReasons(isNew: boolean) {
     const params = new HttpParams().append('isNew', isNew);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-dead-reasons', {
@@ -63,9 +81,11 @@ export class DropDownsService {
     });
   }
 
-  // Policy specific drop downs
-  clearPolicyDropDowns() {
+  // Clear Drops that use a specific parameter related to a Policy or Quote etc. this is triggered by navigation changes
+  clearDropDowns() {
     this.clearClassCodes();
+    this.clearDeductibleCodes();
+    this.clearDeductibleTypes();
   }
 
   getRiskGrades(programId?: number): Observable<Code[]> {
@@ -109,6 +129,68 @@ export class DropDownsService {
   clearClassCodes() {
     this.cacheClassCodes = null;
     this.cacheClassCodes$ == null;
+  }
+
+  ////////////////////////////////////////
+  // Deductible Codes
+  private cacheDeductibleCodes: Code[] | null = null;
+  private cacheDeductibleCodes$!: Observable<Code[] > | null;
+
+  getDeductibleCodes(programId: number): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheDeductibleCodes) {
+      observable = of(this.cacheDeductibleCodes);
+    } else if (this.cacheDeductibleCodes$) {
+      observable = this.cacheDeductibleCodes$;
+    } else {
+      const params = new HttpParams()
+        .append('programId', programId);
+      this.cacheDeductibleCodes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/deductible-codes', { params })
+        .pipe(
+          tap((res) => (this.cacheDeductibleCodes = res)),
+          share(),
+          finalize(() => (this.cacheDeductibleCodes$ = null))
+        );
+      observable = this.cacheDeductibleCodes$;
+    }
+    return observable;
+  }
+
+  clearDeductibleCodes() {
+    this.cacheDeductibleCodes = null;
+    this.cacheDeductibleCodes$ == null;
+  }
+
+  ////////////////////////////////////////
+  // Deductible Types
+  private cacheDeductibleTypes: Code[] | null = null;
+  private cacheDeductibleTypes$!: Observable<Code[] > | null;
+
+  getDeductibleTypes(programId: number): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheDeductibleTypes) {
+      observable = of(this.cacheDeductibleTypes);
+    } else if (this.cacheDeductibleTypes$) {
+      observable = this.cacheDeductibleTypes$;
+    } else {
+      const params = new HttpParams()
+        .append('programId', programId);
+      this.cacheDeductibleTypes$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/deductible-types', { params })
+        .pipe(
+          tap((res) => (this.cacheDeductibleTypes = res)),
+          share(),
+          finalize(() => (this.cacheDeductibleTypes$ = null))
+        );
+      observable = this.cacheDeductibleTypes$;
+    }
+    return observable;
+  }
+
+  clearDeductibleTypes() {
+    this.cacheDeductibleTypes = null;
+    this.cacheDeductibleTypes$ == null;
   }
 
   // Static Drop Downs
@@ -698,27 +780,51 @@ export class DropDownsService {
 
   ////////////////////////////////////////
   // Deductibe Type
-  private cacheDeductibleType: any;
-  private cacheDeductibleType$!: Observable<any> | null;
+  // private cacheDeductibleType: any;
+  // private cacheDeductibleType$!: Observable<any> | null;
 
-  getDeductibleTypes(): Observable<Code[]> {
-    let observable: Observable<any>;
-    if (this.cacheDeductibleType) {
-      observable = of(this.cacheDeductibleType);
-    } else if (this.cacheDeductibleType$) {
-      observable = this.cacheDeductibleType$;
-    } else {
-      this.cacheDeductibleType$ = this.http
-        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
-        .pipe(
-          tap((res) => (this.cacheDeductibleType = res)),
-          share(),
-          finalize(() => (this.cacheDeductibleType$ = null))
-        );
-      observable = this.cacheDeductibleType$;
-    }
-    return observable;
-  }
+  // getDeductibleTypes(): Observable<Code[]> {
+  //   let observable: Observable<any>;
+  //   if (this.cacheDeductibleType) {
+  //     observable = of(this.cacheDeductibleType);
+  //   } else if (this.cacheDeductibleType$) {
+  //     observable = this.cacheDeductibleType$;
+  //   } else {
+  //     this.cacheDeductibleType$ = this.http
+  //       .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deducttype')
+  //       .pipe(
+  //         tap((res) => (this.cacheDeductibleType = res)),
+  //         share(),
+  //         finalize(() => (this.cacheDeductibleType$ = null))
+  //       );
+  //     observable = this.cacheDeductibleType$;
+  //   }
+  //   return observable;
+  // }
+
+  ////////////////////////////////////////
+  // Deductibe Code
+  // private cacheDeductibleCode: Code[] | null = null;
+  // private cacheDeductibleCode$!: Observable<Code[]> | null;
+
+  // getDeductibleCodes(): Observable<Code[]> {
+  //   let observable: Observable<Code[]>;
+  //   if (this.cacheDeductibleCode) {
+  //     observable = of(this.cacheDeductibleCode);
+  //   } else if (this.cacheDeductibleCode$) {
+  //     observable = this.cacheDeductibleCode$;
+  //   } else {
+  //     this.cacheDeductibleCode$ = this.http
+  //       .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/deductiblecode')
+  //       .pipe(
+  //         tap((res) => (this.cacheDeductibleCode = res)),
+  //         share(),
+  //         finalize(() => (this.cacheDeductibleCode$ = null))
+  //       );
+  //     observable = this.cacheDeductibleCode$;
+  //   }
+  //   return observable;
+  // }
 
   ////////////////////////////////////////
   // EachEmployee Deductible
@@ -740,6 +846,30 @@ export class DropDownsService {
           finalize(() => (this.cacheEachEmployee$ = null))
         );
       observable = this.cacheEachEmployee$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Deductibes
+  private cachePropertyDeductibles: PropertyDeductibleLookup[] | null = null;
+  private cachePropertyDeductibles$!: Observable<PropertyDeductibleLookup[]> | null;
+
+  getPropertyDeductibles(): Observable<PropertyDeductibleLookup[]> {
+    let observable: Observable<PropertyDeductibleLookup[]>;
+    if (this.cachePropertyDeductibles) {
+      observable = of(this.cachePropertyDeductibles);
+    } else if (this.cachePropertyDeductibles$) {
+      observable = this.cachePropertyDeductibles$;
+    } else {
+      this.cachePropertyDeductibles$ = this.http
+        .get<PropertyDeductibleLookup[]>(this.config.apiBaseUrl + 'api/dropdowns/property-deductibles')
+        .pipe(
+          tap((res) => (this.cachePropertyDeductibles = res)),
+          share(),
+          finalize(() => (this.cachePropertyDeductibles$ = null))
+        );
+      observable = this.cachePropertyDeductibles$;
     }
     return observable;
   }
@@ -959,4 +1089,127 @@ export class DropDownsService {
     }
     return observable;
   }
+
+  ////////////////////////////////////////
+  // Property Coverages
+  private cachePropertyCoverages: PropertyCoverageLookup[] | null = null;
+  private cachePropertyCoverages$!: Observable<PropertyCoverageLookup[]> | null;
+
+  getPropertyCoverages(): Observable<PropertyCoverageLookup[]> {
+    let observable: Observable<PropertyCoverageLookup[]>;
+    if (this.cachePropertyCoverages) {
+      observable = of(this.cachePropertyCoverages);
+    } else if (this.cachePropertyCoverages$) {
+      observable = this.cachePropertyCoverages$;
+    } else {
+      this.cachePropertyCoverages$ = this.http
+        .get<PropertyCoverageLookup[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coverages')
+        .pipe(
+          tap((res) => (this.cachePropertyCoverages = res)),
+          share(),
+          finalize(() => (this.cachePropertyCoverages$ = null))
+        );
+      observable = this.cachePropertyCoverages$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Cause of Loss
+  private cachePropertyCauseOfLoss: Code[] | null = null;
+  private cachePropertyCauseOfLoss$!: Observable<Code[]> | null;
+
+  getPropertyCauseOfLoss(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyCauseOfLoss) {
+      observable = of(this.cachePropertyCauseOfLoss);
+    } else if (this.cachePropertyCauseOfLoss$) {
+      observable = this.cachePropertyCauseOfLoss$;
+    } else {
+      this.cachePropertyCauseOfLoss$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-cause-of-loss')
+        .pipe(
+          tap((res) => (this.cachePropertyCauseOfLoss = res)),
+          share(),
+          finalize(() => (this.cachePropertyCauseOfLoss$ = null))
+        );
+      observable = this.cachePropertyCauseOfLoss$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Valuations
+  private cachePropertyValuations: Code[] | null = null;
+  private cachePropertyValuations$!: Observable<Code[]> | null;
+
+  getPropertyValuations(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyValuations) {
+      observable = of(this.cachePropertyValuations);
+    } else if (this.cachePropertyValuations$) {
+      observable = this.cachePropertyValuations$;
+    } else {
+      this.cachePropertyValuations$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-valuations')
+        .pipe(
+          tap((res) => (this.cachePropertyValuations = res)),
+          share(),
+          finalize(() => (this.cachePropertyValuations$ = null))
+        );
+      observable = this.cachePropertyValuations$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Property Coinsurance
+  private cachePropertyCoinsurance: Code[] | null = null;
+  private cachePropertyCoinsurance$!: Observable<Code[]> | null;
+
+  getPropertyCoinsurance(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyCoinsurance) {
+      observable = of(this.cachePropertyCoinsurance);
+    } else if (this.cachePropertyCoinsurance$) {
+      observable = this.cachePropertyCoinsurance$;
+    } else {
+      const params = new HttpParams().append('isBI', false);
+      this.cachePropertyCoinsurance$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coinsurance',{params})
+        .pipe(
+          tap((res) => (this.cachePropertyCoinsurance = res)),
+          share(),
+          finalize(() => (this.cachePropertyCoinsurance$ = null))
+        );
+      observable = this.cachePropertyCoinsurance$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  //  Property BI Coinsurance
+  private cachePropertyBICoinsurance: Code[] | null = null;
+  private cachePropertyBICoinsurance$!: Observable<Code[]> | null;
+
+  getPropertyBICoinsurance(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cachePropertyBICoinsurance) {
+      observable = of(this.cachePropertyBICoinsurance);
+    } else if (this.cachePropertyBICoinsurance$) {
+      observable = this.cachePropertyBICoinsurance$;
+    } else {
+      const params = new HttpParams().append('isBI', true);
+      this.cachePropertyBICoinsurance$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/property-coinsurance',{params})
+        .pipe(
+          tap((res) => (this.cachePropertyBICoinsurance = res)),
+          share(),
+          finalize(() => (this.cachePropertyBICoinsurance$ = null))
+        );
+      observable = this.cachePropertyBICoinsurance$;
+    }
+    return observable;
+  }
+
 }

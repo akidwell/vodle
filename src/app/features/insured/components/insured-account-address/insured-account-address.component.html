@@ -82,7 +82,7 @@
       <div class="col-lg-6">
         <label for="country" class="form-label" title="Country">Country</label>
         <div class="inputspinner">
-          <ng-select id="locationState" [items]="countries$ | async" bindLabel="description" bindValue="code"
+          <ng-select id="country" [items]="countries$ | async" bindLabel="description" bindValue="code"
             [readonly]="!canEditInsured || insured.countryReadonly"
             [required]="canEditInsured && insured.countryRequired" name="country" [(ngModel)]="insured.country"
             #state="ngModel" [ngClass]="countryUpdated" (ngModelChange)="changeCountry()">
@@ -97,7 +97,7 @@
     <div class="row">
       <div class="col-lg-2">
         <label for="override" class="form-label" title="Override">Override</label>
-        <input type="checkbox" class="form-checkbox" id="override" [(ngModel)]="insured.isAddressOverride"
+        <input type="checkbox" class="form-check-input" id="override" [(ngModel)]="insured.isAddressOverride"
           name="override" [readonly]="!canEditInsured || insured.isAddressOverrideReadonly"
           [required]="canEditInsured && insured.isAddressOverrideRequired" (change)="addressOverride()">
       </div>

@@ -16,11 +16,37 @@ div.card {
   font-weight: bold;
 }
 
+/* Validation for required fields */
+.ng-valid[required]:not(.ng-select),
+.ng-valid.required:not(.ng-select){
+  border-left: 5px solid #42a948;
+}
+.ng-invalid:not(form, .ng-select){
+  border-left: 5px solid #a94442;
+}
+
+.ng-select.ng-valid[required] .ng-select-container{
+  border-left: 5px solid #42a948;
+}
+
+.ng-select.ng-invalid .ng-select-container{
+  border-left: 5px solid #a94442;
+}
+
+/* Used to aligh right fields like amounts */
+.right {
+  text-align: right;
+}
+
 /* Added here to allow the drop downs show full width of values, only worked here*/
 ng-select .ng-dropdown-panel {
   width: auto !important;
   max-width: 550px;
   min-width: 100%;
+}
+
+.ng-select.max-width .ng-dropdown-panel {
+  width: 550px !important;
 }
 
 .ng-select.ng-select-disabled>.ng-select-container {
@@ -40,15 +66,19 @@ ng-select .ng-dropdown-panel {
     0 8px 10px 1px rgba(0, 0, 0, 0.14),
     0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
+
 .cdk-drag-placeholder {
   opacity: 0;
 }
+
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 .drag-block:last-child {
   border: none;
 }
+
 .drag-list.cdk-drop-list-dragging .drag-block:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
@@ -116,6 +146,11 @@ body {
   border: none;
 }
 
+.link-button {
+  background: none;
+  border: none;
+}
+
 .footer-button:hover {
   text-decoration: underline;
 }
@@ -125,7 +160,80 @@ body {
   margin: 6px !important;
 }
 
-/* Standate distance between components in rows */
+/* Standard distance between components in rows */
 .component-row {
   padding-bottom: 4px;
+}
+
+/* Check Box formatting*/
+.form-check-input {
+  height: 25px;
+  width: 25px;
+}
+
+.form-check-input:checked {
+  background-color: #00ac5d !important;
+}
+
+.form-check-input[readonly] {
+  background-color: lightgray !important;
+  border: 1px solid #ced4da;
+  pointer-events: none;
+}
+
+/* Adds a line on the top of a div */
+.top-bordered {
+  border-top: 2px solid black;
+}
+
+
+/* Collapsable panel */
+.expanded {
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  margin-left: -6px;
+  margin-right: -6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  border-radius: 8px;
+  background-color: whitesmoke;
+  cursor: default;
+  border: 1px solid grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 12px 0 rgba(0, 0, 0, 0.19);
+}
+
+.collapsed {
+  position: relative;
+  cursor: row-resize;
+}
+
+.collapse-bar {
+  background: none;
+  padding: 0;
+  margin-left: -1px !important;
+  margin-bottom: -1px;
+  color: #00274e;
+  text-align: center;
+  cursor: pointer;
+  background-color: #e6e9ed;
+  border: 1px solid grey;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  width: calc(100% + 2px);
+  height: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.collapse-bar:hover {
+  background-color: #ccd4dc;
+}
+
+/* Page Item */
+.page-item.active {
+  z-index: 1 !important;
 }

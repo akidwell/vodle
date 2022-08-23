@@ -1,0 +1,56 @@
+.form-label {
+  overflow: hidden; 
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
+}
+
+.form-label-wrap {
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
+}
+
+.right {
+  text-align: right;
+}
+
+.margin-left {
+  margin-left: 5px;
+}
+
+.inputspinner {
+  position: relative;
+}
+
+#spinner {
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 10px);
+}
+
+.address-valid {
+  background-color: white;
+  cursor: row-resize;
+  border-left: 5px solid #42a948;
+}
+
+.address-invalid {
+  background-color: white;
+  cursor: row-resize;
+  border-left: 5px solid #a94442;
+}
+
+#action {
+  height: fit-content;
+  width: fit-content;
+  color: black;
+  border-color: black;
+  background-color: rgb(235, 230, 230);
+}
+
+.dropdown-menu {
+  padding: 0px;
+}

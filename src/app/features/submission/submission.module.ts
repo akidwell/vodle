@@ -11,7 +11,6 @@ import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { SubmissionComponent } from './components/submission-base/submission.component';
-import { SubmissionHeaderComponent } from './components/submission-header/submission-header.component';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,24 +20,17 @@ import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { EndorsementStoredValues } from '../policy/services/endorsement-stored-values/endorsement-stored-values.service';
-import { SubmissionInformationComponent } from './components/submission-information/submission-information.component';
-import { SubmissionInfoPanelLeftComponent } from './components/submission-info-panel-left/submission-info-panel-left.component';
-import { SubmissionInfoPanelRightComponent } from './components/submission-info-panel-right/submission-info-panel-right.component';
-import { ProducerSearchModule } from 'src/app/shared/components/producer-search/producer-search.module';
-import { ProducerContactSearchModule } from 'src/app/shared/components/producer-contact-search/producer-contact-search.module';
+import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
+import { SubmissionInfoBaseComponent } from './components/submission-info-base/submission-info-base.component';
 
 @NgModule({
   declarations: [
     SubmissionComponent,
-    SubmissionHeaderComponent,
-    SubmissionInformationComponent,
-    SubmissionInfoPanelLeftComponent,
-    SubmissionInfoPanelRightComponent
+    SubmissionInfoBaseComponent
   ],
   imports: [
     CommonModule,
     SubmissionRoutingModule,
-    AdditionalNamedInsuredModule,
     FormsModule,
     FontAwesomeModule,
     NgbModule,
@@ -49,8 +41,7 @@ import { ProducerContactSearchModule } from 'src/app/shared/components/producer-
     MatNativeDateModule,
     MatFormFieldModule,
     PipesModule,
-    ProducerSearchModule,
-    ProducerContactSearchModule,
+    SubmissionInformationModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

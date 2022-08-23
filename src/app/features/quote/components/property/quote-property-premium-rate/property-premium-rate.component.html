@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-lg-4">
+        <label for="policyCoverage" class="form-label" title="Policy Coverage">Policy Coverage</label>
+        <input type="text" class="form-control" id="policyCoverage" readonly name="policyCoverage"
+            [(ngModel)]="programDescription" #policyCoverage="ngModel">
+    </div>
+    <div class="col-lg-2">
+        <label for="totalLimit" class="form-label" title="Total Limit Amount">Total Limit Amount</label>
+        <input type="text" class="form-control right" id="totalLimit" readonly mask="separator.0" thousandSeparator=","
+            name="totalLimit" [ngModel]="limitTotal" #totalLimit="ngModel">
+    </div>
+    <div class="col-lg-1">
+        <label for="rateBasis" class="form-label" title="Rate Basis">Rate Basis</label>
+        <input type="text" class="form-control right" id="rateBasis" readonly name="rateBasis"
+            [(ngModel)]="rate.rateBasis" #rateBasis="ngModel">
+    </div>
+    <div class="col-lg-1">
+        <label for="finalRate" class="form-label" title="Final Rate">Final Rate</label>
+        <input type="text" class="form-control right" id="finalRate" [readonly]="!canEdit" name="finalRate"
+            string-to-currency [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false"
+            [(ngModel)]="rate.premiumRate" #finalRate="ngModel">
+    </div>
+    <div class="col-lg-2">
+        <label for="flatRate" class="form-label" title="Flat Rate">Flat Rate</label>
+        <input type="checkbox" class="form-check-input" id="flatRate" [(ngModel)]="rate.isFlatRate" name="flatRate"
+            [readonly]="!canEdit">
+    </div>
+    <div class="col-lg-2">
+        <label for="Premium" class="form-label" title="Premium">Premium</label>
+        <input type="text" class="form-control right" id="Premium" [readonly]="!canEdit" [required]="canEdit"
+            string-to-currency [allowNegative]="false" name="Premium" [(ngModel)]="rate.premium" #Premium="ngModel">
+    </div>
+</div>

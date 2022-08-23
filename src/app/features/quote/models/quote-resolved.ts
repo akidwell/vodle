@@ -1,6 +1,6 @@
-import { Quote } from './quote';
+import { DepartmentClass } from '../classes/department-class';
 
 export interface QuoteResolved {
-    quote: Quote[] | null;
+    department: DepartmentClass | null;
     error?: any;
   }

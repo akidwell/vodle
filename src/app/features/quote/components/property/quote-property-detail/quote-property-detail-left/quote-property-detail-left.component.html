@@ -1,0 +1,53 @@
+<div class="panel">
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="totalAccountLimit" class="panel-header" title="totalAccountLimit">Total Acct Limit Amt</label>
+            <input type="text" class="form-control right"  id="totalAccountLimit" maxlength="40" [readonly]="true"
+                [value]="limitTotal | currency: 'USD' : 'symbol':'1.0-0'">
+        </div>
+        <div class="col-lg-3">
+            <label for="largestAmt" class="panel-header" title="largestAmt">Largest Premises TIV</label>
+            <input type="text" class="form-control right"  id="largestAmt" maxlength="40" [readonly]="true"
+                [value]="largestTiv | currency: 'USD' : 'symbol':'1.0-0'">
+        </div>
+        <div class="col-lg-3">
+            <label for="lawLimits" class="panel-header" title="lawLimits">Bldg Ord Law Limits</label>
+            <input type="text" class="form-control right" id="lawLimits" maxlength="40" [readonly]="true"
+            [value]="lawLimits | currency: 'USD' : 'symbol':'1.0-0'">
+            
+        </div>
+        <div class="col-lg-3">
+            <label for="largestExposure" class="panel-header" title="largestExposure">Largest Exposure</label>
+            <input type="text" class="form-control right" id="largestExposure" maxlength="40" [readonly]="true"
+            [value]="largestExposure | currency: 'USD' : 'symbol':'1.0-0'">
+            
+        </div>
+    </div>
+    <br>
+    <div class="row" style="padding: 1px" *ngIf="subjectAmount.size > 0">
+        <div class="col-lg-2">
+            <label for="subject" class="subj" title="subject">Subj #:</label>
+        </div>
+        <div class="col-lg-1"> </div>
+        <div class="col-lg-4">
+            <label for="subjectBreakdown" class="panel-header" title="subjectBreakdown">Subj Amt Breakdown:</label>
+        </div>
+    </div>
+    <div *ngFor="let sub of subjects$ | async">
+        <div class="row" style="padding: 1px">
+            <div class="col-lg-2">
+                <input type="text" class="form-control text-center" id="subject" maxlength="40" [readonly]="true" style="width:50%; margin-left:30%"
+                    [value]="sub.subject">
+            </div>
+            <div class="col-lg-1"> </div>
+            <div class="col-lg-3">
+                <input type="text" class="form-control right" id="subjectBreakdown" maxlength="40" [readonly]="true"
+                    [value]="sub.limit | currency: 'USD' : 'symbol':'1.0-0'">
+            </div>
+        </div>
+    </div>
+    <div  *ngIf="buildings.length > 0" class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+            [rotate]="true" [boundaryLinks]="true">
+        </ngb-pagination>
+    </div>

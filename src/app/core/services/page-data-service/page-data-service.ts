@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { InsuredClass } from 'src/app/features/insured/classes/insured-class';
 import { AccountInformation, PolicyInformation } from 'src/app/features/policy/models/policy';
-import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
+import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
+import { ProgramClass } from 'src/app/features/quote/classes/program-class';
+import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { HistoricRoute } from '../../models/historic-route';
 
@@ -10,20 +12,27 @@ import { HistoricRoute } from '../../models/historic-route';
 export class PageDataService {
   private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
-  private _quoteData: QuoteClass | null = null;
+  private _quoteData: DepartmentClass | null = null;
   private _policyData: PolicyInformation | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
+  private _selectedProgram: ProgramClass | null = null;
   private _resetLastSubmission = true;
 
   private _noData = true;
 
   insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
-  submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(this._submissionData);
-  quoteData$: BehaviorSubject<QuoteClass | null> = new BehaviorSubject(this._quoteData);
+  submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(
+    this._submissionData
+  );
+  quoteData$: BehaviorSubject<DepartmentClass | null> = new BehaviorSubject(this._quoteData);
+  selectedProgram$: BehaviorSubject<ProgramClass | null> = new BehaviorSubject(this._selectedProgram);
   policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
+
+  constructor(private propertyDataService: PropertyDataService) {
+  }
 
   get insuredData(): InsuredClass | null {
     return this._insuredData;
@@ -48,11 +57,11 @@ export class PageDataService {
     }
   }
 
-  get quoteData(): QuoteClass | null {
+  get quoteData(): DepartmentClass | null {
     return this._quoteData;
   }
 
-  set quoteData(val: QuoteClass | null) {
+  set quoteData(val: DepartmentClass | null) {
     this._quoteData = val;
     this.quoteData$.next(this._quoteData);
     if (val != null) {
@@ -98,6 +107,33 @@ export class PageDataService {
 
   set isNoData(val: boolean) {
     this._noData = val;
-    setTimeout(() => this.noData$.next(this._noData),0);
+    setTimeout(() => this.noData$.next(this._noData), 0);
+  }
+
+  getProgramWithQuote(quoteId: number) {
+    let activeProgram = null;
+    console.log('quote data: ', this._quoteData)
+    if (this._quoteData) {
+      this._quoteData.programMappings.forEach((program) => {
+        if (program && program.quoteData && program.quoteData.quoteId == quoteId) {
+          this.propertyDataService.buildingList = program.quoteData.propertyQuote.buildingList;
+          activeProgram = program;
+        }
+      });
+    }
+    this.selectedProgram = activeProgram;
+  }
+  set selectedProgram(program: ProgramClass | null) {
+    this._selectedProgram = program;
+    setTimeout(()=>{
+      this.refreshProgram();
+    });
+  }
+  get selectedProgram(): ProgramClass | null {
+    return this._selectedProgram;
+  }
+
+  refreshProgram() {
+    this.selectedProgram$.next(this._selectedProgram);
   }
 }

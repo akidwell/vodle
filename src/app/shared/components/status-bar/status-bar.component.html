@@ -20,11 +20,11 @@
 
   </div>
 
-  <div class="button-bar"
+  <div class="button-bar  minimized"
   *ngIf="(pageDataService.submissionData != null && pageDataService.submissionData.isDirty)
   || (pageDataService.insuredData != null && pageDataService.insuredData.isDirty) || pageDataService.lastSubmission !== null
-  || (pageDataService.quoteData != null && pageDataService.quoteData.isDirty)"
-  
+  || (pageDataService.quoteData != null)"
+
   [style.top.px]="headerPaddingService.buttonBarPadding$ | async"
   [style.height.px]="headerPaddingService.buttonBarHeight$ | async">
     <button
@@ -52,7 +52,6 @@
     >
       Save
     </button>
-
     <button
       class="btn btn-md btn-primary"
       *ngIf="(pageDataService.lastSubmission != null) "

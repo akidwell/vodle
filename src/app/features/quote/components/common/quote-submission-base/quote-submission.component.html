@@ -1,0 +1,5 @@
+<div *ngFor="let program of department.programMappings">
+  <div *ngIf="program.quoteData && program.quoteData.submission">
+    <rsps-submission-information [quoteDescription]="program.programDesc" [submission]="program.quoteData.submission"></rsps-submission-information>
+  </div>
+</div>
