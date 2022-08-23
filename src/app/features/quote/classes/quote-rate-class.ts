@@ -8,6 +8,7 @@ import { QuoteValidationClass } from './quote-validation-class';
 export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSave {
   quoteId: number | null = null;
   sequenceNo: number | null = 0;
+  classCode: number | null = 0;
   invalidList: string[] = [];
 
   private _premiumRate: number | null = null;
@@ -132,14 +133,15 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSav
     // No special rules
   }
 
-  toJSON() {
+  toJSON(classCode: number | null) {
     return {
       quoteId: this.quoteId,
       sequenceNo: this.sequenceNo,
       rateBasis: this.rateBasis,
       isFlatRate: this.isFlatRate,
       premiumRate: this.premiumRate,
-      premium: this.premium
+      premium: this.premium,
+      classCode: classCode
     };
   }
 }

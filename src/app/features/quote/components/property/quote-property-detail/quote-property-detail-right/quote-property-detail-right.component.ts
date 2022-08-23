@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { map, Observable, tap, zipAll } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
+import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { ClassCode } from 'src/app/features/quote/models/class-code';
-import { NaicsCode } from 'src/app/features/quote/models/naics';
 import { Quote } from 'src/app/features/quote/models/quote';
 
 @Component({
@@ -16,67 +15,54 @@ export class QuotePropertyDetailRightComponent implements OnInit {
   @Input() public quote!: Quote;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
-  sicCodes$: Observable<Code[]> | undefined;
-  naicsCodes: NaicsCode[] = [];
-  classCodes$: Observable<ClassCode[]> | undefined;
-  code!: NaicsCode;
-  loadingSic = true;
-  loadingNaics = true;
-  loadingClass = true;
+  cspCodes$: Observable<Code[]> | undefined;
+  loadingCsp = true;
+  cspCode: Code = {code:'', key:0, description:''};
+  previousCspCode: any = undefined;
+  testArray: Code[] = [];
 
   selectedAttribute!: string;
   naicsSelectedAttribute!: string;
 
 
-  constructor( private dropdowns: DropDownsService) { }
+  constructor( private dropdowns: DropDownsService,
+               private confirmationDialogService: ConfirmationDialogService
+  ) { }
 
   ngOnInit(): void {
-    // this.sicCodes$ = this.dropdowns.getSicCodes()
-    //   .pipe(tap(() => this.loadingSic = false));
+    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', '2020-01-01', this.quote.programId.toString() || '*')
+      .pipe(tap(() => this.loadingCsp = false));
 
+    this.previousCspCode = this.quote.classCode;
   }
 
 
-  // dropDownSearch(term: string, item: Code) {
-  //   term = term.toLowerCase();
-  //   return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
-  // }
-
-  // classDropDownSearch(term: string, item: ClassCode) {
-  //   term = term.toLowerCase();
-  //   return item.classCode?.toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
-  // }
-
-  // naicsDropDownSearch(term: string, item: NaicsCode) {
-  //   term = term.toLowerCase();
-  //   return item.naicsCode?.toLowerCase().indexOf(term) > -1 || item.longDescription?.toLowerCase().indexOf(term) > -1;
-  // }
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
 
 
-  // changeSicCode() {
-  //   if (this.quote.sicCode != null) {
-  //     this.loadingNaics = true;
-  //     this.quote.naicsCode = null;
-  //     this.classCodes$ = this.dropdowns.postSicCode(this.quote.sicCode)
-  //       .pipe(tap(() => this.loadingClass = false))
-  //       .pipe(tap(() => this.loadingNaics = false))
-  //       .pipe(tap((x) => {
-  //         //to do: check values in DB once save is finished
-  //         this.naicsCodes = x.map(y => y.sicCode.map(z => z.naicsCodes).reduce((x,y) => x.concat(y), [])).reduce((x,y) => x.concat(y), []);
-  //         if (this.naicsCodes.length > 0){
-  //           this.naicsSelectedAttribute = this.naicsCodes[0].naicsCode;
-  //         }
-  //       }));
-  //     this.classCodes$.subscribe(classCode =>
-  //     {
-  //       if(classCode.length > 0)
-  //         this.selectedAttribute = classCode[0].classCode;
-  //       console.log(this.selectedAttribute);
-  //     });
-
-  //   }
-  //   else {
-  //     this.classCodes$ = new Observable<ClassCode[]>();
-  //   }
-  // }
+  changeCspCode(cspCode: Code) {
+    if (this.previousCspCode != 0 || undefined) {
+      this.confirmationDialogService
+        .open(
+          'CSP Code Change Confirmation',
+          'Do you wish to overwrite existing CSP Codes?'
+        )
+        .then(async (result: boolean) => {
+          if (result) {
+            this.previousCspCode = cspCode;
+            this.quote.propertyQuote.clearCspCodes();
+            this.quote.propertyQuote.cspCode = cspCode;
+            this.quote.classCode = Number(cspCode);
+          } else {
+            this.quote.classCode = this.previousCspCode;
+          }});
+    } else {
+      this.previousCspCode = cspCode;
+      this.quote.propertyQuote.cspCode = cspCode;
+      this.quote.classCode = Number(cspCode);
+    }
+  }
 }

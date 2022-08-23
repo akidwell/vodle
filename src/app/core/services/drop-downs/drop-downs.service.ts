@@ -65,6 +65,15 @@ export class DropDownsService {
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/naics-codes', { params });
   }
 
+  getCspCodes(sourceSystem: string, effectiveDate: string, programId: string) {
+    const params = new HttpParams()
+      .append('sourceSystem', sourceSystem)
+      .append('effectiveDate', effectiveDate)
+      .append('programId', programId);
+
+    return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/csp-codes', { params });
+  }
+
   getMarkDeadReasons(isNew: boolean) {
     const params = new HttpParams().append('isNew', isNew);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-dead-reasons', {

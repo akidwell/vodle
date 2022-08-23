@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div *ngFor="let item of policies$ | async; let i = index">
-                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType"
+                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId"
                     (copyBuilding)=copyBuilding($event) (deleteBuilding)=deleteBuilding($event)
                     (addCoverage)=addCoverage($event) (filterBuilding)=filterBuilding($event)>
                 </rsps-property-building>

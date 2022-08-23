@@ -130,7 +130,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
   importErrors = [];
   naicsCode = null;
   sicCode = null;
-  classCode = null;
+  classCode = 0;
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
@@ -205,6 +205,8 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
+    this.classCode = quote.quoteRates[0].classCode || 0;
+
     this.setReadonlyFields();
     this.setRequiredFields();
     this.validateQuoteChildren();
@@ -429,8 +431,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
 
   toJSON() {
     const rates: QuoteRate[] = [];
-    this.quoteRates.forEach(c => rates.push(c.toJSON()));
-
+    this.quoteRates.forEach(c => rates.push(c.toJSON(Number(this.classCode))));
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -452,6 +453,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
       policySymbol: this.policySymbol,
       formName: this.formName,
       programId: this.programId,
+      classCode: this.classCode,
       autoCalcMiscPremium: this.autoCalcMiscPremium,
       propertyQuote: this.propertyQuote?.toJSON(),
       quoteRates: rates

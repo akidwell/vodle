@@ -8,6 +8,7 @@ import { PropertyQuoteClass } from './property-quote-class';
 import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
+import { Code } from 'src/app/core/models/code';
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation, QuoteAfterSave {
   private _isDirty = false;
@@ -32,7 +33,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   private _state: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
-  private _cspCode: string | null = null;
+  private _cspCode : string | null = null;
   private _description: string | null = null;
   private _occupancy: string | null = null;
   private _squareFeet: number | null = null;
@@ -146,7 +147,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._countryCode = value;
     this._isDirty = true;
   }
-  get cspCode(): string | null {
+  get cspCode(): string | null{
     return this._cspCode;
   }
   set cspCode(value: string | null) {
@@ -353,7 +354,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       coverages.push(coverage);
     });
     this.propertyQuoteBuildingCoverage = coverages;
-
     this.setReadonlyFields();
     this.setRequiredFields();
   }
