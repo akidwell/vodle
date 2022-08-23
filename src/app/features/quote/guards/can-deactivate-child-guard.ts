@@ -31,7 +31,7 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
       // Skip checks if bypassFormGuard is set
       console.log(this.checkLeavePolicy(state.url, nextState.url));
       if (!this.checkLeavePolicy(state.url, nextState.url)) {
-        allowNavigate = this.validateAndSaveDepartment();
+        allowNavigate = this.validateAndSaveQuote();
       }
       // // Show errors
       // //component.showInvalidControls();
@@ -52,7 +52,7 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
     return allowNavigate;
   }
 
-  validateAndSaveDepartment(): boolean {
+  validateAndSaveQuote(): boolean {
     const program = this.pageDataService.selectedProgram || null;
     program?.quoteData?.validate();
     //TODO: Add isDirty check as we don't want to save every tab change

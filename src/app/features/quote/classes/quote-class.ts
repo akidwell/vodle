@@ -316,6 +316,9 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     this._validateOnLoad = false;
     return this.validationResults;
   }
+  validatePropertyQuote(quote: QuoteValidation){
+    quote.validate ? quote.validate(): null;
+  }
   // validateCoverageTab(): QuoteChildValidation {
   //   const validation: QuoteChildValidation = {
   //     className: 'CoverageClass',

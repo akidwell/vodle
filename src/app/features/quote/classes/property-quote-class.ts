@@ -38,7 +38,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
-  private _errorMessages: string[] = [];
+  private _errorMessages: string[] = ['Property Quote'];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
@@ -321,6 +321,9 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
 
     //tab validations
     this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAsStandalone(this.propertyQuoteBuilding);
+    if (this.propertyQuoteBuildingLocationTabValidation?.isDirty) {
+      //complex validations on building location tab
+    }
     this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
     this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAndMerge(this.propertyQuoteAdditionalInterest);
     //TODO: T&C

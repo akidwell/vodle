@@ -94,7 +94,7 @@ export class AdditionalInterestGroupComponent implements OnInit {
     const mort: AdditionalInterestClass = new AdditionalInterestClass();
     mort.isNew = true;
     this.aiData?.push(mort);
-    this.program?.quoteData?.validate();
+    ///this.program?.quoteData?.validate();
     this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
   }
 
