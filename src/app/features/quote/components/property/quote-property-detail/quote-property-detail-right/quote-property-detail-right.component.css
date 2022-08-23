@@ -13,3 +13,7 @@
   .panel-header{
     font-weight: bold;
   }
+
+  #description {
+    height: 200px;
+  }

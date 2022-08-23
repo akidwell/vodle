@@ -4,13 +4,14 @@
     </div>
     <div class="empty-row"></div>
     <div class="col-lg-12">
-        <label for="SIC" class="form-label" title="SIC">CSP</label>
+        <label for="csp" class="form-label" title="CSP">CSP</label>
 
     </div>
     <div class="col-lg-12">
-        <!-- <ng-select id="sicCode" [items]="sicCodes$ | async" bindLabel="description" bindValue="code"
-            [readonly]="!canEdit" name="sicCode" [(ngModel)]="quote.sicCode" [loading]="loadingSic"
-            loadingText="Loading..." [searchFn]="dropDownSearch" #sicCode="ngModel" (change)="changeSicCode()"
+        <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="key"
+
+            [readonly]="!canEdit" name="cspCode" [(ngModel)]="quote.classCode" [loading]="loadingCsp"
+            loadingText="Loading..." [searchFn]="dropDownSearch" #csp="ngModel" (ngModelChange)="changeCspCode($event)"
             [virtualScroll]="true">
             <ng-template ng-label-tmp let-item="item">
                 {{item.code}} - {{item.description}}
@@ -18,7 +19,14 @@
             <ng-template ng-option-tmp let-item="item">
                 {{item.code}} - {{item.description}}
             </ng-template>
-        </ng-select> -->
+        </ng-select>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <label for="riskDescription" class="panel-header" title="riskDescription">Risk Description</label>
+            <textarea type="text" class="form-control" id="description" maxlength="255" name="riskDescription"
+                [(ngModel)]="quote.propertyQuote.riskDescription" #riskDescription="ngModel"></textarea>
+        </div>
     </div>
 
 </div>

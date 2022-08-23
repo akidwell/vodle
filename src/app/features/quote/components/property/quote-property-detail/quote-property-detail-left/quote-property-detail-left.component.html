@@ -50,9 +50,4 @@
         <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
             [rotate]="true" [boundaryLinks]="true">
         </ngb-pagination>
-        <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">
-            <option [ngValue]="5">5 items per page</option>
-            <option [ngValue]="10">10 items per page</option>
-            <option [ngValue]="15">15 items per page</option>
-        </select>
     </div>
