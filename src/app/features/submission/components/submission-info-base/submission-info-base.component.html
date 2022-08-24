@@ -21,8 +21,12 @@
       <tbody>
         <ng-container *ngFor="let quoteActivity of submission.quoteActivity let i = index">
           <tr [ngClass]="{'white': quoteActivity.rowcolor == 'white', 'gray': quoteActivity.rowcolor == 'gray'}">
-            <td><a *ngIf="quoteActivity.firstRow" [routerLink]="[]" 
-              (click)="routeToQuote(quoteActivity.sequenceNumber)">Select</a>
+            <td>
+              <!-- <a *ngIf="quoteActivity.firstRow" 
+              [routerLink]="[]" 
+              (click)="routeToQuote(quoteActivity.sequenceNumber)"> -->
+              Select
+            <!-- </a> -->
             </td>
             <td >{{ quoteActivity.quoteId }}</td>
             <td>{{ quoteActivity.quoteNo }}</td>
