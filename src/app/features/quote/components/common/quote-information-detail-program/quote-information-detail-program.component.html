@@ -5,9 +5,9 @@
     </div>
   </div>
   <div class="col-lg-10" >
-    <!-- <div class="row" *ngIf="program.quoteData == null">
+    <div class="row" *ngIf="program.quoteData == null">
       <button class="btn btn-secondary margin-left" (click)=createQuote() hover-class="btn-warning">Create Quote</button>
-    </div> -->
+    </div>
     <div class="row" *ngIf="program.quoteData != null" [ngClass]="program.quoteData != null && program.quoteData.mappingError ? 'mapping-error' : ''">
       <div class="col-lg-2">
         <input
