@@ -10,7 +10,8 @@
       <div class="card-header" (click)="collapse.toggle()">
         Submission Information <span *ngIf="submission.submissionNumber > 0"> - {{ submission.submissionNumber }}</span>
           <span *ngIf="submission.submissionNumber > 0"><span *ngIf="quoteDescription"> - {{quoteDescription}}</span>
-          <span *ngIf="submission.quoteActivity.length == 0"> - <a (click)="routeToNewQuote()"  [routerLink]="[]" >Add New Quote</a></span> </span>
+          <!-- <span *ngIf="submission.quoteActivity.length == 0"> - <a (click)="routeToNewQuote()"  [routerLink]="[]" >Add New Quote</a></span>  -->
+        </span>
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="submissionCollapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!submissionCollapsed"></fa-icon>
       </div>
