@@ -9,7 +9,9 @@ export class PropertyDataService {
 
   get buildingList(): Code[] { return this._buildingList; }
   set buildingList(value: Code[]) {
-    this._buildingList = value;
-    this.buildingList$.next(this._buildingList);
+    if (JSON.stringify(this._buildingList) != JSON.stringify(value)) {
+      this._buildingList = value;
+      this.buildingList$.next(this._buildingList);
+    }
   }
 }

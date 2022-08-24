@@ -1,4 +1,4 @@
-import { AsyncSubject } from 'rxjs';
+
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Code } from 'src/app/core/models/code';
@@ -7,7 +7,7 @@ import { AdditionalInterestClass } from 'src/app/shared/components/property-addi
 import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
 import { PropertyBuildingData } from '../models/property-building';
-import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
+import { PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
 import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteAfterSave } from '../models/quote-after-save';
@@ -198,6 +198,27 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     }
   }
 
+  onPremisesBuildingChange(premisesNumber: number | null, buildingNumber: number | null) {
+    this.propertyQuoteDeductible.map(c => {
+      if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
+        c.premisesNumber = null;
+        c.buildingNumber = null;
+      }
+    });
+    this.propertyQuoteMortgagee.map(c => {
+      if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
+        c.premisesNumber = null;
+        c.buildingNumber = null;
+      }
+    });
+    this.propertyQuoteAdditionalInterest.map(c => {
+      if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
+        c.premisesNumber = null;
+        c.buildingNumber = null;
+      }
+    });
+  }
+
   clearCspCodes() {
     this.propertyQuoteBuilding.forEach(x => x.cspCode == null);
   }
@@ -341,15 +362,9 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
 
   callChildValidations() {
-
-    // Validate all buildings
-    //if (this.propertyQuoteBuildingLocationTabValidation?.isDirty) {
-    if (this.validateBuildings()) {
-      // this._canBeSaved = false;
-      // this._isValid = false;
-      //this.propertyQuoteBuildingLocationTabValidation.canBeSaved = false;
-    }
-    //}
+    // Validate all buildings for duplicates
+    this.validateBuildings();
+    this. validateDeductibles();
 
     this.childArrayValidate(this.propertyQuoteDeductible);
     this.childArrayValidate(this.propertyQuoteMortgagee);
@@ -401,9 +416,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     this._errorMessages = this.invalidList;
   }
 
-  validateBuildings(): boolean {
-    let dupe = false;
-    this.propertyQuoteBuilding.forEach(c => {
+  validateBuildings() {
+    this.propertyQuoteBuilding.map(c => {
       if (c.isDuplicate) {
         c.isDuplicate = false;
       }
@@ -412,14 +426,47 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
       if (!x.isDuplicate) {
         const dupes = this.propertyQuoteBuilding.filter(c => c.subjectNumber == x.subjectNumber && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
         if (dupes.length > 1) {
-          dupe = true;
+          dupes.forEach(c => {
+            c.isDuplicate = true;
+          });
+        }
+      }
+
+      // Check coverage for duplicates
+      x.propertyQuoteBuildingCoverage.map(c => {
+        if (c.isDuplicate) {
+          c.isDuplicate = false;
+        }
+      });
+      x.propertyQuoteBuildingCoverage.map(coverage => {
+        if (!coverage.isDuplicate) {
+          const dupes = x.propertyQuoteBuildingCoverage.filter(c => c.propertyCoverageId == coverage.propertyCoverageId);
+          if (dupes.length > 1) {
+            dupes.forEach(dupe => {
+              dupe.isDuplicate = true;
+            });
+          }
+        }
+      });
+    });
+  }
+
+  validateDeductibles() {
+    this.propertyQuoteDeductible.map(c => {
+      if (c.isDuplicate) {
+        c.isDuplicate = false;
+      }
+    });
+    this.propertyQuoteDeductible.map(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.propertyQuoteDeductible.filter(c => c.propertyDeductibleId == x.propertyDeductibleId && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
+        if (dupes.length > 1) {
           dupes.forEach(c => {
             c.isDuplicate = true;
           });
         }
       }
     });
-    return dupe;
   }
 
   toJSON() {

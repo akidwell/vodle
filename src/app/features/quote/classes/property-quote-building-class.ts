@@ -101,10 +101,13 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     return this._buildingNumber;
   }
   set buildingNumber(value: number | null) {
+    // Need to Check with original value
+    this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value;
     this._isDirty = true;
     this.propertyQuoteBuildingCoverage.forEach(c => c.buildingNumber = value);
   }
+
   get street1(): string | null {
     return this._street1;
   }
@@ -432,6 +435,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this.propertyQuoteId = 0;
     this.expand = true;
     this.isNew = true;
+    this._isDirty = true;
     this.guid = crypto.randomUUID();
   }
 
@@ -457,10 +461,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._canBeSaved = true;
     this._isValid = true;
 
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-    //this._errorMessages = this.invalidList;
     if (this.emptyNumberValueCheck(this._subjectNumber)){
       this._canBeSaved = false;
       this._isValid = false;

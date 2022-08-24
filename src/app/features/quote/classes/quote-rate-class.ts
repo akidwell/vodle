@@ -96,7 +96,7 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSav
     let invalid = false;
     if ((this.premium ?? 0) == 0) {
       invalid = true;
-      this.invalidList.push('Amount is required');
+      this.invalidList.push('Premium is required');
     }
     return invalid;
   }
