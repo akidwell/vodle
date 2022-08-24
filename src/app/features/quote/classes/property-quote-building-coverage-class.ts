@@ -14,6 +14,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
+  private _isDuplicate = false;
 
   propertyQuoteBuildingCoverageId = 0;
   propertyQuoteBuildingId = 0;
@@ -110,6 +111,14 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
   }
+  get isDuplicate(): boolean {
+    return this._isDuplicate;
+  }
+  set isDuplicate(value: boolean ) {
+    this._isDuplicate = value;
+    this._isDirty = true;
+  }
+
   constructor(coverage?: PropertyBuildingCoverageData) {
     if (coverage) {
       this.existingInit(coverage);
@@ -131,12 +140,48 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   }
   classValidation() {
     this.invalidList = [];
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-    //this._errorMessages = this.invalidList;
     this._canBeSaved = true;
     this._isValid = true;
+
+    if (this.isDuplicate){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Coverage: ' + this.propertyCoverageId + ' is duplicated on ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim());
+    }
+    if ((this.limit ?? 0 ) > 9999999999){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this._propertyCoverageId)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this._limit)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this._coinsuranceId)){
+      this._isValid = false;
+      this.invalidList.push('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this._causeOfLossId)){
+      this._isValid = false;
+      this.invalidList.push('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this._valuationId)){
+      this._isValid = false;
+      this.invalidList.push('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    this._errorMessages = this.invalidList;
+  }
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
   }
 
   existingInit(coverage: PropertyBuildingCoverageData) {
@@ -153,8 +198,6 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.setRequiredFields();
   }
 
-  // locationNumberRequired = true;
-  // buildingNumberRequired = true;
   propertyCoverageIdRequired = true;
   coinsuranceRequired = true;
   causeOfLossIdRequired = true;
@@ -169,6 +212,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.propertyQuoteBuildingCoverageId = 0;
     this.propertyQuoteBuildingId = 0;
     this.isNew = true;
+    this._isDirty = true;
     this.guid = crypto.randomUUID();
     this.expand = true;
   }

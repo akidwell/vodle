@@ -70,9 +70,6 @@ export class AdditionalInterestComponent {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
-        if (this.aiData.building != null && this.buildingList.find(c => c.code == this.aiData.building) == null) {
-          this.aiData.buildingNumber = null;
-        }
       }
     });
     console.log(this.aiData.isAppliedToAll);

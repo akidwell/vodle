@@ -73,9 +73,6 @@ export class MortgageeComponent {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
-        if (this.mortgageeData.building != null && this.buildingList.find(c => c.code == this.mortgageeData.building) == null) {
-          this.mortgageeData.buildingNumber = null;
-        }
       }
     });
     console.log(this.mortgageeData.isAppliedToAll);

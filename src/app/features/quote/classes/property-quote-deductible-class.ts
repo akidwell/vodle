@@ -13,6 +13,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
+  private _isDuplicate = false;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
   sequence: number | null = null;
@@ -184,6 +185,13 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
   }
+  get isDuplicate(): boolean {
+    return this._isDuplicate;
+  }
+  set isDuplicate(value: boolean ) {
+    this._isDuplicate = value;
+    this._isDirty = true;
+  }
 
   constructor(deductible?: PropertyDeductible) {
     if (deductible) {
@@ -209,18 +217,32 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
     this.invalidList = [];
     this._canBeSaved = true;
 
-    if (!this.isAppliedToAll && this.emptyNumberValueCheck(this.premisesNumber)) {
-      // this._canBeSaved = false;
+    if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
+      this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Premises Number is required');
+      this.invalidList.push('Premises/Building Number is required');
     }
 
+    if (this.emptyNumberValueCheck(this._propertyDeductibleId)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Deductible is required');
+    }
+    if (this.isDuplicate){
+      this._canBeSaved = false;
+      this._isValid = false;
+      if (this.isAppliedToAll) {
+        this.invalidList.push('Deductible: ' + this.propertyDeductibleId + ' is duplicated on All');
+      }
+      else {
+        this.invalidList.push('Deductible: ' + this.propertyDeductibleId + ' is duplicated on ' + this.premisesNumber + '-' + this.buildingNumber);
+      }
+    }
     if (this.validateAmount()) {
       this._isValid = false;
     }
     if (this.validateDeductibleType()) {
       this._isValid = false;
-      // this._canBeSaved = false;
     }
     if (this.validateDeductibleCode()) {
       this._isValid = false;
@@ -232,6 +254,51 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
       this._isValid = false;
     }
     this._errorMessages = this.invalidList;
+  }
+
+  validateAmount(): boolean {
+    let invalid = false;
+    if ((!this.isExcluded && !this.isSubjectToMin) && (this.amount ?? 0) == 0) {
+      invalid = true;
+      this.invalidList.push('Deductible Amount is required');
+    }
+    return invalid;
+  }
+
+  validateDeductibleType(): boolean {
+    let invalid = false;
+    if (!this.isExcluded && !this._deductibleType) {
+      invalid = true;
+      this.invalidList.push('Deductible Type is required');
+    }
+    return invalid;
+  }
+
+  validateDeductibleCode(): boolean {
+    let invalid = false;
+    if (!this.isExcluded && !this._deductibleCode) {
+      invalid = true;
+      this.invalidList.push('Deductible Code is required');
+    }
+    return invalid;
+  }
+
+  validateSubjectToMinPercent(): boolean {
+    let invalid = false;
+    if (this.isSubjectToMin && !this._subjectToMinPercent) {
+      invalid = true;
+      this.invalidList.push('Subject to Min Percent is required');
+    }
+    return invalid;
+  }
+
+  validateSubjectToMinAmount(): boolean {
+    let invalid = false;
+    if (this.isSubjectToMin && (this._subjectToMinAmount ?? 0) == 0) {
+      invalid = true;
+      this.invalidList.push('Subject to Min Amount is required');
+    }
+    return invalid;
   }
 
   emptyNumberValueCheck(value: number | null | undefined) {
@@ -288,51 +355,6 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteVa
   }
   setReadonlyFields() {
     // No special rules
-  }
-
-  validateAmount(): boolean {
-    let invalid = false;
-    if ((!this.isExcluded && !this.isSubjectToMin) && (this.amount ?? 0) == 0) {
-      invalid = true;
-      this.invalidList.push('Amount is required');
-    }
-    return invalid;
-  }
-
-  validateDeductibleType(): boolean {
-    let invalid = false;
-    if (!this.isExcluded && !this.deductibleType) {
-      invalid = true;
-      this.invalidList.push('Deductible Type is required');
-    }
-    return invalid;
-  }
-
-  validateDeductibleCode(): boolean {
-    let invalid = false;
-    if (!this.isExcluded && !this.deductibleCode) {
-      invalid = true;
-      this.invalidList.push('Deductible Code is required');
-    }
-    return invalid;
-  }
-
-  validateSubjectToMinPercent(): boolean {
-    let invalid = false;
-    if (this.isSubjectToMin && !this.subjectToMinPercent) {
-      invalid = true;
-      this.invalidList.push('Subject to Min Percent is required');
-    }
-    return invalid;
-  }
-
-  validateSubjectToMinAmount(): boolean {
-    let invalid = false;
-    if (this.isSubjectToMin && (this.subjectToMinAmount ?? 0) == 0) {
-      invalid = true;
-      this.invalidList.push('Subject to Min Amount is required');
-    }
-    return invalid;
   }
 
   get deductibleReadonly(): boolean {

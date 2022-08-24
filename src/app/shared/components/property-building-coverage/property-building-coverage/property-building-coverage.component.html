@@ -4,52 +4,53 @@
             <div class="row">
                 <div class="col-lg-1">
                     <input type="text" class="form-control" id="subjectNumber" name="subjectNumber"
-                        [(ngModel)]="coverage.buildingIndex" #subjectNumber="ngModel" readonly
-                        click-stop-propagation
+                        [(ngModel)]="coverage.buildingIndex" #subjectNumber="ngModel" readonly click-stop-propagation
                         [ngbTooltip]="coverage.buildingIndex" [openDelay]="1000">
                 </div>
                 <div class="col-lg-3">
                     <div class="row">
-                <div class="col-lg-6">
-                    <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="name" bindValue="propertyCoverageId"
-                        [clearable]="false" click-stop-propagation
-                        [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
-                        [required]="canEdit && coverage.propertyCoverageIdRequired" name="coverageSelect"
-                        [(ngModel)]="coverage.propertyCoverageId" #coverageSelect="ngModel" #coverageComp [ngbTooltip]="coverageTooltip"
-                        [openDelay]="1000" (change)="changeCoverage($event)">
-                    </ng-select>
-                </div>
-                <div class="col-lg-6">
-                    <input type="text" class="form-control right" id="limit" name="limit" [(ngModel)]="coverage.limit"
-                        #subjectNumber="ngModel" [readonly]="!canEdit" [required]="canEdit && coverage.limitRequired" string-to-currency [allowNegative]="false" click-stop-propagation
-                        [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
-                </div>
-                </div>
+                        <div class="col-lg-6">
+                            <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="name"
+                                bindValue="propertyCoverageId" [clearable]="false" click-stop-propagation
+                                [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
+                                [required]="canEdit && coverage.propertyCoverageIdRequired" name="coverageSelect"
+                                [(ngModel)]="coverage.propertyCoverageId" #coverageSelect="ngModel" #coverageComp
+                                [ngbTooltip]="coverageTooltip" [openDelay]="1000" (change)="changeCoverage($event)">
+                            </ng-select>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control right" id="limit" name="limit"
+                                [(ngModel)]="coverage.limit" #subjectNumber="ngModel" [readonly]="!canEdit"
+                                [required]="canEdit && coverage.limitRequired" string-to-currency
+                                [allowNegative]="false" click-stop-propagation
+                                [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-1">
-                    <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description"
-                        bindValue="key" [clearable]="false" click-stop-propagation
+                    <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description" bindValue="key"
+                        [clearable]="false" click-stop-propagation
                         [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
                         [required]="canEdit && coverage.coinsuranceRequired" name="coinsurance"
-                        [(ngModel)]="coverage.coinsuranceId" #coinsurance="ngModel" #coinsuranceComp [ngbTooltip]="coinsuranceTooltip"
-                        [openDelay]="1000">
+                        [(ngModel)]="coverage.coinsuranceId" #coinsurance="ngModel" #coinsuranceComp
+                        [ngbTooltip]="coinsuranceTooltip" [openDelay]="1000">
                     </ng-select>
                 </div>
                 <div class="col-lg-3">
-                    <ng-select id="causeOfLoss" [items]="causeOfLoss$ | async" bindLabel="description"
-                        bindValue="key" [clearable]="false" click-stop-propagation [virtualScroll]="true"
+                    <ng-select id="causeOfLoss" [items]="causeOfLoss$ | async" bindLabel="description" bindValue="key"
+                        [clearable]="false" click-stop-propagation [virtualScroll]="true"
                         [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
                         [required]="canEdit && coverage.causeOfLossIdRequired" name="causeOfLoss"
-                        [(ngModel)]="coverage.causeOfLossId" #causeOfLoss="ngModel" #causeOfLossComp [ngbTooltip]="causeOfLossTooltip"
-                        [openDelay]="1000">
+                        [(ngModel)]="coverage.causeOfLossId" #causeOfLoss="ngModel" #causeOfLossComp
+                        [ngbTooltip]="causeOfLossTooltip" [openDelay]="1000">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="valuationId" [items]="valuations$ | async" bindLabel="description" bindValue="key"
                         [clearable]="false" click-stop-propagation [readonly]="!canEdit || coverage.valuationIdReadonly"
                         [required]="canEdit && coverage.valuationIdRequired" name="valuationId"
-                        [(ngModel)]="coverage.valuationId" #valuationId="ngModel" #valuationComp [ngbTooltip]="valuationTooltip"
-                        [openDelay]="1000">
+                        [(ngModel)]="coverage.valuationId" #valuationId="ngModel" #valuationComp
+                        [ngbTooltip]="valuationTooltip" [openDelay]="1000">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
