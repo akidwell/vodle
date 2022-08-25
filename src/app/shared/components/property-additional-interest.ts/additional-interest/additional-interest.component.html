@@ -38,7 +38,7 @@
         <div class="col-lg-1">
           <label for="building" class="form-label" title="building">Prem/Bldg:</label>
           <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code"
-            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false"
+            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEditSubmission"
             [searchFn]="dropDownSearch" [(ngModel)]="aiData.building">
             <ng-template ng-label-tmp let-item="item">
               {{item.code}}
@@ -51,12 +51,12 @@
         <div class="col-sm-3">
           <label for="interest" class="form-label" title="interest">Interest</label>
           <input type="text" class="form-control" id="policyEventCode" name="interest" [readonly]="!canEditSubmission"
-            [(ngModel)]="aiData.interest" #interest="ngModel">
+          [required]="canEditSubmission" [(ngModel)]="aiData.interest" #interest="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street1" class="form-label" title="Status">Street Address 1</label>
           <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEditSubmission"
-            [(ngModel)]="aiData.street1" #street1="ngModel">
+          [required]="canEditSubmission" [(ngModel)]="aiData.street1" #street1="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street2" class="form-label" title="Status">Street Address 2</label>
@@ -69,7 +69,7 @@
             <div class="inputspinner">
               <input type="text" zip-code class="form-control" id="zipCode" [readonly]="aiData.isZipLookup"
                 [(ngModel)]="aiData.zip" [readonly]="!canEditSubmission" name="zipCode" #zip="ngModel"
-                (ngModelChange)="changeZipCode()">
+                [required]="canEditSubmission" (ngModelChange)="changeZipCode()">
               <div *ngIf="aiData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="zipCode"
                 aria-hidden="true">
               </div>
@@ -78,7 +78,7 @@
           <div class="col-sm-3">
             <label for="city" class="form-label" title="city">City</label>
             <input type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city"
-              [readonly]="aiData.isZipLookup || !canEditSubmission" #city="ngModel">
+            [required]="canEditSubmission" [readonly]="aiData.isZipLookup || !canEditSubmission" #city="ngModel">
           </div>
           <div class="col-sm-2">
             <label for="policyEventCode" class="form-label" title="Status">State</label>
@@ -89,7 +89,7 @@
             <div *ngIf="!isLoadingAddress">
               <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code"
                 [clearable]="false" [readonly]="!canEditSubmission || aiData.isZipLookup" name="mortgageeState"
-                [(ngModel)]="aiData.state" #mortgageeState="ngModel" (change)="changeState($event)">
+                [required]="canEditSubmission"  [(ngModel)]="aiData.state" #mortgageeState="ngModel" (change)="changeState($event)">
               </ng-select>
             </div>
           </div>

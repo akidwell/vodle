@@ -61,15 +61,50 @@ export class MortgageeClass implements MortgageeData, QuoteValidation, QuoteAfte
   classValidation() {
     this.invalidList = [];
     this._canBeSaved = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-    if (!this.city) {
+    this._isValid = true;
+    if (this.emptyStringValueCheck(this._mortgageHolder)){
       this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - Mortgagee Holder is required');
+    }
+    if (this.emptyNumberValueCheck(this._premisesNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - Premises Number is required');
+    }
+    if (this.emptyNumberValueCheck(this._buildingNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee -Building Number is required');
+    }
+    if (this.emptyStringValueCheck(this._street1)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - Street is required');
+    }
+    if (this.emptyStringValueCheck(this._city)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - City is required');
+    }
+    if (this.emptyStringValueCheck(this._state)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - State is required');
+    }
+    if (this.emptyStringValueCheck(this._zip)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - Zip is required');
     }
     this._errorMessages = this.invalidList;
-    // this._canBeSaved = true;
-    // this._isValid = true;
+  }
+
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
   }
 
   existingInit(mortgagee?: MortgageeData){

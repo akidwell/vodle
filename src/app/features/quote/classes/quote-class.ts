@@ -172,7 +172,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     } else if (program && submission) {
       this.newInit(program, submission);
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, QuoteValidationTabNameEnum.CoveragePremium);
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
     this.validate();
   }
   existingInit(quote: Quote) {
