@@ -11,13 +11,27 @@
   }
 
   .panel-header{
-    font-weight: bold;
     padding-left: 14%;
 
   }
 
   .subj{
-    font-weight: bold;
     padding-left: 38%;
   }
+
+  .form-label {
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    margin-bottom: 0px;
+  }
+  
+  .form-label-wrap {
+    width: 100%;
+    display: block;
+    margin-bottom: 0px;
+  }
+  
 
