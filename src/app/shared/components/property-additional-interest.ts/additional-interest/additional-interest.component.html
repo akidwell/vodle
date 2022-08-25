@@ -4,7 +4,7 @@
       <div class="row" *ngIf="collapsed">
         <div class="col-lg-1">
           <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code"
-            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false"
+            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEditSubmission"
             [searchFn]="dropDownSearch" [(ngModel)]="aiData.building">
             <ng-template ng-label-tmp let-item="item">
               {{item.code}}
