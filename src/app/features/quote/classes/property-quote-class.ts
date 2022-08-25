@@ -51,7 +51,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
   get limitTotal(): number {
     let total = 0;
-    this.propertyQuoteBuilding.forEach((c) =>
+    this.propertyQuoteBuilding.map((c) =>
       c.propertyQuoteBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
     );
     return total;
@@ -60,8 +60,8 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   get subjectAmount(): Map<any,any> {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-    this.propertyQuoteBuilding.forEach((element) => {
-      element.propertyQuoteBuildingCoverage.forEach((x) => {
+    this.propertyQuoteBuilding.map((element) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
         subAm.subject = Number(element.subjectNumber);
         subAm.limit = x.limit;
@@ -80,15 +80,15 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
   get largestTiv(): number {
     let largest = 0;
-    this.propertyQuoteBuilding.forEach(x => {
+    this.propertyQuoteBuilding.map(x => {
       if (x.propertyQuoteBuildingCoverage.length == 0){
         return 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-        this.propertyQuoteBuilding.forEach((element) => {
-          element.propertyQuoteBuildingCoverage.forEach((x) => {
+        this.propertyQuoteBuilding.map((element) => {
+          element.propertyQuoteBuildingCoverage.map((x) => {
             const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
             subAm.subject = element.premisesNumber;
             subAm.limit = x.limit;

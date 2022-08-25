@@ -92,3 +92,18 @@ background-color: #ccd4dc;
   right: 10px;
   top: calc(50% - 10px);
 }
+
+  .form-label {
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    margin-bottom: 0px;
+  }
+  
+  .form-label-wrap {
+    width: 100%;
+    display: block;
+    margin-bottom: 0px;
+  }
