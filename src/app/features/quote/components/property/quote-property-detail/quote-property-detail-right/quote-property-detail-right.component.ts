@@ -44,7 +44,7 @@ export class QuotePropertyDetailRightComponent implements OnInit {
 
 
   changeCspCode(cspCode: Code) {
-    if (this.previousCspCode != 0 || undefined) {
+    if (this.previousCspCode != null || undefined || 0) {
       this.confirmationDialogService
         .open(
           'CSP Code Change Confirmation',

@@ -23,6 +23,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _isValid = true;
+  private _classCode : number | null = null;
 
   submissionNumber = 0;
   quoteId = 0;
@@ -130,7 +131,6 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
   importErrors = [];
   naicsCode = null;
   sicCode = null;
-  classCode = 0;
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
@@ -165,6 +165,13 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
   }
   private datepipe = new DatePipe('en-US');
 
+  get classCode() : number | null {
+    return this._classCode;
+  }
+  set classCode(value: number | null) {
+    this._classCode = this.quoteRates[0].classCode || null;
+    this._isDirty = true;
+  }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
@@ -205,7 +212,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
-    this.classCode = quote.quoteRates[0].classCode || 0;
+    this.classCode = quote.quoteRates[0].classCode || null;
 
     this.setReadonlyFields();
     this.setRequiredFields();
