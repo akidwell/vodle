@@ -1,0 +1,45 @@
+<form #locationForm="ngForm">
+    <ng-template #modal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Group Edit </h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <label for="coverageSelect" class="form-label" title="Coverage">Coverage</label>
+                    <ng-select id="coverageSelect" [items]="filteredCoverage" bindLabel="name" bindValue="propertyCoverageId"
+                        [clearable]="false" click-stop-propagation name="coverageSelect" appendTo="body"
+                        [(ngModel)]="propertyCoverageId" #coverageSelect="ngModel" #coverageComp
+                        (change)="changeCoverage($event)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="coinsurance" class="form-label" title="Coinsurance">Coinsurance</label>
+                    <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description" bindValue="key" [disabled]="propertyCoverageId == null"
+                        [clearable]="true" click-stop-propagation name="coinsurance" appendTo="body" [(ngModel)]="coinsuranceId"
+                        #coinsurance="ngModel">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6">
+                    <label for="causeOfLoss" class="form-label" title="Cause of Loss">Cause of Loss</label>
+                    <ng-select id="causeOfLoss" [items]="causeOfLoss$ | async" bindLabel="description" bindValue="key" [disabled]="propertyCoverageId == null"
+                        [clearable]="true" click-stop-propagation [virtualScroll]="true" name="causeOfLoss"
+                        appendTo="body" [(ngModel)]="causeOfLossId" #causeOfLoss="ngModel">
+                    </ng-select>
+                </div>
+                <div class="col-lg-4">
+                    <label for="valuation" class="form-label" title="Valuation">Valuation</label>
+                    <ng-select id="valuation" [items]="valuations$ | async" bindLabel="description" bindValue="key" [disabled]="propertyCoverageId == null"
+                        [clearable]="true" click-stop-propagation name="valuation" appendTo="body" [(ngModel)]="valuationId"
+                        #valuation="ngModel">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" [disabled]="!canUpdate" (click)="update()">Update</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+    </ng-template>

@@ -45,3 +45,8 @@ ngb-typeahead-window { max-height: 200px !important; overflow-y: auto;}
 .primary {
     width: 20px;
 }
+
+.tabErrors .tooltip-inner {
+  max-width: 400px;
+  width:auto;
+}

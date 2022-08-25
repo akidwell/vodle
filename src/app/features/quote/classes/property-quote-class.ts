@@ -52,7 +52,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   get limitTotal(): number {
     let total = 0;
     this.propertyQuoteBuilding.forEach((c) =>
-      c.propertyQuoteBuildingCoverage.forEach((coverage) => (total += coverage.limit ?? 0))
+      c.propertyQuoteBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
     );
     return total;
   }
@@ -117,7 +117,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
 
   get coverageCount(): number {
     let total = 0;
-    this.propertyQuoteBuilding.forEach((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
+    this.propertyQuoteBuilding.map((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
     );
     return total;
   }
@@ -226,11 +226,10 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   clearBuildings() {
     this.propertyQuoteBuilding = [];
     this.filteredBuildings = [];
-    this.filteredCoverage = [];
+    this.filteredCoverages = [];
   }
   filteredBuildings: PropertyQuoteBuildingClass[] = [];
-
-  filteredCoverage: PropertyQuoteBuildingCoverageClass[] = [];
+  filteredCoverages: PropertyQuoteBuildingCoverageClass[] = [];
 
   filterBuildings() {
     const allBuildings: PropertyQuoteBuildingClass[] = [];
@@ -246,13 +245,13 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   }
 
   filterCoverages() {
-    const allChildren: PropertyQuoteBuildingCoverageClass[] = [];
-    this.filteredBuildings.forEach((element) => {
-      element.propertyQuoteBuildingCoverage.forEach((x) => {
-        allChildren.push(x);
+    const filtered: PropertyQuoteBuildingCoverageClass[] = [];
+    this.filteredBuildings.map((element) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
+        filtered.push(x);
       });
     });
-    this.filteredCoverage = allChildren;
+    this.filteredCoverages = filtered;
   }
 
   filterBuildingsCoverages() {

@@ -54,9 +54,9 @@
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
-                    <input type="text" class="form-control" id="additionalDetail" name="additionalDetail"
+                    <input type="text" class="form-control" id="additionalDetail" name="additionalDetail" maxlength="50"
                         [(ngModel)]="coverage.additionalDetail" #additionalDetail="ngModel" [readonly]="!canEdit"
-                        click-stop-propagation ngbTooltip="Additional Detail #" [openDelay]="1000">
+                        click-stop-propagation ngbTooltip="coverage.additionalDetail" [openDelay]="1000">
                 </div>
             </div>
         </div>
