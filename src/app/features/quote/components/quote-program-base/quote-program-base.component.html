@@ -2,9 +2,12 @@
   <div class="navToolbar">
     <ul class="nav nav-tabs nav-fill">
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['location']">Location/Coverage <span
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['location']">Location/Coverage 
+          <span
             class="badge bg-danger" *ngIf="(this.propertyLocationTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="errorList" tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}</span></a>
+            [ngbTooltip]="errorList" tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}
+          </span>
+        </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['mortgagee']">Mortgagee/Additional Interest</a>
