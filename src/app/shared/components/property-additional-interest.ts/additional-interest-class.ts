@@ -59,6 +59,11 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this.invalidList = [];
     this._canBeSaved = true;
     this._isValid = true;
+    if (this.emptyStringValueCheck(this._interest)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Interest is required');
+    }
     if (this.emptyNumberValueCheck(this._premisesNumber)){
       this._canBeSaved = false;
       this._isValid = false;
