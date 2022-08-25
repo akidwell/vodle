@@ -1,6 +1,4 @@
-<div class="row" *ngIf="canEdit && hasCoverages">
-    <div class="col-lg-12">
-        <button class="btn btn-sm btn-primary margin-left" style="float:left;margin-top: 15px;margin-left: 15px;" (click)="groupEdit()">Group Edit</button>
-    </div>
+<div class="card-body" *ngIf="canEdit && hasCoverages" style="padding-bottom: 0px;display:flex;">
+    <button class="btn btn-sm btn-primary margin-left" (click)="groupEdit()">Group Edit</button>
 </div>
 <rsps-property-building-coverage-edit-dialog #modal></rsps-property-building-coverage-edit-dialog>

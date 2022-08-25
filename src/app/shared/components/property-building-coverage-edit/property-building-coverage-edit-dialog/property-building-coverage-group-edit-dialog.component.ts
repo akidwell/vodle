@@ -106,6 +106,6 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
   }
 
   get canUpdate(): boolean {
-    return this.coinsuranceId != null && (this.coinsuranceId != null || this.causeOfLossId != null || this.valuationId != null);
+    return this.propertyCoverageId != null && (this.coinsuranceId != null || this.causeOfLossId != null || this.valuationId != null);
   }
 }

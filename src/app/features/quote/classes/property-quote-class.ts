@@ -233,7 +233,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
 
   filterBuildings() {
     const allBuildings: PropertyQuoteBuildingClass[] = [];
-    this.propertyQuoteBuilding.forEach((element) => {
+    this.propertyQuoteBuilding.map((element) => {
       if ((this.searchSubject == '' || element.subjectNumber == Number(this.searchSubject)) &&
       (this.searchPremises == '' || element.premisesNumber == Number(this.searchPremises)) &&
       (this.searchBuilding == '' || element.buildingNumber == Number(this.searchBuilding)) &&
