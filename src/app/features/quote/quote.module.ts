@@ -45,6 +45,7 @@ import { QuotePropertyDetailLeftComponent } from './components/property/quote-pr
 import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
+import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
     PropertyBuildingModule,
     PropertyImportModule,
     PropertyBuildingCoverageModule,
+    PropertyBuildingCoverageEditModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

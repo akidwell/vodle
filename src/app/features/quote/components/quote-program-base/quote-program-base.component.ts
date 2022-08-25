@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
@@ -9,7 +9,8 @@ import { QuoteDataValidationService } from '../../services/quote-data-validation
 @Component({
   selector: 'rsps-quote-program-base',
   templateUrl: './quote-program-base.component.html',
-  styleUrls: ['./quote-program-base.component.css']
+  styleUrls: ['./quote-program-base.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuoteProgramBaseComponent {
   program!: ProgramClass | null;
@@ -28,7 +29,6 @@ export class QuoteProgramBaseComponent {
   termsAndConditionsTabValidation: QuoteValidationClass | null = null;
 
   constructor(private pageDataService: PageDataService, private route: ActivatedRoute, private quoteValidationService: QuoteDataValidationService) {
-
   }
 
   ngAfterViewInit(): void {
@@ -49,6 +49,7 @@ export class QuoteProgramBaseComponent {
     this.propertyLocationTabValidationSub = this.quoteValidationService.propertyQuoteLocationBuildingTabValidation$.subscribe(
       (validation: QuoteValidationClass | null) => {
         this.propertyLocationTabValidation = validation;
+        this.propertyLocationTabValidation?.errorMessages.length;
       }
     );
     this.mortgageeAdditionalInterestTabValidationSub = this.quoteValidationService.propertyQuoteMortgageeAdditionalInterestTabValidation$.subscribe(

@@ -10,6 +10,7 @@ import { QuoteService } from 'src/app/features/quote/services/quote-service/quot
 import { switchMap, tap } from 'rxjs/operators';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PropertyQuote } from 'src/app/features/quote/models/property-quote';
 
 @Component({
   selector: 'rsps-property-building-coverage-group',
@@ -23,6 +24,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   faAngleUp = faAngleUp;
   private _coverages: PropertyBuildingCoverage[] = [];
 
+  @Input() public propertyQuote!: PropertyQuote;
   @Input() public limitTotal!: number;
   @Input() public coverageCount!: number;
   @Input() public canEdit = false;
@@ -72,7 +74,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
       switchMap(() => this._search()),
       tap(() => this._loading$.next(false)),
     ).subscribe(result => {
-      this._policies$.next(result.policies);
+      this._policies$.next(result.coverages);
       this._total$.next(result.total);
     });
   }
@@ -92,19 +94,19 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   private _search(): Observable<SearchResult> {
     const {pageSize, page} = this._state;
     // 1. Populate from source
-    let policies = this._coverages;
+    let coverages = this._coverages;
     // 2. Set Focus Page
-    const focusIndex = policies.findIndex((c) => c.focus);
+    const focusIndex = coverages.findIndex((c) => c.focus);
     let focusPage = page;
     if (focusIndex >= 0) {
-      policies[focusIndex].focus = false;
+      coverages[focusIndex].focus = false;
       focusPage = Math.floor((focusIndex + 1) / this.pageSize) + ((focusIndex + 1) % this.pageSize == 0 ? 0 : 1);
       this._state.page = focusPage;
     }
     // 3. paginate
-    const total = policies.length;
-    policies = policies.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
-    return of({policies, total});
+    const total = coverages.length;
+    coverages = coverages.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
+    return of({coverages, total});
   }
 
   copyCoverage(coverage: PropertyBuildingCoverage) {
@@ -148,6 +150,6 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
 }
 
 export interface SearchResult {
-  policies: PropertyBuildingCoverage[];
+  coverages: PropertyBuildingCoverage[];
   total: number;
 }
