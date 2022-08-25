@@ -50,6 +50,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
       this.classValidation();
       this._validateOnLoad = false;
     }
+    this._validationResults.resetValidation();
     this._validationResults.mapValues(this);
     return this._validationResults;
   }
@@ -58,15 +59,48 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this.invalidList = [];
     this._canBeSaved = true;
     this._isValid = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
+    if (this.emptyStringValueCheck(this._interest)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Interest is required');
+    }
+    if (this.emptyNumberValueCheck(this._premisesNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Premises Number is required');
+    }
+    if (this.emptyNumberValueCheck(this._buildingNumber)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest -Building Number is required');
+    }
+    if (this.emptyStringValueCheck(this._street1)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Street is required');
+    }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
+      this.invalidList.push('Additional Interest - City is required');
+    }
+    if (this.emptyStringValueCheck(this._state)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - State is required');
+    }
+    if (this.emptyStringValueCheck(this._zip)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Zip is required');
     }
     this._errorMessages = this.invalidList;
   }
+
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+
   emptyStringValueCheck(value: string | null | undefined) {
     return !value;
   }
