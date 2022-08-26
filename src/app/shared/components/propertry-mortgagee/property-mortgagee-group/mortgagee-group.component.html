@@ -3,10 +3,6 @@
     Mortgagee / Loss Payee
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="mortgageeData.length > 1"
-      [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
-      Sort: {{canDrag ? 'On' : 'Off'}}
-    </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
     <div class="card-body" *ngIf="mortgageeData.length > 0">
@@ -18,15 +14,13 @@
           <label for="address">Address:</label>
         </div>
       </div>
-      <div cdkDropList class="drag-list" [cdkDropListDisabled]="!canDrag" (cdkDropListDropped)="drop($event)">
         <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-          <div class="drag-block" [ngClass]="dragDropClass" cdkDrag *ngFor="let item of mortgageeData; let i = index">
+          <div *ngFor="let item of mortgageeData; let i = index">
             <rsps-mortgagee (copyExisitingMortgagee)=copyExisitingMortgagee($event)
               (deleteExistingMortgagee)=deleteExistingMortgagee($event) [mortgagee]=mortgageeData [mortgageeData]=item>
             </rsps-mortgagee>
           </div>
         </div>
-      </div>
     </div>
   </div>
   <div class="card-footer">

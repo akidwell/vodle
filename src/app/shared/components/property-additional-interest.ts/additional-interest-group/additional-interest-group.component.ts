@@ -25,8 +25,6 @@ export class AdditionalInterestGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   color: ThemePalette = 'warn';
-  canDrag = false;
-  dragDropClass = '';
   invalidList: string[] = [];
   isNew = false;
   collapsed = false;
@@ -97,24 +95,5 @@ export class AdditionalInterestGroupComponent implements OnInit {
     ///this.program?.quoteData?.validate();
     this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
   }
-
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(this.aiData, event.previousIndex, event.currentIndex);
-    }
-  }
-
-
-  toggleDragDrop() {
-    this.collapsed = false;
-    if (this.canDrag) {
-      this.dragDropClass = 'drag';
-    }
-    else {
-      this.dragDropClass = '';
-    }
-  }
-
 
 }
