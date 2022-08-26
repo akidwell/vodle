@@ -41,6 +41,7 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   private _errorMessages: string[] = ['Property Quote'];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
+  private _lastLargestExposure = 0;
 
   get riskDescription() : string | null {
     return this._riskDescription;
@@ -112,7 +113,12 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   get largestExposure(): number {
     const lawLimit = this.lawLimits;
     const largestPremTiv = this.largestTiv;
-    return lawLimit + largestPremTiv;
+    const exposure = lawLimit + largestPremTiv;
+    if (this._lastLargestExposure != exposure){
+      this._isDirty = true;
+      this._lastLargestExposure = exposure;
+    }
+    return exposure;
   }
 
   get coverageCount(): number {
@@ -416,7 +422,20 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     this.invalidList = [];
     this._canBeSaved = true;
     this._isValid = true;
+    if (this.validateLargestExposure()) {
+      this._isValid = false;
+    }
     this._errorMessages = this.invalidList;
+  }
+
+  validateLargestExposure(): boolean {
+    let invalid = false;
+    console.log(this.largestExposure);
+    if (this.largestExposure > 15000000){
+      invalid = true;
+      this.invalidList.push('Largest Exposure + Building Law Limits is greater than 15,000,000 is required');
+    }
+    return invalid;
   }
 
   validateBuildings() {

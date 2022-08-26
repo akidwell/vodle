@@ -23,8 +23,6 @@ export class MortgageeGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   color: ThemePalette = 'warn';
-  canDrag = false;
-  dragDropClass = '';
   invalidList: string[] = [];
   isNew = false;
   collapsed = false;
@@ -91,23 +89,5 @@ export class MortgageeGroupComponent implements OnInit {
     const mort: MortgageeClass = new MortgageeClass();
     mort.isNew = true;
     this.mortgageeData?.push(mort);
-  }
-
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(this.mortgageeData, event.previousIndex, event.currentIndex);
-    }
-  }
-
-
-  toggleDragDrop() {
-    this.collapsed = false;
-    if (this.canDrag) {
-      this.dragDropClass = 'drag';
-    }
-    else {
-      this.dragDropClass = '';
-    }
   }
 }

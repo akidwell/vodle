@@ -169,7 +169,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     return this._classCode;
   }
   set classCode(value: number | null) {
-    this._classCode = this.quoteRates[0].classCode || null;
+    this._classCode = value == 0 ? null : value;
     this._isDirty = true;
   }
 
@@ -303,9 +303,21 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     //this._canBeSaved = true;
     this._errorMessages = [];
     this._isValid = true;
+    this.validateClassCode();
     this.validationResults.mapValues(this);
     this.validateQuoteChildren();
   }
+
+  validateClassCode(): boolean {
+    let invalid = false;
+    console.log(this.classCode);
+    if (this.classCode == null){
+      invalid = true;
+      this._errorMessages.push('CSP Code is required');
+    }
+    return invalid;
+  }
+
   validate(){
     this.validateQuote();
     this.propertyQuote?.validate();
