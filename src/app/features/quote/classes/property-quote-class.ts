@@ -58,23 +58,23 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     return total;
   }
 
-  // get subjectAmount(): Map<any,any> {
-  //   const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
+  get subjectAmount(): Map<any,any> {
+    const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-  //   this.propertyQuoteBuilding.map((element) => {
-  //     element.propertyQuoteBuildingCoverage.map((x) => {
-  //       const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
-  //       subAm.subject = Number(element.subjectNumber);
-  //       subAm.limit = x.limit;
-  //       subjectAmounts.push(subAm);
-  //     });
-  //   });
-  //   const res = subjectAmounts.reduce((a, b) =>
-  //     a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
+    this.propertyQuoteBuilding.map((element) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
+        const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
+        subAm.subject = Number(element.subjectNumber);
+        subAm.limit = x.limit;
+        subjectAmounts.push(subAm);
+      });
+    });
+    const res = subjectAmounts.reduce((a, b) =>
+      a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
 
 
-  //   return res;
-  // }
+    return res;
+  }
 
   get buildingCount(): number {
     return this.propertyQuoteBuilding?.length ?? 0;
