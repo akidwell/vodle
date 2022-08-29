@@ -212,7 +212,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
-    this.classCode = quote.quoteRates[0].classCode || null;
+    this._classCode = quote.quoteRates[0].classCode || null;
 
     this.setReadonlyFields();
     this.setRequiredFields();

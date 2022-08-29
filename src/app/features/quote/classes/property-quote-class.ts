@@ -115,7 +115,9 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     const largestPremTiv = this.largestTiv;
     const exposure = lawLimit + largestPremTiv;
     if (this._lastLargestExposure != exposure){
-      this._isDirty = true;
+      if(this._lastLargestExposure != 0){
+        this._isDirty = true;
+      }
       this._lastLargestExposure = exposure;
     }
     return exposure;
