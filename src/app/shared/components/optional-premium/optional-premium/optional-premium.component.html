@@ -4,6 +4,7 @@
       <div class="col-lg-1">
         <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
             bindValue="code" name="building"
+            (change)="optionalPremiumData.markDirty()"
             [virtualScroll]="true" click-stop-propagation
             [clearable]="false"
             [searchFn]="dropDownSearch" [(ngModel)]="optionalPremiumData.building">

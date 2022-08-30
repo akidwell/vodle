@@ -23,6 +23,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _isValid = true;
+  private _classCode : number | null = null;
 
   submissionNumber = 0;
   quoteId = 0;
@@ -130,7 +131,6 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   importErrors = [];
   naicsCode = null;
   sicCode = null;
-  classCode = 0;
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
@@ -165,6 +165,13 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   }
   private datepipe = new DatePipe('en-US');
 
+  get classCode() : number | null {
+    return this._classCode;
+  }
+  set classCode(value: number | null) {
+    this._classCode = value == 0 ? null : value;
+    this._isDirty = true;
+  }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
@@ -172,7 +179,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     } else if (program && submission) {
       this.newInit(program, submission);
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, QuoteValidationTabNameEnum.CoveragePremium);
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
     this.validate();
   }
   existingInit(quote: Quote) {
@@ -205,7 +212,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     });
     this.quoteRates = rates;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
-    this.classCode = quote.quoteRates[0].classCode || 0;
+    this._classCode = quote.quoteRates[0].classCode || null;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -296,9 +303,21 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     //this._canBeSaved = true;
     this._errorMessages = [];
     this._isValid = true;
+    this.validateClassCode();
     this.validationResults.mapValues(this);
     this.validateQuoteChildren();
   }
+
+  validateClassCode(): boolean {
+    let invalid = false;
+    console.log(this.classCode);
+    if (this.classCode == null){
+      invalid = true;
+      this._errorMessages.push('CSP Code is required');
+    }
+    return invalid;
+  }
+
   validate(){
     this.validateQuote();
     this.propertyQuote?.validate();

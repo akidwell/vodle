@@ -43,6 +43,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
+  private _lastLargestExposure = 0;
 
   constructor(propertyQuote?: PropertyQuote) {
     if (propertyQuote) {
@@ -70,8 +71,8 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
   get limitTotal(): number {
     let total = 0;
-    this.propertyQuoteBuilding.forEach((c) =>
-      c.propertyQuoteBuildingCoverage.forEach((coverage) => (total += coverage.limit ?? 0))
+    this.propertyQuoteBuilding.map((c) =>
+      c.propertyQuoteBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
     );
     return total;
   }
@@ -79,8 +80,8 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   get subjectAmount(): Map<any,any> {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-    this.propertyQuoteBuilding.forEach((element) => {
-      element.propertyQuoteBuildingCoverage.forEach((x) => {
+    this.propertyQuoteBuilding.map((element) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
         subAm.subject = Number(element.subjectNumber);
         subAm.limit = x.limit;
@@ -99,15 +100,15 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
   get largestTiv(): number {
     let largest = 0;
-    this.propertyQuoteBuilding.forEach(x => {
+    this.propertyQuoteBuilding.map(x => {
       if (x.propertyQuoteBuildingCoverage.length == 0){
         return 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-        this.propertyQuoteBuilding.forEach((element) => {
-          element.propertyQuoteBuildingCoverage.forEach((x) => {
+        this.propertyQuoteBuilding.map((element) => {
+          element.propertyQuoteBuildingCoverage.map((x) => {
             const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
             subAm.subject = element.premisesNumber;
             subAm.limit = x.limit;
@@ -131,12 +132,19 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   get largestExposure(): number {
     const lawLimit = this.lawLimits;
     const largestPremTiv = this.largestTiv;
-    return lawLimit + largestPremTiv;
+    const exposure = lawLimit + largestPremTiv;
+    if (this._lastLargestExposure != exposure){
+      if(this._lastLargestExposure != 0){
+        this._isDirty = true;
+      }
+      this._lastLargestExposure = exposure;
+    }
+    return exposure;
   }
 
   get coverageCount(): number {
     let total = 0;
-    this.propertyQuoteBuilding.forEach((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
+    this.propertyQuoteBuilding.map((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
     );
     return total;
   }
@@ -193,7 +201,11 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
   set cspCode(value: Code) {
     this._cspCode = value;
-    this.propertyQuoteBuilding.forEach(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
+    if(value == null){
+      this.propertyQuoteBuilding.map(x => x.cspCode = null);
+    } else {
+      this.propertyQuoteBuilding.map(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
+    }
   }
 
   get isDirty(): boolean {
@@ -263,15 +275,14 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   clearBuildings() {
     this.propertyQuoteBuilding = [];
     this.filteredBuildings = [];
-    this.filteredCoverage = [];
+    this.filteredCoverages = [];
   }
   filteredBuildings: PropertyQuoteBuildingClass[] = [];
-
-  filteredCoverage: PropertyQuoteBuildingCoverageClass[] = [];
+  filteredCoverages: PropertyQuoteBuildingCoverageClass[] = [];
 
   filterBuildings() {
     const allBuildings: PropertyQuoteBuildingClass[] = [];
-    this.propertyQuoteBuilding.forEach((element) => {
+    this.propertyQuoteBuilding.map((element) => {
       if ((this.searchSubject == '' || element.subjectNumber == Number(this.searchSubject)) &&
       (this.searchPremises == '' || element.premisesNumber == Number(this.searchPremises)) &&
       (this.searchBuilding == '' || element.buildingNumber == Number(this.searchBuilding)) &&
@@ -283,13 +294,13 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   filterCoverages() {
-    const allChildren: PropertyQuoteBuildingCoverageClass[] = [];
-    this.filteredBuildings.forEach((element) => {
-      element.propertyQuoteBuildingCoverage.forEach((x) => {
-        allChildren.push(x);
+    const filtered: PropertyQuoteBuildingCoverageClass[] = [];
+    this.filteredBuildings.map((element) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
+        filtered.push(x);
       });
     });
-    this.filteredCoverage = allChildren;
+    this.filteredCoverages = filtered;
   }
 
   filterBuildingsCoverages() {
@@ -419,7 +430,20 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     this.invalidList = [];
     this._canBeSaved = true;
     this._isValid = true;
+    if (this.validateLargestExposure()) {
+      this._isValid = false;
+    }
     this._errorMessages = this.invalidList;
+  }
+
+  validateLargestExposure(): boolean {
+    let invalid = false;
+    console.log(this.largestExposure);
+    if (this.largestExposure > 15000000){
+      invalid = true;
+      this.invalidList.push('Largest Exposure + Building Law Limits is greater than 15,000,000 is required');
+    }
+    return invalid;
   }
 
   validateBuildings() {

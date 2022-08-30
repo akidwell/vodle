@@ -65,7 +65,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   set subjectNumber(value: number | null) {
     this._subjectNumber = value;
     this._isDirty = true;
-    this.propertyQuoteBuildingCoverage.forEach(c => c.subjectNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.subjectNumber = value);
   }
   get isDirty(): boolean {
     return this._isDirty ;
@@ -95,7 +95,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   set premisesNumber(value: number | null) {
     this._premisesNumber = value;
     this._isDirty = true;
-    this.propertyQuoteBuildingCoverage.forEach(c => c.premisesNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.premisesNumber = value);
   }
   get buildingNumber(): number | null {
     return this._buildingNumber;
@@ -105,7 +105,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value;
     this._isDirty = true;
-    this.propertyQuoteBuildingCoverage.forEach(c => c.buildingNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.buildingNumber = value);
   }
 
   get street1(): string | null {
@@ -479,32 +479,32 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     if (this.emptyStringValueCheck(this._street1)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Street is required');
+      this.invalidList.push('Street is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
     }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('City is required');
+      this.invalidList.push('City is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
     }
     if (this.emptyStringValueCheck(this._state)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('State is required');
+      this.invalidList.push('State is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
     }
     if (this.emptyStringValueCheck(this._zip)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Zip is required');
+      this.invalidList.push('Zip is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
     }
     if ((this._sprinklered ?? 0) > 100){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Sprinklered% mush be <= 100%');
+      this.invalidList.push('Sprinklered% mush be <= 100% for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
     }
     if (this.isDuplicate){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Building: ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim() + ' is duplicated.');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated.');
     }
     this._errorMessages = this.invalidList;
   }
