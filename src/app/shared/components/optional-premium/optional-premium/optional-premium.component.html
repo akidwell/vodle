@@ -1,0 +1,75 @@
+<div class="component-row" >
+  <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
+    <div class="row"  (click)="collapseExpand(false)">
+      <div class="col-lg-1">
+        <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
+            bindValue="code" name="building"
+            (change)="optionalPremiumData.markDirty()"
+            [virtualScroll]="true" click-stop-propagation
+            [clearable]="false"
+            [searchFn]="dropDownSearch" [(ngModel)]="optionalPremiumData.building">
+            <ng-template ng-label-tmp let-item="item">
+                {{item.code}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.description}}
+            </ng-template>
+        </ng-select>
+      </div>
+      <div (click)="collapseExpand(false)" class="col-lg-3">
+        <ng-select class="max-width" id="building" [items]="coverageCodes" bindLabel="description"
+        bindValue="code" name="building"
+        [virtualScroll]="true" click-stop-propagation
+        [clearable]="false"
+        [searchFn]="dropDownSearch" [(ngModel)]="optionalPremiumData.coverageCode">
+        <ng-template ng-option-tmp let-item="item">
+            {{item.description}}
+        </ng-template></ng-select>
+      </div>
+      <div class="col-lg-2">
+        <input type="text" class="form-control" id="limit" name="limit"
+              [readonly]="!canEdit" [(ngModel)]="optionalPremiumData.limit" #limit="ngModel">
+      </div>
+      <div class="col-lg-2">
+        <input type="text" class="form-control" id="additionalPremium" name="additionalPremium"
+              [readonly]="!canEdit" [(ngModel)]="optionalPremiumData.additionalPremium" #additionalPremium="ngModel">
+      </div>
+      <!-- <div class="col-lg-4">
+        <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
+          [disabled]="!canEdit" click-stop-propagation>Copy</button>&nbsp;
+        <button *ngIf="!optionalPremiumData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+          [disabled]="!canEdit" hover-class="btn-danger" click-stop-propagation>Delete</button>
+        <button *ngIf="optionalPremiumData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+          [disabled]="!canEdit" hover-class="btn-warning" click-stop-propagation>Remove</button>
+      </div> -->
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div class="row">
+          <div class="col-lg-1">
+            <label for="maxAmount" class="form-label" title="Subject to Max Amount">Subject To Max Amount</label>
+            <input type="checkbox" class="form-check-input" #maxAmount="ngModel" id="maxAmount" [(ngModel)]="optionalPremiumData.subjectToMaxAmount"
+              name="maxAmount" [readonly]="!canEdit">
+        </div>
+          <div class="col-sm-1">
+            <label for="maxPercent" class="form-label" title="Subject to Max Percent">%</label>
+            <input type="text" class="form-control" id="maxPercent" name="maxPercent"
+              [readonly]="!canEdit || !optionalPremiumData.subjectToMaxAmount" [(ngModel)]="optionalPremiumData.subjectToMaxPercent" #maxPercent="ngModel">
+          </div>
+          <div class="col-sm-2">
+            <label for="deductibleType" class="form-label" title="Status">Deductible Type</label>
+            <input type="text" class="form-control" id="deductibleType" name="deductibleType" [readonly]="!canEdit"
+              [(ngModel)]="optionalPremiumData.deductibleType" #deductibleType="ngModel">
+          </div>
+          <div class="col-sm-2">
+            <label for="deductibleCode" class="form-label" title="Status">Deductible Code</label>
+            <input type="text" class="form-control" id="deductibleCode" name="deductibleCode" [readonly]="!canEdit"
+              [(ngModel)]="optionalPremiumData.deductibleCode" #deductibleCode="ngModel">
+          </div>
+      </div>
+      <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
+        [openDelay]="1000">
+        <fa-icon [icon]="faArrowUp"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>

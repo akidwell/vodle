@@ -4,7 +4,6 @@ import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Quote } from '../models/quote';
-import { QuoteValidation } from '../models/quote-validation';
 import { ProgramClass } from './program-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
@@ -16,8 +15,9 @@ import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class'
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { QuoteAfterSave } from '../models/quote-after-save';
+import { Validation } from 'src/app/shared/interfaces/validation';
 
-export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
+export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
   private _canBeSaved = true;
@@ -337,7 +337,7 @@ export class QuoteClass implements Quote, QuoteValidation, QuoteAfterSave {
     this._validateOnLoad = false;
     return this.validationResults;
   }
-  validatePropertyQuote(quote: QuoteValidation){
+  validatePropertyQuote(quote: Validation){
     quote.validate ? quote.validate(): null;
   }
   // validateCoverageTab(): QuoteChildValidation {

@@ -7,23 +7,20 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
-import { MortgageeGroupComponent } from './property-mortgagee-group/mortgagee-group.component';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { CanDeactivateGuard } from 'src/app/features/policy/guards/can-deactivate-guard';
 import { AdditionalInterestModule } from '../property-additional-interest.ts/additional-interest.module';
-import { MortgageeComponent } from './property-mortgagee/mortgagee.component';
-
-
-
-
+import { OptionalPremiumComponent } from './optional-premium/optional-premium.component';
+import { OptionalPremiumGroupComponent } from './optional-premium-group/optional-premium-group.component';
 
 @NgModule({
   declarations: [
-    MortgageeComponent,
-    MortgageeGroupComponent],
+    OptionalPremiumComponent,
+    OptionalPremiumGroupComponent,
+  ],
   imports: [
     CommonModule,
     FontAwesomeModule,
@@ -47,6 +44,6 @@ import { MortgageeComponent } from './property-mortgagee/mortgagee.component';
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
   ],
-  exports: [MortgageeGroupComponent]
+  exports: [OptionalPremiumGroupComponent]
 })
-export class MortgageeModule { }
+export class OptionalPremiumModule { }
