@@ -5,16 +5,25 @@
         <a class="nav-link" routerLinkActive='active' [routerLink]="['location']">Location/Coverage 
           <span
             class="badge bg-danger" *ngIf="(this.propertyLocationTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="errorList" tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}
+            [ngbTooltip]="propertyLocationTabErrorList" tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}
           </span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['mortgagee']">Mortgagee/Additional Interest</a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['mortgagee']">Mortgagee/Additional Interest
+          <span
+            class="badge bg-danger" *ngIf="(this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? 0) > 0"
+            [ngbTooltip]="mortgageeAdditionalInterestErrorList" tooltipClass="tabErrors">{{this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? ''}}
+          </span>
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['premium']">Coverage Premium<span
-            *ngIf=""></span></a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['premium']">Coverage Premium
+          <span
+          class="badge bg-danger" *ngIf="(this.coveragePremiumTabValidation?.errorMessages?.length ?? 0) > 0"
+          [ngbTooltip]="coveragePremiumTabErrorList" tooltipClass="tabErrors">{{this.coveragePremiumTabValidation?.errorMessages?.length ?? ''}}
+        </span>
+          </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['conditions']">Terms and Conditions</a>
@@ -26,8 +35,18 @@
   <router-outlet></router-outlet>
 </div>
 
-<ng-template #errorList>
+<ng-template #propertyLocationTabErrorList>
   <tr *ngFor="let item of (this.propertyLocationTabValidation?.errorMessages ?? [])">
+    <span>{{item}}<br></span>
+  </tr>
+</ng-template>
+<ng-template #mortgageeAdditionalInterestErrorList>
+  <tr *ngFor="let item of (this.mortgageeAdditionalInterestTabValidation?.errorMessages ?? [])">
+    <span>{{item}}<br></span>
+  </tr>
+</ng-template>
+<ng-template #coveragePremiumTabErrorList>
+  <tr *ngFor="let item of (this.coveragePremiumTabValidation?.errorMessages ?? [])">
     <span>{{item}}<br></span>
   </tr>
 </ng-template>
