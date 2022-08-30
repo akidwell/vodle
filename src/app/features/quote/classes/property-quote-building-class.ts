@@ -479,32 +479,36 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     if (this.emptyStringValueCheck(this._street1)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Street is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Street is required');
     }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('City is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' City is required');
     }
     if (this.emptyStringValueCheck(this._state)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('State is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' State is required');
     }
     if (this.emptyStringValueCheck(this._zip)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Zip is required for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Zip is required');
     }
     if ((this._sprinklered ?? 0) > 100){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Sprinklered% mush be <= 100% for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?'));
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Sprinklered% mush be <= 100%');
     }
     if (this.isDuplicate){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated.');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated');
+    }
+    if (this._yearBuilt != null && (this._yearBuilt < 1000 || this._yearBuilt > 9999)) {
+      this._isValid = false;
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Year Built is invalid');
     }
     this._errorMessages = this.invalidList;
   }

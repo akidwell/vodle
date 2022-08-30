@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { finalize, map, share, tap } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { UnderlyingLimitBasis } from '../../../features/policy/models/schedules';
@@ -13,16 +13,8 @@ import { PropertyCoverageLookup } from '../../models/property-coverage-lookup';
   providedIn: 'root',
 })
 export class DropDownsService {
-  private readonly refreshSubject = new Subject();
 
   constructor(private http: HttpClient, private config: ConfigService) {}
-
-  // postSicCode(sicCode: string): Observable<ClassCode[]>{
-  //   const params = new HttpParams().append('sicCode', sicCode);
-
-  //   return this.http.get<ClassCode[]>(this.config.apiBaseUrl + 'api/dropdowns/sic-codes/class-code', {params} );
-
-  // }
 
   // Non static drop downs
   getLimitBasisDescriptions(
@@ -86,6 +78,8 @@ export class DropDownsService {
     this.clearClassCodes();
     this.clearDeductibleCodes();
     this.clearDeductibleTypes();
+    this.clearDepartments();
+    this.clearUnderwriters();
   }
 
   getRiskGrades(programId?: number): Observable<Code[]> {
@@ -193,7 +187,36 @@ export class DropDownsService {
     this.cacheDeductibleTypes$ == null;
   }
 
-  // Static Drop Downs
+  ////////////////////////////////////////
+  // Departments
+  private cacheDepartments: Code[] | null = null;
+  private cacheDepartments$!: Observable<Code[]> | null;
+
+  getDepartments(departmentCode: number | null): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheDepartments) {
+      observable = of(this.cacheDepartments);
+    } else if (this.cacheDepartments$) {
+      observable = this.cacheDepartments$;
+    } else {
+      const params = new HttpParams().append('departmentCode', departmentCode?.toString() ?? '');
+      this.cacheDepartments$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/lookups/departments',{ params })
+        .pipe(
+          tap((res) => (this.cacheDepartments = res)),
+          share(),
+          finalize(() => (this.cacheDepartments$ = null))
+        );
+      observable = this.cacheDepartments$;
+    }
+    return observable;
+  }
+  clearDepartments() {
+    this.cacheDepartments = null;
+    this.cacheDepartments$ == null;
+  }
+
+  //////////////////////////////////////// Static Drop Downs ////////////////////////////////////////
 
   ////////////////////////////////////////
   // PAC Codes
@@ -220,35 +243,12 @@ export class DropDownsService {
   }
 
   ////////////////////////////////////////
-  // Departments
-  private cacheDepartments: any;
-  private cacheDepartments$!: Observable<any> | null;
-
-  getDepartments(): Observable<Code[]> {
-    let observable: Observable<any>;
-    if (this.cacheDepartments) {
-      observable = of(this.cacheDepartments);
-    } else if (this.cacheDepartments$) {
-      observable = this.cacheDepartments$;
-    } else {
-      this.cacheDepartments$ = this.http
-        .get<Code[]>(this.config.apiBaseUrl + 'api/lookups/departments')
-        .pipe(
-          tap((res) => (this.cacheDepartments = res)),
-          share(),
-          finalize(() => (this.cacheDepartments$ = null))
-        );
-      observable = this.cacheDepartments$;
-    }
-    return observable;
-  }
-  ////////////////////////////////////////
-  // Departments
-  private cacheUnderwriters: any;
-  private cacheUnderwriters$!: Observable<any> | null;
+  // Underwriters
+  private cacheUnderwriters: Code[] | null = null;
+  private cacheUnderwriters$!: Observable<Code[]> | null;
 
   getUnderwriters(): Observable<Code[]> {
-    let observable: Observable<any>;
+    let observable: Observable<Code[]>;
     if (this.cacheUnderwriters) {
       observable = of(this.cacheUnderwriters);
     } else if (this.cacheUnderwriters$) {
@@ -265,6 +265,12 @@ export class DropDownsService {
     }
     return observable;
   }
+
+  clearUnderwriters() {
+    this.cacheUnderwriters = null;
+    this.cacheUnderwriters$ == null;
+  }
+
   ////////////////////////////////////////
   // Programs
   private cachePrograms: any;
