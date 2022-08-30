@@ -1,12 +1,12 @@
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyDeductible } from '../models/property-deductible';
 import { QuoteAfterSave } from '../models/quote-after-save';
-import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 
 
-export class PropertyQuoteDeductibleClass implements PropertyDeductible, QuoteValidation, QuoteAfterSave {
+export class PropertyQuoteDeductibleClass implements PropertyDeductible, Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;

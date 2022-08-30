@@ -1,16 +1,16 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyBuilding } from '../models/property-building';
-import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { Code } from 'src/app/core/models/code';
 
-export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation, QuoteAfterSave {
+export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
@@ -306,7 +306,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   callChildValidations() {
     this.childArrayValidate(this.propertyQuoteBuildingCoverage);
   }
-  childArrayValidate(children: QuoteValidation[]) {
+  childArrayValidate(children: Validation[]) {
     children.forEach(child => {
       child.validate ? child.validate() : null;
     });

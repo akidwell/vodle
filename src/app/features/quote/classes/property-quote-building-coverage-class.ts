@@ -1,13 +1,13 @@
 
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { QuoteAfterSave } from '../models/quote-after-save';
-import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { QuoteValidationClass } from './quote-validation-class';
 
-export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage, QuoteValidation, QuoteAfterSave {
+export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage, Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;

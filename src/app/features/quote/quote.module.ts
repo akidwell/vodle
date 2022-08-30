@@ -45,6 +45,7 @@ import { QuotePropertyDetailLeftComponent } from './components/property/quote-pr
 import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
+import { OptionalPremiumModule } from 'src/app/shared/components/optional-premium/optional-premium.module';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
     MatFormFieldModule,
     SubmissionInformationModule,
     MortgageeModule,
+    OptionalPremiumModule,
     AdditionalInterestModule,
     PipesModule,
     PropertyDeductibleModule,

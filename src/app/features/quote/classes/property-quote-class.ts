@@ -4,6 +4,7 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { Code } from 'src/app/core/models/code';
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
 import { PropertyBuildingData } from '../models/property-building';
@@ -11,17 +12,18 @@ import { PropertyBuildingCoverageSubjectAmountData } from '../models/property-bu
 import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteAfterSave } from '../models/quote-after-save';
-import { QuoteValidation } from '../models/quote-validation';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
+import { QuoteOptionalPremiumClass } from './quote-optional-premium-class';
 import { QuoteValidationClass } from './quote-validation-class';
 
-export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, QuoteAfterSave {
+export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
   propertyQuoteId: number | null = null;
   quoteId: number | null = null;
 
   propertyQuoteDeductible: PropertyQuoteDeductibleClass[] = [];
+  propertyOptionalPremium: QuoteOptionalPremiumClass[] = [];
   coveragesTabValidation: QuoteValidationClass | null = null;
 
   termsAndConditionsTabValidation: QuoteValidationClass | null = null;
@@ -38,9 +40,26 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
-  private _errorMessages: string[] = ['Property Quote'];
+  private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
+
+  constructor(propertyQuote?: PropertyQuote) {
+    if (propertyQuote) {
+      this.existingInit(propertyQuote);
+    } else {
+      this.newInit();
+    }
+    this.propertyOptionalPremium.push(new QuoteOptionalPremiumClass());
+    console.log(this.propertyOptionalPremium);
+    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
+    this.propertyQuoteBuildingLocationTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this.propertyQuoteMortgageeAdditionalInterestTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    this.termsAndConditionsTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.TermsAndConditions);
+    this.coveragesTabValidation= new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.CoveragePremium);
+
+    this.validate();
+  }
 
   get riskDescription() : string | null {
     return this._riskDescription;
@@ -177,6 +196,24 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     this.propertyQuoteBuilding.forEach(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
   }
 
+  get isDirty(): boolean {
+    return this._isDirty ;
+  }
+  get isValid(): boolean {
+    // let valid = true;
+    // valid = this.validate(valid);
+    return this._isValid;
+  }
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  get errorMessages(): string[] {
+    return this._errorMessages;
+  }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
+
   addBuilding(building: PropertyQuoteBuildingClass) {
     this.propertyQuoteBuilding.push(building);
     // this.propertyQuoteBuilding.forEach(c => c.focus = false);
@@ -260,37 +297,6 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
     this.filterCoverages();
   }
 
-  constructor(propertyQuote?: PropertyQuote) {
-    if (propertyQuote) {
-      this.existingInit(propertyQuote);
-    } else {
-      this.newInit();
-    }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
-    this.propertyQuoteBuildingLocationTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
-    this.propertyQuoteMortgageeAdditionalInterestTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
-    this.termsAndConditionsTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.TermsAndConditions);
-    this.coveragesTabValidation= new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.CoveragePremium);
-
-    this.validate();
-  }
-  get isDirty(): boolean {
-    return this._isDirty ;
-  }
-  get isValid(): boolean {
-    // let valid = true;
-    // valid = this.validate(valid);
-    return this._isValid;
-  }
-  get canBeSaved(): boolean {
-    return this._canBeSaved;
-  }
-  get errorMessages(): string[] {
-    return this._errorMessages;
-  }
-  get validationResults(): QuoteValidationClass {
-    return this._validationResults;
-  }
   existingInit(propertyQuote: PropertyQuote) {
     this.propertyQuoteId = propertyQuote.propertyQuoteId;
     this.quoteId = propertyQuote.quoteId;
@@ -364,14 +370,14 @@ export class PropertyQuoteClass implements PropertyQuote, QuoteValidation, Quote
   callChildValidations() {
     // Validate all buildings for duplicates
     this.validateBuildings();
-    this. validateDeductibles();
+    this.validateDeductibles();
 
     this.childArrayValidate(this.propertyQuoteDeductible);
     this.childArrayValidate(this.propertyQuoteMortgagee);
     this.childArrayValidate(this.propertyQuoteAdditionalInterest);
     this.childArrayValidate(this.propertyQuoteBuilding);
   }
-  childArrayValidate(children: QuoteValidation[]) {
+  childArrayValidate(children: Validation[]) {
     children.forEach(child => {
       child.validate ? child.validate() : null;
     });

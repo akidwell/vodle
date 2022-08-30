@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
 import { QuoteClass } from '../../../classes/quote-class';
@@ -16,6 +17,7 @@ export class QuotePremiumComponent implements OnInit {
   rate!: QuoteRateClass;
   quoteId = 0;
   programSub!: Subscription;
+  componentType = SharedComponentType.Policy;
   constructor(private pageDataService: PageDataService) {
   }
 

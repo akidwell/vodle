@@ -3,9 +3,9 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { AdditionalInterestData } from 'src/app/features/quote/models/additional-interest';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
-import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
+import { Validation } from '../../interfaces/validation';
 
-export class AdditionalInterestClass implements AdditionalInterestData, QuoteValidation, QuoteAfterSave{
+export class AdditionalInterestClass implements AdditionalInterestData, Validation, QuoteAfterSave{
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
