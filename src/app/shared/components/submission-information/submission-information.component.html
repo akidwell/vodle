@@ -59,9 +59,8 @@
                   <div class="col-lg-6">
                     <label for="underwriter" title="Underwriter">Underwriter</label>
                     <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key"
-                      [clearable]="false" [readonly]="
-                        !canEditSubmission || submission.underwriterReadonly
-                      " name="underwriter" [required]="canEditSubmission && submission.underwriterRequired"
+                      [clearable]="false" 
+                      name="underwriter" [required]="canEditSubmission && submission.underwriterRequired"
                       [(ngModel)]="submission.underwriter" #underwriter="ngModel">
                     </ng-select>
                   </div>

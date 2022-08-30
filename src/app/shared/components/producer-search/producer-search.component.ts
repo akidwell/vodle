@@ -35,7 +35,7 @@ export class ProducerSearchService {
   providers: [ProducerSearchService],
   styleUrls: ['./producer-search.css']
 })
-export class ProducerSearch implements OnInit{
+export class ProducerSearch {
   model!: Producer | null;
   originalModel!: Producer;
   allowSearching = true;
@@ -43,10 +43,14 @@ export class ProducerSearch implements OnInit{
   searchFailed = false;
   formatDateForDisplay: FormatDateForDisplay;
   public _department!: number | null;
+  private _producerOnLoad!: Producer | null;
+
   @Input() public policyDate!: Date;
   @Input() set department(value: number | null) {
-    this._department = value;
-    this.resetSearch();
+    if (this._department != value) {
+      this._department = value;
+      this.resetSearch();
+    }
   }
   get department(): number | null {
     return this._department;
@@ -54,18 +58,25 @@ export class ProducerSearch implements OnInit{
   @ViewChild('producer') producer!: ElementRef;
   @Input() public canEdit!: boolean;
   @Input() public isRequired!: boolean;
-  @Input() public producerOnLoad!: Producer | null;
   @Output() producerSelected: EventEmitter<Producer | null> = new EventEmitter();
+  @Input() set producerOnLoad(value: Producer | null) {
+    this._producerOnLoad = value;
+    this.reload();
+  }
+  get producerOnLoad(): Producer | null {
+    return this._producerOnLoad;
+  }
 
   constructor(private _service: ProducerSearchService, private formatDateService: FormatDateForDisplay) {
     this.formatDateForDisplay = formatDateService;
   }
-  ngOnInit(): void {
+
+  private reload() {
     if (this.producerOnLoad) {
       this.allowSearching = false;
       this.model = this.producerOnLoad;
-      this.originalModel = this.model;
-      this.formatDisplay(this.model);
+      this.originalModel = this.producerOnLoad;
+      this.formatDisplay(this.producerOnLoad);
     }
   }
 

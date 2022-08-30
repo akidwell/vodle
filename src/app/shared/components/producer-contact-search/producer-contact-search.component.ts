@@ -19,7 +19,7 @@ export interface FuzzyProducerContactSearchResponse {
   providers: [ProducerContactService],
   styleUrls: ['./producer-contact-search.css']
 })
-export class ProducerContactSearch implements OnInit{
+export class ProducerContactSearch {
   model!: ProducerContactClass | null;
   originalModel!: ProducerContactClass;
   allowSearching = true;
@@ -40,7 +40,9 @@ export class ProducerContactSearch implements OnInit{
   faPlus = faPlus;
   faX = faX;
   public _producerCode!: number | null;
+  private _producerContactOnLoad!: ProducerContactClass | null;
   focus$ = new Subject<string>();
+
 
   @Input() set producerCode(value: number | null) {
     this._producerCode = value;
@@ -53,20 +55,27 @@ export class ProducerContactSearch implements OnInit{
   @ViewChild('producerContact') producerContact!: ElementRef;
   @Input() public canEdit!: boolean;
   @Input() public isRequired!: boolean;
-  @Input() public producerContactOnLoad!: ProducerContactClass | null;
+  @Input() set producerContactOnLoad(value: ProducerContactClass | null) {
+    this._producerContactOnLoad = value;
+    this.reload();
+  }
+  get producerContactOnLoad(): ProducerContactClass | null {
+    return this._producerContactOnLoad;
+  }
   @Output() producerContactSelected: EventEmitter<ProducerContactClass | null> = new EventEmitter();
 
   constructor(private _service: ProducerContactService, private formatDateService: FormatDateForDisplay) {
     this.formatDateForDisplay = formatDateService;
   }
 
-  ngOnInit(): void {
+  private reload() {
     if (this.producerContactOnLoad) {
       this.allowSearching = false;
       this.model = this.producerContactOnLoad;
-      this.originalModel = this.model;
+      this.originalModel = this.producerContactOnLoad;
     }
   }
+
   // formatter = (producer: ProducerContact) => producer.firstName + '\xa0' + producer.lastName;
   displayFormatter = (producer: ProducerContactClass) => producer.display;
 
