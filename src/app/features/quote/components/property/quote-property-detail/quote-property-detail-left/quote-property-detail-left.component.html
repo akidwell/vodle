@@ -33,7 +33,7 @@
             <label for="subjectBreakdown" class="form-label"  title="subjectBreakdown">Subj Amt Breakdown</label>
         </div>
     </div>
-    <div *ngFor="let sub of subjects$ | async">
+ <div *ngFor="let sub of subjects$ | async">
         <div class="row" style="padding: 1px">
             <div class="col-lg-2">
                 <input type="text" class="form-control right" id="subject" maxlength="40" [readonly]="true" 
@@ -50,4 +50,9 @@
         <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
             [rotate]="true" [boundaryLinks]="true">
         </ngb-pagination>
-    </div>
+        <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">
+            <option [ngValue]="5">5 items per page</option>
+            <option [ngValue]="10">10 items per page</option>
+            <option [ngValue]="15">15 items per page</option>
+        </select>
+    </div> 
