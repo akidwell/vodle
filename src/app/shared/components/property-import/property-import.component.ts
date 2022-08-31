@@ -40,7 +40,7 @@ export class PropertyImportComponent {
       if (this.classType == ClassTypeEnum.Quote) {
         const quoteId = this.route.parent?.parent?.snapshot.paramMap.get('seq');
         if (this.quote != null && quoteId != null) {
-          if (this.quote.propertyQuote.propertyQuoteBuilding.length > 0) {
+          if (this.quote.propertyQuote.propertyQuoteBuildingList.length > 0) {
             this.confirmationDialogService
               .open(
                 'Import Confirmation',

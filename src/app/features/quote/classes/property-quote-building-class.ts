@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyBuilding } from '../models/property-building';
 import { QuoteValidationClass } from './quote-validation-class';

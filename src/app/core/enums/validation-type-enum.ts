@@ -1,5 +1,5 @@
 export enum QuoteValidationTypeEnum {
-  Department = 'department',
+    Department = 'department',
     Quote = 'quote',
     Tab = 'tab',
     Child = 'child',

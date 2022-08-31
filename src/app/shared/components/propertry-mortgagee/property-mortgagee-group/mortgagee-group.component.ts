@@ -40,8 +40,8 @@ export class MortgageeGroupComponent implements OnInit {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyQuoteMortgagee){
-          this.mortgageeData = this.program?.quoteData?.propertyQuote.propertyQuoteMortgagee;
+        if (this.program?.quoteData?.propertyQuote?.propertyQuoteMortgageeList){
+          this.mortgageeData = this.program?.quoteData?.propertyQuote.propertyQuoteMortgageeList;
         }
       });
     this.collapsed = false;

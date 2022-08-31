@@ -1,5 +1,5 @@
 
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Code } from 'src/app/core/models/code';
 import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
@@ -17,23 +17,24 @@ import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-co
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
 import { QuoteOptionalPremiumClass } from './quote-optional-premium-class';
 import { QuoteValidationClass } from './quote-validation-class';
+import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
 
 export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
   propertyQuoteId: number | null = null;
   quoteId: number | null = null;
 
-  propertyQuoteDeductible: PropertyQuoteDeductibleClass[] = [];
-  propertyOptionalPremium: QuoteOptionalPremiumClass[] = [];
-  coveragesTabValidation: QuoteValidationClass | null = null;
+  propertyQuoteDeductibleList: PropertyQuoteDeductibleClass[] = [];
+  propertyOptionalPremiumList: QuoteOptionalPremiumClass[] = [];
+  coveragesTabValidation: TabValidationClass | null = null;
 
-  termsAndConditionsTabValidation: QuoteValidationClass | null = null;
+  termsAndConditionsTabValidation: TabValidationClass | null = null;
 
-  propertyQuoteBuilding: PropertyQuoteBuildingClass[] = [];
-  propertyQuoteBuildingLocationTabValidation: QuoteValidationClass | null = null;
+  propertyQuoteBuildingList: PropertyQuoteBuildingClass[] = [];
+  propertyQuoteBuildingLocationTabValidation: TabValidationClass | null = null;
 
-  propertyQuoteMortgagee: MortgageeClass[] = [];
-  propertyQuoteAdditionalInterest: AdditionalInterestClass[] = [];
-  propertyQuoteMortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
+  propertyQuoteMortgageeList: MortgageeClass[] = [];
+  propertyQuoteAdditionalInterestList: AdditionalInterestClass[] = [];
+  propertyQuoteMortgageeAdditionalInterestTabValidation: TabValidationClass | null = null;
   invalidList: string[] = [];
 
   private _riskDescription: string | null = null;
@@ -51,13 +52,13 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     } else {
       this.newInit();
     }
-    this.propertyOptionalPremium.push(new QuoteOptionalPremiumClass());
-    console.log(this.propertyOptionalPremium);
+    this.propertyOptionalPremiumList.push(new QuoteOptionalPremiumClass());
+    console.log(this.propertyOptionalPremiumList);
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
-    this.propertyQuoteBuildingLocationTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
-    this.propertyQuoteMortgageeAdditionalInterestTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
-    this.termsAndConditionsTabValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.TermsAndConditions);
-    this.coveragesTabValidation= new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.CoveragePremium);
+    this.propertyQuoteBuildingLocationTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this.propertyQuoteMortgageeAdditionalInterestTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    this.termsAndConditionsTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.TermsAndConditions);
+    this.coveragesTabValidation= new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
 
     this.validate();
   }
@@ -71,7 +72,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
   get limitTotal(): number {
     let total = 0;
-    this.propertyQuoteBuilding.map((c) =>
+    this.propertyQuoteBuildingList.map((c) =>
       c.propertyQuoteBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
     );
     return total;
@@ -80,7 +81,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   get subjectAmount(): Map<any,any> {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-    this.propertyQuoteBuilding.map((element) => {
+    this.propertyQuoteBuildingList.map((element) => {
       element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
         subAm.subject = Number(element.subjectNumber);
@@ -96,18 +97,18 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   get buildingCount(): number {
-    return this.propertyQuoteBuilding?.length ?? 0;
+    return this.propertyQuoteBuildingList?.length ?? 0;
   }
   get largestTiv(): number {
     let largest = 0;
-    this.propertyQuoteBuilding.map(x => {
+    this.propertyQuoteBuildingList.map(x => {
       if (x.propertyQuoteBuildingCoverage.length == 0){
         return 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-        this.propertyQuoteBuilding.map((element) => {
+        this.propertyQuoteBuildingList.map((element) => {
           element.propertyQuoteBuildingCoverage.map((x) => {
             const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
             subAm.subject = element.premisesNumber;
@@ -144,7 +145,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
 
   get coverageCount(): number {
     let total = 0;
-    this.propertyQuoteBuilding.map((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
+    this.propertyQuoteBuildingList.map((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
     );
     return total;
   }
@@ -153,7 +154,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     const buildings: Code[] = [];
     const all: Code = {key: 0, code: 'All', description: 'All'};
     buildings.push(all);
-    this.propertyQuoteBuilding.forEach((c) => {
+    this.propertyQuoteBuildingList.forEach((c) => {
       const building = (c.premisesNumber?.toString() ?? '') + '-' + (c.buildingNumber?.toString() ?? '');
       const code: Code = {key: 0, code: building, description: building + ' : ' + c.address};
       buildings.push(code);
@@ -202,9 +203,9 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   set cspCode(value: Code) {
     this._cspCode = value;
     if(value == null){
-      this.propertyQuoteBuilding.map(x => x.cspCode = null);
+      this.propertyQuoteBuildingList.map(x => x.cspCode = null);
     } else {
-      this.propertyQuoteBuilding.map(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
+      this.propertyQuoteBuildingList.map(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
     }
   }
 
@@ -227,7 +228,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   addBuilding(building: PropertyQuoteBuildingClass) {
-    this.propertyQuoteBuilding.push(building);
+    this.propertyQuoteBuildingList.push(building);
     // this.propertyQuoteBuilding.forEach(c => c.focus = false);
     building.propertyQuote = this;
     building.focus = true;
@@ -235,9 +236,9 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   deleteBuilding(building: PropertyQuoteBuildingClass) {
-    const index = this.propertyQuoteBuilding.indexOf(building, 0);
+    const index = this.propertyQuoteBuildingList.indexOf(building, 0);
     if (index > -1) {
-      this.propertyQuoteBuilding.splice(index, 1);
+      this.propertyQuoteBuildingList.splice(index, 1);
     }
     if (building.propertyQuoteBuildingCoverage.length > 0) {
       this.filterBuildingsCoverages();
@@ -248,19 +249,19 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   onPremisesBuildingChange(premisesNumber: number | null, buildingNumber: number | null) {
-    this.propertyQuoteDeductible.map(c => {
+    this.propertyQuoteDeductibleList.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
       }
     });
-    this.propertyQuoteMortgagee.map(c => {
+    this.propertyQuoteMortgageeList.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
       }
     });
-    this.propertyQuoteAdditionalInterest.map(c => {
+    this.propertyQuoteAdditionalInterestList.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
@@ -269,11 +270,11 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   clearCspCodes() {
-    this.propertyQuoteBuilding.forEach(x => x.cspCode == null);
+    this.propertyQuoteBuildingList.forEach(x => x.cspCode == null);
   }
 
   clearBuildings() {
-    this.propertyQuoteBuilding = [];
+    this.propertyQuoteBuildingList = [];
     this.filteredBuildings = [];
     this.filteredCoverages = [];
   }
@@ -282,7 +283,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
 
   filterBuildings() {
     const allBuildings: PropertyQuoteBuildingClass[] = [];
-    this.propertyQuoteBuilding.map((element) => {
+    this.propertyQuoteBuildingList.map((element) => {
       if ((this.searchSubject == '' || element.subjectNumber == Number(this.searchSubject)) &&
       (this.searchPremises == '' || element.premisesNumber == Number(this.searchPremises)) &&
       (this.searchBuilding == '' || element.buildingNumber == Number(this.searchBuilding)) &&
@@ -314,31 +315,40 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     this._riskDescription = propertyQuote.riskDescription;
 
     const deductibles: PropertyQuoteDeductibleClass[] = [];
-    propertyQuote.propertyQuoteDeductible.forEach((element) => {
-      deductibles.push(new PropertyQuoteDeductibleClass(element));
-    });
-    this.propertyQuoteDeductible = deductibles;
+    console.log(propertyQuote);
+    if(propertyQuote.propertyQuoteDeductible) {
+      propertyQuote.propertyQuoteDeductible.forEach((element) => {
+        deductibles.push(new PropertyQuoteDeductibleClass(element));
+      });
+    }
+    this.propertyQuoteDeductibleList = deductibles;
 
     const mortgagee: MortgageeClass[] = [];
-    propertyQuote.propertyQuoteMortgagee.forEach((element) => {
-      mortgagee.push(new MortgageeClass(element));
-    });
-    this.propertyQuoteMortgagee = mortgagee;
+    if(propertyQuote.propertyQuoteMortgagee) {
+      propertyQuote.propertyQuoteMortgagee.forEach((element) => {
+        mortgagee.push(new MortgageeClass(element));
+      });
+    }
+    this.propertyQuoteMortgageeList = mortgagee;
 
     const ai: AdditionalInterestClass[] = [];
-    propertyQuote.propertyQuoteAdditionalInterest.forEach((element) => {
-      ai.push(new AdditionalInterestClass(element));
-    });
-    this.propertyQuoteMortgagee = mortgagee;
-    this.propertyQuoteAdditionalInterest = ai;
+    if(propertyQuote.propertyQuoteAdditionalInterest) {
+      propertyQuote.propertyQuoteAdditionalInterest.forEach((element) => {
+        ai.push(new AdditionalInterestClass(element));
+      });
+    }
+    this.propertyQuoteMortgageeList = mortgagee;
+    this.propertyQuoteAdditionalInterestList = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
-    propertyQuote.propertyQuoteBuilding.forEach((element) => {
-      const building = new PropertyQuoteBuildingClass(element);
-      building.propertyQuote = this;
-      buildings.push(building);
-    });
-    this.propertyQuoteBuilding = buildings;
+    if(propertyQuote.propertyQuoteBuilding) {
+      propertyQuote.propertyQuoteBuilding.forEach((element) => {
+        const building = new PropertyQuoteBuildingClass(element);
+        building.propertyQuote = this;
+        buildings.push(building);
+      });
+    }
+    this.propertyQuoteBuildingList = buildings;
     this.filterBuildingsCoverages();
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -358,22 +368,19 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     this.callChildValidations();
 
     //tab validations
-    this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAsStandalone(this.propertyQuoteBuilding);
-    if (this.propertyQuoteBuildingLocationTabValidation?.isDirty) {
-      //complex validations on building location tab
-    }
-    this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
-    this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAndMerge(this.propertyQuoteAdditionalInterest);
-    //TODO: T&C
+    this.validateLocationCoverageTab();
+    this.validateCoveragesTab();
+    this.validateMortgageeAdditionalInterestTab();
+    this.validateTermsAndConditionsTab();
 
     //map this to validation results
     this._validationResults.mapValues(this);
 
     //map children to validation results
-    this._validationResults.validateChildrenAndMerge(this.propertyQuoteDeductible);
-    this._validationResults.validateChildrenAndMerge(this.propertyQuoteMortgagee);
-    this._validationResults.validateChildrenAndMerge(this.propertyQuoteAdditionalInterest);
-    this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuilding);
+    this._validationResults.validateChildrenAndMerge(this.propertyQuoteDeductibleList);
+    this._validationResults.validateChildrenAndMerge(this.propertyQuoteMortgageeList);
+    this._validationResults.validateChildrenAndMerge(this.propertyQuoteAdditionalInterestList);
+    this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingList);
 
     return this._validationResults;
   }
@@ -383,10 +390,10 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     this.validateBuildings();
     this.validateDeductibles();
 
-    this.childArrayValidate(this.propertyQuoteDeductible);
-    this.childArrayValidate(this.propertyQuoteMortgagee);
-    this.childArrayValidate(this.propertyQuoteAdditionalInterest);
-    this.childArrayValidate(this.propertyQuoteBuilding);
+    this.childArrayValidate(this.propertyQuoteDeductibleList);
+    this.childArrayValidate(this.propertyQuoteMortgageeList);
+    this.childArrayValidate(this.propertyQuoteAdditionalInterestList);
+    this.childArrayValidate(this.propertyQuoteBuildingList);
   }
   childArrayValidate(children: Validation[]) {
     children.forEach(child => {
@@ -394,10 +401,10 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     });
   }
   markChildrenClean() {
-    this.cleanChildArray(this.propertyQuoteDeductible);
-    this.cleanChildArray(this.propertyQuoteMortgagee);
-    this.cleanChildArray(this.propertyQuoteAdditionalInterest);
-    this.cleanChildArray(this.propertyQuoteBuilding);
+    this.cleanChildArray(this.propertyQuoteDeductibleList);
+    this.cleanChildArray(this.propertyQuoteMortgageeList);
+    this.cleanChildArray(this.propertyQuoteAdditionalInterestList);
+    this.cleanChildArray(this.propertyQuoteBuildingList);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -445,16 +452,30 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     }
     return invalid;
   }
+  validateLocationCoverageTab() {
+    this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAsStandalone(this.propertyQuoteBuildingList);
+  }
+  validateCoveragesTab() {
+    this.coveragesTabValidation?.nullCheck();
+    console.log('TODO: Validate Coverages');
 
+  }
+  validateTermsAndConditionsTab() {
+    console.log('TODO: Validate T&C');
+  }
+  validateMortgageeAdditionalInterestTab() {
+    this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgageeList);
+    this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAndMerge(this.propertyQuoteAdditionalInterestList);
+  }
   validateBuildings() {
-    this.propertyQuoteBuilding.map(c => {
+    this.propertyQuoteBuildingList.map(c => {
       if (c.isDuplicate) {
         c.isDuplicate = false;
       }
     });
-    this.propertyQuoteBuilding.map(x => {
+    this.propertyQuoteBuildingList.map(x => {
       if (!x.isDuplicate) {
-        const dupes = this.propertyQuoteBuilding.filter(c => c.subjectNumber == x.subjectNumber && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
+        const dupes = this.propertyQuoteBuildingList.filter(c => c.subjectNumber == x.subjectNumber && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
         if (dupes.length > 1) {
           dupes.forEach(c => {
             c.isDuplicate = true;
@@ -482,14 +503,14 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
   }
 
   validateDeductibles() {
-    this.propertyQuoteDeductible.map(c => {
+    this.propertyQuoteDeductibleList.map(c => {
       if (c.isDuplicate) {
         c.isDuplicate = false;
       }
     });
-    this.propertyQuoteDeductible.map(x => {
+    this.propertyQuoteDeductibleList.map(x => {
       if (!x.isDuplicate) {
-        const dupes = this.propertyQuoteDeductible.filter(c => c.propertyDeductibleId == x.propertyDeductibleId && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
+        const dupes = this.propertyQuoteDeductibleList.filter(c => c.propertyDeductibleId == x.propertyDeductibleId && c.premisesNumber == x.premisesNumber && c.buildingNumber == x.buildingNumber);
         if (dupes.length > 1) {
           dupes.forEach(c => {
             c.isDuplicate = true;
@@ -501,16 +522,16 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
 
   toJSON() {
     const deductibles: PropertyDeductibleData[] = [];
-    this.propertyQuoteDeductible.forEach(c => deductibles.push(c.toJSON()));
+    this.propertyQuoteDeductibleList.forEach(c => deductibles.push(c.toJSON()));
 
     const mortgagee: MortgageeData[] = [];
-    this.propertyQuoteMortgagee.forEach(c => mortgagee.push(c.toJSON()));
+    this.propertyQuoteMortgageeList.forEach(c => mortgagee.push(c.toJSON()));
 
     const ai: AdditionalInterestData[] = [];
-    this.propertyQuoteAdditionalInterest.forEach(c => ai.push(c.toJSON()));
+    this.propertyQuoteAdditionalInterestList.forEach(c => ai.push(c.toJSON()));
 
     const buildings: PropertyBuildingData[] = [];
-    this.propertyQuoteBuilding.forEach(c => buildings.push(c.toJSON()));
+    this.propertyQuoteBuildingList.forEach(c => buildings.push(c.toJSON()));
 
     return {
       propertyQuoteId: this.propertyQuoteId,
