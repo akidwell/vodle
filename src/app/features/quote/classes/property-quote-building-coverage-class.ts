@@ -55,6 +55,10 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   set limit(value: number | null) {
     this._limit = value;
     this.building?.calculateITV();
+    this.building?.propertyQuote.calculateSubjectAmounts();
+    this.building?.propertyQuote.calculateLargestPremTiv();
+    this.building?.propertyQuote.calculateLargestExposure();
+    this.building?.propertyQuote.calculateLawLimits();
     this._isDirty = true;
   }
   get coinsuranceId() : number | null {

@@ -66,6 +66,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this._subjectNumber = value;
     this._isDirty = true;
     this.propertyQuoteBuildingCoverage.map(c => c.subjectNumber = value);
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
   get isDirty(): boolean {
     return this._isDirty ;
@@ -381,6 +385,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     newCoverage.buildingNumber = this._buildingNumber;
     this.propertyQuoteBuildingCoverage.push(newCoverage);
     this.propertyQuote.filterCoverages();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
 
   copyCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
@@ -396,6 +404,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     coverage.markDirty();
     this.propertyQuoteBuildingCoverage.push(coverage);
     this.propertyQuote.filterCoverages();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
 
   deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
@@ -404,6 +416,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
       this.propertyQuoteBuildingCoverage.splice(index, 1);
     }
     this.propertyQuote.filterCoverages();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
+
   }
 
   subjectNumberRequired = true;
@@ -509,6 +526,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     if (this._yearBuilt != null && (this._yearBuilt < 1000 || this._yearBuilt > 9999)) {
       this._isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Year Built is invalid');
+    }
+    if (this.emptyStringValueCheck(this._cspCode)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Csp Code for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?' + ' is required'));
     }
     this._errorMessages = this.invalidList;
   }
