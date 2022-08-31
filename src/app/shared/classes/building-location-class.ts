@@ -17,8 +17,11 @@ export abstract class BuildingLocationClass {
     this._premisesNumber= value;
   }
 
-  get isAppliedToAll() : boolean{
+  get isAppliedToAll() : boolean {
     return this._isAppliedToAll;
+  }
+  set isAppliedToAll(value: boolean) {
+    this._isAppliedToAll= value;
   }
 
   get building() : string | null {
