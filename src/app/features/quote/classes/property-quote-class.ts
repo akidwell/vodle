@@ -251,18 +251,21 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
+        c.markDirty();
       }
     });
     this.propertyQuoteMortgagee.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
+        c.markDirty();
       }
     });
     this.propertyQuoteAdditionalInterest.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
+        c.markDirty();
       }
     });
   }
