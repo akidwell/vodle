@@ -228,7 +228,6 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
 
   addBuilding(building: PropertyQuoteBuildingClass) {
     this.propertyQuoteBuilding.push(building);
-    // this.propertyQuoteBuilding.forEach(c => c.focus = false);
     building.propertyQuote = this;
     building.focus = true;
     this.filterBuildings();
