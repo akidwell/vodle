@@ -456,7 +456,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAsStandalone(this.propertyQuoteBuildingList);
   }
   validateCoveragesTab() {
-    this.coveragesTabValidation?.nullCheck();
+    //this.coveragesTabValidation?.nullCheck();
     console.log('TODO: Validate Coverages');
 
   }
