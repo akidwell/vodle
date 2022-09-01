@@ -100,6 +100,9 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this._premisesNumber = value;
     this._isDirty = true;
     this.propertyQuoteBuildingCoverage.map(c => c.premisesNumber = value);
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
   get buildingNumber(): number | null {
     return this._buildingNumber;
