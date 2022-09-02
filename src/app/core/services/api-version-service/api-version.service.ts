@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class APIVersionService {
-  apiVersion = '1.0';
+  private _apiVersion ='1.0';
+  apiVersion$ = new BehaviorSubject<string>('1.0');
+
   constructor(private config: ConfigService) {
-    this.apiVersion = this.config.defaultApiVersion;
+    this._apiVersion = this.config.defaultApiVersion;
+    this.apiVersion$.next(this.config.defaultApiVersion);
   }
 
-  get getApiVersion(): string {
-    return this.apiVersion;
+  get apiVersion(): string {
+    return this._apiVersion;
   }
-  set setApiVersion(version: string) {
-    this.apiVersion = version;
+
+  set apiVersion(version: string) {
+    this._apiVersion = version;
+    this.apiVersion$.next(version);
   }
 }

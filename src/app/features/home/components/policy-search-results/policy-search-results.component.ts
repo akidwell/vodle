@@ -34,73 +34,71 @@ export class PolicySearchResultsComponent implements OnInit {
     searchType: null
   };
 
-@Input('version') version!: string;
+  constructor(private router: Router, private userAuth: UserAuth, public modalService: NgbModal, private policySearchService: PolicySearchService, private navigationService: NavigationService) {
+    this.authSub = this.userAuth.canEditPolicy$.subscribe(
+      (canEdit: boolean) => this.canEdit = canEdit
+    );
+  }
 
-constructor(private router: Router, private userAuth: UserAuth, public modalService: NgbModal, private policySearchService: PolicySearchService, private navigationService: NavigationService) {
-  this.authSub = this.userAuth.canEditPolicy$.subscribe(
-    (canEdit: boolean) => this.canEdit = canEdit
-  );
-}
-
-ngOnInit(): void {
-  this.searchSub = this.policySearchService.searchResults.subscribe({
-    next: results => {
-      let policyNumber = '';
-      for (const x of results.policySearchResponses) {
-        if (x.policyNumber != policyNumber) {
-          x.firstPolicyRow = true;
-          policyNumber = x.policyNumber;
+  ngOnInit(): void {
+    this.searchSub = this.policySearchService.searchResults.subscribe({
+      next: results => {
+        let policyNumber = '';
+        for (const x of results.policySearchResponses) {
+          if (x.policyNumber != policyNumber) {
+            x.firstPolicyRow = true;
+            policyNumber = x.policyNumber;
+          }
         }
-      }
-      //flag for if policy endorsement can be backedout/backedin
-      for (const y of results.policySearchResponses) {
-        if ((y.transactionType != 'Endorsement' && y.transactionType != 'Reinstatement' && y.transactionType != 'Flat Cancel'
+        //flag for if policy endorsement can be backedout/backedin
+        for (const y of results.policySearchResponses) {
+          if ((y.transactionType != 'Endorsement' && y.transactionType != 'Reinstatement' && y.transactionType != 'Flat Cancel'
            && y.transactionType != 'Pro-Rata Cancel' && y.transactionType != 'Short Rate Cancel' && y.transactionType != 'Policy Extension By Endt')) {
-          y.canBackOut = true;
-        } else {
-          y.canBackOut = false;
+            y.canBackOut = true;
+          } else {
+            y.canBackOut = false;
+          }
         }
-      }
-      this.searchResults.policySearchResponses = results.policySearchResponses;
-      this.searchResults.submissionSearchResponses = results.submissionSearchResponses;
-      this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
-      this.collapsed = this.searchResults.searchType != 'policy' && this.version == '2.0';
+        this.searchResults.policySearchResponses = results.policySearchResponses;
+        this.searchResults.submissionSearchResponses = results.submissionSearchResponses;
+        this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
+        this.collapsed = this.searchResults.searchType != 'policy';
 
 
-      if (results.policySearchResponses.length > 0) {
-        this.insuredName = results.policySearchResponses[0].insuredName;
-        const today = new Date();
-        let expirationDate = new Date();
-        if (results.policySearchResponses[0].policyCancelDate != null)
-        {
-          expirationDate = new Date(results.policySearchResponses[0].policyCancelDate);
+        if (results.policySearchResponses.length > 0) {
+          this.insuredName = results.policySearchResponses[0].insuredName;
+          const today = new Date();
+          let expirationDate = new Date();
+          if (results.policySearchResponses[0].policyCancelDate != null)
+          {
+            expirationDate = new Date(results.policySearchResponses[0].policyCancelDate);
+          }
+          else if (results.policySearchResponses[0].policyExtendedDate != null) {
+            expirationDate = new Date(results.policySearchResponses[0].policyExtendedDate);
+          }
+          else {
+            expirationDate = new Date(results.policySearchResponses[0].policyExpirationDate);
+          }
+          if (today <= expirationDate) {
+            this.status = 'InForce';
+          }
+          else if (results.policySearchResponses[0].policyCancelDate != null) {
+            this.status = 'Cancelled';
+          }
+          else {
+            this.status = 'Expired';
+          }
         }
-        else if (results.policySearchResponses[0].policyExtendedDate != null) {
-          expirationDate = new Date(results.policySearchResponses[0].policyExtendedDate);
-        }
-        else {
-          expirationDate = new Date(results.policySearchResponses[0].policyExpirationDate);
-        }
-        if (today <= expirationDate) {
-          this.status = 'InForce';
-        }
-        else if (results.policySearchResponses[0].policyCancelDate != null) {
-          this.status = 'Cancelled';
-        }
-        else {
-          this.status = 'Expired';
-        }
-      }
-    },
+      },
     // error: err => this.errorMessage = err
-  });
-}
+    });
+  }
 
 
-openPolicy(policy: PolicySearchResponses): void {
-  this.navigationService.clearReuse();
-  this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
-}
+  openPolicy(policy: PolicySearchResponses): void {
+    this.navigationService.clearReuse();
+    this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
+  }
   @ViewChild('actionModal') private actionComponent: ActionComponent | undefined;
   @ViewChild('modalPipe') modalPipe: any;
   @ViewChild('modal') directPolicyComponent!: DirectPolicyComponent;

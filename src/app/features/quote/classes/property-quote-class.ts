@@ -327,6 +327,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     this.filteredBuildings = [];
     this.filteredCoverages = [];
   }
+
   filteredBuildings: PropertyQuoteBuildingClass[] = [];
   filteredCoverages: PropertyQuoteBuildingCoverageClass[] = [];
 
