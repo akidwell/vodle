@@ -6,6 +6,7 @@ import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
@@ -19,7 +20,7 @@ export class PropertyImportComponent {
   sequenceNumber = 0;
   importing = false;
 
-  @Input() public quote!: Quote;
+  @Input() public quote!: QuoteClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
   @ViewChild('file') myInputVariable!: ElementRef;

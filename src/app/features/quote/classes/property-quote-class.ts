@@ -7,7 +7,7 @@ import { AdditionalInterestClass } from 'src/app/shared/components/property-addi
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
-import { PropertyBuildingData } from '../models/property-building';
+import { PropertyBuilding } from '../models/property-building';
 import { PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
 import { PropertyDeductibleData } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
@@ -530,7 +530,7 @@ export class PropertyQuoteClass implements PropertyQuote, Validation, QuoteAfter
     const ai: AdditionalInterestData[] = [];
     this.propertyQuoteAdditionalInterestList.forEach(c => ai.push(c.toJSON()));
 
-    const buildings: PropertyBuildingData[] = [];
+    const buildings: PropertyBuilding[] = [];
     this.propertyQuoteBuildingList.forEach(c => buildings.push(c.toJSON()));
 
     return {

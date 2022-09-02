@@ -1,7 +1,8 @@
-import { PropertyQuoteClass } from '../classes/property-quote-class';
-import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from './property-building-coverage';
+// import { PropertyBuildingCoverageData } from './property-building-coverage';
 
-export interface PropertyBuildingData {
+import { PropertyBuildingCoverage } from './property-building-coverage';
+
+export interface PropertyBuilding {
     guid: string;
     propertyQuoteBuildingId: number;
     propertyQuoteId: number;
@@ -30,32 +31,32 @@ export interface PropertyBuildingData {
     wiring: number | null;
     plumbing: number | null;
     hvac: number | null;
-    propertyQuoteBuildingCoverage: PropertyBuildingCoverageData[];
+    propertyQuoteBuildingCoverage: PropertyBuildingCoverage[];
 }
 
-export interface PropertyBuilding extends PropertyBuildingData {
-    isZipLookup: boolean;
-    subjectNumberRequired: boolean;
-    premisesNumberRequired: boolean;
-    buildingNumberRequired: boolean;
-    street1Required: boolean;
-    zipRequired: boolean;
-    cityRequired: boolean;
-    stateRequired: boolean;
-    zipReadonly: boolean;
-    cityReadonly: boolean;
-    stateReadonly: boolean;
-    isImport: boolean;
-    validateAddress: boolean;
-    buildingIndex: string;
-    address: string;
-    isExpanded: boolean;
-    expand: boolean;
-    focus: boolean;
-    propertyQuote: PropertyQuoteClass;
-    isNew: boolean;
-    addCoverage(): void;
-    copyCoverage(coverage: PropertyBuildingCoverage): void;
-    deleteCoverage(coverage: PropertyBuildingCoverage): void;
-    toJSON(): any;
-  }
+// export interface PropertyBuilding extends PropertyBuildingData {
+//   isZipLookup: boolean;
+//   subjectNumberRequired: boolean;
+//   premisesNumberRequired: boolean;
+//   buildingNumberRequired: boolean;
+//   street1Required: boolean;
+//   zipRequired: boolean;
+//   cityRequired: boolean;
+//   stateRequired: boolean;
+//   zipReadonly: boolean;
+//   cityReadonly: boolean;
+//   stateReadonly: boolean;
+//   isImport: boolean;
+//   validateAddress: boolean;
+//   buildingIndex: string;
+//   address: string;
+//   isExpanded: boolean;
+//   expand: boolean;
+//   focus: boolean;
+//   propertyQuote: PropertyQuoteClass;
+//   isNew: boolean;
+//   addCoverage(): void;
+//   copyCoverage(coverage: PropertyBuildingCoverage): void;
+//   deleteCoverage(coverage: PropertyBuildingCoverage): void;
+//   toJSON(): any;
+// }

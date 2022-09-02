@@ -5,7 +5,7 @@ import { Code } from 'src/app/core/models/code';
 import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lookup';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
+import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
 
 @Component({
   selector: 'rsps-property-building-coverage-edit-dialog',
@@ -13,7 +13,7 @@ import { PropertyBuilding } from 'src/app/features/quote/models/property-buildin
   styleUrls: ['./property-building-coverage-edit-dialog.component.css']
 })
 export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
-  buildings: PropertyBuilding[] = [];
+  buildings: PropertyQuoteBuildingClass[] = [];
   filteredCoverage: PropertyCoverageLookup[] = [];
   propertyCoverageId: number | null = null;
   coinsuranceId: number| null = null;
@@ -35,7 +35,7 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
     this.coinsurance$ = this.dropdowns.getPropertyCoinsurance();
   }
 
-  async open(buildings: PropertyBuilding[]): Promise<boolean> {
+  async open(buildings: PropertyQuoteBuildingClass[]): Promise<boolean> {
     this.buildings = buildings;
     this.propertyCoverageId = null;
     this.coinsuranceId = null;

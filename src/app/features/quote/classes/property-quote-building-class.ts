@@ -4,7 +4,7 @@ import { PropertyBuilding } from '../models/property-building';
 import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteClass } from './property-quote-class';
-import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
+import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
@@ -523,7 +523,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
 
   toJSON() {
-    const coverages: PropertyBuildingCoverageData[] = [];
+    const coverages: PropertyBuildingCoverage[] = [];
     this.propertyQuoteBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
 
     return {
