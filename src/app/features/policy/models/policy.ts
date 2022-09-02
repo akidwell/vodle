@@ -217,7 +217,7 @@ export interface ReinsuranceLayerData {
   effectiveDate: Date | null;
   isFaculative: boolean | null;
   maxLayerLimit?: number | null;
-  attachmentPoint?: number | null;
+  attachmentPoint: number | null;
   isNew: boolean;
 }
 
@@ -254,7 +254,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     cededCommissionRat: null,
     effectiveDate: null,
     isFaculative: false,
-    attachmentPoint: undefined,
+    attachmentPoint: null,
     isNew: true
   };
 };

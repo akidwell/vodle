@@ -1,7 +1,7 @@
 import { Code } from 'src/app/core/models/code';
 import { AdditionalInterestData } from './additional-interest';
 import { MortgageeData } from './mortgagee';
-import { PropertyBuilding, PropertyBuildingData } from './property-building';
+import { PropertyBuilding } from './property-building';
 import { PropertyDeductible } from './property-deductible';
 
 export interface PropertyQuoteData {

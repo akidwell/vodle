@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { APIVersionService } from 'src/app/core/services/api-version-service/api-version.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import {
@@ -17,14 +16,11 @@ import { DirectPolicyComponent } from '../direct-policy/direct-policy.component'
 })
 export class HomeComponent implements OnInit {
   directPolicySubscription!: Subscription;
-
-  @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent;
-
   searchSub!: Subscription;
   loadingSub!: Subscription;
   loading = false;
-  version = '';
 
+  @ViewChild('modal') private directPolicyComponent!: DirectPolicyComponent;
   @Input('submissionResults') submissionResults!: SubmissionSearchResponses[];
   @Input('pacerSearchResults') pacerSearchResults: InsuredSearchResponses[] = [];
   @Input('insuredResults') insuredResults: InsuredSearchResponses[] = [];
@@ -38,7 +34,6 @@ export class HomeComponent implements OnInit {
   constructor(
     private navigationService: NavigationService,
     private policySearchService: PolicySearchService,
-    private apiService: APIVersionService,
     public headerPaddingService: HeaderPaddingService
   ) {}
 
@@ -58,7 +53,6 @@ export class HomeComponent implements OnInit {
         this.searchResults.insuredSearchResponses = results.insuredSearchResponses;
         this.searchResults.searchType = results.searchType;
         this.submissionResults = results.submissionSearchResponses;
-        this.version = this.apiService.getApiVersion;
         this.insuredResults = [];
         this.pacerSearchResults = [];
         this.searchResults.insuredSearchResponses.forEach((element) => {
@@ -73,7 +67,7 @@ export class HomeComponent implements OnInit {
   }
 
   checkToDisplayInsuredPanel(): boolean {
-    return (this.version == '2.0' && this.searchResults.insuredSearchResponses.length > 0)
+    return (this.searchResults.insuredSearchResponses.length > 0)
     || (this.searchResults.searchType != null && this.searchResults.submissionSearchResponses.length == 0 && this.searchResults.policySearchResponses.length == 0 && this.searchResults.insuredSearchResponses.length == 0);
   }
 

@@ -6,6 +6,7 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
 import { HistoricRoute } from 'src/app/core/models/historic-route';
+import { APIVersionService } from 'src/app/core/services/api-version-service/api-version.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
@@ -47,6 +48,8 @@ export class SubmissionInformationComponent implements OnInit {
   quoteStatus$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
   private _submission!: SubmissionClass;
+  version = ''; // TEMP for quote create
+  versionSub!: Subscription;
 
   @Input() set submission(value: SubmissionClass) {
     this._submission = value;
@@ -70,7 +73,8 @@ export class SubmissionInformationComponent implements OnInit {
     private navigationService: NavigationService,
     private formatDateService: FormatDateForDisplay,
     public pageDataService: PageDataService,
-    private previousRouteService: PreviousRouteService
+    private previousRouteService: PreviousRouteService,
+    private apiService: APIVersionService
   ) {
     this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
@@ -86,6 +90,16 @@ export class SubmissionInformationComponent implements OnInit {
     this.sicCodes$ = this.dropdowns.getSicCodes().pipe(tap(() => (this.loadingSic = false)));
     this.quoteStatus$ = this.dropdowns.getQuoteStatus();
     this.programs$ = this.dropdowns.getPrograms();
+    // Used for toggling Create Quote - TEMP
+    // this.version = this.apiService.getApiVersion;
+    this.versionSub = this.apiService.apiVersion$.subscribe(version => this.version = version);
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
+    this.addSub?.unsubscribe();
+    this.updateSub?.unsubscribe();
+    this.versionSub?.unsubscribe();
   }
 
   private reload() {
@@ -112,11 +126,6 @@ export class SubmissionInformationComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
-    this.authSub.unsubscribe();
-    this.addSub?.unsubscribe();
-    this.updateSub?.unsubscribe();
-  }
   routeToInsured(insuredCode: number) {
     this.navigationService.clearReuse();
     const subRoute: HistoricRoute = this.createRoute(this.submission);
