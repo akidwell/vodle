@@ -1,16 +1,16 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PropertyBuilding } from '../models/property-building';
-import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { Code } from 'src/app/core/models/code';
 
-export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValidation, QuoteAfterSave {
+export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
@@ -65,7 +65,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   set subjectNumber(value: number | null) {
     this._subjectNumber = value;
     this._isDirty = true;
-    this.propertyQuoteBuildingCoverage.forEach(c => c.subjectNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.subjectNumber = value);
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
   get isDirty(): boolean {
     return this._isDirty ;
@@ -95,16 +99,22 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   set premisesNumber(value: number | null) {
     this._premisesNumber = value;
     this._isDirty = true;
-    this.propertyQuoteBuildingCoverage.forEach(c => c.premisesNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.premisesNumber = value);
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
   get buildingNumber(): number | null {
     return this._buildingNumber;
   }
   set buildingNumber(value: number | null) {
+    // Need to Check with original value
+    this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value;
     this._isDirty = true;
-    this.propertyQuoteBuildingCoverage.forEach(c => c.buildingNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.buildingNumber = value);
   }
+
   get street1(): string | null {
     return this._street1;
   }
@@ -303,7 +313,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
   callChildValidations() {
     this.childArrayValidate(this.propertyQuoteBuildingCoverage);
   }
-  childArrayValidate(children: QuoteValidation[]) {
+  childArrayValidate(children: Validation[]) {
     children.forEach(child => {
       child.validate ? child.validate() : null;
     });
@@ -378,6 +388,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     newCoverage.buildingNumber = this._buildingNumber;
     this.propertyQuoteBuildingCoverage.push(newCoverage);
     this.propertyQuote.filterCoverages();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
 
   copyCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
@@ -393,6 +407,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     coverage.markDirty();
     this.propertyQuoteBuildingCoverage.push(coverage);
     this.propertyQuote.filterCoverages();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
 
   deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
@@ -401,6 +419,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
       this.propertyQuoteBuildingCoverage.splice(index, 1);
     }
     this.propertyQuote.filterCoverages();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
+
   }
 
   subjectNumberRequired = true;
@@ -432,6 +455,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this.propertyQuoteId = 0;
     this.expand = true;
     this.isNew = true;
+    this._isDirty = true;
     this.guid = crypto.randomUUID();
   }
 
@@ -457,10 +481,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     this._canBeSaved = true;
     this._isValid = true;
 
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-    //this._errorMessages = this.invalidList;
     if (this.emptyNumberValueCheck(this._subjectNumber)){
       this._canBeSaved = false;
       this._isValid = false;
@@ -479,32 +499,41 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, QuoteValida
     if (this.emptyStringValueCheck(this._street1)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Street is required');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Street is required');
     }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('City is required');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' City is required');
     }
     if (this.emptyStringValueCheck(this._state)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('State is required');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' State is required');
     }
     if (this.emptyStringValueCheck(this._zip)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Zip is required');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Zip is required');
     }
     if ((this._sprinklered ?? 0) > 100){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Sprinklered% mush be <= 100%');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Sprinklered% mush be <= 100%');
     }
     if (this.isDuplicate){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Building: ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim() + ' is duplicated.');
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated');
+    }
+    if (this._yearBuilt != null && (this._yearBuilt < 1000 || this._yearBuilt > 9999)) {
+      this._isValid = false;
+      this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Year Built is invalid');
+    }
+    if (this.emptyStringValueCheck(this._cspCode)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Csp Code for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?' + ' is required'));
     }
     this._errorMessages = this.invalidList;
   }

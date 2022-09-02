@@ -1,13 +1,13 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { Code } from 'src/app/core/models/code';
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { Department } from '../models/department';
-import { QuoteValidation } from '../models/quote-validation';
 import { ProgramClass } from './program-class';
 import { QuoteClass } from './quote-class';
 import { QuoteValidationClass } from './quote-validation-class';
 
-export class DepartmentClass implements Department, QuoteValidation {
+export class DepartmentClass implements Department, Validation {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;

@@ -206,7 +206,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
   }
 
   public async writeValue(value: any): Promise<void> {
-    if (value !== null) {
+    if (value !== null && value != undefined) {
       this.el.nativeElement.value = this.formatToDisplayCurrency(value?.toString());
     }
     else {

@@ -8,13 +8,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
 import { MortgageeGroupComponent } from './property-mortgagee-group/mortgagee-group.component';
-import { MortgageeComponent } from './property-mortgagee/mortgagee.component';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { CanDeactivateGuard } from 'src/app/features/policy/guards/can-deactivate-guard';
 import { AdditionalInterestModule } from '../property-additional-interest.ts/additional-interest.module';
+import { MortgageeComponent } from './property-mortgagee/mortgagee.component';
 
 
 

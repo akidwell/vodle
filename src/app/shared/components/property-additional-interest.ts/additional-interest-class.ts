@@ -3,9 +3,10 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { AdditionalInterestData } from 'src/app/features/quote/models/additional-interest';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
-import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
+import { BuildingLocationClass } from '../../classes/building-location-class';
+import { Validation } from '../../interfaces/validation';
 
-export class AdditionalInterestClass implements AdditionalInterestData, QuoteValidation, QuoteAfterSave{
+export class AdditionalInterestClass extends BuildingLocationClass implements AdditionalInterestData, Validation, QuoteAfterSave{
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
@@ -13,10 +14,10 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  private _buildingNumber: number | null = null;
+  //private _buildingNumber: number | null = null;
   private _attention: string | null = null;
   private _description: string | null = null;
-  private _premisesNumber: number | null = null;
+  // private _premisesNumber: number | null = null;
   private _interest: string | null = null;
   private _propertyQuoteId: number | null = null;
   private _propertyQuoteAdditionalInterestId: number | null = null;
@@ -26,7 +27,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
   private _city: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
-  private _isAppliedToAll = false;
+  // private _isAppliedToAll = false;
 
   isNew = false;
   guid = '';
@@ -35,6 +36,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
   isZipLookup = false;
 
   constructor(ai?: AdditionalInterestData){
+    super();
     if (ai) {
       this.existingInit(ai);
     } else {
@@ -50,6 +52,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
       this.classValidation();
       this._validateOnLoad = false;
     }
+    this._validationResults.resetValidation();
     this._validationResults.mapValues(this);
     return this._validationResults;
   }
@@ -58,23 +61,51 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this.invalidList = [];
     this._canBeSaved = true;
     this._isValid = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
+    if (this.emptyStringValueCheck(this._interest)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Interest is required');
+    }
+    if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Premises/Building Number is required');
+    }
+    if (this.emptyStringValueCheck(this._street1)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Street is required');
+    }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
+      this.invalidList.push('Additional Interest - City is required');
+    }
+    if (this.emptyStringValueCheck(this._state)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - State is required');
+    }
+    if (this.emptyStringValueCheck(this._zip)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Zip is required');
     }
     this._errorMessages = this.invalidList;
   }
+
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+
   emptyStringValueCheck(value: string | null | undefined) {
     return !value;
   }
   existingInit(ai?: AdditionalInterestData){
-    this._buildingNumber = ai?.buildingNumber || null;
+    this.buildingNumber = ai?.buildingNumber || null;
     this._attention = ai?.attention || null;
     this._description = ai?.description || null;
-    this._premisesNumber = ai?.premisesNumber || null;
+    this.premisesNumber = ai?.premisesNumber || null;
     this._interest = ai?.interest || null;
     this._propertyQuoteId = ai?.propertyQuoteId || null;
     this._propertyQuoteAdditionalInterestId = ai?.propertyQuoteAdditionalInterestId || null;
@@ -84,7 +115,7 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this._city = ai?.city || null;
     this._zip = ai?.zip || null;
     this._countryCode = ai?.countryCode || null;
-    this._isAppliedToAll = ai?.isAppliedToAll || false;
+    this.isAppliedToAll = ai?.isAppliedToAll || false;
   }
 
   newInit() {
@@ -104,49 +135,49 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     return this._errorMessages;
   }
 
-  get buildingNumber() : number | null {
-    return this._buildingNumber;
-  }
-  set buildingNumber(value: number | null) {
-    this._buildingNumber = value;
-    this._isDirty = true;
-  }
+  // get buildingNumber() : number | null {
+  //   return this._buildingNumber;
+  // }
+  // set buildingNumber(value: number | null) {
+  //   this._buildingNumber = value;
+  //   this._isDirty = true;
+  // }
 
-  get building() : string | null {
-    if (this._isAppliedToAll) {
-      return 'All';
-    }
-    else if (this._premisesNumber == null || this._buildingNumber == null) {
-      return null;
-    }
-    return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
-  }
+  // get building() : string | null {
+  //   if (this._isAppliedToAll) {
+  //     return 'All';
+  //   }
+  //   else if (this._premisesNumber == null || this._buildingNumber == null) {
+  //     return null;
+  //   }
+  //   return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
+  // }
 
-  set building(value: string | null) {
-    if (value == 'All') {
-      this._isAppliedToAll = true;
-      this._premisesNumber = null;
-      this._buildingNumber = null;
-      this._isDirty = true;
-    }
-    else {
-      const parse = value?.split('-');
-      if (parse?.length == 2) {
-        const premises = parse[0] ?? '';
-        const building = parse[1] ?? '';
-        this._isAppliedToAll = false;
-        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
-        this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
-        this._isDirty = true;
-      }
-      else {
-        this._isAppliedToAll = false;
-        this._premisesNumber = null;
-        this._buildingNumber = null;
-        this._isDirty = true;
-      }
-    }
-  }
+  // set building(value: string | null) {
+  //   if (value == 'All') {
+  //     this._isAppliedToAll = true;
+  //     this._premisesNumber = null;
+  //     this._buildingNumber = null;
+  //     this._isDirty = true;
+  //   }
+  //   else {
+  //     const parse = value?.split('-');
+  //     if (parse?.length == 2) {
+  //       const premises = parse[0] ?? '';
+  //       const building = parse[1] ?? '';
+  //       this._isAppliedToAll = false;
+  //       this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
+  //       this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
+  //       this._isDirty = true;
+  //     }
+  //     else {
+  //       this._isAppliedToAll = false;
+  //       this._premisesNumber = null;
+  //       this._buildingNumber = null;
+  //       this._isDirty = true;
+  //     }
+  //   }
+  // }
 
 
   get attention() : string | null {
@@ -157,13 +188,13 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this._isDirty = true;
   }
 
-  get isAppliedToAll() : boolean {
-    return this._isAppliedToAll;
-  }
-  set isAppliedToAll(value: boolean) {
-    this._isAppliedToAll = value;
-    this._isDirty = true;
-  }
+  // get isAppliedToAll() : boolean {
+  //   return this._isAppliedToAll;
+  // }
+  // set isAppliedToAll(value: boolean) {
+  //   this._isAppliedToAll = value;
+  //   this._isDirty = true;
+  // }
 
   get description() : string | null {
     return this._description;
@@ -173,13 +204,13 @@ export class AdditionalInterestClass implements AdditionalInterestData, QuoteVal
     this._isDirty = true;
   }
 
-  get premisesNumber() : number | null {
-    return this._premisesNumber;
-  }
-  set premisesNumber(value: number | null) {
-    this._premisesNumber= value;
-    this._isDirty = true;
-  }
+  // get premisesNumber() : number | null {
+  //   return this._premisesNumber;
+  // }
+  // set premisesNumber(value: number | null) {
+  //   this._premisesNumber= value;
+  //   this._isDirty = true;
+  // }
 
   get propertyQuoteId() : number | null {
     return this._propertyQuoteId;

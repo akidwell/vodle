@@ -10,23 +10,17 @@
       <div class="card-header" (click)="collapse.toggle()">
         Submission Information <span *ngIf="submission.submissionNumber > 0"> - {{ submission.submissionNumber }}</span>
           <span *ngIf="submission.submissionNumber > 0"><span *ngIf="quoteDescription"> - {{quoteDescription}}</span>
-          <!-- <span *ngIf="submission.quoteActivity.length == 0"> - <a (click)="routeToNewQuote()"  [routerLink]="[]" >Add New Quote</a></span>  -->
+          <span *ngIf="version == '2.0' && submission.quoteActivity.length == 0"> - <a (click)="routeToNewQuote()"  [routerLink]="[]" >Add New Quote</a></span> 
         </span>
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="submissionCollapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!submissionCollapsed"></fa-icon>
       </div>
       <div #collapse="ngbCollapse" [(ngbCollapse)]="submissionCollapsed">
         <div class="card-body">
-          <!-- <div class="row"> -->
-          <!-- <div class="panel panel-bordered"> -->
           <rsps-submission-header #submissionHeader [submission]="submission"></rsps-submission-header>
-          <!-- </div> -->
-          <!-- </div> -->
         </div>
         <div class="card-body top-bordered">
         <div class="row">
-          <!-- <div class="panel"> -->
-
             <div class="row">
               <div *ngIf="submission.insured != null" class="col-lg-4">
                 <div class="col-lg-12">
@@ -59,9 +53,8 @@
                   <div class="col-lg-6">
                     <label for="underwriter" title="Underwriter">Underwriter</label>
                     <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key"
-                      [clearable]="false" [readonly]="
-                        !canEditSubmission || submission.underwriterReadonly
-                      " name="underwriter" [required]="canEditSubmission && submission.underwriterRequired"
+                      [clearable]="false" 
+                      name="underwriter" [required]="canEditSubmission && submission.underwriterRequired"
                       [(ngModel)]="submission.underwriter" #underwriter="ngModel">
                     </ng-select>
                   </div>
@@ -81,8 +74,6 @@
         </div>
         <div class="card-body top-bordered">
         <div class="row">
-          <!-- <div class="panel"> -->
-            <!-- <div class="row"> -->
             <div class="col-lg-4">
               <label for="sicCode" title="SIC Code">SIC Code</label>
               <ng-select id="sicCode" [items]="sicCodes$ | async" bindLabel="description" bindValue="code"
@@ -111,9 +102,7 @@
                 </ng-template>
               </ng-select>
             </div>
-            <!-- </div> -->
           </div>
-          <!-- </div> -->
         </div>
       </div>
     </div>

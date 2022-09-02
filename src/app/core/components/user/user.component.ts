@@ -75,7 +75,7 @@ export class UserComponent {
         this.historySize = size;
       }
     );
-    this.activeAPIVersion = this.apiService.getApiVersion;
+    this.activeAPIVersion = this.apiService.apiVersion;
     this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
   ngOnDestroy() {
@@ -101,7 +101,7 @@ export class UserComponent {
     }
   }
   changeApiVersion(){
-    this.apiService.setApiVersion = this.activeAPIVersion;
+    this.apiService.apiVersion = this.activeAPIVersion;
   }
   async clearHistory() {
     const confirm = await this.confirmationDialogService.open('Confirmation', 'Are you sure you want to clear all Policies in your history? Have to refresh to get changes.');

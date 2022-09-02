@@ -1,23 +1,23 @@
 <div class="panel">
     <div class="row">
         <div class="col-lg-3">
-            <label for="totalAccountLimit" class="panel-header" title="totalAccountLimit">Total Acct Limit Amt</label>
+            <label for="totalAccountLimit" class="form-label"  title="totalAccountLimit">Total Acct Limit Amt</label>
             <input type="text" class="form-control right"  id="totalAccountLimit" maxlength="40" [readonly]="true"
                 [value]="limitTotal | currency: 'USD' : 'symbol':'1.0-0'">
         </div>
         <div class="col-lg-3">
-            <label for="largestAmt" class="panel-header" title="largestAmt">Largest Premises TIV</label>
+            <label for="largestAmt" class="form-label"  title="largestAmt">Largest Premises TIV</label>
             <input type="text" class="form-control right"  id="largestAmt" maxlength="40" [readonly]="true"
                 [value]="largestTiv | currency: 'USD' : 'symbol':'1.0-0'">
         </div>
         <div class="col-lg-3">
-            <label for="lawLimits" class="panel-header" title="lawLimits">Bldg Ord Law Limits</label>
+            <label for="lawLimits" class="form-label"  title="lawLimits">Bldg Ord Law Limits</label>
             <input type="text" class="form-control right" id="lawLimits" maxlength="40" [readonly]="true"
             [value]="lawLimits | currency: 'USD' : 'symbol':'1.0-0'">
             
         </div>
         <div class="col-lg-3">
-            <label for="largestExposure" class="panel-header" title="largestExposure">Largest Exposure</label>
+            <label for="largestExposure" class="form-label"  title="largestExposure">Largest Exposure</label>
             <input type="text" class="form-control right" id="largestExposure" maxlength="40" [readonly]="true"
             [value]="largestExposure | currency: 'USD' : 'symbol':'1.0-0'">
             
@@ -26,17 +26,17 @@
     <br>
     <div class="row" style="padding: 1px" *ngIf="subjectAmount.size > 0">
         <div class="col-lg-2">
-            <label for="subject" class="subj" title="subject">Subj #:</label>
+            <label for="subject" class="form-label"  title="subject">Subj #</label>
         </div>
         <div class="col-lg-1"> </div>
         <div class="col-lg-4">
-            <label for="subjectBreakdown" class="panel-header" title="subjectBreakdown">Subj Amt Breakdown:</label>
+            <label for="subjectBreakdown" class="form-label"  title="subjectBreakdown">Subj Amt Breakdown</label>
         </div>
     </div>
-    <div *ngFor="let sub of subjects$ | async">
+ <div *ngFor="let sub of subjects$ | async">
         <div class="row" style="padding: 1px">
             <div class="col-lg-2">
-                <input type="text" class="form-control text-center" id="subject" maxlength="40" [readonly]="true" style="width:50%; margin-left:30%"
+                <input type="text" class="form-control right" id="subject" maxlength="40" [readonly]="true" 
                     [value]="sub.subject">
             </div>
             <div class="col-lg-1"> </div>
@@ -50,4 +50,9 @@
         <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
             [rotate]="true" [boundaryLinks]="true">
         </ngb-pagination>
-    </div>
+        <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">
+            <option [ngValue]="5">5 items per page</option>
+            <option [ngValue]="10">10 items per page</option>
+            <option [ngValue]="15">15 items per page</option>
+        </select>
+    </div> 

@@ -1,11 +1,11 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteRate } from '../models/quote-rate';
-import { QuoteValidation } from '../models/quote-validation';
 import { QuoteValidationClass } from './quote-validation-class';
 
-export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSave {
+export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   quoteId: number | null = null;
   sequenceNo: number | null = 0;
   classCode: number | null = 0;
@@ -96,7 +96,7 @@ export class QuoteRateClass implements QuoteRate, QuoteValidation, QuoteAfterSav
     let invalid = false;
     if ((this.premium ?? 0) == 0) {
       invalid = true;
-      this.invalidList.push('Amount is required');
+      this.invalidList.push('Premium is required');
     }
     return invalid;
   }

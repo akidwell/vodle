@@ -10,11 +10,11 @@
 <div class="content-fluid" style="padding-top:60px !important;">
   <div class="row">
     <div>
-      <rsps-policy-search-results *ngIf="(searchResults.policySearchResponses.length > 0) || (version == '1.0')"
-        [searchResults]="searchResults" [version]="version"></rsps-policy-search-results>
+      <rsps-policy-search-results *ngIf="(searchResults.policySearchResponses.length > 0)"
+        [searchResults]="searchResults"></rsps-policy-search-results>
     </div>
     <div [ngClass]="searchResults.searchType == 'submission' ? 'col-12 order-first !important': 'col-12'">
-      <shared-rsps-submission-activity *ngIf="version == '2.0' && searchResults.submissionSearchResponses.length > 0"
+      <shared-rsps-submission-activity *ngIf="searchResults.submissionSearchResponses.length > 0"
         [submissionResults]='submissionResults'></shared-rsps-submission-activity>
     </div>
     <div [ngClass]="searchResults.searchType == 'insured' ? 'col-12 order-first !important': 'col-12'">

@@ -3,10 +3,6 @@
     Additional Interest
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
-    <mat-slide-toggle style="float: right;padding-right: 15px;" click-stop-propagation *ngIf="aiData.length > 1"
-      [color]="color" [(ngModel)]="canDrag" (change)="toggleDragDrop()">
-      Sort: {{canDrag ? 'On' : 'Off'}}
-    </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
     <div class="card-body" *ngIf="aiData.length > 0">
@@ -18,15 +14,13 @@
           <label for="address">Address:</label>
         </div>
       </div>
-      <div cdkDropList class="drag-list" [cdkDropListDisabled]="!canDrag" (cdkDropListDropped)="drop($event)">
         <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-          <div class="drag-block" [ngClass]="dragDropClass" cdkDrag  *ngFor="let item of aiData; let i = index">
+          <div *ngFor="let item of aiData; let i = index">
             <rsps-additional-interest (copyExisitingAdditionalInterest)=copyExisitingAdditionalInterest($event)
               (deleteExistingAdditionalInterest)=deleteExistingAdditionalInterest($event) [ai]=aiData [aiData]=item>
             </rsps-additional-interest>
           </div>
         </div>
-      </div>
     </div>
   </div>
   <div class="card-footer">
