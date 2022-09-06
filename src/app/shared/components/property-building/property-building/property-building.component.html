@@ -125,7 +125,7 @@
                 <div class="col-lg-5">
                     <label for="cspCode" class="form-label" title=">CSP Code">CSP Code</label>
                     <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="code"
-                        name="cspCode" click-stop-propagation [readonly]="!canEdit" [clearable]="false"
+                        name="cspCode" click-stop-propagation [readonly]="!canEdit" [clearable]="false" [required]="canEdit"
                         [(ngModel)]="building.cspCode" [searchFn]="dropDownSearch" #cspCode="ngModel" [virtualScroll]="true">
                         <ng-template ng-label-tmp let-item="item">
                             {{item.code}} - {{item.description}}

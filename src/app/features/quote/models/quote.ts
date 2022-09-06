@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
+import { QuoteLineItem } from './quote-line-item';
 import { QuoteRate } from './quote-rate';
 
 export interface Quote {
@@ -108,10 +109,12 @@ export interface Quote {
   displayCommissionRate: number;
   supportedStatus: string | null;
   quoteRates: QuoteRate[];
+  quoteLineItems: QuoteLineItem[];
   propertyQuote: PropertyQuote | null;
   importWarnings: string[];
   importErrors: string[];
   naicsCode: string | null;
   sicCode: string | null;
   classCode: number | null;
+  riskState: string | null;
 }

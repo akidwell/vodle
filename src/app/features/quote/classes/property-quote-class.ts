@@ -75,10 +75,45 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     );
     return total;
   }
+  private _subjectAmounts: Map<any,any> = new Map();
 
-  get subjectAmount(): Map<any,any> {
+  get subjectAmounts(): Map<any,any> {
+    return this._subjectAmounts;
+  }
+  set subjectAmounts(value: Map<any,any>) {
+    this._subjectAmounts = value;
+  }
+
+  private _largestPremTiv = 0;
+
+  get largestPremTiv():number {
+    return this._largestPremTiv;
+  }
+  set largestPremTiv(value:number) {
+    this._largestPremTiv = value;
+  }
+
+  private _largestExposure = 0;
+
+  get largestExposure():number {
+    return this._largestExposure;
+  }
+  set largestExposure(value:number) {
+    this._largestExposure = value;
+  }
+
+  private _lawLimits = 0;
+
+  get lawLimits():number {
+    return this._lawLimits;
+  }
+  set lawLimits(value:number) {
+    this._lawLimits = value;
+  }
+
+  calculateSubjectAmounts() {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
-
+    console.log(this);
     this.propertyQuoteBuildingList.map((element) => {
       element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
@@ -90,18 +125,19 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     const res = subjectAmounts.reduce((a, b) =>
       a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
 
+    const sortedList = new Map([...res].sort((a, b) => b[1] - a[1]));
 
-    return res;
+    this._subjectAmounts = sortedList;
   }
 
   get buildingCount(): number {
     return this.propertyQuoteBuildingList?.length ?? 0;
   }
-  get largestTiv(): number {
+  calculateLargestPremTiv(){
     let largest = 0;
     this.propertyQuoteBuildingList.map(x => {
       if (x.propertyQuoteBuildingCoverage.length == 0){
-        return 0;
+        this._largestPremTiv = 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
@@ -118,19 +154,19 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
           a.set(b.subject, (a.get(b.subject) || 0) + Number(b.limit)), new Map);
 
         largest = Math.max(...res.values());
-        return largest;
+        this._largestPremTiv = largest;
       }
     });
-    return largest;
+    this._largestPremTiv = largest;
   }
 
-  get lawLimits(): number {
-    return 0;
+  calculateLawLimits(){
+    this._lawLimits = 0;
   }
 
-  get largestExposure(): number {
+  calculateLargestExposure(){
     const lawLimit = this.lawLimits;
-    const largestPremTiv = this.largestTiv;
+    const largestPremTiv = this.largestPremTiv;
     const exposure = lawLimit + largestPremTiv;
     if (this._lastLargestExposure != exposure){
       if(this._lastLargestExposure != 0){
@@ -138,7 +174,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
       this._lastLargestExposure = exposure;
     }
-    return exposure;
+    this._largestExposure = exposure;
   }
 
   get coverageCount(): number {
@@ -226,11 +262,17 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   addBuilding(building: PropertyQuoteBuildingClass) {
+
     this.propertyQuoteBuildingList.push(building);
     // this.propertyQuoteBuilding.forEach(c => c.focus = false);
+
     building.propertyQuote = this;
     building.focus = true;
     this.filterBuildings();
+    this.calculateSubjectAmounts();
+    this.calculateLargestPremTiv();
+    this.calculateLargestExposure();
+    this.calculateLawLimits();
   }
 
   deleteBuilding(building: PropertyQuoteBuildingClass) {
@@ -240,9 +282,17 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     }
     if (building.propertyQuoteBuildingCoverage.length > 0) {
       this.filterBuildingsCoverages();
+      this.calculateSubjectAmounts();
+      this.calculateLargestPremTiv();
+      this.calculateLargestExposure();
+      this.calculateLawLimits();
     }
     else {
       this.filterBuildings();
+      this.calculateSubjectAmounts();
+      this.calculateLargestPremTiv();
+      this.calculateLargestExposure();
+      this.calculateLawLimits();
     }
   }
 
@@ -251,18 +301,21 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
+        c.markDirty();
       }
     });
     this.propertyQuoteMortgageeList.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
+        c.markDirty();
       }
     });
     this.propertyQuoteAdditionalInterestList.map(c => {
       if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
         c.premisesNumber = null;
         c.buildingNumber = null;
+        c.markDirty();
       }
     });
   }
@@ -276,6 +329,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.filteredBuildings = [];
     this.filteredCoverages = [];
   }
+
   filteredBuildings: PropertyQuoteBuildingClass[] = [];
   filteredCoverages: PropertyQuoteBuildingCoverageClass[] = [];
 
@@ -350,6 +404,10 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.filterBuildingsCoverages();
     this.setReadonlyFields();
     this.setRequiredFields();
+    this.calculateSubjectAmounts();
+    this.calculateLargestPremTiv();
+    this.calculateLargestExposure();
+    this.calculateLawLimits();
   }
   validate(){
     console.log('validate property quote');
@@ -403,6 +461,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.propertyQuoteMortgageeList);
     this.cleanChildArray(this.propertyQuoteAdditionalInterestList);
     this.cleanChildArray(this.propertyQuoteBuildingList);
+    this.cleanChildArray(this.quoteLineItems);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -439,6 +498,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     if (this.quoteRatesValidation){
       childValidations.push(this.quoteRatesValidation);
     }
+    if (this.quoteLineItemsValidation){
+      childValidations.push(this.quoteLineItemsValidation);
+    }
     if (childValidations.length > 0) {
       this.validationResults.validateChildValidations(childValidations);
     }
@@ -460,7 +522,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     console.log(this.largestExposure);
     if (this.largestExposure > 15000000){
       invalid = true;
-      this.invalidList.push('Largest Exposure + Building Law Limits is greater than 15,000,000 is required');
+      this.invalidList.push('Largest Premises TIV + Building Law Limits is greater than 15,000,000');
     }
     return invalid;
   }

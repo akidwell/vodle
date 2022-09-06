@@ -3,7 +3,7 @@
 <rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission"
     [buildings]="quote.propertyQuoteBuildingList" [largestExposure]="quote.largestExposure"
     [lawLimits]="quote.lawLimits" [limitTotal]="quote.limitTotal"
-    [largestTiv]="quote.largestTiv" [subjectAmount]="quote.subjectAmount">
+    [largestTiv]="quote.largestPremTiv" [subjectAmount]="quote.subjectAmounts">
 </rsps-quote-property-detail>
 <rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote"
     [buildings]="quote.filteredBuildings" [canEdit]="canEditSubmission"

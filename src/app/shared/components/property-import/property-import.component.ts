@@ -37,6 +37,7 @@ export class PropertyImportComponent {
   async import(e: any) {
     const file = e.target.files[0];
     this.myInputVariable.nativeElement.value = '';
+    this.quote.classCode = null;
     if (file !== null) {
       if (this.classType == ClassTypeEnum.Quote) {
         const quoteId = this.route.parent?.parent?.snapshot.paramMap.get('seq');

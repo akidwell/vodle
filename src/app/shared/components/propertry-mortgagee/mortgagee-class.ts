@@ -69,15 +69,10 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
       this._isValid = false;
       this.invalidList.push('Mortgagee - Mortgagee Holder is required');
     }
-    if (this.emptyNumberValueCheck(this.premisesNumber)){
+    if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Mortgagee - Premises Number is required');
-    }
-    if (this.emptyNumberValueCheck(this.buildingNumber)){
-      this._canBeSaved = false;
-      this._isValid = false;
-      this.invalidList.push('Mortgagee -Building Number is required');
+      this.invalidList.push('Premises/Building Number is required');
     }
     if (this.emptyStringValueCheck(this._street1)){
       this._canBeSaved = false;

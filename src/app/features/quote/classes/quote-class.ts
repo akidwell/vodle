@@ -9,8 +9,10 @@ import { QuoteValidationClass } from './quote-validation-class';
 import { QuoteRate } from '../models/quote-rate';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { PropertyQuote } from '../models/property-quote';
+import { QuoteLineItemClass } from './quote-line-item-class';
+import { QuoteLineItem } from '../models/quote-line-item';
 import { ValidationClass } from 'src/app/shared/classes/validation-class';
+import { PropertyQuoteClass } from './property-quote-class';
 
 export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -135,7 +137,10 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   quoteRates: QuoteRateClass[] = [];
   quoteRatesValidation: QuoteValidationClass | null = null;
 
-  propertyQuote!: PropertyQuote;
+  quoteLineItems: QuoteLineItemClass[] = [];
+  quoteLineItemsValidation: QuoteValidationClass | null = null;
+
+  propertyQuote!: PropertyQuoteClass;
 
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
@@ -165,6 +170,11 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   set classCode(value: number | null) {
     this._classCode = value == 0 ? null : value;
     this._isDirty = true;
+  }
+  private _riskState : string | null = null;
+
+  get riskState() : string | null {
+    return this._riskState;
   }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
@@ -205,8 +215,13 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       rates.push(new QuoteRateClass(element));
     });
     this.quoteRates = rates;
-    //this.propertyQuote = new PropertyQuoteClass(quote);
+    const lineItems: QuoteLineItemClass[] = [];
+    quote.quoteLineItems?.forEach(element => {
+      lineItems.push(new QuoteLineItemClass(element));
+    });
+    this.quoteLineItems = lineItems;
     this._classCode = quote.quoteRates[0].classCode || null;
+    this._riskState = quote.riskState;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -268,6 +283,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
 
   validateQuoteChildren() {
     this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
+    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteLineItems);
+
     //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
     //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   }
@@ -343,6 +360,9 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   baseToJSON(): Quote {
     const rates: QuoteRate[] = [];
     this.quoteRates.forEach(c => rates.push(c.toJSON(Number(this.classCode))));
+    const lineItems: QuoteLineItem[] = [];
+    this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
+    console.log(lineItems);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -368,7 +388,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       autoCalcMiscPremium: this.autoCalcMiscPremium,
       propertyQuote: null,
       quoteRates: rates,
-
+      quoteLineItems: lineItems,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,
@@ -441,6 +461,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       retroDate: this.retroDate,
       riskSelectionComments: this.riskSelectionComments,
       sicCode: this.sicCode,
+      riskState: this.riskState,
       //sinceInception: this.sinceInception,
       //specPlusEndorsement: this.specPlusEndorsement,
       submissionGroupsStatusId: this.submissionGroupsStatusId,

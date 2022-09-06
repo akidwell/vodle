@@ -2,7 +2,7 @@ export interface PropertyDeductible {
     propertyQuoteDeductibleId: number | null;
     propertyQuoteId: number | null;
     propertyDeductibleId: number | null;
-    isAppliedToAll: boolean | null;
+    isAppliedToAll: boolean;
     premisesNumber: number | null;
     buildingNumber: number | null;
     sequence: number | null;

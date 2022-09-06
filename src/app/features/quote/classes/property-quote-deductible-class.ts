@@ -4,9 +4,9 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { PropertyDeductible } from '../models/property-deductible';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteValidationClass } from './quote-validation-class';
+import { BuildingLocationClass } from 'src/app/shared/classes/building-location-class';
 
-
-export class PropertyQuoteDeductibleClass implements PropertyDeductible, Validation, QuoteAfterSave {
+export class PropertyQuoteDeductibleClass extends BuildingLocationClass implements PropertyDeductible, Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
@@ -23,9 +23,6 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, Validat
   isSubjectToMinLocked = false;
 
   private _propertyDeductibleId: number | null = null;
-  private _isAppliedToAll: boolean | null = null;
-  private _premisesNumber: number | null = null;
-  private _buildingNumber: number | null = null;
   private _deductibleType: string | null = null;
   private _amount: number | null = null;
   private _subjectToMinPercent: number | null = null;
@@ -114,61 +111,6 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, Validat
     }
     this._isDirty = true;
   }
-  get isAppliedToAll() : boolean | null {
-    return this._isAppliedToAll;
-  }
-  set isAppliedToAll(value: boolean | null) {
-    this._isAppliedToAll = value;
-    this._isDirty = true;
-  }
-  get premisesNumber() : number | null {
-    return this._premisesNumber;
-  }
-  set premisesNumber(value: number | null) {
-    this._premisesNumber = value;
-    this._isDirty = true;
-  }
-  get buildingNumber() : number | null {
-    return this._buildingNumber;
-  }
-  set buildingNumber(value: number | null) {
-    this._buildingNumber = value;
-    this._isDirty = true;
-  }
-  get building() : string | null {
-    if (this._isAppliedToAll) {
-      return 'All';
-    }
-    else if (this._premisesNumber == null || this._buildingNumber == null) {
-      return null;
-    }
-    return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
-  }
-  set building(value: string | null) {
-    if (value == 'All') {
-      this._isAppliedToAll = true;
-      this._premisesNumber = null;
-      this._buildingNumber = null;
-      this._isDirty = true;
-    }
-    else {
-      const parse = value?.split('-');
-      if (parse?.length == 2) {
-        const premises = parse[0] ?? '';
-        const building = parse[1] ?? '';
-        this._isAppliedToAll = false;
-        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
-        this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
-        this._isDirty = true;
-      }
-      else {
-        this._isAppliedToAll = false;
-        this._premisesNumber = null;
-        this._buildingNumber = null;
-        this._isDirty = true;
-      }
-    }
-  }
 
   get isDirty() : boolean {
     return this._isDirty;
@@ -194,6 +136,7 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, Validat
   }
 
   constructor(deductible?: PropertyDeductible) {
+    super();
     if (deductible) {
       this.existingInit(deductible);
     } else {
@@ -312,9 +255,9 @@ export class PropertyQuoteDeductibleClass implements PropertyDeductible, Validat
     this.propertyQuoteDeductibleId = deductible.propertyQuoteDeductibleId;
     this.propertyQuoteId = deductible.propertyQuoteId;
     this.sequence = deductible.sequence;
-    this._isAppliedToAll = deductible.isAppliedToAll;
-    this._premisesNumber = deductible.premisesNumber;
-    this._buildingNumber = deductible.buildingNumber;
+    this.isAppliedToAll = deductible.isAppliedToAll;
+    this.premisesNumber = deductible.premisesNumber;
+    this.buildingNumber = deductible.buildingNumber;
     this._propertyDeductibleId = deductible.propertyDeductibleId;
     this._deductibleType = deductible.deductibleType;
     this._amount = deductible.amount;

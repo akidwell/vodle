@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { APIVersionService } from 'src/app/core/services/api-version-service/api-version.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
@@ -23,6 +24,8 @@ export class SubmissionInfoBaseComponent implements OnInit {
   faAngleUp = faAngleUp;
   qaCollapsed = false;
   seCollapsed = true;
+  version = ''; // TEMP for quote create
+  versionSub!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +34,8 @@ export class SubmissionInfoBaseComponent implements OnInit {
     public formatDateService: FormatDateForDisplay,
     public pageDataService: PageDataService,
     private navigationService: NavigationService,
-    private historyService: HistoryService
+    private historyService: HistoryService,
+    private apiService: APIVersionService
   ) {
     this.formatDateForDisplay = formatDateService;
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
@@ -47,8 +51,14 @@ export class SubmissionInfoBaseComponent implements OnInit {
       }
       console.log(this.submission);
     });
+    // Used for toggling Create Quote - TEMP
+    this.versionSub = this.apiService.apiVersion$.subscribe(version => this.version = version);
   }
 
+  ngOnDestroy() {
+    this.versionSub?.unsubscribe();
+  }
+ 
   setupQuoteAcitivityTable() {
     this.qaCollapsed = this.submission.quoteActivity.length == 0 ? true : false;
     let group = 0;

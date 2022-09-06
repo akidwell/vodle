@@ -2,7 +2,7 @@ import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/
 import { ActivatedRoute } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { Endorsement, newPolicyLayer, newReinsuranceLayer, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
+import { Endorsement, newPolicyLayer, newReinsuranceLayer, PolicyInformation, PolicyLayerData } from '../../models/policy';
 import { PolicyLayerGroupComponent } from '../reinsurance-policy-layer-group/policy-layer-group.component';
 import { PolicyLayerHeaderComponent } from '../reinsurance-policy-layer-header/policy-layer-header.component';
 import { ReinsuranceLookup } from '../../services/reinsurance-lookup/reinsurance-lookup';
@@ -17,15 +17,15 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
 export class ReinsuranceComponent implements OnInit {
 
   policyLayerData!: PolicyLayerData[];
-  canEditPolicy: boolean = false;
+  canEditPolicy = false;
   authSub: Subscription;
   updateSub!: Subscription;
   endorsementNumber!: number;
   policyId!: number;
-  showInvalid: boolean = false;
-  invalidMessage: string = "";
+  showInvalid = false;
+  invalidMessage = '';
   statusSub!: Subscription;
-  canEditEndorsement: boolean = false;
+  canEditEndorsement = false;
   authLoadedSub!: Subscription;
   reinsuranceSub!: Subscription;
   reinsuranceCodes: ReinsuranceLookup[] = [];
@@ -33,7 +33,7 @@ export class ReinsuranceComponent implements OnInit {
   policyInfo!: PolicyInformation;
   endorsement!: Endorsement;
   reinsuranceRefreshedSub!: Subscription;
-  loading: boolean = true;
+  loading = true;
 
   @ViewChild(PolicyLayerGroupComponent) policyLayerGroup!: PolicyLayerGroupComponent;
   @ViewChild(PolicyLayerHeaderComponent) headerComp!: PolicyLayerHeaderComponent;
@@ -71,7 +71,7 @@ export class ReinsuranceComponent implements OnInit {
         }
         // This prevent the add button being visible will still loading, can be slow whne first opening
         this.loading = false;
-      });  
+      });
     });
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
@@ -80,8 +80,8 @@ export class ReinsuranceComponent implements OnInit {
     });
 
     this.reinsuranceRefreshedSub = this.reinsuranceLookupService.refreshed$.subscribe(async () => {
-       await this.populateReinsuranceCodes();
-       await this.populateReinsuranceFacCodes();
+      await this.populateReinsuranceCodes();
+      await this.populateReinsuranceFacCodes();
     });
   }
 
@@ -111,7 +111,7 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
 
   addPolicyLayer(): void {
@@ -122,7 +122,7 @@ export class ReinsuranceComponent implements OnInit {
 
   async addReinsurance(policyLayerData: PolicyLayerData) {
     const reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, policyLayerData.policyLayerNo, this.getNextReinsuranceLayerSequence(policyLayerData));
-    policyLayerData.reinsuranceData.push(reinsuranceLayer)
+    policyLayerData.reinsuranceData.push(reinsuranceLayer);
 
     // For first layer copy attachment point and limit
     if (reinsuranceLayer.policyLayerNo == 1 && reinsuranceLayer.reinsLayerNo == 1) {
@@ -152,7 +152,7 @@ export class ReinsuranceComponent implements OnInit {
       return 1;
     }
     else {
-      let policyLayerNo = Math.max(...this.policyLayerData.map(o => o.policyLayerNo)) + 1;
+      const policyLayerNo = Math.max(...this.policyLayerData.map(o => o.policyLayerNo)) + 1;
       return policyLayerNo;
     }
   }
@@ -162,7 +162,7 @@ export class ReinsuranceComponent implements OnInit {
       return 1;
     }
     else {
-      let reinsuranceLayerNo = Math.max(...policyLayerData.reinsuranceData.map(o => o.reinsLayerNo)) + 1;
+      const reinsuranceLayerNo = Math.max(...policyLayerData.reinsuranceData.map(o => o.reinsLayerNo)) + 1;
       return reinsuranceLayerNo;
     }
   }
@@ -179,18 +179,18 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   isValid(): boolean {
-    let totalPrem: number = 0;
-    let totalLimit: number = 0;
+    let totalPrem = 0;
+    let totalLimit = 0;
     let subAttachmentpoints = false;
     let insuringAgreements = false;
     if (this.canEdit) {
-      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium ?? 0 }) });
-      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit ?? 0 }) });
-      subAttachmentpoints = this.checkSubAttachmentPoints()
-      insuringAgreements = this.checkAgreementLimits()
+      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalPrem += layer.reinsCededPremium ?? 0; }); });
+      this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { totalLimit += layer.reinsLimit ?? 0; }); });
+      subAttachmentpoints = this.checkSubAttachmentPoints();
+      insuringAgreements = this.checkAgreementLimits();
 
       if (this.components != null) {
-        for (let child of this.components) {
+        for (const child of this.components) {
           if (!child.isValid()) {
             this.endorsementStatusService.reinsuranceValidated = false;
             return false;
@@ -209,7 +209,7 @@ export class ReinsuranceComponent implements OnInit {
 
   isDirty(): boolean {
     if (this.canEdit && this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.isDirty()) {
           return true;
         }
@@ -219,16 +219,16 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   showInvalidControls(): void {
-    let invalid = [];
-    this.invalidMessage = ""
+    const invalid = [];
+    this.invalidMessage = '';
     this.showInvalid = false;
 
     // Loop through each child component to see it any of them have invalid controls
-    for (let groups of this.components!) {
-      for (let child of groups.components) {
-        for (let name in child.reinsuranceForm.controls) {
+    for (const groups of this.components!) {
+      for (const child of groups.components) {
+        for (const name in child.reinsuranceForm.controls) {
           if (child.reinsuranceForm.controls[name].invalid) {
-            invalid.push(name + " - Policy Layer: #" + child.policyLayerData.policyLayerNo.toString());
+            invalid.push(name + ' - Policy Layer: #' + child.policyLayerData.policyLayerNo.toString());
           }
         }
       }
@@ -237,25 +237,25 @@ export class ReinsuranceComponent implements OnInit {
     // Compile all invalide controls in a list
     if (invalid.length > 0) {
       this.showInvalid = true;
-      for (let error of invalid) {
-        this.invalidMessage += "<br><li>" + error;
+      for (const error of invalid) {
+        this.invalidMessage += '<br><li>' + error;
       }
     }
     if (!this.checkPremiumMatches()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Premium totals do not match";
+      this.invalidMessage += '<br><li>Premium totals do not match';
     }
     if (!this.checkLimitMatches()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Limit totals do not match";
+      this.invalidMessage += '<br><li>Limit totals do not match';
     }
     if (!this.checkAttachmentPoint()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Policy Layer 1 attachment point does not eqaul total Policy Attachment point";
+      this.invalidMessage += '<br><li>Policy Layer 1 attachment point does not eqaul total Policy Attachment point';
     }
     if (!this.checkSubAttachmentPoints()) {
       this.showInvalid = true;
-      this.invalidMessage += "<br><li>Please review attachment points";
+      this.invalidMessage += '<br><li>Please review attachment points';
     }
     if(!this.checkAgreementLimits()){
       this.showInvalid = true;
@@ -264,7 +264,7 @@ export class ReinsuranceComponent implements OnInit {
       this.showInvalid = true;
     }
     if (this.showInvalid) {
-      this.invalidMessage = "Following fields are invalid" + this.invalidMessage;
+      this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
     }
     else {
       this.hideInvalid();
@@ -272,58 +272,58 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   checkAttachmentPoint(): boolean {
-    return (this.policyLayerData[0]?.reinsuranceData[0]?.attachmentPoint) == this.headerComp.endorsement.attachmentPoint
+    return (this.policyLayerData[0]?.reinsuranceData[0]?.attachmentPoint) == this.headerComp.endorsement.attachmentPoint;
   }
 
   checkSubAttachmentPoints(): boolean {
     let total: number = this.headerComp.endorsement.attachmentPoint;
-    let failed: boolean = false;
+    let failed = false;
 
     this.policyLayerData.forEach(group => {
       group.reinsuranceData.forEach((layer) => {
         if (layer.attachmentPoint != total && layer.reinsLayerNo == 1) {
-          failed = true
+          failed = true;
         } else {
-          total += layer.reinsLimit?.toString() == "" ? 0 : layer.reinsLimit ?? 0
-            + (layer.attachmentPoint?.toString() == "" ? 0 : layer.attachmentPoint ?? 0);
+          total += layer.reinsLimit?.toString() == '' ? 0 : layer.reinsLimit ?? 0
+            + (layer.attachmentPoint?.toString() == '' ? 0 : layer.attachmentPoint ?? 0);
         }
-      })
+      });
     });
     return !failed;
   }
 
   checkPremiumMatches(): boolean {
-    let total: number = 0;
-    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsCededPremium ?? 0 }) });
-    return this.headerComp.endorsement.premium == total
+    let total = 0;
+    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsCededPremium ?? 0; }); });
+    return this.headerComp.endorsement.premium == total;
   }
 
   checkLimitMatches(): boolean {
-    let total: number = 0;
-    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsLimit ?? 0 }) });
-    return this.headerComp.endorsement.limit == total
+    let total = 0;
+    this.policyLayerData.forEach(group => { group.reinsuranceData.forEach(layer => { total += layer.reinsLimit ?? 0; }); });
+    return this.headerComp.endorsement.limit == total;
   }
 
   checkAgreements(): boolean {
-    let failed: boolean = false;
+    let failed = false;
     let filteredList: ReinsuranceLookup[];
     let comboList = [];
 
-   this.policyLayerData.forEach(group => {
-     group.reinsuranceData.forEach(layer => {
+    this.policyLayerData.forEach(group => {
+      group.reinsuranceData.forEach(layer => {
         comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
         filteredList = comboList.filter(x => x.treatyNumber == layer.treatyNo);
         if (filteredList.length == 0) {
-          this.invalidMessage += "<br><li>Agreement is no longer valid for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo;
+          this.invalidMessage += '<br><li>Agreement is no longer valid for Policy Layer #:' + layer.policyLayerNo + ', Reinsurance Layer #:' + layer.reinsLayerNo;
           failed = true;
         }
-      })
+      });
     });
     return !failed;
   }
 
   checkAgreementLimits(): boolean {
-    let failed: boolean = false;
+    let failed = false;
     let filteredList: number | undefined = 0;
     let comboList = [];
 
@@ -331,20 +331,20 @@ export class ReinsuranceComponent implements OnInit {
       group.reinsuranceData.forEach(async layer => {
         if (layer.treatyNo == 1) {
           if ((layer.reinsLimit ?? 0) > (this.headerComp.endorsement.limit ?? 0)) {
-            this.invalidMessage += "<br><li>Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + this.headerComp.endorsement.limit?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            this.invalidMessage += '<br><li>Policy Layer #:' + layer.policyLayerNo + ', Reinsurance Layer #:' + layer.reinsLayerNo + '. Max Layer Limit is: ' + this.headerComp.endorsement.limit?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             failed = true;
           }
         }
         else if (layer.treatyNo !== 1) {
           comboList = this.reinsuranceCodes.concat(this.reinsuranceFacCodes);
-          filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit
+          filteredList = comboList.find(x => x.treatyNumber == layer.treatyNo)?.maxLayerLimit;
           if (filteredList != null)
             if ((layer.reinsLimit ?? 0) > filteredList) {
-              this.invalidMessage += "<br><li>Please check Insuring Agreement for Policy Layer #:" + layer.policyLayerNo + ", Reinsurance Layer #:" + layer.reinsLayerNo + ". Max Layer Limit is: " + filteredList.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              this.invalidMessage += '<br><li>Please check Insuring Agreement for Policy Layer #:' + layer.policyLayerNo + ', Reinsurance Layer #:' + layer.reinsLayerNo + '. Max Layer Limit is: ' + filteredList.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
               failed = true;
             }
         }
-      })
+      });
     });
     return !failed;
   }

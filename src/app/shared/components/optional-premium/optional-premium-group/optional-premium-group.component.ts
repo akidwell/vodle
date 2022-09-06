@@ -11,6 +11,9 @@ import { QuoteOptionalPremiumClass } from 'src/app/features/quote/classes/quote-
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
 import { PolicyOptionalPremiumClass } from 'src/app/features/policy/classes/policy-optional-premium-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
+import { Quote } from 'src/app/features/quote/models/quote';
+import { QuoteLineItemClass } from 'src/app/features/quote/classes/quote-line-item-class';
+import { Moment } from 'moment';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
@@ -29,6 +32,9 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   collapsed = false;
   program!: ProgramClass | null;
   optionalPremiumData: OptionalPremiumClass[] = [];
+  quoteLineItemData!: QuoteLineItemClass[];
+  riskState!: string| null;
+  effectiveDate!: Date | Moment | null;
   quoteId = 0;
   programSub!: Subscription;
   constructor(private notification: NotificationService, userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
@@ -42,6 +48,9 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
         this.program = selectedProgram;
         if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyOptionalPremiumList){
           this.optionalPremiumData = this.program?.quoteData?.propertyOptionalPremiumList;
+          this.quoteLineItemData = this.program?.quoteData?.quoteLineItems;
+          this.riskState = this.program?.quoteData?.riskState;
+          this.effectiveDate = this.program?.quoteData.policyEffectiveDate;
         }
       });
     this.collapsed = false;
