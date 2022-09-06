@@ -1,8 +1,8 @@
 
-import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from '../models/property-building-coverage';
+import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { QuoteValidationClass } from './quote-validation-class';
@@ -123,7 +123,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this._isDirty = true;
   }
 
-  constructor(coverage?: PropertyBuildingCoverageData) {
+  constructor(coverage?: PropertyBuildingCoverage) {
     if (coverage) {
       this.existingInit(coverage);
     } else {
@@ -188,7 +188,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     return !value;
   }
 
-  existingInit(coverage: PropertyBuildingCoverageData) {
+  existingInit(coverage: PropertyBuildingCoverage) {
     this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
     this._propertyCoverageId = coverage.propertyCoverageId;

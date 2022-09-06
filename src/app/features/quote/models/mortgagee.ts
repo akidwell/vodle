@@ -16,4 +16,5 @@ export interface MortgageeData {
   isAppliedToAll: boolean;
   building: string | null;
   isNew: boolean | null;
+  guid: string;
   }

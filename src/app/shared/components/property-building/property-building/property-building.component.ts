@@ -9,6 +9,7 @@ import { AddressLookupService } from 'src/app/core/services/address-lookup/addre
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
+import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
 
 @Component({
   selector: 'rsps-property-building',
@@ -28,14 +29,14 @@ export class PropertyBuildingComponent implements OnInit {
   protectionClassList: number[] = [1,2,3,4,5,6,7,8,9,10];
 
   @Input() public programId!: number;
-  @Input() public building!: PropertyBuilding;
+  @Input() public building!: PropertyQuoteBuildingClass;
   @Input() public canEdit = false;
   @Input() public index = 0;
   @Input() public classType!: ClassTypeEnum;
-  @Output() deleteBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
-  @Output() copyBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
-  @Output() addCoverage: EventEmitter<PropertyBuilding> = new EventEmitter();
-  @Output() filterBuilding: EventEmitter<PropertyBuilding> = new EventEmitter();
+  @Output() deleteBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
+  @Output() copyBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
+  @Output() addCoverage: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
+  @Output() filterBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
 
   constructor(private confirmationDialogService: ConfirmationDialogService, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService,
     private messageDialogService: MessageDialogService) { }

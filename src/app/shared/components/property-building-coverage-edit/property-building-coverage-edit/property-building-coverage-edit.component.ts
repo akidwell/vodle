@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
+import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { PropertyBuildingCoverageEditDialogComponent } from '../property-building-coverage-edit-dialog/property-building-coverage-group-edit-dialog.component';
 
@@ -10,7 +11,7 @@ import { PropertyBuildingCoverageEditDialogComponent } from '../property-buildin
 export class PropertyBuildingCoverageEditComponent {
 
   @Input() public canEdit = false;
-  @Input() public buildings: PropertyBuilding[] = [];
+  @Input() public buildings: PropertyQuoteBuildingClass[] = [];
   @ViewChild('modal') private groupEditComponent!: PropertyBuildingCoverageEditDialogComponent;
 
   get hasCoverages() {

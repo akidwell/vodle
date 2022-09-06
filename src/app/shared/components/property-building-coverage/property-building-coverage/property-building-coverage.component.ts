@@ -6,6 +6,7 @@ import { Code } from 'src/app/core/models/code';
 import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lookup';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
 import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property-building-coverage';
 
 @Component({
@@ -24,12 +25,12 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   anchorId!: string;
   isLoadingAddress = false;
 
-  @Input() public coverage!: PropertyBuildingCoverage;
+  @Input() public coverage!: PropertyQuoteBuildingCoverageClass;
   @Input() public canEdit = false;
   @Input() public buildingIndex = 0;
   @Input() public coverageIndex = 0;
-  @Output() deleteCoverage: EventEmitter<PropertyBuildingCoverage> = new EventEmitter();
-  @Output() copyCoverage: EventEmitter<PropertyBuildingCoverage> = new EventEmitter();
+  @Output() deleteCoverage: EventEmitter<PropertyQuoteBuildingCoverageClass> = new EventEmitter();
+  @Output() copyCoverage: EventEmitter<PropertyQuoteBuildingCoverageClass> = new EventEmitter();
   @ViewChild('coinsuranceComp') coinsuranceComp!: NgSelectComponent;
   @ViewChild('coverageComp') coverageComp!: NgSelectComponent;
   @ViewChild('causeOfLossComp') causeOfLossComp!: NgSelectComponent;

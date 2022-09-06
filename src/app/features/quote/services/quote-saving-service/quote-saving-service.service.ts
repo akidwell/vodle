@@ -6,6 +6,7 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
+import { PropertyQuoteClass } from '../../classes/property-quote-class';
 import { PropertyDataService } from '../property-data.service';
 import { QuoteService } from '../quote-service/quote.service';
 
@@ -60,6 +61,7 @@ export class QuoteSavingService {
   }
   async saveQuote() {
     const quote = this.program?.quoteData;
+    console.log(quote);
     if (quote) {
       console.log('quotes: ', quote, 'id: ');
       const results$ = this.quoteService.updateQuote(quote);
@@ -69,7 +71,9 @@ export class QuoteSavingService {
           console.log('quoteData: ' + quoteData);
           this.program?.quoteData?.onSave(quoteData);
           quote.sequenceNumber = quoteData.sequenceNumber;
-          this.propertyDataService.buildingList = quote.propertyQuote.buildingList;
+          if (quote instanceof PropertyQuoteClass) {
+            this.propertyDataService.buildingList = quote.buildingList;
+          }
           //this.newQuote = false;
           quote.afterSave();
           this.notification.show('Quote Saved.', {

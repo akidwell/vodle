@@ -14,6 +14,7 @@ import { SharedComponentBase } from 'src/app/shared/component-base/shared-compon
 import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteLineItemClass } from 'src/app/features/quote/classes/quote-line-item-class';
 import { Moment } from 'moment';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
   selector: 'rsps-optional-premium-group',
@@ -45,8 +46,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyOptionalPremiumList){
-          this.optionalPremiumData = this.program?.quoteData?.propertyQuote.propertyOptionalPremiumList;
+        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyOptionalPremiumList){
+          this.optionalPremiumData = this.program?.quoteData?.propertyOptionalPremiumList;
           this.quoteLineItemData = this.program?.quoteData?.quoteLineItems;
           this.riskState = this.program?.quoteData?.riskState;
           this.effectiveDate = this.program?.quoteData.policyEffectiveDate;

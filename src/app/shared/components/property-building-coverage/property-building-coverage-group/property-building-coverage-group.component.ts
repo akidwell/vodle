@@ -22,24 +22,24 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   collapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  private _coverages: PropertyBuildingCoverage[] = [];
+  private _coverages: PropertyQuoteBuildingCoverageClass[] = [];
 
   @Input() public propertyQuote!: PropertyQuote;
   @Input() public limitTotal!: number;
   @Input() public coverageCount!: number;
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
-  @Input() set coverages(value: PropertyBuildingCoverage[]) {
+  @Input() set coverages(value: PropertyQuoteBuildingCoverageClass[]) {
     this._coverages = value;
     this._search$.next();
   }
-  get coverages(): PropertyBuildingCoverage[] {
+  get coverages(): PropertyQuoteBuildingCoverageClass[] {
     return this._coverages;
   }
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _policies$ = new BehaviorSubject<PropertyBuildingCoverage[]>([]);
+  private _policies$ = new BehaviorSubject<PropertyQuoteBuildingCoverageClass[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
   get policies$() { return this._policies$.asObservable(); }
   get total$() { return this._total$.asObservable(); }
@@ -109,7 +109,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     return of({coverages, total});
   }
 
-  copyCoverage(coverage: PropertyBuildingCoverage) {
+  copyCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
     if (this.classType == ClassTypeEnum.Quote) {
       const clone = deepClone(coverage.toJSON());
       const newCoverage = new PropertyQuoteBuildingCoverageClass(clone);
@@ -117,7 +117,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     }
   }
 
-  deleteCoverage(coverage: PropertyBuildingCoverage) {
+  deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
     const index = this.coverages.indexOf(coverage, 0);
     if (index > -1) {
       if (!coverage.isNew && coverage.propertyQuoteBuildingCoverageId > 0) {
@@ -150,6 +150,6 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
 }
 
 export interface SearchResult {
-  coverages: PropertyBuildingCoverage[];
+  coverages: PropertyQuoteBuildingCoverageClass[];
   total: number;
 }
