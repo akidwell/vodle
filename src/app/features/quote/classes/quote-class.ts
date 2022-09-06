@@ -1,8 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
-import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
 import { PropertyQuoteClass } from './property-quote-class';
@@ -250,7 +249,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._isDirty = true;
   }
   markImported() {
-    this.propertyQuote.propertyQuoteBuilding.forEach(c => {
+    this.propertyQuote.propertyQuoteBuildingList.forEach(c => {
       c.markImported();
       c.calculateITV();
     });
@@ -370,16 +369,16 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
 
 
   onSave(savedQuote: QuoteClass) {
-    this.onSaveBuilding(this.propertyQuote.propertyQuoteBuilding,savedQuote);
-    this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductible,savedQuote);
-    this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgagee,savedQuote);
-    this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterest,savedQuote);
+    this.onSaveBuilding(this.propertyQuote.propertyQuoteBuildingList,savedQuote);
+    this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductibleList,savedQuote);
+    this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
+    this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
   }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: QuoteClass): void {
     mortgagees.forEach(mortgagee => {
       if (mortgagee.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteMortgagee.find(c => c.guid == mortgagee.guid);
+        const match = savedQuote.propertyQuote.propertyQuoteMortgageeList.find(c => c.guid == mortgagee.guid);
         if (match != null) {
           mortgagee.propertyQuoteMortgageeId = match.propertyQuoteMortgageeId;
           mortgagee.propertyQuoteId = match.propertyQuoteId;
@@ -393,7 +392,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private onSaveAdditionalInterest(additionalInterests: AdditionalInterestClass[], savedQuote: QuoteClass): void {
     additionalInterests.forEach(additionalInterest => {
       if (additionalInterest.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteAdditionalInterest.find(c => c.guid == additionalInterest.guid);
+        const match = savedQuote.propertyQuote.propertyQuoteAdditionalInterestList.find(c => c.guid == additionalInterest.guid);
         if (match != null) {
           additionalInterest.propertyQuoteAdditionalInterestId = match.propertyQuoteAdditionalInterestId;
           additionalInterest.propertyQuoteId = match.propertyQuoteId;
@@ -407,7 +406,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private onSaveDeductible(deductibles: PropertyQuoteDeductibleClass[], savedQuote: QuoteClass): void {
     deductibles.forEach(deductible => {
       if (deductible.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteDeductible.find(c => c.guid == deductible.guid);
+        const match = savedQuote.propertyQuote.propertyQuoteDeductibleList.find(c => c.guid == deductible.guid);
         if (match != null) {
           deductible.propertyQuoteDeductibleId = match.propertyQuoteDeductibleId;
           deductible.propertyQuoteId = match.propertyQuoteId;
@@ -421,7 +420,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: QuoteClass): void {
     buildings.forEach(building => {
       if (building.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.guid == building.guid);
+        const match = savedQuote.propertyQuote.propertyQuoteBuildingList.find(c => c.guid == building.guid);
         if (match != null) {
           building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
           building.propertyQuoteId = match.propertyQuoteId;
@@ -436,7 +435,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: QuoteClass): void {
     coverages.forEach(coverage => {
       if (coverage.isNew) {
-        const buildingMatch = savedQuote.propertyQuote.propertyQuoteBuilding.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
+        const buildingMatch = savedQuote.propertyQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
         const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.guid == coverage.guid);
         if (coverageMatch != null) {
           coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId;

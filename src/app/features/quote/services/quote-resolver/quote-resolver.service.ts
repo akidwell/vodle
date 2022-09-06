@@ -25,6 +25,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
           }),
           map(department => ({ department })),
           catchError((error) => {
+            console.log(error);
             this.router.navigate(['/quote/quote-not-found'], { state: { error: error.message } });
             return of({ department: null, error: error });
           })
@@ -34,6 +35,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
       return of({ department: null});
     }
     if (isNaN(+sequenceNumber)) {
+      console.log(sequenceNumber);
       const message = `SequenceNumber  was not a number: ${sequenceNumber}`;
       this.router.navigate(['/quote/quote-not-found'], { state: { error: message } });
       return of({ department: null, error: message });
@@ -46,6 +48,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
         }),
         map(department => ({ department })),
         catchError((error) => {
+          console.log(error);
           this.router.navigate(['/quote/quote-not-found'], { state: { error: error.message } });
           return of({ department: null, error: error });
         })
