@@ -44,8 +44,8 @@ export class AdditionalInterestGroupComponent implements OnInit {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterest){
-          this.aiData = this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterest;
+        if (this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterestList){
+          this.aiData = this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterestList;
         }
       });
     this.collapsed = false;

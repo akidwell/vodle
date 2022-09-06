@@ -45,8 +45,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyOptionalPremium){
-          this.optionalPremiumData = this.program?.quoteData?.propertyQuote.propertyOptionalPremium;
+        if (this.program?.quoteData?.propertyQuote?.propertyOptionalPremiumList){
+          this.optionalPremiumData = this.program?.quoteData?.propertyQuote.propertyOptionalPremiumList;
           this.quoteLineItemData = this.program?.quoteData?.quoteLineItems;
           this.riskState = this.program?.quoteData?.riskState;
           this.effectiveDate = this.program?.quoteData.policyEffectiveDate;

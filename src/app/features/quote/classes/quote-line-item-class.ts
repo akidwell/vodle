@@ -1,5 +1,5 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteLineItem } from '../models/quote-line-item';

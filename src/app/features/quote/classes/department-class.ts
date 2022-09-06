@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { SubmissionClass } from '../../submission/classes/SubmissionClass';

@@ -1,6 +1,6 @@
 
 import { CurrencyPipe, PercentPipe } from '@angular/common';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageData } from '../models/property-building-coverage';
 import { QuoteAfterSave } from '../models/quote-after-save';

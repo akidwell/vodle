@@ -40,6 +40,9 @@ export class AppComponent {
         if (nav.url.startsWith('/insured')) {
           this.loading = true;
         }
+        if (nav.url.startsWith('/submission')) {
+          this.loading = true;
+        }
         if (nav.url.startsWith('/quote')) {
           this.loading = true;
         }
