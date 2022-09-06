@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-sm-2">
+        <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description"
+            bindValue="key" [clearable]="false" name="lineItemDescription" [(ngModel)]="lineItem.lineItemCode"
+            #lineItemCode="ngModel" (change)="changeLineItem($event)">
+            <ng-template ng-label-tmp let-item="item">
+                {{item.description}} {{item.state != null ? " (" + item.state + ")" : ""}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.description}} {{item.state != null ? " (" + item.state + ")" : ""}}
+            </ng-template>
+        </ng-select>
+    </div>
+    <div class="col-sm-2">
+        <input type="text" class="form-control" id="dueDate" name="dueDate" 
+        [(ngModel)]="lineItem.dueDate" #dueDate="ngModel">
+    </div>
+    <div class="col-sm-1">
+        <input type="checkbox" id="received" name="received" 
+        [(ngModel)]="lineItem.ysnReceived" #received="ngModel">
+    </div>
+    <div class="col-sm-4">
+        <input style="width:100%" type="text" class="form-control" id="notes" name="notes" 
+        [(ngModel)]="lineItem.notes" #dueDate="ngModel">
+    </div>
+    <div class="col-sm-2">
+        <input type="text" class="form-control" id="amount" name="amount" 
+        [(ngModel)]="lineItem.amount" #amount="ngModel">    </div>
+    <div class="col-sm-1">
+        <div ngbDropdown class="d-inline-block">
+            <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle
+                click-stop-propagation>Actions</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button>Copy</button>
+                <button>Delete</button>
+                <button>Remove</button>
+            </div>
+        </div>
+    </div>
+</div>

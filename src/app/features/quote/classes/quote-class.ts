@@ -15,6 +15,8 @@ import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mo
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
+import { QuoteLineItemClass } from './quote-line-item-class';
+import { QuoteLineItem } from '../models/quote-line-item';
 
 export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   private _validateOnLoad = true;
@@ -136,6 +138,9 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   quoteRates: QuoteRateClass[] = [];
   quoteRatesValidation: QuoteValidationClass | null = null;
 
+  quoteLineItems: QuoteLineItemClass[] = [];
+  quoteLineItemsValidation: QuoteValidationClass | null = null;
+
   propertyQuote!: PropertyQuoteClass;
 
   quoteValidation!: QuoteValidationClass;
@@ -170,6 +175,11 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   set classCode(value: number | null) {
     this._classCode = value == 0 ? null : value;
     this._isDirty = true;
+  }
+  private _riskState : string | null = null;
+
+  get riskState() : string | null {
+    return this._riskState;
   }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
@@ -210,8 +220,14 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       rates.push(new QuoteRateClass(element));
     });
     this.quoteRates = rates;
+    const lineItems: QuoteLineItemClass[] = [];
+    quote.quoteLineItems?.forEach(element => {
+      lineItems.push(new QuoteLineItemClass(element));
+    });
+    this.quoteLineItems = lineItems;
     this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
     this._classCode = quote.quoteRates[0].classCode || null;
+    this._riskState = quote.riskState;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -275,6 +291,8 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       this.propertyQuote.markStructureClean();
     }
     this.cleanChildArray(this.quoteRates);
+    this.cleanChildArray(this.quoteLineItems);
+
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -295,6 +313,8 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   // }
   validateQuoteChildren() {
     this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
+    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteLineItems);
+
     //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
     //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   }
@@ -326,6 +346,9 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     }
     if (this.quoteRatesValidation){
       childValidations.push(this.quoteRatesValidation);
+    }
+    if (this.quoteLineItemsValidation){
+      childValidations.push(this.quoteLineItemsValidation);
     }
     console.log(childValidations);
     if (childValidations.length > 0) {
@@ -450,6 +473,9 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   toJSON() {
     const rates: QuoteRate[] = [];
     this.quoteRates.forEach(c => rates.push(c.toJSON(Number(this.classCode))));
+    const lineItems: QuoteLineItem[] = [];
+    this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
+    console.log(lineItems);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -474,7 +500,8 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       classCode: this.classCode,
       autoCalcMiscPremium: this.autoCalcMiscPremium,
       propertyQuote: this.propertyQuote?.toJSON(),
-      quoteRates: rates
+      quoteRates: rates,
+      quoteLineItems: lineItems
     };
   }
 }

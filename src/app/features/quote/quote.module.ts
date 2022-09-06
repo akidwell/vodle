@@ -48,6 +48,7 @@ import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 import { OptionalPremiumModule } from 'src/app/shared/components/optional-premium/optional-premium.module';
 import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
+import { QuoteLineItemsModule } from './components/common/quote-line-items/quote-line-items.module';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-
     MortgageeModule,
     OptionalPremiumModule,
     AdditionalInterestModule,
+    QuoteLineItemsModule,
     PipesModule,
     PropertyDeductibleModule,
     PropertyBuildingModule,
