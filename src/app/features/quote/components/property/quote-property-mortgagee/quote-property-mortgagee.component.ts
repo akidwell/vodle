@@ -4,6 +4,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
+import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteClass } from '../../../classes/quote-class';
 
 @Component({
@@ -15,7 +16,7 @@ export class QuotePropertyMortgageeComponent{
 
   authSub: Subscription;
   canEditSubmission = false;
-  quote!: QuoteClass;
+  quote!: PropertyQuoteClass;
   programSub!: Subscription;
   classType = ClassTypeEnum.Quote;
 
@@ -29,7 +30,7 @@ export class QuotePropertyMortgageeComponent{
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
-          this.quote = selectedProgram.quoteData ?? new QuoteClass();
+          this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
         }
       }
     );

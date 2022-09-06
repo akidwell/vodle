@@ -4,6 +4,7 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
+import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteClass } from '../../../classes/quote-class';
 import { QuoteDataValidationService } from '../../../services/quote-data-validation-service/quote-data-validation-service.service';
 
@@ -15,7 +16,7 @@ import { QuoteDataValidationService } from '../../../services/quote-data-validat
 export class QuotePropertyLocationCoverageComponent {
   authSub: Subscription;
   canEditSubmission = false;
-  quote!: QuoteClass;
+  quote!: PropertyQuoteClass;
   programSub!: Subscription;
   // tabValidationSub!: Subscription;
   classType = ClassTypeEnum.Quote;
@@ -31,9 +32,9 @@ export class QuotePropertyLocationCoverageComponent {
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
           setTimeout(() => {
-            this.quote = selectedProgram.quoteData ?? new QuoteClass();
-            this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.quote.propertyQuote.propertyQuoteBuildingLocationTabValidation;
-            this.quoteValidationService.propertyQuoteMortgageeAdditionalInterestTabValidation = this.quote.propertyQuote.propertyQuoteMortgageeAdditionalInterestTabValidation;
+            this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
+            this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.quote.propertyQuoteBuildingLocationTabValidation;
+            this.quoteValidationService.propertyQuoteMortgageeAdditionalInterestTabValidation = this.quote.propertyQuoteMortgageeAdditionalInterestTabValidation;
           });
         }
       }

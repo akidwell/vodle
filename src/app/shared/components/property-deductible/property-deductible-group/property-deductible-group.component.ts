@@ -15,7 +15,7 @@ export class PropertyDeductibleGroupComponent implements OnInit {
   deleteSub!: Subscription;
 
   @Input() public programId!: number;
-  @Input() public deductibles!: PropertyDeductible[];
+  @Input() public deductibles!: PropertyQuoteDeductibleClass[];
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
 
@@ -49,7 +49,7 @@ export class PropertyDeductibleGroupComponent implements OnInit {
     }
   }
 
-  deleteDeductible(deductible: PropertyDeductible) {
+  deleteDeductible(deductible: PropertyQuoteDeductibleClass) {
     const index = this.deductibles.indexOf(deductible, 0);
     if (index > -1) {
       this.deductibles.splice(index, 1);

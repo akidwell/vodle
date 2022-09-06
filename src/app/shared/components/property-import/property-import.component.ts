@@ -20,7 +20,7 @@ export class PropertyImportComponent {
   sequenceNumber = 0;
   importing = false;
 
-  @Input() public quote!: QuoteClass;
+  @Input() public quote!: PropertyQuoteClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
   @ViewChild('file') myInputVariable!: ElementRef;
@@ -40,8 +40,8 @@ export class PropertyImportComponent {
     if (file !== null) {
       if (this.classType == ClassTypeEnum.Quote) {
         const quoteId = this.route.parent?.parent?.snapshot.paramMap.get('seq');
-        if (this.quote != null && quoteId != null) {
-          if (this.quote.propertyQuote.propertyQuoteBuildingList.length > 0) {
+        if (this.quote != null && quoteId != null && this.quote instanceof PropertyQuoteClass) {
+          if (this.quote.propertyQuoteBuildingList.length > 0) {
             this.confirmationDialogService
               .open(
                 'Import Confirmation',
@@ -49,7 +49,7 @@ export class PropertyImportComponent {
               )
               .then(async (result: boolean) => {
                 if (result) {
-                  this.quote.propertyQuote.clearBuildings();
+                  this.quote.clearBuildings();
                   if (this.quote.propertyQuote.propertyQuoteId !== null) {
                     const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuote.propertyQuoteId);
                     await lastValueFrom(result$);
@@ -72,7 +72,7 @@ export class PropertyImportComponent {
     const results$ = this.quoteService.import(quote, file);
     await lastValueFrom(results$).then(
       async (quote) => {
-        const newQuote = new QuoteClass(quote);
+        const newQuote = new PropertyQuoteClass(quote);
         newQuote.markImported();
         if (await this.checkErrors(quote.importErrors)) {
           if (await this.checkWarning(quote.importWarnings)) {

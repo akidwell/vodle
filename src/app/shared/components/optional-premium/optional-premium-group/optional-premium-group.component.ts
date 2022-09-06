@@ -11,6 +11,7 @@ import { QuoteOptionalPremiumClass } from 'src/app/features/quote/classes/quote-
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
 import { PolicyOptionalPremiumClass } from 'src/app/features/policy/classes/policy-optional-premium-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
   selector: 'rsps-optional-premium-group',
@@ -39,8 +40,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyOptionalPremiumList){
-          this.optionalPremiumData = this.program?.quoteData?.propertyQuote.propertyOptionalPremiumList;
+        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyOptionalPremiumList){
+          this.optionalPremiumData = this.program?.quoteData?.propertyOptionalPremiumList;
         }
       });
     this.collapsed = false;

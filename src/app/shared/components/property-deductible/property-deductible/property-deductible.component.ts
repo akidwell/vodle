@@ -7,6 +7,7 @@ import { ConfirmationDialogService } from 'src/app/core/services/confirmation-di
 import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
 import { PropertyDeductibleLookup } from 'src/app/core/models/property-deductible-lookup';
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
+import { PropertyQuoteDeductibleClass } from 'src/app/features/quote/classes/property-quote-deductible-class';
 
 @Component({
   selector: 'rsps-property-deductible',
@@ -25,10 +26,10 @@ export class PropertyDeductibleComponent implements OnInit {
 
   @Input() public index = 0;
   @Input() public programId!: number;
-  @Input() public deductible!: PropertyDeductible;
+  @Input() public deductible!: PropertyQuoteDeductibleClass;
   @Input() public canEdit = false;
-  @Output() copyDeductible: EventEmitter<PropertyDeductible> = new EventEmitter();
-  @Output() deleteDeductible: EventEmitter<PropertyDeductible> = new EventEmitter();
+  @Output() copyDeductible: EventEmitter<PropertyQuoteDeductibleClass> = new EventEmitter();
+  @Output() deleteDeductible: EventEmitter<PropertyQuoteDeductibleClass> = new EventEmitter();
 
   constructor( private dropdowns: DropDownsService, private confirmationDialogService: ConfirmationDialogService, private propertyDataService: PropertyDataService) { }
 

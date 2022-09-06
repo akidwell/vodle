@@ -9,6 +9,7 @@ export interface PropertyBuildingCoverage {
   causeOfLossId: number | null;
   valuationId: number | null;
   additionalDetail: string | null;
+  guid: string;
 }
 
 // export interface PropertyBuildingCoverage extends PropertyBuildingCoverageData {

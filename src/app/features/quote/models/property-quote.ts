@@ -8,10 +8,10 @@ export interface PropertyQuote {
   propertyQuoteId: number | null;
   quoteId: number | null;
   riskDescription: string | null;
-  propertyQuoteDeductibleList: PropertyDeductible[];
-  propertyQuoteBuildingList: PropertyBuilding[];
-  propertyQuoteMortgageeList: MortgageeData[];
-  propertyQuoteAdditionalInterestList: AdditionalInterestData[];
+  propertyQuoteDeductibleList?: PropertyDeductible[];
+  propertyQuoteBuildingList?: PropertyBuilding[];
+  propertyQuoteMortgageeList?: MortgageeData[];
+  propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
 
   propertyQuoteDeductible?: PropertyDeductible[];
   propertyQuoteBuilding?: PropertyBuilding[];
