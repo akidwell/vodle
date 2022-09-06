@@ -532,7 +532,7 @@ export class SubmissionClass implements Submission {
     this._submission = submission;
     this.init(this._submission);
   }
-  toJSON() {
+  toJSON(): Submission {
     return {
       producerCode: this._producerCode,
       departmentCode: this.departmentCode,
@@ -573,7 +573,17 @@ export class SubmissionClass implements Submission {
       processor: this.processor,
       submissionEventCode: this.submissionEventCode,
       extExpiringPolicyNo: this._extExpiringPolicyNo,
-      policyTerm: this._policyTerm === PolicyTermEnum.custom ? null : this._policyTerm
+      policyTerm: this._policyTerm === PolicyTermEnum.custom ? null : this._policyTerm,
+      modifiedBy: this.modifiedBy,
+      modifiedDate: this.modifiedDate,
+      retailProducerCode: this.retailProducerCode,
+      brokerId: this.brokerId,
+      constructionWrapup: this.constructionWrapup,
+      xrefSubNum: this.xrefSubNum,
+      assistantBroker: this.assistantBroker,
+      teamId: this.teamId,
+      underwriterName: this.underwriterName,
+      hasPostedInvoice: this.hasPostedInvoice
     };
   }
 

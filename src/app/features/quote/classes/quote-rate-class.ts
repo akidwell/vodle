@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/quote-validation-enum';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteAfterSave } from '../models/quote-after-save';
@@ -50,7 +50,6 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     this._isFlatRate = value;
     this._isDirty = true;
   }
-
   get isDirty() : boolean {
     return this._isDirty;
   }
@@ -63,6 +62,9 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   get isValid(): boolean {
     //this._isValid = this.validate(valid);
     return this._isValid;
+  }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
   }
 
   constructor(rate?: QuoteRate) {
@@ -86,19 +88,22 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   classValidation() {
     this.invalidList = [];
     this._canBeSaved = true;
-
-    if (this.validateAmount()) {
+    this._isValid = true;
+    const amountValidation = this.validateAmount();
+    if (amountValidation) {
       this._isValid = false;
+      this.invalidList.push(amountValidation);
     }
     this._errorMessages = this.invalidList;
   }
-  validateAmount(): boolean {
-    let invalid = false;
-    if ((this.premium ?? 0) == 0) {
-      invalid = true;
-      this.invalidList.push('Premium is required');
+  validateAmount(): string | null {
+    if (this.premium === null) {
+      return 'Premium is required';
     }
-    return invalid;
+    if (this.premium == 0) {
+      return 'Premium must be > 0';
+    }
+    return null;
   }
   existingInit(rate: QuoteRate) {
     this.quoteId = rate.quoteId;

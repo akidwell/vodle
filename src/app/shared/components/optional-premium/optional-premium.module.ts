@@ -15,6 +15,7 @@ import { CanDeactivateGuard } from 'src/app/features/policy/guards/can-deactivat
 import { AdditionalInterestModule } from '../property-additional-interest.ts/additional-interest.module';
 import { OptionalPremiumComponent } from './optional-premium/optional-premium.component';
 import { OptionalPremiumGroupComponent } from './optional-premium-group/optional-premium-group.component';
+import { QuoteLineItemsModule } from 'src/app/features/quote/components/common/quote-line-items/quote-line-items.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { OptionalPremiumGroupComponent } from './optional-premium-group/optional
     DirectivesModule,
     DragDropModule,
     MatSlideToggleModule,
-    AdditionalInterestModule
+    AdditionalInterestModule,
+    QuoteLineItemsModule
   ],
   providers: [
     CanDeactivateGuard,

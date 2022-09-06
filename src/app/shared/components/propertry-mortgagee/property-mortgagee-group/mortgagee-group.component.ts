@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
   selector: 'rsps-mortgagee-group',
@@ -40,8 +41,8 @@ export class MortgageeGroupComponent implements OnInit {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyQuoteMortgagee){
-          this.mortgageeData = this.program?.quoteData?.propertyQuote.propertyQuoteMortgagee;
+        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuoteMortgageeList){
+          this.mortgageeData = this.program?.quoteData?.propertyQuoteMortgageeList;
         }
       });
     this.collapsed = false;

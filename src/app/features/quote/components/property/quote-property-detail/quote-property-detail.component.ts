@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
-import { PropertyBuilding } from '../../../models/property-building';
-import { Quote } from '../../../models/quote';
+import { PropertyQuoteBuildingClass } from '../../../classes/property-quote-building-class';
+import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 
 @Component({
   selector: 'rsps-quote-property-detail',
@@ -11,9 +11,9 @@ import { Quote } from '../../../models/quote';
 })
 export class QuotePropertyDetailComponent implements OnInit {
   @Input() public canEdit = false;
-  @Input() public quote!: Quote;
+  @Input() public quote!: PropertyQuoteClass;
   @Input() public classType!: ClassTypeEnum;
-  @Input() public buildings!: PropertyBuilding[];
+  @Input() public buildings!: PropertyQuoteBuildingClass[];
   @Input() public subjectAmount!: Map<any,any>;
   @Input() public limitTotal!: number;
   @Input() public largestTiv!: number;

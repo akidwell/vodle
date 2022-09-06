@@ -12,6 +12,7 @@ import { deepClone } from 'src/app/core/utils/deep-clone';
 import { PageState } from 'src/app/core/models/page-state';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { ThemePalette } from '@angular/material/core';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
   selector: 'rsps-property-building-group',
@@ -29,23 +30,23 @@ export class PropertyBuildingGroupComponent implements OnInit {
   color: ThemePalette = 'warn';
   searchThrottle = new Subject<void>();
   searchAddress = '';
-  private _buildings: PropertyBuilding[] = [];
+  private _buildings: PropertyQuoteBuildingClass[] = [];
 
-  @Input() public propertyQuote!: PropertyQuote;
+  @Input() public propertyQuote!: PropertyQuoteClass;
   @Input() public buildingCount!: number;
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
-  @Input() set buildings(value: PropertyBuilding[]) {
+  @Input() set buildings(value: PropertyQuoteBuildingClass[]) {
     this._buildings = value;
     this._search$.next();
   }
-  get buildings(): PropertyBuilding[] {
+  get buildings(): PropertyQuoteBuildingClass[] {
     return this._buildings;
   }
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _policies$ = new BehaviorSubject<PropertyBuilding[]>([]);
+  private _policies$ = new BehaviorSubject<PropertyQuoteBuildingClass[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
   get policies$() { return this._policies$.asObservable(); }
   get total$() { return this._total$.asObservable(); }
@@ -130,7 +131,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
     }
   }
 
-  addCoverage(building: PropertyBuilding) {
+  addCoverage(building: PropertyQuoteBuildingClass) {
     if (this.classType == ClassTypeEnum.Quote) {
       building.addCoverage();
     }
@@ -139,7 +140,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
     }
   }
 
-  copyBuilding(building: PropertyBuilding) {
+  copyBuilding(building: PropertyQuoteBuildingClass) {
     if (this.classType == ClassTypeEnum.Quote) {
       const clone = deepClone(building.toJSON());
       const newBuilding = new PropertyQuoteBuildingClass(clone);
@@ -151,7 +152,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
     }
   }
 
-  deleteBuilding(building: PropertyBuilding) {
+  deleteBuilding(building: PropertyQuoteBuildingClass) {
     const index = this.buildings.indexOf(building, 0);
     if (index > -1) {
       if (!building.isNew && building.propertyQuoteBuildingId > 0) {
@@ -182,7 +183,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
     }
   }
 
-  filterBuilding(building: PropertyBuilding) {
+  filterBuilding(building: PropertyQuoteBuildingClass) {
     this.canFilter = true;
     this.propertyQuote.searchSubject = building.subjectNumber?.toString() ?? '';
     this.propertyQuote.searchPremises = building.premisesNumber?.toString() ?? '';
@@ -213,6 +214,6 @@ export class PropertyBuildingGroupComponent implements OnInit {
 }
 
 export interface SearchResult {
-  buildings: PropertyBuilding[];
+  buildings: PropertyQuoteBuildingClass[];
   total: number;
 }

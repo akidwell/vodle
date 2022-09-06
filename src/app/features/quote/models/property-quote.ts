@@ -4,25 +4,30 @@ import { MortgageeData } from './mortgagee';
 import { PropertyBuilding } from './property-building';
 import { PropertyDeductible } from './property-deductible';
 
-export interface PropertyQuoteData {
+export interface PropertyQuote {
   propertyQuoteId: number | null;
   quoteId: number | null;
   riskDescription: string | null;
-  propertyQuoteDeductible: PropertyDeductible[];
-  propertyQuoteBuilding: PropertyBuilding[];
-  propertyQuoteMortgagee: MortgageeData[];
-  propertyQuoteAdditionalInterest: AdditionalInterestData[];
+  propertyQuoteDeductibleList?: PropertyDeductible[];
+  propertyQuoteBuildingList?: PropertyBuilding[];
+  propertyQuoteMortgageeList?: MortgageeData[];
+  propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
+
+  propertyQuoteDeductible?: PropertyDeductible[];
+  propertyQuoteBuilding?: PropertyBuilding[];
+  propertyQuoteMortgagee?: MortgageeData[];
+  propertyQuoteAdditionalInterest?: AdditionalInterestData[];
 }
 
-export interface PropertyQuote extends PropertyQuoteData {
-  searchSubject: string;
-  searchPremises: string;
-  searchBuilding: string;
-  searchAddress: string;
-  cspCode: Code | null;
+// export interface PropertyQuote extends PropertyQuoteData {
+//   searchSubject: string;
+//   searchPremises: string;
+//   searchBuilding: string;
+//   searchAddress: string;
+//   cspCode: Code | null;
 
-  addBuilding(building: PropertyBuilding): void;
-  deleteBuilding(building: PropertyBuilding): void;
-  clearBuildings(): void;
-  clearCspCodes():void;
-}
+//   addBuilding(building: PropertyBuilding): void;
+//   deleteBuilding(building: PropertyBuilding): void;
+//   clearBuildings(): void;
+//   clearCspCodes():void;
+// }

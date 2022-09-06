@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../classes/program-class';
+import { PropertyQuoteClass } from '../../classes/property-quote-class';
 import { QuoteValidationClass } from '../../classes/quote-validation-class';
 import { QuoteDataValidationService } from '../../services/quote-data-validation-service/quote-data-validation-service.service';
 
@@ -39,10 +40,12 @@ export class QuoteProgramBaseComponent {
       (selectedProgram: ProgramClass | null) => {
         setTimeout(() => {
           this.program = selectedProgram;
-          this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.program?.quoteData?.propertyQuote.propertyQuoteBuildingLocationTabValidation || null;
-          this.mortgageeAdditionalInterestTabValidation = this.program?.quoteData?.propertyQuote.propertyQuoteMortgageeAdditionalInterestTabValidation || null;
-          this.coveragePremiumTabValidation = this.program?.quoteData?.propertyQuote.coveragesTabValidation || null;
-          this.termsAndConditionsTabValidation = this.program?.quoteData?.propertyQuote.termsAndConditionsTabValidation || null;
+          if (this.program?.quoteData instanceof PropertyQuoteClass) {
+            this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.program?.quoteData?.propertyQuoteBuildingLocationTabValidation || null;
+            this.mortgageeAdditionalInterestTabValidation = this.program?.quoteData?.propertyQuoteMortgageeAdditionalInterestTabValidation || null;
+            this.coveragePremiumTabValidation = this.program?.quoteData?.coveragesTabValidation || null;
+            this.termsAndConditionsTabValidation = this.program?.quoteData?.termsAndConditionsTabValidation || null;
+          }
         });
       }
     );

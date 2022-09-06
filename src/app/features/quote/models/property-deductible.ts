@@ -1,4 +1,4 @@
-export interface PropertyDeductibleData {
+export interface PropertyDeductible {
     propertyQuoteDeductibleId: number | null;
     propertyQuoteId: number | null;
     propertyDeductibleId: number | null;
@@ -19,23 +19,23 @@ export interface PropertyDeductibleData {
     isDeductibleTypeLocked: boolean;
     isExcludeLocked: boolean;
     isSubjectToMinLocked: boolean;
+    guid: string;
 }
 
-export interface PropertyDeductible extends PropertyDeductibleData {
-    deductibleReadonly: boolean;
-    deductibleTypeReadonly: boolean;
-    isExcludedReadonly: boolean;
-    isSubjectToMinVisible: boolean;
-    deleteVisible: boolean;
-    subjectToMinVisible: boolean;
-    subjectToMinPercentRequired: boolean;
-    subjectToMinAmountRequired: boolean;
-    deductibleCodeRequired: boolean;
-    isExcludedVisible: boolean;
-    deductibleTypeRequired: boolean;
-    amountRequired: boolean;
-    amountReadonly: boolean;
-    deductibleRequired: boolean;
-    building: string | null;
-    markDirty(): void;
-  }
+// export interface PropertyDeductible extends PropertyDeductibleData {
+//     deductibleReadonly: boolean;
+//     deductibleTypeReadonly: boolean;
+//     isExcludedReadonly: boolean;
+//     isSubjectToMinVisible: boolean;
+//     deleteVisible: boolean;
+//     subjectToMinVisible: boolean;
+//     subjectToMinPercentRequired: boolean;
+//     subjectToMinAmountRequired: boolean;
+//     deductibleCodeRequired: boolean;
+//     isExcludedVisible: boolean;
+//     deductibleTypeRequired: boolean;
+//     amountRequired: boolean;
+//     amountReadonly: boolean;
+//     deductibleRequired: boolean;
+//     building: string | null;
+//   }

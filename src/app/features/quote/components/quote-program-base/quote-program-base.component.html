@@ -2,31 +2,58 @@
   <div class="navToolbar">
     <ul class="nav nav-tabs nav-fill">
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['location']">Location/Coverage 
-          <span
-            class="badge bg-danger" *ngIf="(this.propertyLocationTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="propertyLocationTabErrorList" tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['location']">Location/Coverage
+          <span class="badge bg-danger" *ngIf="(this.propertyLocationTabValidation?.errorMessages?.length ?? 0) > 0"
+            [ngbTooltip]="propertyLocationTabErrorList"
+            tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}
           </span>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['mortgagee']">Mortgagee/Additional Interest
-          <span
-            class="badge bg-danger" *ngIf="(this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="mortgageeAdditionalInterestErrorList" tooltipClass="tabErrors">{{this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? ''}}
+          <span class="badge bg-danger"
+            *ngIf="(this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? 0) > 0"
+            [ngbTooltip]="mortgageeAdditionalInterestErrorList"
+            tooltipClass="tabErrors">{{this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? ''}}
           </span>
         </a>
       </li>
       <li class="nav-item">
+        <!-- <svg width="240" height="40">
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['premium']">
+          <path d="M   0   0
+                   L 210   0
+                   L 240 20
+                   L  210  40
+                   L  0 40
+                   L 20 20
+                   L 0 0
+                   Z"
+                fill="#677d95"/>
+      
+          <text x="120"
+                y="20"
+                fill="#FFFFFF"
+                text-anchor="middle"
+                alignment-baseline="middle">
+            Coverage Premium
+          </text>
+          <span class="badge bg-danger" *ngIf="(this.coveragePremiumTabValidation?.errorMessages?.length ?? 0) > 0"
+            [ngbTooltip]="coveragePremiumTabErrorList"
+            tooltipClass="tabErrors">{{this.coveragePremiumTabValidation?.errorMessages?.length ?? ''}}
+          </span>
+        </a> 
+      </svg> -->
+
         <a class="nav-link" routerLinkActive='active' [routerLink]="['premium']">Coverage Premium
-          <span
-          class="badge bg-danger" *ngIf="(this.coveragePremiumTabValidation?.errorMessages?.length ?? 0) > 0"
-          [ngbTooltip]="coveragePremiumTabErrorList" tooltipClass="tabErrors">{{this.coveragePremiumTabValidation?.errorMessages?.length ?? ''}}
-        </span>
-          </a>
+          <span class="badge bg-danger" *ngIf="(this.coveragePremiumTabValidation?.errorMessages?.length ?? 0) > 0"
+            [ngbTooltip]="coveragePremiumTabErrorList"
+            tooltipClass="tabErrors">{{this.coveragePremiumTabValidation?.errorMessages?.length ?? ''}}
+          </span>
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['forms']">Forms</a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['forms']">Forms List</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['conditions']">Terms and Conditions</a>
