@@ -528,16 +528,17 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   validateLocationCoverageTab() {
     this.propertyQuoteBuildingLocationTabValidation?.resetValidation();
-
     this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAsStandalone(this.propertyQuoteBuildingList);
   }
   validateCoveragesTab() {
     this.coveragesTabValidation?.resetValidation();
     if (this.quoteRates.length > 0) {
-      this.coveragesTabValidation?.nullCheck(this.quoteRates[0].premium, 'Premium');
+      const amountValidation = this.quoteRates[0].validateAmount();
+      if (amountValidation) {
+        this.coveragesTabValidation?.errorMessages.push(amountValidation);
+      }
     }
-    console.log('TODO: Validate Coverages');
-
+    this.coveragesTabValidation?.validateChildrenAndMerge(this.propertyQuoteDeductibleList);
   }
   validateTermsAndConditionsTab() {
     this.termsAndConditionsTabValidation?.resetValidation();
@@ -545,7 +546,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   validateMortgageeAdditionalInterestTab() {
     this.propertyQuoteMortgageeAdditionalInterestTabValidation?.resetValidation();
-
     this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgageeList);
     this.propertyQuoteMortgageeAdditionalInterestTabValidation?.validateChildrenAndMerge(this.propertyQuoteAdditionalInterestList);
   }

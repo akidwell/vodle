@@ -64,6 +64,9 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     //this._isValid = this.validate(valid);
     return this._isValid;
   }
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
 
   constructor(rate?: QuoteRate) {
     if (rate) {
@@ -86,19 +89,21 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   classValidation() {
     this.invalidList = [];
     this._canBeSaved = true;
-
-    if (this.validateAmount()) {
+    const amountValidation = this.validateAmount();
+    if (amountValidation) {
       this._isValid = false;
+      this.invalidList.push(amountValidation);
     }
     this._errorMessages = this.invalidList;
   }
-  validateAmount(): boolean {
-    let invalid = false;
-    if ((this.premium ?? 0) == 0) {
-      invalid = true;
-      this.invalidList.push('Premium is required');
+  validateAmount(): string | null {
+    if (this.premium === null) {
+      return 'Premium is required';
     }
-    return invalid;
+    if (this.premium == 0) {
+      return 'Premium must be > 0';
+    }
+    return null;
   }
   existingInit(rate: QuoteRate) {
     this.quoteId = rate.quoteId;
