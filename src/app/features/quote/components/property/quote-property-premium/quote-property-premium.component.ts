@@ -19,12 +19,11 @@ export class QuotePropertyPremiumComponent implements OnInit {
   faAngleUp = faAngleUp;
   authSub: Subscription;
   canEditSubmission = false;
-  quote!: PropertyQuoteClass;
 
   classType = ClassTypeEnum.Quote;
 
   @Input() public program!: ProgramClass;
-  @Input() public quoteBase!: QuoteClass;
+  @Input() public quote!: PropertyQuoteClass;
   @Input() public rate!: QuoteRateClass;
 
   constructor(private userAuth: UserAuth) {
@@ -34,6 +33,5 @@ export class QuotePropertyPremiumComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.quote = this.quoteBase as PropertyQuoteClass;
   }
 }

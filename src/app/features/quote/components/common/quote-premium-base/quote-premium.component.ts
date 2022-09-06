@@ -14,7 +14,7 @@ import { QuoteRateClass } from '../../../classes/quote-rate-class';
 })
 export class QuotePremiumComponent implements OnInit {
   program!: ProgramClass;
-  quote!: QuoteClass;
+  quote!: PropertyQuoteClass;
   rate!: QuoteRateClass;
   quoteId = 0;
   programSub!: Subscription;
@@ -27,7 +27,9 @@ export class QuotePremiumComponent implements OnInit {
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
           this.program = selectedProgram;
-          this.quote = selectedProgram.quoteData ?? new PropertyQuoteClass();
+          if (selectedProgram.quoteData instanceof PropertyQuoteClass) {
+            this.quote = selectedProgram.quoteData ?? new PropertyQuoteClass();
+          }
           this.rate = selectedProgram.quoteData?.quoteRates[0] ?? new QuoteRateClass();
         }
       }
