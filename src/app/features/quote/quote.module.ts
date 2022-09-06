@@ -49,6 +49,7 @@ import { OptionalPremiumModule } from 'src/app/shared/components/optional-premiu
 import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
 import { QuoteLineItemsModule } from './components/common/quote-line-items/quote-line-items.module';
+import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy-forms.module';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,8 @@ import { QuoteLineItemsModule } from './components/common/quote-line-items/quote
     PropertyImportModule,
     PropertyBuildingCoverageModule,
     PropertyBuildingCoverageEditModule,
+    FormsModule,
+    PolicyFormsModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

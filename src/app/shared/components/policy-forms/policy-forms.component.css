@@ -1,0 +1,27 @@
+.margin-left {
+    margin-left: 5px;
+}
+
+.toggle-button {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.table th {
+  background-color: #335271;
+  color: white;
+  padding: 6px;
+}
+
+.table-body {
+    padding: 0px !important;
+}
+
+
+i.fa {
+    display: inline-block;
+    border-radius: 60px;
+    box-shadow: 0 0 2px #888;
+    padding: 0.5em 0.6em;
+  
+  }
