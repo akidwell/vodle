@@ -6,6 +6,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
 import { ProgramClass } from '../../../classes/program-class';
+import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteClass } from '../../../classes/quote-class';
 import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 import { QuoteService } from '../../../services/quote-service/quote.service';
@@ -38,14 +39,16 @@ export class QuoteInformationDetailProgramComponent {
   }
 
   createQuote() {
-    this.program.quoteData = new QuoteClass(
+    //TODO: CASUALTY create quote
+    this.program.quoteData = this.createPropertyQuote();
+    this.newQuote = true;
+    this.quoteSavingService.saveDepartment();
+  }
+  createPropertyQuote(): PropertyQuoteClass{
+    return new PropertyQuoteClass(
       undefined,
       this.program,
       this.submissionForQuote || undefined
     );
-    console.log(this.program);
-    this.newQuote = true;
-    this.quoteSavingService.saveDepartment();
   }
-
 }

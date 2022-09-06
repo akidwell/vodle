@@ -4,7 +4,7 @@ import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { Quote } from 'src/app/features/quote/models/quote';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
   selector: 'rsps-quote-property-detail-right',
@@ -12,7 +12,7 @@ import { Quote } from 'src/app/features/quote/models/quote';
   styleUrls: ['./quote-property-detail-right.component.css']
 })
 export class QuotePropertyDetailRightComponent implements OnInit {
-  @Input() public quote!: Quote;
+  @Input() public quote!: PropertyQuoteClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
   cspCodes$: Observable<Code[]> | undefined;
@@ -53,15 +53,15 @@ export class QuotePropertyDetailRightComponent implements OnInit {
         .then(async (result: boolean) => {
           if (result) {
             this.previousCspCode = cspCode;
-            this.quote.propertyQuote.clearCspCodes();
-            this.quote.propertyQuote.cspCode = cspCode;
+            this.quote.clearCspCodes();
+            this.quote.cspCode = cspCode;
             this.quote.classCode = Number(cspCode);
           } else {
             this.quote.classCode = this.previousCspCode;
           }});
     } else {
       this.previousCspCode = cspCode;
-      this.quote.propertyQuote.cspCode = cspCode;
+      this.quote.cspCode = cspCode;
       this.quote.classCode = Number(cspCode);
     }
   }

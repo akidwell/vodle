@@ -12,6 +12,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 
 import { QuoteDataValidationService } from 'src/app/features/quote/services/quote-data-validation-service/quote-data-validation-service.service';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
   selector: 'rsps-additional-interest-group',
@@ -44,8 +45,8 @@ export class AdditionalInterestGroupComponent implements OnInit {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterestList){
-          this.aiData = this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterestList;
+        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterestList){
+          this.aiData = this.program?.quoteData?.propertyQuoteAdditionalInterestList;
         }
       });
     this.collapsed = false;

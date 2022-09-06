@@ -1,6 +1,7 @@
 import { Code } from 'src/app/core/models/code';
 import { Program } from '../models/program';
 import { ProgramCoverageCarrierMapping } from '../models/program-coverage-carrier-mapping';
+import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteClass } from './quote-class';
 
 export class ProgramClass implements Program {
@@ -36,7 +37,7 @@ export class ProgramClass implements Program {
 
   init(program: Program, availableCarrierCodes?: Code[], availablePacCodes?: Code[]) {
     this.programId = program.programId;
-    this.quoteData = program.quoteData ? new QuoteClass(program.quoteData || undefined) : null;
+    this.quoteData = this.selectProgramQuote(program);
     this.ratingTabEnabled = program.ratingTabEnabled;
     this.programDesc = program.programDesc;
     this.allCarrierCodes = availableCarrierCodes || [];
@@ -45,6 +46,11 @@ export class ProgramClass implements Program {
     this.availablePacCodes = availablePacCodes || [];
     this.programCoverageCarrierMappings = program.programCoverageCarrierMappings;
     this.setCoverageCarrierMapping();
+  }
+  selectProgramQuote(program: Program) {
+    //if (program.programId === 112) {
+    return program.quoteData ? new PropertyQuoteClass(program.quoteData || undefined) : null;
+    //}
   }
   updateGlobalSettings(admittedStatus: string, claimsMadeOrOccurrence: string) {
     if (this._quoteData != null) {

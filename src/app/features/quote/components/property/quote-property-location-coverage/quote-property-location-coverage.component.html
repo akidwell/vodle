@@ -1,16 +1,16 @@
 <rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission">
 </rsps-property-import>
 <rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission"
-    [buildings]="quote.propertyQuote.propertyQuoteBuildingList" [largestExposure]="quote.propertyQuote.largestExposure"
-    [lawLimits]="quote.propertyQuote.lawLimits" [limitTotal]="quote.propertyQuote.limitTotal"
-    [largestTiv]="quote.propertyQuote.largestPremTiv" [subjectAmount]="quote.propertyQuote.subjectAmounts">
+    [buildings]="quote.propertyQuoteBuildingList" [largestExposure]="quote.largestExposure"
+    [lawLimits]="quote.lawLimits" [limitTotal]="quote.limitTotal"
+    [largestTiv]="quote.largestPremTiv" [subjectAmount]="quote.subjectAmounts">
 </rsps-quote-property-detail>
-<rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote.propertyQuote"
-    [buildings]="quote.propertyQuote.filteredBuildings" [canEdit]="canEditSubmission"
-    [buildingCount]="quote.propertyQuote.buildingCount" [programId]="quote.programId"></rsps-property-building-group>
+<rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote"
+    [buildings]="quote.filteredBuildings" [canEdit]="canEditSubmission"
+    [buildingCount]="quote.buildingCount" [programId]="quote.programId"></rsps-property-building-group>
 <rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEditSubmission"
-    [buildings]="quote.propertyQuote.propertyQuoteBuildingList"></rsps-property-building-coverage-edit>
+    [buildings]="quote.propertyQuoteBuildingList"></rsps-property-building-coverage-edit>
 <rsps-property-building-coverage-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote.propertyQuote"
-    [coverages]="quote.propertyQuote.filteredCoverages" [limitTotal]="quote.propertyQuote.limitTotal"
-    [coverageCount]="quote.propertyQuote.coverageCount" [canEdit]="canEditSubmission">
+    [coverages]="quote.filteredCoverages" [limitTotal]="quote.limitTotal"
+    [coverageCount]="quote.coverageCount" [canEdit]="canEditSubmission">
 </rsps-property-building-coverage-group>

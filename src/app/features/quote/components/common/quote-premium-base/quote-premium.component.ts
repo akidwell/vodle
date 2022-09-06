@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
+import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteClass } from '../../../classes/quote-class';
 import { QuoteRateClass } from '../../../classes/quote-rate-class';
 
@@ -26,7 +27,7 @@ export class QuotePremiumComponent implements OnInit {
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
           this.program = selectedProgram;
-          this.quote = selectedProgram.quoteData ?? new QuoteClass();
+          this.quote = selectedProgram.quoteData ?? new PropertyQuoteClass();
           this.rate = selectedProgram.quoteData?.quoteRates[0] ?? new QuoteRateClass();
         }
       }

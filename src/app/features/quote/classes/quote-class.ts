@@ -4,25 +4,26 @@ import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
-import { PropertyQuoteClass } from './property-quote-class';
 import { QuoteRateClass } from './quote-rate-class';
 import { QuoteValidationClass } from './quote-validation-class';
 import { QuoteRate } from '../models/quote-rate';
-import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
-import { PropertyQuoteBuildingClass } from './property-quote-building-class';
-import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
-import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
-import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
+import { QuoteLineItemClass } from './quote-line-item-class';
+import { QuoteLineItem } from '../models/quote-line-item';
+import { ValidationClass } from 'src/app/shared/classes/validation-class';
+import { PropertyQuoteClass } from './property-quote-class';
 
-export class QuoteClass implements Quote, Validation, QuoteAfterSave {
-  private _validateOnLoad = true;
-  private _validationResults: QuoteValidationClass;
-  private _canBeSaved = true;
-  private _errorMessages: string[] = [];
-  private _isValid = true;
-  private _classCode : number | null = null;
+export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
+  _validateOnLoad = true;
+  _validationResults: QuoteValidationClass;
+  _canBeSaved = true;
+  _errorMessages: string[] = [];
+  _isValid = true;
+  _classCode : number | null = null;
+  _isDirty = false;
+  isNew = false;
+  invalidList: string[] = [];
 
   submissionNumber = 0;
   quoteId = 0;
@@ -81,7 +82,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   validatedRisk = null;
   triaFormReceived = null;
   annualizedPremium = null;
-  manualApprovalRequired = false;
+  manualApprovalRequired = 'N';
   submissionGroupsStatusId = 1;
   modifiedUserId = null;
   approvalUserId = null;
@@ -124,7 +125,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   qsPercentTotalPremium = null;
   quotaSharePercent = null;
   maxPolicyAggregate = null;
-  displayCommissionRate = false;
+  displayCommissionRate = 0;
   supportedStatus = null;
   importWarnings = [];
   importErrors = [];
@@ -136,14 +137,13 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   quoteRates: QuoteRateClass[] = [];
   quoteRatesValidation: QuoteValidationClass | null = null;
 
+  quoteLineItems: QuoteLineItemClass[] = [];
+  quoteLineItemsValidation: QuoteValidationClass | null = null;
+
   propertyQuote!: PropertyQuoteClass;
 
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
-
-  private _isDirty = false;
-  isNew = false;
-  invalidList: string[] = [];
 
   get isDirty(): boolean {
     return this._isDirty ;
@@ -171,6 +171,11 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._classCode = value == 0 ? null : value;
     this._isDirty = true;
   }
+  private _riskState : string | null = null;
+
+  get riskState() : string | null {
+    return this._riskState;
+  }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
@@ -179,7 +184,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       this.newInit(program, submission);
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
-    this.validate();
+    //this.validate();
   }
   existingInit(quote: Quote) {
     this.submissionNumber = quote.submissionNumber || 0;
@@ -201,7 +206,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.programId = quote.programId || 0;
     this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
     this.submissionNumber = quote.submissionNumber || 0;
-    this.displayCommissionRate = quote.displayCommissionRate || true;
+    this.displayCommissionRate = quote.displayCommissionRate || 1;
     this.createdBy = quote.createdBy || '';
     this.createdDate = quote.createdDate || null;
     this.submission = new SubmissionClass(quote.submission);
@@ -210,12 +215,16 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       rates.push(new QuoteRateClass(element));
     });
     this.quoteRates = rates;
-    this.propertyQuote = new PropertyQuoteClass(quote.propertyQuote);
+    const lineItems: QuoteLineItemClass[] = [];
+    quote.quoteLineItems?.forEach(element => {
+      lineItems.push(new QuoteLineItemClass(element));
+    });
+    this.quoteLineItems = lineItems;
     this._classCode = quote.quoteRates[0].classCode || null;
+    this._riskState = quote.riskState;
 
     this.setReadonlyFields();
     this.setRequiredFields();
-    this.validateQuoteChildren();
   }
   newInit(program: ProgramClass, submission: SubmissionClass) {
     //if first quote on group attach to existing submission
@@ -248,12 +257,7 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   markDirty() {
     this._isDirty = true;
   }
-  markImported() {
-    this.propertyQuote.propertyQuoteBuildingList.forEach(c => {
-      c.markImported();
-      c.calculateITV();
-    });
-  }
+
   setRequiredFields() {
     // No special rules
   }
@@ -269,32 +273,18 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       this.markStructureClean();
     }
   }
-  markChildrenClean() {
-    console.log(this.propertyQuote);
-    if (this.propertyQuote) {
-      this.propertyQuote.markStructureClean();
-    }
-    this.cleanChildArray(this.quoteRates);
-  }
+  abstract markChildrenClean(): void;
+
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
       child.markStructureClean();
     });
   }
-  // createPropertyLocationCoverageValidation() {
-  //   this.propertyQuoteValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyLocationCoverages);
 
-  // }
-  // createPropertyMortgageeAdditionalInterestValidation() {
-  //   this.mortgageeAdditionalInterestValidation = new QuoteValidationClass(QuoteValidationTypeEnum.Tab, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
-  //   this.propertyQuoteAdditionalInterestValidation = this.propertyQuoteAdditionalInterest.length > 0 ? new QuoteValidationClass(QuoteValidationTypeEnum.Child, null) : null;
-  //   this.propertyQuoteAdditionalInterestValidation?.addValidationToChildGroup(this.quoteChildValidations);
-
-  //   this.propertyQuoteMortgageeValidation = this.propertyQuoteMortgagee.length > 0 ? new QuoteValidationClass(QuoteValidationTypeEnum.Child, null) : null;
-  //   this.propertyQuoteMortgageeValidation?.addValidationToChildGroup(this.quoteChildValidations);
-  // }
   validateQuoteChildren() {
     this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
+    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteLineItems);
+
     //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
     //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   }
@@ -303,7 +293,6 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._errorMessages = [];
     this._isValid = true;
     this.validateClassCode();
-    this.validationResults.mapValues(this);
     this.validateQuoteChildren();
   }
 
@@ -317,28 +306,18 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
     return invalid;
   }
 
-  validate(){
+
+  validateBase(){
     this.validateQuote();
-    this.propertyQuote?.validate();
-    const childValidations: QuoteValidationClass[] = [];
-    if (this.propertyQuote) {
-      childValidations.push(this.propertyQuote?.validationResults);
-    }
-    if (this.quoteRatesValidation){
-      childValidations.push(this.quoteRatesValidation);
-    }
-    console.log(childValidations);
-    if (childValidations.length > 0) {
-      this.validationResults.validateChildValidations(childValidations);
-    }
-    console.log('final quote validation: ', this.validationResults);
-    //TODO: class based validation checks
-    this._validateOnLoad = false;
+    this.validateClass();
     return this.validationResults;
   }
-  validatePropertyQuote(quote: Validation){
-    quote.validate ? quote.validate(): null;
-  }
+  abstract validate(): ValidationClass;
+  abstract validateClass(): void;
+
+  // validatePropertyQuote(quote: Validation){
+  //   quote.validate ? quote.validate(): null;
+  // }
   // validateCoverageTab(): QuoteChildValidation {
   //   const validation: QuoteChildValidation = {
   //     className: 'CoverageClass',
@@ -368,88 +347,22 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
   // }
 
 
-  onSave(savedQuote: QuoteClass) {
-    this.onSaveBuilding(this.propertyQuote.propertyQuoteBuildingList,savedQuote);
-    this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductibleList,savedQuote);
-    this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
-    this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
-  }
+  // onSave(savedQuote: QuoteClass) {
+  //   this.onSaveBuilding(this.propertyQuote.propertyQuoteBuildingList,savedQuote);
+  //   this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductibleList,savedQuote);
+  //   this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
+  //   this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
+  // }
+  abstract onSave(savedQuote:QuoteClass): void;
 
-  private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: QuoteClass): void {
-    mortgagees.forEach(mortgagee => {
-      if (mortgagee.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteMortgageeList.find(c => c.guid == mortgagee.guid);
-        if (match != null) {
-          mortgagee.propertyQuoteMortgageeId = match.propertyQuoteMortgageeId;
-          mortgagee.propertyQuoteId = match.propertyQuoteId;
-        }
-        mortgagee.isNew = false;
-        mortgagee.guid = '';
-      }
-    });
-  }
+  abstract toJSON(): Quote;
 
-  private onSaveAdditionalInterest(additionalInterests: AdditionalInterestClass[], savedQuote: QuoteClass): void {
-    additionalInterests.forEach(additionalInterest => {
-      if (additionalInterest.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteAdditionalInterestList.find(c => c.guid == additionalInterest.guid);
-        if (match != null) {
-          additionalInterest.propertyQuoteAdditionalInterestId = match.propertyQuoteAdditionalInterestId;
-          additionalInterest.propertyQuoteId = match.propertyQuoteId;
-        }
-        additionalInterest.isNew = false;
-        additionalInterest.guid = '';
-      }
-    });
-  }
-
-  private onSaveDeductible(deductibles: PropertyQuoteDeductibleClass[], savedQuote: QuoteClass): void {
-    deductibles.forEach(deductible => {
-      if (deductible.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteDeductibleList.find(c => c.guid == deductible.guid);
-        if (match != null) {
-          deductible.propertyQuoteDeductibleId = match.propertyQuoteDeductibleId;
-          deductible.propertyQuoteId = match.propertyQuoteId;
-        }
-        deductible.isNew = false;
-        deductible.guid = '';
-      }
-    });
-  }
-
-  private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: QuoteClass): void {
-    buildings.forEach(building => {
-      if (building.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteBuildingList.find(c => c.guid == building.guid);
-        if (match != null) {
-          building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
-          building.propertyQuoteId = match.propertyQuoteId;
-        }
-        building.isNew = false;
-        building.guid = '';
-      }
-      this.onSaveCoverage(building.propertyQuoteBuildingCoverage, savedQuote);
-    });
-  }
-
-  private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: QuoteClass): void {
-    coverages.forEach(coverage => {
-      if (coverage.isNew) {
-        const buildingMatch = savedQuote.propertyQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
-        const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.guid == coverage.guid);
-        if (coverageMatch != null) {
-          coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId;
-          coverage.propertyQuoteBuildingId = coverageMatch.propertyQuoteBuildingId;
-        }
-        coverage.isNew = false;
-        coverage.guid = '';
-      }
-    });
-  }
-
-  toJSON() {
+  baseToJSON(): Quote {
     const rates: QuoteRate[] = [];
     this.quoteRates.forEach(c => rates.push(c.toJSON(Number(this.classCode))));
+    const lineItems: QuoteLineItem[] = [];
+    this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
+    console.log(lineItems);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -473,8 +386,96 @@ export class QuoteClass implements Quote, Validation, QuoteAfterSave {
       programId: this.programId,
       classCode: this.classCode,
       autoCalcMiscPremium: this.autoCalcMiscPremium,
-      propertyQuote: this.propertyQuote?.toJSON(),
-      quoteRates: rates
+      propertyQuote: null,
+      quoteRates: rates,
+      quoteLineItems: lineItems,
+      terrorismCoverage: this.terrorismCoverage,
+      terrorismCoverageSelected: this.terrorismCoverageSelected,
+      terrorismPremium: this.terrorismPremium,
+      terrorismTemplateCode: this.terrorismTemplateCode,
+      advancePremium: this.advancePremium,
+      annualizedPremium: this.annualizedPremium,
+      approvalDate: this.approvalDate,
+      approvalReason: this.approvalReason,
+      approvalRequired: this.approvalRequired,
+      approvalStatus: this.approvalStatus,
+      approvalUserId: this.approvalUserId,
+      approvalUserName: this.approvalUserName,
+      manualApprovalRequired: this.manualApprovalRequired,
+      attachmentPoint: this.attachmentPoint,
+      auditCode: this.auditCode,
+      ratingBasis: this.ratingBasis,
+      //variesByLoc: this.variesByLoc,
+      coinsurancePercentage: this.coinsurancePercentage,
+      comments: this.comments,
+      commissionRate: this.commissionRate,
+      //discontinuedProducts: this.discontinuedProducts,
+      displayCommissionRate: this.displayCommissionRate,
+      earnedPremiumPct: this.earnedPremiumPct,
+      //excessOfAuto: this.excessOfAuto,
+      facTreatyType: this.facTreatyType,
+      fireDamageLimits: this.fireDamageLimits,
+      //flatRateIndicator: this.flatRateIndicator,
+      formsVersion: this.formsVersion,
+      fullPriorActs: this.fullPriorActs,
+      generalAggregateLimits: this.generalAggregateLimits,
+      grossLimits: this.grossLimits,
+      grossPremium: this.grossPremium,
+      groupId: this.groupId,
+      indicationPremium: this.indicationPremium,
+      maxPolicyAggregate: this.maxPolicyAggregate,
+      medicalPayments: this.medicalPayments,
+      minimumPremium: this.minimumPremium,
+      //minimumPremiumRequired: this.minimumPremiumRequired,
+      modifiedDate: this.modifiedDate,
+      modifiedUserId: this.modifiedUserId,
+      modifiedUserName: this.modifiedUserName,
+      naicsCode: this.naicsCode,
+      //overridePremium: this.overridePremium,
+      //overrideTRIAPremium: this.overrideTRIAPremium,
+      ownerId: this.ownerId,
+      ownerUserId: this.ownerUserId,
+      partOf: this.partOf,
+      pcfCharge: this.pcfCharge,
+      pcfChargeDesc: this.pcfChargeDesc,
+      persInjAdvertInjLimits: this.persInjAdvertInjLimits,
+      premiumRate: this.premiumRate,
+      printedAt: this.printedAt,
+      productAggregateLimits: this.productAggregateLimits,
+      productManufactureDate: this.productManufactureDate,
+      professionalAggregateLimits: this.professionalAggregateLimits,
+      professionalLiabilityLimits: this.professionalLiabilityLimits,
+      projectSpecific: this.projectSpecific,
+      //proRatePremium: this.proRatePremium,
+      qsPartOfLimits: this.qsPartOfLimits,
+      qsPercentTotalPremium: this.qsPercentTotalPremium,
+      qsPercentTotalTRIPRAPremium: this.qsPercentTotalTRIPRAPremium,
+      //quotaShare: this.quotaShare,
+      quotaSharePercent: this.quotaSharePercent,
+      quoteExpirationDate: this.quoteExpirationDate,
+      quoteName: this.quoteName,
+      rated: this.rated,
+      ratedPremium: this.ratedPremium,
+      //ratingDataChanged: this.ratingDataChanged,
+      retainedLimit: this.retainedLimit,
+      retroDate: this.retroDate,
+      riskSelectionComments: this.riskSelectionComments,
+      sicCode: this.sicCode,
+      riskState: this.riskState,
+      //sinceInception: this.sinceInception,
+      //specPlusEndorsement: this.specPlusEndorsement,
+      submissionGroupsStatusId: this.submissionGroupsStatusId,
+      supportedStatus: this.supportedStatus,
+      triaFormReceived: this.triaFormReceived,
+      umuimAccepted: this.umuimAccepted,
+      //umuimAcceptedLastYear: this.umuimAcceptedLastYear,
+      underlyingLimits: this.underlyingLimits,
+      //underlyingUMLimit1Mil: this.underlyingUMLimit1Mil,
+      //userFacultativeReins: this.userFacultativeReins,
+      validated: this.validated,
+      validatedRisk: this.validatedRisk,
+      importErrors: this.importErrors,
+      importWarnings: this.importWarnings
     };
   }
 }

@@ -3,6 +3,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { DepartmentClass } from '../../classes/department-class';
+import { PropertyQuoteClass } from '../../classes/property-quote-class';
 import { QuoteClass } from '../../classes/quote-class';
 import { QuoteValidationClass } from '../../classes/quote-validation-class';
 
@@ -92,10 +93,12 @@ export class QuoteDataValidationService {
   // }
   updateQuoteValidations(quote: QuoteClass | null) {
     if (quote) {
-      this.propertyQuoteValidation = quote.propertyQuote.validationResults;
-      this.propertyQuoteMortgageeAdditionalInterestTabValidation = quote.propertyQuote.propertyQuoteMortgageeAdditionalInterestTabValidation;
-      this.propertyQuoteLocationBuildingTabValidation = quote.propertyQuote.propertyQuoteBuildingLocationTabValidation;
-      this.coveragePremiumTabValidation = quote.propertyQuote.coveragesTabValidation;
+      if (quote instanceof PropertyQuoteClass) {
+        this.propertyQuoteValidation = quote.validationResults;
+        this.propertyQuoteMortgageeAdditionalInterestTabValidation = quote.propertyQuoteMortgageeAdditionalInterestTabValidation;
+        this.propertyQuoteLocationBuildingTabValidation = quote.propertyQuoteBuildingLocationTabValidation;
+        this.coveragePremiumTabValidation = quote.coveragesTabValidation;
+      }
     }
   }
 }
