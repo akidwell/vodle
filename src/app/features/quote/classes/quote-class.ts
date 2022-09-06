@@ -281,19 +281,20 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     });
   }
 
-  validateQuoteChildren() {
-    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
-    this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteLineItems);
+  // validateQuoteChildren() {
+  //   this.quoteRatesValidation?.validateChildrenAsStandalone(this.quoteRates);
+  //   console.log('Quote Rates: ', this.quoteRatesValidation);
+  //   this.quoteRatesValidation?.validateChildrenAndMerge(this.quoteLineItems);
 
-    //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
-    //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
-  }
+  //   //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
+  //   //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
+  // }
   validateQuote() {
     //this._canBeSaved = true;
     this._errorMessages = [];
     this._isValid = true;
     this.validateClassCode();
-    this.validateQuoteChildren();
+    //this.validateQuoteChildren();
   }
 
   validateClassCode(): boolean {
