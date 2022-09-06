@@ -157,7 +157,7 @@ export interface PolicyLayerData {
   policyId: number;
   endorsementNo: number;
   policyLayerNo: number
-  policyLayerAttachmentPoint?: number;
+  policyLayerAttachmentPoint: number;
   policyLayerLimit?: number;
   policyLayerPremium?: number;
   invoiceNo: number| null;
@@ -175,7 +175,7 @@ export const newPolicyLayer = (policyId: number, endorsementNumber: number, poli
     policyId: policyId,
     endorsementNo: endorsementNumber,
     policyLayerNo: policyLayerNo,
-    policyLayerAttachmentPoint: undefined,
+    policyLayerAttachmentPoint: 0,
     policyLayerLimit: undefined,
     policyLayerPremium: undefined,
     invoiceNo: null,
@@ -217,7 +217,7 @@ export interface ReinsuranceLayerData {
   effectiveDate: Date | null;
   isFaculative: boolean | null;
   maxLayerLimit?: number | null;
-  attachmentPoint: number | null;
+  attachmentPoint: number;
   isNew: boolean;
 }
 
@@ -231,7 +231,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     policyId: policyId,
     endorsementNumber: endorsementNumber,
     policyLayerNo: policyLayerNo,
-    reinsLayerNo!: reinsLayerNo,
+    reinsLayerNo: reinsLayerNo,
     reinsLimit: null,
     reinsCededPremium: null,
     reinsCededCommRate: 0,
@@ -254,7 +254,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     cededCommissionRat: null,
     effectiveDate: null,
     isFaculative: false,
-    attachmentPoint: null,
+    attachmentPoint: 0,
     isNew: true
   };
 };
