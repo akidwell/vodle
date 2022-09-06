@@ -50,7 +50,6 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     this._isFlatRate = value;
     this._isDirty = true;
   }
-
   get isDirty() : boolean {
     return this._isDirty;
   }
@@ -89,6 +88,7 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   classValidation() {
     this.invalidList = [];
     this._canBeSaved = true;
+    this._isValid = true;
     const amountValidation = this.validateAmount();
     if (amountValidation) {
       this._isValid = false;

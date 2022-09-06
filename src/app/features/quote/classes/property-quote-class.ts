@@ -437,6 +437,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteMortgageeList);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteAdditionalInterestList);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingList);
+    this._validationResults.validateChildrenAndMerge(this.quoteRates);
+    this._validationResults.validateChildrenAndMerge(this.quoteLineItems);
 
     return this._validationResults;
   }
@@ -450,6 +452,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.propertyQuoteMortgageeList);
     this.childArrayValidate(this.propertyQuoteAdditionalInterestList);
     this.childArrayValidate(this.propertyQuoteBuildingList);
+    this.childArrayValidate(this.quoteLineItems);
+    this.childArrayValidate(this.quoteRates);
   }
   childArrayValidate(children: Validation[]) {
     children.forEach(child => {
@@ -462,6 +466,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.propertyQuoteAdditionalInterestList);
     this.cleanChildArray(this.propertyQuoteBuildingList);
     this.cleanChildArray(this.quoteLineItems);
+    this.cleanChildArray(this.quoteRates);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
