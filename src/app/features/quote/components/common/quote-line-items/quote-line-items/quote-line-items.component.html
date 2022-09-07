@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="col-sm-2">
-        <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description"
+    <div class="col-lg-2">
+        <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description" [readonly]="!canEdit" [required]="canEdit"
             bindValue="key" [clearable]="false" name="lineItemDescription" [(ngModel)]="lineItem.lineItemCode"
             #lineItemCode="ngModel" (change)="changeLineItem($event)">
             <ng-template ng-label-tmp let-item="item">
@@ -11,29 +11,37 @@
             </ng-template>
         </ng-select>
     </div>
-    <div class="col-sm-2">
-        <input type="text" class="form-control" id="dueDate" name="dueDate" 
-        [(ngModel)]="lineItem.dueDate" #dueDate="ngModel">
+    <div class="col-lg-2">
+        <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="dueDateCalendar" [readonly]="!canEdit" 
+        class="form-control"  autocomplete="off"  name="dueDate"  [(ngModel)]="lineItem.dueDate" #dueDate="ngModel">
+      <mat-datepicker-toggle matSuffix  style="display: inline-block; max-width: 20%;" [for]="dueDateCalendar">
+      </mat-datepicker-toggle>
+      <mat-datepicker #dueDateCalendar></mat-datepicker>
     </div>
-    <div class="col-sm-1">
-        <input type="checkbox" id="received" name="received" 
-        [(ngModel)]="lineItem.ysnReceived" #received="ngModel">
+    <div class="col-lg-1">
+        <input type="checkbox" class="form-check-input" id="received" name="received" [readonly]="!canEdit" 
+        [(ngModel)]="lineItem.received" #received="ngModel">
     </div>
-    <div class="col-sm-4">
-        <input style="width:100%" type="text" class="form-control" id="notes" name="notes" 
+    <div class="col-lg-4">
+        <input style="width:100%" type="text" class="form-control" id="notes" name="notes" [readonly]="!canEdit" 
         [(ngModel)]="lineItem.notes" #dueDate="ngModel">
     </div>
-    <div class="col-sm-2">
-        <input type="text" class="form-control" id="amount" name="amount" 
-        [(ngModel)]="lineItem.amount" #amount="ngModel">    </div>
-    <div class="col-sm-1">
+    <div class="col-lg-2">
+        <input type="text" class="form-control" maxlength="18" maxInt [readonly]="!canEdit" [required]="canEdit"
+        [(ngModel)]="lineItem.amount" name="amount" #amount="ngModel" string-to-currency [decimalPlaces]="2"
+        string-to-currency [allowNegative]="false">    
+    
+    </div>
+    <div class="col-lg-1">
         <div ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle
+            <button type="button" class="btn btn-outline-primary" id="action" [disabled]="!canEdit" ngbDropdownToggle
                 click-stop-propagation>Actions</button>
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button>Copy</button>
-                <button>Delete</button>
-                <button>Remove</button>
+                <button *ngIf="canEdit" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
+                <button *ngIf="!lineItem.isNew && canEdit " hover-class="btn-danger"
+                    (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
+                <button *ngIf="lineItem.isNew && canEdit " hover-class="btn-warning"
+                    (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
             </div>
         </div>
     </div>

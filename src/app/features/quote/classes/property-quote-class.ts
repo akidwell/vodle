@@ -75,6 +75,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     );
     return total;
   }
+
+  get totalPremium(): number{
+    let optionalPremTotal = 0;
+    let ratesTotal = 0;
+    this.propertyOptionalPremiumList.map((x) => (optionalPremTotal += x.additionalPremium ?? 0));
+    this.quoteRates.map((x) =>(ratesTotal += x.premium ?? 0));
+    return optionalPremTotal + ratesTotal;
+  }
+
   private _subjectAmounts: Map<any,any> = new Map();
 
   get subjectAmounts(): Map<any,any> {

@@ -18,6 +18,7 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
     this._propertyQuoteId = value;
     this.markDirty();
   }
+  
   classValidation() {
     this.invalidList = [];
     this.canBeSaved = true;
