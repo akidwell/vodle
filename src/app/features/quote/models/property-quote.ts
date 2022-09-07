@@ -4,7 +4,7 @@ import { PropertyBuilding } from './property-building';
 import { PropertyDeductible } from './property-deductible';
 
 export interface PropertyQuote {
-  propertyQuoteId: number | null;
+  propertyQuoteId: number;
   quoteId: number | null;
   riskDescription: string | null;
 

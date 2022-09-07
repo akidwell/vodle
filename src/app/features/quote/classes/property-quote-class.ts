@@ -23,7 +23,7 @@ import { SubmissionClass } from '../../submission/classes/SubmissionClass';
 import { ProgramClass } from './program-class';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
-  propertyQuoteId: number | null = null;
+  propertyQuoteId = 0;
   //quoteId: number | null = null;
 
   propertyQuoteDeductibleList: PropertyQuoteDeductibleClass[] = [];
@@ -501,12 +501,12 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     if (this.propertyQuote) {
       childValidations.push(this.validationResults);
     }
-    if (this.quoteRatesValidation){
-      childValidations.push(this.quoteRatesValidation);
-    }
-    if (this.quoteLineItemsValidation){
-      childValidations.push(this.quoteLineItemsValidation);
-    }
+    // if (this.quoteRatesValidation){
+    //   childValidations.push(this.quoteRatesValidation);
+    // }
+    // if (this.quoteLineItemsValidation){
+    //   childValidations.push(this.quoteLineItemsValidation);
+    // }
     if (childValidations.length > 0) {
       this.validationResults.validateChildValidations(childValidations);
     }
