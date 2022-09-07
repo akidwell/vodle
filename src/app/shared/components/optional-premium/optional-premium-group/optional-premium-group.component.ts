@@ -15,6 +15,8 @@ import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteLineItemClass } from 'src/app/features/quote/classes/quote-line-item-class';
 import { Moment } from 'moment';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
+import { QuoteRateClass } from 'src/app/features/quote/classes/quote-rate-class';
+import { QuoteRate } from 'src/app/features/quote/models/quote-rate';
 
 @Component({
   selector: 'rsps-optional-premium-group',
@@ -37,6 +39,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   effectiveDate!: Date | Moment | null;
   quoteId = 0;
   programSub!: Subscription;
+  @Input() public totalPrem!: number | null;
+
   constructor(private notification: NotificationService, userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
     super(userAuth);
   }

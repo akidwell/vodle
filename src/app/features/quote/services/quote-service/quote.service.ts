@@ -13,7 +13,6 @@ import { Quote } from '../../models/quote';
   providedIn: 'root'
 })
 export class QuoteService {
-
   constructor(private http: HttpClient, private config: ConfigService) { }
 
   getQuotes(sequenceNumber?: number, departmentCode?: number): Observable<DepartmentClass> {
@@ -62,6 +61,9 @@ export class QuoteService {
   deleteAdditionalInterest(ai: AdditionalInterestClass): Observable<boolean> {
     console.log(ai);
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/additional-interest/' + ai.propertyQuoteAdditionalInterestId?.toString());
+  }
+  deleteLineItem(id: number, sequence: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/quote-line-item/' + id + '/seq/' + sequence);
   }
 
   import(quote: Quote, file: any) {

@@ -1,24 +1,28 @@
 <div class="card">
-    <div class="card-body">
+    <div class="card-body top-bordered">
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-lg-2">
                 <label for="address">Surcharges/Fees</label>
             </div>
-            <div class="col-sm-2">
-                <label for="address">Inspection Due</label>
+            <div class="col-lg-2">
+                <label for="address">Due</label>
             </div>
-            <div class="col-sm-1">
-                <label for="address">Inspection Recieved</label>
+            <div class="col-lg-1">
+                <label for="address">Recieved</label>
             </div>
-            <div class="col-sm-4">
-                <label for="address">Inspection Notes</label>
+            <div class="col-lg-4">
+                <label for="address"> Notes</label>
             </div>
-            <div class="col-sm-1">
+            <div class="col-lg-2">
                 <label for="address">Amount</label>
             </div>
         </div>
         <div *ngFor="let item of quoteLineItemData; let i = index">
-            <rsps-quote-line-items [quoteLineItemData]="quoteLineItemData" [lineItem]="item"></rsps-quote-line-items>
+            <rsps-quote-line-items [quoteLineItemData]="quoteLineItemData" [lineItem]="item" (copyLineItem)=copyLineItem($event)
+            (deleteLineItem)=deleteLineItem($event)></rsps-quote-line-items>
         </div>
+        <div class="col-lg-1">
+        </div>
+        <button *ngIf="canEdit" class="link-button" (click)="addLineItem();">Add Line Item</button>
     </div>
 </div>
