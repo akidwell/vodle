@@ -157,6 +157,7 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
   }
 
   newInit() {
+    this.quoteId = 0;
     this.received = false;
     this.isNew = true;
   }
