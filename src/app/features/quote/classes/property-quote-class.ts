@@ -401,6 +401,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       });
     }
     this.propertyQuoteBuildingList = buildings;
+
     this.filterBuildingsCoverages();
     this.setReadonlyFields();
     this.setRequiredFields();

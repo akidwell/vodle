@@ -13,6 +13,8 @@ import { QuoteLineItemClass } from './quote-line-item-class';
 import { QuoteLineItem } from '../models/quote-line-item';
 import { ValidationClass } from 'src/app/shared/classes/validation-class';
 import { PropertyQuoteClass } from './property-quote-class';
+import { QuotePolicyFormClass } from './quote-policy-forms';
+import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 
 export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -136,12 +138,10 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   submission!: SubmissionClass;
   quoteRates: QuoteRateClass[] = [];
   quoteRatesValidation: QuoteValidationClass | null = null;
-
   quoteLineItems: QuoteLineItemClass[] = [];
   quoteLineItemsValidation: QuoteValidationClass | null = null;
-
+  quotePolicyForms: QuotePolicyFormClass[] = [];
   propertyQuote!: PropertyQuoteClass;
-
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
 
@@ -222,6 +222,14 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteLineItems = lineItems;
     this._classCode = quote.quoteRates[0].classCode || null;
     this._riskState = quote.riskState;
+
+    const policyForms: QuotePolicyFormClass[] = [];
+    if(quote.quotePolicyForms) {
+      quote.quotePolicyForms.forEach((element) => {
+        policyForms.push(new QuotePolicyFormClass(element));
+      });
+    }
+    this.quotePolicyForms = policyForms;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -363,7 +371,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteRates.forEach(c => rates.push(c.toJSON(Number(this.classCode))));
     const lineItems: QuoteLineItem[] = [];
     this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
-    console.log(lineItems);
+    const forms: PolicyForm[] = [];
+    this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -390,6 +399,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       propertyQuote: null,
       quoteRates: rates,
       quoteLineItems: lineItems,
+      quotePolicyForms: forms,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,

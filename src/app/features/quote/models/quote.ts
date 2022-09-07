@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteLineItem } from './quote-line-item';
@@ -117,4 +118,5 @@ export interface Quote {
   sicCode: string | null;
   classCode: number | null;
   riskState: string | null;
+  quotePolicyForms: PolicyForm[];
 }
