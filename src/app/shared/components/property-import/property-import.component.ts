@@ -51,8 +51,8 @@ export class PropertyImportComponent {
               .then(async (result: boolean) => {
                 if (result) {
                   this.quote.clearBuildings();
-                  if (this.quote.propertyQuote.propertyQuoteId !== null) {
-                    const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuote.propertyQuoteId);
+                  if (this.quote.propertyQuoteId !== null) {
+                    const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuoteId);
                     await lastValueFrom(result$);
                   }
                   await this.importQuote(this.quote, file);

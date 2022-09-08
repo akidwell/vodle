@@ -13,7 +13,7 @@ import { QuoteLineItemClass } from './quote-line-item-class';
 import { QuoteLineItem } from '../models/quote-line-item';
 import { ValidationClass } from 'src/app/shared/classes/validation-class';
 import { PropertyQuoteClass } from './property-quote-class';
-import { QuotePolicyFormClass } from './quote-policy-forms';
+import { QuotePolicyFormClass } from './quote-policy-forms-class';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 
 export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {

@@ -12,15 +12,17 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
-
   private _isIncluded = false;
 
+  invalidList: string[] = [];
   formName: string | null = null;
   formTitle: string | null = null;
   isMandatory = false;
   specimenLink: string | null = null;
   hasSpecialNote = false;
   isVariable = false;
+  formCategory: string | null = null;
+  sortSequence: number | null = null;
 
   get isIncluded(): boolean {
     return this._isIncluded;
@@ -37,7 +39,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
       this.newInit();
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.FormsList);
-    // this.validate();
+    this.validate();
   }
 
   get validationResults(): QuoteValidationClass {
@@ -78,12 +80,29 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.specimenLink = policyForm.specimenLink;
     this.hasSpecialNote = policyForm.hasSpecialNote;
     this.isVariable = policyForm.isVariable;
+    this.formCategory = policyForm.formCategory;
+    this.sortSequence = policyForm.sortSequence;
     this._isIncluded = policyForm.isIncluded;
   }
 
   newInit() {
     //this.isNew = true;
   }
+
+  validate(){
+    if (this._validateOnLoad || this.isDirty){
+      //TODO: class based validation checks
+      this.classValidation();
+      this._validateOnLoad = false;
+      console.log(this._canBeSaved);
+    }
+    this._validationResults.resetValidation();
+    this._validationResults.mapValues(this);
+    return this._validationResults;
+  }
+
+  abstract classValidation(): void;
+
   markClean() {
     this._isDirty = false;
   }

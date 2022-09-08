@@ -299,7 +299,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   validate(){
     if (this._validateOnLoad || this.isDirty){
-      //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
     }

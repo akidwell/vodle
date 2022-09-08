@@ -10,7 +10,7 @@
                 <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off" checked
+                        <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
                             (click)="selectAll()">
                         <label class="btn btn-outline-secondary toggle-button" for="radioAll">All</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
@@ -19,7 +19,7 @@
                         <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
                             (click)="selectOptional()">
                         <label class="btn btn-outline-secondary toggle-button" for="radioOptional">Optional</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
+                        <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off" checked
                             (click)="selectOnPolicy()">
                         <label class="btn btn-outline-secondary toggle-button" for="radioOnPolicy">On Policy</label>
                     </div>
@@ -42,8 +42,7 @@
                         <tr *ngFor="let form of filteredForms">
                             <td>
                                 <input type="checkbox" class="form-check-input" id="included"
-                                    [(ngModel)]="form.isMandatory" name="included" click-stop-propagation>
-
+                                    [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
                             </td>
                             <td>
                                 <fa-icon *ngIf="form.isVariable" class="faEdit fa-xl" title="Variable Enabled Form"
