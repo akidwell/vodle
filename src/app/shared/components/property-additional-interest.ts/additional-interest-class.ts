@@ -101,21 +101,22 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
   emptyStringValueCheck(value: string | null | undefined) {
     return !value;
   }
-  existingInit(ai?: AdditionalInterestData){
-    this.buildingNumber = ai?.buildingNumber || null;
-    this._attention = ai?.attention || null;
-    this._description = ai?.description || null;
-    this.premisesNumber = ai?.premisesNumber || null;
-    this._interest = ai?.interest || null;
-    this._propertyQuoteId = ai?.propertyQuoteId || null;
-    this._propertyQuoteAdditionalInterestId = ai?.propertyQuoteAdditionalInterestId || null;
-    this._street1 = ai?.street1 || null;
-    this._street2 = ai?.street2 || null;
-    this._state = ai?.state || null;
-    this._city = ai?.city || null;
-    this._zip = ai?.zip || null;
-    this._countryCode = ai?.countryCode || null;
-    this.isAppliedToAll = ai?.isAppliedToAll || false;
+  existingInit(ai: AdditionalInterestData){
+    this.isAppliedToAll = ai.isAppliedToAll;
+    this.buildingNumber = ai.buildingNumber;
+    this.premisesNumber = ai.premisesNumber;
+    this._attention = ai.attention;
+    this._description = ai.description;
+    this._interest = ai.interest;
+    this._propertyQuoteId = ai.propertyQuoteId;
+    this._propertyQuoteAdditionalInterestId = ai.propertyQuoteAdditionalInterestId;
+    this._street1 = ai.street1;
+    this._street2 = ai.street2;
+    this._state = ai.state;
+    this._city = ai.city;
+    this._zip = ai.zip;
+    this._countryCode = ai.countryCode;
+    this.guid = ai.guid;
   }
 
   newInit() {
