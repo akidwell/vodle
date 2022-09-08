@@ -338,6 +338,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingList = [];
     this.filteredBuildings = [];
     this.filteredCoverages = [];
+    // TODO: GAM need to work on this
     // this.propertyQuoteDeductibleList.map(c => {c.premisesNumber = null; c.buildingNumber = null;});
   }
 
@@ -400,7 +401,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
         ai.push(new AdditionalInterestClass(element));
       });
     }
-    this.propertyQuoteMortgageeList = mortgagee;
+    //this.propertyQuoteMortgageeList = mortgagee;
     this.propertyQuoteAdditionalInterestList = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
@@ -631,16 +632,16 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
     });
   }
-  onSave(savedQuote: QuoteClass) {
+  onSave(savedQuote: PropertyQuoteClass) {
     this.onSaveBuilding(this.propertyQuoteBuildingList,savedQuote);
     this.onSaveDeductible(this.propertyQuoteDeductibleList,savedQuote);
     this.onSaveMortgagee(this.propertyQuoteMortgageeList,savedQuote);
     this.onSaveAdditionalInterest(this.propertyQuoteAdditionalInterestList,savedQuote);
   }
-  private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: QuoteClass): void {
+  private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {
     mortgagees.forEach(mortgagee => {
       if (mortgagee.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteMortgageeList?.find(c => c.guid == mortgagee.guid);
+        const match = savedQuote.propertyQuoteMortgageeList.find(c => c.guid == mortgagee.guid);
         if (match != null) {
           mortgagee.propertyQuoteMortgageeId = match.propertyQuoteMortgageeId;
           mortgagee.propertyQuoteId = match.propertyQuoteId;
@@ -651,10 +652,10 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
 
-  private onSaveAdditionalInterest(additionalInterests: AdditionalInterestClass[], savedQuote: QuoteClass): void {
+  private onSaveAdditionalInterest(additionalInterests: AdditionalInterestClass[], savedQuote: PropertyQuoteClass): void {
     additionalInterests.forEach(additionalInterest => {
       if (additionalInterest.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteAdditionalInterestList?.find(c => c.guid == additionalInterest.guid);
+        const match = savedQuote.propertyQuoteAdditionalInterestList.find(c => c.guid == additionalInterest.guid);
         if (match != null) {
           additionalInterest.propertyQuoteAdditionalInterestId = match.propertyQuoteAdditionalInterestId;
           additionalInterest.propertyQuoteId = match.propertyQuoteId;
@@ -665,10 +666,10 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
 
-  private onSaveDeductible(deductibles: PropertyQuoteDeductibleClass[], savedQuote: QuoteClass): void {
+  private onSaveDeductible(deductibles: PropertyQuoteDeductibleClass[], savedQuote: PropertyQuoteClass): void {
     deductibles.forEach(deductible => {
       if (deductible.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteDeductibleList?.find(c => c.guid == deductible.guid);
+        const match = savedQuote.propertyQuoteDeductibleList.find(c => c.guid == deductible.guid);
         if (match != null) {
           deductible.propertyQuoteDeductibleId = match.propertyQuoteDeductibleId;
           deductible.propertyQuoteId = match.propertyQuoteId;
@@ -679,10 +680,10 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
 
-  private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: QuoteClass): void {
+  private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: PropertyQuoteClass): void {
     buildings.forEach(building => {
       if (building.isNew) {
-        const match = savedQuote.propertyQuote.propertyQuoteBuildingList?.find(c => c.guid == building.guid);
+        const match = savedQuote.propertyQuoteBuildingList.find(c => c.guid == building.guid);
         if (match != null) {
           building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
           building.propertyQuoteId = match.propertyQuoteId;
@@ -694,10 +695,10 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
 
-  private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: QuoteClass): void {
+  private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: PropertyQuoteClass): void {
     coverages.forEach(coverage => {
       if (coverage.isNew) {
-        const buildingMatch = savedQuote.propertyQuote?.propertyQuoteBuildingList?.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
+        const buildingMatch = savedQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
         const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.guid == coverage.guid);
         if (coverageMatch != null) {
           coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId;
