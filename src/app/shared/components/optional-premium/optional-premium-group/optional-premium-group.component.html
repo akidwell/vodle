@@ -23,15 +23,26 @@
       </div>
       <div *ngFor="let item of optionalPremiumData; let i = index">
         <rsps-optional-premium (copyExisitingOptionalPremium)=copyOptionalPremium($event) [type]="type"
-          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event)  [optionalPremiumData]=item>
+          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [optionalPremiumData]=item>
         </rsps-optional-premium>
       </div>
+      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add
+        Optional Premium</button>
     </div>
-    <rsps-quote-line-items-group [quoteLineItemData]="quoteLineItemData" [riskState]="riskState" [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>
+    <rsps-quote-line-items-group [quoteLineItemData]="quoteLineItemData" [riskState]="riskState"
+      [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>
   </div>
-  <div class="card-footer">
-    <div id="mortgageeFooter">
-      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add Optional Premium</button>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-6">
+      </div>
+      <div class="col-lg-4">
+      </div>
+      <div class="col-lg-2">
+      <label for="totalPremium" class="form-label">Total Premium</label>
+      <input type="text" class="form-control" id="totalPremium" name="totalPremium" [readonly]="!canEdit"
+        [value]="totalPrem | currency: 'USD' : 'symbol':'1.0-0'">
+        </div>
     </div>
   </div>
-
+</div>

@@ -16,7 +16,7 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
   private _sequence: number | null = 0;
   private _amount: number | null = null;
   private _dueDate: Date | null = null;
-  private _ysnReceived: boolean | null= null;
+  private _received: boolean | null= null;
   private _lineItemCode: number | null= null;
   private _notes: string | null = null;
 
@@ -50,11 +50,11 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
     this._isDirty = true;
   }
 
-  get ysnReceived(): boolean | null {
-    return this._ysnReceived;
+  get received(): boolean | null {
+    return this._received;
   }
-  set ysnReceived(value: boolean | null) {
-    this._ysnReceived = value;
+  set received(value: boolean | null) {
+    this._received = value;
     this._isDirty = true;
   }
 
@@ -124,23 +124,42 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
   classValidation() {
     this.invalidList = [];
     this._canBeSaved = true;
-
+    if (this.emptyNumberValueCheck(this._amount)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Amount is required');
+    }
+    if (this.emptyNumberValueCheck(this._lineItemCode)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('LineItem Code is required');
+    }
     this._errorMessages = this.invalidList;
+  }
+
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
   }
   existingInit(lineItem: QuoteLineItem) {
     this.quoteId = lineItem.quoteId;
     this.sequence = lineItem.sequence;
     this.amount = lineItem.amount;
     this.dueDate = lineItem.dueDate;
-    this.ysnReceived = lineItem.ysnReceived;
+    this.received = lineItem.received;
     this.lineItemCode = lineItem.lineItemCode;
+    this.notes = lineItem.notes;
 
     this.setReadonlyFields();
     this.setRequiredFields();
   }
 
   newInit() {
-    this.ysnReceived = false;
+    this.quoteId = 0;
+    this.received = false;
+    this.isNew = true;
   }
 
   markClean() {
@@ -165,7 +184,7 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
       sequence: this.sequence,
       amount: this.amount,
       dueDate: this.dueDate,
-      ysnReceived: this.ysnReceived,
+      received: this.received,
       lineItemCode: this.lineItemCode,
       notes: this.notes
     };
