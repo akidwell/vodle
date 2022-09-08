@@ -352,7 +352,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this._plumbing = building.plumbing;
     this._hvac = building.hvac;
     this._itv = building.itv;
-
+    this.guid = building.guid;
     const coverages: PropertyQuoteBuildingCoverageClass[] = [];
     building.propertyQuoteBuildingCoverage?.forEach((element) => {
       const coverage = new PropertyQuoteBuildingCoverageClass(element);

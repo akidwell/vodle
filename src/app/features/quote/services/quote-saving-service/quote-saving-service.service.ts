@@ -7,6 +7,7 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
 import { PropertyQuoteClass } from '../../classes/property-quote-class';
+import { QuoteClass } from '../../classes/quote-class';
 import { PropertyDataService } from '../property-data.service';
 import { QuoteService } from '../quote-service/quote.service';
 
@@ -61,19 +62,17 @@ export class QuoteSavingService {
   }
   async saveQuote() {
     const quote = this.program?.quoteData;
-    console.log(quote);
     if (quote) {
       console.log('quotes: ', quote, 'id: ');
       const results$ = this.quoteService.updateQuote(quote);
       await lastValueFrom(results$)
         .then(async (quoteData) => {
-          console.log('quoteData: ' + quoteData);
-          this.program?.quoteData?.onSave(quoteData);
-          quote.sequenceNumber = quoteData.sequenceNumber;
+          const savedQuote = new PropertyQuoteClass(quoteData);
+          this.program?.quoteData?.onSave(savedQuote);
+          quote.sequenceNumber = savedQuote.sequenceNumber;
           if (quote instanceof PropertyQuoteClass) {
             this.propertyDataService.buildingList = quote.buildingList;
           }
-          //this.newQuote = false;
           quote.afterSave();
           this.notification.show('Quote Saved.', {
             classname: 'bg-success text-light',

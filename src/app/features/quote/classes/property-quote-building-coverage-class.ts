@@ -197,7 +197,7 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this._causeOfLossId = coverage.causeOfLossId;
     this._valuationId = coverage.valuationId;
     this._additionalDetail = coverage.additionalDetail;
-
+    this.guid = coverage.guid;
     this.setReadonlyFields();
     this.setRequiredFields();
   }

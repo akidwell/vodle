@@ -362,7 +362,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   //   this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
   //   this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
   // }
-  abstract onSave(savedQuote:QuoteClass): void;
+  abstract onSave(savedQuote:PropertyQuoteClass): void;
 
   abstract toJSON(): Quote;
 

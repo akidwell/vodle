@@ -1,6 +1,6 @@
 
 export interface AdditionalInterestData {
-  buildingNumber: number | null| undefined;
+  buildingNumber: number | null;
   attention: string | null;
   description: string | null;
   premisesNumber: number | null;

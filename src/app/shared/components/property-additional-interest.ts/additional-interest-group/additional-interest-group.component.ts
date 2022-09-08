@@ -41,11 +41,10 @@ export class AdditionalInterestGroupComponent implements OnInit {
   @Input() public canEdit = false;
 
   ngOnInit(): void {
-
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuote?.propertyQuoteAdditionalInterestList){
+        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuoteAdditionalInterestList){
           this.aiData = this.program?.quoteData?.propertyQuoteAdditionalInterestList;
         }
       });
