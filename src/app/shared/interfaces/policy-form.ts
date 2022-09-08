@@ -6,4 +6,6 @@ export interface PolicyForm {
     specimenLink: string | null;
     hasSpecialNote: boolean;
     isVariable: boolean;
+    formCategory: string | null;
+    sortSequence: number | null;
  }

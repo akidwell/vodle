@@ -8,10 +8,21 @@ export class QuotePolicyFormClass extends PolicyFormClass {
   get quoteId() : number {
     return this._quoteId;
   }
-
   set quoteId(value: number) {
     this._quoteId = value;
-    this.markDirty();
+    //this.markDirty();
+  }
+
+  classValidation() {
+    this.invalidList = [];
+    this.canBeSaved = true;
+    // if (!this.validateAmount()) {
+    //   valid = false;
+    // }
+
+    this.errorMessages = this.invalidList;
+    // this._canBeSaved = true;
+    // this._isValid = true;
   }
 
   toJSON(): QuotePolicyForm {
@@ -23,7 +34,9 @@ export class QuotePolicyFormClass extends PolicyFormClass {
       isMandatory: this.isMandatory,
       specimenLink: this.specimenLink,
       hasSpecialNote: this.hasSpecialNote,
-      isVariable: this.isVariable
+      isVariable: this.isVariable,
+      formCategory: this.formCategory,
+      sortSequence: this.sortSequence
     };
   }
 }

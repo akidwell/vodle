@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms';
 import { SharedComponentBase } from '../../component-base/shared-component-base';
 import { faEdit, faExclamationTriangle, faE, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { PolicyFormClass } from '../../classes/policy-form-class';
@@ -23,7 +22,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
 
   @Input() set forms(value: PolicyFormClass[]) {
     this._forms = value;
-    this.filteredForms = value;
+    this.selectOnPolicy();
   }
   get forms(): PolicyFormClass[] {
     return this._forms;
