@@ -65,7 +65,6 @@ export class QuoteSavingService {
     if (quote) {
       console.log('quotes: ', quote, 'id: ');
       const results$ = this.quoteService.updateQuote(quote);
-      quote.quoteRates.forEach(x => x.classCode = Number(quote.classCode) );
       await lastValueFrom(results$)
         .then(async (quoteData) => {
           console.log('quoteData: ' + quoteData);
