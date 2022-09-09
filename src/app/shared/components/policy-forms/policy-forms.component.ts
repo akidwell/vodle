@@ -4,7 +4,7 @@ import { SharedComponentBase } from '../../component-base/shared-component-base'
 import { faEdit, faExclamationTriangle, faE, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { PolicyFormClass } from '../../classes/policy-form-class';
 import { SpecimenPacketService } from './services/specimen-packet.service';
-import { lastValueFrom, Subscribable, Subscription } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 
 @Component({
@@ -19,10 +19,10 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   faCircleE = faE;
   faCircle = faCircle;
   filteredForms: PolicyFormClass[] = [];
-  sub!: Subscription;
+  private _forms!: PolicyFormClass[];
 
-  _forms!: PolicyFormClass[];
-
+  @Input() submissionNumber!: number;
+  @Input() quoteNumber!: number;
   @Input() set forms(value: PolicyFormClass[]) {
     this._forms = value;
     this.selectOnPolicy();
@@ -52,12 +52,14 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   }
 
   async specimenLink() {
-    const response$ = this.specimenPacketService.getSpecimentPacketURL('1064313|1',this._forms.filter(c => c.isIncluded).map(c => c.formName).join(',').slice(0,-1));
-    await lastValueFrom(response$)
-      .then(specimentPacket => {
-        if (specimentPacket) {
-          window.open(specimentPacket.url, '_self');
-        }
-      });
+    if (this.submissionNumber != null && this.quoteNumber != null) {
+      const response$ = this.specimenPacketService.getSpecimentPacketURL(this.submissionNumber.toString() + '|' + this.quoteNumber.toString(),this._forms.filter(c => c.isIncluded).map(c => c.formName).join(',').slice(0,-1));
+      await lastValueFrom(response$)
+        .then(specimentPacket => {
+          if (specimentPacket) {
+            window.open(specimentPacket.url, '_self');
+          }
+        });
+    }
   }
 }
