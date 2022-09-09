@@ -8,4 +8,5 @@ export interface PolicyForm {
     isVariable: boolean;
     formCategory: string | null;
     sortSequence: number | null;
+    formIndex: number | null;
  }

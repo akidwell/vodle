@@ -3,6 +3,8 @@ import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SharedComponentBase } from '../../component-base/shared-component-base';
 import { faEdit, faExclamationTriangle, faE, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { PolicyFormClass } from '../../classes/policy-form-class';
+import { SpecimenPacketService } from './services/specimen-packet.service';
+import { lastValueFrom } from 'rxjs';
 
 
 @Component({
@@ -17,9 +19,10 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   faCircleE = faE;
   faCircle = faCircle;
   filteredForms: PolicyFormClass[] = [];
+  private _forms!: PolicyFormClass[];
 
-  _forms!: PolicyFormClass[];
-
+  @Input() submissionNumber!: number;
+  @Input() quoteNumber!: number;
   @Input() set forms(value: PolicyFormClass[]) {
     this._forms = value;
     this.selectOnPolicy();
@@ -28,7 +31,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     return this._forms;
   }
 
-  constructor(userAuth: UserAuth) {
+  constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService) {
     super(userAuth);
   }
 
@@ -46,5 +49,17 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   }
   selectOnPolicy() {
     this.filteredForms = this.forms.filter(c => c.isIncluded);
+  }
+
+  async specimenLink() {
+    if (this.submissionNumber != null && this.quoteNumber != null) {
+      const response$ = this.specimenPacketService.getSpecimentPacketURL(this.submissionNumber.toString() + '|' + this.quoteNumber.toString(),this._forms.filter(c => c.isIncluded).map(c => c.formName).join(',').slice(0,-1));
+      await lastValueFrom(response$)
+        .then(specimentPacket => {
+          if (specimentPacket) {
+            window.open(specimentPacket.url, '_self');
+          }
+        });
+    }
   }
 }

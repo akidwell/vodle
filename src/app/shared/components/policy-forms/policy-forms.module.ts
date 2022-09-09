@@ -7,6 +7,7 @@ import { DirectivesModule } from '../../directives/directives.module';
 import { CanDeactivateGuard } from 'src/app/features/policy/guards/can-deactivate-guard';
 import { PolicyFormsComponent } from './policy-forms.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SpecimenPacketService } from './services/specimen-packet.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     DirectivesModule
   ],
   providers: [
-    CanDeactivateGuard
+    CanDeactivateGuard,
+    SpecimenPacketService
   ],
   exports: [PolicyFormsComponent]
 })

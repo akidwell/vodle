@@ -23,6 +23,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   isVariable = false;
   formCategory: string | null = null;
   sortSequence: number | null = null;
+  formIndex: number | null = null;
 
   get isIncluded(): boolean {
     return this._isIncluded;
@@ -82,6 +83,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.isVariable = policyForm.isVariable;
     this.formCategory = policyForm.formCategory;
     this.sortSequence = policyForm.sortSequence;
+    this.formIndex = policyForm.formIndex;
     this._isIncluded = policyForm.isIncluded;
   }
 
