@@ -7,7 +7,7 @@
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
@@ -24,9 +24,12 @@
                         <label class="btn btn-outline-secondary toggle-button" for="radioOnPolicy">On Policy</label>
                     </div>
                 </div>
+                <div class="col-lg-2">
+                <button *ngIf="true" class="footer-button"
+                    (click)="specimenLink()">Specimen Packet</button>
+                </div>
             </div>
         </div>
-
         <div class="card-body top-bordered table-body">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" *ngIf="true">
