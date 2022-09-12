@@ -27,3 +27,8 @@ i.fa {
 .form-check-input {
   margin: 0px !important;
 }
+
+.mandatory {
+  border-color: red;
+  background-color: red;
+}

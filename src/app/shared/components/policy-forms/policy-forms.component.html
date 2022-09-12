@@ -51,7 +51,7 @@
                                     [icon]="faExclamationTriangle" ngbTooltip="Special Note" (click)="showSpecialNote(form.specialNote)"></fa-icon>
                             </td>
                             <td style="text-align:center;">
-                                <input type="checkbox" class="form-check-input" id="included"
+                                <input type="checkbox" class="form-check-input" id="included" [ngClass]="!form.isIncluded && form.isMandatory ? 'mandatory' : ''"
                                     [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;">
