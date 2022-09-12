@@ -8,10 +8,13 @@ import { CanDeactivateGuard } from 'src/app/features/policy/guards/can-deactivat
 import { PolicyFormsComponent } from './policy-forms.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SpecimenPacketService } from './services/specimen-packet.service';
+import { PolicyFormVariableComponent } from './policy-form-variable/policy-form-variable.component';
+import { ScrollToTopModule } from 'src/app/core/components/scroll-to-top/scroll-to-top.module';
 
 @NgModule({
   declarations: [
-    PolicyFormsComponent
+    PolicyFormsComponent,
+    PolicyFormVariableComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +23,8 @@ import { SpecimenPacketService } from './services/specimen-packet.service';
     NgbModule,
     NgSelectModule,
     FormsModule,
-    DirectivesModule
+    DirectivesModule,
+    ScrollToTopModule
   ],
   providers: [
     CanDeactivateGuard,

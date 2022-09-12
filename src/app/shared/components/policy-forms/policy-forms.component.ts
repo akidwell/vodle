@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SharedComponentBase } from '../../component-base/shared-component-base';
 import { faEdit, faExclamationTriangle, faE, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { PolicyFormClass } from '../../classes/policy-form-class';
 import { SpecimenPacketService } from './services/specimen-packet.service';
 import { lastValueFrom } from 'rxjs';
+import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PolicyFormVariableComponent } from './policy-form-variable/policy-form-variable.component';
+import { DialogSizeEnum } from 'src/app/core/enums/dialog-size-enum';
 
 
 @Component({
@@ -21,6 +24,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   filteredForms: PolicyFormClass[] = [];
   private _forms!: PolicyFormClass[];
 
+  @ViewChild('modal') private groupEditComponent!: PolicyFormVariableComponent;
   @Input() submissionNumber!: number;
   @Input() quoteNumber!: number;
   @Input() set forms(value: PolicyFormClass[]) {
@@ -31,7 +35,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     return this._forms;
   }
 
-  constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService) {
+  constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService, private messageDialogService: MessageDialogService) {
     super(userAuth);
   }
 
@@ -47,8 +51,18 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   selectMandatory() {
     this.filteredForms = this.forms.filter(c => c.isMandatory);
   }
+  selectExpiring() {
+  }
   selectOnPolicy() {
     this.filteredForms = this.forms.filter(c => c.isIncluded);
+  }
+
+  get showVariableForm(): boolean {
+    return this.filteredForms.findIndex(c => c.isVariable) >= 0;
+  }
+
+  get showIcons(): boolean {
+    return this.filteredForms.findIndex(c => c.hasSpecialNote) >= 0;
   }
 
   async specimenLink() {
@@ -62,4 +76,17 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
         });
     }
   }
+
+  showSpecialNote(specialNote: string | null) {
+    if (specialNote) {
+      this.messageDialogService.open('Special Note', specialNote, DialogSizeEnum.XtraLarge);
+    }
+  }
+
+  async editVariableForm(formName: string | null) {
+    if (formName) {
+      await this.groupEditComponent.open(formName);
+    }
+  }
+
 }

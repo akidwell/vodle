@@ -1,0 +1,7 @@
+<div *ngIf="windowScrolled" class="scroll-to-top"
+    [ngClass]="hover ? 'scroll-up' : windowScrolled ? 'show-scrollTop': '' ">
+    <button mat-fab color="grey" style="right:20px; bottom:20px; position:fixed" (click)="scrollToTop()"
+        (mouseover)="hover = true" (mouseleave)="hover = false">
+        <fa-icon [icon]="faArrowUp" class="fa-xl"></fa-icon>
+    </button>
+</div>

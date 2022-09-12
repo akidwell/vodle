@@ -15,4 +15,10 @@ export class SpecimenPacketService {
     const params = new HttpParams().append('quoteKey', quoteKey ?? '').append('forms', forms ?? '');
     return this.http.get<SpecimenPacket>(this.config.apiBaseUrl + 'api/lookups/specimen-packet', { params });
   }
+
+  getGuideline(formName: string) {
+    const params = new HttpParams().append('formName', formName);
+    const headers = { 'Content-Type': 'application/pdf'};
+    return this.http.get(this.config.apiBaseUrl + 'api/lookups/guideline', { params: params,headers, responseType: 'arraybuffer'});
+  }
 }
