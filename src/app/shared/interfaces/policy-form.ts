@@ -5,6 +5,7 @@ export interface PolicyForm {
     isMandatory: boolean;
     specimenLink: string | null;
     hasSpecialNote: boolean;
+    specialNote: string | null;
     isVariable: boolean;
     formCategory: string | null;
     sortSequence: number | null;
