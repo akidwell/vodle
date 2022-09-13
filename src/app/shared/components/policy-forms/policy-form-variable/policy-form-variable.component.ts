@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { lastValueFrom } from 'rxjs';
-import { SpecimenPacketService } from '../services/specimen-packet.service';
+import { SpecimenPacketService } from '../services/policy-forms.service';
 
 @Component({
   selector: 'rsps-policy-form-variable',
