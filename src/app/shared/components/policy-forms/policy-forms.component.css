@@ -2,7 +2,7 @@
   margin-left: 5px;
 }
 
-.toggle-button {
+.hide-select {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -30,5 +30,20 @@ i.fa {
 
 .mandatory {
   border-color: red;
-  background-color: red;
+  border-width: 5px;
+  /* background-color: red; */
+}
+
+
+.sticky {
+  background: #fff;
+  box-shadow: 0 3px 12px 0 rgba(0,0,0,.08);
+  position: fixed;
+  top: 130px;
+  height: 26px;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 102px;
 }
