@@ -47,3 +47,12 @@ i.fa {
 .sticky + .content {
   padding-top: 102px;
 }
+
+
+.endorsement-row {
+  background-color: #577d95;
+  color: #ffff !important;
+  text-align: center;
+  font-weight: bold;
+  padding: 0px;
+}

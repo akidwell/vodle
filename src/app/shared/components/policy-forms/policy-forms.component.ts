@@ -11,6 +11,8 @@ import { DialogSizeEnum } from 'src/app/core/enums/dialog-size-enum';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms-class';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
+import { EndorsementFormData, newEndorsementFormData } from 'src/app/features/policy/models/policy';
+import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 
 
 @Component({
@@ -24,7 +26,9 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   faExclamationTriangle = faExclamationTriangle;
   faCircleE = faE;
   faCircle = faCircle;
+  showExpiring = false;
   filteredForms: PolicyFormClass[] = [];
+  expiringForms: EndorsementFormData[] | null = null;
   private _forms!: PolicyFormClass[];
 
   @ViewChild('modal') private groupEditComponent!: PolicyFormVariableComponent;
@@ -39,39 +43,68 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     return this._forms;
   }
 
-  constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService, private messageDialogService: MessageDialogService, public headerPaddingService: HeaderPaddingService) {
+  constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService, private messageDialogService: MessageDialogService, public headerPaddingService: HeaderPaddingService, private policyService: PolicyService) {
     super(userAuth);
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-    if (window.pageYOffset > this.headerPaddingService.totalHeaderHeight + 70) {
-      const element = document.getElementById('formVersion');
-      element?.classList.add('sticky');
-    } else {
-      const element = document.getElementById('formVersion');
-      element?.classList.remove('sticky');
-    }
-  }
+  // @HostListener('window:scroll', ['$event'])
+  // onWindowScroll() {
+  //   if (window.pageYOffset > this.headerPaddingService.totalHeaderHeight + 70) {
+  //     const element = document.getElementById('formVersion');
+  //     element?.classList.add('sticky');
+  //   } else {
+  //     const element = document.getElementById('formVersion');
+  //     element?.classList.remove('sticky');
+  //   }
+  // }
 
   ngOnInit(): void {
   }
 
   selectAll() {
+    this.showExpiring = false;
     this.filteredForms = this.forms;
   }
   selectOptional() {
+    this.showExpiring = false;
     this.filteredForms = this.forms.filter(c => !c.isMandatory);
   }
   selectMandatory() {
+    this.showExpiring = false;
     this.filteredForms = this.forms.filter(c => c.isMandatory);
   }
-  selectExpiring() {
-  }
   selectOnPolicy() {
+    this.showExpiring = false;
     this.filteredForms = this.forms.filter(c => c.isIncluded);
   }
 
+  async selectExpiring() {
+    if (this.quote.submission.expiringPolicyId) {
+      this.showExpiring = true;
+      // Check Cache is null first
+      if (!this.expiringForms) {
+        const response$ = this.policyService.getEndorsementForms(this.quote.submission.expiringPolicyId);
+        this.expiringForms = await lastValueFrom(response$)
+          .then(forms => {
+            if (forms) {
+              let endorsementNumber = -1;
+              let index = 0;
+              forms.map(c => {
+                if (c.endorsementNumber != endorsementNumber) {
+                  const endorsementHeader = newEndorsementFormData();
+                  endorsementHeader.endorsementNumber = c.endorsementNumber;
+                  forms.splice(index,0,endorsementHeader);
+                  endorsementNumber = c.endorsementNumber;
+                }
+                index++;
+              });
+              return forms;
+            }
+            return [];
+          });
+      }
+    }
+  }
   get showVariableForm(): boolean {
     return this.filteredForms.findIndex(c => c.isVariable) >= 0;
   }
@@ -135,7 +168,19 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
             policyForms.push(new QuotePolicyFormClass(element));
           });
         }
+        this.quote.quotePolicyForms = policyForms;
         this.forms = policyForms;
       });
+  }
+
+
+  async changeStateFL() {
+    this.quote.riskState = 'FL';
+    await this.changeState();
+  }
+
+  async changeStateGA() {
+    this.quote.riskState = 'GA';
+    await this.changeState();
   }
 }

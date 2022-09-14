@@ -6,7 +6,7 @@ import { ConfigService } from '../../../../core/services/config/config.service';
 import { NewEndorsementData } from '../../../home/models/search-results';
 import { AdditionalNamedInsured, AdditionalNamedInsuredData, coverageANI } from '../../../../shared/components/additional-named-insured/additional-named-insured';
 import { EndorsementCoverageLocation, EndorsementCoveragesGroup, EndorsementCoverage } from '../../components/coverages-base/coverages';
-import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
+import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementFormData, EndorsementLocation, PolicyAddResponse, PolicyData, PolicyInformation, PolicyLayerData, ReinsuranceLayerData } from '../../models/policy';
 import { UnderlyingCoverage } from '../../models/schedules';
 import { InvoiceData, InvoiceDetail } from '../../models/invoice';
 import { UCCoverage } from '../../classes/UCCoverage';
@@ -180,5 +180,9 @@ export class PolicyService {
   }
   deleteAdditionalNamedInsured(aniData: AdditionalNamedInsuredData): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/policies/' + aniData.policyId + '/endorsements/' + aniData.endorsementNo + '/additional-insureds/' + aniData.sequenceNo);
+  }
+
+  getEndorsementForms(policyId: number): Observable<EndorsementFormData[]> {
+    return this.http.get<EndorsementFormData[]>(this.config.apiBaseUrl + 'api/policies/' + policyId + '/endorsements/forms');
   }
 }
