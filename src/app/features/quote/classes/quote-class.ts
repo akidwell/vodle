@@ -181,17 +181,10 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._isDirty = true;
   }
 
-  set riskState(value: string | null) {
-    this._riskState = value;
-    this._isDirty = true;
-  }
-
   private _totalPremium : number | null = null;
-
   get totalPremium() : number | null {
     return this._totalPremium;
   }
-
   set totalPremium(value: number | null) {
     this._totalPremium = value;
     this._isDirty = true;
