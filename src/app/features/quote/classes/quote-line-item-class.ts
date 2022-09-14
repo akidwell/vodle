@@ -132,7 +132,7 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
     if (this.emptyNumberValueCheck(this._lineItemCode)){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('LineItem Code is required');
+      this.invalidList.push('Line Item Code is required');
     }
     this._errorMessages = this.invalidList;
   }

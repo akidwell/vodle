@@ -26,23 +26,28 @@
           (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [optionalPremiumData]=item>
         </rsps-optional-premium>
       </div>
-      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add
-        Optional Premium</button>
     </div>
-    <rsps-quote-line-items-group [quoteLineItemData]="quoteLineItemData" [riskState]="riskState"
-      [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>
+    <!-- <rsps-quote-line-items-group [quoteLineItemData]="quoteLineItemData" [riskState]="riskState"
+      [effectiveDate]="effectiveDate"></rsps-quote-line-items-group> -->
   </div>
-  <div class="card-body">
+
+  <div class="card-footer">
+    <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add
+      Optional Premium</button>
+  </div>
+<!-- <div class="card-body">
     <div class="row">
       <div class="col-lg-6">
+        <label for="totalPremium" class="form-label"></label>
+        <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">AddOptional Premium</button>
       </div>
       <div class="col-lg-4">
       </div>
       <div class="col-lg-2">
       <label for="totalPremium" class="form-label">Total Premium</label>
-      <input type="text" class="form-control" id="totalPremium" name="totalPremium" [readonly]="!canEdit"
+      <input type="text" class="form-control right" id="totalPremium" name="totalPremium" [readonly]="true"
         [value]="totalPrem | currency: 'USD' : 'symbol':'1.0-0'">
         </div>
     </div>
-  </div>
+  </div> -->
 </div>

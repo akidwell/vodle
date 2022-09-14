@@ -119,4 +119,5 @@ export interface Quote {
   classCode: number | null;
   riskState: string | null;
   quotePolicyForms: PolicyForm[];
+  totalPremium: number | null;
 }

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { faAngleDoubleDown, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Moment } from 'moment';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -20,6 +21,10 @@ export class QuoteLineItemsGroupComponent implements OnInit {
   deleteSub!: Subscription;
   authSub: Subscription;
   canEdit = false;
+  collapsed = false;
+  faAngleUp = faAngleUp;
+  faAngleDown = faAngleDown;
+
   constructor(private notification: NotificationService, private quoteService: QuoteService, private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEdit = canEditSubmission
@@ -52,7 +57,7 @@ export class QuoteLineItemsGroupComponent implements OnInit {
           .subscribe((result) => {
             if (result) {
               setTimeout(() => {
-                this.notification.show('LineItem deleted.', { classname: 'bg-success text-light', delay: 5000 });
+                this.notification.show('Line Item deleted.', { classname: 'bg-success text-light', delay: 5000 });
               });
             }
           });

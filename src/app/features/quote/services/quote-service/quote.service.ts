@@ -66,6 +66,10 @@ export class QuoteService {
   deleteLineItem(id: number, sequence: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/quote-line-item/' + id + '/seq/' + sequence);
   }
+  deleteLineItems(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/quote-line-item/' + id);
+  }
+
 
   import(quote: Quote, file: any) {
     const formData = new FormData();

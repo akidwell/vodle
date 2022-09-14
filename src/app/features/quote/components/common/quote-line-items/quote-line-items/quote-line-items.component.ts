@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable, of, Subscription } from 'rxjs';
@@ -7,7 +8,6 @@ import { ConfirmationDialogService } from 'src/app/core/services/confirmation-di
 import { LineItemDescription } from 'src/app/features/policy/services/line-item-descriptions-service/line-item-description';
 import { LineItemDescriptionsService } from 'src/app/features/policy/services/line-item-descriptions-service/line-item-descriptions.service';
 import { QuoteLineItemClass } from 'src/app/features/quote/classes/quote-line-item-class';
-import { QuoteLineItem } from 'src/app/features/quote/models/quote-line-item';
 
 @Component({
   selector: 'rsps-quote-line-items',
@@ -54,7 +54,7 @@ export class QuoteLineItemsComponent implements OnInit {
 
 
   openDeleteConfirmation() {
-    this.confirmationDialogService.open('Delete Confirmation','Are you sure you want to delete this deductible?').then((result: boolean) => {
+    this.confirmationDialogService.open('Delete Confirmation','Are you sure you want to delete this line item?').then((result: boolean) => {
       if (result) {
         this.delete();
       }

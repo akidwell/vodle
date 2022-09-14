@@ -21,3 +21,10 @@
   border-color: black;
   background-color: rgb(235, 230, 230);
 }
+.margin-left {
+  margin-left: 5px;
+}
+
+.dropdown-menu {
+  padding: 0px;
+}
