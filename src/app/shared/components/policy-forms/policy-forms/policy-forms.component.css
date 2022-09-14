@@ -34,7 +34,6 @@ i.fa {
   /* background-color: red; */
 }
 
-
 .sticky {
   background: #fff;
   box-shadow: 0 3px 12px 0 rgba(0,0,0,.08);
@@ -47,7 +46,6 @@ i.fa {
 .sticky + .content {
   padding-top: 102px;
 }
-
 
 .endorsement-row {
   background-color: #577d95;

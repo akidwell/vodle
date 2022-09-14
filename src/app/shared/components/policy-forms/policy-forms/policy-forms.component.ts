@@ -1,18 +1,18 @@
-import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { SharedComponentBase } from '../../component-base/shared-component-base';
 import { faEdit, faExclamationTriangle, faE, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { PolicyFormClass } from '../../classes/policy-form-class';
-import { SpecimenPacketService } from './services/policy-forms.service';
 import { lastValueFrom } from 'rxjs';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { PolicyFormVariableComponent } from './policy-form-variable/policy-form-variable.component';
 import { DialogSizeEnum } from 'src/app/core/enums/dialog-size-enum';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms-class';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { EndorsementFormData, newEndorsementFormData } from 'src/app/features/policy/models/policy';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
+import { PolicyFormClass } from 'src/app/shared/classes/policy-form-class';
+import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
+import { SpecimenPacketService } from '../services/policy-forms.service';
+import { PolicyFormVariableComponent } from '../policy-form-variable/policy-form-variable.component';
 
 
 @Component({
@@ -27,6 +27,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   faCircleE = faE;
   faCircle = faCircle;
   showExpiring = false;
+  expiringFormsLoading = false;
   filteredForms: PolicyFormClass[] = [];
   expiringForms: EndorsementFormData[] | null = null;
   private _forms!: PolicyFormClass[];
@@ -83,6 +84,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
       this.showExpiring = true;
       // Check Cache is null first
       if (!this.expiringForms) {
+        this.expiringFormsLoading = true;
         const response$ = this.policyService.getEndorsementForms(this.quote.submission.expiringPolicyId);
         this.expiringForms = await lastValueFrom(response$)
           .then(forms => {
@@ -98,10 +100,18 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
                 }
                 index++;
               });
+              this.expiringFormsLoading = false;
               return forms;
             }
+            this.expiringFormsLoading = false;
             return [];
-          });
+          })
+          .catch(error => {
+            this.messageDialogService.open('Error getting expiring forms', error.error.Message ?? error.message);
+            this.expiringFormsLoading = false;
+            return [];
+          }
+          );
       }
     }
   }
