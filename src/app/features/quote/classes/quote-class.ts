@@ -171,13 +171,13 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._classCode = value == 0 ? null : value;
     this._isDirty = true;
   }
-  private _riskState : string | null = null;
+  private _riskState = '';
 
-  get riskState() : string | null {
+  get riskState() : string {
     return this._riskState;
   }
 
-  set riskState(value: string | null) {
+  set riskState(value: string) {
     this._riskState = value;
     this._isDirty = true;
   }
@@ -237,7 +237,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     });
     this.quoteLineItems = lineItems;
     this._classCode = quote.quoteRates[0].classCode || null;
-    this._riskState = quote.riskState;
+    this.riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
 
     const policyForms: QuotePolicyFormClass[] = [];
@@ -274,6 +274,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.policyExpirationDate = submission.polExpDate;
     this.programId = program.programId;
     this.status = 1;
+    this.riskState = '';
   }
 
   markClean() {
@@ -324,7 +325,6 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
 
   validateClassCode(): boolean {
     let invalid = false;
-    console.log(this.classCode);
     if (this.classCode == null){
       invalid = true;
       this._errorMessages.push('CSP Code is required');
@@ -390,6 +390,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
     const forms: PolicyForm[] = [];
     this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
+    console.log(this.riskState);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
