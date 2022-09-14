@@ -183,11 +183,9 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   }
 
   private _totalPremium : number | null = null;
-
   get totalPremium() : number | null {
     return this._totalPremium;
   }
-
   set totalPremium(value: number | null) {
     this._totalPremium = value;
     this._isDirty = true;
