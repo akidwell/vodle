@@ -176,6 +176,10 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   get riskState() : string | null {
     return this._riskState;
   }
+  set riskState(value: string | null) {
+    this._riskState = value;
+    this._isDirty = true;
+  }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
