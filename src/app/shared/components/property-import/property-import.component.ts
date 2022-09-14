@@ -55,6 +55,14 @@ export class PropertyImportComponent {
                     const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuoteId);
                     await lastValueFrom(result$);
                   }
+                  const index = this.quote.quoteLineItems?.findIndex( x => x.lineItemCode == 7);
+                  const seq = this.quote.quoteLineItems?.find(x => x.lineItemCode == 7);
+                  if (index > -1 && seq?.sequence){
+                    this.quote.quoteLineItems.splice(index, 1);
+                    const results2$ = this.quoteService.deleteLineItems(this.quote.quoteId);
+                    await lastValueFrom(results2$);
+                  }
+                  console.log(this.quote);
                   await this.importQuote(this.quote, file);
                 }
               });

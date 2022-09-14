@@ -181,6 +181,22 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._isDirty = true;
   }
 
+  set riskState(value: string | null) {
+    this._riskState = value;
+    this._isDirty = true;
+  }
+
+  private _totalPremium : number | null = null;
+
+  get totalPremium() : number | null {
+    return this._totalPremium;
+  }
+
+  set totalPremium(value: number | null) {
+    this._totalPremium = value;
+    this._isDirty = true;
+  }
+
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
       this.existingInit(quote);
@@ -226,6 +242,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteLineItems = lineItems;
     this._classCode = quote.quoteRates[0].classCode || null;
     this._riskState = quote.riskState;
+    this._totalPremium = quote.totalPremium;
 
     const policyForms: QuotePolicyFormClass[] = [];
     if(quote.quotePolicyForms) {
@@ -490,7 +507,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       validated: this.validated,
       validatedRisk: this.validatedRisk,
       importErrors: this.importErrors,
-      importWarnings: this.importWarnings
+      importWarnings: this.importWarnings,
+      totalPremium: this.totalPremium
     };
   }
 }
