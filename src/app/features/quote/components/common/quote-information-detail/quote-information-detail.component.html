@@ -24,39 +24,4 @@
   <div *ngFor="let program of department.programMappings">
     <rsps-quote-information-detail-program [program]="program" [submissionForQuote]="department.submissionForQuote"></rsps-quote-information-detail-program>
   </div>
-  <div class="row top-bordered">
-    <div class="col-lg-6">
-      <ng-select
-            id="admittedStatus"
-            click-stop-propagation
-            [items]="availableAdmittedOptions"
-            bindLabel="description"
-            bindValue="code"
-            placeholder=""
-            [readonly]="!canEditSubmission"
-            [clearable]="false"
-            name="admittedStatus"
-            [(ngModel)]="department.activeAdmittedStatus"
-            #admittedStatus="ngModel"
-            (change)="updateGlobalSettings()"
-          ></ng-select>
-    </div>
-    <div class="col-lg-6">
-      <ng-select
-            id="claimsMadeOccurrenceStatus"
-            click-stop-propagation
-            [items]="availableClaimsMadeOccurrenceOptions"
-            bindLabel="description"
-            bindValue="code"
-            placeholder=""
-            [readonly]="!canEditSubmission"
-            [clearable]="false"
-            name="claimsMadeOccurrenceStatus"
-            [(ngModel)]="department.activeClaimsMadeOrOccurrence"
-            (change)="updateGlobalSettings()"
-            #claimsMadeOccurrenceStatus="ngModel"
-          ></ng-select>
-    </div>
-  </div>
-
 </div>
