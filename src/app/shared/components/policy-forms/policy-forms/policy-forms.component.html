@@ -78,7 +78,10 @@
                 </table>
             </div>
         </div>
-
+        <div class="d-flex justify-content-center" *ngIf="expiringFormsLoading">
+            <strong>Loading...</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
         <div *ngIf="showExpiring" class="card-body table-body">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" *ngIf="true">
@@ -110,5 +113,4 @@
 </div>
 
 <rsps-policy-form-variable #modal></rsps-policy-form-variable>
-
 <rsps-scroll-to-top></rsps-scroll-to-top>
