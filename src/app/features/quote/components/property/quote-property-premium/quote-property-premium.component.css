@@ -7,3 +7,24 @@ ng-valid[required],
 .ng-invalid:not(form) {
   border-left: 5px solid #a94442;
 }
+
+.form-label {
+  overflow: hidden; 
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
+}
+
+.form-label-wrap {
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
+}
+
+label {
+  display: inline-block;
+  width: 150px;
+  text-align: right;
+}

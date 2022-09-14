@@ -25,5 +25,5 @@
     <rsps-property-deductible [index]="i" [programId]="programId" [deductible]=item [canEdit]=canEdit (copyDeductible)=copyDeductible($event)
         (deleteDeductible)=deleteDeductible($event)>
     </rsps-property-deductible>
+
 </div>
-<button *ngIf="canEdit" class="link-button" (click)="addDeductible();">Add Deductible</button>
