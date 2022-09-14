@@ -117,7 +117,7 @@ export interface Quote {
   naicsCode: string | null;
   sicCode: string | null;
   classCode: number | null;
-  riskState: string | null;
+  riskState: string;
   quotePolicyForms: PolicyForm[];
   totalPremium: number | null;
 }
