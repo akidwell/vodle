@@ -24,6 +24,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   formCategory: string | null = null;
   sortSequence: number | null = null;
   formIndex: number | null = null;
+  allowMultiples: boolean | null = null;
 
   get isIncluded(): boolean {
     return this._isIncluded;

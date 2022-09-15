@@ -13,7 +13,9 @@ import { PolicyFormClass } from 'src/app/shared/classes/policy-form-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { SpecimenPacketService } from '../services/policy-forms.service';
 import { PolicyFormVariableComponent } from '../policy-form-variable/policy-form-variable.component';
-
+import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
+import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { FormViewType } from 'src/app/core/enums/form-view-type';
 
 @Component({
   selector: 'rsps-policy-forms',
@@ -30,6 +32,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   expiringFormsLoading = false;
   filteredForms: PolicyFormClass[] = [];
   expiringForms: EndorsementFormData[] | null = null;
+  currentView = FormViewType.OnPolicy;
   private _forms!: PolicyFormClass[];
 
   @ViewChild('modal') private groupEditComponent!: PolicyFormVariableComponent;
@@ -43,6 +46,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   get forms(): PolicyFormClass[] {
     return this._forms;
   }
+
 
   constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService, private messageDialogService: MessageDialogService, public headerPaddingService: HeaderPaddingService, private policyService: PolicyService) {
     super(userAuth);
@@ -60,6 +64,74 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   // }
 
   ngOnInit(): void {
+  }
+
+  addForm(form: PolicyForm) {
+    if (this.type == SharedComponentType.Quote) {
+      form.isIncluded = true;
+      form.formIndex = 1;
+
+      const duplicates = this.quote.quotePolicyForms.filter(c => c.formName == form.formName);
+      if (duplicates.length > 0) {
+        if (!form.allowMultiples) {
+          this.messageDialogService.open('Error','Duplicate');
+          return;
+        }
+        else {
+          let index = 1;
+          duplicates.forEach(dupe => {
+            if ((dupe.formIndex ?? 1) > index) {
+              index = (dupe.formIndex ?? 1);
+            }
+          });
+          form.formIndex = index + 1;
+        }
+      }
+      // if (!form.allowMultiples) {
+      //   if (duplicateIndex > 0) {
+      //     this.messageDialogService.open('Error','Duplicate');
+      //     return;
+      //   }
+      // }
+
+      const newForm = new QuotePolicyFormClass(form);
+      newForm.quoteId = this.quote.quoteId;
+      newForm.markDirty();
+      this.quote.quotePolicyForms.push(newForm);
+      this.selectView(this.currentView);
+
+      // const clone = deepClone(building.toJSON());
+      // const newBuilding = new PropertyQuoteBuildingClass(clone);
+      // newBuilding.propertyQuoteBuildingId = 0;
+      // newBuilding.isNew = true;
+      // newBuilding.expand = true;
+      // newBuilding.markDirty();
+      // this.propertyQuote.addBuilding(newBuilding);
+    }
+  }
+
+  selectView(currentView: FormViewType)
+  {
+    console.log(this.currentView + ' - ' + currentView);
+    this.currentView = currentView;
+    if (currentView == FormViewType.Expiring) {
+      this.selectExpiring();
+    }
+    else {
+      this.showExpiring = false;
+      if (currentView == FormViewType.All) {
+        this.filteredForms = this.forms;
+      }
+      else if (currentView == FormViewType.Optional) {
+        this.filteredForms = this.forms.filter(c => !c.isMandatory);
+      }
+      else if (currentView == FormViewType.Mandatory) {
+        this.filteredForms = this.forms.filter(c => c.isMandatory);
+      }
+      else if (currentView == FormViewType.OnPolicy) {
+        this.filteredForms = this.forms.filter(c => c.isIncluded);
+      }
+    }
   }
 
   selectAll() {
@@ -168,29 +240,34 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     }
   }
 
-  async changeState() {
-    const response$ = this.specimenPacketService.refreshForms(this.quote);
-    await lastValueFrom(response$)
-      .then(quote => {
-        const policyForms: QuotePolicyFormClass[] = [];
-        if(quote.quotePolicyForms) {
-          quote.quotePolicyForms.forEach((element) => {
-            policyForms.push(new QuotePolicyFormClass(element));
-          });
-        }
-        this.quote.quotePolicyForms = policyForms;
-        this.forms = policyForms;
-      });
-  }
+  // async changeState() {
+  //   const response$ = this.specimenPacketService.refreshForms(this.quote);
+  //   await lastValueFrom(response$)
+  //     .then(quote => {
+  //       const policyForms: QuotePolicyFormClass[] = [];
+  //       if(quote.quotePolicyForms) {
+  //         quote.quotePolicyForms.forEach((element) => {
+  //           policyForms.push(new QuotePolicyFormClass(element));
+  //         });
+  //       }
+  //       this.quote.quotePolicyForms = policyForms;
+  //       this.forms = policyForms;
+  //     });
+  // }
 
 
-  async changeStateFL() {
-    this.quote.riskState = 'FL';
-    await this.changeState();
+  // async changeStateFL() {
+  //   this.quote.riskState = 'FL';
+  //   await this.changeState();
+  // }
+
+  // async changeStateGA() {
+  //   this.quote.riskState = 'GA';
+  //   await this.changeState();
+  // }
+
+  public get formViewType(): typeof FormViewType {
+    return FormViewType;
   }
 
-  async changeStateGA() {
-    this.quote.riskState = 'GA';
-    await this.changeState();
-  }
 }

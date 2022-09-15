@@ -3,15 +3,7 @@ import { QuotePolicyForm } from '../models/quote-policy-form';
 
 
 export class QuotePolicyFormClass extends PolicyFormClass {
-  _quoteId = 0;
-
-  get quoteId() : number {
-    return this._quoteId;
-  }
-  set quoteId(value: number) {
-    this._quoteId = value;
-    //this.markDirty();
-  }
+  quoteId = 0;
 
   classValidation() {
     this.invalidList = [];
@@ -38,6 +30,7 @@ export class QuotePolicyFormClass extends PolicyFormClass {
       formCategory: this.formCategory,
       sortSequence: this.sortSequence,
       formIndex: this.formIndex,
+      allowMultiples: this.allowMultiples
     };
   }
 }

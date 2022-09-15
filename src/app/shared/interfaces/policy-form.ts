@@ -9,4 +9,5 @@ export interface PolicyForm {
     formCategory: string | null;
     sortSequence: number | null;
     formIndex: number | null;
+    allowMultiples: boolean | null;
  }

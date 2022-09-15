@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="input-group search-bar">
+            <div class="input-group-prepend">
+                <span class="input-group-text" *ngIf="!searching">
+                    <fa-icon [icon]="faSearch"></fa-icon>
+                </span>
+                <span class="input-group-text" style="height: 100%;" *ngIf="searching">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+                    </span>
+                </span>
+            </div>
+            <input class="form-control ml2" type="search" name="searchTerm" [readonly]="!canEdit"
+                [(ngModel)]="searchFormName" placeholder="Forms Library" [inputFormatter]="displayFormatter"
+                [resultFormatter]="listFormatter" [ngbTypeahead]="search" (selectItem)="selectedItem($event.item)"/>
+            <button *ngIf="canEdit" [disabled]="!canAddForm" class="btn margin-left"
+                [ngClass]="canAddForm ? 'btn-success' : 'btn-secondary'"
+                (click)="add()">Add Form</button>
+        </div>
+    </div>
+</div>
