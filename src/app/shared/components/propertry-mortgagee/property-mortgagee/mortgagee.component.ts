@@ -48,6 +48,7 @@ export class MortgageeComponent {
 
   @Input() mortgageeData!: MortgageeClass;
   @Input() mortgagee!: MortgageeClass[];
+  mortgageeRoles$: Observable<Code[]> | undefined;
 
 
 
@@ -75,6 +76,8 @@ export class MortgageeComponent {
         this.buildingList = results;
       }
     });
+    this.mortgageeRoles$ = this.dropdowns.getMortgageeRoles();
+
     console.log(this.mortgageeData.isAppliedToAll);
   }
 
