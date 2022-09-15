@@ -235,7 +235,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     });
     this.quoteLineItems = lineItems;
     this._classCode = quote.quoteRates[0].classCode || null;
-    this.riskState = quote.riskState;
+    this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
 
     const policyForms: QuotePolicyFormClass[] = [];

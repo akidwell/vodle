@@ -145,12 +145,12 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
   }
   existingInit(lineItem: QuoteLineItem) {
     this.quoteId = lineItem.quoteId;
-    this.sequence = lineItem.sequence;
-    this.amount = lineItem.amount;
-    this.dueDate = lineItem.dueDate;
-    this.received = lineItem.received;
-    this.lineItemCode = lineItem.lineItemCode;
-    this.notes = lineItem.notes;
+    this._sequence = lineItem.sequence;
+    this._amount = lineItem.amount;
+    this._dueDate = lineItem.dueDate;
+    this._received = lineItem.received;
+    this._lineItemCode = lineItem.lineItemCode;
+    this._notes = lineItem.notes;
 
     this.setReadonlyFields();
     this.setRequiredFields();
