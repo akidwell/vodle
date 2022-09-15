@@ -27,6 +27,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
   private _city: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
+  private _additionalInterestType: number | null = 1;
   // private _isAppliedToAll = false;
 
   isNew = false;
@@ -86,10 +87,10 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       this._isValid = false;
       this.invalidList.push('Additional Interest - State is required');
     }
-    if (this.emptyStringValueCheck(this._zip)){
+    if (this.emptyStringValueCheck(this._additionalInterestType?.toString())){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Additional Interest - Zip is required');
+      this.invalidList.push('Additional Interest - Type is required');
     }
     this._errorMessages = this.invalidList;
   }
@@ -116,6 +117,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
     this._city = ai.city;
     this._zip = ai.zip;
     this._countryCode = ai.countryCode;
+    this._additionalInterestType = ai.additionalInterestType;
     this.guid = ai.guid;
   }
 
@@ -124,6 +126,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
     this.propertyQuoteAdditionalInterestId = 0;
     this.isNew = true;
     this.guid = crypto.randomUUID();
+    this.additionalInterestType = 1;
   }
 
   get validationResults(): QuoteValidationClass {
@@ -204,6 +207,14 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
     this._description = value;
     this._isDirty = true;
   }
+  get additionalInterestType() : number | null {
+    return this._additionalInterestType;
+  }
+  set additionalInterestType(value: number | null) {
+    this._additionalInterestType = value;
+    this._isDirty = true;
+  }
+
 
   // get premisesNumber() : number | null {
   //   return this._premisesNumber;
@@ -331,6 +342,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       countryCode: this.countryCode,
       isAppliedToAll: this.isAppliedToAll,
       building: this.building,
+      additionalInterestType: this.additionalInterestType,
       guid: this.guid
     };
   }

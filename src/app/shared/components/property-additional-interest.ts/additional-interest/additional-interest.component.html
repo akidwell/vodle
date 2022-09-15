@@ -48,6 +48,13 @@
             </ng-template>
           </ng-select>
         </div>
+        <div class="col-lg-2">
+          <label for="mortgageType" class="form-label" title="additionalInterestType">Additional Interest Type</label>
+          <ng-select id="additionalInterestType" [items]="additionalInterestRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false"
+          [readonly]="!canEditSubmission" [required]="canEditSubmission" name="additionalInterestType" [(ngModel)]="aiData.additionalInterestType"
+           #aiType="ngModel" >
+          </ng-select>
+        </div>
         <div class="col-sm-3">
           <label for="interest" class="form-label" title="interest">Interest</label>
           <input type="text" class="form-control" id="policyEventCode" name="interest" [readonly]="!canEditSubmission"
@@ -101,7 +108,7 @@
               [readonly]="!canEditSubmission" [(ngModel)]="aiData.attention" #attention="ngModel">
           </div>
           <div class="col-sm-8">
-            <label for="comments" class="form-label" title="comments">Comments</label>
+            <label for="comments" class="form-label" title="comments">Additional Interest Description</label>
             <input type="text" class="form-control" id="comments" name="comments" [readonly]="!canEditSubmission"
               [(ngModel)]="aiData.description" #comments="ngModel">
           </div>

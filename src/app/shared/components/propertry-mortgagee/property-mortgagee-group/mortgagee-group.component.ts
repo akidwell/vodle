@@ -89,6 +89,7 @@ export class MortgageeGroupComponent implements OnInit {
   addNewMortgagee(): void {
     const mort: MortgageeClass = new MortgageeClass();
     mort.isNew = true;
+    mort.mortgageeType = 1;
     this.mortgageeData?.push(mort);
   }
 }

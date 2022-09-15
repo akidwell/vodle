@@ -46,8 +46,7 @@ export class AdditionalInterestComponent {
 
   @Input() aiData!: AdditionalInterestClass;
   @Input() ai!: AdditionalInterestClass[];
-
-
+  additionalInterestRoles$: Observable<Code[]> | undefined;
 
   constructor(public headerPaddingService: HeaderPaddingService,
     private confirmationDialogService: ConfirmationDialogService,
@@ -72,6 +71,8 @@ export class AdditionalInterestComponent {
         this.buildingList = results;
       }
     });
+    this.additionalInterestRoles$ = this.dropdowns.getAdditonalInterestRoles();
+
     console.log(this.aiData.isAppliedToAll);
   }
 

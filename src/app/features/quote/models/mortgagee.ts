@@ -15,6 +15,7 @@ export interface MortgageeData {
   countryCode: string | null;
   isAppliedToAll: boolean;
   building: string | null;
+  mortgageeType: number | null;
   isNew: boolean | null;
   guid: string;
   }

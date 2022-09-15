@@ -52,6 +52,12 @@
                 </ng-template>
             </ng-select>
         </div>
+        <div class="col-lg-2">
+          <label for="mortgageType" class="form-label" title="mortgageType">Mortgage Type</label>
+          <ng-select id="mortgageeType" [items]="mortgageeRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false"
+            [readonly]="!canEditSubmission" [required]="canEditSubmission" name="mortgageeType" [(ngModel)]="mortgageeData.mortgageeType" #mortgageeType="ngModel">
+          </ng-select>
+        </div>
           <div class="col-sm-3">
             <label for="mortgageHolder" class="form-label" title="mortgageHolder">Mortgage Holder</label>
             <input type="text" class="form-control" id="policyEventCode" name="mortgageHolder"  [required]="canEditSubmission"
@@ -107,7 +113,7 @@
                 [readonly]="!canEditSubmission" [(ngModel)]="mortgageeData.attention" #attention="ngModel">
             </div>
             <div class="col-sm-8">
-              <label for="comments" class="form-label" title="comments">Comments</label>
+              <label for="comments" class="form-label" title="comments">Property Description</label>
               <input type="text" class="form-control" id="comments" name="comments" [readonly]="!canEditSubmission"
                 [(ngModel)]="mortgageeData.description" #comments="ngModel">
             </div>
