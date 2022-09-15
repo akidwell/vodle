@@ -75,6 +75,7 @@ export class AdditionalInterestGroupComponent implements OnInit {
     const newAi = new AdditionalInterestClass(clone);
     newAi.interest = 'CopyOf ' + existingAi.interest;
     newAi.isNew = true;
+    newAi.additionalInterestType = 1;
     this.aiData?.push(newAi);
   }
 

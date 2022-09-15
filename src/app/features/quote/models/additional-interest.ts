@@ -15,5 +15,6 @@ export interface AdditionalInterestData {
   countryCode: string | null;
   isAppliedToAll: boolean;
   building: string | null;
+  additionalInterestType: number | null;
   guid: string;
   }
