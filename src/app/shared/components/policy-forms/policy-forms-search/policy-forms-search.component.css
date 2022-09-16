@@ -4,6 +4,7 @@
 
 ::ng-deep .dropdown-menu   { 
     width: 100%!important;  
+   
 }
 
 ::ng-deep .dropdown-item {

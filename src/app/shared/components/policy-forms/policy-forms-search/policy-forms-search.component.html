@@ -12,7 +12,7 @@
             </div>
             <input class="form-control ml2" type="search" name="searchTerm" [readonly]="!canEdit"
                 [(ngModel)]="searchFormName" placeholder="Forms Library" [inputFormatter]="displayFormatter"
-                [resultFormatter]="listFormatter" [ngbTypeahead]="search" (selectItem)="selectedItem($event.item)"/>
+                [resultFormatter]="displayFormatter" [ngbTypeahead]="search" (selectItem)="selectedItem($event.item)"/>
             <button *ngIf="canEdit" [disabled]="!canAddForm" class="btn margin-left"
                 [ngClass]="canAddForm ? 'btn-success' : 'btn-secondary'"
                 (click)="add()">Add Form</button>
