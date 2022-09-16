@@ -12,8 +12,15 @@ export abstract class SharedComponentBase extends ComponentBase implements OnDes
   policyAuthSub: Subscription;
   private _canEditSubmission = false;
   private _canEditPolicy = false;
+  private _type!: SharedComponentType;
 
-  @Input() type!: SharedComponentType;
+  @Input() set type(value: SharedComponentType) {
+    this._type = value;
+    this.handleSecurity(this._type);
+  }
+  get type(): SharedComponentType {
+    return this._type;
+  }
 
   constructor(private userAuth: UserAuth) {
     super();

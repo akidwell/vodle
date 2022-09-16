@@ -31,9 +31,9 @@ export class ProducerSearchService {
 
 @Component({
   selector: 'producer-fuzzy-search',
-  templateUrl: './producer-search.html',
+  templateUrl: './producer-search.component.html',
   providers: [ProducerSearchService],
-  styleUrls: ['./producer-search.css']
+  styleUrls: ['./producer-search.component.css']
 })
 export class ProducerSearch {
   model!: Producer | null;

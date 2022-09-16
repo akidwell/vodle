@@ -1,6 +1,6 @@
 export enum DialogSizeEnum {
-  XtraLarge = 'xl',
-  Large = 'lg',
-  Medium = 'md',
   Small = 'sm',
+  Medium = 'md',
+  Large = 'lg',
+  XtraLarge = 'xl'
 }

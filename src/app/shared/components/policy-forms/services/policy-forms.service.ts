@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { Quote } from 'src/app/features/quote/models/quote';
+import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 
 @Injectable({
   providedIn: 'root'
@@ -38,4 +39,10 @@ export class SpecimenPacketService {
     const headers = { 'Content-Type': 'application/json'};
     return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/refresh-forms', quoteJSON, {headers});
   }
+
+  searchForms(searchValue: string): Observable<PolicyForm[]> {
+    const params = new HttpParams().append('searchValue', searchValue ?? '');
+    return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/lookups/forms-search', { params});
+  }
+
 }

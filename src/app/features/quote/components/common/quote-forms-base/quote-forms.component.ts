@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
@@ -12,6 +13,7 @@ import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 export class QuoteFormsComponent implements OnInit {
   programSub!: Subscription;
   quote!: PropertyQuoteClass;
+  classType = SharedComponentType.Quote;
 
   constructor(private pageDataService: PageDataService) { }
 

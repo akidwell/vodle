@@ -1,4 +1,3 @@
-<!-- <div class="card" (scroll)="onWindowScroll();"> -->
 <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
         Policy Forms
@@ -12,29 +11,28 @@
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
-                            (click)="selectAll()">
+                            (click)="selectView(formViewType.All)">
                         <label class="btn btn-outline-secondary hide-select" for="radioAll">All</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
-                            (click)="selectMandatory()">
+                            (click)="selectView(formViewType.Mandatory)">
                         <label class="btn btn-outline-secondary hide-select" for="radioMandatory">Mandatory</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
-                            (click)="selectOptional()">
+                            (click)="selectView(formViewType.Optional)">
                         <label class="btn btn-outline-secondary hide-select" for="radioOptional">Optional</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
-                            checked (click)="selectOnPolicy()">
+                            checked (click)="selectView(formViewType.OnPolicy)">
                         <label class="btn btn-outline-secondary hide-select" for="radioOnPolicy">On Policy</label>
                         <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check" name="btnradio" id="radioExpiring" autocomplete="off"
-                            (click)="selectExpiring()">
+                            (click)="selectView(formViewType.Expiring)">
                         <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-secondary hide-select" for="radioExpiring">Expiring</label>
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <button *ngIf="true" class="btn btn-primary" (click)="specimenLink()">Specimen Packet</button>   
+                    <button class="btn btn-primary" (click)="specimenLink()">Specimen Packet</button>   
                 </div>
-                <!-- <div class="col-lg-2">
-                    <button type="button" class="btn btn-primary" (click)="changeStateGA()">State GA</button>
-                    <button type="button" class="btn btn-primary" (click)="changeStateFL()">State FL</button>
-                </div> -->
+                <div class ="col-lg-5">
+                    <rsps-policy-forms-search [type]="type" [quote]="quote" (addForm)=addForm($event) ></rsps-policy-forms-search>
+                </div>
             </div>
         </div>
         <div class="top-bordered">Forms Version TBD</div>
@@ -78,7 +76,7 @@
                 </table>
             </div>
         </div>
-        <div class="d-flex justify-content-center" *ngIf="expiringFormsLoading">
+        <div class="d-flex justify-content-center" *ngIf="showExpiring && expiringFormsLoading">
             <strong>Loading...</strong>
             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
         </div>
@@ -105,12 +103,10 @@
                 </table>
             </div>
         </div>
-
     </div>
     <div class="card-footer">
         <div class="footer-count">Forms: {{filteredForms.length}}/{{forms.length}}</div>
     </div>
 </div>
-
-<rsps-policy-form-variable #modal></rsps-policy-form-variable>
 <rsps-scroll-to-top></rsps-scroll-to-top>
+<rsps-policy-form-variable #modal></rsps-policy-form-variable>
