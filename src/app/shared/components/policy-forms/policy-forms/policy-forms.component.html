@@ -1,13 +1,16 @@
 <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
-        Policy Forms
+        Policy Forms - ({{quote.formsVersion }}) {{quote.formsVersionDescription }}
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+        <a href="#" style="float: right; padding-right: 20px;color: #ffff" (click)="specimenLink();$event.preventDefault();" click-stop-propagation>
+            Specimen Packet
+        </a>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
@@ -27,15 +30,11 @@
                         <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-secondary hide-select" for="radioExpiring">Expiring</label>
                     </div>
                 </div>
-                <div class="col-lg-2">
-                    <button class="btn btn-primary" (click)="specimenLink()">Specimen Packet</button>   
-                </div>
-                <div class ="col-lg-5">
+                <div class ="col-lg-6">
                     <rsps-policy-forms-search [type]="type" [quote]="quote" (addForm)=addForm($event) ></rsps-policy-forms-search>
                 </div>
             </div>
         </div>
-        <div class="top-bordered">Forms Version TBD</div>
         <div *ngIf="!showExpiring" class="card-body table-body">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" *ngIf="true">

@@ -39,9 +39,12 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
     }
   }
 
-  displayFormatter = (form: PolicyForm) => (form.formName ?? '');
-  listFormatter(form: PolicyForm) {
-    return (form.formName ?? '') + ' - ' + (form.formTitle ?? '');
+  // displayFormatter = (form: PolicyForm) => (form.formName ?? '');
+  displayFormatter(form: PolicyForm) {
+    if (form.formName) {
+      return (form.formName ?? '') + ' - ' + (form.formTitle ?? '');
+    }
+    return (form.formTitle ?? '');
   }
 
   search: OperatorFunction<string, readonly PolicyForm[]> = (text$: Observable<string>) =>

@@ -7,6 +7,10 @@
   box-shadow: none !important;
 }
 
+.table {
+  margin-top: 0px;
+}
+
 .table th {
   background-color: #335271;
   color: white;

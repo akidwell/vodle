@@ -102,7 +102,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   ownerUserId = null;
   flatRateIndicator = false;
   sinceInception = false;
-  formsVersion = null; //intVersion in PAUL
+  formsVersion: number | null = null; //intVersion in PAUL
   specPlusEndorsement = false;
   proRatePremium = false;
   overridePremium = false;
@@ -133,6 +133,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   importErrors = [];
   naicsCode = null;
   sicCode = null;
+  formsVersionDescription: string | null = null;
   ////////End Datbase fields
   mappingError = false;
   submission!: SubmissionClass;
@@ -237,6 +238,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._classCode = quote.quoteRates[0].classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
+    this.formsVersion = quote.formsVersion;
+    this.formsVersionDescription = quote.formsVersionDescription;
 
     const policyForms: QuotePolicyFormClass[] = [];
     if(quote.quotePolicyForms) {
@@ -513,7 +516,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       validatedRisk: this.validatedRisk,
       importErrors: this.importErrors,
       importWarnings: this.importWarnings,
-      totalPremium: this.totalPremium
+      totalPremium: this.totalPremium,
+      formsVersionDescription: this.formsVersionDescription
     };
   }
 }
