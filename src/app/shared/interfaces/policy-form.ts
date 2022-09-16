@@ -7,6 +7,7 @@ export interface PolicyForm {
     hasSpecialNote: boolean;
     isVariable: boolean;
     formCategory: string | null;
+    categorySequence: number | null;
     sortSequence: number | null;
     formIndex: number | null;
     allowMultiples: boolean | null;

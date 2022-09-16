@@ -330,7 +330,6 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     return invalid;
   }
 
-
   validateBase(){
     this.validateQuote();
     this.validateClass();
@@ -338,6 +337,17 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   }
   abstract validate(): ValidationClass;
   abstract validateClass(): void;
+
+  sortForms() {
+    this.quotePolicyForms = this.quotePolicyForms
+      .sort((a,b) =>
+        ((a.categorySequence ?? 9999) - (b.categorySequence ?? 9999)) ||
+        ((a.sortSequence ?? 9999) - (b.sortSequence ?? 9999)) ||
+        (a.formTitle?.localeCompare(b.formTitle ?? '')) ||
+        (a.formName?.localeCompare(b.formName ?? '')) ||
+        ((a.formIndex ?? 9999) - (b.formIndex ?? 9999))
+      );
+  }
 
   // validatePropertyQuote(quote: Validation){
   //   quote.validate ? quote.validate(): null;

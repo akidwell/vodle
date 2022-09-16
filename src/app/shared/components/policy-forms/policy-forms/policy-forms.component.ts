@@ -87,26 +87,12 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
           form.formIndex = index + 1;
         }
       }
-      // if (!form.allowMultiples) {
-      //   if (duplicateIndex > 0) {
-      //     this.messageDialogService.open('Error','Duplicate');
-      //     return;
-      //   }
-      // }
-
       const newForm = new QuotePolicyFormClass(form);
       newForm.quoteId = this.quote.quoteId;
       newForm.markDirty();
       this.quote.quotePolicyForms.push(newForm);
+      this.quote.sortForms();
       this.selectView(this.currentView);
-
-      // const clone = deepClone(building.toJSON());
-      // const newBuilding = new PropertyQuoteBuildingClass(clone);
-      // newBuilding.propertyQuoteBuildingId = 0;
-      // newBuilding.isNew = true;
-      // newBuilding.expand = true;
-      // newBuilding.markDirty();
-      // this.propertyQuote.addBuilding(newBuilding);
     }
   }
 

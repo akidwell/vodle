@@ -28,6 +28,7 @@ export class QuotePolicyFormClass extends PolicyFormClass {
       hasSpecialNote: this.hasSpecialNote,
       isVariable: this.isVariable,
       formCategory: this.formCategory,
+      categorySequence: this.categorySequence,
       sortSequence: this.sortSequence,
       formIndex: this.formIndex,
       allowMultiples: this.allowMultiples
