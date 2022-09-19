@@ -26,6 +26,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   sortSequence: number | null = null;
   formIndex: number | null = null;
   allowMultiples: boolean | null = null;
+  canAdd = true;
 
   get isIncluded(): boolean {
     return this._isIncluded;
@@ -87,6 +88,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.categorySequence = policyForm.categorySequence;
     this.sortSequence = policyForm.sortSequence;
     this.formIndex = policyForm.formIndex;
+    this.allowMultiples = policyForm.allowMultiples;
     this._isIncluded = policyForm.isIncluded;
   }
 

@@ -44,18 +44,22 @@ export class QuoteSavingService {
     const isNew = this.department?.sequenceNumber === 0;
     if(department) {
       const results$ = this.quoteService.updateAllQuotes(department);
-      await lastValueFrom(results$).then(async sequence => {
-        console.log(sequence);
-        if (isNew && sequence !== null) {
-          this.router.navigate(['/quote/' + sequence + '/information']);
+      await lastValueFrom(results$).then(async savedDepartment => {
+        console.log(savedDepartment.sequenceNumber);
+        savedDepartment.programMappings.map(c => {
+          if (c.quoteData?.propertyQuote != null) {
+            const savedQuote = new PropertyQuoteClass(c.quoteData);
+            this.program?.quoteData?.onSave(savedQuote);
+          }
+        });
+        if (isNew && savedDepartment.sequenceNumber !== null) {
+          this.router.navigate(['/quote/' + savedDepartment.sequenceNumber + '/information']);
         }
-        //this.newQuote = false;
         this.notification.show('Quote Saved.', {
           classname: 'bg-success text-light',
           delay: 5000,
         });
         department.afterSave();
-
         return true;
       });
     }
