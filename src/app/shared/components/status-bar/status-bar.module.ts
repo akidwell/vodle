@@ -8,6 +8,7 @@ import { PolicyHeaderComponent } from 'src/app/features/policy/components/policy
 import { DirectivesModule } from '../../directives/directives.module';
 import { InsuredDuplicatesComponent } from 'src/app/features/insured/components/insured-duplicates/insured-duplicates.component';
 import { PipesModule } from '../../pipes/pipes.module';
+import { BusyModule } from 'src/app/core/components/busy/busy.module';
 
 @NgModule({
   declarations: [ StatusBarComponent, InsuredHeaderComponent, PolicyHeaderComponent, InsuredDuplicatesComponent],
@@ -16,7 +17,8 @@ import { PipesModule } from '../../pipes/pipes.module';
     FontAwesomeModule,
     FormsModule,
     DirectivesModule,
-    PipesModule
+    PipesModule,
+    BusyModule
   ],
   exports: [StatusBarComponent]
 

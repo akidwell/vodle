@@ -2,8 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { NotificationService } from 'src/app/core/components/notification/notification-service';
-import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { SharedAdditionalNamedInsuredsGroupComponent } from 'src/app/shared/components/additional-named-insured/additional-named-insureds-group/additional-named-insureds-group.component';
 import { InsuredService } from '../../services/insured-service/insured.service';
@@ -36,7 +34,7 @@ export class InsuredInformationComponent implements OnInit {
   @ViewChild(InsuredContactGroupComponent) contactComp!: InsuredContactGroupComponent;
 
 
-  constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private messageDialogService: MessageDialogService, private notification: NotificationService, private previousRouteService: PreviousRouteService) {
+  constructor(private route: ActivatedRoute, private router: Router, private insuredService: InsuredService, private userAuth: UserAuth, private previousRouteService: PreviousRouteService) {
     this.authSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
