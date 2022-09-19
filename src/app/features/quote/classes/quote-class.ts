@@ -316,21 +316,11 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   //   //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
   //   //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   // }
-  validateQuote() {
-    //this._canBeSaved = true;
-    this._errorMessages = [];
-    this._isValid = true;
-    this.validateClassCode();
-    //this.validateQuoteChildren();
-  }
 
-  validateClassCode(): boolean {
-    let invalid = false;
-    if (this.classCode == null){
-      invalid = true;
-      this._errorMessages.push('CSP Code is required');
-    }
-    return invalid;
+  validateQuote() {
+    this._errorMessages = [];
+    this._canBeSaved = true;
+    this._isValid = true;
   }
 
   validateBase(){

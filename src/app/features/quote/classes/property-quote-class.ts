@@ -532,10 +532,24 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.invalidList = [];
     this._canBeSaved = true;
     this._isValid = true;
+
+    const amountValidation = this.validateClassCode();
+    if (amountValidation) {
+      this._isValid = false;
+      this._errorMessages.push(amountValidation);
+    }
+
     if (this.validateLargestExposure()) {
       this._isValid = false;
     }
     this._errorMessages = this.invalidList;
+  }
+
+  validateClassCode(): string | null {
+    if (this.classCode == null){
+      return 'CSP Code is required';
+    }
+    return null;
   }
 
   validateLargestExposure(): boolean {
@@ -549,7 +563,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   validateLocationCoverageTab() {
     this.propertyQuoteBuildingLocationTabValidation?.resetValidation();
-    this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAsStandalone(this.propertyQuoteBuildingList);
+    const classCodeValidation = this.validateClassCode();
+    if (classCodeValidation) {
+      this.propertyQuoteBuildingLocationTabValidation?.errorMessages.push(classCodeValidation);
+    }
+    this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAndMerge(this.propertyQuoteBuildingList);
   }
   validateCoveragesTab() {
     this.coveragesTabValidation?.resetValidation();
