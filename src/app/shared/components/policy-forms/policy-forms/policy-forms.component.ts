@@ -121,15 +121,11 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
         this.policyService.getEndorsementForms(this.quote.submission.expiringPolicyId).subscribe( forms => {
           if (forms) {
             let endorsementNumber = -1;
-            let index = 0;
             forms.map(c => {
               if (c.endorsementNumber != endorsementNumber) {
-                const endorsementHeader = newEndorsementFormData();
-                endorsementHeader.endorsementNumber = c.endorsementNumber;
-                forms.splice(index,0,endorsementHeader);
+                c.firstEndorsementRow = true;
                 endorsementNumber = c.endorsementNumber;
               }
-              index++;
             });
             this.expiringForms = forms;
           }
@@ -143,38 +139,6 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
       }
     }
   }
-
-  // async loadExpiring() {
-  //   if (this.quote.submission.expiringPolicyId) {
-  //     // Check Cache is null first
-  //     if (!this.expiringForms) {
-  //       this.expiringFormsLoading = true;
-  //       this.policyService.getEndorsementForms(this.quote.submission.expiringPolicyId).subscribe( forms => {
-  //         if (forms) {
-  //           let endorsementNumber = -1;
-  //           let index = 0;
-  //           forms.map(c => {
-  //             if (c.endorsementNumber != endorsementNumber) {
-  //               c.firstEndorsementRow = true;
-  //               // const endorsementHeader = newEndorsementFormData();
-  //               // endorsementHeader.endorsementNumber = c.endorsementNumber;
-  //               // forms.splice(index,0,endorsementHeader);
-  //               endorsementNumber = c.endorsementNumber;
-  //             }
-  //             index++;
-  //           });
-  //           this.expiringForms = forms;
-  //         }
-  //         else {
-  //           this.expiringForms =[];
-  //         }
-  //         this.expiringFormsLoading = false;
-  //         this.expiringFormsCount = this.forms.length;
-  //       }
-  //       );
-  //     }
-  //   }
-  // }
 
   get showVariableForm(): boolean {
     return this.filteredForms.findIndex(c => c.isVariable) >= 0;
