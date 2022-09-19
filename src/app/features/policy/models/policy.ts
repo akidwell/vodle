@@ -317,12 +317,14 @@ export interface EndorsementFormData {
   endorsementNumber: number;
   formName: string;
   formTitle: string;
+  firstEndorsementRow: boolean;
 }
 
 export const newEndorsementFormData = (): EndorsementFormData => {
   return {
     endorsementNumber: 0,
     formName: '',
-    formTitle: ''
+    formTitle: '',
+    firstEndorsementRow: false
   };
 };

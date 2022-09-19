@@ -637,7 +637,13 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveDeductible(this.propertyQuoteDeductibleList,savedQuote);
     this.onSaveMortgagee(this.propertyQuoteMortgageeList,savedQuote);
     this.onSaveAdditionalInterest(this.propertyQuoteAdditionalInterestList,savedQuote);
+    this.onSaveForms(savedQuote);
   }
+
+  private onSaveForms(savedQuote: PropertyQuoteClass) {
+    this.quotePolicyForms = savedQuote.quotePolicyForms;
+  }
+
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {
     mortgagees.forEach(mortgagee => {
       if (mortgagee.isNew) {

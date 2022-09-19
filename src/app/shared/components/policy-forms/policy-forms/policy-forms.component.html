@@ -15,23 +15,23 @@
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
                             (click)="selectView(formViewType.All)">
-                        <label class="btn btn-outline-secondary hide-select" for="radioAll">All</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioAll">All({{allFormsCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
                             (click)="selectView(formViewType.Mandatory)">
-                        <label class="btn btn-outline-secondary hide-select" for="radioMandatory">Mandatory</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory ({{mandatoryFormsCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
                             (click)="selectView(formViewType.Optional)">
-                        <label class="btn btn-outline-secondary hide-select" for="radioOptional">Optional</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioOptional">Optional ({{optionalFormsCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
                             checked (click)="selectView(formViewType.OnPolicy)">
-                        <label class="btn btn-outline-secondary hide-select" for="radioOnPolicy">On Policy</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioOnPolicy">On Policy ({{onPolicyFormsCount}})</label>
                         <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check" name="btnradio" id="radioExpiring" autocomplete="off"
                             (click)="selectView(formViewType.Expiring)">
-                        <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-secondary hide-select" for="radioExpiring">Expiring</label>
+                        <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-dark hide-select" for="radioExpiring">Expiring ({{expiringFormsCount}})</label>
                     </div>
                 </div>
                 <div class ="col-lg-6">
-                    <rsps-policy-forms-search [type]="type" [quote]="quote" (addForm)=addForm($event) ></rsps-policy-forms-search>
+                    <rsps-policy-forms-search [type]="type" [quote]="quote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>
                 </div>
             </div>
         </div>
@@ -49,22 +49,22 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let form of filteredForms">
-                            <td *ngIf="showIcons">
+                            <td *ngIf="showIcons" style="width:1%;">
                                 <fa-icon *ngIf="form.hasSpecialNote" class="faExclamationTriangle fa-xl"
                                     [icon]="faExclamationTriangle" ngbTooltip="Special Note" (click)="showSpecialNote(form.formName)"></fa-icon>
                             </td>
-                            <td style="text-align:center;">
+                            <td style="text-align:center; width:1%;">
                                 <input type="checkbox" class="form-check-input" id="included" [ngClass]="!form.isIncluded && form.isMandatory ? 'mandatory' : ''"
                                     [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
                             </td>
-                            <td *ngIf="showVariableForm" style="border-left-style: hidden;">
+                            <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
                                 <fa-icon *ngIf="form.isVariable" class="faEdit fa-xl" [icon]="faEdit" (click)="editVariableForm(form.formName)"
                                     ngbTooltip="Variable Enabled Form"></fa-icon>
                                 <fa-icon *ngIf="false" class="faCircleE fa-l"
                                     ngbTooltip="Optional Form selected on Expiring Submission" [icon]="faCircleE">
                                 </fa-icon>
                             </td>
-                            <td>
+                            <td style="width:1%; white-space: nowrap;">
                                 <a href="#" (click)="openSpecimen(form);$event.preventDefault();">
                                     {{form.formName}}
                                 </a>
@@ -81,7 +81,25 @@
         </div>
         <div *ngIf="showExpiring" class="card-body table-body">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered" *ngIf="true">
+                <table class="table table-striped table-bordered">
+                    <!-- <thead>
+                        <tr>
+                            <th>Endorsement #</th>
+                            <th>Form Number</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let form of expiringForms">
+                            <td>
+                                <span *ngIf="form.firstEndorsementRow">{{form.endorsementNumber}}</span>
+                            </td>
+                            <td>
+                                {{form.formName}}
+                            </td>
+                            <td >{{form.formTitle}}</td>
+                        </tr>
+                    </tbody> -->
                     <thead>
                         <tr>
                             <th>Form Number</th>

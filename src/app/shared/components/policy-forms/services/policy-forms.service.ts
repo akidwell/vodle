@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
+import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms-class';
 import { Quote } from 'src/app/features/quote/models/quote';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 
@@ -40,9 +41,17 @@ export class SpecimenPacketService {
     return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/refresh-forms', quoteJSON, {headers});
   }
 
-  searchForms(searchValue: string): Observable<PolicyForm[]> {
+  searchForms(searchValue: string): Observable<QuotePolicyFormClass[]> {
     const params = new HttpParams().append('searchValue', searchValue ?? '');
-    return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/lookups/forms-search', { params});
+    return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/lookups/forms-search', { params}).pipe(
+      map(response => {
+        const data: QuotePolicyFormClass[] = [];
+        response.forEach(element => {
+          data.push(new QuotePolicyFormClass(element));
+        });
+        return data;
+      })
+    );
   }
 
 }

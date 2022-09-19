@@ -134,7 +134,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   naicsCode = null;
   sicCode = null;
   formsVersionDescription: string | null = null;
-  ////////End Datbase fields
+  ////////End Database fields
   mappingError = false;
   submission!: SubmissionClass;
   quoteRates: QuoteRateClass[] = [];

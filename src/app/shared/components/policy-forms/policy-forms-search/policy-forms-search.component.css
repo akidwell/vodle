@@ -12,3 +12,7 @@
     overflow: hidden!important;
     text-overflow: ellipsis!important;
 }
+
+.duplicate {
+    color: red;
+  }
