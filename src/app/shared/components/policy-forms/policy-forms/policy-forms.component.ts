@@ -6,7 +6,7 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 import { DialogSizeEnum } from 'src/app/core/enums/dialog-size-enum';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
-import { EndorsementFormData, newEndorsementFormData } from 'src/app/features/policy/models/policy';
+import { EndorsementFormData } from 'src/app/features/policy/models/policy';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicyFormClass } from 'src/app/shared/classes/policy-form-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
@@ -45,7 +45,6 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   @Input() set forms(value: PolicyFormClass[]) {
     this._forms = value;
     this.refreshForms();
-    this.setFormCounts();
   }
   get forms(): PolicyFormClass[] {
     return this._forms;

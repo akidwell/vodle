@@ -57,7 +57,7 @@
                         [hidden]="!deductible.isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded">
                 </div>
                 <div class="col-lg-1" *ngIf="collapsed">
-                    <div ngbDropdown class="d-inline-block">
+                    <div ngbDropdown class="d-inline-block" *ngIf="canEdit">
                         <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle
                             click-stop-propagation>Actions</button>
                         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
