@@ -25,6 +25,10 @@ export class CanDeactivateGuard implements CanDeactivate<QuoteInformationCompone
     if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
       return true;
     }
+
+    if (this.quoteSavingService.isSaving) {
+      return true;
+    }
     if (component instanceof QuoteInformationComponent || component instanceof QuoteSummaryComponent) {
       // Skip checks if bypassFormGuard is set
       console.log('can deactivate department');

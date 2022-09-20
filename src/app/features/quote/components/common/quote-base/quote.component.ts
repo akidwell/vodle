@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { Department } from '../../../models/department';
+import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-quote',
@@ -15,8 +17,11 @@ export class QuoteComponent implements OnInit {
   previousUrl = '';
   previousLabel = 'Previous';
   department!: Department;
+  isSaving = false;
+  saveSub!: Subscription;
+  faSave = faSave;
 
-  constructor(public headerPaddingService: HeaderPaddingService,private route: ActivatedRoute, private previousRouteService: PreviousRouteService, private router: Router) {
+  constructor(public headerPaddingService: HeaderPaddingService,private route: ActivatedRoute, private previousRouteService: PreviousRouteService, private quoteSavingService: QuoteSavingService) {
   }
 
   ngOnInit(): void {
@@ -27,5 +32,6 @@ export class QuoteComponent implements OnInit {
     this.route?.data.subscribe(data => {
       this.department = data['quoteData'].department;
     });
+    this.saveSub = this.quoteSavingService.isSaving$.subscribe(isSaving => this.isSaving = isSaving);
   }
 }

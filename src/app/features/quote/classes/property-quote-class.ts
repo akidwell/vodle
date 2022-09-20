@@ -67,7 +67,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   set riskDescription(value: string | null) {
     this._riskDescription = value;
-    this._isDirty = true;
+    this.markDirty();
+    // this._isDirty = true;
   }
   get limitTotal(): number {
     let total = 0;
@@ -179,9 +180,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     const largestPremTiv = this.largestPremTiv;
     const exposure = lawLimit + largestPremTiv;
     if (this._lastLargestExposure != exposure){
-      if(this._lastLargestExposure != 0){
-        this._isDirty = true;
-      }
       this._lastLargestExposure = exposure;
     }
     this._largestExposure = exposure;
@@ -503,6 +501,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   markDirty() {
     this._isDirty = true;
+    this._validationResults.isDirty = true;
   }
   setRequiredFields() {
     // No special rules

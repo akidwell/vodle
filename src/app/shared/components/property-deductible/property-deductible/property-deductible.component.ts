@@ -4,7 +4,6 @@ import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
-import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
 import { PropertyDeductibleLookup } from 'src/app/core/models/property-deductible-lookup';
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { PropertyQuoteDeductibleClass } from 'src/app/features/quote/classes/property-quote-deductible-class';

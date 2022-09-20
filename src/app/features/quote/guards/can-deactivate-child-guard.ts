@@ -31,6 +31,11 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
       component instanceof QuotePremiumComponent || component instanceof TermsConditionsComponent || component instanceof QuoteFormsComponent) {
       // Skip checks if bypassFormGuard is set
       console.log(this.checkLeavePolicy(state.url, nextState.url));
+
+      if (this.quoteSavingService.isSaving) {
+        return false;
+      }
+
       if (!this.checkLeavePolicy(state.url, nextState.url)) {
         allowNavigate = this.validateAndSaveQuote();
       }
