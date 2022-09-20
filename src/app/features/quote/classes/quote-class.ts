@@ -23,6 +23,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   _errorMessages: string[] = [];
   _isValid = true;
   _classCode : number | null = null;
+  _policyEffectiveDate: Date | Moment | null = null;
+  _policyExpirationDate: Date | Moment | null = null;
   _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
@@ -32,8 +34,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   cuspNumber = 0;
   quoteNumber = 0;
   sequenceNumber = 0;
-  policyEffectiveDate: Date | Moment | null = null;
-  policyExpirationDate: Date | Moment | null = null;
+  //policyEffectiveDate: Date | Moment | null = null;
+  // policyExpirationDate: Date | Moment | null = null;
   status = 0;
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
@@ -192,6 +194,22 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._isDirty = true;
   }
 
+  get policyEffectiveDate() : Date | Moment | null {
+    return this._policyEffectiveDate;
+  }
+  set policyEffectiveDate(value: Date | Moment | null) {
+    this._policyEffectiveDate = value;
+    this._isDirty = true;
+  }
+
+  get policyExpirationDate() : Date | Moment | null {
+    return this._policyExpirationDate;
+  }
+  set policyExpirationDate(value: Date | Moment | null) {
+    this._policyExpirationDate = value;
+    this._isDirty = true;
+  }
+
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     if (quote) {
       this.existingInit(quote);
@@ -209,8 +227,6 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteNumber = quote.quoteNumber || 1;
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
     this.admittedStatus = quote.admittedStatus || '';
-    this.policyEffectiveDate = quote.policyEffectiveDate || null;
-    this.policyExpirationDate = quote.policyExpirationDate || null;
     this.status = quote.status || 0;
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
@@ -235,11 +251,13 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       lineItems.push(new QuoteLineItemClass(element));
     });
     this.quoteLineItems = lineItems;
+    this.formsVersion = quote.formsVersion;
+    this.formsVersionDescription = quote.formsVersionDescription;
     this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
-    this.formsVersion = quote.formsVersion;
-    this.formsVersionDescription = quote.formsVersionDescription;
+    this._policyEffectiveDate = quote.policyEffectiveDate || null;
+    this._policyExpirationDate = quote.policyExpirationDate || null;
 
     const policyForms: QuotePolicyFormClass[] = [];
     if(quote.quotePolicyForms) {
