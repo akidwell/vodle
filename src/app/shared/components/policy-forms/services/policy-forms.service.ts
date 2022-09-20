@@ -16,34 +16,28 @@ export class SpecimenPacketService {
 
   getSpecialNote(formName: string): Observable<string> {
     const params = new HttpParams().append('formName', formName ?? '');
-    return this.http.get<string>(this.config.apiBaseUrl + 'api/lookups/special-notes', { params, responseType: 'text' as 'json'});
+    return this.http.get<string>(this.config.apiBaseUrl + 'api/forms/special-notes', { params, responseType: 'text' as 'json'});
   }
 
   getSpecimenURL(formName: string): Observable<string> {
     const params = new HttpParams().append('formName', formName ?? '');
-    return this.http.get<string>(this.config.apiBaseUrl + 'api/lookups/specimens', { params, responseType: 'text' as 'json'});
+    return this.http.get<string>(this.config.apiBaseUrl + 'api/forms/specimens', { params, responseType: 'text' as 'json'});
   }
 
   getSpecimentPacketURL(quoteKey: string, forms: string): Observable<string> {
     const params = new HttpParams().append('quoteKey', quoteKey ?? '').append('forms', forms ?? '');
-    return this.http.get<string>(this.config.apiBaseUrl + 'api/lookups/specimen-packets', { params, responseType: 'text' as 'json'});
+    return this.http.get<string>(this.config.apiBaseUrl + 'api/forms/specimen-packets', { params, responseType: 'text' as 'json'});
   }
 
   getGuideline(formName: string) {
     const params = new HttpParams().append('formName', formName);
     const headers = { 'Content-Type': 'application/pdf'};
-    return this.http.get(this.config.apiBaseUrl + 'api/lookups/guidelines', { params: params, headers, responseType: 'arraybuffer'});
-  }
-
-  refreshForms(quote: QuoteClass) {
-    const quoteJSON = quote.toJSON();
-    const headers = { 'Content-Type': 'application/json'};
-    return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/refresh-forms', quoteJSON, {headers});
+    return this.http.get(this.config.apiBaseUrl + 'api/forms/guidelines', { params: params, headers, responseType: 'arraybuffer'});
   }
 
   searchForms(searchValue: string): Observable<QuotePolicyFormClass[]> {
     const params = new HttpParams().append('searchValue', searchValue ?? '');
-    return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/lookups/forms-search', { params}).pipe(
+    return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/forms/forms-search', { params}).pipe(
       map(response => {
         const data: QuotePolicyFormClass[] = [];
         response.forEach(element => {

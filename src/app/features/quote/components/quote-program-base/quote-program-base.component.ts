@@ -51,26 +51,34 @@ export class QuoteProgramBaseComponent {
     );
     this.propertyLocationTabValidationSub = this.quoteValidationService.propertyQuoteLocationBuildingTabValidation$.subscribe(
       (validation: QuoteValidationClass | null) => {
-        this.propertyLocationTabValidation = validation;
-        this.propertyLocationTabValidation?.errorMessages.length;
+        setTimeout(() => {
+          this.propertyLocationTabValidation = validation;
+        });
       }
     );
     this.mortgageeAdditionalInterestTabValidationSub = this.quoteValidationService.propertyQuoteMortgageeAdditionalInterestTabValidation$.subscribe(
       (validation: QuoteValidationClass | null) => {
-        this.mortgageeAdditionalInterestTabValidation = validation;
+        setTimeout(() => {
+          this.mortgageeAdditionalInterestTabValidation = validation;
+        });
       }
     );
     this.coveragePremiumTabValidationSub = this.quoteValidationService.coveragePremiumTabValidation$.subscribe(
       (validation: QuoteValidationClass | null) => {
-        this.coveragePremiumTabValidation = validation;
+        setTimeout(() => {
+          this.coveragePremiumTabValidation = validation;
+        });
       }
     );
     this.termsAndConditionsTabValidationSub = this.quoteValidationService.termsAndConditionsTabValidation$.subscribe(
       (validation: QuoteValidationClass | null) => {
-        this.termsAndConditionsTabValidation = validation;
+        setTimeout(() => {
+          this.termsAndConditionsTabValidation = validation;
+        });
       }
     );
   }
+
   ngOnDestroy(): void {
     this.propertyLocationTabValidationSub.unsubscribe();
     this.mortgageeAdditionalInterestTabValidationSub.unsubscribe();

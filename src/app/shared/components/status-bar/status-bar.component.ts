@@ -51,6 +51,7 @@ export class StatusBarComponent implements OnInit {
   hasSelectedProgram = false;
   selectedProgramSub!: Subscription;
   displayHeaderSub: Subscription;
+  isBusy = false;
 
   @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
   constructor(
@@ -273,6 +274,7 @@ export class StatusBarComponent implements OnInit {
   async saveInsured(insured: InsuredClass): Promise<boolean> {
     if (insured.isValid) {
       if (insured.isNew) {
+        this.isBusy = true;
         const results$ = this.insuredService.addInsured(insured);
         return await lastValueFrom(results$)
           .then(async result => {
@@ -281,9 +283,11 @@ export class StatusBarComponent implements OnInit {
             this.showBusy = false;
             insured.markClean();
             this.router.navigate(['/insured/' + result.insuredCode?.toString() + '/information']);
+            this.isBusy = false;
             return true;
           },
           (error) => {
+            this.isBusy = false;
             this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
             const errorMessage = error.error?.Message ?? error.message;
             this.messageDialogService.open('Insured Save Error', errorMessage);
@@ -292,15 +296,18 @@ export class StatusBarComponent implements OnInit {
       }
       else {
         if (insured.isDirty) {
+          this.isBusy = true;
           const results$ = this.insuredService.updateInsured(insured);
           return await lastValueFrom(results$)
             .then(async updated => {
               insured.updateClass(updated);
               insured.markClean();
               this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+              this.isBusy = false;
               return true;
             },
             (error) => {
+              this.isBusy = false;
               this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
               const errorMessage = error.error?.Message ?? error.message;
               this.messageDialogService.open('Insured Save Error', errorMessage);

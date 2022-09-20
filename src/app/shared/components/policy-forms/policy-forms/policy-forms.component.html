@@ -55,7 +55,7 @@
                             </td>
                             <td style="text-align:center; width:1%;">
                                 <input type="checkbox" class="form-check-input" id="included" [ngClass]="!form.isIncluded && form.isMandatory ? 'mandatory' : ''"
-                                    [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
+                                    [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
                                 <fa-icon *ngIf="form.isVariable" class="faEdit fa-xl" [icon]="faEdit" (click)="editVariableForm(form.formName)"

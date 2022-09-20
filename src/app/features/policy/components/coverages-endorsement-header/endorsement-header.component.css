@@ -2,7 +2,9 @@
   padding-top: 20px;
   padding-bottom: 20px;
 }
-
+.top-info {
+  padding: 16px;
+}
 #premium,
 #attachmentPoint,
 #sir {
@@ -10,7 +12,7 @@
 }
 
 #terrorism ::ng-deep .ng-dropdown-panel.ng-select-bottom {
-  left: calc(100% - 444px)!important; 
+  left: calc(100% - 444px)!important;
 }
 
 label{
