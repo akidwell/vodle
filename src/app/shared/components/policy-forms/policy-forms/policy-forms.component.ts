@@ -45,7 +45,6 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   @Input() set forms(value: PolicyFormClass[]) {
     this._forms = value;
     this.refreshForms();
-    this.setFormCounts();
   }
   get forms(): PolicyFormClass[] {
     return this._forms;

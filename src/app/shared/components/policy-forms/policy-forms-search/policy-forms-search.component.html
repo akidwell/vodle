@@ -13,7 +13,7 @@
             <input id="typeahead-template" class="form-control ml2" type="search" name="searchTerm"
                 [readonly]="!canEdit" [(ngModel)]="searchFormName" placeholder="Forms Library"
                 [inputFormatter]="displayFormatter" [ngbTypeahead]="search"
-                (selectItem)="selectedItem($event.item)" [resultTemplate]="rt" />
+                (selectItem)="selectedItem($event.item)" [resultTemplate]="rt"/>
             <button *ngIf="canEdit" [disabled]="!canAddForm" class="btn margin-left" style="z-index: 1"
                 [ngClass]="canAddForm ? 'btn-success' : 'btn-secondary'" (click)="add()">Add Form</button>
         </div>
