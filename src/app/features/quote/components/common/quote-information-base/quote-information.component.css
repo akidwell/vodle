@@ -6,7 +6,9 @@
   background-color: #f2f4f6;
   margin: 0px;
 }
-
+.top-info {
+  padding: 16px;
+}
 /* .panel {
   box-sizing: border-box;
   height: 100%;
