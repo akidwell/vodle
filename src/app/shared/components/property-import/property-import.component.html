@@ -1,7 +1,6 @@
 <div class="card-body" style="padding-bottom: 0px;display:flex">
     <input type="file" style="display:none" accept=".xls, .xlsx" (change)="import($event)" #file>
-    <button class="btn btn-md btn-primary" [disabled]="importing" (click)="file.click()" name="verify"
-        *ngIf="true">Import
+    <button class="btn btn-md btn-primary" *ngIf="canEdit" [disabled]="importing" (click)="file.click()" name="verify">Import
     </button>
     <div class="d-flex justify-content-center" style="float: left; margin-top: 3px; margin-left: 5px;"
         *ngIf="importing">

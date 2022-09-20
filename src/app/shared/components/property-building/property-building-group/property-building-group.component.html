@@ -77,7 +77,7 @@
         </div>
     </div>
     <div class="card-footer">
-        <button class="footer-button" (click)="addBuilding();">Add
+        <button class="footer-button" (click)="addBuilding();" *ngIf="canEdit">Add
             Location/Building</button>
         <div class="footer-count">Buildings: {{(policies$ | async)?.length}}/{{buildingCount}}</div>
     </div>
