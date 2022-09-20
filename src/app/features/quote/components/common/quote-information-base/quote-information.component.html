@@ -1,10 +1,10 @@
-<div class="card-body">
+<div class="top-info">
   <div class="row" *ngIf="department">
     <div class="col-lg-3">
       <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
       <ng-select id="riskState" [items]="states$ | async" bindLabel="name" bindValue="code"
         [clearable]="false" [readonly]="department.programMappings[0].quoteData.riskState == ''" name="riskState"
-        [required]="canEditSubmission" *ngIf="department.programMappings[0].quoteData" 
+        [required]="canEditSubmission" *ngIf="department.programMappings[0].quoteData"
         [(ngModel)]="department.programMappings[0].quoteData.riskState" (ngModelChange)="changeState($event)"
         #riskState="ngModel" >
       </ng-select>
