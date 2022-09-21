@@ -238,7 +238,18 @@ body {
   z-index: 1 !important;
 }
 
+/* Make readonly fields grey */
 .form-control[readonly] {
  background-color: #e9ecef;
  opacity: 1;
+}
+
+/* Default spacing on nav items */
+.nav-link {
+  padding: 0.5rem 1rem;
+}
+
+/* Padding for sections not in a card */
+.top-info {
+  padding: 16px;
 }

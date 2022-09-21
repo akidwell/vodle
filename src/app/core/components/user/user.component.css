@@ -1,7 +1,8 @@
 .btn {
   background-color: #001f3e;
-  color: white;
+  color: white !important;
   box-shadow: none;
+  border: 0px;
 }
 
 #user-settings {
@@ -9,7 +10,6 @@
   position: fixed;
   z-index: 997 !important;
   background-color: #001f3e;
-  /* background-color: #335271; */
   border-bottom-left-radius: 16px;
   border-top-left-radius: 16px;
 }
