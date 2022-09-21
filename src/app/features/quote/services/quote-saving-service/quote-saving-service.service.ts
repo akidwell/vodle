@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
 import { PropertyQuoteClass } from '../../classes/property-quote-class';
-import { QuoteClass } from '../../classes/quote-class';
 import { PropertyDataService } from '../property-data.service';
 import { QuoteService } from '../quote-service/quote.service';
 
@@ -19,6 +18,16 @@ export class QuoteSavingService {
   departmentSub!: Subscription;
   program: ProgramClass | null = null;
   department: DepartmentClass | null = null;
+
+  isSaving$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _isSaving= false;
+
+  get isSaving(): boolean { return this._isSaving; }
+  set isSaving(value: boolean) {
+    this._isSaving = value;
+    this.isSaving$.next(this._isSaving);
+  }
+
   constructor(
     private router: Router,
     private quoteService: QuoteService,
@@ -43,6 +52,7 @@ export class QuoteSavingService {
     const department = this.department;
     const isNew = this.department?.sequenceNumber === 0;
     if(department) {
+      this.isSaving = true;
       const results$ = this.quoteService.updateAllQuotes(department);
       await lastValueFrom(results$).then(async savedDepartment => {
         console.log(savedDepartment.sequenceNumber);
@@ -50,6 +60,13 @@ export class QuoteSavingService {
           if (c.quoteData?.propertyQuote != null) {
             const savedQuote = new PropertyQuoteClass(c.quoteData);
             this.program?.quoteData?.onSave(savedQuote);
+            ////////////////////////
+            //department.validationResults.isDirty = false;
+            department.programMappings.map(c => {
+              if (c.quoteData) {
+                //c.quoteData.validationResults.isDirty = false;
+              }
+            });
           }
         });
         if (isNew && savedDepartment.sequenceNumber !== null) {
@@ -60,6 +77,7 @@ export class QuoteSavingService {
           delay: 5000,
         });
         department.afterSave();
+        this.isSaving = false;
         return true;
       });
     }
@@ -68,6 +86,7 @@ export class QuoteSavingService {
     const quote = this.program?.quoteData;
     if (quote) {
       console.log('quotes: ', quote, 'id: ');
+      this.isSaving = true;
       const results$ = this.quoteService.updateQuote(quote);
       await lastValueFrom(results$)
         .then(async (quoteData) => {
@@ -82,9 +101,13 @@ export class QuoteSavingService {
             classname: 'bg-success text-light',
             delay: 5000,
           });
+          this.isSaving = false;
+          ////////////////////////
+          //quote.validationResults.isDirty = false;
           return true;
         })
         .catch((error) => {
+          this.isSaving = false;
           this.messageDialogService.open('Quote Save Error!', error.error.Message);
         });
     }
