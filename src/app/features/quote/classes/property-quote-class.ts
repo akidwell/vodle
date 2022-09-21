@@ -24,6 +24,7 @@ import { ProgramClass } from './program-class';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
   propertyQuoteId = 0;
+  quote!: QuoteClass;
   //quoteId: number | null = null;
 
   propertyQuoteDeductibleList: PropertyQuoteDeductibleClass[] = [];
@@ -270,12 +271,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   addBuilding(building: PropertyQuoteBuildingClass) {
-
     this.propertyQuoteBuildingList.push(building);
     // this.propertyQuoteBuilding.forEach(c => c.focus = false);
-
     building.propertyQuote = this;
     building.focus = true;
+    //building.markDirty();
     this.filterBuildings();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
@@ -501,6 +501,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   markDirty() {
     this._isDirty = true;
+    ////////////////////////
     this._validationResults.isDirty = true;
   }
   setRequiredFields() {

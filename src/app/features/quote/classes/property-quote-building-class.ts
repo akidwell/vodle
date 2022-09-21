@@ -295,9 +295,10 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.validate();
-    if (!building) {
-      this.markDirty();
-    }
+    //////////////////////
+    // if (!building) {
+    //   this.markDirty();
+    // }
   }
   validate(){
     if (this._validateOnLoad || this.isDirty){
@@ -469,9 +470,11 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   markDirty() {
     this._isDirty = true;
-    if (this._validationResults) {
-      this._validationResults.isDirty = true;
-    }
+    this.propertyQuote.quoteDirty = true;
+    ////////////////////////
+    // if (this._validationResults) {
+    //   this._validationResults.isDirty = true;
+    // }
   }
   setRequiredFields() {
     // No special rules

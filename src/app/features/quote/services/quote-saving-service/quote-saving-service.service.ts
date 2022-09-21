@@ -60,10 +60,11 @@ export class QuoteSavingService {
           if (c.quoteData?.propertyQuote != null) {
             const savedQuote = new PropertyQuoteClass(c.quoteData);
             this.program?.quoteData?.onSave(savedQuote);
-            department.validationResults.isDirty = false;
+            ////////////////////////
+            //department.validationResults.isDirty = false;
             department.programMappings.map(c => {
               if (c.quoteData) {
-                c.quoteData.validationResults.isDirty = false;
+                //c.quoteData.validationResults.isDirty = false;
               }
             });
           }
@@ -101,7 +102,8 @@ export class QuoteSavingService {
             delay: 5000,
           });
           this.isSaving = false;
-          quote.validationResults.isDirty = false;
+          ////////////////////////
+          //quote.validationResults.isDirty = false;
           return true;
         })
         .catch((error) => {

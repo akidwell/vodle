@@ -12,7 +12,7 @@
         <li class="nav-item" *ngIf="program.quoteData != null;">
           <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}}
             <!-- <span *ngIf="program.quoteData.validationResults.isDirty">*</span> -->
-              <fa-icon [icon]="faSave" *ngIf="(program.quoteData.validationResults.isDirty)  && !isSaving"></fa-icon>
+              <!-- <fa-icon [icon]="faSave" *ngIf="(program.quoteData.quoteDirty)  && !isSaving"></fa-icon> -->
               <!-- <div class="d-flex justify-content-center" *ngIf="isSaving"> -->
                 <div class="spinner-border spinner-border-sm" *ngIf="isSaving"></div>
               <!-- </div> -->            
