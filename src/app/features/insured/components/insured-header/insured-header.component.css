@@ -13,12 +13,12 @@
 /* Overwrite margin size */
 .row {
   margin: 0;
-  margin-top: 7px;
 }
 .header-row {
   white-space: nowrap;
 }
 .header-field {
+  margin-top: 7px;
   font-size: 1.1rem;
   float: left;
   margin-left: 1rem;
