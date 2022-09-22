@@ -26,6 +26,9 @@ export class QuoteProgramBaseComponent {
   coveragePremiumTabValidationSub!: Subscription;
   coveragePremiumTabValidation: QuoteValidationClass | null = null;
 
+  formsListTabValidationSub!: Subscription;
+  formsListTabValidation: QuoteValidationClass | null = null;
+
   termsAndConditionsTabValidationSub!: Subscription;
   termsAndConditionsTabValidation: QuoteValidationClass | null = null;
 
@@ -44,6 +47,7 @@ export class QuoteProgramBaseComponent {
             this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.program?.quoteData?.propertyQuoteBuildingLocationTabValidation || null;
             this.mortgageeAdditionalInterestTabValidation = this.program?.quoteData?.propertyQuoteMortgageeAdditionalInterestTabValidation || null;
             this.coveragePremiumTabValidation = this.program?.quoteData?.coveragesTabValidation || null;
+            this.formsListTabValidation = this.program?.quoteData?.formsListTabValidation || null;
             this.termsAndConditionsTabValidation = this.program?.quoteData?.termsAndConditionsTabValidation || null;
           }
         });
@@ -70,6 +74,13 @@ export class QuoteProgramBaseComponent {
         });
       }
     );
+    this.formsListTabValidationSub = this.quoteValidationService.formsListTabValidation$.subscribe(
+      (validation: QuoteValidationClass | null) => {
+        setTimeout(() => {
+          this.formsListTabValidation = validation;
+        });
+      }
+    );
     this.termsAndConditionsTabValidationSub = this.quoteValidationService.termsAndConditionsTabValidation$.subscribe(
       (validation: QuoteValidationClass | null) => {
         setTimeout(() => {
@@ -83,6 +94,7 @@ export class QuoteProgramBaseComponent {
     this.propertyLocationTabValidationSub.unsubscribe();
     this.mortgageeAdditionalInterestTabValidationSub.unsubscribe();
     this.coveragePremiumTabValidationSub.unsubscribe();
+    this.formsListTabValidationSub.unsubscribe();
     this.termsAndConditionsTabValidationSub.unsubscribe();
   }
 }

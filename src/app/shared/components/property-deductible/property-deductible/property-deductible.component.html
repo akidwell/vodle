@@ -61,10 +61,10 @@
                         <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle
                             click-stop-propagation>Actions</button>
                         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                            <button *ngIf="canEdit" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
-                            <button *ngIf="!deductible.isNew && canEdit && deductible.deleteVisible" hover-class="btn-danger"
+                            <button *ngIf="canEdit" class="btn btn-outline-primary" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
+                            <button *ngIf="!deductible.isNew && canEdit && deductible.deleteVisible" class="btn btn-outline-primary"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
-                            <button *ngIf="deductible.isNew && canEdit && deductible.deleteVisible" hover-class="btn-warning"
+                            <button *ngIf="deductible.isNew && canEdit && deductible.deleteVisible" class="btn btn-outline-primary"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
                         </div>
                     </div>

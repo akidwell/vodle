@@ -17,12 +17,14 @@ export class QuoteDataValidationService {
   private _propertyQuoteLocationBuildingTabValidation: QuoteValidationClass | null = null;
   private _propertyQuoteMortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
   private _coveragePremiumTabValidation: QuoteValidationClass | null = null;
+  private _formsListTabValidation: QuoteValidationClass | null = null;
   private _termsAndConditionsTabValidation: QuoteValidationClass | null = null;
 
   propertyQuoteValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteValidation);
   propertyQuoteLocationBuildingTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteLocationBuildingTabValidation);
   propertyQuoteMortgageeAdditionalInterestTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteMortgageeAdditionalInterestTabValidation);
   coveragePremiumTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.coveragePremiumTabValidation);
+  formsListTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.formsListTabValidation);
   termsAndConditionsTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.termsAndConditionsTabValidation);
 
   constructor(private pageDataService: PageDataService) {
@@ -52,6 +54,13 @@ export class QuoteDataValidationService {
   set coveragePremiumTabValidation(validation: QuoteValidationClass | null) {
     this._coveragePremiumTabValidation = validation;
     this.coveragePremiumTabValidation$.next(this._coveragePremiumTabValidation);
+  }
+  get formsListTabValidation(): QuoteValidationClass | null {
+    return this._formsListTabValidation;
+  }
+  set formsListTabValidation(validation: QuoteValidationClass | null) {
+    this._formsListTabValidation = validation;
+    this.formsListTabValidation$.next(this._formsListTabValidation);
   }
   get termsAndConditionsTabValidation(): QuoteValidationClass | null {
     return this._termsAndConditionsTabValidation;
@@ -98,6 +107,7 @@ export class QuoteDataValidationService {
         this.propertyQuoteMortgageeAdditionalInterestTabValidation = quote.propertyQuoteMortgageeAdditionalInterestTabValidation;
         this.propertyQuoteLocationBuildingTabValidation = quote.propertyQuoteBuildingLocationTabValidation;
         this.coveragePremiumTabValidation = quote.coveragesTabValidation;
+        this.formsListTabValidation = quote.formsListTabValidation;
       }
     }
   }

@@ -64,8 +64,8 @@
                     (addCoverage)=addCoverage($event) (filterBuilding)=filterBuilding($event)>
                 </rsps-property-building>
             </div>
-            <div class="d-flex justify-content-between p-2">
-                <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+            <div class="d-flex justify-content-between p-2 paging">
+                <ngb-pagination class="pagination" [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
                     [rotate]="true" [boundaryLinks]="true">
                 </ngb-pagination>
                 <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">

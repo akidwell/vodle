@@ -45,3 +45,7 @@ ngb-typeahead-window { max-height: 200px !important; overflow-y: auto;}
 .primary {
     width: 20px;
 }
+
+.canNotSave {
+  color: red;
+}

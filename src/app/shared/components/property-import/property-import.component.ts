@@ -7,7 +7,6 @@ import { ConfirmationDialogService } from 'src/app/core/services/confirmation-di
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
-import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 
@@ -129,7 +128,7 @@ export class PropertyImportComponent {
     return true;
   }
 
-  private loadQuote(quote: QuoteClass) {
+  private loadQuote(quote: PropertyQuoteClass) {
     if (this.pageDataService.selectedProgram != null) {
       this.pageDataService.selectedProgram.quoteData = quote;
       this.pageDataService.refreshProgram();

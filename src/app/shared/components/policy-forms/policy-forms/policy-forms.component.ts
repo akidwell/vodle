@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { faEdit, faExclamationTriangle, faE, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { DialogSizeEnum } from 'src/app/core/enums/dialog-size-enum';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
@@ -13,11 +13,12 @@ import { SharedComponentBase } from 'src/app/shared/component-base/shared-compon
 import { SpecimenPacketService } from '../services/policy-forms.service';
 import { PolicyFormVariableComponent } from '../policy-form-variable/policy-form-variable.component';
 import { FormViewType } from 'src/app/core/enums/form-view-type';
+import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
 
 @Component({
   selector: 'rsps-policy-forms',
   templateUrl: './policy-forms.component.html',
-  styleUrls: ['./policy-forms.component.css']
+  styleUrls: ['./policy-forms.component.css'],
 })
 export class PolicyFormsComponent extends SharedComponentBase implements OnInit {
   collapsed = false;
@@ -35,7 +36,8 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   optionalFormsCount = 0;
   onPolicyFormsCount = 0;
   expiringFormsCount = 0;
-
+  isSaving = false;
+  saveSub!: Subscription;
   private _forms!: PolicyFormClass[];
 
   @ViewChild('modal') private groupEditComponent!: PolicyFormVariableComponent;
@@ -50,38 +52,47 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     return this._forms;
   }
 
-  constructor(userAuth: UserAuth, private specimenPacketService: SpecimenPacketService, private messageDialogService: MessageDialogService, public headerPaddingService: HeaderPaddingService, private policyService: PolicyService) {
+  constructor(
+    userAuth: UserAuth,
+    private specimenPacketService: SpecimenPacketService,
+    private messageDialogService: MessageDialogService,
+    public headerPaddingService: HeaderPaddingService,
+    private policyService: PolicyService,
+    private quoteSavingService: QuoteSavingService
+  ) {
     super(userAuth);
   }
 
   ngOnInit(): void {
     this.loadExpiring();
+    this.saveSub = this.quoteSavingService.isSaving$.subscribe(
+      (isSaving) => (this.isSaving = isSaving)
+    );
+  }
+
+  ngOnDestroy() {
+    this.saveSub?.unsubscribe();
   }
 
   refreshForms() {
     this.setFormCounts();
     this.selectView(this.currentView);
   }
-  selectView(currentView: FormViewType)
-  {
+  selectView(currentView: FormViewType) {
     console.log(this.currentView + ' - ' + currentView);
     this.currentView = currentView;
     if (currentView == FormViewType.Expiring) {
       this.selectExpiring();
-    }
-    else {
+    } else {
       this.showExpiring = false;
       if (currentView == FormViewType.All) {
         this.filteredForms = this.forms;
-      }
-      else if (currentView == FormViewType.Optional) {
-        this.filteredForms = this.forms.filter(c => !c.isMandatory);
-      }
-      else if (currentView == FormViewType.Mandatory) {
-        this.filteredForms = this.forms.filter(c => c.isMandatory);
-      }
-      else if (currentView == FormViewType.OnPolicy) {
-        this.filteredForms = this.forms.filter(c => c.isIncluded);
+      } else if (currentView == FormViewType.Optional) {
+        this.filteredForms = this.forms.filter((c) => !c.isMandatory);
+      } else if (currentView == FormViewType.Mandatory) {
+        this.filteredForms = this.forms.filter((c) => c.isMandatory);
+      } else if (currentView == FormViewType.OnPolicy) {
+        this.filteredForms = this.forms.filter((c) => c.isIncluded);
       }
     }
   }
@@ -92,24 +103,24 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   }
   selectOptional() {
     this.showExpiring = false;
-    this.filteredForms = this.forms.filter(c => !c.isMandatory);
+    this.filteredForms = this.forms.filter((c) => !c.isMandatory);
   }
   selectMandatory() {
     this.showExpiring = false;
-    this.filteredForms = this.forms.filter(c => c.isMandatory);
+    this.filteredForms = this.forms.filter((c) => c.isMandatory);
   }
   selectOnPolicy() {
     this.showExpiring = false;
-    this.filteredForms = this.forms.filter(c => c.isIncluded);
+    this.filteredForms = this.forms.filter((c) => c.isIncluded);
   }
   selectExpiring() {
     this.showExpiring = true;
   }
   setFormCounts() {
     this.allFormsCount = this.forms.length;
-    this.mandatoryFormsCount = this.forms.filter(c => c.isMandatory).length;
-    this.optionalFormsCount = this.forms.filter(c => !c.isMandatory).length;
-    this.onPolicyFormsCount = this.forms.filter(c => c.isIncluded).length;
+    this.mandatoryFormsCount = this.forms.filter((c) => c.isMandatory).length;
+    this.optionalFormsCount = this.forms.filter((c) => !c.isMandatory).length;
+    this.onPolicyFormsCount = this.forms.filter((c) => c.isIncluded).length;
   }
 
   async loadExpiring() {
@@ -117,72 +128,75 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
       // Check Cache is null first
       if (!this.expiringForms) {
         this.expiringFormsLoading = true;
-        this.policyService.getEndorsementForms(this.quote.submission.expiringPolicyId).subscribe( forms => {
-          if (forms) {
-            let endorsementNumber = -1;
-            forms.map(c => {
-              if (c.endorsementNumber != endorsementNumber) {
-                c.firstEndorsementRow = true;
-                endorsementNumber = c.endorsementNumber;
-              }
-            });
-            this.expiringForms = forms;
-          }
-          else {
-            this.expiringForms =[];
-          }
-          this.expiringFormsLoading = false;
-          this.expiringFormsCount = this.forms.length;
-        }
-        );
+        this.policyService
+          .getEndorsementForms(this.quote.submission.expiringPolicyId)
+          .subscribe((forms) => {
+            if (forms) {
+              let endorsementNumber = -1;
+              forms.map((c) => {
+                if (c.endorsementNumber != endorsementNumber) {
+                  c.firstEndorsementRow = true;
+                  endorsementNumber = c.endorsementNumber;
+                }
+              });
+              this.expiringForms = forms;
+            } else {
+              this.expiringForms = [];
+            }
+            this.expiringFormsLoading = false;
+            this.expiringFormsCount = this.forms.length;
+          });
       }
     }
   }
 
   get showVariableForm(): boolean {
-    return this.filteredForms.findIndex(c => c.isVariable) >= 0;
+    return this.filteredForms.findIndex((c) => c.isVariable) >= 0;
   }
 
   get showIcons(): boolean {
-    return this.filteredForms.findIndex(c => c.hasSpecialNote) >= 0;
+    return this.filteredForms.findIndex((c) => c.hasSpecialNote) >= 0;
   }
 
   async openSpecimen(form: PolicyFormClass) {
     if (form.specimenLink) {
       window.open(form.specimenLink, '_self');
-    }
-    else if (form.formName) {
+    } else if (form.formName) {
       const response$ = this.specimenPacketService.getSpecimenURL(form.formName);
-      await lastValueFrom(response$)
-        .then(specimen => {
-          if (specimen) {
-            window.open(specimen, '_self');
-          }
-        });
+      await lastValueFrom(response$).then((specimen) => {
+        if (specimen) {
+          window.open(specimen, '_self');
+        }
+      });
     }
   }
 
   async specimenLink() {
     if (this.submissionNumber != null && this.quoteNumber != null) {
-      const response$ = this.specimenPacketService.getSpecimentPacketURL(this.submissionNumber.toString() + '|' + this.quoteNumber.toString(),this._forms.filter(c => c.isIncluded).map(c => c.formName).join(',').slice(0,-1));
-      await lastValueFrom(response$)
-        .then(url => {
-          if (url) {
-            window.open(url, '_self');
-          }
-        });
+      const response$ = this.specimenPacketService.getSpecimentPacketURL(
+        this.submissionNumber.toString() + '|' + this.quoteNumber.toString(),
+        this._forms
+          .filter((c) => c.isIncluded)
+          .map((c) => c.formName)
+          .join(',')
+          .slice(0, -1)
+      );
+      await lastValueFrom(response$).then((url) => {
+        if (url) {
+          window.open(url, '_self');
+        }
+      });
     }
   }
 
   async showSpecialNote(formName: string | null) {
     if (formName) {
       const response$ = this.specimenPacketService.getSpecialNote(formName);
-      await lastValueFrom(response$)
-        .then(specialNote => {
-          if (specialNote) {
-            this.messageDialogService.open('Special Note', specialNote, DialogSizeEnum.XtraLarge);
-          }
-        });
+      await lastValueFrom(response$).then((specialNote) => {
+        if (specialNote) {
+          this.messageDialogService.open('Special Note', specialNote, DialogSizeEnum.XtraLarge);
+        }
+      });
     }
   }
 
@@ -195,5 +209,4 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   public get formViewType(): typeof FormViewType {
     return FormViewType;
   }
-
 }

@@ -457,7 +457,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this.propertyQuoteId = 0;
     this.expand = true;
     this.isNew = true;
-    //this.markDirty();
+    this._isDirty = true;
     this.guid = crypto.randomUUID();
   }
 
@@ -470,11 +470,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   markDirty() {
     this._isDirty = true;
-    this.propertyQuote.quoteDirty = true;
-    ////////////////////////
-    // if (this._validationResults) {
-    //   this._validationResults.isDirty = true;
-    // }
+    this.propertyQuote.showDirty = true;
   }
   setRequiredFields() {
     // No special rules
