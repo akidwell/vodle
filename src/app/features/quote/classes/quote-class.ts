@@ -148,7 +148,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
 
-  quoteDirty = false ;
+  showDirty = false ;
 
   get isDirty(): boolean {
     return this._isDirty ;
@@ -300,8 +300,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
 
   markClean() {
     this._isDirty = false;
-    //////////////////////////////
-    this.quoteDirty = false;
+    this.showDirty = false;
   }
   markDirty() {
     this._isDirty = true;
@@ -320,6 +319,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   afterSave() {
     if (this._validationResults.canBeSaved) {
       this.markStructureClean();
+      this.showDirty = false;
     }
   }
   abstract markChildrenClean(): void;

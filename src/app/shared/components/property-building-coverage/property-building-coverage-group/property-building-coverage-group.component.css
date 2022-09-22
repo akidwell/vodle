@@ -1,9 +1,20 @@
 .form-label {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width: 100%;
-    display: block;
-    margin-bottom: 0px;
-  }
-  
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
+}
+
+.custom-select {
+  height: 38px;
+}
+
+.paging {
+  padding-bottom: 0px!important;
+}
+
+.pagination {
+  height: 38px;
+}

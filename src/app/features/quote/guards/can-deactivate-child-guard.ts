@@ -35,7 +35,6 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
       if (this.quoteSavingService.isSaving) {
         return false;
       }
-
       if (!this.checkLeavePolicy(state.url, nextState.url)) {
         allowNavigate = this.validateAndSaveQuote();
       }

@@ -272,10 +272,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   addBuilding(building: PropertyQuoteBuildingClass) {
     this.propertyQuoteBuildingList.push(building);
-    // this.propertyQuoteBuilding.forEach(c => c.focus = false);
     building.propertyQuote = this;
     building.focus = true;
-    //building.markDirty();
+    building.markDirty();
     this.filterBuildings();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
@@ -453,6 +452,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.quoteLineItems);
     this._validationResults.validateChildrenAndMerge(this.quotePolicyForms);
 
+    // Rest flag based on validation
+    this.showDirty = this._validationResults.isDirty;
     return this._validationResults;
   }
 
@@ -502,7 +503,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   markDirty() {
     this._isDirty = true;
     ////////////////////////
-    this._validationResults.isDirty = true;
+    this.showDirty = true;
   }
   setRequiredFields() {
     // No special rules

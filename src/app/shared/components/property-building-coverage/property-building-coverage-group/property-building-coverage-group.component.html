@@ -39,11 +39,11 @@
                     (deleteCoverage)=deleteCoverage($event)>
                 </rsps-property-building-coverage>
             </div>
-            <div class="d-flex justify-content-between p-2">
-                <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+            <div class="d-flex justify-content-between p-2 paging">
+                <ngb-pagination class="pagination" [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
                     [rotate]="true" [boundaryLinks]="true">
                 </ngb-pagination>
-                <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="pageSize">
+                <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">
                     <option [ngValue]="8">8 items per page</option>
                     <option [ngValue]="12">12 items per page</option>
                     <option [ngValue]="15">15 items per page</option>

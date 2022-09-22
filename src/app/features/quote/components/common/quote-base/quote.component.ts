@@ -34,4 +34,9 @@ export class QuoteComponent implements OnInit {
     });
     this.saveSub = this.quoteSavingService.isSaving$.subscribe(isSaving => this.isSaving = isSaving);
   }
+
+  ngOnDestroy() {
+    this.prevSub?.unsubscribe();
+    this.saveSub?.unsubscribe();
+  }
 }
