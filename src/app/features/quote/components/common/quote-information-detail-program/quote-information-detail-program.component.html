@@ -1,87 +1,53 @@
 <div class="row">
   <div class="col-lg-2">
     <div class="row">
-      <div class="col-lg-8">{{ program.programDesc }}</div>
+      <div class="col-lg-8 text-cell">{{ program.programDesc }}</div>
     </div>
   </div>
-  <div class="col-lg-10" >
+  <div class="col-lg-10">
     <div class="row" *ngIf="program.quoteData == null">
-      <button class="btn btn-secondary margin-left" (click)=createQuote() hover-class="btn-warning">Create Quote</button>
+      <button class="btn btn-secondary margin-left" (click)=createQuote() hover-class="btn-warning">Create
+        Quote</button>
     </div>
-    <div class="row" *ngIf="program.quoteData != null" [ngClass]="program.quoteData != null && program.quoteData.mappingError ? 'mapping-error' : ''">
+    <div class="row" *ngIf="program.quoteData != null"
+      [ngClass]="program.quoteData != null && program.quoteData.mappingError ? 'mapping-error' : ''">
       <div class="col-lg-2">
-        <input
-          style="display: inline-block; max-width: 80%"
-          matInput
-          [matDatepicker]="quoteEffDateCalendar"
-          class="form-control"
-          [required]="canEditSubmission"
-          [readonly]="!canEditSubmission"
-          [(ngModel)]="program.quoteData.policyEffectiveDate"
-          name="quoteEffDate"
-          #polEffDate="ngModel"
-        />
-        <mat-datepicker-toggle
-          matSuffix
-          [disabled]="!canEditSubmission"
-          style="display: inline-block; max-width: 20%"
-          [for]="quoteEffDateCalendar"
-    >    </mat-datepicker-toggle>
+        <input style="display: inline-block; max-width: 80%" matInput [matDatepicker]="quoteEffDateCalendar"
+          class="form-control" [required]="canEditSubmission" [readonly]="!canEditSubmission"
+          [(ngModel)]="program.quoteData.policyEffectiveDate" name="quoteEffDate" #polEffDate="ngModel"
+          (dateChange)="effectiveDateChange()" />
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditSubmission" style="display: inline-block; max-width: 20%"
+          [for]="quoteEffDateCalendar"> </mat-datepicker-toggle>
         <mat-datepicker #quoteEffDateCalendar></mat-datepicker>
       </div>
       <div class="col-lg-2">
-        <input
-        style="display: inline-block; max-width: 80%"
-        matInput
-        [matDatepicker]="quoteExpDateCalendar"
-        class="form-control"
-        [required]="canEditSubmission"
-        [readonly]="!canEditSubmission"
-        [(ngModel)]="program.quoteData.policyExpirationDate"
-        name="quoteExpDate"
-        #polEffDate="ngModel"
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [disabled]="!canEditSubmission"
-        style="display: inline-block; max-width: 20%"
-        [for]="quoteExpDateCalendar"
-  >    </mat-datepicker-toggle>
-      <mat-datepicker #quoteExpDateCalendar></mat-datepicker>
+        <input style="display: inline-block; max-width: 80%" matInput [matDatepicker]="quoteExpDateCalendar"
+          class="form-control" [required]="canEditSubmission" [readonly]="!canEditSubmission"
+          [(ngModel)]="program.quoteData.policyExpirationDate" name="quoteExpDate" #polEffDate="ngModel" />
+        <mat-datepicker-toggle matSuffix [disabled]="!canEditSubmission" style="display: inline-block; max-width: 20%"
+          [for]="quoteExpDateCalendar"> </mat-datepicker-toggle>
+        <mat-datepicker #quoteExpDateCalendar></mat-datepicker>
       </div>
-      <div class="col-lg-1">{{ program.quoteData.submissionNumber }}</div>
-      <div class="col-lg-1">{{ program.quoteData.quoteNumber || 1 }}</div>
-      <div class="col-lg-1">{{ program.quoteData.status }}</div>
-      <div class="col-lg-1">{{ program.quoteData.policyNumber || "--" }}</div>
+      <div class="col-lg-1 text-cell">{{ program.quoteData.submissionNumber }}</div>
+      <div class="col-lg-1 text-cell">{{ program.quoteData.quoteNumber || 1 }}</div>
+      <div class="col-lg-1 text-cell">{{ program.quoteData.status }}</div>
+      <div class="col-lg-1 text-cell">{{ program.quoteData.policyNumber || "--" }}</div>
       <div class="col-lg-3">
-        <ng-select
-          id="carrierCode"
-          click-stop-propagation
-          [items]="program.availableCarrierCodes"
-          bindLabel="description"
-          bindValue="code"
-          placeholder=""
-          [readonly]="!canEditSubmission"
-          [clearable]="false"
-          name="carrierCode"
-          [(ngModel)]="program.quoteData.carrierCode"
-          #carrierCode="ngModel"
-        ></ng-select>
+        <ng-select id="carrierCode" click-stop-propagation [items]="program.availableCarrierCodes"
+          bindLabel="description" bindValue="code" placeholder="" [readonly]="!canEditSubmission" [clearable]="false"
+          name="carrierCode" [(ngModel)]="program.quoteData.carrierCode" #carrierCode="ngModel"></ng-select>
       </div>
       <div class="col-lg-1">
-        <ng-select
-          id="pacCode"
-          click-stop-propagation
-          [items]="program.availablePacCodes"
-          bindLabel="code"
-          bindValue="code"
-          placeholder=""
-          [readonly]="!canEditSubmission"
-          [clearable]="false"
-          name="pacCode"
-          [(ngModel)]="program.quoteData.pacCode"
-        ></ng-select>
+        <ng-select id="pacCode" click-stop-propagation [items]="program.availablePacCodes" bindLabel="code"
+          bindValue="code" placeholder="" [readonly]="!canEditSubmission" [clearable]="false" name="pacCode"
+          [(ngModel)]="program.quoteData.pacCode"></ng-select>
       </div>
     </div>
   </div>
+</div>
+<div class="row">
+  <ngb-alert *ngIf="program.quoteData?.warningsList?.length ?? 0 > 0 && canEditSubmission"
+    class="alert-bar" type="warning" (closed)="hideWarnings()" [dismissible]="true"
+    [innerHTML]="program.quoteData?.warningsMessage">
+  </ngb-alert>
 </div>

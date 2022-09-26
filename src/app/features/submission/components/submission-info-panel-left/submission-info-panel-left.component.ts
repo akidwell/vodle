@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { Code } from 'src/app/core/models/code';
-import { SubmissionClass } from '../../classes/SubmissionClass';
+import { SubmissionClass } from '../../classes/submission-class';
 
 @Component({
   selector: 'rsps-submission-info-panel-left',

@@ -71,3 +71,8 @@
   background-color: #335271;
   color: white;
 }
+
+.alert-bar {
+  margin: 0px;
+  padding: 8px;
+}

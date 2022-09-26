@@ -5,7 +5,7 @@ import { map, filter, tap } from 'rxjs/operators';
 
 import { Subscription, lastValueFrom } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
+import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';

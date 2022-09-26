@@ -56,11 +56,12 @@ export class QuoteSavingService {
       this.isSaving = true;
       const results$ = this.quoteService.updateAllQuotes(department);
       await lastValueFrom(results$).then(async savedDepartment => {
-        console.log(savedDepartment.sequenceNumber);
+        // Try to match the saved quotes by Id to the existing program quotes to refresh any saved data
         savedDepartment.programMappings.map(c => {
           if (c.quoteData?.propertyQuote != null) {
             const savedQuote = new PropertyQuoteClass(c.quoteData);
-            this.program?.quoteData?.onSave(savedQuote);
+            const match = department.programMappings.filter(pm => pm.quoteData?.quoteId == c.quoteData?.quoteId);
+            match.map(m => m.quoteData?.onSave(savedQuote));
           }
         });
         if (isNew && savedDepartment.sequenceNumber !== null) {

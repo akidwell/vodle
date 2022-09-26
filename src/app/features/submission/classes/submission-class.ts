@@ -2,22 +2,21 @@ import * as moment from 'moment';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-desc-enum';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
+import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from '../models/producer';
 import { QuoteActivity } from '../models/quote-activity';
 import { Submission } from '../models/submission';
 import { SubmissionEvent } from '../models/submission-event';
-import { ProducerContactClass } from './ProducerContactClass';
+import { ProducerContactClass } from './producer-contact-class';
 
-export class SubmissionClass implements Submission {
+export class SubmissionClass extends PolicyDatesRuleClass implements Submission {
   private _producerCode: number | null = null;
   private _producerContact: number | null = null;
   private _departmentCode: number | null = null;
   private _underwriter: number | null = null;
   private _sicCode: string | null = null;
   private _naicsCode: string | null = null;
-  private _polEffDate: Date | null = null;
-  private _polExpDate: Date | null = null;
   private _quoteDueDate: Date | null = null;
   private _newRenewalFlag = 1;
   private _expiringPolicyId: number | null = null;
@@ -28,12 +27,8 @@ export class SubmissionClass implements Submission {
   //Hold on to objects we use to build class to reinitialize if need be
   private _submission: Submission | undefined;
   private _insured: Insured | undefined;
-
   private _isDirty = false;
   private _initializerIsStale = false;
-
-  private _effectiveDatePastWarningRange = 89;
-  private _effectiveDateFutureWarningRange = -180;
   private _showErrors = false;
 
   producerCodeRequiredStatus = SubmissionStatusEnum.Live;
@@ -128,6 +123,7 @@ export class SubmissionClass implements Submission {
 
 
   constructor(sub?: Submission, insured?: Insured){
+    super();
     this._submission = sub;
     this._insured = insured;
     this.init(sub, insured);
@@ -144,8 +140,8 @@ export class SubmissionClass implements Submission {
     this.insuredCode = sub?.insuredCode || insured?.insuredCode || null;
     this.brokerId = sub?.brokerId || null;
     this.retailProducerCode = sub?.retailProducerCode || null;
-    this._polEffDate = sub?.polEffDate || null;
-    this._polExpDate = sub?.polExpDate || null;
+    this._policyEffectiveDate = sub?.policyEffectiveDate || null;
+    this._policyExpirationDate = sub?.policyExpirationDate || null;
     this._quoteDueDate = sub?.quoteDueDate || null;
     this._expiringPolicyId = sub?.expiringPolicyId || null;
     this._newRenewalFlag = sub?.newRenewalFlag || 1;
@@ -218,22 +214,22 @@ export class SubmissionClass implements Submission {
     this._expiringPolicyId = id;
     this._isDirty = true;
   }
-  get polEffDate() : Date | null {
-    return this._polEffDate;
+  get policyEffectiveDate() : Date | null {
+    return this._policyEffectiveDate;
   }
-  set polEffDate(date: Date | null) {
-    this._polEffDate = date;
+  set policyEffectiveDate(date: Date | null) {
+    this._policyEffectiveDate = date;
     this.applyPolicyTerm();
     this.setWarnings();
     this._isDirty = true;
   }
-  get polExpDate() : Date | null {
-    return this._polExpDate;
+  get policyExpirationDate() : Date | null {
+    return this._policyExpirationDate;
   }
-  set polExpDate(date: Date | null) {
-    this._polExpDate = date;
+  set policyExpirationDate(date: Date | null) {
+    this._policyExpirationDate = date;
     this._policyTerm = PolicyTermEnum.custom;
-    this.setWarnings();
+    this.setWarnings(true);
     this._isDirty = true;
   }
   get quoteDueDate() : Date | null {
@@ -341,7 +337,7 @@ export class SubmissionClass implements Submission {
   }
   applyPolicyTerm(){
     if (this._policyTerm != PolicyTermEnum.custom) {
-      this._polExpDate = moment(this._polEffDate).add(this._policyTerm, 'M').toDate();
+      this._policyExpirationDate = moment(this._policyEffectiveDate).add(this._policyTerm, 'M').toDate();
     }
   }
   markClean() {
@@ -396,7 +392,7 @@ export class SubmissionClass implements Submission {
     this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus);
     this.naicsReadonly = this.isFieldReadonly();
     this.sicCodeReadonly = this.isFieldReadonly();
-    this.policyDateReadonly = this.isFieldReadonly();
+    this.policyDateReadonly = this.isFieldReadonly() || this.quoteActivity.length > 0;
     this.quoteDueDateReadonly = this.isFieldReadonly();
     this.producerContactReadonly = this.isFieldReadonly();
     this.producerReadonly = this.isFieldReadonly();
@@ -407,36 +403,6 @@ export class SubmissionClass implements Submission {
     this.renewablePolicyReadonly = this.isFieldReadonly();
   }
 
-  setWarnings(){
-    this.warningsList = [];
-    this.warningsMessage = '';
-    this.setEffectiveDateWarning();
-    this.setExpirationDateBeforeEffectiveDateWarning();
-    this.createWarningString();
-  }
-  setEffectiveDateWarning() {
-    const diff = moment().diff(moment(this._polEffDate), 'days');
-    if (diff >= this._effectiveDatePastWarningRange) {
-      this.warningsList.push('Policy Effective Date is effective ' + diff + ' days ago.');
-    } else if (diff <= this._effectiveDateFutureWarningRange) {
-      this.warningsList.push('Policy Effective Date is effective ' + (Math.abs(diff) + 1) + ' days in the future.');
-    }
-  }
-  setExpirationDateBeforeEffectiveDateWarning() {
-    const diff = moment(this._polExpDate).diff(moment(this._polEffDate), 'days');
-    if (diff < 1) {
-      this.warningsList.push('Policy Effective Date must be before Expiration Date');
-      this._polExpDate = null;
-    }
-  }
-  createWarningString(){
-    if (this.warningsList.length > 0) {
-      for (const error of this.warningsList) {
-        this.warningsMessage += '<br><li>' + error;
-      }
-    }
-
-  }
   get errorMessage() {
     let message = '';
     this.invalidList.forEach(error => {
@@ -517,14 +483,17 @@ export class SubmissionClass implements Submission {
     }
     return valid;
   }
+
   validatePolicyDates(): boolean {
     let valid = true;
-    if (this._polEffDate === null || this._polExpDate === null) {
+    const policyDatesErrorMessage = this.checkPolicyDates();
+    if (policyDatesErrorMessage.length > 0) {
       valid = false;
-      this.invalidList.push('Policy effective and expiration dates must be set.');
+      this.invalidList = this.invalidList.concat(policyDatesErrorMessage);
     }
     return valid;
   }
+
   resetClass() {
     this.init(this._submission, this._insured);
   }
@@ -544,8 +513,8 @@ export class SubmissionClass implements Submission {
       regionCode: this.regionCode,
       officeCode: this.officeCode,
       insuredCode: this.insuredCode,
-      polEffDate: this._polEffDate,
-      polExpDate: this._polExpDate,
+      policyEffectiveDate: this._policyEffectiveDate,
+      policyExpirationDate: this._policyExpirationDate,
       quoteDueDate: this._quoteDueDate,
       expiringPolicyId: this._expiringPolicyId,
       newRenewalFlag: this._newRenewalFlag,

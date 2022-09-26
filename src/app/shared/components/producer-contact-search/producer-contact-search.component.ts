@@ -5,7 +5,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { ProducerContact } from 'src/app/features/submission/models/producer-contact';
 import { faAngleDown, faAngleUp, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { ProducerContactService } from 'src/app/features/submission/services/producer-contact-service/producer-contact-service';
-import { ProducerContactClass } from 'src/app/features/submission/classes/ProducerContactClass';
+import { ProducerContactClass } from 'src/app/features/submission/classes/producer-contact-class';
 
 export interface FuzzyProducerContactSearchResponse {
   query: string,
