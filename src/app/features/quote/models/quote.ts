@@ -14,6 +14,7 @@ export interface Quote {
   policyEffectiveDate: Date | null;
   policyExpirationDate: Date | null;
   status: number;
+  statusDescription: string;
   claimsMadeOrOccurrence: string;
   admittedStatus: string;
   policyNumber: string | number;
