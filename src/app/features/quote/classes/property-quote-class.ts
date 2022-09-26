@@ -19,8 +19,10 @@ import { QuoteValidationClass } from './quote-validation-class';
 import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
 import { QuoteClass } from './quote-class';
 import { Quote } from '../models/quote';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../submission/classes/submission-class';
 import { ProgramClass } from './program-class';
+import * as moment from 'moment';
+import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
   propertyQuoteId = 0;
@@ -58,7 +60,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingLocationTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.propertyQuoteMortgageeAdditionalInterestTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.termsAndConditionsTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.TermsAndConditions);
-    this.coveragesTabValidation= new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
+    this.coveragesTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
     this.validate();
   }
@@ -652,6 +654,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
   onSave(savedQuote: PropertyQuoteClass) {
+    this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
+    this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();
+    this.submission.policyTerm = PolicyTermEnum.custom;
     this.onSaveBuilding(this.propertyQuoteBuildingList,savedQuote);
     this.onSaveDeductible(this.propertyQuoteDeductibleList,savedQuote);
     this.onSaveMortgagee(this.propertyQuoteMortgageeList,savedQuote);

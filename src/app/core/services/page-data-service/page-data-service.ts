@@ -6,7 +6,7 @@ import { DepartmentClass } from 'src/app/features/quote/classes/department-class
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
-import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
+import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { HistoricRoute } from '../../models/historic-route';
 
 @Injectable()

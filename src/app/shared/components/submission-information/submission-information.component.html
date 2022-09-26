@@ -1,9 +1,9 @@
-  <ngb-alert *ngIf="submission.showErrors" type="danger" [innerHTML]="submission.errorMessage"></ngb-alert>
+  <ngb-alert *ngIf="submission.showErrors" class="alert-bar" type="danger" [innerHTML]="submission.errorMessage"></ngb-alert>
   <ngb-alert *ngIf="
     submission.warningsList.length > 0 &&
     canEditSubmission &&
     !submission.policyDateReadonly
-  " type="warning" (closed)="hideWarnings()" [dismissible]="true" [innerHTML]="submission.warningsMessage"></ngb-alert>
+  " class="alert-bar" type="warning" (closed)="hideWarnings()" [dismissible]="true" [innerHTML]="submission.warningsMessage"></ngb-alert>
 
   <form #submissionInfoForm="ngForm">
     <div class="card first-card">

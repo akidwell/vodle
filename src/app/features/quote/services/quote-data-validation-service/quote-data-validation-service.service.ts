@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { DepartmentClass } from '../../classes/department-class';
 import { PropertyQuoteClass } from '../../classes/property-quote-class';
@@ -11,9 +10,9 @@ import { QuoteValidationClass } from '../../classes/quote-validation-class';
 export class QuoteDataValidationService {
   private department!: DepartmentClass | null;
   private departmentSub: Subscription;
-  private quoteValidations: QuoteValidationClass[] = [];
 
   private _propertyQuoteValidation: QuoteValidationClass | null = null;
+  private _productSelectionTabValidation: QuoteValidationClass | null = null;
   private _propertyQuoteLocationBuildingTabValidation: QuoteValidationClass | null = null;
   private _propertyQuoteMortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
   private _coveragePremiumTabValidation: QuoteValidationClass | null = null;
@@ -21,6 +20,7 @@ export class QuoteDataValidationService {
   private _termsAndConditionsTabValidation: QuoteValidationClass | null = null;
 
   propertyQuoteValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteValidation);
+  productSelectionTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.productSelectionTabValidation);
   propertyQuoteLocationBuildingTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteLocationBuildingTabValidation);
   propertyQuoteMortgageeAdditionalInterestTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.propertyQuoteMortgageeAdditionalInterestTabValidation);
   coveragePremiumTabValidation$: BehaviorSubject<QuoteValidationClass | null> = new BehaviorSubject(this.coveragePremiumTabValidation);
@@ -34,12 +34,24 @@ export class QuoteDataValidationService {
       }
     );
   }
+
+  ngOnDestroy() {
+    this.departmentSub?.unsubscribe();
+  }
+
   get propertyQuoteValidation(): QuoteValidationClass | null {
     return this._propertyQuoteValidation;
   }
   set propertyQuoteValidation(validation: QuoteValidationClass | null) {
     this._propertyQuoteValidation = validation;
     this.propertyQuoteValidation$.next(this._propertyQuoteValidation);
+  }
+  get productSelectionTabValidation(): QuoteValidationClass | null {
+    return this._productSelectionTabValidation;
+  }
+  set productSelectionTabValidation(validation: QuoteValidationClass | null) {
+    this._productSelectionTabValidation = validation;
+    this.productSelectionTabValidation$.next(this._productSelectionTabValidation);
   }
   get propertyQuoteMortgageeAdditionalInterestTabValidation(): QuoteValidationClass | null {
     return this._propertyQuoteMortgageeAdditionalInterestTabValidation;

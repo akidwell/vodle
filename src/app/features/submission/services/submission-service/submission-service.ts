@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ConfigService } from 'src/app/core/services/config/config.service';
-import { SubmissionClass } from '../../classes/SubmissionClass';
+import { SubmissionClass } from '../../classes/submission-class';
 import { Submission } from '../../models/submission';
 import { SubmissionStatus, SubmissionStatusResult } from '../../models/submission-status';
 

@@ -23,14 +23,8 @@ export class QuotePropertyDetailComponent implements OnInit {
   faAngleUp = faAngleUp;
   collapsed = false;
 
-  constructor() {
-
-  }
-
-
   ngOnInit(): void {
     this.collapsed = false;
-
   }
 
 }

@@ -17,19 +17,10 @@ export class QuoteProgramBaseComponent {
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
-  propertyLocationTabValidationSub!: Subscription;
   propertyLocationTabValidation: QuoteValidationClass | null = null;
-
-  mortgageeAdditionalInterestTabValidationSub!: Subscription;
   mortgageeAdditionalInterestTabValidation: QuoteValidationClass | null = null;
-
-  coveragePremiumTabValidationSub!: Subscription;
   coveragePremiumTabValidation: QuoteValidationClass | null = null;
-
-  formsListTabValidationSub!: Subscription;
   formsListTabValidation: QuoteValidationClass | null = null;
-
-  termsAndConditionsTabValidationSub!: Subscription;
   termsAndConditionsTabValidation: QuoteValidationClass | null = null;
 
   constructor(private pageDataService: PageDataService, private route: ActivatedRoute, private quoteValidationService: QuoteDataValidationService) {
@@ -44,7 +35,7 @@ export class QuoteProgramBaseComponent {
         setTimeout(() => {
           this.program = selectedProgram;
           if (this.program?.quoteData instanceof PropertyQuoteClass) {
-            this.quoteValidationService.propertyQuoteLocationBuildingTabValidation = this.program?.quoteData?.propertyQuoteBuildingLocationTabValidation || null;
+            this.propertyLocationTabValidation = this.program?.quoteData?.propertyQuoteBuildingLocationTabValidation || null;
             this.mortgageeAdditionalInterestTabValidation = this.program?.quoteData?.propertyQuoteMortgageeAdditionalInterestTabValidation || null;
             this.coveragePremiumTabValidation = this.program?.quoteData?.coveragesTabValidation || null;
             this.formsListTabValidation = this.program?.quoteData?.formsListTabValidation || null;
@@ -53,48 +44,9 @@ export class QuoteProgramBaseComponent {
         });
       }
     );
-    this.propertyLocationTabValidationSub = this.quoteValidationService.propertyQuoteLocationBuildingTabValidation$.subscribe(
-      (validation: QuoteValidationClass | null) => {
-        setTimeout(() => {
-          this.propertyLocationTabValidation = validation;
-        });
-      }
-    );
-    this.mortgageeAdditionalInterestTabValidationSub = this.quoteValidationService.propertyQuoteMortgageeAdditionalInterestTabValidation$.subscribe(
-      (validation: QuoteValidationClass | null) => {
-        setTimeout(() => {
-          this.mortgageeAdditionalInterestTabValidation = validation;
-        });
-      }
-    );
-    this.coveragePremiumTabValidationSub = this.quoteValidationService.coveragePremiumTabValidation$.subscribe(
-      (validation: QuoteValidationClass | null) => {
-        setTimeout(() => {
-          this.coveragePremiumTabValidation = validation;
-        });
-      }
-    );
-    this.formsListTabValidationSub = this.quoteValidationService.formsListTabValidation$.subscribe(
-      (validation: QuoteValidationClass | null) => {
-        setTimeout(() => {
-          this.formsListTabValidation = validation;
-        });
-      }
-    );
-    this.termsAndConditionsTabValidationSub = this.quoteValidationService.termsAndConditionsTabValidation$.subscribe(
-      (validation: QuoteValidationClass | null) => {
-        setTimeout(() => {
-          this.termsAndConditionsTabValidation = validation;
-        });
-      }
-    );
   }
 
   ngOnDestroy(): void {
-    this.propertyLocationTabValidationSub.unsubscribe();
-    this.mortgageeAdditionalInterestTabValidationSub.unsubscribe();
-    this.coveragePremiumTabValidationSub.unsubscribe();
-    this.formsListTabValidationSub.unsubscribe();
-    this.termsAndConditionsTabValidationSub.unsubscribe();
+    this.programSub?.unsubscribe();
   }
 }

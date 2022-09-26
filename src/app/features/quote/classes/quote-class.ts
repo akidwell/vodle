@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../submission/classes/submission-class';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
@@ -15,27 +15,26 @@ import { ValidationClass } from 'src/app/shared/classes/validation-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuotePolicyFormClass } from './quote-policy-forms-class';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
 
-export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
+export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
   _validationResults: QuoteValidationClass;
   _canBeSaved = true;
   _errorMessages: string[] = [];
   _isValid = true;
   _classCode : number | null = null;
-  _policyEffectiveDate: Date | Moment | null = null;
-  _policyExpirationDate: Date | Moment | null = null;
   _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
+  warningsList: string[] = [];
+  warningsMessage = '';
 
   submissionNumber = 0;
   quoteId = 0;
   cuspNumber = 0;
   quoteNumber = 0;
   sequenceNumber = 0;
-  //policyEffectiveDate: Date | Moment | null = null;
-  // policyExpirationDate: Date | Moment | null = null;
   status = 0;
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
@@ -196,29 +195,33 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._isDirty = true;
   }
 
-  get policyEffectiveDate() : Date | Moment | null {
+  get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
   }
-  set policyEffectiveDate(value: Date | Moment | null) {
+  set policyEffectiveDate(value: Date | null) {
     this._policyEffectiveDate = value;
     this._isDirty = true;
+    this.setWarnings();
   }
 
-  get policyExpirationDate() : Date | Moment | null {
+  get policyExpirationDate() : Date | null {
     return this._policyExpirationDate;
   }
-  set policyExpirationDate(value: Date | Moment | null) {
+  set policyExpirationDate(value: Date | null) {
     this._policyExpirationDate = value;
     this._isDirty = true;
+    this.setWarnings();
   }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
+    super();
     if (quote) {
       this.existingInit(quote);
     } else if (program && submission) {
       this.newInit(program, submission);
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
+    this.setWarnings();
     //this.validate();
   }
   existingInit(quote: Quote) {
@@ -291,8 +294,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.terrorismTemplateCode = program.selectedCoverageCarrierMapping?.defTRIATemplateCode || '';
     this.coverageCode = program.selectedCoverageCarrierMapping?.coverageCode || 0;
     this.admittedStatus = program.selectedCoverageCarrierMapping?.admittedStatus || '';
-    this.policyEffectiveDate = submission.polEffDate;
-    this.policyExpirationDate = submission.polExpDate;
+    this.policyEffectiveDate = submission.policyEffectiveDate;
+    this.policyExpirationDate = submission.policyExpirationDate;
     this.programId = program.programId;
     this.status = 1;
     this.riskState = '';

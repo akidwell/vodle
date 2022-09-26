@@ -1,18 +1,19 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../submission/classes/submission-class';
 import { Department } from '../models/department';
 import { ProgramClass } from './program-class';
 import { QuoteClass } from './quote-class';
 import { QuoteValidationClass } from './quote-validation-class';
+import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
+import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 
 export class DepartmentClass implements Department, Validation {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
-  private _showErrors = false;
   private _validationResults: QuoteValidationClass;
   departmentId = 0;
   departmentName = '';
@@ -32,6 +33,7 @@ export class DepartmentClass implements Department, Validation {
   //These settings are global over all programs
   activeAdmittedStatus!: string;
   activeClaimsMadeOrOccurrence!: string;
+  productSelectionTabValidation: TabValidationClass | null = null;
 
   constructor(department: Department) {
     this.init(department);
@@ -46,6 +48,9 @@ export class DepartmentClass implements Department, Validation {
     this.activeAdmittedStatus = this.defaultAdmittedStatus;
     this.activeClaimsMadeOrOccurrence = this.defaultClaimsMadeOrOccurrence;
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Department, null);
+
+    this.productSelectionTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.ProductSelection);
+    this.validate();
   }
   get isDirty(): boolean {
     return this._isDirty;
@@ -106,6 +111,8 @@ export class DepartmentClass implements Department, Validation {
     });
   }
   validate(){
+    this._canBeSaved = true;
+    this._isValid = true;
     this._validationResults.resetValidation();
     const quotes = this.programMappings.map(x => x.quoteData).filter((x): x is QuoteClass => x !== null);
     const quoteValidations: QuoteValidationClass[] = [];
@@ -113,9 +120,26 @@ export class DepartmentClass implements Department, Validation {
       quote.validate();
       quoteValidations.push(quote.validationResults);
     });
+
+    this.validateProductSelectionTab();
+    this._validationResults.mapValues(this);
     this._validationResults.validateChildValidations(quoteValidations);
     return this._validationResults;
   }
+
+  validateProductSelectionTab() {
+    this.productSelectionTabValidation?.resetValidation();
+    this.programMappings.map(c => {
+      let policyDatesErrorMessage = c.quoteData?.checkPolicyDates() ?? [];
+      if (this.productSelectionTabValidation && policyDatesErrorMessage.length > 0) {
+        this._canBeSaved = false;
+        this._isValid = false;
+        policyDatesErrorMessage = policyDatesErrorMessage.map(m => m = m + ' for Submission: ' + c.quoteData?.submissionNumber);
+        this.productSelectionTabValidation.errorMessages = this.productSelectionTabValidation.errorMessages.concat(policyDatesErrorMessage);
+      }
+    });
+  }
+
   markClean() {
     this._isDirty = false;
   }

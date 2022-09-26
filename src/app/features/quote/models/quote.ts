@@ -11,8 +11,8 @@ export interface Quote {
   cuspNumber: number | null;
   quoteNumber: number | null;
   sequenceNumber: number | null;
-  policyEffectiveDate: Date | Moment | null;
-  policyExpirationDate: Date | Moment | null;
+  policyEffectiveDate: Date | null;
+  policyExpirationDate: Date | null;
   status: number;
   claimsMadeOrOccurrence: string;
   admittedStatus: string;
