@@ -17,7 +17,7 @@ import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
-import { SpecimenPacketService } from '../services/policy-forms.service';
+import { PolicyFormsService } from '../services/policy-forms.service';
 
 @Component({
   selector: 'rsps-policy-forms-search',
@@ -39,7 +39,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
 
   constructor(
     userAuth: UserAuth,
-    private specimenPacketService: SpecimenPacketService,
+    private policyFormsService: PolicyFormsService,
     private messageDialogService: MessageDialogService
   ) {
     super(userAuth);
@@ -123,7 +123,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
     );
 
   performSearch(term: string): Observable<QuotePolicyFormClass[]> {
-    return this.specimenPacketService.searchForms(term).pipe(
+    return this.policyFormsService.searchForms(term).pipe(
       tap((response) => {
         this.quote.quotePolicyForms.map((c) => {
           const match = response.find((r) => r.formName == c.formName);
