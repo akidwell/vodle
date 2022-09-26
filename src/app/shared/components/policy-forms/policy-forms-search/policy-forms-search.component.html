@@ -10,7 +10,7 @@
                     </span>
                 </span>
             </div>
-            <input id="typeahead-template" class="form-control ml2" type="search" name="searchTerm"
+            <input id="form-search" class="form-control ml2" type="search" name="searchTerm"
                 [readonly]="!canEdit" [(ngModel)]="searchFormName" placeholder="Forms Library"
                 [inputFormatter]="displayFormatter" [ngbTypeahead]="search"
                 (selectItem)="selectedItem($event.item)" [resultTemplate]="rt"/>
