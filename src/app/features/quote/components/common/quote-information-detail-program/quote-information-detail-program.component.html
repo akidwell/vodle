@@ -30,7 +30,7 @@
       </div>
       <div class="col-lg-1 text-cell">{{ program.quoteData.submissionNumber }}</div>
       <div class="col-lg-1 text-cell">{{ program.quoteData.quoteNumber || 1 }}</div>
-      <div class="col-lg-1 text-cell">{{ program.quoteData.status }}</div>
+      <div class="col-lg-1 text-cell">{{ program.quoteData.statusDescription }}</div>
       <div class="col-lg-1 text-cell">{{ program.quoteData.policyNumber || "--" }}</div>
       <div class="col-lg-3">
         <ng-select id="carrierCode" click-stop-propagation [items]="program.availableCarrierCodes"

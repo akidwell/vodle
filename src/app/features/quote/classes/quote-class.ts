@@ -36,6 +36,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   quoteNumber = 0;
   sequenceNumber = 0;
   status = 0;
+  statusDescription = '';
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
@@ -233,6 +234,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
     this.admittedStatus = quote.admittedStatus || '';
     this.status = quote.status || 0;
+    this.statusDescription = quote.statusDescription || '';
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
@@ -426,6 +428,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       policyEffectiveDate: this.policyEffectiveDate,
       policyExpirationDate: this.policyExpirationDate,
       status: this.status,
+      statusDescription: this.statusDescription,
       claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
       admittedStatus: this.admittedStatus,
       policyNumber: this.policyNumber,
