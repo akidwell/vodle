@@ -2,9 +2,10 @@
     <ng-template #modal let-modal>
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">Variable Form Edit</h4>
+            <button *ngIf="hasGuideline" type="button" class="btn btn-primary right" (click)="showGuideline()">Guide</button>
         </div>
         <div class="modal-body">
-            <button type="button" class="btn btn-primary" (click)="showGuideline()">Guide</button>
+            <div [innerHtml]="formHTML"></div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" [disabled]="!canEdit" (click)="save()">Save</button>

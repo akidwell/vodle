@@ -10,7 +10,7 @@ import { EndorsementFormData } from 'src/app/features/policy/models/policy';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicyFormClass } from 'src/app/shared/classes/policy-form-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
-import { SpecimenPacketService } from '../services/policy-forms.service';
+import { PolicyFormsService } from '../services/policy-forms.service';
 import { PolicyFormVariableComponent } from '../policy-form-variable/policy-form-variable.component';
 import { FormViewType } from 'src/app/core/enums/form-view-type';
 import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
@@ -54,7 +54,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
 
   constructor(
     userAuth: UserAuth,
-    private specimenPacketService: SpecimenPacketService,
+    private policyFormsService: PolicyFormsService,
     private messageDialogService: MessageDialogService,
     public headerPaddingService: HeaderPaddingService,
     private policyService: PolicyService,
@@ -162,7 +162,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     if (form.specimenLink) {
       window.open(form.specimenLink, '_self');
     } else if (form.formName) {
-      const response$ = this.specimenPacketService.getSpecimenURL(form.formName);
+      const response$ = this.policyFormsService.getSpecimenURL(form.formName);
       await lastValueFrom(response$).then((specimen) => {
         if (specimen) {
           window.open(specimen, '_self');
@@ -173,7 +173,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
 
   async specimenLink() {
     if (this.submissionNumber != null && this.quoteNumber != null) {
-      const response$ = this.specimenPacketService.getSpecimentPacketURL(
+      const response$ = this.policyFormsService.getSpecimentPacketURL(
         this.submissionNumber.toString() + '|' + this.quoteNumber.toString(),
         this._forms
           .filter((c) => c.isIncluded)
@@ -191,7 +191,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
 
   async showSpecialNote(formName: string | null) {
     if (formName) {
-      const response$ = this.specimenPacketService.getSpecialNote(formName);
+      const response$ = this.policyFormsService.getSpecialNote(formName);
       await lastValueFrom(response$).then((specialNote) => {
         if (specialNote) {
           this.messageDialogService.open('Special Note', specialNote, DialogSizeEnum.XtraLarge);

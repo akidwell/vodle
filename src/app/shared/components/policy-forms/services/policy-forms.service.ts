@@ -10,7 +10,7 @@ import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 @Injectable({
   providedIn: 'root'
 })
-export class SpecimenPacketService {
+export class PolicyFormsService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
 
@@ -29,10 +29,21 @@ export class SpecimenPacketService {
     return this.http.get<string>(this.config.apiBaseUrl + 'api/forms/specimen-packets', { params, responseType: 'text' as 'json'});
   }
 
+  hasGuideline(formName: string): Observable<boolean> {
+    const params = new HttpParams().append('formName', formName);
+    return this.http.get<boolean>(this.config.apiBaseUrl + 'api/forms/guidelines', { params: params});
+  }
+
   getGuideline(formName: string) {
     const params = new HttpParams().append('formName', formName);
     const headers = { 'Content-Type': 'application/pdf'};
-    return this.http.get(this.config.apiBaseUrl + 'api/forms/guidelines', { params: params, headers, responseType: 'arraybuffer'});
+    return this.http.get(this.config.apiBaseUrl + 'api/forms/guidelines-pdf', { params: params, headers, responseType: 'arraybuffer'});
+  }
+
+  getVariableHTML(formName: string) {
+    const params = new HttpParams().append('formName', formName);
+    const headers = { 'Content-Type': 'application/html'};
+    return this.http.get(this.config.apiBaseUrl + 'api/forms/variable-html', { params: params, headers, responseType: 'arraybuffer'});
   }
 
   searchForms(searchValue: string): Observable<QuotePolicyFormClass[]> {
