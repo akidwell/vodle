@@ -40,6 +40,11 @@ export class PolicyFormsService {
     return this.http.get(this.config.apiBaseUrl + 'api/forms/guidelines-pdf', { params: params, headers, responseType: 'arraybuffer'});
   }
 
+  getIsVariable(programId: number, formName: string): Observable<boolean> {
+    const params = new HttpParams().append('programId', programId).append('formName', formName);
+    return this.http.get<boolean>(this.config.apiBaseUrl + 'api/forms/is-variable', { params: params});
+  }
+
   getVariableHTML(formName: string) {
     const params = new HttpParams().append('formName', formName);
     const headers = { 'Content-Type': 'application/html'};

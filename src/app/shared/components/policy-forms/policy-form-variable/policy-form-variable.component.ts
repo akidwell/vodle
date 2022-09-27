@@ -53,6 +53,7 @@ export class PolicyFormVariableComponent {
 
   save() {
     // TODO
+    // console.log( this.formHTML.toString().indexOf('<label for="Percentage">'));
   }
 
   cancel() {

@@ -22,9 +22,9 @@
                 <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
-                            (click)="selectView(formViewType.All)">
-                        <label class="btn btn-outline-dark hide-select" for="radioAll">All({{allFormsCount}})</label>
+                        <input type="radio" class="btn-check" name="btnradio" id="radioAvailable" autocomplete="off"
+                            (click)="selectView(formViewType.Available)">
+                        <label class="btn btn-outline-dark hide-select" for="radioAvailable">Available ({{availableFormsCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
                             (click)="selectView(formViewType.Mandatory)">
                         <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory ({{mandatoryFormsCount}})</label>
@@ -118,4 +118,4 @@
     </div>
 </div>
 <rsps-scroll-to-top></rsps-scroll-to-top>
-<rsps-policy-form-variable #modal></rsps-policy-form-variable>
+<rsps-policy-form-variable #modal [canEdit]="canEdit"></rsps-policy-form-variable>

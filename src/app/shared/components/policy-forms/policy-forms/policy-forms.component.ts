@@ -31,7 +31,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   filteredForms: PolicyFormClass[] = [];
   expiringForms: EndorsementFormData[] | null = null;
   currentView = FormViewType.OnPolicy;
-  allFormsCount = 0;
+  availableFormsCount = 0;
   mandatoryFormsCount = 0;
   optionalFormsCount = 0;
   onPolicyFormsCount = 0;
@@ -85,7 +85,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
       this.selectExpiring();
     } else {
       this.showExpiring = false;
-      if (currentView == FormViewType.All) {
+      if (currentView == FormViewType.Available) {
         this.filteredForms = this.forms;
       } else if (currentView == FormViewType.Optional) {
         this.filteredForms = this.forms.filter((c) => !c.isMandatory);
@@ -117,7 +117,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     this.showExpiring = true;
   }
   setFormCounts() {
-    this.allFormsCount = this.forms.length;
+    this.availableFormsCount = this.forms.length;
     this.mandatoryFormsCount = this.forms.filter((c) => c.isMandatory).length;
     this.optionalFormsCount = this.forms.filter((c) => !c.isMandatory).length;
     this.onPolicyFormsCount = this.forms.filter((c) => c.isIncluded).length;

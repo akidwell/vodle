@@ -8,13 +8,8 @@ export class QuotePolicyFormClass extends PolicyFormClass {
   classValidation() {
     this.invalidList = [];
     this.canBeSaved = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-
+    this.isValid = true;
     this.errorMessages = this.invalidList;
-    // this._canBeSaved = true;
-    // this._isValid = true;
   }
 
   toJSON(): QuotePolicyForm {
