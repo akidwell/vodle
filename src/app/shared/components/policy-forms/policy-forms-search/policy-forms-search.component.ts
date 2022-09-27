@@ -10,6 +10,7 @@ import {
   catchError,
   of,
   distinctUntilChanged,
+  lastValueFrom,
 } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
@@ -18,6 +19,7 @@ import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-polic
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { PolicyFormsService } from '../services/policy-forms.service';
+import { deepClone } from 'src/app/core/utils/deep-clone';
 
 @Component({
   selector: 'rsps-policy-forms-search',
@@ -47,7 +49,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
 
   ngOnInit(): void {}
 
-  add() {
+  async add() {
     if (this._selected) {
       this._selected.isIncluded = true;
       this._selected.formIndex = 1;
@@ -70,23 +72,33 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
             }
           });
           this._selected.formIndex = index + 1;
-          this.addForm(this._selected);
+          await this.addForm(this._selected);
           this.refreshForms.emit();
         }
       } else {
-        this.addForm(this._selected);
+        await this.addForm(this._selected);
         this.refreshForms.emit();
       }
     }
   }
 
-  private addForm(form: QuotePolicyFormClass) {
+  private async addForm(form: QuotePolicyFormClass) {
     if (form) {
-      form.quoteId = this.quote.quoteId;
-      form.markDirty();
-      this.quote.quotePolicyForms.push(form);
+      const cloneForm = Object.create(form);
+      const response$ = this.policyFormsService.getIsVariable(this.quote.programId, form.formName ?? '');
+      await lastValueFrom(response$)
+        .then(isVariable => {
+          cloneForm.isVariable = isVariable;
+        })
+        .catch(() => {
+          // If an error just default to false, it will try to pick it up again on fetch
+          cloneForm.isVariable = false;
+        });
+      cloneForm.quoteId = this.quote.quoteId;
+      cloneForm.markDirty();
+      this.quote.quotePolicyForms.push(cloneForm);
       this.quote.sortForms();
-      if (!form.allowMultiples) {
+      if (!cloneForm.allowMultiples) {
         this.searchFormName = '';
         this._selected = null;
         this.canAddForm = false;
