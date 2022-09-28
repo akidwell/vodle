@@ -69,7 +69,7 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
   }
   selectView(currentView: FormViewType) {
     this.currentView = currentView;
-    if (currentView == FormViewType.All) {
+    if (currentView == FormViewType.Available) {
       this.filteredSubjectivities = this.subjectivities;
     } else if (currentView == FormViewType.Optional) {
       this.filteredSubjectivities = this.subjectivities.filter((c) => !c.ysnDefault);
