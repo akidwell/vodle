@@ -8,6 +8,8 @@
         [(ngModel)]="department.programMappings[0].quoteData.riskState" (ngModelChange)="changeState($event)"
         #riskState="ngModel" >
       </ng-select>
+      <ng-select [readonly]="true" *ngIf="department.programMappings[0].quoteData == null">
+    </ng-select>
     </div>
     <div class="col-lg-4"></div>
     <div class="col-lg-2">

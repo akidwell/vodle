@@ -49,6 +49,7 @@ import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-
 import { QuoteLineItemsModule } from './components/common/quote-line-items/quote-line-items.module';
 import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy-forms.module';
 import { PropertyImportModule } from 'src/app/shared/components/property-import/property-import.module';
+import { SubjectivitiesModule } from 'src/app/shared/components/subjectivities/subjectivities.module';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { PropertyImportModule } from 'src/app/shared/components/property-import/
     PropertyBuildingCoverageEditModule,
     FormsModule,
     PolicyFormsModule,
+    SubjectivitiesModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
