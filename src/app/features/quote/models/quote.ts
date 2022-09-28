@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteLineItem } from './quote-line-item';
@@ -120,6 +121,7 @@ export interface Quote {
   classCode: number | null;
   riskState: string;
   quotePolicyForms: PolicyForm[];
+  subjectivityData: Subjectivities[];
   totalPremium: number | null;
   formsVersionDescription: string | null;
 }
