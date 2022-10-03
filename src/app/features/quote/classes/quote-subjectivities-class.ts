@@ -3,18 +3,12 @@ import { QuoteSubjectivities } from '../models/quote-subjectivities';
 
 
 export class QuoteSubjectivitiesClass extends SubjectivitiesClass {
-  quoteId = 0;
+  quoteId!: number;
 
   classValidation() {
     this.invalidList = [];
     this.canBeSaved = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
-
     this.errorMessages = this.invalidList;
-    // this._canBeSaved = true;
-    // this._isValid = true;
   }
 
   toJSON(): QuoteSubjectivities {
@@ -29,7 +23,8 @@ export class QuoteSubjectivitiesClass extends SubjectivitiesClass {
       subjectivityDesc: this.subjectivityDesc,
       description: this.description,
       sequence: this.sequence,
-      isUserDefined: this.isUserDefined
+      isUserDefined: this.isUserDefined,
+      document: this.document
     };
   }
 }

@@ -17,6 +17,7 @@ import { QuotePolicyFormClass } from './quote-policy-forms-class';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
 import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
+import { QuoteSubjectivities } from '../models/quote-subjectivities';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
@@ -283,7 +284,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
         subs.push(new QuoteSubjectivitiesClass(element));
       });
     }
-    console.log(quote.subjectivityData);
     this.subjectivityData = subs;
 
     this.setReadonlyFields();

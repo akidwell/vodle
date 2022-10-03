@@ -23,6 +23,7 @@ export class TermsConditionsComponent implements OnInit {
         if (selectedProgram != null) {
           setTimeout(() => {
             this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
+            console.log(this.quote);
           });
         }
       }
