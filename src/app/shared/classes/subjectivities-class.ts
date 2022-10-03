@@ -11,19 +11,20 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
+  private _isIncluded = false;
   private _validationResults: QuoteValidationClass;
 
   invalidList: string[] = [];
   sequence: number | null = null;
   isUserDefined: boolean | null = null;
-  isIncluded: boolean | null = null;
   subjectivityCode: number | null = null;
   sortSequence: number | null = null;
-  ysnDefault: number | null = null;
-  ysnAutoSelect: number | null = null;
-  ysnDeletable: number | null = null;
+  ysnDefault: boolean | null = null;
+  ysnAutoSelect: boolean | null = null;
+  ysnDeletable: boolean | null = null;
   subjectivityDesc: string | null = null;
   description: string | null = null;
+  document: string | null = null;
 
   constructor(subjectivities?: Subjectivities){
     if (subjectivities) {
@@ -33,6 +34,14 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.FormsList);
     this.validate();
+  }
+
+  get isIncluded(): boolean {
+    return this._isIncluded;
+  }
+  set isIncluded(value: boolean) {
+    this._isDirty = true;
+    this._isIncluded = value;
   }
 
   get validationResults(): QuoteValidationClass {
@@ -67,7 +76,7 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
   }
 
   existingInit(sub: Subjectivities){
-    this.isIncluded = sub.isIncluded;
+    this._isIncluded = sub.isIncluded;
     this.sequence = sub.sequence;
     this.isUserDefined = sub.isUserDefined;
     this.subjectivityCode = sub.subjectivityCode;
@@ -77,10 +86,13 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
     this.ysnDeletable = sub.ysnDeletable;
     this.subjectivityDesc = sub.subjectivityDesc;
     this.description= sub.description;
+    this.document = sub.document;
   }
 
   newInit() {
-    //this.isNew = true;
+    this.ysnDefault = false;
+    this.isDirty = true;
+    this.isIncluded = true;
   }
 
   validate(){

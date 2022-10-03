@@ -1,14 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { FormViewType } from 'src/app/core/enums/form-view-type';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
+import { QuoteSubjectivitiesClass } from 'src/app/features/quote/classes/quote-subjectivities-class';
 import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
 import { SubjectivitiesClass } from 'src/app/shared/classes/subjectivities-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
+import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 
 @Component({
   selector: 'rsps-subjectivities',
@@ -18,6 +22,8 @@ import { SharedComponentBase } from 'src/app/shared/component-base/shared-compon
 export class SubjectivitiesComponent extends SharedComponentBase implements OnInit {
   collapsed = false;
   filteredSubjectivities: SubjectivitiesClass[] = [];
+
+  documentType: string[] = ['Quote', 'Binder','Both'];
   currentView = FormViewType.OnPolicy;
   faExclamationTriangle = faExclamationTriangle;
   faCircleE = faE;
@@ -34,12 +40,19 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
   saveSub!: Subscription;
   private _subjectivities!: SubjectivitiesClass[];
 
+  @ViewChild(NgForm, { static: false }) userForm!: NgForm;
+  @ViewChild('userModal') private modalContent!: TemplateRef<SubjectivitiesComponent>;
+  private modalRef!: NgbModalRef;
+  userDefinedInfo: SubjectivitiesClass = ({} as any) as SubjectivitiesClass;
+  desc = '';
+
+
   @Input() quote!: QuoteClass;
   @Input() submissionNumber!: number;
   @Input() quoteNumber!: number;
   @Input() set subjectivities(value: SubjectivitiesClass[]) {
     this._subjectivities = value;
-    this.refreshForms();
+    this.refreshSubjectivities();
   }
   get subjectivities(): SubjectivitiesClass[] {
     return this._subjectivities;
@@ -48,7 +61,8 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
   constructor(
     userAuth: UserAuth,
     public headerPaddingService: HeaderPaddingService,
-    private quoteSavingService: QuoteSavingService
+    private quoteSavingService: QuoteSavingService,
+    public modalService: NgbModal
   ) {
     super(userAuth);
   }
@@ -63,8 +77,8 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     this.saveSub?.unsubscribe();
   }
 
-  refreshForms() {
-    this.setFormCounts();
+  refreshSubjectivities() {
+    this.setSubjectivitiesCount();
     this.selectView(this.currentView);
   }
   selectView(currentView: FormViewType) {
@@ -94,15 +108,49 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     this.filteredSubjectivities = this.subjectivities.filter((c) => c.isIncluded);
   }
 
-  setFormCounts() {
+  setSubjectivitiesCount() {
     this.allSubjectivitiesCount = this.subjectivities.length;
     this.mandatorySubjectivitesCount = this.subjectivities.filter((c) => c.ysnDefault).length;
     this.optionalSubjectivitesCount = this.subjectivities.filter((c) => !c.ysnDefault).length;
     this.onPolicySubjectivitesCount = this.subjectivities.filter((c) => c.isIncluded).length;
   }
 
-  public get formViewType(): typeof FormViewType {
+  public get viewType(): typeof FormViewType {
     return FormViewType;
+  }
+
+  async userDefinedPopup(): Promise<void> {
+    return new Promise<void>(resolve => {
+      this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true });
+      this.modalRef.result.then(resolve, resolve);
+    });
+  }
+
+  updateDescription(sub: SubjectivitiesClass){
+    this.desc = sub.description ?? '';
+  }
+  clearAndClose(): void {
+    const newUserDefinedInfo: SubjectivitiesClass = ({} as any) as SubjectivitiesClass;
+    this.userDefinedInfo = newUserDefinedInfo;
+    this.desc = '';
+    this.userDefinedInfo.subjectivityDesc = null;
+    this.userDefinedInfo.document = null;
+    this.modalRef.close();
+  }
+
+  async submit(): Promise<void> {
+    const newUserDefinedInfo: SubjectivitiesClass = ({} as any) as SubjectivitiesClass;
+    this.userDefinedInfo = newUserDefinedInfo;
+    this.modalRef.close();
+    this.userDefinedInfo.description = this.desc;
+    this.userDefinedInfo.subjectivityDesc = 'User Defined';
+    this.userDefinedInfo.ysnDefault = false;
+    this.userDefinedInfo.isUserDefined = true;
+    this.userDefinedInfo.isIncluded = true;
+    this.userDefinedInfo.isDirty = true;
+    this.desc = '';
+    this.quote.subjectivityData.push(new QuoteSubjectivitiesClass(this.userDefinedInfo));
+    this.refreshSubjectivities();
   }
 
   // async loadExpiring() {

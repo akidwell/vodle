@@ -5,6 +5,7 @@ import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteLineItem } from './quote-line-item';
 import { QuoteRate } from './quote-rate';
+import { QuoteSubjectivities } from './quote-subjectivities';
 
 export interface Quote {
   submissionNumber: number | null;
