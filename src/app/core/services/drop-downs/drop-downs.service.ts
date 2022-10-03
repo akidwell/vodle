@@ -8,6 +8,7 @@ import { Code } from '../../models/code';
 import { State } from '../../models/state';
 import { PropertyDeductibleLookup } from '../../models/property-deductible-lookup';
 import { PropertyCoverageLookup } from '../../models/property-coverage-lookup';
+import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
 
 @Injectable({
   providedIn: 'root',
@@ -69,6 +70,14 @@ export class DropDownsService {
   getMarkDeadReasons(isNew: boolean) {
     const params = new HttpParams().append('isNew', isNew);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-dead-reasons', {
+      params,
+    });
+  }
+  getPropertyOptionalCoverages(programId: number, effectiveDate: string) {
+    const params = new HttpParams()
+      .append('programId', programId)
+      .append('effectiveDate', effectiveDate);
+    return this.http.get<OptionalPremiumMapping[]>(this.config.apiBaseUrl + 'api/dropdowns/property-optional-coverages', {
       params,
     });
   }

@@ -3,7 +3,7 @@ import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-class';
@@ -11,12 +11,12 @@ import { QuoteOptionalPremiumClass } from 'src/app/features/quote/classes/quote-
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
 import { PolicyOptionalPremiumClass } from 'src/app/features/policy/classes/policy-optional-premium-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
-import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteLineItemClass } from 'src/app/features/quote/classes/quote-line-item-class';
 import { Moment } from 'moment';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
-import { QuoteRateClass } from 'src/app/features/quote/classes/quote-rate-class';
-import { QuoteRate } from 'src/app/features/quote/models/quote-rate';
+import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import * as moment from 'moment';
+import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
 
 @Component({
   selector: 'rsps-optional-premium-group',
@@ -39,9 +39,10 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   effectiveDate!: Date | Moment | null;
   quoteId = 0;
   programSub!: Subscription;
+  coverages: OptionalPremiumMapping[] = [];
   @Input() public totalPrem!: number | null;
 
-  constructor(private notification: NotificationService, userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
+  constructor(private notification: NotificationService, userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService, private dropdowns: DropDownsService) {
     super(userAuth);
   }
 
@@ -57,6 +58,7 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
           this.effectiveDate = this.program?.quoteData.policyEffectiveDate;
         }
       });
+    this.populateOptionalCoverages();
     this.collapsed = false;
     this.handleSecurity(this.type);
   }
@@ -82,16 +84,31 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   hideInvalid(): void {
     this.showInvalid = false;
   }
+  async populateOptionalCoverages(): Promise<void> {
+    if (this.program && this.effectiveDate) {
+      const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate.toString();
 
+      const results$ = this.dropdowns.getPropertyOptionalCoverages(this.program.programId, effectiveDate);
+
+      await lastValueFrom(results$).then(
+        coverages => {
+          console.log(coverages);
+          this.coverages = coverages;
+        }
+      );
+    }
+  }
   copyOptionalPremium(optionalPremium: OptionalPremiumClass) {
     let newOptionalPremium: OptionalPremiumClass | null = null;
 
     if (optionalPremium instanceof PolicyOptionalPremiumClass) {
       const clone = optionalPremium.copy();
+      clone.isNew = true;
       newOptionalPremium = new PolicyOptionalPremiumClass(clone);
     }
     if (optionalPremium instanceof QuoteOptionalPremiumClass) {
       const clone = optionalPremium.copy();
+      clone.isNew = true;
       newOptionalPremium = new QuoteOptionalPremiumClass(clone);
     }
     if (newOptionalPremium !== null) {

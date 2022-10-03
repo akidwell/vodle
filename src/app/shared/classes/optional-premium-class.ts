@@ -5,6 +5,7 @@ import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { OptionalPremium } from '../interfaces/optional-premium';
 import { Validation } from '../interfaces/validation';
 import { BuildingLocationClass } from './building-location-class';
+import { OptionalPremiumMapping } from '../models/optional-premium-mapping';
 
 export abstract class OptionalPremiumClass extends BuildingLocationClass implements OptionalPremium, Validation, QuoteAfterSave{
   private _isDirty = false;
@@ -23,7 +24,9 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   private _deductibleType: number | null = null;
   private _deductibleCode: number | null = null;
   private _additionalPremium: number | null = null;
+  private _additionalComment = '';
 
+  premiumMapping: OptionalPremiumMapping | null = null;
   isNew = false;
   guid = '';
   invalidList: string[] = [];
@@ -174,6 +177,30 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   }
   markDirty() {
     this._isDirty = true;
+  }
+  isPremiumMappingSet() {
+    return this.premiumMapping ? true : false;
+  }
+  isSubjectToMaxAmountAvailable() {
+    return this.premiumMapping && this.premiumMapping.subjectToMaxAmountAvailable;
+  }
+  isSubjectToMaxAmountRequired() {
+    return this.premiumMapping && this.premiumMapping.subjectToMaxAmountAvailable ? this.premiumMapping.subjectToMaxAmountRequired : false;
+  }
+  isLimitAvailable() {
+    return this.premiumMapping && this.premiumMapping.limitAvailable;
+  }
+  isLimitRequired() {
+    return this.premiumMapping && this.premiumMapping.limitAvailable ? this.premiumMapping.limitRequired : false;
+  }
+  isDeductibleRequired() {
+    return this.premiumMapping && this.premiumMapping.deductibleRequired;
+  }
+  isAdditionalDetailRequired() {
+    return this.premiumMapping && this.premiumMapping.additionalDetailRequired;
+  }
+  isAdditionalPremiumRequired() {
+    return false;
   }
   abstract copy(): OptionalPremium;
   abstract toJSON(): OptionalPremium;
