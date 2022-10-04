@@ -29,7 +29,7 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
   faCircleE = faE;
   faCircle = faCircle;
   showExpiring = false;
-  expiringFormsLoading = false;
+  //expiringFormsLoading = false;
   //expiringForms: EndorsementSubjectivityData[] | null = null;
   allSubjectivitiesCount = 0;
   mandatorySubjectivitesCount = 0;
@@ -150,6 +150,7 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     this.userDefinedInfo.isDirty = true;
     this.desc = '';
     this.quote.subjectivityData.push(new QuoteSubjectivitiesClass(this.userDefinedInfo));
+    console.log(this.userDefinedInfo);
     this.refreshSubjectivities();
   }
 

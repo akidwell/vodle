@@ -1,13 +1,13 @@
 <div class="card">
     <div *ngIf="isSaving">
-        <div class="spinner-wrapper" >
+        <div class="spinner-wrapper">
             <h3>
-            <span class="badge rounded-pill">Refreshing...
-                <div class="spinner-border small"></div>
-            </span>
+                <span class="badge rounded-pill">Refreshing...
+                    <div class="spinner-border small"></div>
+                </span>
             </h3>
         </div>
-      </div>
+    </div>
     <div class="card-header" (click)="collapse.toggle()">
         Subjectivities - On Policy ({{onPolicySubjectivitesCount}})
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
@@ -21,31 +21,37 @@
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
                             (click)="selectView(viewType.Available)">
-                        <label class="btn btn-outline-dark hide-select" for="radioAll">Available ({{allSubjectivitiesCount}})</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioAll">Available
+                            ({{allSubjectivitiesCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
                             (click)="selectView(viewType.Mandatory)">
-                        <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory ({{mandatorySubjectivitesCount}})</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory
+                            ({{mandatorySubjectivitesCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
                             (click)="selectView(viewType.Optional)">
-                        <label class="btn btn-outline-dark hide-select" for="radioOptional">Optional ({{optionalSubjectivitesCount}})</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioOptional">Optional
+                            ({{optionalSubjectivitesCount}})</label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
                             checked (click)="selectView(viewType.OnPolicy)">
-                        <label class="btn btn-outline-dark hide-select" for="radioOnPolicy">On Policy ({{onPolicySubjectivitesCount}})</label>
-                        <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check" name="btnradio" id="radioExpiring" autocomplete="off"
+                        <label class="btn btn-outline-dark hide-select" for="radioOnPolicy">On Policy
+                            ({{onPolicySubjectivitesCount}})</label>
+                        <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
+                            name="btnradio" id="radioExpiring" autocomplete="off"
                             (click)="selectView(viewType.Expiring)">
                     </div>
                 </div>
                 <div class="col-lg-6" style="padding-top:10px" (click)="userDefinedPopup()">
-                    <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined Subjectivity</a>
+                    <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined
+                        Subjectivity</a>
                 </div>
             </div>
         </div>
-        <div  class="card-body table-body">
+        <div class="card-body table-body">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" *ngIf="true">
                     <thead>
                         <tr>
-                            
+
                             <th style="text-align:center;">Included</th>
                             <th nowrap>ID</th>
                             <th>Description</th>
@@ -54,8 +60,10 @@
                     <tbody>
                         <tr *ngFor="let form of filteredSubjectivities">
                             <td style="text-align:center; width:1%;">
-                                <input type="checkbox" class="form-check-input" id="included" [ngClass]="!form.isIncluded && form.ysnDefault ? 'mandatory' : ''"
-                                    [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
+                                <input type="checkbox" class="form-check-input" id="included"
+                                    [ngClass]="!form.isIncluded && form.ysnDefault ? 'mandatory' : ''"
+                                    [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included"
+                                    click-stop-propagation>
                             </td>
                             <!-- <td style="border-left-style: hidden;width:1%;">
                                 <fa-icon *ngIf="false" class="faCircleE fa-l"
@@ -63,7 +71,7 @@
                                 </fa-icon>
                             </td> -->
                             <td style="width:1%; white-space: nowrap;">
-                                    {{form.subjectivityDesc}}
+                                {{form.subjectivityDesc}}
                             </td>
                             <td>{{form.description}}</td>
                         </tr>
@@ -115,30 +123,33 @@
         <div class="modal-body modal-xl">
             <div>
                 <label for="documentType">Document Type</label>
-                <ng-select id="documentType" [required]="canEdit" [items]="documentType" [clearable]="false" [readonly]="!canEdit" name="documentType"
-                    [(ngModel)]="userDefinedInfo.document">
+                <ng-select id="documentType" [required]="canEdit" [items]="documentType" [clearable]="false"
+                    [readonly]="!canEdit" name="documentType" [(ngModel)]="userDefinedInfo.document">
                 </ng-select>
             </div>
             <div>
                 <label for="condition">Subjectivity List</label>
-                <ng-select id="description" [items]="subjectivities" [clearable]="false" [readonly]="!canEdit" name="description"
-                    [(ngModel)]="userDefinedInfo.description"  bindLabel="description" bindValue="subjectivityDesc" (change)="updateDescription($event)">
+                <ng-select id="description" [items]="subjectivities" [clearable]="false" [readonly]="!canEdit"
+                    name="description" [(ngModel)]="userDefinedInfo.description" bindLabel="description"
+                    bindValue="subjectivityDesc" (change)="updateDescription($event)">
                 </ng-select>
                 <ng-template ng-label-tmp let-item="item">
                     {{item.subjectivityDesc}} - {{item.description}}
-                  </ng-template>
-                  <ng-template ng-option-tmp let-item="item">
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
                     {{item.subjectivityDesc}} - {{item.description}}
-                  </ng-template>
+                </ng-template>
             </div>
             <div>
                 <label for="description">Description</label>
-                <textarea style="height:125px" [readonly]="false" type="text" class="form-control" id="premium" [required]="canEdit"
-                    autocomplete="off" name="premium" [(ngModel)]="desc" #premium="ngModel"></textarea>
+                <textarea style="height:125px" [readonly]="false" type="text" class="form-control" id="premium"
+                    [required]="canEdit" autocomplete="off" name="premium" [(ngModel)]="desc"
+                    #premium="ngModel"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button"  class="btn btn-primary" (click)="submit()" [disabled]="!userForm.form.valid">Submit</button>
-                <button type="button" class="btn btn-secondary" (click)="clearAndClose()" >Cancel</button>
+                <button type="button" class="btn btn-primary" (click)="submit()"
+                    [disabled]="!userForm.form.valid">Submit</button>
+                <button type="button" class="btn btn-secondary" (click)="clearAndClose()">Cancel</button>
             </div>
         </div>
     </ng-template>
@@ -146,4 +157,3 @@
         <rsps-busy></rsps-busy>
     </div> -->
 </form>
-

@@ -96,13 +96,13 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
   }
 
   validate(){
+    this._validationResults.resetValidation();
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
       console.log(this._canBeSaved);
     }
-    this._validationResults.resetValidation();
     this._validationResults.mapValues(this);
     return this._validationResults;
   }
