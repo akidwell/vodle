@@ -453,6 +453,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.quoteRates);
     this._validationResults.validateChildrenAndMerge(this.quoteLineItems);
     this._validationResults.validateChildrenAndMerge(this.quotePolicyForms);
+    this._validationResults.validateChildrenAndMerge(this.subjectivityData);
 
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
@@ -470,6 +471,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.quoteLineItems);
     this.childArrayValidate(this.quoteRates);
     this.childArrayValidate(this.quotePolicyForms);
+    this.childArrayValidate(this.subjectivityData);
   }
   childArrayValidate(children: Validation[]) {
     children.forEach(child => {
@@ -484,6 +486,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.quoteLineItems);
     this.cleanChildArray(this.quoteRates);
     this.cleanChildArray(this.quotePolicyForms);
+    this.cleanChildArray(this.subjectivityData);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -584,6 +587,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   validateTermsAndConditionsTab() {
     this.termsAndConditionsTabValidation?.resetValidation();
+    console.log(this.subjectivityData);
+    this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.subjectivityData);
     console.log('TODO: Validate T&C');
   }
   validateMortgageeAdditionalInterestTab() {
@@ -662,10 +667,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveMortgagee(this.propertyQuoteMortgageeList,savedQuote);
     this.onSaveAdditionalInterest(this.propertyQuoteAdditionalInterestList,savedQuote);
     this.onSaveForms(savedQuote);
+    this.onSaveSubjectivities(savedQuote);
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
     this.quotePolicyForms = savedQuote.quotePolicyForms;
+  }
+
+  private onSaveSubjectivities(savedQuote: PropertyQuoteClass) {
+    this.subjectivityData = savedQuote.subjectivityData;
   }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {

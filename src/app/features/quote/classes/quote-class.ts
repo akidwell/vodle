@@ -16,6 +16,9 @@ import { PropertyQuoteClass } from './property-quote-class';
 import { QuotePolicyFormClass } from './quote-policy-forms-class';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
+import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
+import { QuoteSubjectivities } from '../models/quote-subjectivities';
+import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -144,6 +147,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   quoteLineItems: QuoteLineItemClass[] = [];
   quoteLineItemsValidation: QuoteValidationClass | null = null;
   quotePolicyForms: QuotePolicyFormClass[] = [];
+  subjectivityData:QuoteSubjectivitiesClass[] = [];
   propertyQuote!: PropertyQuoteClass;
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
@@ -273,6 +277,14 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       });
     }
     this.quotePolicyForms = policyForms;
+
+    const subs: QuoteSubjectivitiesClass[] = [];
+    if(quote.subjectivityData) {
+      quote.subjectivityData.forEach((element) => {
+        subs.push(new QuoteSubjectivitiesClass(element));
+      });
+    }
+    this.subjectivityData = subs;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -418,7 +430,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
     const forms: PolicyForm[] = [];
     this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
-    console.log(this.riskState);
+    const subjectivities: Subjectivities[] = [];
+    this.subjectivityData.forEach(c => subjectivities.push(c.toJSON()));
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -447,6 +460,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       quoteRates: rates,
       quoteLineItems: lineItems,
       quotePolicyForms: forms,
+      subjectivityData: subjectivities,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,
