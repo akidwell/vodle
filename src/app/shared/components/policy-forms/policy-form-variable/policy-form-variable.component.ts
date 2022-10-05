@@ -137,8 +137,8 @@ export class PolicyFormVariableComponent {
         element.removeEventListener('blur',this.formatField.bind(this, element));
       }
     });
-    this.formHTML = '';
     this.modalRef.close(false);
+    this.formHTML = '';
   }
 
   cancel() {
