@@ -99,7 +99,6 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
       const response$ = this.policyFormsService.getVariableFormData(request);
       await lastValueFrom(response$)
         .then((isVariable) => {
-          console.log('return: ' + isVariable);
           if (isVariable.length > 0) {
             cloneForm.formData = isVariable;
             cloneForm.isVariable = true;

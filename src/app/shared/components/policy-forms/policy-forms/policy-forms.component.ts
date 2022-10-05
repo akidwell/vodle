@@ -79,7 +79,6 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     this.selectView(this.currentView);
   }
   selectView(currentView: FormViewType) {
-    console.log(this.currentView + ' - ' + currentView);
     this.currentView = currentView;
     if (currentView == FormViewType.Expiring) {
       this.selectExpiring();
