@@ -67,8 +67,9 @@
                                     [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
-                                <fa-icon *ngIf="form.isVariable" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
-                                    ngbTooltip="Variable Enabled Form"></fa-icon>
+                                <fa-icon *ngIf="form.isVariable && form.isIncluded" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
+                                    ngbTooltip="Edit Variable Form"></fa-icon>
+                                <fa-icon *ngIf="form.isVariable && !form.isIncluded" class="faEdit fa-xl pointer disabled" [icon]="faEdit" ngbTooltip="Edit Variable Form"></fa-icon>
                                 <fa-icon *ngIf="false" class="faCircleE fa-l"
                                     ngbTooltip="Optional Form selected on Expiring Submission" [icon]="faCircleE">
                                 </fa-icon>
