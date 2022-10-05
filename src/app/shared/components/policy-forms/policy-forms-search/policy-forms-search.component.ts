@@ -19,7 +19,7 @@ import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-polic
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { PolicyFormsService } from '../services/policy-forms.service';
-import { deepClone } from 'src/app/core/utils/deep-clone';
+import { newVariableFormRequest } from '../services/variable-form-request';
 
 @Component({
   selector: 'rsps-policy-forms-search',
@@ -83,12 +83,27 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
   }
 
   private async addForm(form: QuotePolicyFormClass) {
-    if (form) {
+    if (form && form.formName) {
       const cloneForm = Object.create(form);
-      const response$ = this.policyFormsService.getIsVariable(this.quote.programId, form.formName ?? '');
+      const request = newVariableFormRequest();
+      request.companycode = this.quote.submission.companyCode ?? 3;
+      request.businessUnit = '*';
+      request.departmentCode = this.quote.submission.departmentCode?.toString() ?? '*';
+      request.effectiveDate = this.quote.policyEffectiveDate;
+      request.formName = form.formName;
+      request.pacCode = this.quote.pacCode;
+      request.programId = this.quote.programId;
+      request.underwriterId = this.quote.submission.underwriter?.toString() ?? '*';
+      request.producerCode = this.quote.submission.producerCode;
+
+      const response$ = this.policyFormsService.getVariableFormData(request);
       await lastValueFrom(response$)
-        .then(isVariable => {
-          cloneForm.isVariable = isVariable;
+        .then((isVariable) => {
+          console.log('return: ' + isVariable);
+          if (isVariable.length > 0) {
+            cloneForm.formData = isVariable;
+            cloneForm.isVariable = true;
+          }
         })
         .catch(() => {
           // If an error just default to false, it will try to pick it up again on fetch

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ZipCodePipe } from '../pipes/zip-code.pipe';
 import { AutofocusDirective } from './autofocus.directive';
 import { ClickStopPropagation } from './click-stop-propagation.directive';
+import { DomChangeDirective } from './dom-change-directive';
 import { HoverClassDirective } from './hover-class.directive';
 import { MaxIntegerValidator } from './max-integer.directive';
 import { NullValueDirective } from './null-value.directive';
@@ -21,7 +22,8 @@ import { ZipCodeDirective } from './zip-code.directive';
     HoverClassDirective,
     AutofocusDirective,
     ZipCodeDirective,
-    ZipCodeValidator
+    ZipCodeValidator,
+    DomChangeDirective
   ],
   exports: [
     NullValueDirective,
@@ -32,7 +34,8 @@ import { ZipCodeDirective } from './zip-code.directive';
     HoverClassDirective,
     AutofocusDirective,
     ZipCodeDirective,
-    ZipCodeValidator
+    ZipCodeValidator,
+    DomChangeDirective
   ],
   providers: [ZipCodePipe]
 })

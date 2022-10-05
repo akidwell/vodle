@@ -26,7 +26,8 @@ export class QuotePolicyFormClass extends PolicyFormClass {
       categorySequence: this.categorySequence,
       sortSequence: this.sortSequence,
       formIndex: this.formIndex,
-      allowMultiples: this.allowMultiples
+      allowMultiples: this.allowMultiples,
+      formData: this.formData
     };
   }
 }

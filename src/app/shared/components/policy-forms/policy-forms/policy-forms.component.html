@@ -59,15 +59,15 @@
                     <tbody>
                         <tr *ngFor="let form of filteredForms">
                             <td *ngIf="showIcons" style="width:1%;">
-                                <fa-icon *ngIf="form.hasSpecialNote" class="faExclamationTriangle fa-xl"
+                                <fa-icon *ngIf="form.hasSpecialNote" class="faExclamationTriangle fa-xl pointer"
                                     [icon]="faExclamationTriangle" ngbTooltip="Special Note" (click)="showSpecialNote(form.formName)"></fa-icon>
                             </td>
                             <td style="text-align:center; width:1%;">
                                 <input type="checkbox" class="form-check-input" id="included" [ngClass]="!form.isIncluded && form.isMandatory ? 'mandatory' : ''"
-                                    [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation>
+                                    [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
-                                <fa-icon *ngIf="form.isVariable" class="faEdit fa-xl" [icon]="faEdit" (click)="editVariableForm(form.formName)"
+                                <fa-icon *ngIf="form.isVariable" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
                                     ngbTooltip="Variable Enabled Form"></fa-icon>
                                 <fa-icon *ngIf="false" class="faCircleE fa-l"
                                     ngbTooltip="Optional Form selected on Expiring Submission" [icon]="faCircleE">

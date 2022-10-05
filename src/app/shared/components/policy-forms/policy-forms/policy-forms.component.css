@@ -59,3 +59,7 @@ i.fa {
   width: 1.3rem;
   height: 1.3rem;
 }
+
+.pointer {
+  cursor: pointer;
+}
