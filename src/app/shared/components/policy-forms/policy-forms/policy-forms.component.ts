@@ -200,13 +200,17 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     }
   }
 
-  async editVariableForm(formName: string | null) {
-    if (formName) {
-      await this.groupEditComponent.open(formName);
+  async editVariableForm(form: PolicyFormClass) {
+    if (form) {
+      await this.groupEditComponent.open(form,this.quote);
     }
   }
 
   public get formViewType(): typeof FormViewType {
     return FormViewType;
+  }
+
+  checkIncluded() {
+    this.setFormCounts();
   }
 }

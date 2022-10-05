@@ -6,6 +6,9 @@ import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms-class';
 import { Quote } from 'src/app/features/quote/models/quote';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { VariableFormData } from 'src/app/shared/interfaces/variable-form-data';
+import { VariableForm } from './variable-form';
+import { VariableFormRequest } from './variable-form-request';
 
 @Injectable({
   providedIn: 'root'
@@ -40,15 +43,18 @@ export class PolicyFormsService {
     return this.http.get(this.config.apiBaseUrl + 'api/forms/guidelines-pdf', { params: params, headers, responseType: 'arraybuffer'});
   }
 
-  getIsVariable(programId: number, formName: string): Observable<boolean> {
-    const params = new HttpParams().append('programId', programId).append('formName', formName);
-    return this.http.get<boolean>(this.config.apiBaseUrl + 'api/forms/is-variable', { params: params});
+  getVariableFormattedValue(value: string, format: string, columnType: string): Observable<string> {
+    const params = new HttpParams().append('value', value).append('format', format).append('columnType', columnType);
+    return this.http.get<string>(this.config.apiBaseUrl + 'api/forms/variable-field-format', { params: params, responseType: 'text' as 'json'});
   }
 
-  getVariableHTML(formName: string) {
-    const params = new HttpParams().append('formName', formName);
-    const headers = { 'Content-Type': 'application/html'};
-    return this.http.get(this.config.apiBaseUrl + 'api/forms/variable-html', { params: params, headers, responseType: 'arraybuffer'});
+  getVariableFormData(form: VariableFormRequest): Observable<VariableFormData[]> {
+    return this.http.post<VariableFormData[]>(this.config.apiBaseUrl + 'api/forms/variable-form-data', form);
+  }
+
+  getVariable(form: VariableFormRequest) {
+    const headers = { 'Content-Type': 'application/json'};
+    return this.http.post(this.config.apiBaseUrl + 'api/forms/variable-form', form, { headers, responseType: 'arraybuffer'});
   }
 
   searchForms(searchValue: string): Observable<QuotePolicyFormClass[]> {
