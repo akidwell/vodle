@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="card-header" (click)="collapse.toggle()">
-        Subjectivities - On Policy ({{onPolicySubjectivitesCount}})
+        Disclaimers - On Policy ({{onPolicyDisclaimersCount}})
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
     </div>
@@ -19,30 +19,30 @@
                 <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
-                            (click)="selectView(viewType.Available)">
-                        <label class="btn btn-outline-dark hide-select" for="radioAll">Available
-                            ({{allSubjectivitiesCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
-                            (click)="selectView(viewType.Mandatory)">
-                        <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory
-                            ({{mandatorySubjectivitesCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
-                            (click)="selectView(viewType.Optional)">
-                        <label class="btn btn-outline-dark hide-select" for="radioOptional">Optional
-                            ({{optionalSubjectivitesCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
-                            checked (click)="selectView(viewType.OnPolicy)">
-                        <label class="btn btn-outline-dark hide-select" for="radioOnPolicy">On Policy
-                            ({{onPolicySubjectivitesCount}})</label>
+                        <input type="radio" class="btn-check" name="btnradio1" id="radioAllDis" autocomplete="off"
+                            (click)="selectDisclaimerView(disclaimerViewType.Available)" click-stop-propogation>
+                        <label class="btn btn-outline-dark hide-select" for="radioAllDis">Available
+                            ({{allDisclaimersCount}})</label>
+                        <input type="radio" class="btn-check" name="btnradio1" id="radioMandatoryDis" autocomplete="off"
+                            (click)="selectDisclaimerView(disclaimerViewType.Mandatory)">
+                        <label class="btn btn-outline-dark hide-select" for="radioMandatoryDis">Mandatory
+                            ({{mandatoryDisclaimersCount}})</label>
+                        <input type="radio" class="btn-check" name="btnradio1" id="radioOpt" autocomplete="off"
+                            (click)="selectDisclaimerView(disclaimerViewType.Optional)">
+                        <label class="btn btn-outline-dark hide-select" for="radioOpt">Optional
+                            ({{optionalDisclaimersCount}})</label>
+                        <input type="radio" class="btn-check" name="btnradio1" id="radioOnPol" autocomplete="off"
+                            checked (click)="selectDisclaimerView(disclaimerViewType.OnPolicy)">
+                        <label class="btn btn-outline-dark hide-select" for="radioOnPol">On Policy
+                            ({{onPolicyDisclaimersCount}})</label>
                         <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
-                            name="btnradio" id="radioExpiring" autocomplete="off"
-                            (click)="selectView(viewType.Expiring)">
+                            name="btnradio1" id="radioExp" autocomplete="off"
+                            (click)="selectDisclaimerView(disclaimerViewType.Expiring)">
                     </div>
                 </div>
                 <div class="col-lg-6" style="padding-top:10px" (click)="userDefinedPopup()">
                     <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined
-                        Subjectivity</a>
+                        Disclaimer</a>
                 </div>
             </div>
         </div>
@@ -58,11 +58,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let sub of filteredSubjectivities">
+                        <tr *ngFor="let dis of filteredDisclaimers">
                             <td style="text-align:center; width:1%;">
                                 <input type="checkbox" class="form-check-input" id="included"
-                                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : ''"
-                                    [readonly]="!canEdit" [(ngModel)]="sub.isIncluded" name="included"
+                                    [ngClass]="!dis.isIncluded && dis.ysnDefault ? 'mandatory' : ''"
+                                    [readonly]="!canEdit" [(ngModel)]="dis.isIncluded" name="included"
                                     click-stop-propagation>
                             </td>
                             <!-- <td style="border-left-style: hidden;width:1%;">
@@ -71,9 +71,9 @@
                                 </fa-icon>
                             </td> -->
                             <td style="width:1%; white-space: nowrap;">
-                                {{sub.subjectivityDesc}}
+                                {{dis.disclaimerDesc}}
                             </td>
-                            <td>{{sub.description}}</td>
+                            <td>{{dis.description}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -109,14 +109,14 @@
         </div> -->
     </div>
     <div class="card-footer">
-        <div class="footer-count">Subjectivities: {{filteredSubjectivities.length}}/{{subjectivities.length}}</div>
+        <div class="footer-count">Disclaimers: {{filteredDisclaimers.length}}/{{disclaimers.length}}</div>
     </div>
 </div>
 <rsps-scroll-to-top></rsps-scroll-to-top>
 <form #userForm="ngForm">
     <ng-template #userModal let-modal>
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">User Defined Subjectivity</h4>
+            <h4 class="modal-title" id="modal-basic-title">User Defined Disclaimer</h4>
             <div class="col-lg-5"></div>
             <br>
         </div>
@@ -128,8 +128,8 @@
                 </ng-select>
             </div>
             <div>
-                <label for="condition">Subjectivity List</label>
-                <ng-select id="description" [items]="subjectivities" [clearable]="false" [readonly]="!canEdit"
+                <label for="condition">Disclaimer List</label>
+                <ng-select id="description" [items]="disclaimers" [clearable]="false" [readonly]="!canEdit"
                     name="description" [(ngModel)]="userDefinedInfo.description" bindLabel="description"
                     bindValue="subjectivityDesc" (change)="updateDescription($event)">
                 </ng-select>

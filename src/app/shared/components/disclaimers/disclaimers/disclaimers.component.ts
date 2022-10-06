@@ -5,57 +5,56 @@ import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { FormViewType, SubjectivityTypeView } from 'src/app/core/enums/form-view-type';
+import { DisclaimerTypeView, FormViewType } from 'src/app/core/enums/form-view-type';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
-import { QuoteSubjectivitiesClass } from 'src/app/features/quote/classes/quote-subjectivities-class';
+import { QuoteDisclaimersClass } from 'src/app/features/quote/classes/quote-disclaimers-class';
 import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
-import { SubjectivitiesClass } from 'src/app/shared/classes/subjectivities-class';
+import { DisclaimersClass } from 'src/app/shared/classes/disclaimers-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
-import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 
 @Component({
-  selector: 'rsps-subjectivities',
-  templateUrl: './subjectivities.component.html',
-  styleUrls: ['./subjectivities.component.css']
+  selector: 'rsps-disclaimers',
+  templateUrl: './disclaimers.component.html',
+  styleUrls: ['./disclaimers.component.css']
 })
-export class SubjectivitiesComponent extends SharedComponentBase implements OnInit {
+export class DisclaimersComponent extends SharedComponentBase implements OnInit {
   collapsed = false;
-  filteredSubjectivities: SubjectivitiesClass[] = [];
+  filteredDisclaimers: DisclaimersClass[] = [];
 
   documentType: string[] = ['Quote', 'Binder','Both'];
-  currentView = SubjectivityTypeView.OnPolicy;
+  currentView = DisclaimerTypeView.OnPolicy;
   faExclamationTriangle = faExclamationTriangle;
   faCircleE = faE;
   faCircle = faCircle;
   showExpiring = false;
   //expiringFormsLoading = false;
-  //expiringForms: EndorsementSubjectivityData[] | null = null;
-  allSubjectivitiesCount = 0;
-  mandatorySubjectivitesCount = 0;
-  optionalSubjectivitesCount = 0;
-  onPolicySubjectivitesCount = 0;
-  expiringSubjectivitiesCount = 0;
+  //expiringForms: EndorsementdisclaimerData[] | null = null;
+  allDisclaimersCount = 0;
+  mandatoryDisclaimersCount = 0;
+  optionalDisclaimersCount = 0;
+  onPolicyDisclaimersCount = 0;
+  expiringDisclaimersCount = 0;
   isSaving = false;
   saveSub!: Subscription;
-  private _subjectivities!: SubjectivitiesClass[];
+  private _disclaimers!: DisclaimersClass[];
 
   @ViewChild(NgForm, { static: false }) userForm!: NgForm;
-  @ViewChild('userModal') private modalContent!: TemplateRef<SubjectivitiesComponent>;
+  @ViewChild('userModal') private modalContent!: TemplateRef<DisclaimersComponent>;
   private modalRef!: NgbModalRef;
-  userDefinedInfo: SubjectivitiesClass = ({} as any) as SubjectivitiesClass;
+  userDefinedInfo: DisclaimersClass = ({} as any) as DisclaimersClass;
   desc = '';
 
 
   @Input() quote!: QuoteClass;
   @Input() submissionNumber!: number;
   @Input() quoteNumber!: number;
-  @Input() set subjectivities(value: SubjectivitiesClass[]) {
-    this._subjectivities = value;
-    this.refreshSubjectivities();
+  @Input() set disclaimers(value: DisclaimersClass[]) {
+    this._disclaimers = value;
+    this.refreshDisclaimers();
   }
-  get subjectivities(): SubjectivitiesClass[] {
-    return this._subjectivities;
+  get disclaimers(): DisclaimersClass[] {
+    return this._disclaimers;
   }
 
   constructor(
@@ -77,46 +76,46 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     this.saveSub?.unsubscribe();
   }
 
-  refreshSubjectivities() {
-    this.setSubjectivitiesCount();
-    this.selectView(this.currentView);
+  refreshDisclaimers() {
+    this.setDisclaimersCount();
+    this.selectDisclaimerView(this.currentView);
   }
-  selectView(currentView: SubjectivityTypeView) {
+  selectDisclaimerView(currentView: DisclaimerTypeView) {
     this.currentView = currentView;
-    if (currentView == SubjectivityTypeView.Available) {
-      this.filteredSubjectivities = this.subjectivities;
-    } else if (currentView == SubjectivityTypeView.Optional) {
-      this.filteredSubjectivities = this.subjectivities.filter((c) => !c.ysnDefault);
-    } else if (currentView == SubjectivityTypeView.Mandatory) {
-      this.filteredSubjectivities = this.subjectivities.filter((c) => c.ysnDefault);
-    } else if (currentView == SubjectivityTypeView.OnPolicy) {
-      this.filteredSubjectivities = this.subjectivities.filter((c) => c.isIncluded);
-      this.onPolicySubjectivitesCount = this.subjectivities.filter((c) => c.isIncluded).length;
+    if (currentView == DisclaimerTypeView.Available) {
+      this.filteredDisclaimers = this.disclaimers;
+    } else if (currentView == DisclaimerTypeView.Optional) {
+      this.filteredDisclaimers = this.disclaimers.filter((c) => !c.ysnDefault);
+    } else if (currentView == DisclaimerTypeView.Mandatory) {
+      this.filteredDisclaimers = this.disclaimers.filter((c) => c.ysnDefault);
+    } else if (currentView == DisclaimerTypeView.OnPolicy) {
+      this.filteredDisclaimers = this.disclaimers.filter((c) => c.isIncluded);
+      this.onPolicyDisclaimersCount = this.disclaimers.filter((c) => c.isIncluded).length;
     }
   }
 
   selectAll() {
-    this.filteredSubjectivities = this.subjectivities;
+    this.filteredDisclaimers = this.disclaimers;
   }
   selectOptional() {
-    this.filteredSubjectivities = this.subjectivities.filter((c) => !c.ysnDefault);
+    this.filteredDisclaimers = this.disclaimers.filter((c) => !c.ysnDefault);
   }
   selectMandatory() {
-    this.filteredSubjectivities = this.subjectivities.filter((c) => c.ysnDefault);
+    this.filteredDisclaimers = this.disclaimers.filter((c) => c.ysnDefault);
   }
   selectOnPolicy() {
-    this.filteredSubjectivities = this.subjectivities.filter((c) => c.isIncluded);
+    this.filteredDisclaimers = this.disclaimers.filter((c) => c.isIncluded);
   }
 
-  setSubjectivitiesCount() {
-    this.allSubjectivitiesCount = this.subjectivities.length;
-    this.mandatorySubjectivitesCount = this.subjectivities.filter((c) => c.ysnDefault).length;
-    this.optionalSubjectivitesCount = this.subjectivities.filter((c) => !c.ysnDefault).length;
-    this.onPolicySubjectivitesCount = this.subjectivities.filter((c) => c.isIncluded).length;
+  setDisclaimersCount() {
+    this.allDisclaimersCount = this.disclaimers.length;
+    this.mandatoryDisclaimersCount = this.disclaimers.filter((c) => c.ysnDefault).length;
+    this.optionalDisclaimersCount = this.disclaimers.filter((c) => !c.ysnDefault).length;
+    this.onPolicyDisclaimersCount = this.disclaimers.filter((c) => c.isIncluded).length;
   }
 
-  public get viewType(): typeof SubjectivityTypeView {
-    return SubjectivityTypeView;
+  public get disclaimerViewType(): typeof DisclaimerTypeView {
+    return DisclaimerTypeView;
   }
 
   async userDefinedPopup(): Promise<void> {
@@ -126,41 +125,41 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     });
   }
 
-  updateDescription(sub: SubjectivitiesClass){
+  updateDescription(sub: DisclaimersClass){
     this.desc = sub.description ?? '';
   }
   clearAndClose(): void {
-    const newUserDefinedInfo: SubjectivitiesClass = ({} as any) as SubjectivitiesClass;
+    const newUserDefinedInfo: DisclaimersClass = ({} as any) as DisclaimersClass;
     this.userDefinedInfo = newUserDefinedInfo;
     this.desc = '';
-    this.userDefinedInfo.subjectivityDesc = null;
+    this.userDefinedInfo.disclaimerDesc = null;
     this.userDefinedInfo.document = null;
     this.modalRef.close();
   }
 
   async submit(): Promise<void> {
-    const newUserDefinedInfo: SubjectivitiesClass = ({} as any) as SubjectivitiesClass;
+    const newUserDefinedInfo: DisclaimersClass = ({} as any) as DisclaimersClass;
     this.userDefinedInfo = newUserDefinedInfo;
     this.modalRef.close();
     this.userDefinedInfo.description = this.desc;
-    this.userDefinedInfo.subjectivityDesc = 'User Defined';
+    this.userDefinedInfo.disclaimerDesc = 'User Defined';
     this.userDefinedInfo.ysnDefault = false;
     this.userDefinedInfo.isUserDefined = true;
     this.userDefinedInfo.isIncluded = true;
     this.userDefinedInfo.isDirty = true;
     this.desc = '';
-    this.quote.subjectivityData.push(new QuoteSubjectivitiesClass(this.userDefinedInfo));
+    this.quote.disclaimerData.push(new QuoteDisclaimersClass(this.userDefinedInfo));
     console.log(this.userDefinedInfo);
-    this.refreshSubjectivities();
+    this.refreshDisclaimers();
   }
 
   // async loadExpiring() {
   //   if (this.quote.submission.expiringPolicyId) {
   //     // Check Cache is null first
-  //     if (!this.expiringSubjectivities) {
+  //     if (!this.expiringDisclaimers) {
   //       this.expiringFormsLoading = true;
   //       this.policyService
-  //         .getEndorsementSubjectivities(this.quote.submission.expiringPolicyId)
+  //         .getEndorsementDisclaimers(this.quote.submission.expiringPolicyId)
   //         .subscribe((forms) => {
   //           if (forms) {
   //             let endorsementNumber = -1;
