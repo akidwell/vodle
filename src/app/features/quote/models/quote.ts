@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 import { Submission } from '../../submission/models/submission';
@@ -123,6 +124,7 @@ export interface Quote {
   riskState: string;
   quotePolicyForms: PolicyForm[];
   subjectivityData: Subjectivities[];
+  disclaimerData: Disclaimers[];
   totalPremium: number | null;
   formsVersionDescription: string | null;
 }

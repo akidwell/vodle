@@ -17,8 +17,9 @@ import { QuotePolicyFormClass } from './quote-policy-forms-class';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
 import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
-import { QuoteSubjectivities } from '../models/quote-subjectivities';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
+import { QuoteDisclaimersClass } from './quote-disclaimers-class';
+import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -148,6 +149,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   quoteLineItemsValidation: QuoteValidationClass | null = null;
   quotePolicyForms: QuotePolicyFormClass[] = [];
   subjectivityData:QuoteSubjectivitiesClass[] = [];
+  disclaimerData:QuoteDisclaimersClass[] = [];
+
   propertyQuote!: PropertyQuoteClass;
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
@@ -285,6 +288,14 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       });
     }
     this.subjectivityData = subs;
+
+    const disclaimers: QuoteDisclaimersClass[] = [];
+    if(quote.disclaimerData) {
+      quote.disclaimerData.forEach((element) => {
+        disclaimers.push(new QuoteDisclaimersClass(element));
+      });
+    }
+    this.disclaimerData = disclaimers;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -432,6 +443,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
     const subjectivities: Subjectivities[] = [];
     this.subjectivityData.forEach(c => subjectivities.push(c.toJSON()));
+    const disclaimers: Disclaimers[] = [];
+    this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -461,6 +474,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       quoteLineItems: lineItems,
       quotePolicyForms: forms,
       subjectivityData: subjectivities,
+      disclaimerData: disclaimers,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,
