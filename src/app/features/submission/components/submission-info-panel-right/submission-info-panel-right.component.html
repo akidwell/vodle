@@ -8,9 +8,9 @@
         #producer
         (producerSelected)=updateProducer($event)
         [department]="submission.departmentCode || 0"
-        [canEdit]="canEditSubmission && !submission.producerReadonly && submission.polEffDate != null"
+        [canEdit]="canEditSubmission && !submission.producerReadonly && submission.policyEffectiveDate != null"
         [isRequired]="canEditSubmission && submission.producerRequired"
-        [policyDate]="submission.polEffDate || currentDate"
+        [policyDate]="submission.policyEffectiveDate || currentDate"
         [producerOnLoad]="submission.producer"
         ></producer-fuzzy-search>
       </div>

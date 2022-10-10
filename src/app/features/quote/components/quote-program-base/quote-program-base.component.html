@@ -4,7 +4,7 @@
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['location']">Location/Coverage
           <span class="badge bg-danger" *ngIf="(this.propertyLocationTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="propertyLocationTabErrorList"
+            [ngbTooltip]="propertyLocationTabErrorList" container="body"
             tooltipClass="tabErrors">{{this.propertyLocationTabValidation?.errorMessages?.length ?? ''}}
           </span>
         </a>
@@ -13,7 +13,7 @@
         <a class="nav-link" routerLinkActive='active' [routerLink]="['mortgagee']">Mortgagee/Additional Interest
           <span class="badge bg-danger"
             *ngIf="(this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="mortgageeAdditionalInterestErrorList"
+            [ngbTooltip]="mortgageeAdditionalInterestErrorList" container="body"
             tooltipClass="tabErrors">{{this.mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? ''}}
           </span>
         </a>
@@ -36,7 +36,7 @@
         </svg> -->
         <a class="nav-link" routerLinkActive="active" [routerLink]="['premium']">Coverage Premium
           <span class="badge bg-danger" *ngIf="(this.coveragePremiumTabValidation?.errorMessages?.length ?? 0) > 0"
-            [ngbTooltip]="coveragePremiumTabErrorList"
+            [ngbTooltip]="coveragePremiumTabErrorList" container="body"
             tooltipClass="tabErrors">{{this.coveragePremiumTabValidation?.errorMessages?.length ?? ''}}
           </span>
         </a>
@@ -58,10 +58,19 @@
             </text>
           </a>
         </svg> -->
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['forms']">Forms List</a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['forms']">Forms List
+          <span class="badge bg-danger" *ngIf="(this.formsListTabValidation?.errorMessages?.length ?? 0) > 0"
+            [ngbTooltip]="formsListTabErrorList" container="body"
+            tooltipClass="tabErrors">{{this.formsListTabValidation?.errorMessages?.length ?? ''}}
+          </span>
+        </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['conditions']">Terms and Conditions</a>
+        <span class="badge bg-danger" *ngIf="(this.termsAndConditionsTabValidation?.errorMessages?.length ?? 0) > 0"
+          [ngbTooltip]="termsAndConditionsTabErrorList" container="body"
+          tooltipClass="tabErrors">{{this.termsAndConditionsTabValidation?.errorMessages?.length ?? ''}}
+        </span>
       </li>
     </ul>
   </div>
@@ -71,17 +80,42 @@
 </div>
 
 <ng-template #propertyLocationTabErrorList>
-  <tr *ngFor="let item of (this.propertyLocationTabValidation?.errorMessages ?? [])">
+  <tr *ngFor="let item of (this.propertyLocationTabValidation?.errorMessages?.slice(0, 25) ?? [])">
     <span>{{item}}<br></span>
+  </tr>
+  <tr *ngIf="(propertyLocationTabValidation?.errorMessages?.length ?? 0) > 25">
+    <span>({{(propertyLocationTabValidation?.errorMessages?.length ?? 0) - 25}} More) ...</span>
   </tr>
 </ng-template>
 <ng-template #mortgageeAdditionalInterestErrorList>
-  <tr *ngFor="let item of (this.mortgageeAdditionalInterestTabValidation?.errorMessages ?? [])">
+  <tr *ngFor="let item of (this.mortgageeAdditionalInterestTabValidation?.errorMessages?.slice(0, 25) ?? [])">
     <span>{{item}}<br></span>
+  </tr>
+  <tr *ngIf="(mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? 0) > 25">
+    <span>({{(mortgageeAdditionalInterestTabValidation?.errorMessages?.length ?? 0) - 25}} More) ...</span>
   </tr>
 </ng-template>
 <ng-template #coveragePremiumTabErrorList>
-  <tr *ngFor="let item of (this.coveragePremiumTabValidation?.errorMessages ?? [])">
+  <tr *ngFor="let item of (this.coveragePremiumTabValidation?.errorMessages?.slice(0, 25) ?? [])">
     <span>{{item}}<br></span>
+  </tr>
+  <tr *ngIf="(coveragePremiumTabValidation?.errorMessages?.length ?? 0) > 25">
+    <span>({{(coveragePremiumTabValidation?.errorMessages?.length ?? 0) - 25}} More) ...</span>
+  </tr>
+</ng-template>
+<ng-template #formsListTabErrorList>
+  <tr *ngFor="let item of (this.formsListTabValidation?.errorMessages?.slice(0, 25) ?? [])">
+    <span>{{item}}<br></span>
+  </tr>
+  <tr *ngIf="(formsListTabValidation?.errorMessages?.length ?? 0) > 25">
+    <span>({{(formsListTabValidation?.errorMessages?.length ?? 0) - 25}} More) ...</span>
+  </tr>
+</ng-template>
+<ng-template #termsAndConditionsTabErrorList>
+  <tr *ngFor="let item of (this.termsAndConditionsTabValidation?.errorMessages?.slice(0, 25) ?? [])">
+    <span>{{item}}<br></span>
+  </tr>
+  <tr *ngIf="(termsAndConditionsTabValidation?.errorMessages?.length ?? 0) > 25">
+    <span>({{(termsAndConditionsTabValidation?.errorMessages?.length ?? 0) - 25}} More) ...</span>
   </tr>
 </ng-template>

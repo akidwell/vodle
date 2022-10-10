@@ -1,3 +1,5 @@
+import { VariableFormData } from './variable-form-data';
+
 export interface PolicyForm {
     isIncluded: boolean;
     formName: string | null;
@@ -11,4 +13,5 @@ export interface PolicyForm {
     sortSequence: number | null;
     formIndex: number | null;
     allowMultiples: boolean | null;
+    formData: VariableFormData[] | null;
  }

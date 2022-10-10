@@ -19,8 +19,10 @@ import { QuoteValidationClass } from './quote-validation-class';
 import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
 import { QuoteClass } from './quote-class';
 import { Quote } from '../models/quote';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../submission/classes/submission-class';
 import { ProgramClass } from './program-class';
+import * as moment from 'moment';
+import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
@@ -59,7 +61,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingLocationTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.propertyQuoteMortgageeAdditionalInterestTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.termsAndConditionsTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.TermsAndConditions);
-    this.coveragesTabValidation= new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
+    this.coveragesTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
     this.validate();
   }
@@ -274,10 +276,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   addBuilding(building: PropertyQuoteBuildingClass) {
     this.propertyQuoteBuildingList.push(building);
-    // this.propertyQuoteBuilding.forEach(c => c.focus = false);
     building.propertyQuote = this;
     building.focus = true;
-    //building.markDirty();
+    building.markDirty();
     this.filterBuildings();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
@@ -463,7 +464,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.quoteRates);
     this._validationResults.validateChildrenAndMerge(this.quoteLineItems);
     this._validationResults.validateChildrenAndMerge(this.quotePolicyForms);
+    this._validationResults.validateChildrenAndMerge(this.subjectivityData);
+    this._validationResults.validateChildrenAndMerge(this.disclaimerData);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
+    // Rest flag based on validation
+    this.showDirty = this._validationResults.isDirty;
     return this._validationResults;
   }
 
@@ -478,6 +483,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.quoteLineItems);
     this.childArrayValidate(this.quoteRates);
     this.childArrayValidate(this.quotePolicyForms);
+    this.childArrayValidate(this.subjectivityData);
+    this.childArrayValidate(this.disclaimerData);
     this.childArrayValidate(this.propertyQuoteBuildingOptionalCoverage);
   }
   childArrayValidate(children: Validation[]) {
@@ -494,6 +501,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.quoteRates);
     this.cleanChildArray(this.quotePolicyForms);
     this.cleanChildArray(this.propertyQuoteBuildingOptionalCoverage);
+    this.cleanChildArray(this.subjectivityData);
+    this.cleanChildArray(this.disclaimerData);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -515,7 +524,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   markDirty() {
     this._isDirty = true;
     ////////////////////////
-    this._validationResults.isDirty = true;
+    this.showDirty = true;
   }
   setRequiredFields() {
     // No special rules
@@ -595,6 +604,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   validateTermsAndConditionsTab() {
     this.termsAndConditionsTabValidation?.resetValidation();
+    this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.subjectivityData);
+    this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.disclaimerData);
     console.log('TODO: Validate T&C');
   }
   validateMortgageeAdditionalInterestTab() {
@@ -665,12 +676,17 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
   onSave(savedQuote: PropertyQuoteClass) {
+    this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
+    this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();
+    this.submission.policyTerm = PolicyTermEnum.custom;
     this.onSaveBuilding(this.propertyQuoteBuildingList,savedQuote);
     this.onSaveDeductible(this.propertyQuoteDeductibleList,savedQuote);
     this.onSaveMortgagee(this.propertyQuoteMortgageeList,savedQuote);
     this.onSaveOptionalCoverages(this.propertyQuoteBuildingOptionalCoverage,savedQuote);
     this.onSaveAdditionalInterest(this.propertyQuoteAdditionalInterestList,savedQuote);
     this.onSaveForms(savedQuote);
+    this.onSaveSubjectivities(savedQuote);
+    this.onSaveDisclaimers(savedQuote);
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -691,6 +707,13 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
     });
   }
+  private onSaveSubjectivities(savedQuote: PropertyQuoteClass) {
+    this.subjectivityData = savedQuote.subjectivityData;
+  }
+  private onSaveDisclaimers(savedQuote: PropertyQuoteClass) {
+    this.disclaimerData = savedQuote.disclaimerData;
+  }
+
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {
     mortgagees.forEach(mortgagee => {
       if (mortgagee.isNew) {

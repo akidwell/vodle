@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
 import { PropertyImportComponent } from './property-import.component';
+import { BusyModule } from 'src/app/core/components/busy/busy.module';
 
 @NgModule({
   declarations: [PropertyImportComponent],
@@ -16,7 +17,8 @@ import { PropertyImportComponent } from './property-import.component';
     NgbModule,
     NgSelectModule,
     FormsModule,
-    DirectivesModule
+    DirectivesModule,
+    BusyModule
   ],
   exports: [PropertyImportComponent]
 })

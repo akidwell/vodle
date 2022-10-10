@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
-import { SubmissionClass } from '../../classes/SubmissionClass';
+import { SubmissionClass } from '../../classes/submission-class';
 
 @Component({
   selector: 'rsps-submission-header',

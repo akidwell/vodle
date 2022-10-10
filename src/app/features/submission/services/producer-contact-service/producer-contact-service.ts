@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap, map } from 'rxjs';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { FuzzyProducerContactSearchResponse } from 'src/app/shared/components/producer-contact-search/producer-contact-search.component';
-import { ProducerContactClass } from '../../classes/ProducerContactClass';
+import { ProducerContactClass } from '../../classes/producer-contact-class';
 import { ProducerContact } from '../../models/producer-contact';
 
 @Injectable({

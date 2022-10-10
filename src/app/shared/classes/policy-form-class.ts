@@ -4,6 +4,7 @@ import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-valid
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { PolicyForm } from '../interfaces/policy-form';
 import { Validation } from '../interfaces/validation';
+import { VariableFormData } from '../interfaces/variable-form-data';
 
 export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAfterSave{
   private _isDirty = false;
@@ -13,6 +14,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
   private _isIncluded = false;
+  private _formData: VariableFormData[] | null = null;
 
   invalidList: string[] = [];
   formName: string | null = null;
@@ -35,7 +37,13 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this._isDirty = true;
     this._isIncluded = value;
   }
-
+  get formData(): VariableFormData[] | null {
+    return this._formData;
+  }
+  set formData(value: VariableFormData[] | null) {
+    this._isDirty = true;
+    this._formData = value;
+  }
   constructor(policyForm?: PolicyForm){
     if (policyForm) {
       this.existingInit(policyForm);
@@ -90,6 +98,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.formIndex = policyForm.formIndex;
     this.allowMultiples = policyForm.allowMultiples;
     this._isIncluded = policyForm.isIncluded;
+    this._formData = policyForm.formData;
   }
 
   newInit() {

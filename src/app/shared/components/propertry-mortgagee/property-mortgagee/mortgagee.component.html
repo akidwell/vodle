@@ -40,7 +40,7 @@
           <div class="col-lg-1">
             <label for="building" class="form-label" title="building">Prem/Bldg:</label>
             <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
-                bindValue="code" name="building"  [required]="canEditSubmission"
+                bindValue="code" name="building"  [required]="canEditSubmission"  [readonly]="!canEditSubmission" 
                 [virtualScroll]="true" click-stop-propagation
                 [clearable]="false"
                 [searchFn]="dropDownSearch" [(ngModel)]="mortgageeData.building">
@@ -99,7 +99,7 @@
               </div>
               <div *ngIf="!isLoadingAddress">
                 <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code"  [required]="canEditSubmission"
-                  [clearable]="false" [readonly]="!canEditSubmission || mortgageeData.isZipLookup" name="mortgageeState"
+                  [clearable]="false" [readonly]="!canEditSubmission || mortgageeData.isZipLookup" name="mortgageeState"  [readonly]="!canEditSubmission" 
                   [(ngModel)]="mortgageeData.state" #mortgageeState="ngModel" (change)="changeState($event)">
                 </ng-select>
               </div>

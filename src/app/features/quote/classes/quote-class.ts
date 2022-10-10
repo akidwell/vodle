@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../submission/classes/submission-class';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
@@ -15,28 +15,32 @@ import { ValidationClass } from 'src/app/shared/classes/validation-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { QuotePolicyFormClass } from './quote-policy-forms-class';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
+import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
+import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
+import { QuoteDisclaimersClass } from './quote-disclaimers-class';
+import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 
-export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
+export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
   _validationResults: QuoteValidationClass;
   _canBeSaved = true;
   _errorMessages: string[] = [];
   _isValid = true;
   _classCode : number | null = null;
-  _policyEffectiveDate: Date | Moment | null = null;
-  _policyExpirationDate: Date | Moment | null = null;
   _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
+  warningsList: string[] = [];
+  warningsMessage = '';
 
   submissionNumber = 0;
   quoteId = 0;
   cuspNumber = 0;
   quoteNumber = 0;
   sequenceNumber = 0;
-  //policyEffectiveDate: Date | Moment | null = null;
-  // policyExpirationDate: Date | Moment | null = null;
   status = 0;
+  statusDescription = '';
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
@@ -144,11 +148,14 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   quoteLineItems: QuoteLineItemClass[] = [];
   quoteLineItemsValidation: QuoteValidationClass | null = null;
   quotePolicyForms: QuotePolicyFormClass[] = [];
+  subjectivityData:QuoteSubjectivitiesClass[] = [];
+  disclaimerData:QuoteDisclaimersClass[] = [];
+
   propertyQuote!: PropertyQuoteClass;
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
 
-  quoteDirty = false ;
+  showDirty = false ;
 
   get isDirty(): boolean {
     return this._isDirty ;
@@ -196,29 +203,33 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this._isDirty = true;
   }
 
-  get policyEffectiveDate() : Date | Moment | null {
+  get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
   }
-  set policyEffectiveDate(value: Date | Moment | null) {
+  set policyEffectiveDate(value: Date | null) {
     this._policyEffectiveDate = value;
     this._isDirty = true;
+    this.setWarnings();
   }
 
-  get policyExpirationDate() : Date | Moment | null {
+  get policyExpirationDate() : Date | null {
     return this._policyExpirationDate;
   }
-  set policyExpirationDate(value: Date | Moment | null) {
+  set policyExpirationDate(value: Date | null) {
     this._policyExpirationDate = value;
     this._isDirty = true;
+    this.setWarnings();
   }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
+    super();
     if (quote) {
       this.existingInit(quote);
     } else if (program && submission) {
       this.newInit(program, submission);
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
+    this.setWarnings();
     //this.validate();
   }
   existingInit(quote: Quote) {
@@ -230,6 +241,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
     this.admittedStatus = quote.admittedStatus || '';
     this.status = quote.status || 0;
+    this.statusDescription = quote.statusDescription || '';
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
@@ -269,6 +281,22 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     }
     this.quotePolicyForms = policyForms;
 
+    const subs: QuoteSubjectivitiesClass[] = [];
+    if(quote.subjectivityData) {
+      quote.subjectivityData.forEach((element) => {
+        subs.push(new QuoteSubjectivitiesClass(element));
+      });
+    }
+    this.subjectivityData = subs;
+
+    const disclaimers: QuoteDisclaimersClass[] = [];
+    if(quote.disclaimerData) {
+      quote.disclaimerData.forEach((element) => {
+        disclaimers.push(new QuoteDisclaimersClass(element));
+      });
+    }
+    this.disclaimerData = disclaimers;
+
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -291,8 +319,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.terrorismTemplateCode = program.selectedCoverageCarrierMapping?.defTRIATemplateCode || '';
     this.coverageCode = program.selectedCoverageCarrierMapping?.coverageCode || 0;
     this.admittedStatus = program.selectedCoverageCarrierMapping?.admittedStatus || '';
-    this.policyEffectiveDate = submission.polEffDate;
-    this.policyExpirationDate = submission.polExpDate;
+    this.policyEffectiveDate = submission.policyEffectiveDate;
+    this.policyExpirationDate = submission.policyExpirationDate;
     this.programId = program.programId;
     this.status = 1;
     this.riskState = '';
@@ -300,8 +328,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
 
   markClean() {
     this._isDirty = false;
-    //////////////////////////////
-    this.quoteDirty = false;
+    this.showDirty = false;
   }
   markDirty() {
     this._isDirty = true;
@@ -320,6 +347,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   afterSave() {
     if (this._validationResults.canBeSaved) {
       this.markStructureClean();
+      this.showDirty = false;
     }
   }
   abstract markChildrenClean(): void;
@@ -413,7 +441,10 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
     const forms: PolicyForm[] = [];
     this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
-    console.log(this.riskState);
+    const subjectivities: Subjectivities[] = [];
+    this.subjectivityData.forEach(c => subjectivities.push(c.toJSON()));
+    const disclaimers: Disclaimers[] = [];
+    this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -423,6 +454,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       policyEffectiveDate: this.policyEffectiveDate,
       policyExpirationDate: this.policyExpirationDate,
       status: this.status,
+      statusDescription: this.statusDescription,
       claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
       admittedStatus: this.admittedStatus,
       policyNumber: this.policyNumber,
@@ -441,6 +473,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       quoteRates: rates,
       quoteLineItems: lineItems,
       quotePolicyForms: forms,
+      subjectivityData: subjectivities,
+      disclaimerData: disclaimers,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,

@@ -1,3 +1,13 @@
 .mapping-error {
   background-color: yellow;
 }
+
+.text-cell {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.alert-bar {
+  margin-top: 2px;
+  padding: 4px;
+}

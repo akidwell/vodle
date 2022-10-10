@@ -8,7 +8,7 @@ import { HistoricRoute } from 'src/app/core/models/historic-route';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
-import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
+import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 import { InsuredClass } from '../../classes/insured-class';
 import { Insured } from '../../models/insured';

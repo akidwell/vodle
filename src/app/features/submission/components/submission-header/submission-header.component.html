@@ -10,7 +10,7 @@
       class="form-control"
       [required]="canEditSubmission && submission.policyDateRequired"
       [readonly]="!canEditSubmission || submission.policyDateReadonly"
-      [(ngModel)]="submission.polEffDate"
+      [(ngModel)]="submission.policyEffectiveDate"
       name="polEffDate"
       #polEffDate="ngModel"
     />
@@ -34,7 +34,7 @@
       class="form-control"
       [required]="canEditSubmission && submission.policyDateRequired"
       [readonly]="!canEditSubmission || submission.policyDateReadonly"
-      [(ngModel)]="submission.polExpDate"
+      [(ngModel)]="submission.policyExpirationDate"
       name="polExpDate"
       #polExpDate="ngModel"
     />

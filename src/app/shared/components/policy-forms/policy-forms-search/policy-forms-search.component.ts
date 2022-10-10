@@ -10,6 +10,7 @@ import {
   catchError,
   of,
   distinctUntilChanged,
+  lastValueFrom,
 } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
@@ -17,7 +18,8 @@ import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuotePolicyFormClass } from 'src/app/features/quote/classes/quote-policy-forms-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
-import { SpecimenPacketService } from '../services/policy-forms.service';
+import { PolicyFormsService } from '../services/policy-forms.service';
+import { newVariableFormRequest } from '../services/variable-form-request';
 
 @Component({
   selector: 'rsps-policy-forms-search',
@@ -39,7 +41,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
 
   constructor(
     userAuth: UserAuth,
-    private specimenPacketService: SpecimenPacketService,
+    private policyFormsService: PolicyFormsService,
     private messageDialogService: MessageDialogService
   ) {
     super(userAuth);
@@ -47,7 +49,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
 
   ngOnInit(): void {}
 
-  add() {
+  async add() {
     if (this._selected) {
       this._selected.isIncluded = true;
       this._selected.formIndex = 1;
@@ -70,23 +72,47 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
             }
           });
           this._selected.formIndex = index + 1;
-          this.addForm(this._selected);
+          await this.addForm(this._selected);
           this.refreshForms.emit();
         }
       } else {
-        this.addForm(this._selected);
+        await this.addForm(this._selected);
         this.refreshForms.emit();
       }
     }
   }
 
-  private addForm(form: QuotePolicyFormClass) {
-    if (form) {
-      form.quoteId = this.quote.quoteId;
-      form.markDirty();
-      this.quote.quotePolicyForms.push(form);
+  private async addForm(form: QuotePolicyFormClass) {
+    if (form && form.formName) {
+      const cloneForm = Object.create(form);
+      const request = newVariableFormRequest();
+      request.companycode = this.quote.submission.companyCode ?? 3;
+      request.businessUnit = '*';
+      request.departmentCode = this.quote.submission.departmentCode?.toString() ?? '*';
+      request.effectiveDate = this.quote.policyEffectiveDate;
+      request.formName = form.formName;
+      request.pacCode = this.quote.pacCode;
+      request.programId = this.quote.programId;
+      request.underwriterId = this.quote.submission.underwriter?.toString() ?? '*';
+      request.producerCode = this.quote.submission.producerCode;
+
+      const response$ = this.policyFormsService.getVariableFormData(request);
+      await lastValueFrom(response$)
+        .then((isVariable) => {
+          if (isVariable.length > 0) {
+            cloneForm.formData = isVariable;
+            cloneForm.isVariable = true;
+          }
+        })
+        .catch(() => {
+          // If an error just default to false, it will try to pick it up again on fetch
+          cloneForm.isVariable = false;
+        });
+      cloneForm.quoteId = this.quote.quoteId;
+      cloneForm.markDirty();
+      this.quote.quotePolicyForms.push(cloneForm);
       this.quote.sortForms();
-      if (!form.allowMultiples) {
+      if (!cloneForm.allowMultiples) {
         this.searchFormName = '';
         this._selected = null;
         this.canAddForm = false;
@@ -123,7 +149,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
     );
 
   performSearch(term: string): Observable<QuotePolicyFormClass[]> {
-    return this.specimenPacketService.searchForms(term).pipe(
+    return this.policyFormsService.searchForms(term).pipe(
       tap((response) => {
         this.quote.quotePolicyForms.map((c) => {
           const match = response.find((r) => r.formName == c.formName);

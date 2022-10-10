@@ -7,6 +7,7 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { DepartmentClass } from '../../classes/department-class';
 import { ProgramClass } from '../../classes/program-class';
 import { PropertyQuoteClass } from '../../classes/property-quote-class';
+import { Quote } from '../../models/quote';
 import { PropertyDataService } from '../property-data.service';
 import { QuoteService } from '../quote-service/quote.service';
 
@@ -55,18 +56,12 @@ export class QuoteSavingService {
       this.isSaving = true;
       const results$ = this.quoteService.updateAllQuotes(department);
       await lastValueFrom(results$).then(async savedDepartment => {
-        console.log(savedDepartment.sequenceNumber);
+        // Try to match the saved quotes by Id to the existing program quotes to refresh any saved data
         savedDepartment.programMappings.map(c => {
           if (c.quoteData?.propertyQuote != null) {
             const savedQuote = new PropertyQuoteClass(c.quoteData);
-            this.program?.quoteData?.onSave(savedQuote);
-            ////////////////////////
-            //department.validationResults.isDirty = false;
-            department.programMappings.map(c => {
-              if (c.quoteData) {
-                //c.quoteData.validationResults.isDirty = false;
-              }
-            });
+            const match = department.programMappings.filter(pm => pm.quoteData?.quoteId == c.quoteData?.quoteId);
+            match.map(m => m.quoteData?.onSave(savedQuote));
           }
         });
         if (isNew && savedDepartment.sequenceNumber !== null) {
@@ -89,7 +84,7 @@ export class QuoteSavingService {
       this.isSaving = true;
       const results$ = this.quoteService.updateQuote(quote);
       await lastValueFrom(results$)
-        .then(async (quoteData) => {
+        .then(async (quoteData: Quote) => {
           const savedQuote = new PropertyQuoteClass(quoteData);
           this.program?.quoteData?.onSave(savedQuote);
           quote.sequenceNumber = savedQuote.sequenceNumber;
@@ -102,8 +97,6 @@ export class QuoteSavingService {
             delay: 5000,
           });
           this.isSaving = false;
-          ////////////////////////
-          //quote.validationResults.isDirty = false;
           return true;
         })
         .catch((error) => {
