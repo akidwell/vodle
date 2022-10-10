@@ -38,7 +38,8 @@
       </div>
       <div *ngFor="let item of optionalPremiumData; let i = index">
         <rsps-optional-premium (copyExisitingOptionalPremium)=copyOptionalPremium($event) [type]="type"
-          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [coverages]="coverages" [optionalPremiumData]=item>
+          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [coveragesObs$]="coverages$"
+          [deductibleCodes$]="deductibleCodes$" [deductibleTypes$]="deductibleTypes$" [optionalPremiumData]=item>
         </rsps-optional-premium>
       </div>
     </div>

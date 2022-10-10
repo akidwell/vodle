@@ -22,11 +22,11 @@ import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-m
   styleUrls: ['./optional-premium.component.css']
 })
 export class OptionalPremiumComponent extends SharedComponentBase {
-
   optionalPremiumList!: OptionalPremiumClass[];
   confirmation = '';
   buildingsSub!: Subscription;
-  //canEditSubmission = false;
+  coveragesSub!: Subscription;
+
   collapsed = true;
   firstExpand = true;
   faArrowUp = faAngleUp;
@@ -34,6 +34,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   isHover = false;
   buildingList!: Code[];
   coverageCodes: Code[] = [];
+  blockResetOnLoad = true;
 
   isPremiumMappingSet = false;
   isSubjectToMaxAmountAvailable = false;
@@ -43,62 +44,25 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   isDeductibleRequired = false;
   isAdditionalDetailRequired = false;
   isAdditionalPremiumRequired = false;
+  coverages: OptionalPremiumMapping[] = [];
 
   @Input() canDrag = false;
-
 
   private modalRef!: NgbModalRef;
   @Output() copyExisitingOptionalPremium: EventEmitter<OptionalPremiumClass> = new EventEmitter();
   @Output() deleteExistingOptionalPremium: EventEmitter<OptionalPremiumClass> = new EventEmitter();
-  @Input() coverages: OptionalPremiumMapping[];
+  @Input() coveragesObs$!: Observable<OptionalPremiumMapping[]>;
   @Input() optionalPremiumData!: OptionalPremiumClass;
+  @Input() deductibleTypes$: Observable<Code[]> | undefined;
+  @Input() deductibleCodes$: Observable<Code[]> | undefined;
 
   constructor(public headerPaddingService: HeaderPaddingService,
     private confirmationDialogService: ConfirmationDialogService,
     userAuth: UserAuth,
-    private dropdowns: DropDownsService,
-    private route: ActivatedRoute,
-    private quoteService: QuoteService,
-    private addressLookupService: AddressLookupService,
-    private messageDialogService: MessageDialogService,
     private propertyDataService: PropertyDataService) {
     super(userAuth);
-
-    this.coverages = [
-      {
-        coverageCode: 1,
-        coverageDescription: 'Sewer Backup Test',
-        coverageDisplay: 'Sewer Backup',
-        coverageName: 'Sewer Backup',
-        additionalDetailRequired: true,
-        deductibleRequired: true,
-        defaultDeductibleCode: 3,
-        defaultDeductibleType: 3,
-        limitRequired: true,
-        subjectToMaxAmountRequired: true,
-        limitAvailable: true,
-        subjectToMaxAmountAvailable: true,
-        additionalPremiumRequired: false
-      },
-      {
-        coverageCode: 2,
-        coverageDescription: 'Ordinance or Law - B&C Combined Test',
-        coverageDisplay: 'Ordinance or Law - B&C Combined',
-        coverageName: 'Ordinance or Law - B&C Combined',
-        additionalDetailRequired: false,
-        deductibleRequired: false,
-        defaultDeductibleCode: 3,
-        defaultDeductibleType: 3,
-        limitRequired: false,
-        subjectToMaxAmountRequired: false,
-        limitAvailable: false,
-        subjectToMaxAmountAvailable: false,
-        additionalPremiumRequired: false
-      }
-    ];
   }
   ngOnInit(): void {
-    //this.anchorId = 'focusHere' + this.mortgageeData.mortgageHolder;
     if (this.optionalPremiumData.isNew) {
       this.collapseExpand(false);
       this.focus();
@@ -111,18 +75,18 @@ export class OptionalPremiumComponent extends SharedComponentBase {
         }
       }
     });
+    this.coveragesSub = this.coveragesObs$.subscribe({
+      next: result => {
+        this.coverages = result;
+        this.setActiveCoverageMapping(this.optionalPremiumData.coverageCode);
+      }
+    });
 
-    // this.coverageCodes = [{key: 1, description: 'Sewer Backup', code: '1'},
-    //   {key: 2, description: 'Ordinance or Law - B&C Combined', code: '2'},
-    //   {key: 3, description: 'Equipment Breakdown', code: '3'},
-    //   {key: 4, description: 'Enhancement Endorsement - Package A', code: '4'}
-    // ];
-    console.log(this.type);
-    this.setActiveCoverageMapping(this.optionalPremiumData.coverageCode);
     this.handleSecurity(this.type);
   }
   ngOnDestroy(): void {
     this.buildingsSub.unsubscribe();
+    this.coveragesSub.unsubscribe();
   }
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();
@@ -140,21 +104,12 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   }
 
   async delete() {
-    console.log(this.coverages);
-    if (this.optionalPremiumData.isNew) {
-      setTimeout(() => {
-        this.deleteExistingOptionalPremium.emit(this.optionalPremiumData);
-      });
-    } else {
-      //const results$ = this.quoteService.deleteMortgagee(this.mortgageeData);
-      // return await lastValueFrom(results$).then(() => {
-      //   this.deleteExistingMortgagee.emit(this.mortgageeData);
-      // });
-    }
+    setTimeout(() => {
+      this.deleteExistingOptionalPremium.emit(this.optionalPremiumData);
+    });
   }
 
   copy(): void {
-    console.log(this.optionalPremiumData);
     this.copyExisitingOptionalPremium.emit(this.optionalPremiumData);
   }
 
@@ -179,14 +134,19 @@ export class OptionalPremiumComponent extends SharedComponentBase {
     if (coverageCode === null) {
       this.optionalPremiumData.premiumMapping = null;
     }
-    this.coverages.forEach(element => {
-      if(element.coverageCode == coverageCode) {
-        console.log(element);
-        this.optionalPremiumData.premiumMapping = element;
-        this.setFlags();
-        this.resetOptions();
-      }
-    });
+    if (this.coverages) {
+      this.coverages.forEach(element => {
+        if(element.coverageCode == coverageCode) {
+          console.log(element);
+          this.optionalPremiumData.premiumMapping = element;
+          this.setFlags();
+          this.resetOptions();
+          if(this.isSubjectToMaxAmountRequired) {
+            this.optionalPremiumData.isSubjectToMaxAmount = true;
+          }
+        }
+      });
+    }
   }
 
   setFlags() {
@@ -201,13 +161,16 @@ export class OptionalPremiumComponent extends SharedComponentBase {
 
   }
   resetOptions() {
-    this.optionalPremiumData.additionalPremium = null;
-    this.optionalPremiumData.deductible = null;
-    this.optionalPremiumData.deductibleCode = null;
-    this.optionalPremiumData.deductibleType = null;
-    this.optionalPremiumData.hasDeductible = false;
-    this.optionalPremiumData.subjectToMaxAmount = false;
-    this.optionalPremiumData.subjectToMaxPercent = null;
+    if (!this.blockResetOnLoad) {
+      this.optionalPremiumData.additionalPremium = null;
+      this.optionalPremiumData.deductible = null;
+      this.optionalPremiumData.deductibleCode = null;
+      this.optionalPremiumData.deductibleType = null;
+      this.optionalPremiumData.isDeductibleSelected = false;
+      this.optionalPremiumData.isSubjectToMaxAmount = false;
+      this.optionalPremiumData.subjectToMaxPercent = null;
+    }
+    this.blockResetOnLoad = false;
   }
 }
 

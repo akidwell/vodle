@@ -5,8 +5,6 @@ export interface OptionalPremiumMapping {
   coverageDescription: string;
   coverageDisplay: string;
   additionalDetailRequired: boolean;
-  defaultDeductibleType: number;
-  defaultDeductibleCode: number;
   subjectToMaxAmountAvailable: boolean;
   subjectToMaxAmountRequired: boolean;
   limitAvailable: boolean;

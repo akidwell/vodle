@@ -8,6 +8,7 @@ import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
+import { QuoteOptionalPremiumClass } from './quote-optional-premium-class';
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation, QuoteAfterSave {
   private _isDirty = false;
@@ -21,6 +22,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   propertyQuoteBuildingId = 0;
   propertyQuoteId = 0;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
+  propertyQuoteBuildingOptionalCoverage: QuoteOptionalPremiumClass[] = [];
+
   taxCode: string | null = null;
 
   private _subjectNumber: number | null = null;

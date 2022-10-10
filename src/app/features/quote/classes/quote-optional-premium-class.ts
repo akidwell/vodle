@@ -3,32 +3,45 @@ import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-cl
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
 
 export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
-  private _propertyQuoteId = 0;
+  private _quoteId = 0;
+  private _propertyQuoteBuildingOptionalCoverageId: number;
 
-  constructor(optionalPremium?: QuoteOptionalPremium) {
+  constructor(optionalPremium?: QuoteOptionalPremium, quoteId?: number) {
     super(optionalPremium);
-    this._propertyQuoteId = optionalPremium?.quoteId || 0;
+    this._quoteId = quoteId || 0;
+    this._propertyQuoteBuildingOptionalCoverageId = optionalPremium ? optionalPremium.propertyQuoteBuildingOptionalCoverageId : 0;
   }
 
-  get propertyQuoteId() : number {
-    return this._propertyQuoteId;
+  get quoteId() : number {
+    return this._quoteId;
   }
 
-  set propertyQuoteId(value: number) {
-    this._propertyQuoteId = value;
+  set quoteId(value: number) {
+    this._quoteId = value;
     this.markDirty();
   }
-  
+  get propertyQuoteBuildingOptionalCoverageId() : number {
+    return this._propertyQuoteBuildingOptionalCoverageId;
+  }
+
+  set propertyQuoteBuildingOptionalCoverageId(value: number) {
+    this._propertyQuoteBuildingOptionalCoverageId = value;
+    this.markDirty();
+  }
   classValidation() {
     this.invalidList = [];
     this.canBeSaved = true;
-    // if (!this.validateAmount()) {
-    //   valid = false;
-    // }
 
-    this.errorMessages = this.invalidList;
-    // this._canBeSaved = true;
-    // this._isValid = true;
+    this.validateLimit();
+    this.validateBuilding();
+    this.validateDeductible();
+    this.validateDeductibleType();
+    this.validateDeductibleCode();
+    this.validateSubjectToMaxAmount();
+    this.validateAdditionalDetail();
+    this.validateAdditionalPremium();
+
+    this.setErrorMessages();
   }
   copy(): QuoteOptionalPremium {
     const cloned = deepClone(this.toJSON());
@@ -36,18 +49,21 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
   }
   toJSON(): QuoteOptionalPremium {
     return {
+      propertyQuoteBuildingOptionalCoverageId: this._propertyQuoteBuildingOptionalCoverageId,
       buildingNumber: this.buildingNumber,
       premisesNumber: this.premisesNumber,
-      quoteId: this.propertyQuoteId,
+      isAppliedToAll: this.isAppliedToAll,
+      quoteId: this._quoteId,
       limit: this.limit,
       deductible: this.deductible,
       deductibleCode: this.deductibleCode,
       deductibleType: this.deductibleType,
       additionalPremium: this.additionalPremium,
       coverageCode: this.coverageCode,
-      subjectToMaxAmount: this.subjectToMaxAmount,
+      isSubjectToMaxAmount: this.isSubjectToMaxAmount,
       subjectToMaxPercent: this.subjectToMaxPercent,
-      hasDeductible: this.hasDeductible,
+      isDeductibleSelected: this.isDeductibleSelected,
+      additionalDetail: this.additionalDetail,
       guid: this.guid,
       isNew: this.isNew
     };

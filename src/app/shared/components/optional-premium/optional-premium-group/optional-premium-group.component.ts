@@ -3,7 +3,7 @@ import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-class';
@@ -17,6 +17,8 @@ import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quot
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import * as moment from 'moment';
 import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
+import { Code } from 'src/app/core/models/code';
+import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 
 @Component({
   selector: 'rsps-optional-premium-group',
@@ -24,6 +26,8 @@ import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-m
   styleUrls: ['./optional-premium-group.component.css']
 })
 export class OptionalPremiumGroupComponent extends SharedComponentBase implements OnInit {
+  deductibleTypes$: Observable<Code[]> | undefined;
+  deductibleCodes$: Observable<Code[]> | undefined;
   invalidMessage = '';
   showInvalid = false;
   color: ThemePalette = 'warn';
@@ -39,31 +43,41 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   effectiveDate!: Date | Moment | null;
   quoteId = 0;
   programSub!: Subscription;
-  coverages: OptionalPremiumMapping[] = [];
+  deleteSub!: Subscription;
+  coverages$!: Observable<OptionalPremiumMapping[]>;
   @Input() public totalPrem!: number | null;
 
-  constructor(private notification: NotificationService, userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService, private dropdowns: DropDownsService) {
+  constructor(private notification: NotificationService,
+    userAuth: UserAuth,
+    private route: ActivatedRoute,
+    private pageDataService: PageDataService,
+    private quoteService: QuoteService,
+    private dropdowns: DropDownsService) {
     super(userAuth);
-  }
-
-  ngOnInit(): void {
-    console.log(this.type);
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         this.program = selectedProgram;
-        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyOptionalPremiumList){
-          this.optionalPremiumData = this.program?.quoteData?.propertyOptionalPremiumList;
+        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuoteBuildingOptionalCoverage){
+          this.optionalPremiumData = this.program?.quoteData?.propertyQuoteBuildingOptionalCoverage;
           this.quoteLineItemData = this.program?.quoteData?.quoteLineItems;
           this.riskState = this.program?.quoteData?.riskState;
           this.effectiveDate = this.program?.quoteData.policyEffectiveDate;
+          this.deductibleTypes$ = this.dropdowns.getDeductibleTypes(this.program.programId);
+          this.deductibleCodes$ = this.dropdowns.getDeductibleCodes(this.program.programId);
         }
       });
-    this.populateOptionalCoverages();
+    const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate?.toString();
+
+    this.coverages$ = this.dropdowns.getPropertyOptionalCoverages(this.program?.programId || 0, effectiveDate || moment.toString());
+  }
+
+  ngOnInit(): void {
     this.collapsed = false;
     this.handleSecurity(this.type);
   }
   ngOnDestroy(): void {
     this.programSub.unsubscribe();
+    this.deleteSub.unsubscribe();
   }
   isValid(): boolean {
     let valid = true;
@@ -84,20 +98,7 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   hideInvalid(): void {
     this.showInvalid = false;
   }
-  async populateOptionalCoverages(): Promise<void> {
-    if (this.program && this.effectiveDate) {
-      const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate.toString();
 
-      const results$ = this.dropdowns.getPropertyOptionalCoverages(this.program.programId, effectiveDate);
-
-      await lastValueFrom(results$).then(
-        coverages => {
-          console.log(coverages);
-          this.coverages = coverages;
-        }
-      );
-    }
-  }
   copyOptionalPremium(optionalPremium: OptionalPremiumClass) {
     let newOptionalPremium: OptionalPremiumClass | null = null;
 
@@ -117,22 +118,38 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   }
 
   deleteExistingOptionalPremium(optionalPremium: OptionalPremiumClass) {
+    if (optionalPremium instanceof PolicyOptionalPremiumClass) {
+      return;
+    }
+    if (optionalPremium instanceof QuoteOptionalPremiumClass) {
+      console.log(optionalPremium);
+      this.deleteQuoteOptionalPremium(optionalPremium);
+    }
+  }
+  deleteQuoteOptionalPremium(optionalPremium: QuoteOptionalPremiumClass) {
     const index = this.optionalPremiumData?.indexOf(optionalPremium, 0);
     if (index > -1) {
       this.optionalPremiumData?.splice(index, 1);
-      if (!optionalPremium.isNew) {
-        this.notification.show('Optional Premium deleted.', { classname: 'bg-success text-light', delay: 5000 });
+      if (!optionalPremium.isNew && optionalPremium.propertyQuoteBuildingOptionalCoverageId != null) {
+        this.deleteSub = this.quoteService
+          .deleteOptionalCoverage(optionalPremium.propertyQuoteBuildingOptionalCoverageId)
+          .subscribe((result) => {
+            if (result) {
+              setTimeout(() => {
+                this.notification.show('Optional Coverage deleted.', { classname: 'bg-success text-light', delay: 5000 });
+              });
+            }
+          });
       }
     }
   }
-
   addNewOptionalPremium(): void {
     let optionalPremium: OptionalPremiumClass | null;
     if (this.type === SharedComponentType.Policy) {
       optionalPremium = new PolicyOptionalPremiumClass();
       this.optionalPremiumData.push(optionalPremium);
     } else if (this.type === SharedComponentType.Quote) {
-      optionalPremium = new QuoteOptionalPremiumClass();
+      optionalPremium = new QuoteOptionalPremiumClass(undefined, this.program?.quoteData?.quoteId);
       this.optionalPremiumData.push(optionalPremium);
     }
   }

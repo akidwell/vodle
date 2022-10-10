@@ -46,6 +46,9 @@ export class QuoteService {
   deleteDeductible(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-deductibles/' + id);
   }
+  deleteOptionalCoverage(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/optional-coverage/' + id);
+  }
   deleteAllBuildings(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/property-quote/' + id + '/property-buildings');
   }
