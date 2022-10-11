@@ -109,6 +109,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
           cloneForm.isVariable = false;
         });
       cloneForm.quoteId = this.quote.quoteId;
+      cloneForm.attachmentMethod = 'U';
       cloneForm.markDirty();
       this.quote.quotePolicyForms.push(cloneForm);
       this.quote.sortForms();

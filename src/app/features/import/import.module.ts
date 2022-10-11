@@ -10,6 +10,7 @@ import { ImportComponent } from './components/import/import.component';
 import { RemoveCommaPipe } from 'src/app/shared/pipes/remove-comma.pipe';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
+import { ScrollToTopModule } from 'src/app/core/components/scroll-to-top/scroll-to-top.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DirectivesModule } from 'src/app/shared/directives/directives.module';
     NgbModule,
     ReactiveFormsModule,
     BusyModule,
-    DirectivesModule
+    DirectivesModule,
+    ScrollToTopModule
   ],
   providers: [DecimalPipe]
 })

@@ -38,6 +38,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   expiringFormsCount = 0;
   isSaving = false;
   saveSub!: Subscription;
+  isBusy = false;
   private _forms!: PolicyFormClass[];
 
   @ViewChild('modal') private groupEditComponent!: PolicyFormVariableComponent;
@@ -211,5 +212,31 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
 
   checkIncluded() {
     this.setFormCounts();
+  }
+
+  async getQuote() {
+    // this.policyFormsService.getQuote(this.quote.quoteId);
+    this.isBusy = true;
+    const response$ = this.policyFormsService.getQuote(this.quote.quoteId);
+    await lastValueFrom(response$).then((guideline) => {
+      if (guideline) {
+
+        const file = new Blob([guideline], { type: 'application/octet-stream' });
+        // const fileURL = URL.createObjectURL(file);
+        // window.open(fileURL,'test.pdf');
+
+        const element = document.createElement('a');
+        element.href = URL.createObjectURL(file);
+        element.download = 'QL-' + this.quote.submissionNumber + 'Q' + this.quote.quoteNumber + '.docx';
+        document.body.appendChild(element);
+        element.click();
+        this.isBusy = false;
+      }
+    })
+      .catch((error) => {
+        this.isBusy = false;
+        const message = String.fromCharCode.apply(null, new Uint8Array(error.error) as any);
+        this.messageDialogService.open('Quote Letter Error', message);
+      });
   }
 }
