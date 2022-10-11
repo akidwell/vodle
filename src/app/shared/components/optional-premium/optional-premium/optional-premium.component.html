@@ -265,6 +265,7 @@
             class="form-control"
             id="additionalComment"
             name="additionalComment"
+            maxlength="50"
             [readonly]="!canEdit || !isPremiumMappingSet"
             [(ngModel)]="optionalPremiumData.additionalDetail"
             #additionalComment="ngModel"

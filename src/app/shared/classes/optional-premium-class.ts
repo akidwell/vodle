@@ -37,7 +37,6 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
 
   constructor(optionalPremium?: OptionalPremium){
     super();
-    console.log(optionalPremium);
     if (optionalPremium) {
       this.existingInit(optionalPremium);
     } else {
