@@ -38,6 +38,7 @@
                             (click)="selectView(formViewType.Expiring)">
                         <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-dark hide-select" for="radioExpiring">Expiring ({{expiringFormsCount}})</label>
                     </div>
+                    <button type="button" class="btn btn-secondary" (click)="getQuote()">Quote</button>
                 </div>
                 <div class ="col-lg-6">
                     <rsps-policy-forms-search [type]="type" [quote]="quote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>
@@ -67,9 +68,9 @@
                                     [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
-                                <fa-icon *ngIf="form.isVariable && form.isIncluded" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
+                                <fa-icon *ngIf="form.isVariable && form.isIncluded && canEdit" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
                                     ngbTooltip="Edit Variable Form"></fa-icon>
-                                <fa-icon *ngIf="form.isVariable && !form.isIncluded" class="faEdit fa-xl pointer disabled" [icon]="faEdit" ngbTooltip="Edit Variable Form"></fa-icon>
+                                <fa-icon *ngIf="form.isVariable && (!form.isIncluded || !canEdit)" class="faEdit fa-xl pointer disabled" [icon]="faEdit" ngbTooltip="Edit Variable Form"></fa-icon>
                                 <fa-icon *ngIf="false" class="faCircleE fa-l"
                                     ngbTooltip="Optional Form selected on Expiring Submission" [icon]="faCircleE">
                                 </fa-icon>
@@ -120,3 +121,4 @@
 </div>
 <rsps-scroll-to-top></rsps-scroll-to-top>
 <rsps-policy-form-variable #modal [canEdit]="canEdit"></rsps-policy-form-variable>
+<rsps-busy *ngIf="isBusy" message="Loading..."></rsps-busy>

@@ -57,6 +57,21 @@ export class PolicyFormsService {
     return this.http.post(this.config.apiBaseUrl + 'api/forms/variable-form', form, { headers, responseType: 'arraybuffer'});
   }
 
+  getQuote(quoteId: number) {
+    const params = new HttpParams().append('quoteId', quoteId);
+    const headers = { 'Content-Type': 'application/octet-stream'};
+    return this.http.get(this.config.apiBaseUrl + 'api/forms/quote-letter', { params, headers, responseType: 'arraybuffer'});
+    // return this.http.get(this.config.apiBaseUrl + 'api/forms/quote-letter', { params, headers, responseType: 'arraybuffer', observe: 'response'});
+    //  .subscribe((c: any) => {
+    //   console.log(c.headers.get('content-disposition'));
+    // }
+    //   );
+      // .pipe(map((res: any) => {
+      //   console.log(res.headers.get('content-disposition'));
+      //   return res;
+      // }));
+  }
+
   searchForms(searchValue: string): Observable<QuotePolicyFormClass[]> {
     const params = new HttpParams().append('searchValue', searchValue ?? '');
     return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/forms/forms-search', { params}).pipe(
