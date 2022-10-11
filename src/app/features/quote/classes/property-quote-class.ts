@@ -454,6 +454,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.quoteLineItems);
     this._validationResults.validateChildrenAndMerge(this.quotePolicyForms);
     this._validationResults.validateChildrenAndMerge(this.subjectivityData);
+    this._validationResults.validateChildrenAndMerge(this.disclaimerData);
 
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
@@ -472,6 +473,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.quoteRates);
     this.childArrayValidate(this.quotePolicyForms);
     this.childArrayValidate(this.subjectivityData);
+    this.childArrayValidate(this.disclaimerData);
   }
   childArrayValidate(children: Validation[]) {
     children.forEach(child => {
@@ -487,6 +489,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.quoteRates);
     this.cleanChildArray(this.quotePolicyForms);
     this.cleanChildArray(this.subjectivityData);
+    this.cleanChildArray(this.disclaimerData);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -587,8 +590,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   validateTermsAndConditionsTab() {
     this.termsAndConditionsTabValidation?.resetValidation();
-    console.log(this.subjectivityData);
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.subjectivityData);
+    this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.disclaimerData);
     console.log('TODO: Validate T&C');
   }
   validateMortgageeAdditionalInterestTab() {
@@ -668,6 +671,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveAdditionalInterest(this.propertyQuoteAdditionalInterestList,savedQuote);
     this.onSaveForms(savedQuote);
     this.onSaveSubjectivities(savedQuote);
+    this.onSaveDisclaimers(savedQuote);
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -676,6 +680,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   private onSaveSubjectivities(savedQuote: PropertyQuoteClass) {
     this.subjectivityData = savedQuote.subjectivityData;
+  }
+  private onSaveDisclaimers(savedQuote: PropertyQuoteClass) {
+    this.disclaimerData = savedQuote.disclaimerData;
   }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {

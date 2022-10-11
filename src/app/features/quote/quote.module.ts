@@ -50,6 +50,7 @@ import { QuoteLineItemsModule } from './components/common/quote-line-items/quote
 import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy-forms.module';
 import { PropertyImportModule } from 'src/app/shared/components/property-import/property-import.module';
 import { SubjectivitiesModule } from 'src/app/shared/components/subjectivities/subjectivities.module';
+import { DisclaimersModule } from 'src/app/shared/components/disclaimers/disclaimers.module';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { SubjectivitiesModule } from 'src/app/shared/components/subjectivities/s
     FormsModule,
     PolicyFormsModule,
     SubjectivitiesModule,
+    DisclaimersModule,
     NgxMaskModule.forRoot()
   ],
   providers: [
