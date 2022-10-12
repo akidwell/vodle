@@ -27,6 +27,7 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   categorySequence: number | null = null;
   sortSequence: number | null = null;
   formIndex: number | null = null;
+  attachmentMethod: string | null = null;
   allowMultiples: boolean | null = null;
   canAdd = true;
 
@@ -97,12 +98,15 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.sortSequence = policyForm.sortSequence;
     this.formIndex = policyForm.formIndex;
     this.allowMultiples = policyForm.allowMultiples;
+    this.attachmentMethod = policyForm.attachmentMethod;
     this._isIncluded = policyForm.isIncluded;
     this._formData = policyForm.formData;
   }
 
   newInit() {
     //this.isNew = true;
+    // Always default to User added
+    this.attachmentMethod = 'U';
   }
 
   validate(){
