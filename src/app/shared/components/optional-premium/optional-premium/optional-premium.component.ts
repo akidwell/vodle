@@ -137,7 +137,6 @@ export class OptionalPremiumComponent extends SharedComponentBase {
     if (this.coverages) {
       this.coverages.forEach(element => {
         if(element.coverageCode == coverageCode) {
-          console.log(element);
           this.optionalPremiumData.premiumMapping = element;
           this.setFlags();
           this.resetOptions();

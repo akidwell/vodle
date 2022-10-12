@@ -51,6 +51,10 @@ import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy
 import { PropertyImportModule } from 'src/app/shared/components/property-import/property-import.module';
 import { SubjectivitiesModule } from 'src/app/shared/components/subjectivities/subjectivities.module';
 import { DisclaimersModule } from 'src/app/shared/components/disclaimers/disclaimers.module';
+import { QuoteSummaryCoveragesDetailComponent } from './components/common/quote-summary-coverages-detail/quote-summary-coverages-detail.component';
+import { QuoteSummarySubmissionInfoComponent } from './components/common/quote-summary-submission-info/quote-summary-submission-info.component';
+import { QuoteSummaryQuoteBindComponent } from './components/common/quote-summary-quote-bind/quote-summary-quote-bind.component';
+import { QuoteSummaryPremiumDetailComponent } from './components/common/quote-summary-premium-detail/quote-summary-premium-detail.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +68,10 @@ import { DisclaimersModule } from 'src/app/shared/components/disclaimers/disclai
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
+    QuoteSummaryCoveragesDetailComponent,
+    QuoteSummarySubmissionInfoComponent,
+    QuoteSummaryQuoteBindComponent,
+    QuoteSummaryPremiumDetailComponent,
     QuoteSubmissionComponent,
     QuoteProgramBaseComponent,
     QuotePropertyLocationCoverageComponent,
