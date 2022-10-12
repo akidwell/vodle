@@ -12,6 +12,7 @@ export interface PolicyForm {
     categorySequence: number | null;
     sortSequence: number | null;
     formIndex: number | null;
+    attachmentMethod: string | null;
     allowMultiples: boolean | null;
     formData: VariableFormData[] | null;
  }

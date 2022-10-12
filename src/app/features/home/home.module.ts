@@ -22,6 +22,7 @@ import { InsuredSearchResultsComponent } from './components/insured-search-resul
 import { PolicySearchResultsComponent } from './components/policy-search-results/policy-search-results.component';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 import { PacerSearchResultsComponent } from './components/pacer-search-results/pacer-search-results.component';
+import { ScrollToTopModule } from 'src/app/core/components/scroll-to-top/scroll-to-top.module';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { PacerSearchResultsComponent } from './components/pacer-search-results/p
     MatNativeDateModule,
     MatFormFieldModule,
     PipesModule,
-    SubmissionActivityModule
+    SubmissionActivityModule,
+    ScrollToTopModule
   ],
   providers: [
     DatePipe,
