@@ -55,6 +55,7 @@
           click-stop-propagation
           string-to-currency
           [allowNegative]="false"
+          [required]="isLimitRequired"
           [readonly]="!canEdit || !isLimitAvailable"
           [(ngModel)]="optionalPremiumData.limit"
           #limit="ngModel"
@@ -212,8 +213,7 @@
             [required]="
               canEdit &&
               isPremiumMappingSet &&
-              optionalPremiumData.isDeductibleSelected ||
-              !isDeductibleAvailable
+              optionalPremiumData.isDeductibleSelected
             "
             name="deductibleType"
             click-stop-propagation
