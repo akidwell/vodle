@@ -204,6 +204,9 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   isLimitRequired() {
     return this.premiumMapping && this.premiumMapping.limitAvailable ? this.premiumMapping.limitRequired : false;
   }
+  isDeductibleAvailable() {
+    return this.premiumMapping && this.premiumMapping.deductibleAvailable;
+  }
   isDeductibleRequired() {
     return this.premiumMapping && this.premiumMapping.deductibleRequired;
   }

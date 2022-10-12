@@ -41,6 +41,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   isSubjectToMaxAmountRequired = false;
   isLimitAvailable = false;
   isLimitRequired = false;
+  isDeductibleAvailable = false;
   isDeductibleRequired = false;
   isAdditionalDetailRequired = false;
   isAdditionalPremiumRequired = false;
@@ -154,6 +155,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
     this.isPremiumMappingSet = this.optionalPremiumData.isPremiumMappingSet() || false;
     this.isSubjectToMaxAmountAvailable = this.optionalPremiumData.isSubjectToMaxAmountAvailable() || false;
     this.isSubjectToMaxAmountRequired = this.optionalPremiumData.isSubjectToMaxAmountRequired() || false;
+    this.isDeductibleAvailable = this.optionalPremiumData.isDeductibleAvailable() || false;
     this.isDeductibleRequired = this.optionalPremiumData.isDeductibleRequired() || false;
     this.isAdditionalDetailRequired = this.optionalPremiumData.isAdditionalDetailRequired() || false;
     this.isAdditionalPremiumRequired = this.optionalPremiumData.isAdditionalPremiumRequired() || false;

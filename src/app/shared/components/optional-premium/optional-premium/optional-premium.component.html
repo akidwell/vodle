@@ -121,7 +121,7 @@
             (change)="optionalPremiumData.onChangeDeductible()"
             [(ngModel)]="optionalPremiumData.isDeductibleSelected"
             name="maxAmount"
-            [readonly]="!canEdit || !isPremiumMappingSet"
+            [readonly]="!canEdit || !isPremiumMappingSet || !isDeductibleAvailable"
           />
         </div>
       </div>
@@ -187,7 +187,8 @@
             [readonly]="
               !canEdit ||
               !isPremiumMappingSet ||
-              !optionalPremiumData.isDeductibleSelected
+              !optionalPremiumData.isDeductibleSelected  ||
+              !isDeductibleAvailable
             "
             [required]="
             canEdit && isPremiumMappingSet && optionalPremiumData.isDeductibleSelected
@@ -211,14 +212,16 @@
             [required]="
               canEdit &&
               isPremiumMappingSet &&
-              optionalPremiumData.isDeductibleSelected
+              optionalPremiumData.isDeductibleSelected ||
+              !isDeductibleAvailable
             "
             name="deductibleType"
             click-stop-propagation
             [readonly]="
               !canEdit ||
               !isPremiumMappingSet ||
-              !optionalPremiumData.isDeductibleSelected
+              !optionalPremiumData.isDeductibleSelected ||
+              !isDeductibleAvailable
             "
             [clearable]="false"
             [(ngModel)]="optionalPremiumData.deductibleType"

@@ -10,5 +10,6 @@ export interface OptionalPremiumMapping {
   limitAvailable: boolean;
   limitRequired: boolean;
   deductibleRequired: boolean;
+  deductibleAvailable: boolean;
   additionalPremiumRequired: boolean;
 }
