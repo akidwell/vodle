@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { SubmissionStatusDescEnum } from 'src/app/core/enums/submission-status-desc-enum';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
+import { InsuredClass } from '../../insured/classes/insured-class';
 import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
 import { Insured } from '../../insured/models/insured';
 import { Producer } from '../models/producer';
@@ -109,7 +110,7 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
   constructionWrapup: number | null = null;
   processor: number | null = null;
   submissionEventCode = '';
-  insured: Insured | null = null;
+  insured!: Insured;
   producer: Producer | null = null;
   producerContact: ProducerContactClass | null = null;
   submissionEvents: SubmissionEvent[] = [];
@@ -175,7 +176,7 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
     this.quoteActivity = sub?.quoteActivity || [];
     this.producerContact = sub?.producerContact ? new ProducerContactClass(sub?.producerContact) : null;
     this.producer = sub?.producer || null;
-    this.insured = sub?.insured || insured || null;
+    this.insured = sub?.insured || insured || new InsuredClass();
     this._extExpiringPolicyNo = sub?.extExpiringPolicyNo || null;
     this.submissionEventCode = sub?.submissionEventCode || '';
     this.processor = sub?.processor || null;

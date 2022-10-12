@@ -1,11 +1,48 @@
 <div id="insuredHeader" >
-  <div class="row" >
+  <div class="row" style="position:relative;">
     <div class="name header-field-container">
       <span class="header-field">{{insured.name}}</span>
-
     </div>
     <div class="address header-field-container">
       <span class="header-field">{{insured.city}}, {{insured.state}} {{insured.zip | zipCode }}</span>
     </div>
+    <div style="width:auto; position: absolute; right:0">
+      <button  type="button"
+      class="btn btn-primary"
+      *ngIf="pageDataService.insuredData"
+      [disabled]="pageDataService.insuredData != null && !pageDataService.insuredData.isDirty"
+      style="margin-left:8px;"
+      title="Save Insured">
+        <fa-icon
+          [icon]="faSave"
+          appPreventDoubleClick
+          (throttledClick)="preSaveInsured()"
+          [throttleTime]="700"
+        ></fa-icon>
+      </button>
+      <button  type="button"
+      class="btn btn-primary"
+      *ngIf="pageDataService.submissionData"
+      [disabled]="pageDataService.submissionData != null && !pageDataService.submissionData.isDirty"
+      style="margin-left:8px;"
+      title="Save Submission">
+        <fa-icon appPreventDoubleClick
+          (throttledClick)="saveSubmission()"
+          [throttleTime]="700"
+          [icon]="faSave"
+        ></fa-icon>
+      </button>
+      <button  type="button" *ngIf="pageDataService.lastSubmission" class="btn btn-primary" style="margin-left:8px;" title="Return to Submission">
+        <fa-icon
+          [icon]="faLeft"
+          (click)="navigateToHistoricRoute(pageDataService.lastSubmission)"
+        ></fa-icon>
+      </button>
+    </div>
   </div>
+  <rsps-insured-duplicates #modal></rsps-insured-duplicates>
+
+</div>
+<div *ngIf="isBusy">
+  <rsps-busy></rsps-busy>
 </div>

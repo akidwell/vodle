@@ -23,6 +23,7 @@ export class QuotePremiumComponent implements OnInit {
   riskState!: string| null;
   effectiveDate!: Date | Moment | null;
   quoteLineItemData!: QuoteLineItemClass[];
+  type = SharedComponentType.Quote;
 
   constructor(private pageDataService: PageDataService) {
   }

@@ -5,6 +5,7 @@ import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { OptionalPremium } from '../interfaces/optional-premium';
 import { Validation } from '../interfaces/validation';
 import { BuildingLocationClass } from './building-location-class';
+import { OptionalPremiumMapping } from '../models/optional-premium-mapping';
 
 export abstract class OptionalPremiumClass extends BuildingLocationClass implements OptionalPremium, Validation, QuoteAfterSave{
   private _isDirty = false;
@@ -16,18 +17,22 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
 
   private _coverageCode: number | null = null;
   private _limit: number | null = null;
-  private _subjectToMaxAmount = false;
   private _subjectToMaxPercent: number | null = null;
-  private _hasDeductible = false;
+  private _isSubjectToMaxAmount = false;
+  private _isDeductibleSelected = false;
   private _deductible: number | null = null;
-  private _deductibleType: number | null = null;
-  private _deductibleCode: number | null = null;
+  private _deductibleType: string | null = null;
+  private _deductibleCode: string | null = null;
   private _additionalPremium: number | null = null;
+  private _additionalDetail = '';
 
+  premiumMapping: OptionalPremiumMapping | null = null;
   isNew = false;
   guid = '';
   invalidList: string[] = [];
   isCopy = false;
+  focus = false;
+
   isZipLookup = false;
 
   constructor(optionalPremium?: OptionalPremium){
@@ -54,13 +59,6 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     this._isDirty = true;
     this._limit = value;
   }
-  get subjectToMaxAmount(): boolean {
-    return this._subjectToMaxAmount;
-  }
-  set subjectToMaxAmount(value: boolean) {
-    this._isDirty = true;
-    this._subjectToMaxAmount = value;
-  }
   get subjectToMaxPercent(): number | null {
     return this._subjectToMaxPercent;
   }
@@ -68,12 +66,19 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     this._isDirty = true;
     this._subjectToMaxPercent = value;
   }
-  get hasDeductible(): boolean {
-    return this._hasDeductible;
+  get isSubjectToMaxAmount(): boolean {
+    return this._isSubjectToMaxAmount;
   }
-  set hasDeductible(value: boolean) {
+  set isSubjectToMaxAmount(value: boolean) {
     this._isDirty = true;
-    this._hasDeductible = value;
+    this._isSubjectToMaxAmount = value;
+  }
+  get isDeductibleSelected(): boolean {
+    return this._isDeductibleSelected;
+  }
+  set isDeductibleSelected(value: boolean) {
+    this._isDirty = true;
+    this._isDeductibleSelected = value;
   }
   get deductible(): number | null {
     return this._deductible;
@@ -82,17 +87,17 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     this._isDirty = true;
     this._deductible = value;
   }
-  get deductibleType(): number | null {
+  get deductibleType(): string | null {
     return this._deductibleType;
   }
-  set deductibleType(value: number | null) {
+  set deductibleType(value: string | null) {
     this._isDirty = true;
     this._deductibleType = value;
   }
-  get deductibleCode(): number | null {
+  get deductibleCode(): string | null {
     return this._deductibleCode;
   }
-  set deductibleCode(value: number | null) {
+  set deductibleCode(value: string | null) {
     this._isDirty = true;
     this._deductibleCode = value;
   }
@@ -102,6 +107,13 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   set additionalPremium(value: number | null) {
     this._isDirty = true;
     this._additionalPremium = value;
+  }
+  get additionalDetail(): string {
+    return this._additionalDetail;
+  }
+  set additionalDetail(value: string) {
+    this._isDirty = true;
+    this._additionalDetail = value;
   }
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
@@ -139,7 +151,6 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
       //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
-      console.log(this._canBeSaved);
     }
     this._validationResults.resetValidation();
     this._validationResults.mapValues(this);
@@ -151,19 +162,22 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   existingInit(optionalPremium: OptionalPremium){
     this.buildingNumber = optionalPremium.buildingNumber;
     this.premisesNumber = optionalPremium.premisesNumber;
+    this.isAppliedToAll = optionalPremium.isAppliedToAll;
     this._coverageCode = optionalPremium.coverageCode;
     this._limit = optionalPremium.limit;
-    this._subjectToMaxAmount = optionalPremium.subjectToMaxAmount;
+    this._isSubjectToMaxAmount = optionalPremium.isSubjectToMaxAmount;
     this._subjectToMaxPercent = optionalPremium.subjectToMaxPercent;
-    this._hasDeductible = optionalPremium.hasDeductible;
+    this._isDeductibleSelected = optionalPremium.isDeductibleSelected;
     this._deductible = optionalPremium.deductible;
     this._deductibleType = optionalPremium.deductibleType;
     this._deductibleCode = optionalPremium.deductibleCode;
     this._additionalPremium = optionalPremium.additionalPremium;
+    this._additionalDetail = optionalPremium.additionalDetail;
   }
 
   newInit() {
     this.isNew = true;
+    this.isAppliedToAll = true;
     this.guid = crypto.randomUUID();
   }
   markClean() {
@@ -174,6 +188,115 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   }
   markDirty() {
     this._isDirty = true;
+  }
+  isPremiumMappingSet() {
+    return this.premiumMapping ? true : false;
+  }
+  isSubjectToMaxAmountAvailable() {
+    return this.premiumMapping && this.premiumMapping.subjectToMaxAmountAvailable;
+  }
+  isSubjectToMaxAmountRequired() {
+    return this.premiumMapping && this.premiumMapping.subjectToMaxAmountAvailable ? this.premiumMapping.subjectToMaxAmountRequired : false;
+  }
+  isLimitAvailable() {
+    return this.premiumMapping && this.premiumMapping.limitAvailable;
+  }
+  isLimitRequired() {
+    return this.premiumMapping && this.premiumMapping.limitAvailable ? this.premiumMapping.limitRequired : false;
+  }
+  isDeductibleAvailable() {
+    return this.premiumMapping && this.premiumMapping.deductibleAvailable;
+  }
+  isDeductibleRequired() {
+    return this.premiumMapping && this.premiumMapping.deductibleRequired;
+  }
+  isAdditionalDetailRequired() {
+    return this.premiumMapping && this.premiumMapping.additionalDetailRequired;
+  }
+  isAdditionalPremiumRequired() {
+    return this.premiumMapping && this.premiumMapping.additionalPremiumRequired;
+  }
+  validateLimit() {
+    let invalid = false;
+    if (this.isLimitRequired() && (this.limit ?? 0) == 0) {
+      invalid = true;
+      this.invalidList.push('Limit is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+  validateAdditionalDetail() {
+    let invalid = false;
+    if (this.isAdditionalDetailRequired() && !this._additionalDetail) {
+      invalid = true;
+      this.invalidList.push('Additional Detail is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+  validateAdditionalPremium() {
+    let invalid = false;
+    if (this.isAdditionalPremiumRequired() && !this._additionalPremium) {
+      invalid = true;
+      this.invalidList.push('Additional Premium is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+  validateDeductible() {
+    let invalid = false;
+    if (this._isDeductibleSelected && !this.deductible) {
+      invalid = true;
+      this.invalidList.push('Deductible is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+  validateDeductibleType() {
+    let invalid = false;
+    if (this._isDeductibleSelected && !this._deductibleType) {
+      invalid = true;
+      this.invalidList.push('Deductible Type is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+
+  validateDeductibleCode() {
+    let invalid = false;
+    if (this._isDeductibleSelected && !this._deductibleCode) {
+      invalid = true;
+      this.invalidList.push('Deductible Code is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+  validateSubjectToMaxAmount() {
+    let invalid = false;
+    if (this.isSubjectToMaxAmount && (this._subjectToMaxPercent ?? 0) == 0) {
+      invalid = true;
+      this.invalidList.push('Subject to Max Amount is required');
+    }
+    this._isValid = this._isValid == true ? invalid : false;
+  }
+
+  validateBuilding() {
+    if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Premises/Building Number is required');
+    }
+  }
+  emptyNumberValueCheck(value: number | null | undefined) {
+    return !value;
+  }
+  emptyStringValueCheck(value: string | null | undefined) {
+    return !value;
+  }
+  onChangeSubjectToMax() {
+    this._subjectToMaxPercent = null;
+  }
+  onChangeDeductible() {
+    this._deductible = null;
+    this._deductibleCode = null;
+    this._deductibleType = null;
+  }
+  setErrorMessages() {
+    this._errorMessages = this.invalidList;
   }
   abstract copy(): OptionalPremium;
   abstract toJSON(): OptionalPremium;

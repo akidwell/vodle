@@ -1,73 +1,313 @@
-<div class="component-row" >
+<div class="component-row">
   <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
-    <div class="row"  (click)="collapseExpand(false)">
+    <div class="row" (click)="collapseExpand(false)">
       <div class="col-lg-1">
-        <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
-            bindValue="code" name="building"
-            (change)="optionalPremiumData.markDirty()"
-            [virtualScroll]="true" click-stop-propagation
-            [clearable]="false"
-            [searchFn]="dropDownSearch" [(ngModel)]="optionalPremiumData.building">
-            <ng-template ng-label-tmp let-item="item">
-                {{item.code}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-                {{item.description}}
-            </ng-template>
+        <ng-select
+          class="max-width"
+          id="building"
+          [items]="buildingList"
+          bindLabel="description"
+          bindValue="code"
+          name="building"
+          (change)="optionalPremiumData.markDirty()"
+          [virtualScroll]="true"
+          click-stop-propagation
+          [clearable]="false"
+          click-stop-propagation
+          [searchFn]="dropDownSearch"
+          [(ngModel)]="optionalPremiumData.building"
+        >
+          <ng-template ng-label-tmp let-item="item">
+            {{ item.code }}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.description }}
+          </ng-template>
         </ng-select>
       </div>
       <div (click)="collapseExpand(false)" class="col-lg-3">
-        <ng-select class="max-width" id="building" [items]="coverageCodes" bindLabel="description"
-        bindValue="code" name="building"
-        [virtualScroll]="true" click-stop-propagation
-        [clearable]="false"
-        [searchFn]="dropDownSearch" [(ngModel)]="optionalPremiumData.coverageCode">
-        <ng-template ng-option-tmp let-item="item">
-            {{item.description}}
-        </ng-template></ng-select>
+        <ng-select
+          class="max-width"
+          id="building"
+          [items]="coverages"
+          bindLabel="coverageDescription"
+          bindValue="coverageCode"
+          name="building"
+          [virtualScroll]="true"
+          click-stop-propagation
+          (change)="setActiveCoverageMapping(optionalPremiumData.coverageCode)"
+          [clearable]="false"
+          click-stop-propagation
+          [searchFn]="dropDownSearch"
+          [(ngModel)]="optionalPremiumData.coverageCode"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.coverageDisplay }}
+          </ng-template></ng-select
+        >
       </div>
       <div class="col-lg-2">
-        <input type="text" class="form-control" id="limit" name="limit"
-              [readonly]="!canEdit" [(ngModel)]="optionalPremiumData.limit" #limit="ngModel">
+        <input
+          type="text"
+          class="form-control"
+          id="limit"
+          name="limit"
+          click-stop-propagation
+          string-to-currency
+          [allowNegative]="false"
+          [required]="isLimitRequired"
+          [readonly]="!canEdit || !isLimitAvailable"
+          [(ngModel)]="optionalPremiumData.limit"
+          #limit="ngModel"
+        />
+      </div>
+      <div class="col-sm-2">
+        <div class="row">
+          <div class="col-sm-6">
+            <!-- <div *ngIf="optionalPremiumData.isSubjectToMaxAmountAvailable()"> -->
+            <div>
+              <input
+                type="checkbox"
+                class="form-check-input"
+                #isSubjectToMaxAmount="ngModel"
+                id="isSubjectToMaxAmount"
+                click-stop-propagation
+                (change)="optionalPremiumData.onChangeSubjectToMax()"
+                [(ngModel)]="optionalPremiumData.isSubjectToMaxAmount"
+                name="isSubjectToMaxAmount"
+                [readonly]="
+                  !canEdit ||
+                  !isPremiumMappingSet ||
+                  !isSubjectToMaxAmountAvailable ||
+                  isSubjectToMaxAmountRequired
+                "
+              />
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <!-- <div *ngIf="optionalPremiumData.isSubjectToMaxAmountAvailable()"> -->
+            <div>
+              <input
+                type="text"
+                string-to-currency
+                class="form-control"
+                id="subjectToMaxPercent"
+                name="subjectToMaxPercent"
+                click-stop-propagation
+                [decimalPlaces]="5"
+                [hideDecimal]="true"
+                [allowNegative]="false"
+                [required]="canEdit && isPremiumMappingSet && optionalPremiumData.isSubjectToMaxAmount"
+                [readonly]="
+                  !canEdit ||
+                  !isPremiumMappingSet ||
+                  !optionalPremiumData.isSubjectToMaxAmount
+                "
+                [(ngModel)]="optionalPremiumData.subjectToMaxPercent"
+                #subjectToMaxPercent="ngModel"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-1">
+        <div>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            #maxAmount="ngModel"
+            id="maxAmount"
+            click-stop-propagation
+            (change)="optionalPremiumData.onChangeDeductible()"
+            [(ngModel)]="optionalPremiumData.isDeductibleSelected"
+            name="maxAmount"
+            [readonly]="!canEdit || !isPremiumMappingSet || !isDeductibleAvailable"
+          />
+        </div>
       </div>
       <div class="col-lg-2">
-        <input type="text" class="form-control" id="additionalPremium" name="additionalPremium"
-              [readonly]="!canEdit" [(ngModel)]="optionalPremiumData.additionalPremium" #additionalPremium="ngModel">
+        <input
+          type="text"
+          string-to-currency
+          class="form-control"
+          id="additionalPremium"
+          name="additionalPremium"
+          click-stop-propagation
+          [readonly]="!canEdit || !isPremiumMappingSet"
+          [required]="canEdit && isPremiumMappingSet && isAdditionalPremiumRequired"
+          [allowNegative]="false"
+          [(ngModel)]="optionalPremiumData.additionalPremium"
+          #additionalPremium="ngModel"
+        />
       </div>
-      <!-- <div class="col-lg-4">
-        <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
-          [disabled]="!canEdit" click-stop-propagation>Copy</button>&nbsp;
-        <button *ngIf="!optionalPremiumData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-          [disabled]="!canEdit" hover-class="btn-danger" click-stop-propagation>Delete</button>
-        <button *ngIf="optionalPremiumData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-          [disabled]="!canEdit" hover-class="btn-warning" click-stop-propagation>Remove</button>
-      </div> -->
+      <div class="col-lg-1" *ngIf="collapsed">
+        <div ngbDropdown class="d-inline-block" *ngIf="canEdit">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            id="action"
+            ngbDropdownToggle
+            click-stop-propagation
+          >
+            Actions
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button
+              *ngIf="!optionalPremiumData.isNew && canEdit"
+              hover-class="btn-danger"
+              (click)="openDeleteConfirmation()"
+              click-stop-propagation
+              ngbDropdownItem
+            >
+              Delete
+            </button>
+            <button
+              *ngIf="optionalPremiumData.isNew && canEdit"
+              hover-class="btn-warning"
+              (click)="openDeleteConfirmation()"
+              click-stop-propagation
+              ngbDropdownItem
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-        <div class="row">
-          <div class="col-lg-1">
-            <label for="maxAmount" class="form-label" title="Subject to Max Amount">Subject To Max Amount</label>
-            <input type="checkbox" class="form-check-input" #maxAmount="ngModel" id="maxAmount" [(ngModel)]="optionalPremiumData.subjectToMaxAmount"
-              name="maxAmount" [readonly]="!canEdit">
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="deductibleValue" class="form-label" title="Deductible"
+            >Deductible</label
+          >
+          <input
+            type="text"
+            string-to-currency
+            [allowNegative]="false"
+            [readonly]="
+              !canEdit ||
+              !isPremiumMappingSet ||
+              !optionalPremiumData.isDeductibleSelected  ||
+              !isDeductibleAvailable
+            "
+            [required]="
+            canEdit && isPremiumMappingSet && optionalPremiumData.isDeductibleSelected
+            "
+            class="form-control"
+            id="deductibleValue"
+            name="deductibleValue"
+            [(ngModel)]="optionalPremiumData.deductible"
+            #deductibleValue="ngModel"
+          />
         </div>
-          <div class="col-sm-1">
-            <label for="maxPercent" class="form-label" title="Subject to Max Percent">%</label>
-            <input type="text" class="form-control" id="maxPercent" name="maxPercent"
-              [readonly]="!canEdit || !optionalPremiumData.subjectToMaxAmount" [(ngModel)]="optionalPremiumData.subjectToMaxPercent" #maxPercent="ngModel">
-          </div>
-          <div class="col-sm-2">
-            <label for="deductibleType" class="form-label" title="Status">Deductible Type</label>
-            <input type="text" class="form-control" id="deductibleType" name="deductibleType" [readonly]="!canEdit"
-              [(ngModel)]="optionalPremiumData.deductibleType" #deductibleType="ngModel">
-          </div>
-          <div class="col-sm-2">
-            <label for="deductibleCode" class="form-label" title="Status">Deductible Code</label>
-            <input type="text" class="form-control" id="deductibleCode" name="deductibleCode" [readonly]="!canEdit"
-              [(ngModel)]="optionalPremiumData.deductibleCode" #deductibleCode="ngModel">
-          </div>
+        <div class="col-lg-2">
+          <label for="deductibleType" class="form-label" title="Deductible Type"
+            >Deductible Type</label
+          >
+          <ng-select
+            id="deductibleType"
+            [items]="deductibleTypes$ | async"
+            bindLabel="description"
+            bindValue="code"
+            [required]="
+              canEdit &&
+              isPremiumMappingSet &&
+              optionalPremiumData.isDeductibleSelected
+            "
+            name="deductibleType"
+            click-stop-propagation
+            [readonly]="
+              !canEdit ||
+              !isPremiumMappingSet ||
+              !optionalPremiumData.isDeductibleSelected ||
+              !isDeductibleAvailable
+            "
+            [clearable]="false"
+            [(ngModel)]="optionalPremiumData.deductibleType"
+          >
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <label for="deductibleCode" class="form-label" title="Deductible Code"
+            >Deductible Code</label
+          >
+          <ng-select
+            id="deductibleCode"
+            [items]="deductibleCodes$ | async"
+            bindLabel="description"
+            bindValue="code"
+            [required]="
+              canEdit &&
+              isPremiumMappingSet &&
+              optionalPremiumData.isDeductibleSelected
+            "
+            name="deductibleCode"
+            click-stop-propagation
+            [readonly]="
+              !canEdit ||
+              !isPremiumMappingSet ||
+              !optionalPremiumData.isDeductibleSelected
+            "
+            [clearable]="false"
+            [(ngModel)]="optionalPremiumData.deductibleCode"
+          >
+          </ng-select>
+        </div>
+
+        <div class="col-sm-6">
+          <label
+            for="additionalComment"
+            class="form-label"
+            title="Additional Comment"
+            >Additional Comment</label
+          >
+          <input
+            type="text"
+            [required]="isPremiumMappingSet && isAdditionalDetailRequired"
+            class="form-control"
+            id="additionalComment"
+            name="additionalComment"
+            maxlength="50"
+            [readonly]="!canEdit || !isPremiumMappingSet"
+            [(ngModel)]="optionalPremiumData.additionalDetail"
+            #additionalComment="ngModel"
+          />
+        </div>
       </div>
-      <button *ngIf="!collapsed" class="collapse-bar" (click)="collapseExpand(true)" ngbTooltip="Collapse"
-        [openDelay]="1000">
+      <div class="empty-row"></div>
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
+                *ngIf="canEdit">Copy</button> -->
+          <button
+            class="btn btn-secondary margin-left"
+            (click)="openDeleteConfirmation()"
+            hover-class="btn-danger"
+            click-stop-propagation
+            *ngIf="!optionalPremiumData.isNew && canEdit"
+          >
+            Delete
+          </button>
+          <button
+            class="btn btn-secondary margin-left"
+            (click)="openDeleteConfirmation()"
+            hover-class="btn-warning"
+            click-stop-propagation
+            *ngIf="optionalPremiumData.isNew && canEdit"
+          >
+            Remove
+          </button>
+        </div>
+        <div [id]="anchorId"></div>
+      </div>
+      <button
+        *ngIf="!collapsed"
+        class="collapse-bar"
+        (click)="collapseExpand(true)"
+        ngbTooltip="Collapse"
+        [openDelay]="1000"
+      >
         <fa-icon [icon]="faArrowUp"></fa-icon>
       </button>
     </div>
