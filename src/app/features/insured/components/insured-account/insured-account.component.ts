@@ -50,7 +50,7 @@ export class InsuredAccountComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   dropDownSearch(term: string, item: Code) {

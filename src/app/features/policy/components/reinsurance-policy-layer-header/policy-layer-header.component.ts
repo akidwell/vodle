@@ -26,7 +26,7 @@ export class PolicyLayerHeaderComponent implements OnInit {
     );
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
-        this.canEditEndorsement = canEdit;  
+        this.canEditEndorsement = canEdit;
       }
     });
   }
@@ -38,7 +38,7 @@ export class PolicyLayerHeaderComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.statusSub?.unsubscribe();
   }
 

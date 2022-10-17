@@ -96,7 +96,7 @@ export class SubmissionInformationComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.versionSub?.unsubscribe();

@@ -64,7 +64,7 @@ export class CoveragesComponent implements OnInit, PolicySave {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.coveragesSub?.unsubscribe();
     this.statusSub?.unsubscribe();
   }

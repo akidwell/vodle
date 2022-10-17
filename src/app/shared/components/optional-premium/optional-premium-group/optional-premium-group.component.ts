@@ -76,8 +76,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
     this.handleSecurity(this.type);
   }
   ngOnDestroy(): void {
-    this.programSub.unsubscribe();
-    this.deleteSub.unsubscribe();
+    this.programSub?.unsubscribe();
+    this.deleteSub?.unsubscribe();
   }
   isValid(): boolean {
     let valid = true;

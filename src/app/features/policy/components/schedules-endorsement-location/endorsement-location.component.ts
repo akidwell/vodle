@@ -65,7 +65,7 @@ export class EndorsementLocationComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.dirtySub?.unsubscribe();
     this.addressSub?.unsubscribe();
     this.deleteSub?.unsubscribe();

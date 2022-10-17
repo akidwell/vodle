@@ -66,8 +66,8 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.authSub.unsubscribe();
-    this.editSub.unsubscribe();
+    this.authSub?.unsubscribe();
+    this.editSub?.unsubscribe();
     this.policySub?.unsubscribe();
   }
 

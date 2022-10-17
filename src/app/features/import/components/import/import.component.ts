@@ -103,8 +103,8 @@ export class ImportComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
-    this.authSub.unsubscribe();
+    this.sub?.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   async import(selectedRow: ImportPolicy): Promise<void> {

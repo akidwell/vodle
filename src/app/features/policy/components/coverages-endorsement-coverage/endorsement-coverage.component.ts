@@ -147,7 +147,7 @@ export class EndorsementCoverageComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.defaultsSub?.unsubscribe();
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.saveEventSubscription?.unsubscribe();
     this.collapsePanelSubscription?.unsubscribe();

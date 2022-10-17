@@ -86,8 +86,8 @@ export class OptionalPremiumComponent extends SharedComponentBase {
     this.handleSecurity(this.type);
   }
   ngOnDestroy(): void {
-    this.buildingsSub.unsubscribe();
-    this.coveragesSub.unsubscribe();
+    this.buildingsSub?.unsubscribe();
+    this.coveragesSub?.unsubscribe();
   }
   dropDownSearch(term: string, item: Code) {
     term = term.toLowerCase();

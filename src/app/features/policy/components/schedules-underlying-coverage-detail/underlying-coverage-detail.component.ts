@@ -88,7 +88,7 @@ export class UnderlyingCoverageDetailComponent implements OnInit {
     });
   }
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.statusSub?.unsubscribe();
     this.collapsePanelSubscription?.unsubscribe();
   }

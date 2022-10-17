@@ -39,8 +39,8 @@ export abstract class SharedComponentBase extends ComponentBase implements OnDes
   }
 
   ngOnDestroy() {
-    this.submissionAuthSub.unsubscribe();
-    this.policyAuthSub.unsubscribe();
+    this.submissionAuthSub?.unsubscribe();
+    this.policyAuthSub?.unsubscribe();
   }
   handleSecurity(type: SharedComponentType) {
     if (type === SharedComponentType.Policy) {

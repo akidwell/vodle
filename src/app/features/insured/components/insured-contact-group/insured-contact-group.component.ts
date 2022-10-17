@@ -37,7 +37,7 @@ export class InsuredContactGroupComponent {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   addNewContact(): void {
