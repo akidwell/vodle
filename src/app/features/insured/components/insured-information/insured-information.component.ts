@@ -53,7 +53,7 @@ export class InsuredInformationComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.prevSub?.unsubscribe();

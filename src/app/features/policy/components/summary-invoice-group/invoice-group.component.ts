@@ -59,7 +59,7 @@ export class InvoiceGroupComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.issuanceSub?.unsubscribe();

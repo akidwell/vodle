@@ -41,7 +41,7 @@ export class UnderlyingCoverageLimitBasisComponent implements OnInit {
     });
   }
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.statusSub?.unsubscribe();
   }
   limitChange(): void{

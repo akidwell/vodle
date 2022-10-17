@@ -60,6 +60,6 @@ export class PolicyComponent implements OnInit {
     this.policyTabvalidatedSub?.unsubscribe();
     this.coverageTabvalidatedSub?.unsubscribe();
     this.reinsuranceTabvalidatedSub?.unsubscribe();
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 }

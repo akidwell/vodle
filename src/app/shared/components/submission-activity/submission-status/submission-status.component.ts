@@ -67,7 +67,7 @@ export class SubmissionStatusComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.dirtySub?.unsubscribe();
   }
 
