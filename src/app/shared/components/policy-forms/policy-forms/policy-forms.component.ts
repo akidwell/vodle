@@ -36,6 +36,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   optionalFormsCount = 0;
   onPolicyFormsCount = 0;
   expiringFormsCount = 0;
+  unselectedFormsCount = 0;
   isSaving = false;
   saveSub!: Subscription;
   isBusy = false;
@@ -79,6 +80,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     this.setFormCounts();
     this.selectView(this.currentView);
   }
+
   selectView(currentView: FormViewType) {
     this.currentView = currentView;
     if (currentView == FormViewType.Expiring) {
@@ -121,6 +123,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     this.mandatoryFormsCount = this.forms.filter((c) => c.isMandatory).length;
     this.optionalFormsCount = this.forms.filter((c) => !c.isMandatory).length;
     this.onPolicyFormsCount = this.forms.filter((c) => c.isIncluded).length;
+    this.unselectedFormsCount = this.forms.filter((c) => c.isSelected && !c.isIncluded).length;
   }
 
   async loadExpiring() {

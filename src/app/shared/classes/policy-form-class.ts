@@ -29,7 +29,9 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   formIndex: number | null = null;
   attachmentMethod: string | null = null;
   allowMultiples: boolean | null = null;
+  isSelected: boolean | null = null;
   canAdd = true;
+  checkboxClass = '';
 
   get isIncluded(): boolean {
     return this._isIncluded;
@@ -37,7 +39,15 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   set isIncluded(value: boolean) {
     this._isDirty = true;
     this._isIncluded = value;
+    if (!value && this.isSelected)
+    {
+      this.checkboxClass = 'mandatory';
+    }
+    else {
+      this.checkboxClass = '';
+    }
   }
+
   get formData(): VariableFormData[] | null {
     return this._formData;
   }
@@ -99,12 +109,12 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.formIndex = policyForm.formIndex;
     this.allowMultiples = policyForm.allowMultiples;
     this.attachmentMethod = policyForm.attachmentMethod;
+    this.isSelected = policyForm.isSelected;
     this._isIncluded = policyForm.isIncluded;
     this._formData = policyForm.formData;
   }
 
   newInit() {
-    //this.isNew = true;
     // Always default to User added
     this.attachmentMethod = 'U';
   }

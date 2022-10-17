@@ -50,7 +50,7 @@ i.fa {
   z-index: 998;
 }
 
-.badge {
+.refresh {
   background-color: #00274e;
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2), 0 6px 12px 0 rgba(0, 0, 0, 0.19);
 }
@@ -68,4 +68,8 @@ i.fa {
   opacity: 0.5;
   cursor: not-allowed;
   /* pointer-events: none; */
+}
+
+.unselected-warning {
+  background-color: #ffb400;
 }
