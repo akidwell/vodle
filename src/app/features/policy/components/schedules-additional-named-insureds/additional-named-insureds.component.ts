@@ -59,7 +59,7 @@ export class AdditionalNamedInsuredsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.deleteSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.addSub?.unsubscribe();

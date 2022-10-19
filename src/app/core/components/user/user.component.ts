@@ -79,8 +79,8 @@ export class UserComponent {
     this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
   ngOnDestroy() {
-    this.authSub.unsubscribe();
-    this.historySub.unsubscribe();
+    this.authSub?.unsubscribe();
+    this.historySub?.unsubscribe();
   }
 
   async logout() {

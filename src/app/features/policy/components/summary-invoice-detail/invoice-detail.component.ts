@@ -62,7 +62,7 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.deleteSub?.unsubscribe();
   }
 

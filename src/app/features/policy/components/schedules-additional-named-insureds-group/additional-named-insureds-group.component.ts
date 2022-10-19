@@ -47,7 +47,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   isValid(): boolean {
@@ -126,7 +126,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
       let saveCount: number = 0;
       if (this.components != null) {
         for (let child of this.components) {
-          if (child.aniForm.dirty) {         
+          if (child.aniForm.dirty) {
             let result = await child.save();
             if (result === false) {
               this.notification.show('Additional Named Insureds ' + child.aniData.sequenceNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });

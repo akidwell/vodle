@@ -32,7 +32,7 @@ export class InvoiceMasterComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   get canEditComment(): boolean {

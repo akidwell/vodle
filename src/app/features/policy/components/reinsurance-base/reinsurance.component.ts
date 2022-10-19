@@ -104,7 +104,7 @@ export class ReinsuranceComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.statusSub?.unsubscribe();
     this.authLoadedSub?.unsubscribe();
     this.reinsuranceRefreshedSub?.unsubscribe();

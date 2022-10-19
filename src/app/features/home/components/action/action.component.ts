@@ -52,7 +52,7 @@ export class ActionComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 
   async endorsementPopup(endorsementAction: NewEndorsementData, policy: PolicySearchResponses): Promise<void> {
