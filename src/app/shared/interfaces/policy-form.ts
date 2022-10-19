@@ -14,5 +14,6 @@ export interface PolicyForm {
     formIndex: number | null;
     attachmentMethod: string | null;
     allowMultiples: boolean | null;
+    isSelected: boolean | null;
     formData: VariableFormData[] | null;
  }
