@@ -42,6 +42,7 @@
                         <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-dark hide-select" for="radioExpiring">Expiring ({{expiringFormsCount}})</label>
                     </div>
                     <button type="button" class="btn btn-secondary" (click)="getQuote()">Quote</button>
+                    <button type="button" class="btn btn-secondary" (click)="getBinder()">Binder</button>
                 </div>
                 <div class ="col-lg-6">
                     <rsps-policy-forms-search [type]="type" [quote]="quote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>

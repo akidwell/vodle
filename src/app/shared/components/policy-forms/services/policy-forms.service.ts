@@ -72,6 +72,12 @@ export class PolicyFormsService {
       // }));
   }
 
+  getBinder(quoteId: number) {
+    const params = new HttpParams().append('quoteId', quoteId);
+    const headers = { 'Content-Type': 'application/pdf'};
+    return this.http.get(this.config.apiBaseUrl + 'api/forms/quote-binder', { params, headers, responseType: 'arraybuffer'});
+  }
+
   searchForms(searchValue: string): Observable<QuotePolicyFormClass[]> {
     const params = new HttpParams().append('searchValue', searchValue ?? '');
     return this.http.get<PolicyForm[]>(this.config.apiBaseUrl + 'api/forms/forms-search', { params}).pipe(
