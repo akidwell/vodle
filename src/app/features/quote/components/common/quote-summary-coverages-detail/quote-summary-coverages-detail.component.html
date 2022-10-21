@@ -73,15 +73,20 @@
     class="row"
   >
     <div class="col-lg-6">
-      <input
-        type="text"
-        class="form-control"
+      <ng-select
         id="coverageDesc"
-        readonly
+        [items]="optionalCoverages"
+        bindLabel="coverageDescription"
+        bindValue="coverageCode"
+        [readonly]="true"
         name="coverageDesc"
+        [clearable]="false"
         [(ngModel)]="coverage.coverageCode"
-        #coverageDesc="ngModel"
-      />
+      >
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.coverageDisplay }}
+        </ng-template></ng-select
+      >
     </div>
     <div class="col-lg-1"></div>
     <div class="col-lg-2">
@@ -102,7 +107,7 @@
         class="form-check-input"
         id="coverageAccepted"
         [(ngModel)]="coverage.isAccepted"
-        (change)="this.quoteData.calculateSummaryPremiums();"
+        (change)="this.quoteData.calculateSummaryPremiums()"
         name="coverageAccepted"
         [readonly]="!canEdit"
         #coverageAccepted="ngModel"
@@ -132,15 +137,26 @@
   </div>
   <div *ngFor="let item of quoteData.quoteLineItems" class="row">
     <div class="col-lg-6">
-      <input
-        type="text"
-        class="form-control"
-        id="surchargesFees"
-        readonly
-        name="surchargesFees"
+      <ng-select
+        id="lineItemDescription"
+        [items]="lineitemDescriptions"
+        bindLabel="description"
+        bindValue="key"
+        [readonly]="true"
+        [clearable]="false"
+        name="lineItemDescription"
         [(ngModel)]="item.lineItemCode"
-        #surchargesFees="ngModel"
-      />
+        #lineItemCode="ngModel"
+      >
+        <ng-template ng-label-tmp let-item="item">
+          {{ item.description }}
+          {{ item.state != null ? " (" + item.state + ")" : "" }}
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.description }}
+          {{ item.state != null ? " (" + item.state + ")" : "" }}
+        </ng-template>
+      </ng-select>
     </div>
     <div class="col-lg-1"></div>
     <div class="col-lg-2">
@@ -180,7 +196,7 @@
         [disabled]="!canEdit"
         string-to-currency
         [allowNegative]="false"
-        (change)="this.quoteData.calculateSummaryPremiums();"
+        (change)="this.quoteData.calculateSummaryPremiums()"
         name="terrorismPremium"
         [(ngModel)]="quoteData.terrorismPremium"
         #terrorismPremium="ngModel"
@@ -191,7 +207,7 @@
         type="checkbox"
         class="form-check-input"
         id="terrorismAccepted"
-        (change)="this.quoteData.calculateSummaryPremiums();"
+        (change)="this.quoteData.calculateSummaryPremiums()"
         [(ngModel)]="quoteData.terrorismCoverageSelected"
         [readonly]="!canEdit"
         #terrorismAccepted="ngModel"
@@ -217,7 +233,7 @@
           class="form-control"
           id="brokerPercent"
           name="brokerPercent"
-          (change)="this.quoteData.calculateSummaryPremiums();"
+          (change)="this.quoteData.calculateSummaryPremiums()"
           string-to-currency
           [allowNegative]="false"
           [decimalPlaces]="1"
@@ -246,29 +262,38 @@
 <div *ngIf="quoteData">
   <div class="row">
     <div class="col-lg-2">
-      <label for="minEarnedPercent" class="form-label" title="Min Earned Premium %"
-      >Min Earned Premium %</label
-    >
+      <label
+        for="minEarnedPercent"
+        class="form-label"
+        title="Min Earned Premium %"
+        >Min Earned Premium %</label
+      >
     </div>
     <div class="col-lg-2">
-      <label for="minEarnedPremium" class="form-label" title="Min Earned Premium"
-      >Min Earned Premium</label
-    >
+      <label
+        for="minEarnedPremium"
+        class="form-label"
+        title="Min Earned Premium"
+        >Min Earned Premium</label
+      >
     </div>
     <div class="col-lg-2">
       <label for="minPremium" class="form-label" title="Min Premium"
-      >Min Premium</label
-    >
+        >Min Premium</label
+      >
     </div>
     <div class="col-lg-1">
       <label for="minPremium" class="form-label" title="Has Minimum Premium"
-      >Min Prem</label
-    >
+        >Min Prem</label
+      >
     </div>
     <div class="col-lg-1">
-      <label for="totalAdvancePremium" class="form-label" title="Total Advance Premium"
-      >Total Advance Premium</label
-    >
+      <label
+        for="totalAdvancePremium"
+        class="form-label"
+        title="Total Advance Premium"
+        >Total Advance Premium</label
+      >
     </div>
   </div>
   <div class="row">
@@ -302,11 +327,7 @@
       />
     </div>
     <div class="col-lg-1">
-      <input
-        type="checkbox"
-        class="form-check-input"
-        id="hasMinPremium"
-      />
+      <input type="checkbox" class="form-check-input" id="hasMinPremium" />
     </div>
     <div class="col-lg-2">
       <input
