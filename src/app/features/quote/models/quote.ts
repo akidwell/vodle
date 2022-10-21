@@ -27,6 +27,7 @@ export interface Quote {
   submission: Submission;
   quoteName: string | null;
   policySymbol: string;
+  policyMod: string | null;
   formName: string;
   terrorismCoverageSelected: boolean;
   terrorismPremium: number | null;

@@ -675,6 +675,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
     });
   }
+  calculateSummaryPremiums(): void {
+    let premiumCommissionAvailable = this.totalPremium;
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
+    this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
+    const terrorismPremium = (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+    let totalPremium = premiumCommissionAvailable + terrorismPremium;
+    this.quoteLineItems.map((surchargeOrFee) => (totalPremium += surchargeOrFee.amount ?? 0));
+    this.totalAdvancePremium = totalPremium;
+  }
   onSave(savedQuote: PropertyQuoteClass) {
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
     this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();

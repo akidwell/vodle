@@ -5,11 +5,13 @@ import { QuoteOptionalPremium } from '../models/quote-optional-premium';
 export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
   private _quoteId = 0;
   private _propertyQuoteBuildingOptionalCoverageId: number;
+  private _isAccepted = true;
 
   constructor(optionalPremium?: QuoteOptionalPremium, quoteId?: number) {
     super(optionalPremium);
     this._quoteId = quoteId || 0;
     this._propertyQuoteBuildingOptionalCoverageId = optionalPremium ? optionalPremium.propertyQuoteBuildingOptionalCoverageId : 0;
+    this._isAccepted = optionalPremium?.isAccepted || true;
   }
 
   get quoteId() : number {
@@ -20,6 +22,15 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
     this._quoteId = value;
     this.markDirty();
   }
+
+  set isAccepted(value: boolean) {
+    this._isAccepted = value;
+    this.markDirty();
+  }
+  get isAccepted() : boolean {
+    return this._isAccepted;
+  }
+
   get propertyQuoteBuildingOptionalCoverageId() : number {
     return this._propertyQuoteBuildingOptionalCoverageId;
   }
@@ -63,6 +74,7 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
       isSubjectToMaxAmount: this.isSubjectToMaxAmount,
       subjectToMaxPercent: this.subjectToMaxPercent,
       isDeductibleSelected: this.isDeductibleSelected,
+      isAccepted: this.isAccepted,
       additionalDetail: this.additionalDetail,
       guid: this.guid,
       isNew: this.isNew

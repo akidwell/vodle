@@ -1,1 +1,40 @@
-<p>quote-summary quote/bind works!</p>
+<div class="row" *ngIf="quoteData">
+  <div class="col-lg-3">
+    <label for="quoteLetter" style="width:100%">&nbsp;</label>
+    <button type="button" name="quoteLetter" class="btn btn-primary" (click)="generateQuoteLetter()">Quote Letter</button>
+  </div>
+  <div class="col-lg-3">
+    <label for="submissionNumber">Quote Date</label>
+    <input style="display: inline-block; max-width: 80%"  matInput [matDatepicker]="quoteDateCalendar"
+          class="form-control" [readonly]="!canEdit"
+          [(ngModel)]="quoteData.printedAt" name="quoteEffDate" #polEffDate="ngModel"/>
+        <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%"
+          [for]="quoteDateCalendar"> </mat-datepicker-toggle>
+        <mat-datepicker #quoteDateCalendar></mat-datepicker>
+  </div>
+  <div class="col-lg-3">
+    <label for="expirationDays">Expiration Days</label>
+    <input
+      type="text"
+      class="form-control"
+      id="expirationDays"
+      name="expirationDays"
+      [(ngModel)]="quoteExpirationDays"
+      #expirationDays="ngModel"
+    />
+  </div>
+  <div class="col-lg-3">
+    <label for="expirationDays">Expiration Date</label>
+    <input
+      type="text"
+      class="form-control"
+      id="expirationDate"
+      readonly
+      name="expirationDate"
+      [(ngModel)]="quoteExpirationDate"
+      #expirationDate="ngModel"
+    />
+  </div>
+</div>
+<div class="row">
+</div>
