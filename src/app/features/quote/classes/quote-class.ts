@@ -54,7 +54,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   policySymbol = '';
   formName = '';
   terrorismCoverageSelected = false;
-  terrorismPremium = 0;
   terrorismTemplateCode = '';
   grossPremium = null;
   grossLimits = null;
@@ -124,7 +123,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   autoCalcMiscPremium = false;
   minimumPremium: number | null = null;
   advancePremium = null;
-  earnedPremiumPct = null;
   variesByLoc = false;
   pcfCharge = null;
   pcfChargeDesc = null;
@@ -205,7 +203,22 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._totalPremium = value;
     this._isDirty = true;
   }
-
+  private _terrorismPremium = 0;
+  get terrorismPremium(): number {
+    return this._terrorismPremium;
+  }
+  set terrorismPremium(value: number | null) {
+    this._isDirty = true;
+    this._terrorismPremium = value || 0;
+  }
+  private _earnedPremiumPct = 0;
+  get earnedPremiumPct(): number {
+    return this._earnedPremiumPct;
+  }
+  set earnedPremiumPct(value: number | null) {
+    this._isDirty = true;
+    this._earnedPremiumPct = value || 0;
+  }
   get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
   }
@@ -277,6 +290,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
+    this._terrorismPremium = quote.terrorismPremium || 0;
+    this._earnedPremiumPct = quote.earnedPremiumPct || 0;
     this._policyEffectiveDate = quote.policyEffectiveDate || null;
     this._policyExpirationDate = quote.policyExpirationDate || null;
 
