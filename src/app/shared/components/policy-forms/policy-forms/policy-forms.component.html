@@ -2,7 +2,7 @@
     <div *ngIf="isSaving">
         <div class="spinner-wrapper" >
             <h3>
-            <span class="badge rounded-pill">Refreshing...
+            <span class="badge rounded-pill refresh">Refreshing...
                 <div class="spinner-border small"></div>
             </span>
             </h3>
@@ -24,7 +24,10 @@
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="radioAvailable" autocomplete="off"
                             (click)="selectView(formViewType.Available)">
-                        <label class="btn btn-outline-dark hide-select" for="radioAvailable">Available ({{availableFormsCount}})</label>
+                        <label class="btn btn-outline-dark hide-select" for="radioAvailable">Available ({{availableFormsCount}})
+                            <span *ngIf="unselectedFormsCount > 0" class="badge rounded-pill unselected-warning" ngbTooltip="Unselected forms">{{unselectedFormsCount}}
+                            </span>
+                        </label>
                         <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
                             (click)="selectView(formViewType.Mandatory)">
                         <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory ({{mandatoryFormsCount}})</label>
@@ -39,6 +42,7 @@
                         <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-dark hide-select" for="radioExpiring">Expiring ({{expiringFormsCount}})</label>
                     </div>
                     <button type="button" class="btn btn-secondary" (click)="getQuote()">Quote</button>
+                    <button type="button" class="btn btn-secondary" (click)="getBinder()">Binder</button>
                 </div>
                 <div class ="col-lg-6">
                     <rsps-policy-forms-search [type]="type" [quote]="quote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>
@@ -64,8 +68,8 @@
                                     [icon]="faExclamationTriangle" ngbTooltip="Special Note" (click)="showSpecialNote(form.formName)"></fa-icon>
                             </td>
                             <td style="text-align:center; width:1%;">
-                                <input type="checkbox" class="form-check-input" id="included" [ngClass]="!form.isIncluded && form.isMandatory ? 'mandatory' : ''"
-                                    [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
+                                <input type="checkbox" class="form-check-input" id="included" [ngClass]="form.checkboxClass"
+                                [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
                                 <fa-icon *ngIf="form.isVariable && form.isIncluded && canEdit" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"

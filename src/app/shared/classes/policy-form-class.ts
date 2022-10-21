@@ -29,22 +29,10 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
   formIndex: number | null = null;
   attachmentMethod: string | null = null;
   allowMultiples: boolean | null = null;
+  isSelected: boolean | null = null;
   canAdd = true;
+  checkboxClass = '';
 
-  get isIncluded(): boolean {
-    return this._isIncluded;
-  }
-  set isIncluded(value: boolean) {
-    this._isDirty = true;
-    this._isIncluded = value;
-  }
-  get formData(): VariableFormData[] | null {
-    return this._formData;
-  }
-  set formData(value: VariableFormData[] | null) {
-    this._isDirty = true;
-    this._formData = value;
-  }
   constructor(policyForm?: PolicyForm){
     if (policyForm) {
       this.existingInit(policyForm);
@@ -55,6 +43,22 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.validate();
   }
 
+  get isIncluded(): boolean {
+    return this._isIncluded;
+  }
+  set isIncluded(value: boolean) {
+    this._isDirty = true;
+    this._isIncluded = value;
+    this.checkIncludedClass();
+  }
+
+  get formData(): VariableFormData[] | null {
+    return this._formData;
+  }
+  set formData(value: VariableFormData[] | null) {
+    this._isDirty = true;
+    this._formData = value;
+  }
   get validationResults(): QuoteValidationClass {
     return this._validationResults;
   }
@@ -86,6 +90,16 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this._errorMessages = value;
   }
 
+  private checkIncludedClass() {
+    if (!this._isIncluded && this.isSelected)
+    {
+      this.checkboxClass = 'mandatory';
+    }
+    else {
+      this.checkboxClass = '';
+    }
+  }
+
   existingInit(policyForm: PolicyForm){
     this.formName = policyForm.formName;
     this.formTitle = policyForm.formTitle;
@@ -99,12 +113,13 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
     this.formIndex = policyForm.formIndex;
     this.allowMultiples = policyForm.allowMultiples;
     this.attachmentMethod = policyForm.attachmentMethod;
+    this.isSelected = policyForm.isSelected;
     this._isIncluded = policyForm.isIncluded;
     this._formData = policyForm.formData;
+    this.checkIncludedClass();
   }
 
   newInit() {
-    //this.isNew = true;
     // Always default to User added
     this.attachmentMethod = 'U';
   }

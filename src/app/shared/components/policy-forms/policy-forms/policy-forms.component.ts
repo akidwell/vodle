@@ -36,6 +36,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   optionalFormsCount = 0;
   onPolicyFormsCount = 0;
   expiringFormsCount = 0;
+  unselectedFormsCount = 0;
   isSaving = false;
   saveSub!: Subscription;
   isBusy = false;
@@ -79,6 +80,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     this.setFormCounts();
     this.selectView(this.currentView);
   }
+
   selectView(currentView: FormViewType) {
     this.currentView = currentView;
     if (currentView == FormViewType.Expiring) {
@@ -121,6 +123,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     this.mandatoryFormsCount = this.forms.filter((c) => c.isMandatory).length;
     this.optionalFormsCount = this.forms.filter((c) => !c.isMandatory).length;
     this.onPolicyFormsCount = this.forms.filter((c) => c.isIncluded).length;
+    this.unselectedFormsCount = this.forms.filter((c) => c.isSelected && !c.isIncluded).length;
   }
 
   async loadExpiring() {
@@ -228,6 +231,32 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
         const element = document.createElement('a');
         element.href = URL.createObjectURL(file);
         element.download = 'QL-' + this.quote.submissionNumber + 'Q' + this.quote.quoteNumber + '.docx';
+        document.body.appendChild(element);
+        element.click();
+        this.isBusy = false;
+      }
+    })
+      .catch((error) => {
+        this.isBusy = false;
+        const message = String.fromCharCode.apply(null, new Uint8Array(error.error) as any);
+        this.messageDialogService.open('Quote Letter Error', message);
+      });
+  }
+
+  async getBinder() {
+    // this.policyFormsService.getQuote(this.quote.quoteId);
+    this.isBusy = true;
+    const response$ = this.policyFormsService.getBinder(this.quote.quoteId);
+    await lastValueFrom(response$).then((guideline) => {
+      if (guideline) {
+
+        const file = new Blob([guideline], { type: 'application/pdf' });
+        // const fileURL = URL.createObjectURL(file);
+        // window.open(fileURL,'test.pdf');
+
+        const element = document.createElement('a');
+        element.href = URL.createObjectURL(file);
+        element.download = 'BL-' + this.quote.submissionNumber + 'Q' + this.quote.quoteNumber + '.pdf';
         document.body.appendChild(element);
         element.click();
         this.isBusy = false;
