@@ -33,6 +33,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   invalidList: string[] = [];
   warningsList: string[] = [];
   warningsMessage = '';
+  brokerCommission = 0;
+  totalAdvancePremium = 0;
 
   submissionNumber = 0;
   quoteId = 0;
@@ -45,20 +47,21 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
   policyNumber: string | number = '--';
+  policyMod: string | null = '--';
   carrierCode = '';
   pacCode = '';
   quoteName = null;
   policySymbol = '';
   formName = '';
   terrorismCoverageSelected = false;
-  terrorismPremium = null;
+  terrorismPremium = 0;
   terrorismTemplateCode = '';
   grossPremium = null;
   grossLimits = null;
   partOf = null;
   attachmentPoint = null;
   underlyingLimits = null;
-  commissionRate = null;
+  commissionRate: number | null = null;
   ratingBasis = null;
   riskSelectionComments = null;
   approvalRequired = false;
@@ -101,7 +104,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   underlyingUMLimit1Mil = false;
   umuimAcceptedLastYear = false;
   indicationPremium = null;
-  printedAt = null;
+  printedAt: Date | Moment | null = null;
   facTreatyType = null;
   premiumRate = null;
   ownerId = null;
@@ -119,7 +122,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   productManufactureDate = null;
   discontinuedProducts = null;
   autoCalcMiscPremium = false;
-  minimumPremium = null;
+  minimumPremium: number | null = null;
   advancePremium = null;
   earnedPremiumPct = null;
   variesByLoc = false;
@@ -246,14 +249,18 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
     this.policySymbol = quote.policySymbol || '';
+    this.policyNumber = quote.policyNumber || '--';
+    this.policyMod = quote.policyMod || '--';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this.autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
     this.programId = quote.programId || 0;
     this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
     this.submissionNumber = quote.submissionNumber || 0;
+    this.commissionRate = quote.commissionRate || 17.5; //TODO: remove hardcode for service
     this.displayCommissionRate = quote.displayCommissionRate || 1;
     this.createdBy = quote.createdBy || '';
     this.createdDate = quote.createdDate || null;
+    this.printedAt = quote.printedAt || null;
     this.submission = new SubmissionClass(quote.submission);
     const rates: QuoteRateClass[] = [];
     quote.quoteRates?.forEach(element => {
@@ -432,6 +439,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   // }
   abstract onSave(savedQuote:PropertyQuoteClass): void;
 
+  abstract calculateSummaryPremiums(): void;
+
   abstract toJSON(): Quote;
 
   baseToJSON(): Quote {
@@ -563,7 +572,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       importErrors: this.importErrors,
       importWarnings: this.importWarnings,
       totalPremium: this.totalPremium,
-      formsVersionDescription: this.formsVersionDescription
+      formsVersionDescription: this.formsVersionDescription,
+      policyMod: this.policyMod
     };
   }
 }
