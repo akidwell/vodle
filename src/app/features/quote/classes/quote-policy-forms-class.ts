@@ -28,6 +28,7 @@ export class QuotePolicyFormClass extends PolicyFormClass {
       formIndex: this.formIndex,
       allowMultiples: this.allowMultiples,
       attachmentMethod: this.attachmentMethod,
+      isSelected: this.isSelected,
       formData: this.formData
     };
   }
