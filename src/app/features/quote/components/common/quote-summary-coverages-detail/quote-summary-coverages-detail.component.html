@@ -179,6 +179,7 @@
         id="terrorismPremium"
         [disabled]="!canEdit"
         string-to-currency
+        [allowNegative]="false"
         (change)="this.quoteData.calculateSummaryPremiums();"
         name="terrorismPremium"
         [(ngModel)]="quoteData.terrorismPremium"
@@ -216,6 +217,10 @@
           class="form-control"
           id="brokerPercent"
           name="brokerPercent"
+          (change)="this.quoteData.calculateSummaryPremiums();"
+          string-to-currency
+          [allowNegative]="false"
+          [decimalPlaces]="1"
           [(ngModel)]="quoteData.commissionRate"
           #brokerPercent="ngModel"
         />
@@ -227,6 +232,9 @@
           id="brokerPremium"
           readonly
           name="brokerPremium"
+          string-to-currency
+          [allowNegative]="false"
+          [decimalPlaces]="2"
           [(ngModel)]="quoteData.brokerCommission"
           #brokerPremium="ngModel"
         />

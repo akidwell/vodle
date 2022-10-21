@@ -4,13 +4,16 @@
     <button type="button" name="quoteLetter" class="btn btn-primary" (click)="generateQuoteLetter()">Quote Letter</button>
   </div>
   <div class="col-lg-3">
-    <label for="submissionNumber">Quote Date</label>
-    <input style="display: inline-block; max-width: 80%"  matInput [matDatepicker]="quoteDateCalendar"
-          class="form-control" [readonly]="!canEdit"
-          [(ngModel)]="quoteData.printedAt" name="quoteEffDate" #polEffDate="ngModel"/>
-        <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%"
-          [for]="quoteDateCalendar"> </mat-datepicker-toggle>
-        <mat-datepicker #quoteDateCalendar></mat-datepicker>
+    <label for="quoteDate">Quote Date</label>
+    <input
+      type="text"
+      class="form-control"
+      id="quoteDate"
+      readonly
+      name="quoteDate"
+      [(ngModel)]="quoteLetterGeneratedDisplay"
+      #expirationDate="ngModel"
+    />
   </div>
   <div class="col-lg-3">
     <label for="expirationDays">Expiration Days</label>
@@ -19,6 +22,7 @@
       class="form-control"
       id="expirationDays"
       name="expirationDays"
+      (change)="changeQuoteExpirationDate()"
       [(ngModel)]="quoteExpirationDays"
       #expirationDays="ngModel"
     />
@@ -31,10 +35,28 @@
       id="expirationDate"
       readonly
       name="expirationDate"
-      [(ngModel)]="quoteExpirationDate"
+      [(ngModel)]="quoteLetterExpirationDisplay"
       #expirationDate="ngModel"
     />
   </div>
 </div>
-<div class="row">
+<div class="row"> &nbsp;
+</div>
+<div class="row" *ngIf="quoteData">
+  <div class="col-lg-3">
+    <label for="binderLetter" style="width:100%">&nbsp;</label>
+    <button type="button" name="binderLetter" class="btn btn-primary" (click)="generateBinderLetter()">Binder Letter</button>
+  </div>
+  <div class="col-lg-3">
+    <label for="binderDate">Binder Date</label>
+    <input
+      type="text"
+      class="form-control"
+      id="binderDate"
+      readonly
+      name="binderDate"
+      [(ngModel)]="binderLetterGeneratedDisplay"
+      #expirationDate="ngModel"
+    />
+  </div>
 </div>

@@ -676,11 +676,13 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     });
   }
   calculateSummaryPremiums(): void {
+    //Add all commission eligible premium
     let premiumCommissionAvailable = this.totalPremium;
     this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
+    premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
-    const terrorismPremium = (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
-    let totalPremium = premiumCommissionAvailable + terrorismPremium;
+    //Add all non-commission eligible items for total premium
+    let totalPremium = premiumCommissionAvailable;
     this.quoteLineItems.map((surchargeOrFee) => (totalPremium += surchargeOrFee.amount ?? 0));
     this.totalAdvancePremium = totalPremium;
   }
