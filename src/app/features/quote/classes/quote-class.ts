@@ -140,6 +140,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   naicsCode = null;
   sicCode = null;
   formsVersionDescription: string | null = null;
+  departmentId: number | null = null;
   ////////End Database fields
   mappingError = false;
   submission!: SubmissionClass;
@@ -267,6 +268,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.quoteLineItems = lineItems;
     this.formsVersion = quote.formsVersion;
     this.formsVersionDescription = quote.formsVersionDescription;
+    this.departmentId = quote.departmentId;
     this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
@@ -563,7 +565,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       importErrors: this.importErrors,
       importWarnings: this.importWarnings,
       totalPremium: this.totalPremium,
-      formsVersionDescription: this.formsVersionDescription
+      formsVersionDescription: this.formsVersionDescription,
+      departmentId: this.departmentId
     };
   }
 }

@@ -221,13 +221,9 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     // this.policyFormsService.getQuote(this.quote.quoteId);
     this.isBusy = true;
     const response$ = this.policyFormsService.getQuote(this.quote.quoteId);
-    await lastValueFrom(response$).then((guideline) => {
-      if (guideline) {
-
-        const file = new Blob([guideline], { type: 'application/octet-stream' });
-        // const fileURL = URL.createObjectURL(file);
-        // window.open(fileURL,'test.pdf');
-
+    await lastValueFrom(response$).then((quoteLetter) => {
+      if (quoteLetter) {
+        const file = new Blob([quoteLetter], { type: 'application/octet-stream' });
         const element = document.createElement('a');
         element.href = URL.createObjectURL(file);
         element.download = 'QL-' + this.quote.submissionNumber + 'Q' + this.quote.quoteNumber + '.docx';
@@ -247,13 +243,9 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     // this.policyFormsService.getQuote(this.quote.quoteId);
     this.isBusy = true;
     const response$ = this.policyFormsService.getBinder(this.quote.quoteId);
-    await lastValueFrom(response$).then((guideline) => {
-      if (guideline) {
-
-        const file = new Blob([guideline], { type: 'application/pdf' });
-        // const fileURL = URL.createObjectURL(file);
-        // window.open(fileURL,'test.pdf');
-
+    await lastValueFrom(response$).then((binderLetter) => {
+      if (binderLetter) {
+        const file = new Blob([binderLetter], { type: 'application/pdf' });
         const element = document.createElement('a');
         element.href = URL.createObjectURL(file);
         element.download = 'BL-' + this.quote.submissionNumber + 'Q' + this.quote.quoteNumber + '.pdf';
@@ -265,7 +257,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
       .catch((error) => {
         this.isBusy = false;
         const message = String.fromCharCode.apply(null, new Uint8Array(error.error) as any);
-        this.messageDialogService.open('Quote Letter Error', message);
+        this.messageDialogService.open('Binder Letter Error', message);
       });
   }
 }

@@ -127,4 +127,5 @@ export interface Quote {
   disclaimerData: Disclaimers[];
   totalPremium: number | null;
   formsVersionDescription: string | null;
+  departmentId: number | null;
 }
