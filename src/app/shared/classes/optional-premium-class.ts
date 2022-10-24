@@ -163,6 +163,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     this.buildingNumber = optionalPremium.buildingNumber;
     this.premisesNumber = optionalPremium.premisesNumber;
     this.isAppliedToAll = optionalPremium.isAppliedToAll;
+    this.guid = optionalPremium.guid;
     this._coverageCode = optionalPremium.coverageCode;
     this._limit = optionalPremium.limit;
     this._isSubjectToMaxAmount = optionalPremium.isSubjectToMaxAmount;
