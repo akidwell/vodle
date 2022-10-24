@@ -12,6 +12,6 @@ export interface OptionalPremium {
   deductibleCode: string | null;
   additionalPremium: number | null;
   additionalDetail: string;
-  guid?: string;
+  guid: string;
   isNew?: boolean;
 }
