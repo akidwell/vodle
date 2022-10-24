@@ -2,6 +2,7 @@ import { Moment } from 'moment';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
+import { Warranties } from 'src/app/shared/interfaces/warranties';
 import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteLineItem } from './quote-line-item';
@@ -125,6 +126,7 @@ export interface Quote {
   riskState: string;
   quotePolicyForms: PolicyForm[];
   subjectivityData: Subjectivities[];
+  warrantyData: Warranties[];
   disclaimerData: Disclaimers[];
   totalPremium: number | null;
   formsVersionDescription: string | null;

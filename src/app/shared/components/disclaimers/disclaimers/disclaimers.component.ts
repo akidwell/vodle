@@ -19,7 +19,7 @@ import { SharedComponentBase } from 'src/app/shared/component-base/shared-compon
   styleUrls: ['./disclaimers.component.css']
 })
 export class DisclaimersComponent extends SharedComponentBase implements OnInit {
-  collapsed = false;
+  collapsed = true;
   filteredDisclaimers: DisclaimersClass[] = [];
 
   documentType: string[] = ['Quote', 'Binder','Both'];
