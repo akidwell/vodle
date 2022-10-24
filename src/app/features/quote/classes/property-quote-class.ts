@@ -290,6 +290,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     const index = this.propertyQuoteBuildingList.indexOf(building, 0);
     if (index > -1) {
       this.propertyQuoteBuildingList.splice(index, 1);
+      // Mark dirty to force form rules check
+      this.markDirty();
     }
     if (building.propertyQuoteBuildingCoverage.length > 0) {
       this.filterBuildingsCoverages();
