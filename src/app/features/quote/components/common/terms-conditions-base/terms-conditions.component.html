@@ -1,4 +1,7 @@
-<rsps-subjectivities *ngIf="quote" [type]="classType" [quote]="quote" [subjectivities]="quote.subjectivityData" 
+<rsps-warranties *ngIf="quote" [type]="classType" [quote]="quote" [warranties]="quote.warrantyData"
+[submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-warranties>
+<rsps-subjectivities *ngIf="quote" [type]="classType" [quote]="quote" [subjectivities]="quote.subjectivityData"
 [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-subjectivities>
-<rsps-disclaimers *ngIf="quote" [type]="classType" [quote]="quote" [disclaimers]="quote.disclaimerData" 
+<rsps-disclaimers *ngIf="quote" [type]="classType" [quote]="quote" [disclaimers]="quote.disclaimerData"
 [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-disclaimers>
+

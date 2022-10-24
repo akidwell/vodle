@@ -2,10 +2,10 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
-import { Subjectivities } from '../interfaces/subjectivities';
 import { Validation } from '../interfaces/validation';
+import { Warranties } from '../interfaces/warranties';
 
-export abstract class SubjectivitiesClass implements Subjectivities, Validation, QuoteAfterSave{
+export abstract class WarrantiesClass implements Warranties, Validation, QuoteAfterSave{
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
@@ -17,18 +17,23 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
   invalidList: string[] = [];
   sequence: number | null = null;
   isUserDefined: boolean | null = null;
-  subjectivityCode: number | null = null;
+  warrantyCode: number | null = null;
   sortSequence: number | null = null;
   ysnDefault: boolean | null = null;
   ysnAutoSelect: boolean | null = null;
   ysnDeletable: boolean | null = null;
-  subjectivityDesc: string | null = null;
   description: string | null = null;
   document: string | null = null;
+  sectionHeader = '';
+  mainHeader: string | null = null;
+  warrantyOf = '';
+  firstFilteredMainHeaderRow = false;
+  firstFilteredSectionHeaderRow = false;
 
-  constructor(subjectivities?: Subjectivities){
-    if (subjectivities) {
-      this.existingInit(subjectivities);
+
+  constructor(warrantys?: Warranties){
+    if (warrantys) {
+      this.existingInit(warrantys);
     } else {
       this.newInit();
     }
@@ -75,28 +80,32 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
     this._errorMessages = value;
   }
 
-  existingInit(sub: Subjectivities){
+  existingInit(sub: Warranties){
     this._isIncluded = sub.isIncluded;
     this.sequence = sub.sequence;
     this.isUserDefined = sub.isUserDefined;
-    this.subjectivityCode = sub.subjectivityCode;
+    this.warrantyCode = sub.warrantyCode;
     this.sortSequence= sub.sortSequence;
     this.ysnDefault = sub.ysnDefault;
     this.ysnAutoSelect= sub.ysnAutoSelect;
     this.ysnDeletable = sub.ysnDeletable;
-    this.subjectivityDesc = sub.subjectivityDesc;
+    this.description = sub.description;
     this.description= sub.description;
     this.document = sub.document;
+    this.sectionHeader = sub.sectionHeader;
+    this.mainHeader = sub.mainHeader;
+    this.warrantyOf = sub.warrantyOf ?? '';
   }
 
   newInit() {
     this.ysnDefault = false;
     this.isDirty = true;
+    this._isDirty = true;
     this.isIncluded = true;
   }
 
   validate(){
-    this._validationResults.resetValidation();
+    console.log(this.isDirty);
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
       this.classValidation();
@@ -118,5 +127,5 @@ export abstract class SubjectivitiesClass implements Subjectivities, Validation,
     markDirty() {
       this._isDirty = true;
     }
-    abstract toJSON(): Subjectivities;
+    abstract toJSON(): Warranties;
 }
