@@ -108,8 +108,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   printedAt: Date | Moment | null = null;
   facTreatyType = null;
   premiumRate = null;
-  ownerId = null;
-  ownerUserId = null;
+  ownerId: number | null = null;
+  ownerUserId: number | null = null;
   flatRateIndicator = false;
   sinceInception = false;
   formsVersion: number | null = null; //intVersion in PAUL
@@ -292,6 +292,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.formsVersion = quote.formsVersion;
     this.formsVersionDescription = quote.formsVersionDescription;
     this.departmentId = quote.departmentId;
+    this.ownerUserId = quote.ownerUserId;
     this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
