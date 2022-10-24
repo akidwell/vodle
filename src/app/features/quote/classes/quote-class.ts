@@ -20,6 +20,8 @@ import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 import { QuoteDisclaimersClass } from './quote-disclaimers-class';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
+import { Warranties } from 'src/app/shared/interfaces/warranties';
+import { QuoteWarrantiesClass } from './quote-warranties-class';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -33,6 +35,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   invalidList: string[] = [];
   warningsList: string[] = [];
   warningsMessage = '';
+  brokerCommission = 0;
+  totalAdvancePremium = 0;
 
   submissionNumber = 0;
   quoteId = 0;
@@ -45,20 +49,20 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
   policyNumber: string | number = '--';
+  policyMod: string | null = '--';
   carrierCode = '';
   pacCode = '';
   quoteName = null;
   policySymbol = '';
   formName = '';
   terrorismCoverageSelected = false;
-  terrorismPremium = null;
   terrorismTemplateCode = '';
   grossPremium = null;
   grossLimits = null;
   partOf = null;
   attachmentPoint = null;
   underlyingLimits = null;
-  commissionRate = null;
+  commissionRate: number | null = null;
   ratingBasis = null;
   riskSelectionComments = null;
   approvalRequired = false;
@@ -101,7 +105,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   underlyingUMLimit1Mil = false;
   umuimAcceptedLastYear = false;
   indicationPremium = null;
-  printedAt = null;
+  printedAt: Date | Moment | null = null;
   facTreatyType = null;
   premiumRate = null;
   ownerId = null;
@@ -119,9 +123,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   productManufactureDate = null;
   discontinuedProducts = null;
   autoCalcMiscPremium = false;
-  minimumPremium = null;
+  minimumPremium: number | null = null;
   advancePremium = null;
-  earnedPremiumPct = null;
   variesByLoc = false;
   pcfCharge = null;
   pcfChargeDesc = null;
@@ -150,6 +153,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   quoteLineItemsValidation: QuoteValidationClass | null = null;
   quotePolicyForms: QuotePolicyFormClass[] = [];
   subjectivityData:QuoteSubjectivitiesClass[] = [];
+  warrantyData:QuoteWarrantiesClass[] = [];
   disclaimerData:QuoteDisclaimersClass[] = [];
 
   propertyQuote!: PropertyQuoteClass;
@@ -203,7 +207,22 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._totalPremium = value;
     this._isDirty = true;
   }
-
+  private _terrorismPremium = 0;
+  get terrorismPremium(): number {
+    return this._terrorismPremium;
+  }
+  set terrorismPremium(value: number | null) {
+    this._isDirty = true;
+    this._terrorismPremium = value || 0;
+  }
+  private _earnedPremiumPct = 0;
+  get earnedPremiumPct(): number {
+    return this._earnedPremiumPct;
+  }
+  set earnedPremiumPct(value: number | null) {
+    this._isDirty = true;
+    this._earnedPremiumPct = value || 0;
+  }
   get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
   }
@@ -247,14 +266,18 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
     this.policySymbol = quote.policySymbol || '';
+    this.policyNumber = quote.policyNumber || '--';
+    this.policyMod = quote.policyMod || '--';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this.autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
     this.programId = quote.programId || 0;
     this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
     this.submissionNumber = quote.submissionNumber || 0;
+    this.commissionRate = quote.commissionRate || 17.5; //TODO: remove hardcode for service
     this.displayCommissionRate = quote.displayCommissionRate || 1;
     this.createdBy = quote.createdBy || '';
     this.createdDate = quote.createdDate || null;
+    this.printedAt = quote.printedAt || null;
     this.submission = new SubmissionClass(quote.submission);
     const rates: QuoteRateClass[] = [];
     quote.quoteRates?.forEach(element => {
@@ -272,6 +295,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
+    this._terrorismPremium = quote.terrorismPremium || 0;
+    this._earnedPremiumPct = quote.earnedPremiumPct || 0;
     this._policyEffectiveDate = quote.policyEffectiveDate || null;
     this._policyExpirationDate = quote.policyExpirationDate || null;
 
@@ -298,6 +323,16 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       });
     }
     this.disclaimerData = disclaimers;
+
+
+    const warranties: QuoteWarrantiesClass[] = [];
+    if(quote.warrantyData) {
+      quote.warrantyData.forEach((element) => {
+        warranties.push(new QuoteWarrantiesClass(element));
+      });
+    }
+    this.warrantyData = warranties;
+
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -434,6 +469,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   // }
   abstract onSave(savedQuote:PropertyQuoteClass): void;
 
+  abstract calculateSummaryPremiums(): void;
+
   abstract toJSON(): Quote;
 
   baseToJSON(): Quote {
@@ -445,6 +482,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
     const subjectivities: Subjectivities[] = [];
     this.subjectivityData.forEach(c => subjectivities.push(c.toJSON()));
+    const warranties: Warranties[] = [];
+    this.warrantyData.forEach(c => warranties.push(c.toJSON()));
     const disclaimers: Disclaimers[] = [];
     this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
     return {
@@ -476,6 +515,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       quoteLineItems: lineItems,
       quotePolicyForms: forms,
       subjectivityData: subjectivities,
+      warrantyData: warranties,
       disclaimerData: disclaimers,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
@@ -566,7 +606,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       importWarnings: this.importWarnings,
       totalPremium: this.totalPremium,
       formsVersionDescription: this.formsVersionDescription,
-      departmentId: this.departmentId
+      departmentId: this.departmentId,
+      policyMod: this.policyMod
     };
   }
 }

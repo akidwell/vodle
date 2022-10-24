@@ -20,7 +20,7 @@ import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
   styleUrls: ['./subjectivities.component.css']
 })
 export class SubjectivitiesComponent extends SharedComponentBase implements OnInit {
-  collapsed = false;
+  collapsed = true;
   filteredSubjectivities: SubjectivitiesClass[] = [];
 
   documentType: string[] = ['Quote', 'Binder','Both'];

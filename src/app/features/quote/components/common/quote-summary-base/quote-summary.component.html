@@ -1,25 +1,32 @@
-<div class="top-info">
-  <div class="card-header info-header">
-    <div class="row">
-      Property - Submission Number
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-lg-9">
+<div >
+  <div *ngFor="let program of department?.programMappings">
+    <div class="card" *ngIf="program.quoteData != null">
+      <div class="card-header info-header">
         <div class="row">
-          <rsps-quote-summary-coverages-detail></rsps-quote-summary-coverages-detail>
-        </div>
-        <div class="row">
-          <rsps-quote-summary-premium-detail></rsps-quote-summary-premium-detail>
+          <div class="col-lg-12">
+            {{program.programDesc}} - Submission #{{program.quoteData.submissionNumber}}
+          </div>
         </div>
       </div>
-      <div class="col-lg-3">
+      <div class="card-body">
         <div class="row">
-          <rsps-quote-summary-submission-info></rsps-quote-summary-submission-info>
-        </div>
-        <div class="row">
-          <rsps-quote-summary-quote-bind></rsps-quote-summary-quote-bind>
+          <div class="col-lg-7">
+            <div class="row">
+              <rsps-quote-summary-coverages-detail [program]="program"></rsps-quote-summary-coverages-detail>
+            </div>
+            <!-- <div class="row">
+              <rsps-quote-summary-premium-detail></rsps-quote-summary-premium-detail>
+            </div> -->
+          </div>
+          <div class="col-lg-5">
+            <div class="row">
+              <rsps-quote-summary-submission-info *ngIf="program.quoteData" [quote]="program.quoteData"></rsps-quote-summary-submission-info>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+              <rsps-quote-summary-quote-bind [program]="program"></rsps-quote-summary-quote-bind>
+            </div>
+          </div>
         </div>
       </div>
     </div>
