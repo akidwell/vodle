@@ -89,8 +89,6 @@ export function Log(params?: LoggerParams): (target: any, propertyKey: string, d
   };
 }
 
-// If you want every other console log to also be timestamped look here:
-// https://stackoverflow.com/a/36887315/15439733
 function formatConsoleDate(date: Date) {
   const hour = date.getHours();
   const minutes = date.getMinutes();
