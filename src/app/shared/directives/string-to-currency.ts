@@ -5,6 +5,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Directive, ElementRef, forwardRef, HostListener, Input } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { MinusSignToParens } from '../pipes/minus-sign.pipe';
+import { Log } from '../decorators/logger';
 
 @Directive({
   selector: 'input[string-to-currency]',
@@ -24,6 +25,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
   constructor(protected el: ElementRef) {}
 
   @HostListener('input', ['$event'])
+  @Log({type: 'log'})
   change(event: any) {
     const target = event.target;
     const posStart = target.selectionStart ?? 0;
@@ -58,6 +60,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
   }
 
   @HostListener('blur', ['$event.target'])
+  @Log({type: 'log'})
   onLeaveEvent(target: HTMLInputElement) {
     if (!target.readOnly) {
       // If leaving control and only thing is a symbol like - or . then it will automatically remove it
@@ -67,6 +70,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
   }
 
   @HostListener('focus', ['$event.target'])
+  @Log({type: 'log'})
   onEnterEvent(target: HTMLInputElement) {
     // Convert Parenthesis to minus sign
     if (!target.readOnly && target.value.charAt(0) === '(') {
@@ -75,6 +79,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
   }
 
   @HostListener('keydown', ['$event'])
+  @Log({type: 'log'})
   onKeyDown(event: any) {
     const el: HTMLInputElement = event.target as HTMLInputElement;
 
@@ -149,7 +154,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
       return false;
     }
   }
-
+  @Log({type: 'log'})
   private formatToDisplayCurrency(input: string): string {
     const currencyPipe = new CurrencyPipe('en-US');
     const minusPipe = new MinusSignToParens();
@@ -182,6 +187,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
     return formattedValue;
   }
 
+  @Log({type: 'log'})
   private formatToEditCurrency(input: string): string {
     const currencyPipe = new CurrencyPipe('en-US');
     let decimalLen = 0;
