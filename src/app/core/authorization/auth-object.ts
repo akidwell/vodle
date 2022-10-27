@@ -3,6 +3,7 @@ export interface IAuthObject {
   CanEditPolicy: string,
   CanEditSubmission: string,
   CanEditInsured: string,
+  CanEditQuote: string,
   userRole: string,
   environment: string,
   aud: string,
