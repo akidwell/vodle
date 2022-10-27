@@ -20,6 +20,8 @@ import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 import { QuoteDisclaimersClass } from './quote-disclaimers-class';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
+import { Warranties } from 'src/app/shared/interfaces/warranties';
+import { QuoteWarrantiesClass } from './quote-warranties-class';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -106,8 +108,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   printedAt: Date | Moment | null = null;
   facTreatyType = null;
   premiumRate = null;
-  ownerId = null;
-  ownerUserId = null;
+  ownerId: number | null = null;
+  ownerUserId: number | null = null;
   flatRateIndicator = false;
   sinceInception = false;
   formsVersion: number | null = null; //intVersion in PAUL
@@ -141,6 +143,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   naicsCode = null;
   sicCode = null;
   formsVersionDescription: string | null = null;
+  departmentId: number | null = null;
   ////////End Database fields
   mappingError = false;
   submission!: SubmissionClass;
@@ -150,6 +153,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   quoteLineItemsValidation: QuoteValidationClass | null = null;
   quotePolicyForms: QuotePolicyFormClass[] = [];
   subjectivityData:QuoteSubjectivitiesClass[] = [];
+  warrantyData:QuoteWarrantiesClass[] = [];
   disclaimerData:QuoteDisclaimersClass[] = [];
 
   propertyQuote!: PropertyQuoteClass;
@@ -287,6 +291,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.quoteLineItems = lineItems;
     this.formsVersion = quote.formsVersion;
     this.formsVersionDescription = quote.formsVersionDescription;
+    this.departmentId = quote.departmentId;
+    this.ownerUserId = quote.ownerUserId;
     this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
     this._totalPremium = quote.totalPremium;
@@ -318,6 +324,16 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       });
     }
     this.disclaimerData = disclaimers;
+
+
+    const warranties: QuoteWarrantiesClass[] = [];
+    if(quote.warrantyData) {
+      quote.warrantyData.forEach((element) => {
+        warranties.push(new QuoteWarrantiesClass(element));
+      });
+    }
+    this.warrantyData = warranties;
+
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -467,6 +483,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
     const subjectivities: Subjectivities[] = [];
     this.subjectivityData.forEach(c => subjectivities.push(c.toJSON()));
+    const warranties: Warranties[] = [];
+    this.warrantyData.forEach(c => warranties.push(c.toJSON()));
     const disclaimers: Disclaimers[] = [];
     this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
     return {
@@ -498,6 +516,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       quoteLineItems: lineItems,
       quotePolicyForms: forms,
       subjectivityData: subjectivities,
+      warrantyData: warranties,
       disclaimerData: disclaimers,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
@@ -588,6 +607,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       importWarnings: this.importWarnings,
       totalPremium: this.totalPremium,
       formsVersionDescription: this.formsVersionDescription,
+      departmentId: this.departmentId,
       policyMod: this.policyMod
     };
   }

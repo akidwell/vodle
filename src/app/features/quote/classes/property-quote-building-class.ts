@@ -422,6 +422,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     const index = this.propertyQuoteBuildingCoverage.indexOf(coverage, 0);
     if (index > -1) {
       this.propertyQuoteBuildingCoverage.splice(index, 1);
+      // Mark dirty to force form rules check
+      this.propertyQuote.markDirty();
     }
     this.propertyQuote.filterCoverages();
     this.propertyQuote.calculateSubjectAmounts();

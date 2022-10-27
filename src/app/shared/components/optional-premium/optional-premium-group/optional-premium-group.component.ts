@@ -130,6 +130,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
     const index = this.optionalPremiumData?.indexOf(optionalPremium, 0);
     if (index > -1) {
       this.optionalPremiumData?.splice(index, 1);
+      // Mark dirty to force form rules check
+      this.program?.quoteData?.markDirty();
       if (!optionalPremium.isNew && optionalPremium.propertyQuoteBuildingOptionalCoverageId != null) {
         this.deleteSub = this.quoteService
           .deleteOptionalCoverage(optionalPremium.propertyQuoteBuildingOptionalCoverageId)
