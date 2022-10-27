@@ -5,7 +5,7 @@ import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { DisclaimerTypeView, FormViewType } from 'src/app/core/enums/form-view-type';
+import { DisclaimerTypeView } from 'src/app/core/enums/form-view-type';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuoteDisclaimersClass } from 'src/app/features/quote/classes/quote-disclaimers-class';
@@ -149,6 +149,10 @@ export class DisclaimersComponent extends SharedComponentBase implements OnInit 
     this.userDefinedInfo.isDirty = true;
     this.desc = '';
     this.quote.disclaimerData.push(new QuoteDisclaimersClass(this.userDefinedInfo));
+    // have to set to dirty after pushed due to abstract classes can't be instantiated
+    // and don't want to set isDirty in the ExisitingInit Function as that is truly for what's from the DB
+    const lastAdded = this.quote.disclaimerData.length - 1;
+    this.quote.disclaimerData[lastAdded].isDirty = true;
     console.log(this.userDefinedInfo);
     this.refreshDisclaimers();
   }

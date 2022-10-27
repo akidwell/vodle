@@ -39,8 +39,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   private _optionalWarranties: WarrantiesClass[] = [];
   private _addedWarranties: WarrantiesClass[] = [];
 
-
-
   @ViewChild(NgForm, { static: false }) userForm!: NgForm;
   @ViewChild('editModal') private modalContent!: TemplateRef<WarrantiesComponent>;
   @ViewChild('userModal') private modalContent2!: TemplateRef<WarrantiesComponent>;
@@ -53,8 +51,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   userWarranty = '';
   sectionHeaderList: WarrantiesClass[] = [];
   mainHeaderList: WarrantiesClass[] = [];
-
-
 
   @Input() quote!: QuoteClass;
   @Input() submissionNumber!: number;
@@ -74,7 +70,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     return this._optionalWarranties;
 
   }
-
   get addedWarranties(){
     return this._addedWarranties;
   }
@@ -102,14 +97,17 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     });
 
     //The warranty of dropdown list at the top of the card
-    // Just want the distinct warrantys
+    // Just want the distinct warranty ofs to display in that dropdown
     this.optionalWarranties = this._optionalWarranties.filter((item,i,arr) => arr.findIndex((x) => (x.warrantyOf === item.warrantyOf)) === i);
 
     //when we first display the list, only show those that are included and default
-    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || x.isIncluded);
-    //sort by the warranty of
-    this.filteredWarranties.sort((x,y) => x.warrantyOf?.localeCompare(y.warrantyOf));
-
+    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || x.isIncluded).sort((x,y) =>
+      (x.warrantyOf < y.warrantyOf ? -1 : 0));
+    //sort by the warranty of then section header
+    this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
+      (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
+      (x.sectionHeader < y.sectionHeader ? -1 : 0)
+    );
     // determine if it's the first main header/ section header that way they're only displayed once, not repeated
     let fMainHeader : string | null = '';
     let fSectionHeader : string | null = '';
@@ -134,22 +132,24 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   // or anytime a warranty is edited/user defined warranty is added
   refreshWarranties() {
     // reget any warranties that were added
-    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || x.isIncluded);
-    console.log(this.filteredWarranties);
+    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || x.isIncluded).sort((x,y) =>
+      (x.warrantyOf < y.warrantyOf ? -1 : 0)
+    );
     // re add any warranties that were chosed from the warranty dropdown that could be unchecked
     this.addedWarranties.map(element => {
       this.filteredWarranties.push(element);
     });
 
-    // sort by warranty of
-    this.filteredWarranties = this.filteredWarranties.sort((x,y) => x.warrantyOf?.localeCompare(y.warrantyOf));
 
-    // remove duplicates. the same warranty could be included
-    // but could also be not included if in the list of "added warranties"
-    this.filteredWarranties = Array.from(this.filteredWarranties.reduce((m, t) => m.set(t.warrantyCode, t), new Map()).values());
+    // sort by warranty of then by section header
+    // TO DO: Sort null section headers first, then other section headers
+    this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
+      (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
+    (x.sectionHeader < y.sectionHeader ? -1 : 0)
+    );
 
     // reset the firstrow flags
-    this.filteredWarranties.map(
+    this.warranties.map(
       x => {
         x.firstFilteredMainHeaderRow = false;
         x.firstFilteredSectionHeaderRow = false;
@@ -160,7 +160,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     console.log(this.filteredWarranties);
     let fMainHeader : string | null = '';
     let fSectionHeader : string | null = '';
-    console.log(this.filteredWarranties);
+
     for (const x of this.filteredWarranties) {
       if (x.mainHeader != fMainHeader) {
         x.firstFilteredMainHeaderRow = true;
@@ -190,8 +190,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
 
   setWarrantiesCount() {
     this.allWarrantiesCount = this.warranties.length;
-    this.mandatoryWarrantiesCount = this.warranties.filter((c) => c.ysnDefault).length;
-    this.optionalWarrantiesCount = this.warranties.filter((c) => !c.ysnDefault).length;
     this.onPolicyWarrantiesCount = this.warranties.filter((c) => c.isIncluded).length;
   }
 
@@ -212,20 +210,27 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
       this.userDefinedInfo.warrantyOf = sub.warrantyOf ?? null;
       this.userDefinedInfo.mainHeader = sub.mainHeader;
       this.userDefinedInfo.sectionHeader = sub.sectionHeader ?? null;
-      this.userDefinedInfo.warrantyCode = Math.max(...this.warranties.map(o => o.warrantyCode ?? 0)) + 1;
+      // this is to check if they are editing a preexisting userdefined warranty
+      //if so we can use that warranty code to edit and just update the DB
+      if (sub.isUserDefined){
+        this.userDefinedInfo.warrantyCode = sub.warrantyCode;
+      }
+      // if not, we need to create a new warranty code because we can't edit existing/defined warranties
+      // anything "edited" gets treated as a new user defined and a new userdefined will be saved to DB
+      else {
+        this.userDefinedInfo.warrantyCode = Math.max(...this.warranties.map(o => o.warrantyCode ?? 0)) + 1;
+      }
       this.desc = sub.description ?? '';
       this.userDefinedInfo.isIncluded = true;
-      this.userDefinedInfo.isDirty = true;
       this.userDefinedInfo.isUserDefined = true;
       this.modalRef = this.modalService.open(this.modalContent, { backdrop: 'static', centered: true });
       this.modalRef.result.then(resolve, resolve);
       sub.isIncluded = false;
-      console.log(this.userDefinedInfo);
     });
   }
 
   addWarranties(sub: WarrantiesClass){
-    this.addedWarranties = this.warranties.filter(x => x.warrantyOf == sub.warrantyOf);
+    this.addedWarranties = this.warranties.filter(x => x.warrantyOf == sub.warrantyOf && !(x.ysnDefault || x.isIncluded));
     this.refreshWarranties();
   }
   clearAndClose(): void {
@@ -238,15 +243,20 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   }
 
   async submit(): Promise<void> {
-    console.log(this.userDefinedInfo);
     this.userDefinedInfo.description = this.desc;
     this.editWarranty = this.userDefinedInfo;
-    console.log(this.editWarranty);
+    this.editWarranty.isDirty = true;
+    this.editWarranty.isIncluded = true;
     this.modalRef.close();
     this.desc = '';
     this.quote.warrantyData.push(new QuoteWarrantiesClass(this.editWarranty));
+    // have to set to dirty after pushed due to abstract classes can't be instantiated
+    // and don't want to set isDirty in the ExisitingInit Function as that is truly for what's from the DB
+    const lastAdded = this.quote.warrantyData.length - 1;
+    this.quote.warrantyData[lastAdded].isDirty = true;
     const newUserDefinedInfo: WarrantiesClass = ({} as any) as WarrantiesClass;
     this.editWarranty = newUserDefinedInfo;
+    this.userDefinedInfo = newUserDefinedInfo;
     this.refreshWarranties();
   }
 
