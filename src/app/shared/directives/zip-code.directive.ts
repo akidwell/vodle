@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Directive, ElementRef, forwardRef, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Log } from '../decorators/logger';
 import { ZipCodePipe } from '../pipes/zip-code.pipe';
 
 @Directive({
@@ -19,6 +20,7 @@ export class ZipCodeDirective implements ControlValueAccessor {
   constructor(protected el: ElementRef, private zipPipe: ZipCodePipe) {}
 
   @HostListener('keydown', ['$event'])
+  @Log({type: 'log'})
   onKeyDown(event: KeyboardEvent) {
     const numberPattern = /^[0-9]\d*$/;
     const pattern = /^[a-zA-Z0-9]+$/;
@@ -62,6 +64,7 @@ export class ZipCodeDirective implements ControlValueAccessor {
   }
 
   @HostListener('input', ['$event'])
+  @Log({type: 'log'})
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   change(event: any) {
     const original = event.target.value;
@@ -91,6 +94,7 @@ export class ZipCodeDirective implements ControlValueAccessor {
     this.onChange(target.value === '' ? null : target.value.toString().replaceAll('-', ''));
   }
 
+  @Log({type: 'log'})
   public async writeValue(value: any): Promise<void> {
     if (value !== null) {
       this.el.nativeElement.value = this.zipPipe.transform(value?.toString());

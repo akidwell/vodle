@@ -13,14 +13,14 @@ import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 })
 export class QuotePropertyLocationCoverageComponent {
   authSub: Subscription;
-  canEditSubmission = false;
+  canEdit = false;
   quote!: PropertyQuoteClass;
   programSub!: Subscription;
   classType = ClassTypeEnum.Quote;
 
   constructor(private userAuth: UserAuth, private pageDataService: PageDataService) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
 

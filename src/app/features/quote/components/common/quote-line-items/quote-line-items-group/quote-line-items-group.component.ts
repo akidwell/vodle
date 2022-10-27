@@ -26,8 +26,8 @@ export class QuoteLineItemsGroupComponent implements OnInit {
   faAngleDown = faAngleDown;
 
   constructor(private notification: NotificationService, private quoteService: QuoteService, private userAuth: UserAuth) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEdit = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
 

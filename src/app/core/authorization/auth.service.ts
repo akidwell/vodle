@@ -99,6 +99,7 @@ export class AuthService {
     this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
     this.userAuth.canEditInsured = token.CanEditInsured == 'True';
     this.userAuth.canEditSubmission = token.CanEditSubmission == 'True';
+    this.userAuth.canEditQuote = token.CanEditQuote == 'True';
     this.userAuth.userRole = token.userRole;
     this.userAuth.environment = token.environment;
     this.userAuth.loaded();
