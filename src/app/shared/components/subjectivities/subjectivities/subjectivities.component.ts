@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { last, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { FormViewType, SubjectivityTypeView } from 'src/app/core/enums/form-view-type';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
@@ -150,6 +150,10 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     this.userDefinedInfo.isDirty = true;
     this.desc = '';
     this.quote.subjectivityData.push(new QuoteSubjectivitiesClass(this.userDefinedInfo));
+    // have to set to dirty after pushed due to abstract classes can't be instantiated
+    // and don't want to set isDirty in the ExisitingInit Function as that is truly for what's from the DB
+    const lastAdded = this.quote.subjectivityData.length - 1;
+    this.quote.subjectivityData[lastAdded].isDirty = true;
     console.log(this.userDefinedInfo);
     this.refreshSubjectivities();
   }
