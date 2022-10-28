@@ -37,7 +37,7 @@ export function Log(params?: LoggerParams): (target: any, propertyKey: string, d
 
     // Overwrite console logging in production with printInProd = true
     // https://angular.io/api/core/isDevMode
-    if (!options.printInProd && (!isDevMode() || environment.production)) {
+    if (!options.printInProd && (environment.production)) {
       return;
     }
 
