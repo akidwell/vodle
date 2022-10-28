@@ -106,6 +106,7 @@ export abstract class WarrantiesClass implements Warranties, Validation, QuoteAf
 
   validate(){
     console.log(this.isDirty);
+    this._validationResults.resetValidation();
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
       this.classValidation();
