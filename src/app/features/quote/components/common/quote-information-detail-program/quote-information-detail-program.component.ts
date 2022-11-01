@@ -16,7 +16,7 @@ import { QuoteSavingService } from '../../../services/quote-saving-service/quote
 export class QuoteInformationDetailProgramComponent {
   formatDateForDisplay!: FormatDateForDisplay;
   authSub: Subscription;
-  canEditSubmission = false;
+  canEdit = false;
   newQuote = false;
   showWarnings = false;
   @Input() public program!: ProgramClass;
@@ -28,8 +28,8 @@ export class QuoteInformationDetailProgramComponent {
     private quoteSavingService: QuoteSavingService,
     private messageDialogService: MessageDialogService
   ) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => (this.canEditSubmission = canEditSubmission)
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => (this.canEdit = canEditQuote)
     );
     this.formatDateForDisplay = this.formatDateService;
   }
