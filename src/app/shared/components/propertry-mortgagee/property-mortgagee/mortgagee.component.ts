@@ -25,7 +25,7 @@ export class MortgageeComponent {
   quote!: MortgageeClass[];
   confirmation = '';
   authSub: Subscription;
-  canEditSubmission = false;
+  canEdit = false;
   faAngleDown = faAngleDown;
   //faAngleUp = faAngleUp;
   collapsed = true;
@@ -61,8 +61,8 @@ export class MortgageeComponent {
     private addressLookupService: AddressLookupService,
     private messageDialogService: MessageDialogService,
     private propertyDataService: PropertyDataService) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
   ngOnInit(): void {

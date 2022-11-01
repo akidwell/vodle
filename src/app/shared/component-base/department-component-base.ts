@@ -8,20 +8,20 @@ import { ComponentBase } from './component-base';
   template: ''
 })
 export abstract class DepartmentComponentBase extends ComponentBase implements OnDestroy {
-  submissionAuthSub: Subscription;
+  authSub: Subscription;
 
   private _type!: SharedComponentType;
 
   constructor(private userAuth: UserAuth) {
     super();
-    this.submissionAuthSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => {
-        this.canEdit = canEditSubmission;
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => {
+        this.canEdit = canEditQuote;
       }
     );
   }
 
   ngOnDestroy() {
-    this.submissionAuthSub?.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 }
