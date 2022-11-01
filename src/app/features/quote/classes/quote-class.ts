@@ -371,7 +371,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
 
   markDirty() {
     this._isDirty = true;
-    this._validationResults.isDirty = true;
+    //this._validationResults.isDirty = true;
   }
 
   setRequiredFields() {

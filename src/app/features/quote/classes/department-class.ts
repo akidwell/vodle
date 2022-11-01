@@ -143,7 +143,7 @@ export class DepartmentClass implements Department, Validation {
   }
   markDirty() {
     this._isDirty = true;
-    this._validationResults.isDirty = true;
+    //this._validationResults.isDirty = true;
   }
   markClean() {
     this._isDirty = false;
