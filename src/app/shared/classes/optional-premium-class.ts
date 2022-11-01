@@ -49,70 +49,70 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     return this._coverageCode;
   }
   set coverageCode(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._coverageCode = value;
   }
   get limit(): number | null{
     return this._limit;
   }
   set limit(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._limit = value;
   }
   get subjectToMaxPercent(): number | null {
     return this._subjectToMaxPercent;
   }
   set subjectToMaxPercent(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._subjectToMaxPercent = value;
   }
   get isSubjectToMaxAmount(): boolean {
     return this._isSubjectToMaxAmount;
   }
   set isSubjectToMaxAmount(value: boolean) {
-    this._isDirty = true;
+    this.markDirty();
     this._isSubjectToMaxAmount = value;
   }
   get isDeductibleSelected(): boolean {
     return this._isDeductibleSelected;
   }
   set isDeductibleSelected(value: boolean) {
-    this._isDirty = true;
+    this.markDirty();
     this._isDeductibleSelected = value;
   }
   get deductible(): number | null {
     return this._deductible;
   }
   set deductible(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._deductible = value;
   }
   get deductibleType(): string | null {
     return this._deductibleType;
   }
   set deductibleType(value: string | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._deductibleType = value;
   }
   get deductibleCode(): string | null {
     return this._deductibleCode;
   }
   set deductibleCode(value: string | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._deductibleCode = value;
   }
   get additionalPremium(): number | null {
     return this._additionalPremium;
   }
   set additionalPremium(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._additionalPremium = value;
   }
   get additionalDetail(): string {
     return this._additionalDetail;
   }
   set additionalDetail(value: string) {
-    this._isDirty = true;
+    this.markDirty();
     this._additionalDetail = value;
   }
   get validationResults(): QuoteValidationClass {

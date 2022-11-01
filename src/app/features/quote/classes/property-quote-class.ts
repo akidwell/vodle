@@ -527,11 +527,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.markClean();
     this.markChildrenClean();
   }
-  markDirty() {
-    this._isDirty = true;
-    ////////////////////////
-    this.showDirty = true;
-  }
   setRequiredFields() {
     // No special rules
   }

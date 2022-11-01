@@ -36,6 +36,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   warningsList: string[] = [];
   warningsMessage = '';
   brokerCommission = 0;
+  advancePremiumValue = 0;
   totalAdvancePremium = 0;
 
   submissionNumber = 0;
@@ -186,7 +187,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set classCode(value: number | null) {
     this._classCode = value == 0 ? null : value;
-    this._isDirty = true;
+    this.markDirty();
   }
   private _riskState = '';
 
@@ -196,7 +197,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
 
   set riskState(value: string) {
     this._riskState = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   private _totalPremium : number | null = null;
@@ -205,14 +206,14 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set totalPremium(value: number | null) {
     this._totalPremium = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   private _terrorismPremium = 0;
   get terrorismPremium(): number {
     return this._terrorismPremium;
   }
   set terrorismPremium(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._terrorismPremium = value || 0;
   }
   private _earnedPremiumPct = 0;
@@ -220,7 +221,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._earnedPremiumPct;
   }
   set earnedPremiumPct(value: number | null) {
-    this._isDirty = true;
+    this.markDirty();
     this._earnedPremiumPct = value || 0;
   }
   get policyEffectiveDate() : Date | null {
@@ -228,7 +229,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set policyEffectiveDate(value: Date | null) {
     this._policyEffectiveDate = value;
-    this._isDirty = true;
+    this.markDirty();
     this.setWarnings();
   }
 
@@ -237,7 +238,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set policyExpirationDate(value: Date | null) {
     this._policyExpirationDate = value;
-    this._isDirty = true;
+    this.markDirty();
     this.setWarnings();
   }
 
@@ -250,7 +251,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
     this.setWarnings();
-    //this.validate();
   }
   existingInit(quote: Quote) {
     this.submissionNumber = quote.submissionNumber || 0;
@@ -368,8 +368,10 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._isDirty = false;
     this.showDirty = false;
   }
+
   markDirty() {
     this._isDirty = true;
+    this._validationResults.isDirty = true;
   }
 
   setRequiredFields() {

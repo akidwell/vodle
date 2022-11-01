@@ -22,7 +22,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   propertyQuoteBuildingId = 0;
   propertyQuoteId = 0;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
-  propertyQuoteBuildingOptionalCoverage: QuoteOptionalPremiumClass[] = [];
 
   taxCode: string | null = null;
 
