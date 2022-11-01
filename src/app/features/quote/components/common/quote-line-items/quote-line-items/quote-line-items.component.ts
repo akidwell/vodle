@@ -30,8 +30,8 @@ export class QuoteLineItemsComponent implements OnInit {
   itemDescriptionSub!: Subscription;
 
   constructor(private lineItemDescriptionsService: LineItemDescriptionsService, private userAuth: UserAuth, private confirmationDialogService: ConfirmationDialogService) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEdit = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
 

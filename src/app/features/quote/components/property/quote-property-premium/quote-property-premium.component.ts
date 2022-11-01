@@ -19,7 +19,7 @@ export class QuotePropertyPremiumComponent implements OnInit {
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
   authSub: Subscription;
-  canEditSubmission = false;
+  canEdit = false;
 
   classType = ClassTypeEnum.Quote;
 
@@ -30,8 +30,8 @@ export class QuotePropertyPremiumComponent implements OnInit {
 
 
   constructor(private userAuth: UserAuth) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
 

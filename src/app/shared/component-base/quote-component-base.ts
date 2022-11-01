@@ -11,7 +11,7 @@ import { ComponentBase } from './component-base';
   template: ''
 })
 export abstract class QuoteComponentBase extends ComponentBase implements OnInit,OnDestroy {
-  submissionAuthSub: Subscription;
+  authSub: Subscription;
   program!: ProgramClass;
   quote!: PropertyQuoteClass;
   programSub!: Subscription;
@@ -20,9 +20,9 @@ export abstract class QuoteComponentBase extends ComponentBase implements OnInit
 
   constructor(private userAuth: UserAuth, private pageDataService: PageDataService) {
     super();
-    this.submissionAuthSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => {
-        this.canEdit = canEditSubmission;
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => {
+        this.canEdit = canEditQuote;
       }
     );
   }
@@ -39,6 +39,6 @@ export abstract class QuoteComponentBase extends ComponentBase implements OnInit
     );
   }
   ngOnDestroy() {
-    this.submissionAuthSub?.unsubscribe();
+    this.authSub?.unsubscribe();
   }
 }

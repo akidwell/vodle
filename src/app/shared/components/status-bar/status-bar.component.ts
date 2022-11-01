@@ -35,6 +35,7 @@ export class StatusBarComponent implements OnInit {
   faSearch = faSearch;
   insuredAuthSub!: Subscription;
   submissionAuthSub!: Subscription;
+  quoteAuthSub!: Subscription;
   policyAuthSub!: Subscription;
   lastSubmissionSub!: Subscription;
   disabled = true;
@@ -42,6 +43,7 @@ export class StatusBarComponent implements OnInit {
   canEditSubmission = false;
   canEditInsured = false;
   canEditPolicy = false;
+  canEditQuote = false;
   currentUrl = '';
   userPanelSize = 0;
   headerWidth = 0;
@@ -66,6 +68,9 @@ export class StatusBarComponent implements OnInit {
     );
     this.submissionAuthSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    );
+    this.quoteAuthSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEditQuote = canEditQuote
     );
     this.policyAuthSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy

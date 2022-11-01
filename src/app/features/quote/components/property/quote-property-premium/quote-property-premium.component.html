@@ -11,16 +11,16 @@
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
         <div *ngIf="quote" class="card-body">
             <rsps-property-premium-rate [programDescription]="program.programDesc"
-                [limitTotal]="quote.limitTotal" [rate]="rate" [canEdit]="canEditSubmission">
+                [limitTotal]="quote.limitTotal" [rate]="rate" [canEdit]="canEdit">
             </rsps-property-premium-rate>
         </div>
        <div *ngIf="quote" class="card-body top-bordered" >
             <rsps-property-deductible-group [programId]="program.programId" [classType]="classType"
-                [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEditSubmission">
+                [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEdit">
             </rsps-property-deductible-group>
         </div>
     </div>
     <div class="card-footer">
-        <button style="float:left" *ngIf="canEditSubmission" class="link-button" (click)="addDeductible();">Add Deductible</button>
+        <button style="float:left" *ngIf="canEdit" class="link-button" (click)="addDeductible();">Add Deductible</button>
     </div>
 </div>
