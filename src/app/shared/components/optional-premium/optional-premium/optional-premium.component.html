@@ -13,7 +13,6 @@
           [virtualScroll]="true"
           click-stop-propagation
           [clearable]="false"
-          click-stop-propagation
           [searchFn]="dropDownSearch"
           [(ngModel)]="optionalPremiumData.building"
         >
@@ -37,6 +36,7 @@
           (change)="setActiveCoverageMapping(optionalPremiumData.coverageCode)"
           [clearable]="false"
           click-stop-propagation
+          validate-on-change
           [searchFn]="dropDownSearch"
           [(ngModel)]="optionalPremiumData.coverageCode"
         >
@@ -53,6 +53,8 @@
           name="limit"
           click-stop-propagation
           string-to-currency
+          validate-on-change
+          [validateLevel]="validateQuote"
           [allowNegative]="false"
           [required]="isLimitRequired"
           [readonly]="!canEdit || !isLimitAvailable"
@@ -73,6 +75,7 @@
                 click-stop-propagation
                 (change)="optionalPremiumData.onChangeSubjectToMax()"
                 [(ngModel)]="optionalPremiumData.isSubjectToMaxAmount"
+                validate-on-change
                 name="isSubjectToMaxAmount"
                 [readonly]="
                   !canEdit ||
@@ -97,6 +100,7 @@
                 [hideDecimal]="true"
                 [allowNegative]="false"
                 [required]="canEdit && isPremiumMappingSet && optionalPremiumData.isSubjectToMaxAmount"
+                validate-on-change
                 [readonly]="
                   !canEdit ||
                   !isPremiumMappingSet ||
@@ -120,6 +124,8 @@
             click-stop-propagation
             (change)="optionalPremiumData.onChangeDeductible()"
             [(ngModel)]="optionalPremiumData.isDeductibleSelected"
+            validate-on-change
+            [fullValidate]="true"
             name="maxAmount"
             [readonly]="!canEdit || !isPremiumMappingSet || !isDeductibleAvailable"
           />
@@ -133,6 +139,9 @@
           id="additionalPremium"
           name="additionalPremium"
           click-stop-propagation
+          validate-on-change
+          [validateLevel]="validateQuote"
+          [fullValidate]="true"
           [readonly]="!canEdit || !isPremiumMappingSet"
           [required]="canEdit && isPremiumMappingSet && isAdditionalPremiumRequired"
           [allowNegative]="false"
@@ -196,6 +205,7 @@
             class="form-control"
             id="deductibleValue"
             name="deductibleValue"
+            validate-on-change
             [(ngModel)]="optionalPremiumData.deductible"
             #deductibleValue="ngModel"
           />
@@ -249,6 +259,7 @@
               !optionalPremiumData.isDeductibleSelected
             "
             [clearable]="false"
+            validate-on-change
             [(ngModel)]="optionalPremiumData.deductibleCode"
           >
           </ng-select>
@@ -268,6 +279,7 @@
             id="additionalComment"
             name="additionalComment"
             maxlength="50"
+            validate-on-change
             [readonly]="!canEdit || !isPremiumMappingSet"
             [(ngModel)]="optionalPremiumData.additionalDetail"
             #additionalComment="ngModel"

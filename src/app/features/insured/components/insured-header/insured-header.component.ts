@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/core/components/notification/notifi
 import { HistoricRoute } from 'src/app/core/models/historic-route';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
@@ -26,6 +27,8 @@ export class InsuredHeaderComponent {
   @Input() public insured!: Insured;
   @Input() public showSubmissionSave?: boolean;
   @Input() public showInsuredSave?: boolean;
+  @Input() public showQuoteSave?: boolean;
+
   @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
 
   faSave = faSave;
@@ -33,9 +36,7 @@ export class InsuredHeaderComponent {
 
   isBusy = false;
   showBusy = false;
-
-
-
+  isSaving = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -183,5 +184,32 @@ export class InsuredHeaderComponent {
       }
     }
     return false;
+  }
+  async saveFullQuotes() {
+    this.isSaving = true;
+    let department: DepartmentClass;
+    if (this.pageDataService.quoteData == null) {
+      this.isSaving = false;
+      return;
+    } else {
+      department = this.pageDataService.quoteData;
+    }
+    if (department.canBeSaved) {
+      const results$ = this.quoteService.updateAllQuotes(department);
+      await lastValueFrom(results$).then(async () => {
+        department.markClean();
+        department.afterSave();
+        this.isSaving = false;
+        this.notification.show('Quote successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
+        return true;
+      },
+      (error) => {
+        this.notification.show('Quote Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
+        const errorMessage = error.error?.Message ?? error.message;
+        this.messageDialogService.open('Quote Save Error', errorMessage);
+        this.isSaving = false;
+        return false;
+      });
+    }
   }
 }

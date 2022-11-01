@@ -151,7 +151,7 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
       optionalPremium = new PolicyOptionalPremiumClass();
       this.optionalPremiumData.push(optionalPremium);
     } else if (this.type === SharedComponentType.Quote) {
-      optionalPremium = new QuoteOptionalPremiumClass(undefined, this.program?.quoteData?.quoteId);
+      optionalPremium = new QuoteOptionalPremiumClass();
       this.optionalPremiumData.push(optionalPremium);
     }
   }

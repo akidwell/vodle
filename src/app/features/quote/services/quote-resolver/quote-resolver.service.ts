@@ -21,6 +21,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
         .pipe(
           tap((department) => {
             console.log(department);
+            department.insured = submission.insured;
             department.submissionForQuote = submission;
           }),
           map(department => ({ department })),

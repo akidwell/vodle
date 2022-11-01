@@ -16,6 +16,11 @@
     [insured]="pageDataService.submissionData.insured"
     [showSubmissionSave]="canEditSubmission && pageDataService.submissionData != null && pageDataService.submissionData.isDirty"
   ></rsps-insured-header>
+  <rsps-insured-header
+    *ngIf="pageDataService.quoteData && pageDataService.quoteData.insured"
+    [insured]="pageDataService.quoteData.insured"
+    [showQuoteSave]="canEditSubmission && pageDataService.quoteData != null && pageDataService.quoteData.isDirty"
+  ></rsps-insured-header>
     <rsps-policy-header
     *ngIf="pageDataService.policyData != null  && pageDataService.accountInfo != null"
     [accountInfo]="pageDataService.accountInfo"

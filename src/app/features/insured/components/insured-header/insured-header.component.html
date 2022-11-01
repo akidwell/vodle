@@ -12,30 +12,48 @@
       *ngIf="pageDataService.insuredData"
       [disabled]="pageDataService.insuredData != null && !pageDataService.insuredData.isDirty"
       style="margin-left:8px;"
+      appPreventDoubleClick
+      (throttledClick)="preSaveInsured()"
+      [throttleTime]="700"
       title="Save Insured">
         <fa-icon
           [icon]="faSave"
-          appPreventDoubleClick
-          (throttledClick)="preSaveInsured()"
-          [throttleTime]="700"
         ></fa-icon>
       </button>
       <button  type="button"
-      class="btn btn-primary"
-      *ngIf="pageDataService.submissionData"
-      [disabled]="pageDataService.submissionData != null && !pageDataService.submissionData.isDirty"
-      style="margin-left:8px;"
-      title="Save Submission">
-        <fa-icon appPreventDoubleClick
-          (throttledClick)="saveSubmission()"
-          [throttleTime]="700"
-          [icon]="faSave"
-        ></fa-icon>
+        class="btn btn-primary"
+        *ngIf="pageDataService.submissionData"
+        [disabled]="pageDataService.submissionData != null && !pageDataService.submissionData.isDirty"
+        style="margin-left:8px;"
+        appPreventDoubleClick
+        (throttledClick)="saveSubmission()"
+        [throttleTime]="700"
+        title="Save Submission">
+          <fa-icon
+            [icon]="faSave"
+          ></fa-icon>
       </button>
-      <button  type="button" *ngIf="pageDataService.lastSubmission" class="btn btn-primary" style="margin-left:8px;" title="Return to Submission">
+      <button  type="button"
+        class="btn btn-primary"
+        *ngIf="pageDataService.quoteData"
+        [disabled]="isSaving || (pageDataService.quoteData != null && !pageDataService.quoteData.childQuotesAreDirty())"
+        style="margin-left:8px;"
+        appPreventDoubleClick
+        (throttledClick)="saveFullQuotes()"
+        [throttleTime]="700"
+        title="Save Quote">
+          <fa-icon
+            [icon]="faSave"
+          ></fa-icon>
+      </button>
+      <button  type="button"
+      *ngIf="pageDataService.lastSubmission"
+      class="btn btn-primary"
+      style="margin-left:8px;"
+      (click)="navigateToHistoricRoute(pageDataService.lastSubmission)"
+      title="Return to Submission">
         <fa-icon
           [icon]="faLeft"
-          (click)="navigateToHistoricRoute(pageDataService.lastSubmission)"
         ></fa-icon>
       </button>
     </div>

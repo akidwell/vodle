@@ -1,17 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { lastValueFrom, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Code } from 'src/app/core/models/code';
-import { AddressLookupService } from 'src/app/core/services/address-lookup/address-lookup.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
-import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
-import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
-import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
@@ -45,6 +41,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   isDeductibleRequired = false;
   isAdditionalDetailRequired = false;
   isAdditionalPremiumRequired = false;
+  validateQuote = QuoteValidationTypeEnum.Quote;
   coverages: OptionalPremiumMapping[] = [];
 
   @Input() canDrag = false;

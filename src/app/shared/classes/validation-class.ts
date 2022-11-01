@@ -1,12 +1,14 @@
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Validation } from '../interfaces/validation';
+import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
 
 export abstract class ValidationClass implements Validation {
   isValid = false;
   isDirty = false;
   canBeSaved = false;
   errorMessages: string[] = [];
+  markParentDirty?: () => void;
   isEmpty = false;
   tabName: QuoteValidationTabNameEnum | null = null;
   validationType: QuoteValidationTypeEnum = QuoteValidationTypeEnum.Quote;
@@ -64,4 +66,73 @@ export abstract class ValidationClass implements Validation {
     this.isValid = true;
     this.errorMessages = [];
   }
+
+  ////////
+  ///Below is a recursive validation checker
+  ///classes aren't clean enough to use this optimally but could be used in the future
+  ////////
+  // departmentLevelValidation(object: DepartmentClass): boolean {
+  //   let userCanSave = false;
+  //   object.programMappings.forEach(program => {
+  //     if (!this.canBeSaved) {
+  //       return;
+  //     }
+  //     if (program.quoteData) {
+  //       userCanSave = this.fullQuoteValidation(program.quoteData);
+  //     }
+  //   });
+  //   console.log('userCanSave: ', userCanSave, 'obj: ', object);
+  //   return userCanSave;
+  // }
+  // fullValidation<T extends Validation>(object: T): boolean {
+  //   const isDirty = this.isDirty;
+  //   const canBeSaved = this.canBeSaved;
+  //   let userCanSave = (isDirty && canBeSaved);
+  //   Object.keys(object).forEach(key => {
+  //     const property = object[key as keyof T];
+  //     if (!canBeSaved) {
+  //       return;
+  //     }
+
+  //     if (Array.isArray(property) && property.length > 0) {
+  //       if (this.checkIfTypeOfValidationArray(property)) {
+  //         this.isDirty = (property as Array<Validation>).some(x=> x.isDirty === true);
+  //         this.canBeSaved = !(property as Array<Validation>).some(x=> x.canBeSaved === false);
+  //         (property as Array<Validation>).forEach(object => {
+  //           //userCanSave = this.fullQuoteValidation(object as Validation);
+  //         });
+  //       }
+  //     } else if (!Array.isArray(property) && this.checkIfTypeOfValidation(property)) {
+  //       this.isDirty = this.isDirty ? this.isDirty : (property as Validation).isDirty;
+  //       this.canBeSaved = this.canBeSaved ? (property as Validation).canBeSaved : this.canBeSaved;
+  //       if (!canBeSaved) {
+  //         return;
+  //       }
+  //       userCanSave = this.fullQuoteValidation(property as Validation);
+  //     }
+  //     userCanSave = userCanSave ? (isDirty && canBeSaved) : userCanSave;
+
+  //     //return userCanSave;
+  //   });
+  //   //Object.keys(object).map(key => object[key as keyof T])
+  //   // for (const key in object) {
+  //   // }
+
+  //   return userCanSave;
+  // }
+  // private checkIfTypeOfValidationArray<T>(array: Array<T>):boolean {
+  //   let typeCheck = false;
+  //   const object = array[0];
+  //   if (object as Validation && (object as Validation).validate) {
+  //     typeCheck = this.checkIfTypeOfValidation(object);
+  //   }
+  //   return typeCheck;
+  // }
+  // private checkIfTypeOfValidation<T>(object: T):boolean {
+  //   let typeCheck = false;
+  //   if (object as Validation && (object as Validation).validate) {
+  //     typeCheck = true;
+  //   }
+  //   return typeCheck;
+  // }
 }

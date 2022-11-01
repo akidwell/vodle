@@ -8,6 +8,7 @@ import { QuoteClass } from './quote-class';
 import { QuoteValidationClass } from './quote-validation-class';
 import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
+import { Insured } from '../../insured/models/insured';
 
 export class DepartmentClass implements Department, Validation {
   private _isDirty = false;
@@ -21,6 +22,7 @@ export class DepartmentClass implements Department, Validation {
   availableCarrierCodes: Code[] = [];
   availablePacCodes: Code[] = [];
   programMappings: ProgramClass[] = [];
+  insured!: Insured;
   submissionForQuote: SubmissionClass | null = null;
   //Admitted - NonAdmitted Flags
   admittedAvailable = false;
@@ -38,7 +40,6 @@ export class DepartmentClass implements Department, Validation {
   constructor(department: Department) {
     this.init(department);
     this.setGlobalFlags(this.programMappings);
-
     if (this.defaultClaimsMadeOrOccurrence == '') {
       this.defaultClaimsMadeOrOccurrence = this.claimsMadeAvailable == true ? 'C' : 'O';
     }
@@ -77,6 +78,7 @@ export class DepartmentClass implements Department, Validation {
     this.availableCarrierCodes = department.availableCarrierCodes;
     this.availablePacCodes = department.availablePacCodes;
     this.sequenceNumber = department.sequenceNumber;
+    this.insured = department.insured;
     const programs: ProgramClass[] = [];
     department.programMappings.forEach(element => {
       programs.push(new ProgramClass(element, department.availableCarrierCodes, department.availablePacCodes));
@@ -139,7 +141,10 @@ export class DepartmentClass implements Department, Validation {
       }
     });
   }
-
+  markDirty() {
+    this._isDirty = true;
+    this._validationResults.isDirty = true;
+  }
   markClean() {
     this._isDirty = false;
   }
@@ -160,6 +165,21 @@ export class DepartmentClass implements Department, Validation {
       }
     });
   }
+  childQuotesAreDirty() {
+    let isDirty = this._isDirty;
+    let canBeSaved = this._canBeSaved;
+
+    this.programMappings.forEach(program => {
+      if(program.quoteData && program.quoteData.isDirty) {
+        isDirty = true;
+      }
+      if(program.quoteData && !program.quoteData.canBeSaved) {
+        canBeSaved = false;
+      }
+    });
+    return isDirty && canBeSaved;
+  }
+
   toJSON() {
     const programs: any[] = [];
     this.programMappings.forEach(program => {
