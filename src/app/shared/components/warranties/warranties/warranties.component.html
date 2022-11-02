@@ -1,0 +1,188 @@
+<div class="card">
+  <div *ngIf="isSaving">
+    <div class="spinner-wrapper">
+      <h3>
+        <span class="badge rounded-pill">Refreshing...
+          <div class="spinner-border small"></div>
+        </span>
+      </h3>
+    </div>
+  </div>
+  <div class="card-header" (click)="collapse.toggle()">
+    Warranties - On Policy ({{onPolicyWarrantiesCount}})
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div class="card-body">
+      <div class="row">
+        <label for="warranty">Warranty</label>
+        <div class="col-lg-3">
+          <ng-select id="description" [items]="optionalWarranties" [clearable]="false" [readonly]="!canEdit"
+            name="description" [(ngModel)]="warrantyOfs" bindLabel="warrantyOf" bindValue="warrantyOf"
+            (change)="addWarranties($event)">
+          </ng-select>
+          <ng-template ng-label-tmp let-item="item">
+            {{item.warrantyOf}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.warrantyOf}}
+          </ng-template>
+        </div>
+        <div class="col-lg-6"></div>
+        <div class="col-lg-3" style="padding-top:10px" (click)="userDefinedPopup()">
+          <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined Warranty</a>
+        </div>
+      </div>
+    </div>
+    <div class="card-body table-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" *ngIf="true">
+          <thead>
+            <tr>
+
+              <th style="text-align:center;">Included</th>
+              <th nowrap>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let sub of filteredWarranties">
+              <tr *ngIf="sub.firstFilteredMainHeaderRow">
+                <td colspan="12" style="background:#f2f4f6">{{sub.mainHeader}}
+              </tr>
+              <tr *ngIf="sub.firstFilteredSectionHeaderRow">
+                <td colspan="12" style=" font-weight: bold;"><u>{{ sub.sectionHeader}}</u>
+                </td>
+              </tr>
+              <tr >
+                <td style="text-align:center; width:1%;">
+                  <input type="checkbox" class="form-check-input" id="included"
+                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : ''" [readonly]="!canEdit"
+                    [(ngModel)]="sub.isIncluded" name="included" click-stop-propagation>
+                </td>
+
+                <td>
+                  {{sub.description}}
+                </td>
+                <td>
+                  <button class="btn btn-outline-primary" id="action" (click)="editWarrantyPopup(sub)">Edit</button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div class="card-footer">
+    <div class="footer-count">Warranties: {{this.onPolicyWarrantiesCount}}/{{warranties.length}}</div>
+  </div>
+  <rsps-scroll-to-top></rsps-scroll-to-top>
+  <form #userForm="ngForm">
+    <ng-template #editModal let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Edit Defined Warranty</h4>
+        <div class="col-lg-5"></div>
+        <br>
+      </div>
+      <div class="modal-body modal-xl">
+        <div>
+          <label for="documentType">Document Type</label>
+          <ng-select id="documentType" [required]="canEdit" [items]="documentType" [clearable]="false"
+            [readonly]="!canEdit" name="documentType" [(ngModel)]="userDefinedInfo.document">
+          </ng-select>
+        </div>
+        <div>
+          <label for="mainHeader">Main Header</label>
+          <input [readonly]="false" type="text" class="form-control" id="mainHeader" autocomplete="off"
+            name="mainHeader" [(ngModel)]="userDefinedInfo.mainHeader" #mainHeader="ngModel">
+        </div>
+        <div>
+          <label for="sectionHeader">Section Header</label>
+          <input [readonly]="false" type="text" class="form-control" id="sectionHeader" autocomplete="off"
+            name="sectionHeader" [(ngModel)]="userDefinedInfo.sectionHeader" #sectionHeader="ngModel">
+        </div>
+        <div>
+          <label for="description">Description</label>
+          <textarea style="height:125px" [readonly]="false" type="text" class="form-control" id="description"
+            [required]="canEdit" autocomplete="off" name="description" [(ngModel)]="desc"
+            #description="ngModel"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="submit()"
+            [disabled]="!userForm.form.valid">Submit</button>
+          <button type="button" class="btn btn-secondary" (click)="clearAndClose()">Cancel</button>
+        </div>
+      </div>
+    </ng-template>
+  </form>
+  <form #userForm="ngForm">
+    <ng-template #userModal let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">User Defined Warranty</h4>
+        <div class="col-lg-5"></div>
+        <br>
+      </div>
+      <div class="modal-body modal-xl">
+        <div>
+          <label for="documentType">Document Type</label>
+          <ng-select id="documentType" [required]="canEdit" [items]="documentType" [clearable]="false"
+            [readonly]="!canEdit" name="documentType" [(ngModel)]="userDefinedInfo.document">
+          </ng-select>
+        </div>
+        <label for="mainHeader">Warranty Of</label>
+        <div class="col-lg-3">
+          <ng-select id="description" [items]="optionalWarranties" [clearable]="false" [readonly]="!canEdit"
+            (change)="populateSectionHeaders($event)" name="description" [(ngModel)]="userDefinedInfo.warrantyOf"
+            bindLabel="warrantyOf" bindValue="warrantyOf">
+          </ng-select>
+          <ng-template ng-label-tmp let-item="item">
+            {{item.warrantyOf}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.warrantyOf}}
+          </ng-template>
+        </div>
+        <div>
+          <label for="mainHeader">Main Header</label>
+          <ng-select id="mainHeader" [items]="optionalWarranties" [clearable]="false"
+            [readonly]="userDefinedInfo.warrantyOf == null" (change)="populateSectionHeaders($event)" name="mainHeader"
+            [(ngModel)]="userDefinedInfo.mainHeader" bindLabel="mainHeader" bindValue="mainHeader">
+          </ng-select>
+          <ng-template ng-label-tmp let-item="item">
+            {{item.mainHeader}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.mainHeader}}
+          </ng-template>
+        </div>
+        <div>
+          <label for="sectionHeader">Section Header</label>
+          <ng-select id="sectionHeader" [items]="sectionHeaderList" [clearable]="false"
+            [readonly]="!userDefinedInfo.mainHeader" name="sectionHeader" [(ngModel)]="userDefinedInfo.sectionHeader"
+            bindLabel="sectionHeader" bindValue="sectionHeader">
+          </ng-select>
+          <ng-template ng-label-tmp let-item="item">
+            {{item.sectionHeader}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.sectionHeader}}
+          </ng-template>
+        </div>
+        <div>
+          <label for="description">Description</label>
+          <textarea style="height:125px" [readonly]="false" type="text" class="form-control" id="description"
+            [required]="canEdit" autocomplete="off" name="description" [(ngModel)]="desc"
+            #description="ngModel"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="submit()"
+            [disabled]="!userForm.form.valid">Submit</button>
+          <button type="button" class="btn btn-secondary" (click)="clearAndClose()">Cancel</button>
+        </div>
+      </div>
+    </ng-template>
+  </form>

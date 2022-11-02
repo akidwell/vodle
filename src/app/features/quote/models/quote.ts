@@ -1,8 +1,13 @@
 import { Moment } from 'moment';
+import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
+import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
+import { Warranties } from 'src/app/shared/interfaces/warranties';
 import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteLineItem } from './quote-line-item';
 import { QuoteRate } from './quote-rate';
+import { QuoteSubjectivities } from './quote-subjectivities';
 
 export interface Quote {
   submissionNumber: number | null;
@@ -10,9 +15,10 @@ export interface Quote {
   cuspNumber: number | null;
   quoteNumber: number | null;
   sequenceNumber: number | null;
-  policyEffectiveDate: Date | Moment | null;
-  policyExpirationDate: Date | Moment | null;
+  policyEffectiveDate: Date | null;
+  policyExpirationDate: Date | null;
   status: number;
+  statusDescription: string;
   claimsMadeOrOccurrence: string;
   admittedStatus: string;
   policyNumber: string | number;
@@ -22,6 +28,7 @@ export interface Quote {
   submission: Submission;
   quoteName: string | null;
   policySymbol: string;
+  policyMod: string | null;
   formName: string;
   terrorismCoverageSelected: boolean;
   terrorismPremium: number | null;
@@ -116,5 +123,12 @@ export interface Quote {
   naicsCode: string | null;
   sicCode: string | null;
   classCode: number | null;
-  riskState: string | null;
+  riskState: string;
+  quotePolicyForms: PolicyForm[];
+  subjectivityData: Subjectivities[];
+  warrantyData: Warranties[];
+  disclaimerData: Disclaimers[];
+  totalPremium: number | null;
+  formsVersionDescription: string | null;
+  departmentId: number | null;
 }

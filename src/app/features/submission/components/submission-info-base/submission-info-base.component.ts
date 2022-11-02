@@ -8,7 +8,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { SubmissionClass } from '../../classes/SubmissionClass';
+import { SubmissionClass } from '../../classes/submission-class';
 
 @Component({
   selector: 'rsps-submission-info-base',

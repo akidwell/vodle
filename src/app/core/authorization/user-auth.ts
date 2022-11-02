@@ -41,6 +41,11 @@ export class UserAuth {
   get canEditSubmission(): boolean { return this._canEditSubmission.getValue(); }
   set canEditSubmission(value: boolean) { this._canEditSubmission.next(value); }
 
+  private _canEditQuote = new BehaviorSubject<boolean>(false);
+  canEditQuote$ = this._canEditQuote.asObservable();
+  get canEditQuote(): boolean { return this._canEditQuote.getValue(); }
+  set canEditQuote(value: boolean) { this._canEditQuote.next(value); }
+
   private _userRole = new BehaviorSubject<string>('');
   userRole$ = this._userRole.asObservable();
   get userRole(): string { return this._userRole.getValue(); }

@@ -34,7 +34,7 @@ export class AdditionalInterestComponent {
   states$: Observable<State[]> | undefined;
   addressSub!: Subscription;
   isLoadingAddress = false;
-  canEditSubmission = false;
+  canEdit = false;
   isHover = false;
   @Input() canDrag = false;
   buildingList!: Code[];
@@ -46,8 +46,7 @@ export class AdditionalInterestComponent {
 
   @Input() aiData!: AdditionalInterestClass;
   @Input() ai!: AdditionalInterestClass[];
-
-
+  additionalInterestRoles$: Observable<Code[]> | undefined;
 
   constructor(public headerPaddingService: HeaderPaddingService,
     private confirmationDialogService: ConfirmationDialogService,
@@ -57,8 +56,8 @@ export class AdditionalInterestComponent {
     private addressLookupService: AddressLookupService,
     private messageDialogService: MessageDialogService,
     private propertyDataService: PropertyDataService) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
   ngOnInit(): void {
@@ -72,6 +71,8 @@ export class AdditionalInterestComponent {
         this.buildingList = results;
       }
     });
+    this.additionalInterestRoles$ = this.dropdowns.getAdditonalInterestRoles();
+
     console.log(this.aiData.isAppliedToAll);
   }
 

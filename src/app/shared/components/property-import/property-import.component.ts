@@ -7,7 +7,6 @@ import { ConfirmationDialogService } from 'src/app/core/services/confirmation-di
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
-import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 
@@ -51,10 +50,18 @@ export class PropertyImportComponent {
               .then(async (result: boolean) => {
                 if (result) {
                   this.quote.clearBuildings();
-                  if (this.quote.propertyQuote.propertyQuoteId !== null) {
-                    const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuote.propertyQuoteId);
+                  if (this.quote.propertyQuoteId !== null) {
+                    const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuoteId);
                     await lastValueFrom(result$);
                   }
+                  const index = this.quote.quoteLineItems?.findIndex( x => x.lineItemCode == 7);
+                  const seq = this.quote.quoteLineItems?.find(x => x.lineItemCode == 7);
+                  if (index > -1 && seq?.sequence){
+                    this.quote.quoteLineItems.splice(index, 1);
+                    const results2$ = this.quoteService.deleteLineItems(this.quote.quoteId);
+                    await lastValueFrom(results2$);
+                  }
+                  console.log(this.quote);
                   await this.importQuote(this.quote, file);
                 }
               });
@@ -121,7 +128,7 @@ export class PropertyImportComponent {
     return true;
   }
 
-  private loadQuote(quote: QuoteClass) {
+  private loadQuote(quote: PropertyQuoteClass) {
     if (this.pageDataService.selectedProgram != null) {
       this.pageDataService.selectedProgram.quoteData = quote;
       this.pageDataService.refreshProgram();

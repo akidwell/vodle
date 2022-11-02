@@ -36,9 +36,11 @@ export class UserComponent {
   editPol: Subscription;
   editSub: Subscription;
   editIns: Subscription;
+  editQuote: Subscription;
   canEditInsured = false;
   canEditSubmission = false;
   canEditPolicy = false;
+  canEditQuote = false;
   apiOptions: string[] = ['1.0', '2.0'];
   activeAPIVersion = '1.0';
   apiSwitchActive = false;
@@ -70,6 +72,9 @@ export class UserComponent {
     this.editIns = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
     );
+    this.editQuote = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEditQuote = canEditQuote
+    );
     this.historySub = this.historyService.policyhistorySize$.subscribe(
       (size: number) => {
         this.historySize = size;
@@ -79,8 +84,8 @@ export class UserComponent {
     this.apiSwitchActive = this.configService.apiSwitchIsActive;
   }
   ngOnDestroy() {
-    this.authSub.unsubscribe();
-    this.historySub.unsubscribe();
+    this.authSub?.unsubscribe();
+    this.historySub?.unsubscribe();
   }
 
   async logout() {

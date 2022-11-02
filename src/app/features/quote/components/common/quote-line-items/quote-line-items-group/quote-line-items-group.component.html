@@ -1,24 +1,34 @@
 <div class="card">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-sm-2">
-                <label for="address">Surcharges/Fees</label>
+    <div class="card-header" (click)="collapse.toggle()">Surcharges & Fees
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+        <div class="card-body" *ngIf="quoteLineItemData.length > 0">
+            <div class="row">
+                <div class="col-lg-2">
+                    <label for="address">Line Item</label>
+                </div>
+                <div class="col-lg-2">
+                    <label for="address">Due</label>
+                </div>
+                <div class="col-lg-1">
+                    <label for="address">Recieved</label>
+                </div>
+                <div class="col-lg-4">
+                    <label for="address"> Notes</label>
+                </div>
+                <div class="col-lg-2">
+                    <label for="address">Amount</label>
+                </div>
             </div>
-            <div class="col-sm-2">
-                <label for="address">Inspection Due</label>
-            </div>
-            <div class="col-sm-1">
-                <label for="address">Inspection Recieved</label>
-            </div>
-            <div class="col-sm-4">
-                <label for="address">Inspection Notes</label>
-            </div>
-            <div class="col-sm-1">
-                <label for="address">Amount</label>
+            <div *ngFor="let item of quoteLineItemData; let i = index">
+                <rsps-quote-line-items [quoteLineItemData]="quoteLineItemData" [lineItem]="item"
+                    (copyLineItem)=copyLineItem($event) (deleteLineItem)=deleteLineItem($event)></rsps-quote-line-items>
             </div>
         </div>
-        <div *ngFor="let item of quoteLineItemData; let i = index">
-            <rsps-quote-line-items [quoteLineItemData]="quoteLineItemData" [lineItem]="item"></rsps-quote-line-items>
-        </div>
+    </div>
+    <div class="card-footer">
+        <button *ngIf="canEdit" class="footer-button" (click)="addLineItem();">Add Line Item</button>
     </div>
 </div>

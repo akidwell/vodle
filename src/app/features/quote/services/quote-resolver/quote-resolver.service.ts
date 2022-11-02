@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, map, catchError, of, tap } from 'rxjs';
-import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
+import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { QuoteResolved } from '../../models/quote-resolved';
 import { QuoteService } from '../quote-service/quote.service';
 
@@ -21,6 +21,7 @@ export class QuoteResolver implements Resolve<QuoteResolved> {
         .pipe(
           tap((department) => {
             console.log(department);
+            department.insured = submission.insured;
             department.submissionForQuote = submission;
           }),
           map(department => ({ department })),

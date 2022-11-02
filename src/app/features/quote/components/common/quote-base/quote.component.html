@@ -6,12 +6,22 @@
         <a class="nav-link" routerLinkActive='active' [routerLink]="['submission']">Submission</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Product Selection</a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['information']">Product Selection
+          <span class="badge bg-danger"
+          *ngIf="(this.productSelectionTabValidation?.errorMessages?.length ?? 0) > 0"
+          [ngbTooltip]="productSelectionTabErrorList" container="body"
+          tooltipClass="tabErrors">{{this.productSelectionTabValidation?.errorMessages?.length ?? ''}}
+        </span>
+
+        </a>
       </li>
       <ng-container *ngFor="let program of department.programMappings">
         <li class="nav-item" *ngIf="program.quoteData != null;">
-          <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}} <span
-              *ngIf="program.quoteData.validationResults.isDirty">*</span></a>
+          <a class="nav-link" routerLinkActive='active' [routerLink]="[program.navTabUrl]">{{program.programDesc}}
+              <fa-icon [icon]="faSave" *ngIf="(program.quoteData.showDirty && program.quoteData._validationResults.canBeSaved)  && !isSaving"></fa-icon>
+              <fa-icon [icon]="faSave" class="canNotSave" *ngIf="(!program.quoteData._validationResults.canBeSaved)  && !isSaving"></fa-icon>
+              <div class="spinner-border spinner-border-sm" *ngIf="isSaving"></div>         
+          </a>
         </li>
       </ng-container>
       <li class="nav-item">
@@ -23,3 +33,12 @@
 <div>
   <router-outlet></router-outlet>
 </div>
+
+<ng-template #productSelectionTabErrorList>
+  <tr *ngFor="let item of (this.productSelectionTabValidation?.errorMessages?.slice(0, 25) ?? [])">
+    <span>{{item}}<br></span>
+  </tr>
+  <tr *ngIf="(productSelectionTabValidation?.errorMessages?.length ?? 0) > 25">
+    <span>({{(productSelectionTabValidation?.errorMessages?.length ?? 0) - 25}} More) ...</span>
+  </tr>
+</ng-template>

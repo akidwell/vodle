@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-
 import { QuoteRoutingModule } from './quote-routing.module';
 import { QuoteComponent } from './components/common/quote-base/quote.component';
 import { QuoteInformationComponent } from './components/common/quote-information-base/quote-information.component';
@@ -39,7 +38,6 @@ import { AdditionalInterestModule } from 'src/app/shared/components/property-add
 import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
-import { PropertyImportModule } from 'src/app/shared/components/property-import/property-building.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
 import { QuotePropertyDetailLeftComponent } from './components/property/quote-property-detail/quote-property-detail-left/quote-property-detail-left.component';
 import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
@@ -50,6 +48,14 @@ import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/pr
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
 import { QuoteLineItemsModule } from './components/common/quote-line-items/quote-line-items.module';
 import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy-forms.module';
+import { PropertyImportModule } from 'src/app/shared/components/property-import/property-import.module';
+import { SubjectivitiesModule } from 'src/app/shared/components/subjectivities/subjectivities.module';
+import { DisclaimersModule } from 'src/app/shared/components/disclaimers/disclaimers.module';
+import { QuoteSummaryCoveragesDetailComponent } from './components/common/quote-summary-coverages-detail/quote-summary-coverages-detail.component';
+import { QuoteSummarySubmissionInfoComponent } from './components/common/quote-summary-submission-info/quote-summary-submission-info.component';
+import { QuoteSummaryQuoteBindComponent } from './components/common/quote-summary-quote-bind/quote-summary-quote-bind.component';
+import { QuoteSummaryPremiumDetailComponent } from './components/common/quote-summary-premium-detail/quote-summary-premium-detail.component';
+import { WarrantiesModule } from 'src/app/shared/components/warranties/warranties.module';
 
 @NgModule({
   declarations: [
@@ -63,6 +69,10 @@ import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
+    QuoteSummaryCoveragesDetailComponent,
+    QuoteSummarySubmissionInfoComponent,
+    QuoteSummaryQuoteBindComponent,
+    QuoteSummaryPremiumDetailComponent,
     QuoteSubmissionComponent,
     QuoteProgramBaseComponent,
     QuotePropertyLocationCoverageComponent,
@@ -97,6 +107,9 @@ import { PolicyFormsModule } from 'src/app/shared/components/policy-forms/policy
     PropertyBuildingCoverageEditModule,
     FormsModule,
     PolicyFormsModule,
+    SubjectivitiesModule,
+    DisclaimersModule,
+    WarrantiesModule,
     NgxMaskModule.forRoot()
   ],
   providers: [

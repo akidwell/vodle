@@ -5,7 +5,7 @@ import { map, filter, tap } from 'rxjs/operators';
 
 import { Subscription, lastValueFrom } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { SubmissionClass } from 'src/app/features/submission/classes/SubmissionClass';
+import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
@@ -35,6 +35,7 @@ export class StatusBarComponent implements OnInit {
   faSearch = faSearch;
   insuredAuthSub!: Subscription;
   submissionAuthSub!: Subscription;
+  quoteAuthSub!: Subscription;
   policyAuthSub!: Subscription;
   lastSubmissionSub!: Subscription;
   disabled = true;
@@ -42,9 +43,8 @@ export class StatusBarComponent implements OnInit {
   canEditSubmission = false;
   canEditInsured = false;
   canEditPolicy = false;
+  canEditQuote = false;
   currentUrl = '';
-  messageDialogService: any;
-  showBusy = false;
   userPanelSize = 0;
   headerWidth = 0;
   widthOffset = 0;
@@ -52,18 +52,13 @@ export class StatusBarComponent implements OnInit {
   selectedProgramSub!: Subscription;
   displayHeaderSub: Subscription;
 
-  @ViewChild('modal') private dupeComponent!: InsuredDuplicatesComponent;
   constructor(
     private userAuth: UserAuth,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private submissionService: SubmissionService,
-    private insuredService: InsuredService,
-    private quoteService: QuoteService,
     public pageDataService: PageDataService,
     public headerPaddingService: HeaderPaddingService,
     public elementRef: ElementRef,
-    private notification: NotificationService,
     public endorsementStatus: EndorsementStatusService,
     private navigationService: NavigationService,
     public quoteSavingService: QuoteSavingService
@@ -73,6 +68,9 @@ export class StatusBarComponent implements OnInit {
     );
     this.submissionAuthSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    );
+    this.quoteAuthSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEditQuote = canEditQuote
     );
     this.policyAuthSub = this.userAuth.canEditPolicy$.subscribe(
       (canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy
@@ -181,136 +179,6 @@ export class StatusBarComponent implements OnInit {
     } else {
       return this.pageDataService.policyData;
     }
-  }
-
-  navigateToHistoricRoute(route: HistoricRoute){
-    this.router.navigate([route.url]);
-  }
-  async saveSubmission() {
-    let sub: SubmissionClass;
-    if (this.pageDataService.submissionData == null) {
-      return;
-    } else {
-      sub = this.pageDataService.submissionData;
-    }
-
-    if (sub.isValid) {
-      if (sub.submissionNumber === 0) {
-        const results$ = this.submissionService.postSubmission(sub);
-        await lastValueFrom(results$).then(async submission => {
-          sub.submissionNumber = submission.submissionNumber;
-          sub.markClean();
-          this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-          if (sub.submissionNumber !== null) {
-            this.router.navigate(['/submission/' + sub.submissionNumber?.toString() + '/information']);
-          }
-          return true;
-        },
-        (error) => {
-          this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-          const errorMessage = error.error?.Message ?? error.message;
-          this.messageDialogService.open('Submission Save Error', errorMessage);
-          return false;
-        });
-      } else {
-        const results$ = this.submissionService.updateSubmission(sub);
-        await lastValueFrom(results$).then(async (result) => {
-          sub.updateClass(result);
-          sub.markClean();
-          this.notification.show('Submission successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-          return true;
-        },
-        (error) => {
-          this.notification.show('Submission Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-          const errorMessage = error.error?.Message ?? error.message;
-          this.messageDialogService.open('Submission Save Error', errorMessage);
-          return false;
-        });
-      }
-    } else {
-      sub.showErrorMessage();
-      window.scroll(0, 0);
-    }
-    this.showBusy = false;
-  }
-
-  async preSaveInsured(): Promise<void> {
-    let insured: InsuredClass;
-    if (this.pageDataService.insuredData == null) {
-      return;
-    } else {
-      insured = this.pageDataService.insuredData;
-    }
-    if (insured.isValid) {
-      let save: boolean | null = true;
-      if (insured.isNew && insured.isValid) {
-        save = await this.checkDuplicates(insured);
-      }
-      if (save) {
-        this.showBusy = true;
-        await this.saveInsured(insured);
-      }
-      this.showBusy = false;
-    }
-    else {
-      insured.showErrorMessage();
-      window.scroll(0, 0);
-    }
-  }
-  private async checkDuplicates(insured: InsuredClass): Promise<boolean | null> {
-    const dupe = newInsuredDupeRequst(insured);
-    const results$ = this.insuredService.checkDuplicates(dupe);
-    const results = await lastValueFrom(results$);
-
-    if (results.length > 0) {
-      if (this.dupeComponent != null) {
-        return await this.dupeComponent.open(insured, results);
-      }
-    }
-    return true;
-  }
-
-  async saveInsured(insured: InsuredClass): Promise<boolean> {
-    if (insured.isValid) {
-      if (insured.isNew) {
-        const results$ = this.insuredService.addInsured(insured);
-        return await lastValueFrom(results$)
-          .then(async result => {
-            insured.isNew = false;
-            this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-            this.showBusy = false;
-            insured.markClean();
-            this.router.navigate(['/insured/' + result.insuredCode?.toString() + '/information']);
-            return true;
-          },
-          (error) => {
-            this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-            const errorMessage = error.error?.Message ?? error.message;
-            this.messageDialogService.open('Insured Save Error', errorMessage);
-            return false;
-          });
-      }
-      else {
-        if (insured.isDirty) {
-          const results$ = this.insuredService.updateInsured(insured);
-          return await lastValueFrom(results$)
-            .then(async updated => {
-              insured.updateClass(updated);
-              insured.markClean();
-              this.notification.show('Insured successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
-              return true;
-            },
-            (error) => {
-              this.notification.show('Insured Not Saved.', { classname: 'bg-danger text-light', delay: 5000 });
-              const errorMessage = error.error?.Message ?? error.message;
-              this.messageDialogService.open('Insured Save Error', errorMessage);
-              return false;
-            });
-        }
-        return true;
-      }
-    }
-    return false;
   }
 }
 

@@ -30,14 +30,14 @@
                         <button type="button" class="btn btn-outline-primary" id="action" ngbDropdownToggle
                             click-stop-propagation>Actions</button>
                         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                            <button *ngIf="canEdit" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
-                            <button *ngIf="!building.isNew && canEdit" hover-class="btn-danger"
+                            <button *ngIf="canEdit" class="btn btn-outline-primary" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
+                            <button *ngIf="!building.isNew && canEdit" class="btn btn-outline-primary"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
-                            <button *ngIf="building.isNew && canEdit" hover-class="btn-warning"
+                            <button *ngIf="building.isNew && canEdit" class="btn btn-outline-primary"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
-                            <button *ngIf="canEdit" (click)=add() click-stop-propagation
+                            <button *ngIf="canEdit" class="btn btn-outline-primary" (click)=add() click-stop-propagation
                                 ngbDropdownItem>Add Coverage</button>
-                            <button (click)=filter() click-stop-propagation
+                            <button class="btn btn-outline-primary" (click)=filter() click-stop-propagation
                                 ngbDropdownItem>Filter</button>
                         </div>
                     </div>

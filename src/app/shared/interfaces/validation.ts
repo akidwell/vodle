@@ -6,4 +6,5 @@ export interface Validation {
   errorMessages: string[];
   validationResults?: Validation;
   validate?(): Validation;
+  markDirty?: () => void;
 }

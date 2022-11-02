@@ -8,18 +8,25 @@ import { ComponentBase } from './component-base';
   template: ''
 })
 export abstract class SharedComponentBase extends ComponentBase implements OnDestroy {
-  submissionAuthSub: Subscription;
+  quoteAuthSub: Subscription;
   policyAuthSub: Subscription;
-  private _canEditSubmission = false;
+  private _canEditQuote = false;
   private _canEditPolicy = false;
+  private _type!: SharedComponentType;
 
-  @Input() type!: SharedComponentType;
+  @Input() set type(value: SharedComponentType) {
+    this._type = value;
+    this.handleSecurity(this._type);
+  }
+  get type(): SharedComponentType {
+    return this._type;
+  }
 
   constructor(private userAuth: UserAuth) {
     super();
-    this.submissionAuthSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => {
-        this._canEditSubmission = canEditSubmission;
+    this.quoteAuthSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => {
+        this._canEditQuote = canEditQuote;
         this.handleSecurity(this.type);
       }
     );
@@ -32,15 +39,15 @@ export abstract class SharedComponentBase extends ComponentBase implements OnDes
   }
 
   ngOnDestroy() {
-    this.submissionAuthSub.unsubscribe();
-    this.policyAuthSub.unsubscribe();
+    this.quoteAuthSub?.unsubscribe();
+    this.policyAuthSub?.unsubscribe();
   }
   handleSecurity(type: SharedComponentType) {
     if (type === SharedComponentType.Policy) {
       this.canEdit = this._canEditPolicy;
     }
     if (type === SharedComponentType.Quote) {
-      this.canEdit = this._canEditSubmission;
+      this.canEdit = this._canEditQuote;
     }
   }
 }

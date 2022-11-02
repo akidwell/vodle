@@ -1,4 +1,4 @@
-import { SubmissionClass } from '../classes/SubmissionClass';
+import { SubmissionClass } from '../classes/submission-class';
 
 export interface SubmissionResolved {
     submission: SubmissionClass | null;

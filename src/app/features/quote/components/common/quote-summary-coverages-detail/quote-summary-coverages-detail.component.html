@@ -1,0 +1,345 @@
+<div class="row">
+  <div class="col-lg-6">
+    <label for="policyCoverage" class="form-label" title="Policy Coverage"
+      >Policy Coverage</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="policyCoverage"
+      readonly
+      name="policyCoverage"
+      [(ngModel)]="program.programDesc"
+      #policyCoverage="ngModel"
+    />
+  </div>
+  <div class="col-lg-1"></div>
+  <div class="col-lg-2">
+    <label for="policyCoverage" class="form-label" title="Policy Coverage"
+      >Premium</label
+    >
+    <input
+      type="text"
+      *ngIf="program.quoteData"
+      class="form-control"
+      id="policyCoverage"
+      readonly
+      name="policyCoverage"
+      [(ngModel)]="program.quoteData.totalPremium"
+      #policyCoverage="ngModel"
+    />
+  </div>
+  <div class="col-lg-1"></div>
+</div>
+<div class="row">&nbsp;</div>
+<div *ngIf="quoteData">
+  <div class="row">
+    <div class="col-lg-6">
+      <label
+        for="coverageDesc"
+        class="form-label"
+        title="Optional Coverages / Sublimits"
+        >Optional Coverages / Sublimits</label
+      >
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+      <label for="coverageDesc" class="form-label" title="Additional Premium"
+        >Additional Premium</label
+      >
+    </div>
+    <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
+      <label for="coverageDesc" class="form-label" title="Accept / Decline"
+        >Accept / Decline</label
+      >
+    </div>
+    <!-- <div class="col-lg-3">
+      <div class="row">
+        <div class="col-lg-6">
+          <label for="accept" class="form-label" title="Accept"
+            >Accept</label
+          >
+        </div>
+        <div class="col-lg-6">
+          <label for="decline" class="form-label" title="Decline"
+            >Decline</label
+          >
+        </div>
+      </div>
+    </div> -->
+  </div>
+  <div
+    *ngFor="let coverage of quoteData.propertyQuoteBuildingOptionalCoverage"
+    class="row"
+  >
+    <div class="col-lg-6">
+      <ng-select
+        id="coverageDesc"
+        [items]="optionalCoverages"
+        bindLabel="coverageDescription"
+        bindValue="coverageCode"
+        [readonly]="true"
+        name="coverageDesc"
+        [clearable]="false"
+        [(ngModel)]="coverage.coverageCode"
+      >
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.coverageDisplay }}
+        </ng-template></ng-select
+      >
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        *ngIf="program.quoteData"
+        class="form-control"
+        id="coverageDesc"
+        readonly
+        name="coverageDesc"
+        [(ngModel)]="coverage.additionalPremium"
+        #coverageDesc="ngModel"
+      />
+    </div>
+    <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="coverageAccepted"
+        [(ngModel)]="coverage.isAccepted"
+        (change)="this.quoteData.calculateSummaryPremiums()"
+        name="coverageAccepted"
+        [readonly]="!canEdit"
+        #coverageAccepted="ngModel"
+      />
+    </div>
+  </div>
+</div>
+<div class="row">&nbsp;</div>
+<div *ngIf="quoteData">
+  <div class="row">
+    <div class="col-lg-6">
+      <label for="surchargesFees" class="form-label" title="Surcharges / Fees"
+        >Surcharges / Fees</label
+      >
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+      <!-- <label for="coverageDesc" class="form-label" title="Additional Premium"
+        >Additional Premium</label
+      > -->
+    </div>
+    <div class="col-lg-2">
+      <!-- <label for="coverageDesc" class="form-label" title="Accept / Decline"
+        >Accept / Decline</label
+      > -->
+    </div>
+  </div>
+  <div *ngFor="let item of quoteData.quoteLineItems" class="row">
+    <div class="col-lg-6">
+      <ng-select
+        id="lineItemDescription"
+        [items]="lineitemDescriptions"
+        bindLabel="description"
+        bindValue="key"
+        [readonly]="true"
+        [clearable]="false"
+        name="lineItemDescription"
+        [(ngModel)]="item.lineItemCode"
+        #lineItemCode="ngModel"
+      >
+        <ng-template ng-label-tmp let-item="item">
+          {{ item.description }}
+          {{ item.state != null ? " (" + item.state + ")" : "" }}
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.description }}
+          {{ item.state != null ? " (" + item.state + ")" : "" }}
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        *ngIf="program.quoteData"
+        class="form-control"
+        id="lineItemAmount"
+        readonly
+        name="lineItemAmount"
+        [(ngModel)]="item.amount"
+        #lineItemAmount="ngModel"
+      />
+    </div>
+  </div>
+</div>
+<div class="row">&nbsp;</div>
+<div *ngIf="quoteData">
+  <div class="row">
+    <div class="col-lg-6">
+      <input
+        type="text"
+        class="form-control"
+        id="terrorismDesc"
+        readonly
+        name="terrorismDesc"
+        [(ngModel)]="terrorismLabel"
+        #terrorismDesc="ngModel"
+      />
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        class="form-control"
+        id="terrorismPremium"
+        [disabled]="!canEdit"
+        string-to-currency
+        [allowNegative]="false"
+        (change)="this.quoteData.calculateSummaryPremiums()"
+        name="terrorismPremium"
+        [(ngModel)]="quoteData.terrorismPremium"
+        #terrorismPremium="ngModel"
+      />
+    </div>
+    <div class="col-lg-2">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="terrorismAccepted"
+        (change)="this.quoteData.calculateSummaryPremiums()"
+        [(ngModel)]="quoteData.terrorismCoverageSelected"
+        [readonly]="!canEdit"
+        #terrorismAccepted="ngModel"
+      />
+    </div>
+  </div>
+  <div>
+    <div class="row">
+      <div class="col-lg-6">
+        <input
+          type="text"
+          class="form-control"
+          id="brokerDesc"
+          readonly
+          name="brokerDesc"
+          [(ngModel)]="brokerCommissionLabel"
+          #brokerDesc="ngModel"
+        />
+      </div>
+      <div class="col-lg-1">
+        <input
+          type="text"
+          class="form-control"
+          id="brokerPercent"
+          name="brokerPercent"
+          (change)="this.quoteData.calculateSummaryPremiums()"
+          string-to-currency
+          [allowNegative]="false"
+          [decimalPlaces]="1"
+          [(ngModel)]="quoteData.commissionRate"
+          #brokerPercent="ngModel"
+        />
+      </div>
+      <div class="col-lg-2">
+        <input
+          type="text"
+          class="form-control"
+          id="brokerPremium"
+          readonly
+          name="brokerPremium"
+          string-to-currency
+          [allowNegative]="false"
+          [decimalPlaces]="2"
+          [(ngModel)]="quoteData.brokerCommission"
+          #brokerPremium="ngModel"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">&nbsp;</div>
+<div *ngIf="quoteData">
+  <div class="row">
+    <div class="col-lg-2">
+      <label
+        for="minEarnedPercent"
+        class="form-label"
+        title="Min Earned Premium %"
+        >Min Earned Premium %</label
+      >
+    </div>
+    <div class="col-lg-2">
+      <label
+        for="minEarnedPremium"
+        class="form-label"
+        title="Min Earned Premium"
+        >Min Earned Premium</label
+      >
+    </div>
+    <div class="col-lg-2">
+      <label for="minPremium" class="form-label" title="Min Premium"
+        >Min Premium</label
+      >
+    </div>
+    <div class="col-lg-1">
+      <label for="minPremium" class="form-label" title="Has Minimum Premium"
+        >Min Prem</label
+      >
+    </div>
+    <div class="col-lg-1">
+      <label
+        for="totalAdvancePremium"
+        class="form-label"
+        title="Total Advance Premium"
+        >Total Advance Premium</label
+      >
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2">
+      <input
+        type="text"
+        class="form-control"
+        id="minEarnedPercent"
+        readonly
+        name="minEarnedPercent"
+        [(ngModel)]="quoteData.earnedPremiumPct"
+        #minEarnedPercent="ngModel"
+      />
+    </div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        class="form-control"
+        id="minEarnedPremium"
+        readonly
+        name="minEarnedPremium"
+      />
+    </div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        class="form-control"
+        id="minPremium"
+        readonly
+        name="minPremium"
+      />
+    </div>
+    <div class="col-lg-1">
+      <input type="checkbox" class="form-check-input" id="hasMinPremium" />
+    </div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        class="form-control"
+        id="totalAdvancePremium"
+        readonly
+        [disabled]="!canEdit"
+        name="totalAdvancePremium"
+        [(ngModel)]="quoteData.totalAdvancePremium"
+        #totalAdvancePremium="ngModel"
+      />
+    </div>
+  </div>
+</div>

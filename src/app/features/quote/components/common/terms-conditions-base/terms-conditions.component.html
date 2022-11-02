@@ -1,4 +1,7 @@
-<div>test</div>
+<rsps-warranties *ngIf="quote" [type]="classType" [quote]="quote" [warranties]="quote.warrantyData"
+[submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-warranties>
+<rsps-subjectivities *ngIf="quote" [type]="classType" [quote]="quote" [subjectivities]="quote.subjectivityData"
+[submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-subjectivities>
+<rsps-disclaimers *ngIf="quote" [type]="classType" [quote]="quote" [disclaimers]="quote.disclaimerData"
+[submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-disclaimers>
 
-<p>quote-terms-conditions works!</p>
-<p>{{this.program?.quoteData?.quoteId }}</p>

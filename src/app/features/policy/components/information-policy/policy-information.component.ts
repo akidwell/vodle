@@ -104,7 +104,7 @@ export class PolicyInformationComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.statusSub?.unsubscribe();
     this.endorsementSub?.unsubscribe();
   }

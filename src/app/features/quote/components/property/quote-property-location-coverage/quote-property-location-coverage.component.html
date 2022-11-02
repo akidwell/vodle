@@ -1,16 +1,16 @@
-<rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission">
+<rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit">
 </rsps-property-import>
-<rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEditSubmission"
+<rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit"
     [buildings]="quote.propertyQuoteBuildingList" [largestExposure]="quote.largestExposure"
     [lawLimits]="quote.lawLimits" [limitTotal]="quote.limitTotal"
     [largestTiv]="quote.largestPremTiv" [subjectAmount]="quote.subjectAmounts">
 </rsps-quote-property-detail>
 <rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote"
-    [buildings]="quote.filteredBuildings" [canEdit]="canEditSubmission"
+    [buildings]="quote.filteredBuildings" [canEdit]="canEdit"
     [buildingCount]="quote.buildingCount" [programId]="quote.programId"></rsps-property-building-group>
-<rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEditSubmission"
+<rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEdit"
     [buildings]="quote.propertyQuoteBuildingList"></rsps-property-building-coverage-edit>
 <rsps-property-building-coverage-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote.propertyQuote"
     [coverages]="quote.filteredCoverages" [limitTotal]="quote.limitTotal"
-    [coverageCount]="quote.coverageCount" [canEdit]="canEditSubmission">
+    [coverageCount]="quote.coverageCount" [canEdit]="canEdit">
 </rsps-property-building-coverage-group>

@@ -18,20 +18,52 @@
           <label for="limit">Limit</label>
         </div>
         <div class="col-sm-2">
+          <div class="row">
+
+            <div class="col-sm-6">
+              <label for="maxAmount" class="form-label" title="Subject to Max Amount">Subject To Max</label>
+            </div>
+            <div class="col-sm-6">
+              <label for="maxPercent" class="form-label" title="Max Percent">%</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-1">
+          <label for="deductible" class="form-label" title="Has Deductible">Has Deductible</label>
+        </div>
+        <div class="col-sm-2">
           <label for="addPremium">Additional Premium</label>
         </div>
       </div>
       <div *ngFor="let item of optionalPremiumData; let i = index">
         <rsps-optional-premium (copyExisitingOptionalPremium)=copyOptionalPremium($event) [type]="type"
-          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event)  [optionalPremiumData]=item>
+          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [coveragesObs$]="coverages$"
+          [deductibleCodes$]="deductibleCodes$" [deductibleTypes$]="deductibleTypes$" [optionalPremiumData]=item>
         </rsps-optional-premium>
       </div>
     </div>
-    <rsps-quote-line-items-group [quoteLineItemData]="quoteLineItemData" [riskState]="riskState" [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>
-  </div>
-  <div class="card-footer">
-    <div id="mortgageeFooter">
-      <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add Optional Premium</button>
-    </div>
+    <!-- <rsps-quote-line-items-group [quoteLineItemData]="quoteLineItemData" [riskState]="riskState"
+      [effectiveDate]="effectiveDate"></rsps-quote-line-items-group> -->
   </div>
 
+  <div class="card-footer">
+    <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add
+      Optional Premium</button>
+  </div>
+<!-- <div class="card-body">
+    <div class="row">
+      <div class="col-lg-6">
+        <label for="totalPremium" class="form-label"></label>
+        <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">AddOptional Premium</button>
+      </div>
+      <div class="col-lg-4">
+      </div>
+      <div class="col-lg-2">
+      <label for="totalPremium" class="form-label">Total Premium</label>
+      <input type="text" class="form-control right" id="totalPremium" name="totalPremium" [readonly]="true"
+        [value]="totalPrem | currency: 'USD' : 'symbol':'1.0-0'">
+        </div>
+    </div>
+  </div> -->
+</div>

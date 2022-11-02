@@ -13,3 +13,18 @@
   display: block;
   margin-bottom: 0px;
 }
+
+#action {
+  height: fit-content;
+  width: fit-content;
+  color: black;
+  border-color: black;
+  background-color: rgb(235, 230, 230);
+}
+.margin-left {
+  margin-left: 5px;
+}
+
+.dropdown-menu {
+  padding: 0px;
+}

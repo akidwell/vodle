@@ -1,5 +1,5 @@
 import { Directive, forwardRef } from '@angular/core';
-import { NG_VALIDATORS, FormControl } from '@angular/forms';
+import { NG_VALIDATORS, UntypedFormControl } from '@angular/forms';
 import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 
 @Directive({
@@ -10,7 +10,7 @@ import { ZipCodeCountry } from 'src/app/core/utils/zip-code-country';
 })
 export class ZipCodeValidator {
 
-  validate(c: FormControl) {
+  validate(c: UntypedFormControl) {
     if (!ZipCodeCountry(c.value?.toString())) {
       return {validateZipCode: {
         valid: false}

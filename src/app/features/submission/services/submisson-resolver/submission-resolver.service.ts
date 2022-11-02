@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
-import { SubmissionClass } from '../../classes/SubmissionClass';
+import { SubmissionClass } from '../../classes/submission-class';
 import { SubmissionResolved } from '../../models/submission-resolved';
 import { SubmissionService } from '../submission-service/submission-service';
 

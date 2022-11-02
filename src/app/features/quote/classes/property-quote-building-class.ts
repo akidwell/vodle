@@ -8,7 +8,7 @@ import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { Code } from 'src/app/core/models/code';
+import { QuoteOptionalPremiumClass } from './quote-optional-premium-class';
 
 export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation, QuoteAfterSave {
   private _isDirty = false;
@@ -22,6 +22,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   propertyQuoteBuildingId = 0;
   propertyQuoteId = 0;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
+
   taxCode: string | null = null;
 
   private _subjectNumber: number | null = null;
@@ -64,7 +65,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   set subjectNumber(value: number | null) {
     this._subjectNumber = value;
-    this._isDirty = true;
+    this.markDirty();
     this.propertyQuoteBuildingCoverage.map(c => c.subjectNumber = value);
     this.propertyQuote.calculateSubjectAmounts();
     this.propertyQuote.calculateLargestPremTiv();
@@ -91,14 +92,14 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   set isDuplicate(value: boolean ) {
     this._isDuplicate = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get premisesNumber(): number | null {
     return this._premisesNumber;
   }
   set premisesNumber(value: number | null) {
     this._premisesNumber = value;
-    this._isDirty = true;
+    this.markDirty();
     this.propertyQuoteBuildingCoverage.map(c => c.premisesNumber = value);
     this.propertyQuote.calculateLargestPremTiv();
     this.propertyQuote.calculateLargestExposure();
@@ -111,7 +112,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     // Need to Check with original value
     this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value;
-    this._isDirty = true;
+    this.markDirty();
     this.propertyQuoteBuildingCoverage.map(c => c.buildingNumber = value);
   }
 
@@ -120,70 +121,70 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   set street1(value: string | null) {
     this._street1 = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get street2(): string | null {
     return this._street2;
   }
   set street2(value: string | null) {
     this._street2 = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get city(): string | null {
     return this._city;
   }
   set city(value: string | null) {
     this._city = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get state(): string | null {
     return this._state;
   }
   set state(value: string | null) {
     this._state = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get zip(): string | null {
     return this._zip;
   }
   set zip(value: string | null) {
     this._zip = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get countryCode(): string | null {
     return this._countryCode;
   }
   set countryCode(value: string | null) {
     this._countryCode = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get cspCode(): string | null{
     return this._cspCode;
   }
   set cspCode(value: string | null) {
     this._cspCode = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get description(): string | null {
     return this._description;
   }
   set description(value: string | null) {
     this._description = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get occupancy(): string | null {
     return this._occupancy;
   }
   set occupancy(value: string | null) {
     this._occupancy = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get squareFeet(): number | null {
     return this._squareFeet;
   }
   set squareFeet(value: number | null) {
     this._squareFeet = value;
-    this._isDirty = true;
+    this.markDirty();
     this.calculateITV();
   }
   get itv(): number | null {
@@ -191,77 +192,77 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   set itv(value: number | null) {
     this._itv = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get yearBuilt(): number | null {
     return this._yearBuilt;
   }
   set yearBuilt(value: number | null) {
     this._yearBuilt = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get gutRehab(): number | null {
     return this._gutRehab;
   }
   set gutRehab(value: number | null) {
     this._gutRehab = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get sprinklered(): number | null {
     return this._sprinklered;
   }
   set sprinklered(value: number | null) {
     this._sprinklered = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get construction(): string | null {
     return this._construction;
   }
   set construction(value: string | null) {
     this._construction = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get stories(): number | null {
     return this._stories;
   }
   set stories(value: number | null) {
     this._stories = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get protectionClass(): number | null {
     return this._protectionClass;
   }
   set protectionClass(value: number | null) {
     this._protectionClass = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get roof(): number | null {
     return this._roof;
   }
   set roof(value: number | null) {
     this._roof = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get wiring(): number | null {
     return this._wiring;
   }
   set wiring(value: number | null) {
     this._wiring = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get plumbing(): number | null {
     return this._plumbing;
   }
   set plumbing(value: number | null) {
     this._plumbing = value;
-    this._isDirty = true;
+    this.markDirty();
   }
   get hvac(): number | null {
     return this._hvac;
   }
   set hvac(value: number | null) {
     this._hvac = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get buildingIndex(): string {
@@ -284,7 +285,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     }
     else {
       this._itv = Math.round((buildingLimit ?? 0) / (this._squareFeet ?? 1));
-      this._isDirty = true;
+      this.markDirty();
     }
   }
 
@@ -296,14 +297,17 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.validate();
+    //////////////////////
+    // if (!building) {
+    //   this.markDirty();
+    // }
   }
   validate(){
     if (this._validateOnLoad || this.isDirty){
-      //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
     }
-    this._validationResults.resetValidation();
+    this._validationResults?.resetValidation();
 
     this.callChildValidations();
     this._validationResults.mapValues(this);
@@ -353,7 +357,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this._plumbing = building.plumbing;
     this._hvac = building.hvac;
     this._itv = building.itv;
-
+    this.guid = building.guid;
     const coverages: PropertyQuoteBuildingCoverageClass[] = [];
     building.propertyQuoteBuildingCoverage?.forEach((element) => {
       const coverage = new PropertyQuoteBuildingCoverageClass(element);
@@ -417,6 +421,8 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     const index = this.propertyQuoteBuildingCoverage.indexOf(coverage, 0);
     if (index > -1) {
       this.propertyQuoteBuildingCoverage.splice(index, 1);
+      // Mark dirty to force form rules check
+      this.propertyQuote.markDirty();
     }
     this.propertyQuote.filterCoverages();
     this.propertyQuote.calculateSubjectAmounts();
@@ -468,6 +474,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   markDirty() {
     this._isDirty = true;
+    this.propertyQuote.showDirty = true;
   }
   setRequiredFields() {
     // No special rules

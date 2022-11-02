@@ -9,6 +9,7 @@ import { QuotePropertyLocationCoverageComponent } from '../components/property/q
 import { QuotePropertyMortgageeComponent } from '../components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 import { QuotePremiumComponent } from '../components/common/quote-premium-base/quote-premium.component';
 import { TermsConditionsComponent } from '../components/common/terms-conditions-base/terms-conditions.component';
+import { QuoteFormsComponent } from '../components/common/quote-forms-base/quote-forms.component';
 
 @Injectable()
 export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocationCoverageComponent> {
@@ -17,7 +18,7 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
     private pageDataService: PageDataService, private quoteDataValidationService: QuoteDataValidationService, private quoteSavingService: QuoteSavingService) { }
 
   canDeactivate(
-    component: QuotePropertyLocationCoverageComponent | QuotePropertyMortgageeComponent | QuotePremiumComponent | TermsConditionsComponent,
+    component: QuotePropertyLocationCoverageComponent | QuotePropertyMortgageeComponent | QuotePremiumComponent | TermsConditionsComponent | QuoteFormsComponent,
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot
@@ -27,9 +28,13 @@ export class CanDeactivateChildGuard implements CanDeactivate<QuotePropertyLocat
       return true;
     }
     if (component instanceof QuotePropertyLocationCoverageComponent || component instanceof QuotePropertyMortgageeComponent ||
-      component instanceof QuotePremiumComponent || component instanceof TermsConditionsComponent) {
+      component instanceof QuotePremiumComponent || component instanceof TermsConditionsComponent || component instanceof QuoteFormsComponent) {
       // Skip checks if bypassFormGuard is set
       console.log(this.checkLeavePolicy(state.url, nextState.url));
+
+      if (this.quoteSavingService.isSaving) {
+        return false;
+      }
       if (!this.checkLeavePolicy(state.url, nextState.url)) {
         allowNavigate = this.validateAndSaveQuote();
       }

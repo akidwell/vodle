@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
-import { ProducerContactClass } from '../../classes/ProducerContactClass';
-import { SubmissionClass } from '../../classes/SubmissionClass';
+import { ProducerContactClass } from '../../classes/producer-contact-class';
+import { SubmissionClass } from '../../classes/submission-class';
 import { Producer } from '../../models/producer';
 
 @Component({

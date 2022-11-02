@@ -8,6 +8,7 @@ import { Code } from '../../models/code';
 import { State } from '../../models/state';
 import { PropertyDeductibleLookup } from '../../models/property-deductible-lookup';
 import { PropertyCoverageLookup } from '../../models/property-coverage-lookup';
+import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
 
 @Injectable({
   providedIn: 'root',
@@ -69,6 +70,14 @@ export class DropDownsService {
   getMarkDeadReasons(isNew: boolean) {
     const params = new HttpParams().append('isNew', isNew);
     return this.http.get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/mark-dead-reasons', {
+      params,
+    });
+  }
+  getPropertyOptionalCoverages(programId: number, effectiveDate: string) {
+    const params = new HttpParams()
+      .append('programId', programId)
+      .append('effectiveDate', effectiveDate);
+    return this.http.get<OptionalPremiumMapping[]>(this.config.apiBaseUrl + 'api/dropdowns/property-optional-coverages', {
       params,
     });
   }
@@ -1000,6 +1009,53 @@ export class DropDownsService {
     return observable;
   }
 
+  ////////////////////////////////////////
+  // Mortgagee Roles
+  private cacheMortgageeRoles: any;
+  private cacheMortgageeRoles$!: Observable<any> | null;
+
+  getMortgageeRoles(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheMortgageeRoles) {
+      observable = of(this.cacheMortgageeRoles);
+    } else if (this.cacheMortgageeRoles$) {
+      observable = this.cacheMortgageeRoles$;
+    } else {
+      this.cacheMortgageeRoles$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/mortgagee_role')
+        .pipe(
+          tap((res) => (this.cacheMortgageeRoles = res)),
+          share(),
+          finalize(() => (this.cacheMortgageeRoles$ = null))
+        );
+      observable = this.cacheMortgageeRoles$;
+    }
+    return observable;
+  }
+
+  ////////////////////////////////////////
+  // Additional Interest Roles
+  private cacheAdditonalInterestRoles: any;
+  private cacheAdditonalInterestRoles$!: Observable<any> | null;
+
+  getAdditonalInterestRoles(): Observable<Code[]> {
+    let observable: Observable<any>;
+    if (this.cacheAdditonalInterestRoles) {
+      observable = of(this.cacheAdditonalInterestRoles);
+    } else if (this.cacheAdditonalInterestRoles$) {
+      observable = this.cacheAdditonalInterestRoles$;
+    } else {
+      this.cacheAdditonalInterestRoles$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/codetable/additionalinterest_role')
+        .pipe(
+          tap((res) => (this.cacheAdditonalInterestRoles = res)),
+          share(),
+          finalize(() => (this.cacheAdditonalInterestRoles$ = null))
+        );
+      observable = this.cacheAdditonalInterestRoles$;
+    }
+    return observable;
+  }
   ////////////////////////////////////////
   // Sic Codes
   private cacheSicCodes: any;

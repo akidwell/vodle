@@ -2,5 +2,7 @@ export enum QuoteValidationTabNameEnum {
     PropertyLocationCoverages = 'PropertyLocationsBuildingsCoverages',
     PropertyMortgageeAdditionalInterest = 'MortgageeAdditionalInterest',
     CoveragePremium = 'CoveragePremium',
-    TermsAndConditions = 'TermsAndConditions'
+    FormsList = 'FormList',
+    TermsAndConditions = 'TermsAndConditions',
+    ProductSelection = 'ProductSelection'
   }

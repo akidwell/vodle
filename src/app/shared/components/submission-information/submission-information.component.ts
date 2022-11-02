@@ -12,7 +12,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
-import { SubmissionClass } from '../../../features/submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../../features/submission/classes/submission-class';
 import { SubmissionInfoPanelLeftComponent } from '../../../features/submission/components/submission-info-panel-left/submission-info-panel-left.component';
 import { SubmissionInfoPanelRightComponent } from '../../../features/submission/components/submission-info-panel-right/submission-info-panel-right.component';
 
@@ -96,7 +96,7 @@ export class SubmissionInformationComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.addSub?.unsubscribe();
     this.updateSub?.unsubscribe();
     this.versionSub?.unsubscribe();

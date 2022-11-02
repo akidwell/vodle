@@ -111,7 +111,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
     this.statusSub?.unsubscribe();
     this.collapsePanelSubscription?.unsubscribe();
     this.expandPanelSubscription?.unsubscribe();

@@ -27,6 +27,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
   private _city: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
+  private _additionalInterestType: number | null = 1;
   // private _isAppliedToAll = false;
 
   isNew = false;
@@ -86,10 +87,10 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       this._isValid = false;
       this.invalidList.push('Additional Interest - State is required');
     }
-    if (this.emptyStringValueCheck(this._zip)){
+    if (this.emptyStringValueCheck(this._additionalInterestType?.toString())){
       this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Additional Interest - Zip is required');
+      this.invalidList.push('Additional Interest - Type is required');
     }
     this._errorMessages = this.invalidList;
   }
@@ -101,21 +102,23 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
   emptyStringValueCheck(value: string | null | undefined) {
     return !value;
   }
-  existingInit(ai?: AdditionalInterestData){
-    this.buildingNumber = ai?.buildingNumber || null;
-    this._attention = ai?.attention || null;
-    this._description = ai?.description || null;
-    this.premisesNumber = ai?.premisesNumber || null;
-    this._interest = ai?.interest || null;
-    this._propertyQuoteId = ai?.propertyQuoteId || null;
-    this._propertyQuoteAdditionalInterestId = ai?.propertyQuoteAdditionalInterestId || null;
-    this._street1 = ai?.street1 || null;
-    this._street2 = ai?.street2 || null;
-    this._state = ai?.state || null;
-    this._city = ai?.city || null;
-    this._zip = ai?.zip || null;
-    this._countryCode = ai?.countryCode || null;
-    this.isAppliedToAll = ai?.isAppliedToAll || false;
+  existingInit(ai: AdditionalInterestData){
+    this.isAppliedToAll = ai.isAppliedToAll;
+    this.buildingNumber = ai.buildingNumber;
+    this.premisesNumber = ai.premisesNumber;
+    this._attention = ai.attention;
+    this._description = ai.description;
+    this._interest = ai.interest;
+    this._propertyQuoteId = ai.propertyQuoteId;
+    this._propertyQuoteAdditionalInterestId = ai.propertyQuoteAdditionalInterestId;
+    this._street1 = ai.street1;
+    this._street2 = ai.street2;
+    this._state = ai.state;
+    this._city = ai.city;
+    this._zip = ai.zip;
+    this._countryCode = ai.countryCode;
+    this._additionalInterestType = ai.additionalInterestType;
+    this.guid = ai.guid;
   }
 
   newInit() {
@@ -123,6 +126,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
     this.propertyQuoteAdditionalInterestId = 0;
     this.isNew = true;
     this.guid = crypto.randomUUID();
+    this.additionalInterestType = 1;
   }
 
   get validationResults(): QuoteValidationClass {
@@ -203,6 +207,14 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
     this._description = value;
     this._isDirty = true;
   }
+  get additionalInterestType() : number | null {
+    return this._additionalInterestType;
+  }
+  set additionalInterestType(value: number | null) {
+    this._additionalInterestType = value;
+    this._isDirty = true;
+  }
+
 
   // get premisesNumber() : number | null {
   //   return this._premisesNumber;
@@ -330,6 +342,7 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       countryCode: this.countryCode,
       isAppliedToAll: this.isAppliedToAll,
       building: this.building,
+      additionalInterestType: this.additionalInterestType,
       guid: this.guid
     };
   }

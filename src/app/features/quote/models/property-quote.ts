@@ -1,18 +1,20 @@
-import { Code } from 'src/app/core/models/code';
 import { AdditionalInterestData } from './additional-interest';
 import { MortgageeData } from './mortgagee';
 import { PropertyBuilding } from './property-building';
 import { PropertyDeductible } from './property-deductible';
+import { QuoteOptionalPremium } from './quote-optional-premium';
 
 export interface PropertyQuote {
-  propertyQuoteId: number | null;
+  propertyQuoteId: number;
   quoteId: number | null;
   riskDescription: string | null;
+
+  // GAM are these needed? Need to look at more closely!!!
   propertyQuoteDeductibleList?: PropertyDeductible[];
   propertyQuoteBuildingList?: PropertyBuilding[];
   propertyQuoteMortgageeList?: MortgageeData[];
   propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
-
+  propertyQuoteBuildingOptionalCoverage?: QuoteOptionalPremium[];
   propertyQuoteDeductible?: PropertyDeductible[];
   propertyQuoteBuilding?: PropertyBuilding[];
   propertyQuoteMortgagee?: MortgageeData[];

@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col-lg-6">
+    <label for="submissionNumber">Submission Number</label>
+    <input
+      type="text"
+      class="form-control"
+      id="submissionNumber"
+      readonly
+      name="submissionNumber"
+      [(ngModel)]="submission.submissionNumber"
+      #submissionNumber="ngModel"
+    />
+  </div>
+  <div class="col-lg-6">
+    <label for="submissionStatus">Status</label>
+    <input
+      type="text"
+      class="form-control"
+      id="submissionStatus"
+      readonly
+      name="submissionStatus"
+      [(ngModel)]="submission.statusCode"
+      #submissionStatus="ngModel"
+    />
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-3">
+    <label for="policySymbol">Symbol</label>
+    <input
+      type="text"
+      class="form-control"
+      id="policySymbol"
+      readonly
+      name="policySymbol"
+      [(ngModel)]="quote.policySymbol"
+      #policySymbol="ngModel"
+    />
+  </div>
+  <div class="col-lg-6">
+    <label for="policyNumber">Policy Number</label>
+    <input
+      type="text"
+      class="form-control"
+      id="policyNumber"
+      readonly
+      name="policyNumber"
+      [(ngModel)]="quote.policyNumber"
+      #policyNumber="ngModel"
+    />
+  </div>
+  <div class="col-lg-3">
+    <label for="mod">Mod</label>
+    <input
+      type="text"
+      class="form-control"
+      id="mod"
+      readonly
+      name="mod"
+      [(ngModel)]="quote.policyMod"
+      #mod="ngModel"
+    />
+  </div>
+</div>

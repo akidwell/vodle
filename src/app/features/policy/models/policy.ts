@@ -312,3 +312,19 @@ export interface EndorsementNumberResponse {
   limit: number;
   transactionType: string
 }
+
+export interface EndorsementFormData {
+  endorsementNumber: number;
+  formName: string;
+  formTitle: string;
+  firstEndorsementRow: boolean;
+}
+
+export const newEndorsementFormData = (): EndorsementFormData => {
+  return {
+    endorsementNumber: 0,
+    formName: '',
+    formTitle: '',
+    firstEndorsementRow: false
+  };
+};

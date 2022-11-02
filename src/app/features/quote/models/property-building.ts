@@ -1,5 +1,3 @@
-// import { PropertyBuildingCoverageData } from './property-building-coverage';
-
 import { PropertyBuildingCoverage } from './property-building-coverage';
 
 export interface PropertyBuilding {

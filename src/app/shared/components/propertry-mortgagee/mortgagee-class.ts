@@ -27,6 +27,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   private _city: string | null = null;
   private _zip: string | null = null;
   private _countryCode: string | null = null;
+  private _mortgageeType: number | null = 1;
   //private _isAppliedToAll = false;
   private _isNew!: boolean;
 
@@ -94,6 +95,11 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
       this._isValid = false;
       this.invalidList.push('Mortgagee - Zip is required');
     }
+    if (this.emptyStringValueCheck(this._mortgageeType?.toString())){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Mortgagee - Type is required');
+    }
     this._errorMessages = this.invalidList;
   }
 
@@ -104,26 +110,29 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
     return !value;
   }
 
-  existingInit(mortgagee?: MortgageeData){
-    this.buildingNumber = mortgagee?.buildingNumber || null;
-    this._attention = mortgagee?.attention || null;
-    this._description = mortgagee?.description || null;
-    this.premisesNumber = mortgagee?.premisesNumber || null;
-    this._mortgageHolder = mortgagee?.mortgageHolder || null;
-    this._propertyQuoteId = mortgagee?.propertyQuoteId || null;
-    this._propertyQuoteMortgageeId = mortgagee?.propertyQuoteMortgageeId || null;
-    this._street1 = mortgagee?.street1 || null;
-    this._street2 = mortgagee?.street2 || null;
-    this._state = mortgagee?.state || null;
-    this._city = mortgagee?.city || null;
-    this._zip = mortgagee?.zip || null;
-    this._countryCode = mortgagee?.countryCode || null;
-    //this.isAppliedToAll = mortgagee?.isAppliedToAll || false;
+  existingInit(mortgagee: MortgageeData){
+    this.isAppliedToAll = mortgagee.isAppliedToAll;
+    this.premisesNumber = mortgagee.premisesNumber;
+    this.buildingNumber = mortgagee.buildingNumber;
+    this._attention = mortgagee.attention;
+    this._description = mortgagee.description ;
+    this._mortgageHolder = mortgagee.mortgageHolder;
+    this._propertyQuoteId = mortgagee.propertyQuoteId;
+    this._propertyQuoteMortgageeId = mortgagee.propertyQuoteMortgageeId;
+    this._street1 = mortgagee.street1;
+    this._street2 = mortgagee.street2;
+    this._state = mortgagee.state;
+    this._city = mortgagee.city;
+    this._zip = mortgagee.zip;
+    this._countryCode = mortgagee.countryCode;
+    this._mortgageeType = mortgagee.mortgageeType;
+    this.guid = mortgagee.guid;
   }
 
   newInit() {
     this.propertyQuoteId = 0;
     this.propertyQuoteMortgageeId = 0;
+    this.mortgageeType = 1;
     this.isNew = true;
     this.guid = crypto.randomUUID();
   }
@@ -289,6 +298,14 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
     this._isDirty = true;
   }
 
+  get mortgageeType() : number | null {
+    return this._mortgageeType;
+  }
+  set mortgageeType(value: number | null) {
+    this._mortgageeType = value;
+    this._isDirty = true;
+  }
+
   get isDirty() : boolean {
     return this._isDirty;
   }
@@ -335,7 +352,8 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
       isAppliedToAll: this.isAppliedToAll,
       guid: this.guid,
       building: this.building,
-      isNew: this.isNew
+      isNew: this.isNew,
+      mortgageeType: this.mortgageeType
     };
   }
 

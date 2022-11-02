@@ -12,12 +12,12 @@ import { DepartmentClass } from '../../../classes/department-class';
 export class QuoteInformationDetailComponent implements OnInit {
   @Input() public department!: DepartmentClass;
   authSub: Subscription;
-  canEditSubmission = false;
+  canEdit = false;
   availableAdmittedOptions: Code[] = [];
   availableClaimsMadeOccurrenceOptions: Code[] = [];
   constructor(private userAuth: UserAuth) {
-    this.authSub = this.userAuth.canEditSubmission$.subscribe(
-      (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
+    this.authSub = this.userAuth.canEditQuote$.subscribe(
+      (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
 

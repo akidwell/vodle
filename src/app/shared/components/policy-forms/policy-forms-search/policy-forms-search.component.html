@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="input-group search-bar">
+            <div class="input-group-prepend">
+                <span class="input-group-text" *ngIf="!searching">
+                    <fa-icon [icon]="faSearch"></fa-icon>
+                </span>
+                <span class="input-group-text" style="height: 100%;" *ngIf="searching">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+                    </span>
+                </span>
+            </div>
+            <input id="form-search" class="form-control ml2" type="search" name="searchTerm"
+                [readonly]="!canEdit" [(ngModel)]="searchFormName" placeholder="Forms Library"
+                [inputFormatter]="displayFormatter" [ngbTypeahead]="search"
+                (selectItem)="selectedItem($event.item)" [resultTemplate]="rt"/>
+            <button *ngIf="canEdit" [disabled]="!canAddForm" class="btn margin-left" style="z-index: 1"
+                [ngClass]="canAddForm ? 'btn-success' : 'btn-secondary'" (click)="add()">Add Form</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #rt let-r="result" let-t="term">
+    <fa-icon *ngIf="!r.canAdd" class="duplicate" [icon]="faTimesCircle" style="padding-right: 5px"
+        ngbTooltip="Form already used" placement="left" container="body"></fa-icon>
+    <ngb-highlight [result]="r.formName + ' - ' + r.formTitle" [term]="t"></ngb-highlight>
+</ng-template>

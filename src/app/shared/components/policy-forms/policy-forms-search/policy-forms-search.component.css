@@ -1,0 +1,22 @@
+.margin-left {
+  margin-left: 5px !important;
+}
+
+#form-search {
+  z-index: 1;
+}
+
+::ng-deep .dropdown-menu {
+  width: 100% !important;
+  z-index: 1;
+}
+
+::ng-deep .dropdown-item {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.duplicate {
+  color: red;
+}

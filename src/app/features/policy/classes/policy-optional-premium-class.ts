@@ -36,6 +36,7 @@ export class PolicyOptionalPremiumClass extends OptionalPremiumClass {
     return {
       buildingNumber: this.buildingNumber,
       premisesNumber: this.premisesNumber,
+      isAppliedToAll: this.isAppliedToAll,
       policyId: this.policyId,
       limit: this.limit,
       deductible: this.deductible,
@@ -43,9 +44,10 @@ export class PolicyOptionalPremiumClass extends OptionalPremiumClass {
       deductibleType: this.deductibleType,
       additionalPremium: this.additionalPremium,
       coverageCode: this.coverageCode,
-      subjectToMaxAmount: this.subjectToMaxAmount,
+      isSubjectToMaxAmount: this.isSubjectToMaxAmount,
       subjectToMaxPercent: this.subjectToMaxPercent,
-      hasDeductible: this.hasDeductible,
+      isDeductibleSelected: this.isDeductibleSelected,
+      additionalDetail: this.additionalDetail,
       guid: this.guid,
       isNew: this.isNew
     };

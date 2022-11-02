@@ -6,7 +6,9 @@
   background-color: #f2f4f6;
   margin: 0px;
 }
-
+.top-info {
+  padding: 16px;
+}
 /* .panel {
   box-sizing: border-box;
   height: 100%;
@@ -75,4 +77,13 @@
   background-color: #335271;
   color: white;
   border-radius: 0;
+}
+
+.form-label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
 }

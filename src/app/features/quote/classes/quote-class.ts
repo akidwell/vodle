@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
-import { SubmissionClass } from '../../submission/classes/SubmissionClass';
+import { SubmissionClass } from '../../submission/classes/submission-class';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
@@ -13,8 +13,17 @@ import { QuoteLineItemClass } from './quote-line-item-class';
 import { QuoteLineItem } from '../models/quote-line-item';
 import { ValidationClass } from 'src/app/shared/classes/validation-class';
 import { PropertyQuoteClass } from './property-quote-class';
+import { QuotePolicyFormClass } from './quote-policy-forms-class';
+import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
+import { PolicyDatesRuleClass } from 'src/app/shared/classes/policy-dates-rule-class';
+import { QuoteSubjectivitiesClass } from './quote-subjectivities-class';
+import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
+import { QuoteDisclaimersClass } from './quote-disclaimers-class';
+import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
+import { Warranties } from 'src/app/shared/interfaces/warranties';
+import { QuoteWarrantiesClass } from './quote-warranties-class';
 
-export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
+export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
   _validationResults: QuoteValidationClass;
   _canBeSaved = true;
@@ -24,33 +33,37 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   _isDirty = false;
   isNew = false;
   invalidList: string[] = [];
+  warningsList: string[] = [];
+  warningsMessage = '';
+  brokerCommission = 0;
+  advancePremiumValue = 0;
+  totalAdvancePremium = 0;
 
   submissionNumber = 0;
   quoteId = 0;
   cuspNumber = 0;
   quoteNumber = 0;
   sequenceNumber = 0;
-  policyEffectiveDate: Date | Moment | null = null;
-  policyExpirationDate: Date | Moment | null = null;
   status = 0;
+  statusDescription = '';
   coverageCode = 0;
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
   policyNumber: string | number = '--';
+  policyMod: string | null = '--';
   carrierCode = '';
   pacCode = '';
   quoteName = null;
   policySymbol = '';
   formName = '';
   terrorismCoverageSelected = false;
-  terrorismPremium = null;
   terrorismTemplateCode = '';
   grossPremium = null;
   grossLimits = null;
   partOf = null;
   attachmentPoint = null;
   underlyingLimits = null;
-  commissionRate = null;
+  commissionRate: number | null = null;
   ratingBasis = null;
   riskSelectionComments = null;
   approvalRequired = false;
@@ -93,14 +106,14 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   underlyingUMLimit1Mil = false;
   umuimAcceptedLastYear = false;
   indicationPremium = null;
-  printedAt = null;
+  printedAt: Date | Moment | null = null;
   facTreatyType = null;
   premiumRate = null;
-  ownerId = null;
-  ownerUserId = null;
+  ownerId: number | null = null;
+  ownerUserId: number | null = null;
   flatRateIndicator = false;
   sinceInception = false;
-  formsVersion = null; //intVersion in PAUL
+  formsVersion: number | null = null; //intVersion in PAUL
   specPlusEndorsement = false;
   proRatePremium = false;
   overridePremium = false;
@@ -111,9 +124,8 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   productManufactureDate = null;
   discontinuedProducts = null;
   autoCalcMiscPremium = false;
-  minimumPremium = null;
+  minimumPremium: number | null = null;
   advancePremium = null;
-  earnedPremiumPct = null;
   variesByLoc = false;
   pcfCharge = null;
   pcfChargeDesc = null;
@@ -131,19 +143,25 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   importErrors = [];
   naicsCode = null;
   sicCode = null;
-  ////////End Datbase fields
+  formsVersionDescription: string | null = null;
+  departmentId: number | null = null;
+  ////////End Database fields
   mappingError = false;
   submission!: SubmissionClass;
   quoteRates: QuoteRateClass[] = [];
   quoteRatesValidation: QuoteValidationClass | null = null;
-
   quoteLineItems: QuoteLineItemClass[] = [];
   quoteLineItemsValidation: QuoteValidationClass | null = null;
+  quotePolicyForms: QuotePolicyFormClass[] = [];
+  subjectivityData:QuoteSubjectivitiesClass[] = [];
+  warrantyData:QuoteWarrantiesClass[] = [];
+  disclaimerData:QuoteDisclaimersClass[] = [];
 
   propertyQuote!: PropertyQuoteClass;
-
   quoteValidation!: QuoteValidationClass;
   quoteChildValidations: QuoteValidationClass[] = [];
+
+  showDirty = false ;
 
   get isDirty(): boolean {
     return this._isDirty ;
@@ -169,22 +187,70 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   }
   set classCode(value: number | null) {
     this._classCode = value == 0 ? null : value;
-    this._isDirty = true;
+    this.markDirty();
   }
-  private _riskState : string | null = null;
+  private _riskState = '';
 
-  get riskState() : string | null {
+  get riskState() : string {
     return this._riskState;
   }
 
+  set riskState(value: string) {
+    this._riskState = value;
+    this.markDirty();
+  }
+
+  private _totalPremium : number | null = null;
+  get totalPremium() : number | null {
+    return this._totalPremium;
+  }
+  set totalPremium(value: number | null) {
+    this._totalPremium = value;
+    this.markDirty();
+  }
+  private _terrorismPremium = 0;
+  get terrorismPremium(): number {
+    return this._terrorismPremium;
+  }
+  set terrorismPremium(value: number | null) {
+    this.markDirty();
+    this._terrorismPremium = value || 0;
+  }
+  private _earnedPremiumPct = 0;
+  get earnedPremiumPct(): number {
+    return this._earnedPremiumPct;
+  }
+  set earnedPremiumPct(value: number | null) {
+    this.markDirty();
+    this._earnedPremiumPct = value || 0;
+  }
+  get policyEffectiveDate() : Date | null {
+    return this._policyEffectiveDate;
+  }
+  set policyEffectiveDate(value: Date | null) {
+    this._policyEffectiveDate = value;
+    this.markDirty();
+    this.setWarnings();
+  }
+
+  get policyExpirationDate() : Date | null {
+    return this._policyExpirationDate;
+  }
+  set policyExpirationDate(value: Date | null) {
+    this._policyExpirationDate = value;
+    this.markDirty();
+    this.setWarnings();
+  }
+
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
+    super();
     if (quote) {
       this.existingInit(quote);
     } else if (program && submission) {
       this.newInit(program, submission);
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
-    //this.validate();
+    this.setWarnings();
   }
   existingInit(quote: Quote) {
     this.submissionNumber = quote.submissionNumber || 0;
@@ -194,21 +260,24 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteNumber = quote.quoteNumber || 1;
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence || '';
     this.admittedStatus = quote.admittedStatus || '';
-    this.policyEffectiveDate = quote.policyEffectiveDate || null;
-    this.policyExpirationDate = quote.policyExpirationDate || null;
     this.status = quote.status || 0;
+    this.statusDescription = quote.statusDescription || '';
     this.coverageCode = quote.coverageCode || 0;
     this.carrierCode = quote.carrierCode || '';
     this.pacCode = quote.pacCode || '';
     this.policySymbol = quote.policySymbol || '';
+    this.policyNumber = quote.policyNumber || '--';
+    this.policyMod = quote.policyMod || '--';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this.autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
     this.programId = quote.programId || 0;
     this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
     this.submissionNumber = quote.submissionNumber || 0;
+    this.commissionRate = quote.commissionRate || 17.5; //TODO: remove hardcode for service
     this.displayCommissionRate = quote.displayCommissionRate || 1;
     this.createdBy = quote.createdBy || '';
     this.createdDate = quote.createdDate || null;
+    this.printedAt = quote.printedAt || null;
     this.submission = new SubmissionClass(quote.submission);
     const rates: QuoteRateClass[] = [];
     quote.quoteRates?.forEach(element => {
@@ -220,8 +289,51 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       lineItems.push(new QuoteLineItemClass(element));
     });
     this.quoteLineItems = lineItems;
-    this._classCode = quote.quoteRates[0].classCode || null;
+    this.formsVersion = quote.formsVersion;
+    this.formsVersionDescription = quote.formsVersionDescription;
+    this.departmentId = quote.departmentId;
+    this.ownerUserId = quote.ownerUserId;
+    this._classCode = quote.quoteRates[0]?.classCode || null;
     this._riskState = quote.riskState;
+    this._totalPremium = quote.totalPremium;
+    this._terrorismPremium = quote.terrorismPremium || 0;
+    this._earnedPremiumPct = quote.earnedPremiumPct || 0;
+    this._policyEffectiveDate = quote.policyEffectiveDate || null;
+    this._policyExpirationDate = quote.policyExpirationDate || null;
+
+    const policyForms: QuotePolicyFormClass[] = [];
+    if(quote.quotePolicyForms) {
+      quote.quotePolicyForms.forEach((element) => {
+        policyForms.push(new QuotePolicyFormClass(element));
+      });
+    }
+    this.quotePolicyForms = policyForms;
+
+    const subs: QuoteSubjectivitiesClass[] = [];
+    if(quote.subjectivityData) {
+      quote.subjectivityData.forEach((element) => {
+        subs.push(new QuoteSubjectivitiesClass(element));
+      });
+    }
+    this.subjectivityData = subs;
+
+    const disclaimers: QuoteDisclaimersClass[] = [];
+    if(quote.disclaimerData) {
+      quote.disclaimerData.forEach((element) => {
+        disclaimers.push(new QuoteDisclaimersClass(element));
+      });
+    }
+    this.disclaimerData = disclaimers;
+
+
+    const warranties: QuoteWarrantiesClass[] = [];
+    if(quote.warrantyData) {
+      quote.warrantyData.forEach((element) => {
+        warranties.push(new QuoteWarrantiesClass(element));
+      });
+    }
+    this.warrantyData = warranties;
+
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -245,17 +357,21 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.terrorismTemplateCode = program.selectedCoverageCarrierMapping?.defTRIATemplateCode || '';
     this.coverageCode = program.selectedCoverageCarrierMapping?.coverageCode || 0;
     this.admittedStatus = program.selectedCoverageCarrierMapping?.admittedStatus || '';
-    this.policyEffectiveDate = submission.polEffDate;
-    this.policyExpirationDate = submission.polExpDate;
+    this.policyEffectiveDate = submission.policyEffectiveDate;
+    this.policyExpirationDate = submission.policyExpirationDate;
     this.programId = program.programId;
     this.status = 1;
+    this.riskState = '';
   }
 
   markClean() {
     this._isDirty = false;
+    this.showDirty = false;
   }
+
   markDirty() {
     this._isDirty = true;
+    //this._validationResults.isDirty = true;
   }
 
   setRequiredFields() {
@@ -271,6 +387,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   afterSave() {
     if (this._validationResults.canBeSaved) {
       this.markStructureClean();
+      this.showDirty = false;
     }
   }
   abstract markChildrenClean(): void;
@@ -289,24 +406,12 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   //   //this.propertyQuoteMortgageeValidation?.validateChildrenAsStandalone(this.propertyQuoteMortgagee);
   //   //this.propertyQuoteAdditionalInterestValidation?.validateChildrenAsStandalone(this.propertyQuoteAdditionalInterest);
   // }
+
   validateQuote() {
-    //this._canBeSaved = true;
     this._errorMessages = [];
+    this._canBeSaved = true;
     this._isValid = true;
-    this.validateClassCode();
-    //this.validateQuoteChildren();
   }
-
-  validateClassCode(): boolean {
-    let invalid = false;
-    console.log(this.classCode);
-    if (this.classCode == null){
-      invalid = true;
-      this._errorMessages.push('CSP Code is required');
-    }
-    return invalid;
-  }
-
 
   validateBase(){
     this.validateQuote();
@@ -315,6 +420,17 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   }
   abstract validate(): ValidationClass;
   abstract validateClass(): void;
+
+  sortForms() {
+    this.quotePolicyForms = this.quotePolicyForms
+      .sort((a,b) =>
+        ((a.categorySequence ?? 9999) - (b.categorySequence ?? 9999)) ||
+        ((a.sortSequence ?? 9999) - (b.sortSequence ?? 9999)) ||
+        (a.formTitle?.localeCompare(b.formTitle ?? '')) ||
+        (a.formName?.localeCompare(b.formName ?? '')) ||
+        ((a.formIndex ?? 9999) - (b.formIndex ?? 9999))
+      );
+  }
 
   // validatePropertyQuote(quote: Validation){
   //   quote.validate ? quote.validate(): null;
@@ -354,7 +470,9 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
   //   this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
   //   this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
   // }
-  abstract onSave(savedQuote:QuoteClass): void;
+  abstract onSave(savedQuote:PropertyQuoteClass): void;
+
+  abstract calculateSummaryPremiums(): void;
 
   abstract toJSON(): Quote;
 
@@ -363,7 +481,14 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
     this.quoteRates.forEach(c => rates.push(c.toJSON(Number(this.classCode))));
     const lineItems: QuoteLineItem[] = [];
     this.quoteLineItems.forEach(c => lineItems.push(c.toJSON()));
-    console.log(lineItems);
+    const forms: PolicyForm[] = [];
+    this.quotePolicyForms.forEach(c => forms.push(c.toJSON()));
+    const subjectivities: Subjectivities[] = [];
+    this.subjectivityData.forEach(c => subjectivities.push(c.toJSON()));
+    const warranties: Warranties[] = [];
+    this.warrantyData.forEach(c => warranties.push(c.toJSON()));
+    const disclaimers: Disclaimers[] = [];
+    this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -373,6 +498,7 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       policyEffectiveDate: this.policyEffectiveDate,
       policyExpirationDate: this.policyExpirationDate,
       status: this.status,
+      statusDescription: this.statusDescription,
       claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
       admittedStatus: this.admittedStatus,
       policyNumber: this.policyNumber,
@@ -390,6 +516,10 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       propertyQuote: null,
       quoteRates: rates,
       quoteLineItems: lineItems,
+      quotePolicyForms: forms,
+      subjectivityData: subjectivities,
+      warrantyData: warranties,
+      disclaimerData: disclaimers,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,
@@ -476,7 +606,11 @@ export abstract class QuoteClass implements Quote, Validation, QuoteAfterSave {
       validated: this.validated,
       validatedRisk: this.validatedRisk,
       importErrors: this.importErrors,
-      importWarnings: this.importWarnings
+      importWarnings: this.importWarnings,
+      totalPremium: this.totalPremium,
+      formsVersionDescription: this.formsVersionDescription,
+      departmentId: this.departmentId,
+      policyMod: this.policyMod
     };
   }
 }

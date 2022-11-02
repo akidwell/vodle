@@ -1,4 +1,8 @@
+
 <div class="card">
+    <div >
+        <div style="float:right; font-weight:bold; padding:10px">Total Premium: {{totalPrem | currency: 'USD' : 'symbol':'1.0-0'}}</div>
+    </div>
     <div class="card-header" (click)="collapse.toggle()">
         Property Premium
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
@@ -7,16 +11,16 @@
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
         <div *ngIf="quote" class="card-body">
             <rsps-property-premium-rate [programDescription]="program.programDesc"
-                [limitTotal]="quote.limitTotal" [rate]="rate" [canEdit]="canEditSubmission">
+                [limitTotal]="quote.limitTotal" [rate]="rate" [canEdit]="canEdit">
             </rsps-property-premium-rate>
         </div>
        <div *ngIf="quote" class="card-body top-bordered" >
             <rsps-property-deductible-group [programId]="program.programId" [classType]="classType"
-                [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEditSubmission">
+                [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEdit">
             </rsps-property-deductible-group>
         </div>
-        <div class="card-body top-bordered" >
-            <!-- TODO: Next component -->
-        </div>
+    </div>
+    <div class="card-footer">
+        <button style="float:left" *ngIf="canEdit" class="link-button" (click)="addDeductible();">Add Deductible</button>
     </div>
 </div>

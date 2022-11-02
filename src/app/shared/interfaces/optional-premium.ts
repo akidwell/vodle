@@ -1,15 +1,17 @@
 export interface OptionalPremium {
   buildingNumber: number | null;
   premisesNumber: number | null;
+  isAppliedToAll: boolean;
   coverageCode: number | null
   limit: number | null;
-  subjectToMaxAmount: boolean;
   subjectToMaxPercent: number | null;
-  hasDeductible: boolean;
+  isSubjectToMaxAmount: boolean;
+  isDeductibleSelected: boolean;
   deductible: number | null;
-  deductibleType: number | null;
-  deductibleCode: number | null;
+  deductibleType: string | null;
+  deductibleCode: string | null;
   additionalPremium: number | null;
-  guid?: string;
+  additionalDetail: string;
+  guid: string;
   isNew?: boolean;
 }
