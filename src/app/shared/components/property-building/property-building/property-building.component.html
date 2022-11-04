@@ -196,7 +196,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit"
+                    <input type="text" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit" nullValue
                         mask="0000" [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
                 </div>
                 <div class="col-lg-1">
@@ -213,7 +213,7 @@
                         [(ngModel)]="building.itv" #itv="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit" maxInt mask="0*"
+                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit" nullValue
                         [(ngModel)]="building.stories" #stories="ngModel">
                 </div>
                 <div class="col-lg-1">
