@@ -82,6 +82,7 @@ export class QuoteSavingService {
     if (quote) {
       console.log('quotes: ', quote, 'id: ');
       this.isSaving = true;
+      console.log(quote);
       const results$ = this.quoteService.updateQuote(quote);
       await lastValueFrom(results$)
         .then(async (quoteData: Quote) => {

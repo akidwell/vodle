@@ -72,7 +72,9 @@ export class QuoteService {
   deleteLineItems(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/quote-line-item/' + id);
   }
-
+  deleteGeneralRemark(quoteId: number, remarkId: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/general-remarks/' + quoteId + '/remark/' + remarkId);
+  }
 
   import(quote: Quote, file: any) {
     const formData = new FormData();

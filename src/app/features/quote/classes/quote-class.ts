@@ -22,6 +22,9 @@ import { QuoteDisclaimersClass } from './quote-disclaimers-class';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 import { Warranties } from 'src/app/shared/interfaces/warranties';
 import { QuoteWarrantiesClass } from './quote-warranties-class';
+import { QuoteGeneralRemarks } from '../models/quote-general-remarks';
+import { QuoteGeneralRemarksClass } from './quote-general-remarks-class';
+import { GeneralRemarks } from 'src/app/shared/interfaces/general-remarks';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -153,6 +156,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   subjectivityData:QuoteSubjectivitiesClass[] = [];
   warrantyData:QuoteWarrantiesClass[] = [];
   disclaimerData:QuoteDisclaimersClass[] = [];
+  generalRemarksData:QuoteGeneralRemarksClass[] = [];
 
   propertyQuote!: PropertyQuoteClass;
   quoteValidation!: QuoteValidationClass;
@@ -360,6 +364,15 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.warrantyData = warranties;
 
 
+    const generalRemarks: QuoteGeneralRemarksClass[] = [];
+    if(quote.generalRemarksData) {
+      quote.generalRemarksData.forEach((element) => {
+        generalRemarks.push(new QuoteGeneralRemarksClass(element));
+      });
+    }
+    this.generalRemarksData = generalRemarks;
+
+
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -514,6 +527,9 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.warrantyData.forEach(c => warranties.push(c.toJSON()));
     const disclaimers: Disclaimers[] = [];
     this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
+    const generalRemarks: GeneralRemarks[] = [];
+    this.generalRemarksData.forEach(c => generalRemarks.push(c.toJSON()));
+    console.log(generalRemarks);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -545,6 +561,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       subjectivityData: subjectivities,
       warrantyData: warranties,
       disclaimerData: disclaimers,
+      generalRemarksData: generalRemarks,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,
