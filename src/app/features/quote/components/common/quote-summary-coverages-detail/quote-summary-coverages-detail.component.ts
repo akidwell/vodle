@@ -10,6 +10,7 @@ import { DepartmentComponentBase } from 'src/app/shared/component-base/departmen
 import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
 import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
+import { QuoteRateClass } from '../../../classes/quote-rate-class';
 
 @Component({
   selector: 'rsps-quote-summary-coverages-detail',
@@ -20,6 +21,7 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
   @Input() program!: ProgramClass;
   terrorismLabel = 'Terrorism (TRIPRA) Premium:';
   brokerCommissionLabel = 'Broker Commission:';
+  rate: QuoteRateClass | null = null;
   effectiveDate!: Date | moment.Moment;
   optionalCoveragesSubscription!: Subscription;
   optionalCoverages!: OptionalPremiumMapping[];
@@ -32,6 +34,7 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
 
   ngOnInit(): void {
     this.quoteData = this.program.quoteData instanceof PropertyQuoteClass ? this.program.quoteData : null;
+    this.rate = this.quoteData?.quoteRates[0] ?? null;
     this.quoteData?.calculateSummaryPremiums();
     this.effectiveDate = this.program.quoteData?.policyEffectiveDate || moment().startOf('day');
     const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate?.toString();
