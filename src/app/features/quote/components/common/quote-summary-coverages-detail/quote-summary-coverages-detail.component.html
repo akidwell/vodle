@@ -20,12 +20,13 @@
     >
     <input
       type="text"
-      *ngIf="program.quoteData"
-      class="form-control"
+      *ngIf="rate"
+      class="form-control right"
       id="policyCoverage"
       readonly
+      string-to-currency
       name="policyCoverage"
-      [(ngModel)]="program.quoteData.totalPremium"
+      [(ngModel)]="rate.premium"
       #policyCoverage="ngModel"
     />
   </div>
@@ -93,8 +94,9 @@
       <input
         type="text"
         *ngIf="program.quoteData"
-        class="form-control"
+        class="form-control right"
         id="coverageDesc"
+        string-to-currency
         readonly
         name="coverageDesc"
         [(ngModel)]="coverage.additionalPremium"
@@ -112,6 +114,58 @@
         [readonly]="!canEdit"
         #coverageAccepted="ngModel"
       />
+    </div>
+  </div>
+</div>
+<div class="row">&nbsp;</div>
+<div *ngIf="quoteData">
+  <div class="row">
+    <div class="col-lg-6"></div>
+    <div class="col-lg-1">
+      <label for="minimumPremiumRequired" class="form-label" title="Has Minimum Premium"
+        >Min Prem</label
+      >
+    </div>
+    <div class="col-lg-2">
+      <label for="advancePremium" class="form-label" title="Advance Premium"
+        >Advance Premium</label
+      >
+    </div>
+    <div class="col-lg-2">
+      <!-- <label for="coverageDesc" class="form-label" title="Accept / Decline"
+        >Accept / Decline</label
+      > -->
+    </div>
+  </div>
+</div>
+<div *ngIf="quoteData">
+  <div class="row">
+    <div class="col-lg-6"></div>
+    <div class="col-lg-1">
+      <input type="checkbox"
+      *ngIf="!quoteData.autoCalcMiscPremium"
+      class="form-check-input"
+      validate-on-change
+      [readonly]="!canEdit"
+      (change)="this.quoteData.calculateSummaryPremiums()"
+      [(ngModel)]="quoteData.minimumPremiumRequired"
+      #minimumPremiumRequired="ngModel"
+      id="minimumPremiumRequired" />    </div>
+    <div class="col-lg-2">
+      <input
+        type="text"
+        class="form-control right"
+        id="advancePremium"
+        readonly
+        string-to-currency
+        [disabled]="!canEdit"
+        name="advancePremium"
+        [(ngModel)]="quoteData.advancePremiumValue"
+        #advancePremium="ngModel"
+      />
+    </div>
+    <div class="col-lg-2">
+
     </div>
   </div>
 </div>
@@ -163,9 +217,10 @@
       <input
         type="text"
         *ngIf="program.quoteData"
-        class="form-control"
+        class="form-control right"
         id="lineItemAmount"
         readonly
+        string-to-currency
         name="lineItemAmount"
         [(ngModel)]="item.amount"
         #lineItemAmount="ngModel"
@@ -191,18 +246,18 @@
     <div class="col-lg-2">
       <input
         type="text"
-        class="form-control"
+        class="form-control right"
         id="terrorismPremium"
         [disabled]="!canEdit"
+        [readonly]="!canEdit"
         string-to-currency
-        [allowNegative]="false"
         (change)="this.quoteData.calculateSummaryPremiums()"
         name="terrorismPremium"
         [(ngModel)]="quoteData.terrorismPremium"
         #terrorismPremium="ngModel"
       />
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-2"  style="text-align: center; vertical-align: middle;">
       <input
         type="checkbox"
         class="form-check-input"
@@ -230,12 +285,13 @@
       <div class="col-lg-1">
         <input
           type="text"
-          class="form-control"
+          class="form-control right"
           id="brokerPercent"
           name="brokerPercent"
           (change)="this.quoteData.calculateSummaryPremiums()"
+          validate-on-change
+          [readonly]="!canEdit"
           string-to-currency
-          [allowNegative]="false"
           [decimalPlaces]="1"
           [(ngModel)]="quoteData.commissionRate"
           #brokerPercent="ngModel"
@@ -244,13 +300,11 @@
       <div class="col-lg-2">
         <input
           type="text"
-          class="form-control"
+          class="form-control right"
           id="brokerPremium"
           readonly
           name="brokerPremium"
           string-to-currency
-          [allowNegative]="false"
-          [decimalPlaces]="2"
           [(ngModel)]="quoteData.brokerCommission"
           #brokerPremium="ngModel"
         />
@@ -284,7 +338,7 @@
     </div>
     <div class="col-lg-1">
       <label for="minPremium" class="form-label" title="Has Minimum Premium"
-        >Min Prem</label
+        >Auto-Calc</label
       >
     </div>
     <div class="col-lg-1">
@@ -302,7 +356,9 @@
         type="text"
         class="form-control"
         id="minEarnedPercent"
-        readonly
+        [required]="canEdit"
+        [disabled]="!canEdit"
+        [readonly]="!canEdit || quoteData.autoCalcMiscPremium"
         name="minEarnedPercent"
         [(ngModel)]="quoteData.earnedPremiumPct"
         #minEarnedPercent="ngModel"
@@ -311,31 +367,47 @@
     <div class="col-lg-2">
       <input
         type="text"
-        class="form-control"
+        class="form-control right"
         id="minEarnedPremium"
         readonly
         name="minEarnedPremium"
+        string-to-currency
+        [(ngModel)]="quoteData.minimumEarnedPremium"
+        #minEarnedPremium="ngModel"
       />
     </div>
     <div class="col-lg-2">
       <input
         type="text"
-        class="form-control"
-        id="minPremium"
-        readonly
-        name="minPremium"
+        class="form-control right"
+        [readonly]="quoteData.autoCalcMiscPremium"
+        id="minimumPremium"
+        name="minimumPremium"
+        [readonly]="!canEdit"
+        (change)="this.quoteData.calculateSummaryPremiums()"
+        string-to-currency
+        [(ngModel)]="quoteData.minimumPremium"
+        #minimumPremium="ngModel"
       />
     </div>
     <div class="col-lg-1">
-      <input type="checkbox" class="form-check-input" id="hasMinPremium" />
+      <input type="checkbox"
+      class="form-check-input"
+      validate-on-change
+      [readonly]="!canEdit"
+      (change)="this.quoteData.calculateSummaryPremiums()"
+      [(ngModel)]="quoteData.autoCalcMiscPremium"
+      #autoCalcMiscPremium="ngModel"
+      id="autoCalc" />
     </div>
     <div class="col-lg-2">
       <input
         type="text"
-        class="form-control"
+        class="form-control right"
         id="totalAdvancePremium"
         readonly
         [disabled]="!canEdit"
+        string-to-currency
         name="totalAdvancePremium"
         [(ngModel)]="quoteData.totalAdvancePremium"
         #totalAdvancePremium="ngModel"

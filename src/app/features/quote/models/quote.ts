@@ -75,7 +75,7 @@ export interface Quote {
   modifiedUserId: number | null;
   approvalUserId: number | null;
   terrorismCoverage: string | null;
-  // minimumPremiumRequired: boolean;
+  minimumPremiumRequired: boolean | null;
   // userFacultativeReins: boolean;
   // excessOfAuto: boolean;
   // underlyingUMLimit1Mil: boolean;

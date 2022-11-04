@@ -100,7 +100,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   modifiedUserId = null;
   approvalUserId = null;
   terrorismCoverage = null;
-  minimumPremiumRequired = false;
   userFacultativeReins = false;
   excessOfAuto = false;
   underlyingUMLimit1Mil = false;
@@ -123,8 +122,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   coinsurancePercentage = null;
   productManufactureDate = null;
   discontinuedProducts = null;
-  autoCalcMiscPremium = false;
-  minimumPremium: number | null = null;
   advancePremium = null;
   variesByLoc = false;
   pcfCharge = null;
@@ -224,6 +221,31 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.markDirty();
     this._earnedPremiumPct = value || 0;
   }
+  private _autoCalcMiscPremium = true;
+  get autoCalcMiscPremium(): boolean {
+    return this._autoCalcMiscPremium;
+  }
+  set autoCalcMiscPremium(value: boolean) {
+    this.markDirty();
+    this._minimumPremiumRequired = false;
+    this._autoCalcMiscPremium = value;
+  }
+  private _minimumPremiumRequired = false;
+  get minimumPremiumRequired(): boolean {
+    return this._minimumPremiumRequired;
+  }
+  set minimumPremiumRequired(value: boolean) {
+    this.markDirty();
+    this._minimumPremiumRequired = value;
+  }
+  private _minimumPremium: number | null = null;
+  get minimumPremium(): number | null {
+    return this._minimumPremium;
+  }
+  set minimumPremium(value: number | null) {
+    this.markDirty();
+    this._minimumPremium = value;
+  }
   get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
   }
@@ -269,7 +291,10 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.policyNumber = quote.policyNumber || '--';
     this.policyMod = quote.policyMod || '--';
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
-    this.autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
+    this._autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
+    this._minimumPremium = quote.minimumPremium || null;
+    this._autoCalcMiscPremium = quote.autoCalcMiscPremium;
+    this._minimumPremiumRequired = quote.minimumPremiumRequired || false;
     this.programId = quote.programId || 0;
     this.submissionGroupsStatusId = quote.submissionGroupsStatusId || 0;
     this.submissionNumber = quote.submissionNumber || 0;
@@ -557,7 +582,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       maxPolicyAggregate: this.maxPolicyAggregate,
       medicalPayments: this.medicalPayments,
       minimumPremium: this.minimumPremium,
-      //minimumPremiumRequired: this.minimumPremiumRequired,
+      minimumPremiumRequired: this.minimumPremiumRequired,
       modifiedDate: this.modifiedDate,
       modifiedUserId: this.modifiedUserId,
       modifiedUserName: this.modifiedUserName,

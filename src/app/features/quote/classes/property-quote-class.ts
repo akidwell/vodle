@@ -29,6 +29,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   propertyQuoteId = 0;
   quote!: QuoteClass;
   //quoteId: number | null = null;
+  minimumEarnedPremium = 0;
 
   propertyQuoteDeductibleList: PropertyQuoteDeductibleClass[] = [];
   propertyQuoteBuildingOptionalCoverage: QuoteOptionalPremiumClass[] = [];
@@ -679,14 +680,25 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   calculateSummaryPremiums(): void {
     //Add all commission eligible premium
-    let premiumCommissionAvailable = this.totalPremium;
+    let premiumCommissionAvailable = this.quoteRates[0].premium ?? 0;
     this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
     premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
     //Add all non-commission eligible items for total premium
-    let totalPremium = premiumCommissionAvailable;
-    this.quoteLineItems.map((surchargeOrFee) => (totalPremium += surchargeOrFee.amount ?? 0));
-    this.totalAdvancePremium = totalPremium;
+    let advancePremium = premiumCommissionAvailable;
+    if (this.autoCalcMiscPremium) {
+      this.advancePremiumValue = advancePremium;
+      this.minimumPremium = this.advancePremiumValue;
+    } else if (this.minimumPremiumRequired) {
+      this.advancePremiumValue = this.minimumPremium ?? 0;
+      advancePremium = this.minimumPremium ?? 0;
+    } else {
+      this.advancePremiumValue = advancePremium;
+    }
+    this.minimumEarnedPremium = (this.advancePremiumValue * (this.earnedPremiumPct/100)) ?? 0;
+
+    this.quoteLineItems.map((surchargeOrFee) => (advancePremium += surchargeOrFee.amount ?? 0));
+    this.totalAdvancePremium = advancePremium;
   }
   onSave(savedQuote: PropertyQuoteClass) {
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
