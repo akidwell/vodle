@@ -307,9 +307,19 @@ export class InsuredClass implements Insured {
     this.setRequiredFields();
   }
   markClean() {
+    this.markChildrenClean();
     this._isDirty = false;
     this._showErrors = false;
   }
+  markChildrenClean() {
+    this.additionalNamedInsureds.forEach(child => {
+      child.markClean();
+    });
+    this.contacts.forEach(child => {
+      child.markClean();
+    });
+  }
+
   markDirty() {
     this._isDirty = true;
   }
