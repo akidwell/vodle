@@ -692,6 +692,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     } else if (this.minimumPremiumRequired) {
       this.advancePremiumValue = this.minimumPremium ?? 0;
       advancePremium = this.minimumPremium ?? 0;
+    } else {
+      this.advancePremiumValue = advancePremium;
     }
     this.minimumEarnedPremium = (this.advancePremiumValue * (this.earnedPremiumPct/100)) ?? 0;
 
