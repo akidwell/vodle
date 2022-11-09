@@ -70,8 +70,7 @@ import { PropertyDataService } from './features/quote/services/property-data.ser
     NoopAnimationsModule,
     PipesModule,
     SubmissionInformationModule,
-    MortgageeModule,
-    AdditionalInterestModule,
+
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerImmediately'
@@ -95,7 +94,7 @@ import { PropertyDataService } from './features/quote/services/property-data.ser
       multi: true,
       useClass: AuthInterceptor
     },
-    //{ provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: NgbAlert, useClass: NgbModule, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

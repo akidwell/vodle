@@ -29,6 +29,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   propertyQuoteId = 0;
   quote!: QuoteClass;
   //quoteId: number | null = null;
+  minimumEarnedPremium = 0;
 
   propertyQuoteDeductibleList: PropertyQuoteDeductibleClass[] = [];
   propertyQuoteBuildingOptionalCoverage: QuoteOptionalPremiumClass[] = [];
@@ -469,6 +470,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.subjectivityData);
     this._validationResults.validateChildrenAndMerge(this.disclaimerData);
     this._validationResults.validateChildrenAndMerge(this.warrantyData);
+    this._validationResults.validateChildrenAndMerge(this.generalRemarksData);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
@@ -489,6 +491,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.subjectivityData);
     this.childArrayValidate(this.disclaimerData);
     this.childArrayValidate(this.warrantyData);
+    this.childArrayValidate(this.generalRemarksData);
     this.childArrayValidate(this.propertyQuoteBuildingOptionalCoverage);
   }
   childArrayValidate(children: Validation[]) {
@@ -508,6 +511,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.subjectivityData);
     this.cleanChildArray(this.disclaimerData);
     this.cleanChildArray(this.warrantyData);
+    this.cleanChildArray(this.generalRemarksData);
 
   }
   cleanChildArray(children: QuoteAfterSave[]) {
@@ -607,6 +611,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.termsAndConditionsTabValidation?.resetValidation();
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.subjectivityData);
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.disclaimerData);
+    this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.generalRemarksData);
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.warrantyData);
     console.log('TODO: Validate T&C');
   }
@@ -679,14 +684,25 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
   calculateSummaryPremiums(): void {
     //Add all commission eligible premium
-    let premiumCommissionAvailable = this.totalPremium;
+    let premiumCommissionAvailable = this.quoteRates[0].premium ?? 0;
     this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
     premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
     //Add all non-commission eligible items for total premium
-    let totalPremium = premiumCommissionAvailable;
-    this.quoteLineItems.map((surchargeOrFee) => (totalPremium += surchargeOrFee.amount ?? 0));
-    this.totalAdvancePremium = totalPremium;
+    let advancePremium = premiumCommissionAvailable;
+    if (this.autoCalcMiscPremium) {
+      this.advancePremiumValue = advancePremium;
+      this.minimumPremium = this.advancePremiumValue;
+    } else if (this.minimumPremiumRequired) {
+      this.advancePremiumValue = this.minimumPremium ?? 0;
+      advancePremium = this.minimumPremium ?? 0;
+    } else {
+      this.advancePremiumValue = advancePremium;
+    }
+    this.minimumEarnedPremium = (this.advancePremiumValue * (this.earnedPremiumPct/100)) ?? 0;
+
+    this.quoteLineItems.map((surchargeOrFee) => (advancePremium += surchargeOrFee.amount ?? 0));
+    this.totalAdvancePremium = advancePremium;
   }
   onSave(savedQuote: PropertyQuoteClass) {
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
@@ -701,6 +717,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveSubjectivities(savedQuote);
     this.onSaveDisclaimers(savedQuote);
     this.onSaveWarranties(savedQuote);
+    this.onSaveGeneralRemarks(savedQuote);
+
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -731,6 +749,10 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.warrantyData = savedQuote.warrantyData;
   }
 
+  private onSaveGeneralRemarks(savedQuote: PropertyQuoteClass) {
+    console.log(savedQuote.generalRemarksData);
+    this.generalRemarksData = savedQuote.generalRemarksData;
+  }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {
     mortgagees.forEach(mortgagee => {

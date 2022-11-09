@@ -1,3 +1,5 @@
+<rsps-general-remarks-group *ngIf="quote" [type]="classType" [quote]="quote" [generalRemarks]="quote.generalRemarksData"
+[submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-general-remarks-group>
 <rsps-warranties *ngIf="quote" [type]="classType" [quote]="quote" [warranties]="quote.warrantyData"
 [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-warranties>
 <rsps-subjectivities *ngIf="quote" [type]="classType" [quote]="quote" [subjectivities]="quote.subjectivityData"
