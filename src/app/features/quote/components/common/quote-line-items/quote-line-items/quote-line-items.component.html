@@ -12,7 +12,7 @@
         </ng-select>
     </div>
     <div class="col-lg-2">
-        <input style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="dueDateCalendar" [hidden]="lineItem.lineItemCode != 7"
+        <input validate-on-change style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="dueDateCalendar" [hidden]="lineItem.lineItemCode != 7"
             [readonly]="!canEdit" class="form-control" autocomplete="off" name="dueDate" [(ngModel)]="lineItem.dueDate"
             #dueDate="ngModel">
         <mat-datepicker-toggle [hidden]="lineItem.lineItemCode != 7" matSuffix style="display: inline-block; max-width: 20%;" [for]="dueDateCalendar">
@@ -20,15 +20,15 @@
         <mat-datepicker [hidden]="lineItem.lineItemCode != 7" #dueDateCalendar></mat-datepicker>
     </div>
     <div class="col-lg-1">
-        <input type="checkbox" class="form-check-input" id="received" name="received" [readonly]="!canEdit" *ngIf="lineItem.lineItemCode == 7"
+        <input validate-on-change type="checkbox" class="form-check-input" id="received" name="received" [readonly]="!canEdit" *ngIf="lineItem.lineItemCode == 7"
             [(ngModel)]="lineItem.received" #received="ngModel">
     </div>
     <div class="col-lg-4">
-        <input style="width:100%" type="text" class="form-control" id="notes" name="notes" [readonly]="!canEdit"
+        <input validate-on-change style="width:100%" type="text" class="form-control" id="notes" name="notes" [readonly]="!canEdit"
             [(ngModel)]="lineItem.notes" #dueDate="ngModel">
     </div>
     <div class="col-lg-2">
-        <input type="text" class="form-control" maxlength="18" maxInt [readonly]="!canEdit" [required]="canEdit"
+        <input validate-on-change type="text" class="form-control" maxlength="18" maxInt [readonly]="!canEdit" [required]="canEdit"
             [(ngModel)]="lineItem.amount" name="amount" #amount="ngModel" string-to-currency [decimalPlaces]="2"
             string-to-currency [allowNegative]="false">
 

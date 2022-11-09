@@ -1,5 +1,5 @@
 <div class="top-info" style="padding-bottom: 0px;display:flex">
-    <input type="file" style="display:none" accept=".xls, .xlsx" (change)="import($event)" #file>
+    <input validate-on-change type="file" style="display:none" accept=".xls, .xlsx" (change)="import($event)" #file>
     <button class="btn btn-md btn-primary" *ngIf="canEdit" [disabled]="importing" (click)="file.click()"
         name="verify">Import
     </button>

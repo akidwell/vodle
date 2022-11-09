@@ -445,7 +445,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     }
     //reset validation results
     this._validationResults.resetValidation();
-    this._validationResults.mapValues(this);
+    //this._validationResults.mapValues(this);
     //validate children
     this.callChildValidations();
 
