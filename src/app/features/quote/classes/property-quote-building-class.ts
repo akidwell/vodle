@@ -18,7 +18,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
   private _isDuplicate = false;
-
+//test
   propertyQuoteBuildingId = 0;
   propertyQuoteId = 0;
   propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
