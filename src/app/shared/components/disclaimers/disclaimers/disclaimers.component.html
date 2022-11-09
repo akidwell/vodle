@@ -19,23 +19,23 @@
                 <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio1" id="radioAllDis" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio1" id="radioAllDis" autocomplete="off"
                             (click)="selectDisclaimerView(disclaimerViewType.Available)" click-stop-propogation>
                         <label class="btn btn-outline-dark hide-select" for="radioAllDis">Available
                             ({{allDisclaimersCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio1" id="radioMandatoryDis" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio1" id="radioMandatoryDis" autocomplete="off"
                             (click)="selectDisclaimerView(disclaimerViewType.Mandatory)">
                         <label class="btn btn-outline-dark hide-select" for="radioMandatoryDis">Mandatory
                             ({{mandatoryDisclaimersCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio1" id="radioOpt" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio1" id="radioOpt" autocomplete="off"
                             (click)="selectDisclaimerView(disclaimerViewType.Optional)">
                         <label class="btn btn-outline-dark hide-select" for="radioOpt">Optional
                             ({{optionalDisclaimersCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio1" id="radioOnPol" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio1" id="radioOnPol" autocomplete="off"
                             checked (click)="selectDisclaimerView(disclaimerViewType.OnPolicy)">
                         <label class="btn btn-outline-dark hide-select" for="radioOnPol">On Policy
                             ({{onPolicyDisclaimersCount}})</label>
-                        <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
+                        <input validate-on-change *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
                             name="btnradio1" id="radioExp" autocomplete="off"
                             (click)="selectDisclaimerView(disclaimerViewType.Expiring)">
                     </div>
@@ -60,7 +60,7 @@
                     <tbody>
                         <tr *ngFor="let dis of filteredDisclaimers">
                             <td style="text-align:center; width:1%;">
-                                <input type="checkbox" class="form-check-input" id="included"
+                                <input validate-on-change [fullValidate]="true" type="checkbox" class="form-check-input" id="included"
                                     [ngClass]="!dis.isIncluded && dis.ysnDefault ? 'mandatory' : ''"
                                     [readonly]="!canEdit" [(ngModel)]="dis.isIncluded" name="included"
                                     click-stop-propagation>

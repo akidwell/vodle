@@ -5,7 +5,7 @@
                 <div class="col-lg-1">
                     <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
                         bindValue="code" [required]="canEdit && deductible.deductibleRequired" name="building"
-                        [virtualScroll]="true" click-stop-propagation
+                        [virtualScroll]="true" click-stop-propagation validate-on-change
                         [readonly]="!canEdit || deductible.deductibleReadonly" [clearable]="false"
                         [searchFn]="dropDownSearch" [(ngModel)]="deductible.building" (change)="deductible.markDirty()">
                         <ng-template ng-label-tmp let-item="item">
@@ -19,6 +19,7 @@
                 <div class="col-lg-2">
                     <ng-select id="deductible" [items]="propertyDeductibles$ | async" bindLabel="name"
                         bindValue="propertyDeductibleId" [required]="canEdit && deductible.deductibleRequired"
+                        validate-on-change [fullValidate]="true"
                         name="deductible" click-stop-propagation [readonly]="!canEdit || deductible.deductibleReadonly"
                         [clearable]="false" [(ngModel)]="deductible.propertyDeductibleId"
                         (change)="changeDeductible($event)">
@@ -26,7 +27,7 @@
                 </div>
                 <div class="col-lg-2">
                     <input *ngIf="!deductible.isExcluded" type="text" class="form-control right" id="amount"
-                        [readonly]="!canEdit || deductible.amountReadonly"
+                        [readonly]="!canEdit || deductible.amountReadonly" validate-on-change
                         [required]="canEdit && deductible.amountRequired" string-to-currency [allowNegative]="false"
                         name="amount" click-stop-propagation [(ngModel)]="deductible.amount" #amount="ngModel">
                     <input *ngIf="deductible.isExcluded" type="text" class="form-control right" id="amount" readonly
@@ -36,12 +37,14 @@
                     <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description"
                         bindValue="code" [required]="canEdit && deductible.deductibleTypeRequired" name="deductibleType"
                         click-stop-propagation [readonly]="!canEdit || deductible.deductibleTypeReadonly"
+                        validate-on-change
                         [clearable]="false" [(ngModel)]="deductible.deductibleType">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="deductibleCode" [items]="deductibleCodes$ | async" bindLabel="description"
                         bindValue="code" [required]="canEdit && deductible.deductibleCodeRequired" name="deductibleCode"
+                        validate-on-change
                         click-stop-propagation [readonly]="!canEdit || deductible.isExcluded" [clearable]="false"
                         [(ngModel)]="deductible.deductibleCode">
                     </ng-select>
@@ -49,11 +52,11 @@
                 <div class="col-lg-1">
                     <input type="checkbox" class="form-check-input" id="excluded" [(ngModel)]="deductible.isExcluded"
                         name="excluded" [hidden]="!deductible.isExcludedVisible" click-stop-propagation
-                        [readonly]="!canEdit || deductible.isExcludedReadonly">
+                        validate-on-change [readonly]="!canEdit || deductible.isExcludedReadonly">
                 </div>
                 <div class="col-lg-1">
                     <input type="checkbox" class="form-check-input" id="subjectToMin"
-                        [(ngModel)]="deductible.isSubjectToMin" name="subjectToMin"
+                        [(ngModel)]="deductible.isSubjectToMin" validate-on-change [fullValidate]="true" name="subjectToMin"
                         [hidden]="!deductible.isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded">
                 </div>
                 <div class="col-lg-1" *ngIf="collapsed">
@@ -76,14 +79,14 @@
             <div class="row">
                 <div class="col-lg-8">
                     <label for="comment" class="form-label" title="Comment">Comment</label>
-                    <input type="text" class="form-control" id="totalLimit" maxlength="255"
+                    <input type="text" class="form-control" id="totalLimit" maxlength="255" validate-on-change
                         [readonly]="!canEdit || deductible.isExcluded" click-stop-propagation name="comment"
                         [(ngModel)]="deductible.comment" #comment="ngModel">
                 </div>
                 <div class="col-lg-1" *ngIf="deductible.subjectToMinVisible">
                     <label for="subjectToMinPercent" class="form-label" title="%">%</label>
                     <input type="text" class="form-control right" id="subjectToMinPercent" click-stop-propagation
-                        [readonly]="!canEdit || deductible.isExcluded"
+                        [readonly]="!canEdit || deductible.isExcluded" validate-on-change
                         [required]="canEdit && deductible.subjectToMinPercentRequired" string-to-currency
                         [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" name="subjectToMinPercent"
                         [(ngModel)]="deductible.subjectToMinPercent" #subjectToMinPercent="ngModel">
@@ -91,7 +94,7 @@
                 <div class="col-lg-2" *ngIf="deductible.subjectToMinVisible">
                     <label for="subjectToMinAmount" class="form-label" title="Subject to Min Amount">Subject to Min
                         Amount</label>
-                    <input type="text" class="form-control right" id="subjectToMinAmount" click-stop-propagation
+                    <input type="text" class="form-control right" id="subjectToMinAmount" validate-on-change click-stop-propagation
                         [readonly]="!canEdit || deductible.isExcluded"
                         [required]="canEdit && deductible.subjectToMinAmountRequired" string-to-currency
                         [allowNegative]="false" name="subjectToMinAmount" [(ngModel)]="deductible.subjectToMinAmount"

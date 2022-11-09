@@ -58,7 +58,7 @@
               </tr>
               <tr >
                 <td style="text-align:center; width:1%;">
-                  <input type="checkbox" class="form-check-input" id="included"
+                  <input validate-on-change type="checkbox" class="form-check-input" id="included"
                     [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : ''" [readonly]="!canEdit"
                     [(ngModel)]="sub.isIncluded" name="included" click-stop-propagation>
                 </td>
@@ -97,12 +97,12 @@
         </div>
         <div>
           <label for="mainHeader">Main Header</label>
-          <input [readonly]="false" type="text" class="form-control" id="mainHeader" autocomplete="off"
+          <input validate-on-change [readonly]="false" type="text" class="form-control" id="mainHeader" autocomplete="off"
             name="mainHeader" [(ngModel)]="userDefinedInfo.mainHeader" #mainHeader="ngModel">
         </div>
         <div>
           <label for="sectionHeader">Section Header</label>
-          <input [readonly]="false" type="text" class="form-control" id="sectionHeader" autocomplete="off"
+          <input validate-on-change [readonly]="false" type="text" class="form-control" id="sectionHeader" autocomplete="off"
             name="sectionHeader" [(ngModel)]="userDefinedInfo.sectionHeader" #sectionHeader="ngModel">
         </div>
         <div>

@@ -102,7 +102,7 @@
       />
     </div>
     <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
-      <input
+      <input 
         type="checkbox"
         class="form-check-input"
         id="coverageAccepted"
@@ -189,7 +189,7 @@
     </div>
     <div class="col-lg-1"></div>
     <div class="col-lg-2">
-      <input
+      <input validate-on-change
         type="text"
         class="form-control"
         id="terrorismPremium"
@@ -203,7 +203,7 @@
       />
     </div>
     <div class="col-lg-2">
-      <input
+      <input validate-on-change [fullValidate]="true"
         type="checkbox"
         class="form-check-input"
         id="terrorismAccepted"
@@ -228,7 +228,7 @@
         />
       </div>
       <div class="col-lg-1">
-        <input
+        <input validate-on-change
           type="text"
           class="form-control"
           id="brokerPercent"
@@ -327,7 +327,7 @@
       />
     </div>
     <div class="col-lg-1">
-      <input type="checkbox" class="form-check-input" id="hasMinPremium" />
+      <input type="checkbox" validate-on-change [fullValidate]="true" class="form-check-input" id="hasMinPremium" />
     </div>
     <div class="col-lg-2">
       <input

@@ -19,23 +19,23 @@
                 <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioAll" autocomplete="off"
                             (click)="selectView(viewType.Available)">
                         <label class="btn btn-outline-dark hide-select" for="radioAll">Available
                             ({{allSubjectivitiesCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
                             (click)="selectView(viewType.Mandatory)">
                         <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory
                             ({{mandatorySubjectivitesCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
                             (click)="selectView(viewType.Optional)">
                         <label class="btn btn-outline-dark hide-select" for="radioOptional">Optional
                             ({{optionalSubjectivitesCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
                             checked (click)="selectView(viewType.OnPolicy)">
                         <label class="btn btn-outline-dark hide-select" for="radioOnPolicy">On Policy
                             ({{onPolicySubjectivitesCount}})</label>
-                        <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
+                        <input validate-on-change *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
                             name="btnradio" id="radioExpiring" autocomplete="off"
                             (click)="selectView(viewType.Expiring)">
                     </div>
@@ -60,7 +60,7 @@
                     <tbody>
                         <tr *ngFor="let sub of filteredSubjectivities">
                             <td style="text-align:center; width:1%;">
-                                <input type="checkbox" class="form-check-input" id="included"
+                                <input validate-on-change type="checkbox" class="form-check-input" id="included"
                                     [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : ''"
                                     [readonly]="!canEdit" [(ngModel)]="sub.isIncluded" name="included"
                                     click-stop-propagation>
