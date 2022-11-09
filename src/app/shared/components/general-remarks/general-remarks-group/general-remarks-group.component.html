@@ -1,0 +1,31 @@
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">
+   General Remarks
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div class="card-body" *ngIf="generalRemarks.length > 0">
+      <div class="row">
+        <div class="col-sm-1">
+          <label for="address">Remarks:</label>
+        </div>
+
+      </div>
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+          <div *ngFor="let item of generalRemarks; let i = index">
+            <rsps-general-remarks [type]="type" (copyExisitingRemark)=copyExisitingRemark($event) [quote]="quote"
+              (deleteExistingRemark)=deleteExistingRemark($event) [remarks]=generalRemarks [generalRemarkData]=item>
+            </rsps-general-remarks>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div id="mortgageeFooter">
+      <button style="float:left; background:none; border:none;" class="underline"
+        (click)="addNewRemark();">Add General Remarks</button>
+        <p style="float:right; background:none; border:none;">*These remarks are displayed on Quote and Binder Letters.</p>
+    </div>
+  </div>
+</div>
