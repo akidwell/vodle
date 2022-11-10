@@ -1,21 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
-import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
-import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
-import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuoteGeneralRemarksClass } from 'src/app/features/quote/classes/quote-general-remarks-class';
-import { QuoteDataValidationService } from 'src/app/features/quote/services/quote-data-validation-service/quote-data-validation-service.service';
-import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
-import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { GeneralRemarksClass } from 'src/app/shared/classes/general-remarks-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 

@@ -65,12 +65,12 @@
           </div>
           <div class="col-sm-3">
             <label for="street1" class="form-label" title="Status">Street Address 1</label>
-            <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"  [required]="canEdit"
+            <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"  [required]="canEdit" maxlength="40"
               [(ngModel)]="mortgageeData.street1" #street1="ngModel">
           </div>
           <div class="col-sm-3">
             <label for="street2" class="form-label" title="Status">Street Address 2</label>
-            <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit"
+            <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
               [(ngModel)]="mortgageeData.street2" #street2="ngModel">
           </div>
 
@@ -88,7 +88,7 @@
             </div>
             <div class="col-sm-3">
               <label for="city" class="form-label" title="city">City</label>
-              <input type="text" class="form-control" id="city" name="city" [(ngModel)]="mortgageeData.city"  [required]="canEdit"
+              <input type="text" class="form-control" id="city" name="city" [(ngModel)]="mortgageeData.city"  [required]="canEdit" maxlength="40"
                 [readonly]="mortgageeData.isZipLookup || !canEdit" #city="ngModel">
             </div>
             <div class="col-sm-2">

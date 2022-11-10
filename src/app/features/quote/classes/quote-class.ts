@@ -22,9 +22,10 @@ import { QuoteDisclaimersClass } from './quote-disclaimers-class';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 import { Warranties } from 'src/app/shared/interfaces/warranties';
 import { QuoteWarrantiesClass } from './quote-warranties-class';
-import { QuoteGeneralRemarks } from '../models/quote-general-remarks';
 import { QuoteGeneralRemarksClass } from './quote-general-remarks-class';
 import { GeneralRemarks } from 'src/app/shared/interfaces/general-remarks';
+import { QuoteInternalNotesClass } from './quote-internal-notes-class';
+import { InternalNotes } from 'src/app/shared/interfaces/internal-notes';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -157,6 +158,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   warrantyData:QuoteWarrantiesClass[] = [];
   disclaimerData:QuoteDisclaimersClass[] = [];
   generalRemarksData:QuoteGeneralRemarksClass[] = [];
+  internalNotesData:QuoteInternalNotesClass[] = [];
 
   propertyQuote!: PropertyQuoteClass;
   quoteValidation!: QuoteValidationClass;
@@ -354,7 +356,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     }
     this.disclaimerData = disclaimers;
 
-
     const warranties: QuoteWarrantiesClass[] = [];
     if(quote.warrantyData) {
       quote.warrantyData.forEach((element) => {
@@ -362,7 +363,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       });
     }
     this.warrantyData = warranties;
-
 
     const generalRemarks: QuoteGeneralRemarksClass[] = [];
     if(quote.generalRemarksData) {
@@ -372,6 +372,13 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     }
     this.generalRemarksData = generalRemarks;
 
+    const internalNotes: QuoteInternalNotesClass[] = [];
+    if(quote.internalNotesData) {
+      quote.internalNotesData.forEach((element) => {
+        internalNotes.push(new QuoteInternalNotesClass(element));
+      });
+    }
+    this.internalNotesData = internalNotes;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -529,7 +536,9 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
     const generalRemarks: GeneralRemarks[] = [];
     this.generalRemarksData.forEach(c => generalRemarks.push(c.toJSON()));
-    console.log(generalRemarks);
+    const internalNotes: InternalNotes[] = [];
+    this.internalNotesData.forEach(c => internalNotes.push(c.toJSON()));
+    console.log(internalNotes);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -562,6 +571,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       warrantyData: warranties,
       disclaimerData: disclaimers,
       generalRemarksData: generalRemarks,
+      internalNotesData: internalNotes,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,

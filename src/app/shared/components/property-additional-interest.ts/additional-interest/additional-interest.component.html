@@ -62,12 +62,12 @@
         </div>
         <div class="col-sm-3">
           <label for="street1" class="form-label" title="Status">Street Address 1</label>
-          <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"
+          <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit" maxlength="40"
           [required]="canEdit" [(ngModel)]="aiData.street1" #street1="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street2" class="form-label" title="Status">Street Address 2</label>
-          <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit"
+          <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
             [(ngModel)]="aiData.street2" #street2="ngModel">
         </div>
         <div class="row">
@@ -84,7 +84,7 @@
           </div>
           <div class="col-sm-3">
             <label for="city" class="form-label" title="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city"
+            <input type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city" maxlength="40"
             [required]="canEdit" [readonly]="aiData.isZipLookup || !canEdit" #city="ngModel">
           </div>
           <div class="col-sm-2">
