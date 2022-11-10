@@ -57,6 +57,7 @@ import { QuoteSummaryQuoteBindComponent } from './components/common/quote-summar
 import { QuoteSummaryPremiumDetailComponent } from './components/common/quote-summary-premium-detail/quote-summary-premium-detail.component';
 import { WarrantiesModule } from 'src/app/shared/components/warranties/warranties.module';
 import { GeneralRemarksModule } from 'src/app/shared/components/general-remarks/general-remarks.module';
+import { InternalNotesModule } from 'src/app/shared/components/internal-notes/internal-notes.module';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { GeneralRemarksModule } from 'src/app/shared/components/general-remarks/
     SubjectivitiesModule,
     DisclaimersModule,
     GeneralRemarksModule,
+    InternalNotesModule,
     WarrantiesModule,
     NgxMaskModule.forRoot()
   ],

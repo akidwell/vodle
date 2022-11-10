@@ -26,9 +26,13 @@
             <div class="row">
               <rsps-quote-summary-quote-bind [program]="program"></rsps-quote-summary-quote-bind>
             </div>
+            <div class="row">
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <rsps-internal-notes-group *ngIf="quote" [type]="classType" [quote]="quote" [internalNotes]="quote.internalNotesData"
+  [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-internal-notes-group>
 </div>

@@ -223,6 +223,11 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       invalid = true;
       this.invalidList.push('Deductible Code is required');
     }
+    if(this.propertyDeductibleId == 174 && this.deductibleType == 'O' ){
+      invalid = true;
+      this.invalidList.push('Deductible Code for AOP should be Per Occurence');
+    }
+
     return invalid;
   }
 
