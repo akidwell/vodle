@@ -3,19 +3,19 @@
         <div (click)="collapseExpand(false)">
             <div class="row" *ngIf="!building.isExpanded">
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
+                    <input validate-on-change type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
                         [(ngModel)]="building.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit" autocomplete="off"
                         [required]="canEdit && building.subjectNumberRequired" [ngbTooltip]="building.subjectNumber?.toString()"
                         [openDelay]="1000" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
+                    <input validate-on-change type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
                         [(ngModel)]="building.premisesNumber" #premisesNumber="ngModel" [readonly]="!canEdit" autocomplete="off"
                         [required]="canEdit && building.premisesNumberRequired" [ngbTooltip]="building.premisesNumber?.toString()"
                         [openDelay]="1000" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
+                    <input validate-on-change type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
                         [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit" autocomplete="off"
                         [required]="canEdit && building.buildingNumberRequired" [ngbTooltip]="building.buildingNumber?.toString()"
                         [openDelay]="1000" click-stop-propagation>
@@ -48,31 +48,31 @@
             <div class="row">
                 <div class="col-lg-1">
                     <label for="subjectNumber" class="form-label" title="Subject #">Subject #</label>
-                    <input type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
+                    <input validate-on-change type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
                         [(ngModel)]="building.subjectNumber" #subjectNumber="ngModel" [readonly]="!canEdit"
                         [required]="canEdit && building.subjectNumberRequired" click-stop-propagation
                         ngbTooltip="Subject #" [openDelay]="1000">
                 </div>
                 <div class="col-lg-1">
                     <label for="locationNumber" class="form-label" title="Premises #">Premises #</label>
-                    <input type="text" class="form-control" id="locationNumber" name="locationNumber" maxInt mask="0*"
+                    <input validate-on-change type="text" class="form-control" id="locationNumber" name="locationNumber" maxInt mask="0*"
                         [(ngModel)]="building.premisesNumber" #locationNumber="ngModel" [readonly]="!canEdit"
                         [required]="building.premisesNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-1">
                     <label for="buildingNumber" class="form-label" title="Building #">Building #</label>
-                    <input type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
+                    <input validate-on-change type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
                         [(ngModel)]="building.buildingNumber" #buildingNumber="ngModel" [readonly]="!canEdit"
                         [required]="building.buildingNumberRequired" click-stop-propagation>
                 </div>
                 <div class="col-lg-4">
                     <label for="street1" class="form-label" title="Street Address 1">Street Address 1</label>
-                    <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit" maxlength="40"
+                    <input validate-on-change type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit" maxlength="40"
                         [required]="building.street1Required" [(ngModel)]="building.street1" #street1="ngModel">
                 </div>
                 <div class="col-lg-4">
                     <label for="street2" class="form-label" title="Street Address 2">Street Address 2</label>
-                    <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
+                    <input validate-on-change type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
                         [(ngModel)]="building.street2" #street2="ngModel">
                 </div>
             </div>
@@ -81,7 +81,7 @@
                 <div class="col-lg-2">
                     <label for="zip" class="form-label" title="Zip Code">Zip Code</label>
                     <div class="inputspinner">
-                        <input type="text" zip-code class="form-control" id="zipCode"
+                        <input validate-on-change type="text" zip-code class="form-control" id="zipCode"
                             [readonly]="!canEdit || building.zipReadonly" [required]="canEdit && building.zipRequired"
                             [(ngModel)]="building.zip" name="zipCode" #zip="ngModel" (ngModelChange)="changeZipCode()">
                         <div *ngIf="building.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
@@ -92,7 +92,7 @@
                 <div class="col-lg-2">
                     <label for="city" class="form-label" title="City">City</label>
                     <div class="inputspinner">
-                        <input type="text" class="form-control" id="city" name="city" [(ngModel)]="building.city"
+                        <input validate-on-change type="text" class="form-control" id="city" name="city" [(ngModel)]="building.city"
                             [readonly]="!canEdit || building.cityReadonly" [required]="canEdit && building.cityRequired"
                             maxlength="25" #city="ngModel">
                         <div *ngIf="building.isZipLookup" id="spinner" class="spinner-border spinner-border-sm"
@@ -116,7 +116,7 @@
                 <div class="col-lg-6">
                     <label for="description" class="form-label" title="Property Description">Property
                         Description</label>
-                    <input type="text" class="form-control" id="description" name="description" [readonly]="!canEdit" maxlength="250"
+                    <input validate-on-change type="text" class="form-control" id="description" name="description" [readonly]="!canEdit" maxlength="250"
                         [(ngModel)]="building.description" #description="ngModel">
                 </div>
             </div>
@@ -137,12 +137,12 @@
                 </div>
                 <div class="col-lg-4">
                     <label for="occupancy" class="form-label" title="Occupancy">Occupancy</label>
-                    <input type="text" class="form-control" id="occupancy" name="occupancy" [readonly]="!canEdit" maxlength="250"
+                    <input validate-on-change type="text" class="form-control" id="occupancy" name="occupancy" [readonly]="!canEdit" maxlength="250"
                         [(ngModel)]="building.occupancy" #occupancy="ngModel">
                 </div>
                 <div class="col-lg-3">
                     <label for="construction" class="form-label" title="Construction">Construction</label>
-                    <input type="text" class="form-control" id="construction" name="construction" [readonly]="!canEdit" maxlength="250"
+                    <input validate-on-change type="text" class="form-control" id="construction" name="construction" [readonly]="!canEdit" maxlength="250"
                         [(ngModel)]="building.construction" #construction="ngModel">
                 </div>
             </div>
@@ -196,15 +196,15 @@
             </div>
             <div class="row">
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit" nullValue
-                        mask="0000" [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
+                    <input validate-on-change type="number" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit" 
+                        pattern="[0-9]{4}|null" [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
-                        mask="0000" [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
+                    <input validate-on-change type="number" class="form-control" id="gutRehab" name="gutRehab" [readonly]="!canEdit"
+                        pattern="[0-9]{4}|null" [(ngModel)]="building.gutRehab" #gutRehab="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="squareFeet" name="squareFeet" [readonly]="!canEdit"
+                    <input validate-on-change type="text" class="form-control" id="squareFeet" name="squareFeet" [readonly]="!canEdit"
                         string-to-currency [allowNegative]="false" [(ngModel)]="building.squareFeet"
                         #squareFeet="ngModel">
                 </div>
@@ -213,11 +213,11 @@
                         [(ngModel)]="building.itv" #itv="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control" id="stories" name="stories" [readonly]="!canEdit" nullValue
+                    <input validate-on-change type="number" class="form-control" id="stories" name="stories" [readonly]="!canEdit" maxInt pattern="[0-9]*"
                         [(ngModel)]="building.stories" #stories="ngModel">
                 </div>
                 <div class="col-lg-1">
-                    <input type="text" class="form-control right" id="sprinklered" name="sprinklered"
+                    <input validate-on-change type="text" class="form-control right" id="sprinklered" name="sprinklered"
                         [readonly]="!canEdit" mask="separator.0" suffix="%" nullValue
                         [(ngModel)]="building.sprinklered" #sprinklered="ngModel">
                 </div>
@@ -228,19 +228,19 @@
                 </div>
             <div class="col-lg-1"></div>
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="roof" name="roof" [readonly]="!canEdit" mask="0000"
+                <input validate-on-change type="number" class="form-control" id="roof" name="roof" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.roof" #roof="ngModel">
             </div>
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" mask="0000"
+                <input validate-on-change type="number" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.wiring" #wiring="ngModel">
             </div>
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit" mask="0000"
+                <input validate-on-change type="number" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.plumbing" #plumbing="ngModel">
             </div>
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" mask="0000"
+                <input validate-on-change type="number"class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.hvac" #hvac="ngModel">
             </div>
         </div>

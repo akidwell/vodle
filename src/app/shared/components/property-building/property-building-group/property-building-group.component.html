@@ -15,22 +15,22 @@
     <div class="card-body bottom-bordered" *ngIf="canFilter">
         <div class="row">
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
+                <input validate-on-change type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
                     ngbTooltip="Subject Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchSubject"
                     #subjectNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
             </div>
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
+                <input validate-on-change type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
                     ngbTooltip="Premises Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchPremises"
                     #premisesNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
             </div>
             <div class="col-lg-1">
-                <input type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
+                <input validate-on-change type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
                     ngbTooltip="Building Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchBuilding"
                     #buildingNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
             </div>
             <div class="col-lg-7">
-                <input type="address" class="form-control" id="address" name="address" maxlength="250"
+                <input validate-on-change type="address" class="form-control" id="address" name="address" maxlength="250"
                     ngbTooltip="Address" [openDelay]="1000" (input)="searchThrottle.next()" #address="ngModel"
                     [(ngModel)]="searchAddress" autocomplete="off">
             </div>

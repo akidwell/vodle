@@ -77,6 +77,11 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       this._isValid = false;
       this.invalidList.push('Additional Interest - Street is required');
     }
+    if (this.emptyStringValueCheck(this._zip)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Zipcode is required');
+    }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
