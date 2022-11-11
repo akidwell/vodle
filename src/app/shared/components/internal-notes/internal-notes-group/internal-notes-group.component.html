@@ -7,8 +7,14 @@
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
     <div class="card-body" *ngIf="internalNotes.length > 0">
       <div class="row">
-        <div class="col-sm-1">
+        <div class="col-sm-8">
           <label for="note">Note:</label>
+        </div>
+        <div class="col-sm-1">
+          <label for="note">Created By:</label>
+        </div>
+        <div class="col-sm-1">
+          <label for="note">Created Date:</label>
         </div>
 
       </div>

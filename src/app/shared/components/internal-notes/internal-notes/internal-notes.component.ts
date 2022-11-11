@@ -89,10 +89,10 @@ export class InternalNotesComponent extends SharedComponentBase implements OnIni
         this.deleteExistingNote.emit(this.internalNoteData);
       });
     } else {
-      // const results$ = this.quoteService.deleteInternalNote(this.quote?.quoteId, this.internalNoteData?.noteId === null ? 0 : this.internalNoteData.noteId);
-      //return await lastValueFrom(results$).then(() => {
-      // this.deleteExistingNote.emit(this.internalNoteData);
-      // });
+      const results$ = this.quoteService.deleteInternalNote(this.quote?.quoteId, this.internalNoteData?.noteId === null ? 0 : this.internalNoteData.noteId);
+      return await lastValueFrom(results$).then(() => {
+        this.deleteExistingNote.emit(this.internalNoteData);
+      });
     }
   }
 

@@ -39,7 +39,6 @@ export abstract class InternalNotesClass implements InternalNotes, Validation, Q
   }
   set note(value: string | null) {
     this._note = value;
-    this._isDirty = true;
   }
 
   get validationResults(): QuoteValidationClass {
@@ -79,6 +78,7 @@ export abstract class InternalNotesClass implements InternalNotes, Validation, Q
     this.note = sub.note;
     this.createdBy = sub.createdBy;
     this.createdDate = sub.createdDate;
+    this.createdByName = sub.createdByName;
   }
 
   newInit() {
