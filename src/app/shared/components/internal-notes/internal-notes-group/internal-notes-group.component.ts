@@ -27,7 +27,6 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
   invalidList: string[] = [];
   isNew = false;
   collapsed = false;
-  program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
 
@@ -44,6 +43,8 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
   @Input() quote!: QuoteClass;
   @Input() submissionNumber!: number;
   @Input() quoteNumber!: number;
+  @Input() program!: ProgramClass;
+
 
   @Input() set internalNotes(value: InternalNotesClass[]) {
     this._internalNotes = value;
@@ -80,9 +81,11 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     console.log(existingNote);
     const clone = deepClone(existingNote.toJSON());
     const newNote = new QuoteInternalNotesClass(clone);
+    const date = new Date();
     newNote.note = clone.note;
     newNote.isDirty = true;
     newNote.isNew = true;
+    newNote.createdDate = date;
     if (this.internalNotes.length == 0) {
       newNote.noteId = 1;
     } else {
@@ -110,6 +113,8 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     newNote.isDirty = true;
     newNote.isNew = true;
     newNote.quoteId = this.quote.quoteId;
+    const date = new Date();
+    newNote.createdDate = date;
     if (this.internalNotes.length == 0) {
       newNote.noteId = 1;
     } else {

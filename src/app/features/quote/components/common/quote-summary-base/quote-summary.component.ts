@@ -27,10 +27,6 @@ export class QuoteSummaryComponent extends DepartmentComponentBase {
         this.department = department;
       }
     );
-  }
-
-
-  ngOnInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
@@ -40,5 +36,9 @@ export class QuoteSummaryComponent extends DepartmentComponentBase {
         }
       }
     );
+  }
+
+
+  ngOnInit(): void {
   }
 }

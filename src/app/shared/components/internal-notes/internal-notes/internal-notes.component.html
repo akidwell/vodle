@@ -2,9 +2,19 @@
   <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
     <div class="row">
 
-      <div class="col-lg-10">
+      <div class="col-lg-8">
         <input type="text" class="form-control" id="note" name="note" [readonly]="!canEdit"
           [required]="canEdit" [(ngModel)]="internalNoteData.note" #note="ngModel">
+      </div>
+
+      <div class="col-lg-1">
+        <input type="text" class="form-control" id="note" name="note" [readonly]="true"
+          [(ngModel)]="internalNoteData.createdByName" #note="ngModel">
+      </div>
+
+      <div class="col-lg-1">
+        <input type="text" class="form-control" id="note" name="note" [readonly]="true"
+           [ngModel]="internalNoteData.createdDate | date:'MM/dd/yyyy'" (ngModelChange)="internalNoteData.createdDate=$event" #note="ngModel">
       </div>
       <div class="col-lg-2">
         <button class="btn btn-secondary" (click)=copyNote() [disabled]="!canEdit">Copy</button>&nbsp;

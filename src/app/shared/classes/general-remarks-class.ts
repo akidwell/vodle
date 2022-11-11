@@ -11,7 +11,6 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
-  private _isIncluded = false;
   private _validationResults: QuoteValidationClass;
   private _remark: string | null = null;
 
@@ -38,15 +37,6 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
   }
   set remark(value: string | null) {
     this._remark = value;
-    this._isDirty = true;
-  }
-
-  get isIncluded(): boolean {
-    return this._isIncluded;
-  }
-  set isIncluded(value: boolean) {
-    this._isDirty = true;
-    this._isIncluded = value;
   }
 
   get validationResults(): QuoteValidationClass {
