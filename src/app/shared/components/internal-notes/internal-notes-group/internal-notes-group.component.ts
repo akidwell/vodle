@@ -86,6 +86,7 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     newNote.isDirty = true;
     newNote.isNew = true;
     newNote.createdDate = date;
+    newNote.createdByName = this.userName;
     if (this.internalNotes.length == 0) {
       newNote.noteId = 1;
     } else {
@@ -113,6 +114,7 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     newNote.isDirty = true;
     newNote.isNew = true;
     newNote.quoteId = this.quote.quoteId;
+    newNote.createdByName = this.userName;
     const date = new Date();
     newNote.createdDate = date;
     if (this.internalNotes.length == 0) {

@@ -22,6 +22,10 @@ export abstract class SharedComponentBase extends ComponentBase implements OnDes
     return this._type;
   }
 
+  get userName(): string {
+    return this.userAuth.userName;
+  }
+
   constructor(private userAuth: UserAuth) {
     super();
     this.quoteAuthSub = this.userAuth.canEditQuote$.subscribe(
