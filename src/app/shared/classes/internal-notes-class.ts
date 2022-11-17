@@ -2,29 +2,31 @@ import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
-import { GeneralRemarks } from '../interfaces/general-remarks';
+import { InternalNotes } from '../interfaces/internal-notes';
 import { Validation } from '../interfaces/validation';
 
-export abstract class GeneralRemarksClass implements GeneralRemarks, Validation, QuoteAfterSave{
+export abstract class InternalNotesClass implements InternalNotes, Validation, QuoteAfterSave{
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
-  private _remark: string | null = null;
+  private _note: string | null = null;
 
 
   invalidList: string[] = [];
 
-  remarkId: number | null = null;
+  noteId: number | null = null;
   quoteId: number | null = null;
-  sortSequence: number | null = null;
+  createdDate: Date | null = null;
+  createdByName: string | null = null;
+  createdBy: number | null = null;
   isNew: any;
 
-  constructor(disclaimers?: GeneralRemarks){
-    if (disclaimers) {
-      this.existingInit(disclaimers);
+  constructor(notes?: InternalNotes){
+    if (notes) {
+      this.existingInit(notes);
     } else {
       this.newInit();
     }
@@ -32,11 +34,11 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
     this.validate();
   }
 
-  get remark() : string | null {
-    return this._remark;
+  get note() : string | null {
+    return this._note;
   }
-  set remark(value: string | null) {
-    this._remark = value;
+  set note(value: string | null) {
+    this._note = value;
   }
 
   get validationResults(): QuoteValidationClass {
@@ -70,11 +72,13 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
     this._errorMessages = value;
   }
 
-  existingInit(sub: GeneralRemarks){
+  existingInit(sub: InternalNotes){
     this.quoteId = sub.quoteId;
-    this.remarkId = sub.remarkId;
-    this.remark = sub.remark;
-    this.sortSequence = sub.sortSequence;
+    this.noteId = sub.noteId;
+    this.note = sub.note;
+    this.createdBy = sub.createdBy;
+    this.createdDate = sub.createdDate;
+    this.createdByName = sub.createdByName;
   }
 
   newInit() {
@@ -104,5 +108,5 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
     markDirty() {
       this._isDirty = true;
     }
-    abstract toJSON(): GeneralRemarks;
+    abstract toJSON(): InternalNotes;
 }

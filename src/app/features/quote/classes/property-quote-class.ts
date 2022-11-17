@@ -37,6 +37,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   termsAndConditionsTabValidation: TabValidationClass | null = null;
   formsListTabValidation: TabValidationClass | null = null;
+  summaryTabValidation: TabValidationClass | null = null;
 
   propertyQuoteBuildingList: PropertyQuoteBuildingClass[] = [];
   propertyQuoteBuildingLocationTabValidation: TabValidationClass | null = null;
@@ -64,6 +65,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.termsAndConditionsTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.TermsAndConditions);
     this.coveragesTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
+    this.summaryTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.Summary);
     this.validate();
   }
 
@@ -455,6 +457,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.validateMortgageeAdditionalInterestTab();
     this.validateTermsAndConditionsTab();
     this.validateFormsListTab();
+    this.validateSummaryTab();
 
     //map this to validation results
     this._validationResults.mapValues(this);
@@ -472,6 +475,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.warrantyData);
     this._validationResults.validateChildrenAndMerge(this.generalRemarksData);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
+    this._validationResults.validateChildrenAndMerge(this.internalNotesData);
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
     return this._validationResults;
@@ -492,6 +496,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.disclaimerData);
     this.childArrayValidate(this.warrantyData);
     this.childArrayValidate(this.generalRemarksData);
+    this.childArrayValidate(this.internalNotesData);
     this.childArrayValidate(this.propertyQuoteBuildingOptionalCoverage);
   }
   childArrayValidate(children: Validation[]) {
@@ -512,7 +517,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.cleanChildArray(this.disclaimerData);
     this.cleanChildArray(this.warrantyData);
     this.cleanChildArray(this.generalRemarksData);
-
+    this.cleanChildArray(this.internalNotesData);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -625,6 +630,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.formsListTabValidation?.validateChildrenAsStandalone(this.quotePolicyForms);
     console.log('TODO: Validate Forms');
   }
+
+  validateSummaryTab(){
+    this.summaryTabValidation?.resetValidation();
+    this.formsListTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
+  }
   validateBuildings() {
     this.propertyQuoteBuildingList.map(c => {
       if (c.isDuplicate) {
@@ -718,7 +728,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveDisclaimers(savedQuote);
     this.onSaveWarranties(savedQuote);
     this.onSaveGeneralRemarks(savedQuote);
-
+    this.onSaveInternalNotes(savedQuote);
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -750,8 +760,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   private onSaveGeneralRemarks(savedQuote: PropertyQuoteClass) {
-    console.log(savedQuote.generalRemarksData);
     this.generalRemarksData = savedQuote.generalRemarksData;
+  }
+
+  private onSaveInternalNotes(savedQuote: PropertyQuoteClass) {
+    this.internalNotesData = savedQuote.internalNotesData;
   }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {

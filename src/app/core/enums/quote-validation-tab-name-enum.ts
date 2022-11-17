@@ -4,5 +4,6 @@ export enum QuoteValidationTabNameEnum {
     CoveragePremium = 'CoveragePremium',
     FormsList = 'FormList',
     TermsAndConditions = 'TermsAndConditions',
-    ProductSelection = 'ProductSelection'
+    ProductSelection = 'ProductSelection',
+    Summary = 'Summary'
   }
