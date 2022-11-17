@@ -75,6 +75,9 @@ export class QuoteService {
   deleteGeneralRemark(quoteId: number, remarkId: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/general-remarks/' + quoteId + '/remark/' + remarkId);
   }
+  deleteEquipmentBreakdown(id: number) : Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/optional-coverage/equipment-breakdown/' + id);
+  }
 
   deleteInternalNote(quoteId: number, noteId: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/internal-notes/' + quoteId + '/note/' + noteId);
