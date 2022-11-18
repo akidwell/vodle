@@ -1,4 +1,13 @@
 <div >
+  <div *ngIf="isSaving">
+    <div class="spinner-wrapper">
+      <h3>
+        <span class="badge rounded-pill">Refreshing...
+          <div class="spinner-border small"></div>
+        </span>
+      </h3>
+    </div>
+  </div>
   <div *ngFor="let program of department?.programMappings">
     <div class="card" *ngIf="program.quoteData != null">
       <div class="card-header info-header">
