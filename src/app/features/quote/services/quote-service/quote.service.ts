@@ -90,4 +90,17 @@ export class QuoteService {
     return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/import', formData);
   }
 
+  getPolicyNumber():Observable<string> {
+    return this.http.get<string>(this.config.apiBaseUrl + 'api/quotes/newPolicyNumber', { responseType: 'text' as 'json'})
+      .pipe(
+        map((receivedData: string) => {
+          return receivedData;
+        }));
+  }
+
+  UpdateQuoteAndGetBinderLetter(quote: QuoteClass | null) {
+    const quoteJSON = quote?.toJSON();
+    return this.http.put(this.config.apiBaseUrl + 'api/quotes/binder', quoteJSON, { responseType: 'arraybuffer'});
+  }
+
 }

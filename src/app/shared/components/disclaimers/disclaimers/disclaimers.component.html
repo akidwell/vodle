@@ -1,13 +1,5 @@
 <div class="card">
-    <div *ngIf="isSaving">
-        <div class="spinner-wrapper">
-            <h3>
-                <span class="badge rounded-pill">Refreshing...
-                    <div class="spinner-border small"></div>
-                </span>
-            </h3>
-        </div>
-    </div>
+
     <div class="card-header" (click)="collapse.toggle()">
         Disclaimers - On Policy ({{onPolicyDisclaimersCount}})
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
@@ -79,34 +71,6 @@
                 </table>
             </div>
         </div>
-        <!-- <div class="d-flex justify-content-center" *ngIf="showExpiring && expiringFormsLoading">
-            <strong>Loading...</strong>
-            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-        </div>
-        <div *ngIf="showExpiring" class="card-body table-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th nowrap>Endorsement #</th>
-                            <th nowrap>Form Number</th>
-                            <th>Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let form of expiringForms">
-                            <td style="width:1%;">
-                                <span *ngIf="form.firstEndorsementRow">{{form.endorsementNumber}}</span>
-                            </td>
-                            <td style="width:1%;">
-                                {{form.formName}}
-                            </td>
-                            <td >{{form.formTitle}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div> -->
     </div>
     <div class="card-footer">
         <div class="footer-count">Disclaimers: {{filteredDisclaimers.length}}/{{disclaimers.length}}</div>

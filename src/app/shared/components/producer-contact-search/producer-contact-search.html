@@ -15,6 +15,7 @@
       [resultFormatter]="displayFormatter"
       [ngbTypeahead]="search"
       [readonly]="!canEdit"
+      [required]="canEdit"
       [disabled]="this.producerCode == null"
       (selectItem)="selectedProducerContact($event.item)"
       (focus)="canEdit ? focus$.next($any($event).target.value) : null"

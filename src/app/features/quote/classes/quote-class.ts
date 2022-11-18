@@ -88,7 +88,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   retainedLimit = null;
   approvalReason = null;
   retroDate = null;
-  quoteExpirationDate = null;
   projectSpecific = false;
   generalAggregateLimits = null;
   productAggregateLimits = null;
@@ -266,6 +265,16 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set policyExpirationDate(value: Date | null) {
     this._policyExpirationDate = value;
+    this.markDirty();
+    this.setWarnings();
+  }
+
+  private _quoteExpirationDate: Date | null = null;
+  get quoteExpirationDate() : Date | null {
+    return this._quoteExpirationDate;
+  }
+  set quoteExpirationDate(value: Date | null) {
+    this._quoteExpirationDate = value;
     this.markDirty();
     this.setWarnings();
   }

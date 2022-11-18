@@ -4,6 +4,7 @@ import { SharedComponentType } from 'src/app/core/enums/shared-component-type-en
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
+import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 
 @Component({
   selector: 'rsps-terms-conditions',
@@ -14,8 +15,9 @@ export class TermsConditionsComponent implements OnInit {
   programSub!: Subscription;
   quote!: PropertyQuoteClass;
   classType = SharedComponentType.Quote;
-
-  constructor(private pageDataService: PageDataService) { }
+  isSaving = false;
+  saveSub!: Subscription;
+  constructor(private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) { }
 
   ngOnInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
@@ -27,6 +29,9 @@ export class TermsConditionsComponent implements OnInit {
           });
         }
       }
+    );
+    this.saveSub = this.quoteSavingService.isSaving$.subscribe(
+      (isSaving) => (this.isSaving = isSaving)
     );
   }
 }
