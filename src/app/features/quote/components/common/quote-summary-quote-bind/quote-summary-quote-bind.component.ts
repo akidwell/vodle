@@ -32,7 +32,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   newPolNum!: string;
   isSaving = false;
   saveSub!: Subscription;
-
+  updatedQuotedata!: QuoteClass | null;
 
   quoteData!: QuoteClass | null;
   constructor( public pageDataService: PageDataService, userAuth: UserAuth, private formatDate: FormatDateForDisplay, private policyFormsService: PolicyFormsService,
@@ -93,7 +93,8 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   }
   async generateBinderLetter() {
     this.isBusy = true;
-    await this.updateBinderStatus();
+    //await this.updateBinderStatus();
+    this.isSaving = true;
     const response$ = this.quoteService.UpdateQuoteAndGetBinderLetter(this.quoteData);
     await lastValueFrom(response$).then((binderLetter) => {
       if (binderLetter) {
@@ -103,7 +104,6 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
         element.download = 'BL-' + this.quoteData?.submissionNumber + 'Q' + this.quoteData?.quoteNumber + '.pdf';
         document.body.appendChild(element);
         element.click();
-        console.log('generate binder letter');
         this.binderLetterGeneratedDisplay = this.formatDateForDisplay.formatDateForDisplay(moment().startOf('day')) || '--';
       }
     })
@@ -112,7 +112,16 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
         const message = String.fromCharCode.apply(null, new Uint8Array(error.error) as any);
         this.messageDialogService.open('Binder Letter Error', message);
       });
+    const updated = this.quoteService.getQuotes(this.quoteData?.sequenceNumber);
+    await lastValueFrom(updated).then((x)=> {
+      this.updatedQuotedata = x.programMappings[0].quoteData;
+    });
+    if(this.quoteData?.policyNumber != undefined){
+      this.quoteData.policyNumber = this.updatedQuotedata?.policyNumber ?? '';
+      this.quoteData.policyMod = this.updatedQuotedata?.policyMod ?? '';
+    }
     this.isBusy = false;
+    this.isSaving = false;
   }
 
   async updateQuoteStatus () {
@@ -123,30 +132,30 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     await this.quoteSavingService.saveQuote();
   }
 
-  async updateBinderStatus () {
-    if(this.quoteData) {
-      this.quoteData.status = 7;
-    }
-    //check if renewal
-    //TODO: renewal logic
-    if(this.quoteData?.submission.newRenewalFlag == 2){
-      //
-    } else if(this.quoteData) {
-      //only call the policy number service once
-      const string = this.quoteData.policyNumber.toString().replace(/-/g, '');
-      if(string == ''){
-        const policyNumber = this.quoteService.getPolicyNumber();
-        await lastValueFrom(policyNumber).then((polNum) => {
-          if (polNum) {
-            if (this.quoteData?.policyNumber != undefined){
-              this.quoteData.policyNumber = polNum;
-              this.quoteData.policyMod = '00';
-            }
-          }
-        });
-      }
-    }
-    await this.quoteSavingService.saveQuote();
-  }
+  // async updateBinderStatus () {
+  //   if(this.quoteData) {
+  //     this.quoteData.status = 7;
+  //   }
+  //   //check if renewal
+  //   //TODO: renewal logic
+  //   if(this.quoteData?.submission.newRenewalFlag == 2){
+  //     //
+  //   } else if(this.quoteData) {
+  //     //only call the policy number service once
+  //     const string = this.quoteData.policyNumber.toString().replace(/-/g, '');
+  //     if(string == ''){
+  //       const policyNumber = this.quoteService.getPolicyNumber();
+  //       await lastValueFrom(policyNumber).then((polNum) => {
+  //         if (polNum) {
+  //           if (this.quoteData?.policyNumber != undefined){
+  //             this.quoteData.policyNumber = polNum;
+  //             this.quoteData.policyMod = '00';
+  //           }
+  //         }
+  //       });
+  //     }
+  //   }
+  //   await this.quoteSavingService.saveQuote();
+  //}
 }
 
