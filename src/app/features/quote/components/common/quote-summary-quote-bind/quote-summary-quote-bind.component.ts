@@ -119,6 +119,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     if(this.quoteData?.policyNumber != undefined){
       this.quoteData.policyNumber = this.updatedQuotedata?.policyNumber ?? '';
       this.quoteData.policyMod = this.updatedQuotedata?.policyMod ?? '';
+      this.quoteData.status = 7;
     }
     this.isBusy = false;
     this.isSaving = false;
@@ -131,31 +132,5 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     }
     await this.quoteSavingService.saveQuote();
   }
-
-  // async updateBinderStatus () {
-  //   if(this.quoteData) {
-  //     this.quoteData.status = 7;
-  //   }
-  //   //check if renewal
-  //   //TODO: renewal logic
-  //   if(this.quoteData?.submission.newRenewalFlag == 2){
-  //     //
-  //   } else if(this.quoteData) {
-  //     //only call the policy number service once
-  //     const string = this.quoteData.policyNumber.toString().replace(/-/g, '');
-  //     if(string == ''){
-  //       const policyNumber = this.quoteService.getPolicyNumber();
-  //       await lastValueFrom(policyNumber).then((polNum) => {
-  //         if (polNum) {
-  //           if (this.quoteData?.policyNumber != undefined){
-  //             this.quoteData.policyNumber = polNum;
-  //             this.quoteData.policyMod = '00';
-  //           }
-  //         }
-  //       });
-  //     }
-  //   }
-  //   await this.quoteSavingService.saveQuote();
-  //}
 }
 
