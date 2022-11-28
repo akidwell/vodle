@@ -66,6 +66,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.coveragesTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
     this.summaryTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.Summary);
+    console.log('summary tab ' + this.summaryTabValidation)
     this.validate();
   }
 
@@ -633,7 +634,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   validateSummaryTab(){
     this.summaryTabValidation?.resetValidation();
-    this.formsListTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
+    this.summaryTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
   }
   validateBuildings() {
     this.propertyQuoteBuildingList.map(c => {
