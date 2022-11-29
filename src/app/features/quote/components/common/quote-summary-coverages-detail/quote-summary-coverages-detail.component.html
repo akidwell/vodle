@@ -156,11 +156,12 @@
         type="text"
         class="form-control right"
         id="advancePremium"
-        readonly
+        [readonly]="!quoteData.minimumPremiumRequired"
         string-to-currency
         [disabled]="!canEdit"
         name="advancePremium"
         [(ngModel)]="quoteData.advancePremiumValue"
+        (change)="this.quoteData.calculateSummaryPremiums()"
         #advancePremium="ngModel"
       />
     </div>
@@ -360,7 +361,9 @@
         [disabled]="!canEdit"
         [readonly]="!canEdit || quoteData.autoCalcMiscPremium"
         name="minEarnedPercent"
-        [(ngModel)]="quoteData.earnedPremiumPct"
+        [ngModel]="quoteData.earnedPremiumPct | percent"
+        [ngModelOptions]="{ updateOn: 'blur' }"
+        (ngModelChange)="changeEarnedPremiumPct($event)"
         #minEarnedPercent="ngModel"
       />
     </div>
