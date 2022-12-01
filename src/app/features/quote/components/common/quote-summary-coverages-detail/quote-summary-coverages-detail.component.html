@@ -357,6 +357,7 @@
         type="text"
         class="form-control"
         id="minEarnedPercent"
+        validate-on-change
         [required]="canEdit"
         [disabled]="!canEdit"
         [readonly]="!canEdit || quoteData.autoCalcMiscPremium"
@@ -386,6 +387,7 @@
         [readonly]="quoteData.autoCalcMiscPremium"
         id="minimumPremium"
         name="minimumPremium"
+        validate-on-change
         [readonly]="!canEdit"
         (change)="this.quoteData.calculateSummaryPremiums()"
         string-to-currency
@@ -394,7 +396,7 @@
       />
     </div>
     <div class="col-lg-2">
-      <input type="checkbox" validate-on-change [fullValidate]="true" class="form-check-input" id="hasMinPremium"
+      <input type="checkbox" [fullValidate]="true" class="form-check-input" id="hasMinPremium"
       class="form-check-input"
       validate-on-change
       [readonly]="!canEdit"
