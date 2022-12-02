@@ -66,6 +66,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.coveragesTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
     this.summaryTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.Summary);
+    console.log('summary tab ' + this.summaryTabValidation)
     this.validate();
   }
 
@@ -633,7 +634,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   validateSummaryTab(){
     this.summaryTabValidation?.resetValidation();
-    this.formsListTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
+    this.summaryTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
   }
   validateBuildings() {
     this.propertyQuoteBuildingList.map(c => {
@@ -703,16 +704,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     if (this.autoCalcMiscPremium) {
       this.advancePremiumValue = advancePremium;
       this.minimumPremium = this.advancePremiumValue;
-    } else if (this.minimumPremiumRequired) {
-      this.advancePremiumValue = this.minimumPremium ?? 0;
-      advancePremium = this.minimumPremium ?? 0;
-    } else {
-      this.advancePremiumValue = advancePremium;
+      this.totalAdvancePremium = advancePremium;
+
+    } else if (!this.autoCalcMiscPremium && this.minimumPremiumRequired){
+      this.totalAdvancePremium = this.advancePremiumValue + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     }
-    this.minimumEarnedPremium = (this.advancePremiumValue * (this.earnedPremiumPct/100)) ?? 0;
+    this.minimumEarnedPremium = (this.advancePremiumValue * (this.earnedPremiumPct)) ?? 0;
 
     this.quoteLineItems.map((surchargeOrFee) => (advancePremium += surchargeOrFee.amount ?? 0));
-    this.totalAdvancePremium = advancePremium;
   }
   onSave(savedQuote: PropertyQuoteClass) {
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();

@@ -1,4 +1,13 @@
 <div >
+  <div *ngIf="isSaving">
+    <div class="spinner-wrapper">
+      <h3>
+        <span class="badge rounded-pill">Refreshing...
+          <div class="spinner-border small"></div>
+        </span>
+      </h3>
+    </div>
+  </div>
   <div *ngFor="let program of department?.programMappings">
     <div class="card" *ngIf="program.quoteData != null">
       <div class="card-header info-header">
@@ -10,7 +19,7 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-lg-7">
+          <div class="col-lg-7" style="border-right:2px solid black">
             <div class="row">
               <rsps-quote-summary-coverages-detail [program]="program"></rsps-quote-summary-coverages-detail>
             </div>

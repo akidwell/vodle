@@ -123,7 +123,7 @@
     <div class="col-lg-6"></div>
     <div class="col-lg-1">
       <label for="minimumPremiumRequired" class="form-label" title="Has Minimum Premium"
-        >Min Prem</label
+        >Min Prem?</label
       >
     </div>
     <div class="col-lg-2">
@@ -156,11 +156,12 @@
         type="text"
         class="form-control right"
         id="advancePremium"
-        readonly
+        [readonly]="!quoteData.minimumPremiumRequired"
         string-to-currency
         [disabled]="!canEdit"
         name="advancePremium"
         [(ngModel)]="quoteData.advancePremiumValue"
+        (change)="this.quoteData.calculateSummaryPremiums()"
         #advancePremium="ngModel"
       />
     </div>
@@ -257,7 +258,7 @@
         #terrorismPremium="ngModel"
       />
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
       <input validate-on-change [fullValidate]="true"
         type="checkbox"
         class="form-check-input"
@@ -315,7 +316,7 @@
 <div class="row">&nbsp;</div>
 <div *ngIf="quoteData">
   <div class="row">
-    <div class="col-lg-2">
+    <div class="col-lg-3">
       <label
         for="minEarnedPercent"
         class="form-label"
@@ -323,48 +324,51 @@
         >Min Earned Premium %</label
       >
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-3">
       <label
         for="minEarnedPremium"
         class="form-label"
         title="Min Earned Premium"
-        >Min Earned Premium</label
+        >Min Earned Prem</label
       >
     </div>
     <div class="col-lg-2">
       <label for="minPremium" class="form-label" title="Min Premium"
-        >Min Premium</label
+        >Min Prem</label
       >
     </div>
-    <div class="col-lg-1">
+    <div class="col-lg-2">
       <label for="minPremium" class="form-label" title="Has Minimum Premium"
         >Auto-Calc</label
       >
     </div>
-    <div class="col-lg-1">
+    <div class="col-lg-2">
       <label
         for="totalAdvancePremium"
         class="form-label"
         title="Total Advance Premium"
-        >Total Advance Premium</label
+        >Total Advance Prem</label
       >
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-2">
+    <div class="col-lg-3">
       <input
         type="text"
         class="form-control"
         id="minEarnedPercent"
+        validate-on-change
         [required]="canEdit"
         [disabled]="!canEdit"
         [readonly]="!canEdit || quoteData.autoCalcMiscPremium"
         name="minEarnedPercent"
-        [(ngModel)]="quoteData.earnedPremiumPct"
+        [ngModel]="quoteData.earnedPremiumPct | percent"
+        [ngModelOptions]="{ updateOn: 'blur' }"
+        (ngModelChange)="changeEarnedPremiumPct($event)"
         #minEarnedPercent="ngModel"
       />
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-3">
       <input
         type="text"
         class="form-control right"
@@ -383,6 +387,7 @@
         [readonly]="quoteData.autoCalcMiscPremium"
         id="minimumPremium"
         name="minimumPremium"
+        validate-on-change
         [readonly]="!canEdit"
         (change)="this.quoteData.calculateSummaryPremiums()"
         string-to-currency
@@ -390,8 +395,8 @@
         #minimumPremium="ngModel"
       />
     </div>
-    <div class="col-lg-1">
-      <input type="checkbox" validate-on-change [fullValidate]="true" class="form-check-input" id="hasMinPremium"
+    <div class="col-lg-2">
+      <input type="checkbox" [fullValidate]="true" class="form-check-input" id="hasMinPremium"
       class="form-check-input"
       validate-on-change
       [readonly]="!canEdit"

@@ -7,6 +7,7 @@ import { DepartmentComponentBase } from 'src/app/shared/component-base/departmen
 import { DepartmentClass } from '../../../classes/department-class';
 import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
+import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 
 @Component({
   selector: 'rsps-quote-summary',
@@ -19,8 +20,10 @@ export class QuoteSummaryComponent extends DepartmentComponentBase {
   programSub!: Subscription;
   quote!: PropertyQuoteClass;
   classType = SharedComponentType.Quote;
+  isSaving = false;
+  saveSub!: Subscription;
 
-  constructor(private pageDataService: PageDataService, userAuth: UserAuth) {
+  constructor(private pageDataService: PageDataService, userAuth: UserAuth, private quoteSavingService: QuoteSavingService) {
     super(userAuth);
     this.departmentSub = pageDataService.quoteData$.subscribe(
       (department: DepartmentClass | null) => {
@@ -40,5 +43,8 @@ export class QuoteSummaryComponent extends DepartmentComponentBase {
 
 
   ngOnInit(): void {
+    this.saveSub = this.quoteSavingService.isSaving$.subscribe(
+      (isSaving) => (this.isSaving = isSaving)
+    );
   }
 }

@@ -19,8 +19,7 @@
       id="submissionStatus"
       readonly
       name="submissionStatus"
-      [(ngModel)]="submission.statusCode"
-      #submissionStatus="ngModel"
+      [ngModel]="getSubmissionStatus()"
     />
   </div>
 </div>
