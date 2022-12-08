@@ -78,7 +78,6 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
   }
 
   copyExisitingNote(existingNote: InternalNotesClass) {
-    console.log(existingNote);
     const clone = deepClone(existingNote.toJSON());
     const newNote = new QuoteInternalNotesClass(clone);
     const date = new Date();
@@ -99,7 +98,6 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
 
 
   deleteExistingNote(existingNote: InternalNotesClass) {
-    console.log(existingNote);
     const index = this.internalNotes?.indexOf(existingNote, 0);
     if (index > -1) {
       this.internalNotes?.splice(index, 1);
@@ -125,6 +123,5 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     this.quote.internalNotesData?.push(newNote);
     const lastAdded = this.quote.internalNotesData.length - 1;
     this.quote.internalNotesData[lastAdded].isDirty = true;
-    console.log(this.quote.internalNotesData);
   }
 }

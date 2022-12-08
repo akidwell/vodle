@@ -66,7 +66,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.coveragesTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.CoveragePremium);
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
     this.summaryTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.Summary);
-    console.log('summary tab ' + this.summaryTabValidation)
     this.validate();
   }
 
@@ -587,7 +586,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   validateLargestExposure(): boolean {
     let invalid = false;
-    console.log(this.largestExposure);
     if (this.largestExposure > 15000000){
       invalid = true;
       this.invalidList.push('Largest Premises TIV + Building Law Limits is greater than 15,000,000');
@@ -619,7 +617,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.disclaimerData);
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.generalRemarksData);
     this.termsAndConditionsTabValidation?.validateChildrenAsStandalone(this.warrantyData);
-    console.log('TODO: Validate T&C');
   }
   validateMortgageeAdditionalInterestTab() {
     this.propertyQuoteMortgageeAdditionalInterestTabValidation?.resetValidation();
@@ -629,7 +626,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   validateFormsListTab() {
     this.formsListTabValidation?.resetValidation();
     this.formsListTabValidation?.validateChildrenAsStandalone(this.quotePolicyForms);
-    console.log('TODO: Validate Forms');
   }
 
   validateSummaryTab(){
@@ -675,6 +671,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       c.markImported();
       c.calculateITV();
     });
+    this.propertyQuoteBuildingOptionalCoverage.forEach(c => {
+      c.markImported();
+    });
   }
   validateDeductibles() {
     this.propertyQuoteDeductibleList.map(c => {
@@ -700,18 +699,18 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
     //Add all non-commission eligible items for total premium
-    let advancePremium = premiumCommissionAvailable;
+    let advancePremiumValue = premiumCommissionAvailable;
     if (this.autoCalcMiscPremium) {
-      this.advancePremiumValue = advancePremium;
-      this.minimumPremium = this.advancePremiumValue;
-      this.totalAdvancePremium = advancePremium;
+      this.advancePremium = advancePremiumValue;
+      this.minimumPremium = this.advancePremium;
+      this.totalAdvancePremium = advancePremiumValue;
 
     } else if (!this.autoCalcMiscPremium && this.minimumPremiumRequired){
-      this.totalAdvancePremium = this.advancePremiumValue + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+      this.totalAdvancePremium = Number(this.advancePremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     }
-    this.minimumEarnedPremium = (this.advancePremiumValue * (this.earnedPremiumPct)) ?? 0;
+    this.minimumEarnedPremium = (Number(this.advancePremium) * (this.earnedPremiumPct)) ?? 0;
 
-    this.quoteLineItems.map((surchargeOrFee) => (advancePremium += surchargeOrFee.amount ?? 0));
+    this.quoteLineItems.map((surchargeOrFee) => (advancePremiumValue += surchargeOrFee.amount ?? 0));
   }
   onSave(savedQuote: PropertyQuoteClass) {
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
@@ -737,7 +736,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   private onSaveOptionalCoverages(coverages: QuoteOptionalPremiumClass[], savedQuote: PropertyQuoteClass): void {
     coverages.forEach(coverage => {
       if (coverage.isNew) {
-        console.log(coverage);
         const match = savedQuote.propertyQuoteBuildingOptionalCoverage.find(c => c.guid == coverage.guid);
         if (match != null) {
           coverage.propertyQuoteBuildingOptionalCoverageId = match.propertyQuoteBuildingOptionalCoverageId;

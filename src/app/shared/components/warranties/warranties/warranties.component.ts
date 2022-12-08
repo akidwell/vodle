@@ -108,7 +108,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
       (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
       (x.sectionHeader < y.sectionHeader ? -1 : 0)
-    );
+    ).reverse();
     // determine if it's the first main header/ section header that way they're only displayed once, not repeated
     let fMainHeader : string | null = '';
     let fSectionHeader : string | null = '';
@@ -146,7 +146,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
       (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
     (x.sectionHeader < y.sectionHeader ? -1 : 0)
-    );
+    ).reverse();
 
     // reset the firstrow flags
     this.warranties.map(

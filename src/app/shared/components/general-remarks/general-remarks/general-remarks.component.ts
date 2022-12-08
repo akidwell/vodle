@@ -65,8 +65,6 @@ export class GeneralRemarksComponent extends SharedComponentBase implements OnIn
       (isSaving) => (this.isSaving = isSaving)
     );
     this.handleSecurity(this.type);
-    console.log(this.canEdit);
-
   }
 
   ngOnDestroy() {
@@ -98,7 +96,6 @@ export class GeneralRemarksComponent extends SharedComponentBase implements OnIn
 
   copyRemark(): void {
     this.copyExisitingRemark.emit(this.generalRemarkData);
-    console.log(this.copyExisitingRemark);
   }
 
   async cancel(): Promise<void> {

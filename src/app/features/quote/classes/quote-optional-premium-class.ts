@@ -6,6 +6,7 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
   private _quoteId = 0;
   private _propertyQuoteBuildingOptionalCoverageId: number;
   private _isAccepted = true;
+  isImport!: boolean;
 
   constructor(optionalPremium?: QuoteOptionalPremium, quoteId?: number) {
     super(optionalPremium);
@@ -57,6 +58,12 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
   copy(): QuoteOptionalPremium {
     const cloned = deepClone(this.toJSON());
     return cloned;
+  }
+
+  markImported() {
+    this.isNew = true;
+    this.isImport = true;
+    this.guid = crypto.randomUUID();
   }
   toJSON(): QuoteOptionalPremium {
     return {

@@ -77,7 +77,6 @@ export class GeneralRemarksGroupComponent extends SharedComponentBase implements
   }
 
   copyExisitingRemark(existingRemark: GeneralRemarksClass) {
-    console.log(existingRemark);
     const clone = deepClone(existingRemark.toJSON());
     const newRemark = new QuoteGeneralRemarksClass(clone);
     newRemark.remark = clone.remark;
@@ -97,7 +96,6 @@ export class GeneralRemarksGroupComponent extends SharedComponentBase implements
 
 
   deleteExistingRemark(existingRemark: GeneralRemarksClass) {
-    console.log(existingRemark);
     const index = this.generalRemarks?.indexOf(existingRemark, 0);
     if (index > -1) {
       this.generalRemarks?.splice(index, 1);
@@ -122,6 +120,5 @@ export class GeneralRemarksGroupComponent extends SharedComponentBase implements
     this.quote.generalRemarksData?.push(newRemark);
     const lastAdded = this.quote.generalRemarksData.length - 1;
     this.quote.generalRemarksData[lastAdded].isDirty = true;
-    console.log(this.quote.generalRemarksData);
   }
 }
