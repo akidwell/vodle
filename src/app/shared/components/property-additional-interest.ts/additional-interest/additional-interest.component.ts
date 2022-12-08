@@ -72,8 +72,6 @@ export class AdditionalInterestComponent {
       }
     });
     this.additionalInterestRoles$ = this.dropdowns.getAdditonalInterestRoles();
-
-    console.log(this.aiData.isAppliedToAll);
   }
 
   dropDownSearch(term: string, item: Code) {
@@ -104,7 +102,6 @@ export class AdditionalInterestComponent {
   }
 
   copyAdditionalInterest(): void {
-    console.log(this.aiData);
     this.copyExisitingAdditionalInterest.emit(this.aiData);
   }
 

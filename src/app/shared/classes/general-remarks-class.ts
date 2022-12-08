@@ -87,7 +87,6 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
       //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
-      console.log(this._canBeSaved);
     }
     this._validationResults.mapValues(this);
     return this._validationResults;

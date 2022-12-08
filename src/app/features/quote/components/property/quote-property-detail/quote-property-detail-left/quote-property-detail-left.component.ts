@@ -76,7 +76,6 @@ export class QuotePropertyDetailLeftComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.subjectAmount);
   }
 
   private _search(): Observable<SearchResult> {

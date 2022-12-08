@@ -150,22 +150,24 @@
       (change)="this.quoteData.calculateSummaryPremiums()"
       [(ngModel)]="quoteData.minimumPremiumRequired"
       #minimumPremiumRequired="ngModel"
-      id="minimumPremiumRequired" />    </div>
+      id="minimumPremiumRequired" />
+    </div>
     <div class="col-lg-2">
       <input
         type="text"
         class="form-control right"
         id="advancePremium"
         [readonly]="!quoteData.minimumPremiumRequired"
+        validate-on-change
         string-to-currency
         [disabled]="!canEdit"
         name="advancePremium"
-        [(ngModel)]="quoteData.advancePremiumValue"
+        [(ngModel)]="quoteData.advancePremium"
         (change)="this.quoteData.calculateSummaryPremiums()"
         #advancePremium="ngModel"
       />
     </div>
-    <div class="col-lg-2">
+  <div class="col-lg-2">
 
     </div>
   </div>
@@ -296,18 +298,6 @@
           [decimalPlaces]="1"
           [(ngModel)]="quoteData.commissionRate"
           #brokerPercent="ngModel"
-        />
-      </div>
-      <div class="col-lg-2">
-        <input
-          type="text"
-          class="form-control right"
-          id="brokerPremium"
-          readonly
-          name="brokerPremium"
-          string-to-currency
-          [(ngModel)]="quoteData.brokerCommission"
-          #brokerPremium="ngModel"
         />
       </div>
     </div>
