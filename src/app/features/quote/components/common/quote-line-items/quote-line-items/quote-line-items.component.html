@@ -28,7 +28,7 @@
             [(ngModel)]="lineItem.notes" #dueDate="ngModel">
     </div>
     <div class="col-lg-2">
-        <input validate-on-change type="text" class="form-control right" maxlength="18" maxInt [readonly]="!canEdit" [required]="canEdit"
+        <input validate-on-change type="text" class="form-control right" maxlength="6" maxInt [readonly]="!canEdit" [required]="canEdit"
             [(ngModel)]="lineItem.amount" name="amount" #amount="ngModel" string-to-currency [decimalPlaces]="2"
             string-to-currency [allowNegative]="false">
 

@@ -485,6 +485,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     // Validate all buildings for duplicates
     this.validateBuildings();
     this.validateDeductibles();
+    this.validateLineItems();
     this.childArrayValidate(this.propertyQuoteDeductibleList);
     this.childArrayValidate(this.propertyQuoteMortgageeList);
     this.childArrayValidate(this.propertyQuoteAdditionalInterestList);
@@ -610,6 +611,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     }
     this.coveragesTabValidation?.validateChildrenAndMerge(this.propertyQuoteDeductibleList);
     this.coveragesTabValidation?.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
+    this.coveragesTabValidation?.validateChildrenAndMerge(this.quoteLineItems);
   }
   validateTermsAndConditionsTab() {
     this.termsAndConditionsTabValidation?.resetValidation();
@@ -688,6 +690,19 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
           dupes.forEach(c => {
             c.isDuplicate = true;
           });
+        }
+      }
+    });
+  }
+
+  validateLineItems() {
+    console.log(this.quoteLineItems);
+    this.quoteLineItems.forEach(a => a.isDuplicate = false);
+    this.quoteLineItems.forEach(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.quoteLineItems.filter(c => c.lineItemCode == x.lineItemCode);
+        if (dupes.length > 1) {
+          dupes.forEach(d =>{ d.isDuplicate = true;});
         }
       }
     });

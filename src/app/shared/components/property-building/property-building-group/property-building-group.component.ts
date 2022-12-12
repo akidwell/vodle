@@ -149,6 +149,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
       newBuilding.expand = true;
       newBuilding.markDirty();
       this.propertyQuote.addBuilding(newBuilding);
+      this.propertyQuote.showDirty = true;
     }
   }
 
