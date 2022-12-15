@@ -359,6 +359,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     this._itv = building.itv;
     this.guid = building.guid;
     const coverages: PropertyQuoteBuildingCoverageClass[] = [];
+    console.log(building.propertyQuoteBuildingCoverage);
     building.propertyQuoteBuildingCoverage?.forEach((element) => {
       const coverage = new PropertyQuoteBuildingCoverageClass(element);
       coverage.building = this;
@@ -368,6 +369,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
       coverages.push(coverage);
     });
     this.propertyQuoteBuildingCoverage = coverages;
+    console.log(coverages);
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -457,6 +459,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
 
   newInit() {
+    console.log('in building class init');
     this.propertyQuoteBuildingId = 0;
     this.propertyQuoteId = 0;
     this.expand = true;
