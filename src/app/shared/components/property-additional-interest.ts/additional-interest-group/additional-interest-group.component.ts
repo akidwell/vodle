@@ -73,6 +73,8 @@ export class AdditionalInterestGroupComponent implements OnInit {
   copyExisitingAdditionalInterest(existingAi: AdditionalInterestClass) {
     const clone = deepClone(existingAi.toJSON());
     const newAi = new AdditionalInterestClass(clone);
+    newAi.propertyQuoteAdditionalInterestId = 0;
+    newAi.guid = crypto.randomUUID();
     newAi.interest = 'CopyOf ' + existingAi.interest;
     newAi.isNew = true;
     newAi.additionalInterestType = 1;

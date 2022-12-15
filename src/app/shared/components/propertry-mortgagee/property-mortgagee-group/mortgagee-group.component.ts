@@ -71,6 +71,8 @@ export class MortgageeGroupComponent implements OnInit {
   copyExisitingMortgagee(existingMortgagee: MortgageeClass) {
     const clone = deepClone(existingMortgagee.toJSON());
     const newMortgagee = new MortgageeClass(clone);
+    newMortgagee.propertyQuoteMortgageeId = 0;
+    newMortgagee.guid = crypto.randomUUID();
     newMortgagee.mortgageHolder = 'CopyOf ' + existingMortgagee.mortgageHolder;
     newMortgagee.isNew = true;
     this.mortgageeData?.push(newMortgagee);

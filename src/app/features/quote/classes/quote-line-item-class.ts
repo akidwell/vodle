@@ -30,7 +30,6 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
   }
   set isDuplicate(value: boolean ) {
     this._isDuplicate = value;
-    this.markDirty();
   }
 
   get sequence() : number | null {
