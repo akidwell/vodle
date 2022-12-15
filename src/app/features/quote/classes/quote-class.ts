@@ -276,7 +276,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set quoteExpirationDate(value: Date | null) {
     this._quoteExpirationDate = value;
-    //this.markDirty();
+    this.markDirty();
     this.setWarnings();
   }
 
