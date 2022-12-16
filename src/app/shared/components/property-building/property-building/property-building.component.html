@@ -103,7 +103,7 @@
                 <div class="col-lg-2">
                     <label for="state" class="form-label" title="Status">State</label>
                     <div class="inputspinner">
-                        <ng-select id="state" [items]="states$ | async" bindLabel="name" bindValue="code"
+                        <ng-select id="state" [items]="states$ | async" bindLabel="name" bindValue="code" validate-on-change
                             [clearable]="false" [readonly]="!canEdit || building.stateReadonly"
                             [required]="canEdit && building.stateRequired" name="state" [(ngModel)]="building.state"
                             #state="ngModel" (change)="changeState($event)">
@@ -124,7 +124,7 @@
             <div class="row">
                 <div class="col-lg-5">
                     <label for="cspCode" class="form-label" title=">CSP Code">CSP Code</label>
-                    <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="code"
+                    <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="code" validate-on-change
                         name="cspCode" click-stop-propagation [readonly]="!canEdit" [clearable]="false" [required]="canEdit"
                         [(ngModel)]="building.cspCode" [searchFn]="dropDownSearch" #cspCode="ngModel" [virtualScroll]="true">
                         <ng-template ng-label-tmp let-item="item">
@@ -196,7 +196,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-1">
-                    <input validate-on-change type="number" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit" 
+                    <input validate-on-change type="number" class="form-control" id="yearBuilt" name="yearBuilt" [readonly]="!canEdit"
                         pattern="[0-9]{4}|null" [(ngModel)]="building.yearBuilt" #yearBuilt="ngModel">
                 </div>
                 <div class="col-lg-1">
