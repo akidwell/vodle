@@ -173,6 +173,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
                   delay: 5000,
                 });
               });
+              this.propertyQuote.markDirty();
             },
             error: (error) => {
               this.messageDialogService.open('Delete error', error.error.Message ?? error.message);
