@@ -148,7 +148,12 @@ export class PropertyBuildingGroupComponent implements OnInit {
       newBuilding.isNew = true;
       newBuilding.expand = true;
       newBuilding.markDirty();
+      newBuilding.propertyQuoteBuildingCoverage.map(x => x.propertyQuoteBuildingCoverageId = 0);
+      newBuilding.guid = crypto.randomUUID();
+      newBuilding.propertyQuote = building.propertyQuote;
       this.propertyQuote.addBuilding(newBuilding);
+      newBuilding.propertyQuoteBuildingCoverage.map( x=> x.expand = true);
+      this.propertyQuote.filterBuildingsCoverages();
       this.propertyQuote.showDirty = true;
     }
   }
@@ -168,6 +173,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
                   delay: 5000,
                 });
               });
+              this.propertyQuote.markDirty();
             },
             error: (error) => {
               this.messageDialogService.open('Delete error', error.error.Message ?? error.message);
