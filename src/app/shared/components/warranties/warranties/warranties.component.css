@@ -7,6 +7,10 @@
   box-shadow: none !important;
 }
 
+ .warranty-section:nth-child(even){
+  background-color: rgb(184, 182, 182);
+} 
+
 .table {
   margin-top: 0px;
 }

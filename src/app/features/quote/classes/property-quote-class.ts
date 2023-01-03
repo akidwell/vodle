@@ -181,6 +181,12 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   calculateLawLimits(){
     this._lawLimits = 0;
+    this.propertyQuoteBuildingOptionalCoverage.map((x) =>{
+      if(x.coverageCode == 2 || x.coverageCode == 3 || x.coverageCode == 4 || x.coverageCode == 5)
+      {
+        this._lawLimits += x.limit ?? 0;
+      }
+    });
   }
 
   calculateLargestExposure(){
@@ -285,8 +291,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.filterBuildings();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
-    this.calculateLargestExposure();
     this.calculateLawLimits();
+    this.calculateLargestExposure();
   }
 
   deleteBuilding(building: PropertyQuoteBuildingClass) {
@@ -300,15 +306,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       this.filterBuildingsCoverages();
       this.calculateSubjectAmounts();
       this.calculateLargestPremTiv();
-      this.calculateLargestExposure();
       this.calculateLawLimits();
+      this.calculateLargestExposure();
     }
     else {
       this.filterBuildings();
       this.calculateSubjectAmounts();
       this.calculateLargestPremTiv();
-      this.calculateLargestExposure();
       this.calculateLawLimits();
+      this.calculateLargestExposure();
     }
   }
 
@@ -434,8 +440,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.setRequiredFields();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
-    this.calculateLargestExposure();
     this.calculateLawLimits();
+    this.calculateLargestExposure();
   }
   validate(){
     console.log('validate property quote');
