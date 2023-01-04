@@ -7,6 +7,8 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
+import { ProgramClass } from 'src/app/features/quote/classes/program-class';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
@@ -22,6 +24,9 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   confirmation = '';
   buildingsSub!: Subscription;
   coveragesSub!: Subscription;
+
+  quoteData!: PropertyQuoteClass | null;
+  @Input() program!: ProgramClass | null;
 
   collapsed = true;
   firstExpand = true;
@@ -61,6 +66,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
     super(userAuth);
   }
   ngOnInit(): void {
+    this.quoteData = this.program?.quoteData instanceof PropertyQuoteClass ? this.program.quoteData : null;
     if (this.optionalPremiumData.isNew) {
       this.collapseExpand(false);
       this.focus();
@@ -144,6 +150,11 @@ export class OptionalPremiumComponent extends SharedComponentBase {
         }
       });
     }
+  }
+
+  calculateLawLimitAndExposure(){
+    this.quoteData?.calculateLawLimits();
+    this.quoteData?.calculateLargestExposure();
   }
 
   setFlags() {
