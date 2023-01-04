@@ -58,6 +58,7 @@
           [fullValidate]="true"
           [allowNegative]="false"
           [required]="isLimitRequired"
+          (change)="calculateLawLimitAndExposure()"
           [readonly]="!canEdit || !isLimitAvailable"
           [(ngModel)]="optionalPremiumData.limit"
           #limit="ngModel"

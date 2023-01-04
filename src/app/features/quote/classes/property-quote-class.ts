@@ -124,11 +124,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   private _lawLimits = 0;
 
   get lawLimits():number {
-    this.calculateLawLimits();
     return this._lawLimits;
   }
   set lawLimits(value:number) {
-    this.calculateLawLimits();
     this._lawLimits = value;
   }
 
@@ -195,9 +193,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     const lawLimit = this.lawLimits;
     const largestPremTiv = this.largestPremTiv;
     const exposure = lawLimit + largestPremTiv;
-    if (this._lastLargestExposure != exposure){
-      this._lastLargestExposure = exposure;
-    }
     this._largestExposure = exposure;
   }
 
