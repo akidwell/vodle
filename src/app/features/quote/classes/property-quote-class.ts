@@ -489,6 +489,8 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.validateBuildings();
     this.validateDeductibles();
     this.validateLineItems();
+    this.validateAdditionalInterest();
+    this.validateMortgagees();
     this.childArrayValidate(this.propertyQuoteDeductibleList);
     this.childArrayValidate(this.propertyQuoteMortgageeList);
     this.childArrayValidate(this.propertyQuoteAdditionalInterestList);
@@ -699,11 +701,34 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   validateLineItems() {
-    console.log(this.quoteLineItems);
     this.quoteLineItems.forEach(a => a.isDuplicate = false);
     this.quoteLineItems.forEach(x => {
       if (!x.isDuplicate) {
         const dupes = this.quoteLineItems.filter(c => c.lineItemCode == x.lineItemCode);
+        if (dupes.length > 1) {
+          dupes.forEach(d =>{ d.isDuplicate = true;});
+        }
+      }
+    });
+  }
+
+  validateAdditionalInterest() {
+    this.propertyQuoteAdditionalInterestList.forEach(a => a.isDuplicate = false);
+    this.propertyQuoteAdditionalInterestList.forEach(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.propertyQuoteAdditionalInterestList.filter(c => c.interest?.toUpperCase() == x.interest?.toUpperCase());
+        if (dupes.length > 1) {
+          dupes.forEach(d =>{ d.isDuplicate = true;});
+        }
+      }
+    });
+  }
+
+  validateMortgagees() {
+    this.propertyQuoteMortgageeList.forEach(a => a.isDuplicate = false);
+    this.propertyQuoteMortgageeList.forEach(x => {
+      if (!x.isDuplicate) {
+        const dupes = this.propertyQuoteMortgageeList.filter(c => c.mortgageHolder?.toUpperCase() == x.mortgageHolder?.toUpperCase());
         if (dupes.length > 1) {
           dupes.forEach(d =>{ d.isDuplicate = true;});
         }

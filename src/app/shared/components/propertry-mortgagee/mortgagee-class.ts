@@ -37,6 +37,14 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   isCopy = false;
   isZipLookup = false;
 
+  private _isDuplicate = false;
+  get isDuplicate(): boolean {
+    return this._isDuplicate;
+  }
+  set isDuplicate(value: boolean ) {
+    this._isDuplicate = value;
+  }
+
 
   constructor(mortgagee?: MortgageeData){
     super();
@@ -98,6 +106,11 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Mortgagee - Type is required');
+    }
+    if (this.isDuplicate){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Duplicate Mortgagees exist');
     }
     this._errorMessages = this.invalidList;
   }
