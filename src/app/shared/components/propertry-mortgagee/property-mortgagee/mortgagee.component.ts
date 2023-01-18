@@ -110,7 +110,6 @@ export class MortgageeComponent {
   }
 
   copyMortgagee(): void {
-    console.log(this.mortgageeData);
     this.copyExisitingMortgagee.emit(this.mortgageeData);
   }
 

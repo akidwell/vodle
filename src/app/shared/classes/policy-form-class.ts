@@ -129,7 +129,6 @@ export abstract class PolicyFormClass implements PolicyForm, Validation, QuoteAf
       //TODO: class based validation checks
       this.classValidation();
       this._validateOnLoad = false;
-      console.log(this._canBeSaved);
     }
     this._validationResults.resetValidation();
     this._validationResults.mapValues(this);

@@ -48,7 +48,7 @@
       <div class="col-lg-2">
         <input
           type="text"
-          class="form-control"
+          class="form-control right"
           id="limit"
           name="limit"
           click-stop-propagation
@@ -58,6 +58,7 @@
           [fullValidate]="true"
           [allowNegative]="false"
           [required]="isLimitRequired"
+          (change)="calculateLawLimitAndExposure()"
           [readonly]="!canEdit || !isLimitAvailable"
           [(ngModel)]="optionalPremiumData.limit"
           #limit="ngModel"
@@ -138,7 +139,7 @@
         <input
           type="text"
           string-to-currency
-          class="form-control"
+          class="form-control right"
           id="additionalPremium"
           name="additionalPremium"
           click-stop-propagation

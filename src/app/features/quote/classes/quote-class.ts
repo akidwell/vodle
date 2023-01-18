@@ -40,7 +40,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   warningsList: string[] = [];
   warningsMessage = '';
   brokerCommission = 0;
-  advancePremiumValue = 0;
+  //advancePremiumValue = 0;
   totalAdvancePremium = 0;
 
   submissionNumber = 0;
@@ -125,7 +125,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   coinsurancePercentage = null;
   productManufactureDate = null;
   discontinuedProducts = null;
-  advancePremium = null;
+  // advancePremium = null;
   variesByLoc = false;
   pcfCharge = null;
   pcfChargeDesc = null;
@@ -208,14 +208,12 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set totalPremium(value: number | null) {
     this._totalPremium = value;
-    this.markDirty();
   }
   private _terrorismPremium = 0;
   get terrorismPremium(): number {
     return this._terrorismPremium;
   }
   set terrorismPremium(value: number | null) {
-    this.markDirty();
     this._terrorismPremium = value || 0;
   }
   private _earnedPremiumPct = 0;
@@ -223,7 +221,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._earnedPremiumPct;
   }
   set earnedPremiumPct(value: number | null) {
-    this.markDirty();
     this._earnedPremiumPct = value || 0;
   }
   private _autoCalcMiscPremium = true;
@@ -231,7 +228,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._autoCalcMiscPremium;
   }
   set autoCalcMiscPremium(value: boolean) {
-    this.markDirty();
     this._minimumPremiumRequired = false;
     this._autoCalcMiscPremium = value;
   }
@@ -240,7 +236,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._minimumPremiumRequired;
   }
   set minimumPremiumRequired(value: boolean) {
-    this.markDirty();
     this._minimumPremiumRequired = value;
   }
   private _minimumPremium: number | null = null;
@@ -248,8 +243,14 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._minimumPremium;
   }
   set minimumPremium(value: number | null) {
-    this.markDirty();
     this._minimumPremium = value;
+  }
+  private _advancePremium: number | null = null;
+  get advancePremium(): number | null {
+    return this._advancePremium;
+  }
+  set advancePremium(value: number | null) {
+    this._advancePremium = value;
   }
   get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
@@ -486,44 +487,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       );
   }
 
-  // validatePropertyQuote(quote: Validation){
-  //   quote.validate ? quote.validate(): null;
-  // }
-  // validateCoverageTab(): QuoteChildValidation {
-  //   const validation: QuoteChildValidation = {
-  //     className: 'CoverageClass',
-  //     isDirty: this.quoteCoverages.map(x => x.isDirty).includes(true),
-  //     isValid: this.quoteCoverages.map(x => x.isValid).includes(true),
-  //     canBeSaved: this.quoteCoverages.map(x => x.canBeSaved).includes(true),
-  //     isEmpty: this.quoteCoverages.length === 0,
-  //     errorMessages: this.quoteCoverages.flatMap(x => x.errorMessages)
-  //   };
-  //   return validation;
-  //}
-  // validate(valid: boolean): boolean {
-  //   this.invalidList = [];
-  //   if (!this.validateName()) {
-  //     valid = false;
-  //   }
-  //   return valid;
-  // }
-
-  // validateName(): boolean {
-  //   let valid = true;
-  //   if (!this.name) {
-  //     valid = false;
-  //     this.invalidList.push('First Named Insured is required.');
-  //   }
-  //   return valid;
-  // }
-
-
-  // onSave(savedQuote: QuoteClass) {
-  //   this.onSaveBuilding(this.propertyQuote.propertyQuoteBuildingList,savedQuote);
-  //   this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductibleList,savedQuote);
-  //   this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
-  //   this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
-  // }
   abstract onSave(savedQuote:PropertyQuoteClass): void;
 
   abstract calculateSummaryPremiums(): void;

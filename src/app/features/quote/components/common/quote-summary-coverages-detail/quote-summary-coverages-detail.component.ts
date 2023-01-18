@@ -54,4 +54,12 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
     this.optionalCoveragesSubscription.unsubscribe();
     this.itemDescriptionSub.unsubscribe();
   }
+
+  changeEarnedPremiumPct(percent: number): void {
+    percent = Number(percent.toString().replace(/[%]/g, ''));
+    if(this.quoteData){
+      this.quoteData.earnedPremiumPct = Number(percent/100);
+    }
+    this.quoteData?.calculateSummaryPremiums();
+  }
 }

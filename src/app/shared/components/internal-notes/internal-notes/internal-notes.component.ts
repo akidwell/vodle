@@ -65,8 +65,6 @@ export class InternalNotesComponent extends SharedComponentBase implements OnIni
       (isSaving) => (this.isSaving = isSaving)
     );
     this.handleSecurity(this.type);
-    console.log(this.canEdit);
-
   }
 
   ngOnDestroy() {
@@ -98,7 +96,6 @@ export class InternalNotesComponent extends SharedComponentBase implements OnIni
 
   copyNote(): void {
     this.copyExisitingNote.emit(this.internalNoteData);
-    console.log(this.copyExisitingNote);
   }
 
   async cancel(): Promise<void> {
