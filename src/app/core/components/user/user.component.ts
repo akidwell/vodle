@@ -1,12 +1,10 @@
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AuthService } from '../../authorization/auth.service';
 import { UserAuth } from '../../authorization/user-auth';
 import { faUser, faPowerOff, faKey, faIdBadge, faUserLock, faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { HistoryService } from '../../services/policy-history/policy-history.service';
 import { ConfirmationDialogService } from '../../services/confirmation-dialog/confirmation-dialog.service';
-import { OktaAuth } from '@okta/okta-auth-js';
-import { OKTA_AUTH } from '@okta/okta-angular';
 import { ConfigService } from '../../services/config/config.service';
 import { APIVersionService } from '../../services/api-version-service/api-version.service';
 import { HeaderPaddingService } from '../../services/header-padding-service/header-padding.service';
@@ -47,15 +45,14 @@ export class UserComponent {
   @ViewChild('userSettings') userElement!: ElementRef;
 
 
-  constructor(private userAuth: UserAuth,@Inject(OKTA_AUTH) public oktaAuth: OktaAuth, private configService: ConfigService,
+  constructor(private userAuth: UserAuth, private configService: ConfigService,
   private apiService: APIVersionService, private authService: AuthService, private historyService: HistoryService,
   private confirmationDialogService: ConfirmationDialogService, public headerPaddingService: HeaderPaddingService, public elementRef:ElementRef) {
     this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
       async (isAuthenticated: boolean) => {
         this.isAuthenticated = isAuthenticated;
         if (isAuthenticated) {
-          const userClaims = await this.oktaAuth.getUser();
-          this.userName = userClaims.preferred_username ?? '';
+          this.userName = userAuth.userName;
           this.role = userAuth.userRole;
           this.isReadOnly = this.role == 'ReadOnly';
           this.environment = userAuth.environment;

@@ -11,15 +11,15 @@ export class UserAuth {
   bearerToken = '';
   isAuthenticated = false;
 
+  private _isAuthenticating = new BehaviorSubject<boolean>(true);
+  _isAuthenticating$ = this._isAuthenticating.asObservable();
+  get isAuthenticating(): boolean { return this._isAuthenticating.getValue(); }
+  set isAuthenticating(value: boolean) { this._isAuthenticating.next(value); }
+
   private _isApiAuthenticated = new BehaviorSubject<boolean>(false);
   isApiAuthenticated$ = this._isApiAuthenticated.asObservable();
   get isApiAuthenticated(): boolean { return this._isApiAuthenticated.getValue(); }
   set isApiAuthenticated(value: boolean) { this._isApiAuthenticated.next(value); }
-
-  private _apiBearerToken = new BehaviorSubject<string>('');
-  ApiBearerToken$ = this._apiBearerToken.asObservable();
-  get ApiBearerToken(): string { return this._apiBearerToken.getValue(); }
-  set ApiBearerToken(value: string) { this._apiBearerToken.next(value); }
 
   private _canExecuteImport = new BehaviorSubject<boolean>(false);
   canExecuteImport$ = this._canExecuteImport.asObservable();
@@ -66,6 +66,7 @@ export class UserAuth {
   init(): void {
     this.userName = '';
     this.bearerToken = '';
+    this.isAuthenticating = true;
   }
 
 }

@@ -99,22 +99,6 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
     }
   }
 
-  selectAll() {
-    this.showExpiring = false;
-    this.filteredForms = this.forms;
-  }
-  selectOptional() {
-    this.showExpiring = false;
-    this.filteredForms = this.forms.filter((c) => !c.isMandatory);
-  }
-  selectMandatory() {
-    this.showExpiring = false;
-    this.filteredForms = this.forms.filter((c) => c.isMandatory);
-  }
-  selectOnPolicy() {
-    this.showExpiring = false;
-    this.filteredForms = this.forms.filter((c) => c.isIncluded);
-  }
   selectExpiring() {
     this.showExpiring = true;
   }

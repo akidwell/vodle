@@ -9,10 +9,6 @@
 >
   <div *ngIf="showFullSidebar">
     <img src="./assets/images/risk-solutions-logo-small.png" />
-    <div class="d-flex justify-content-center loading" *ngIf="!isAuthenticated">
-      <strong>Authenticating...</strong>
-      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-    </div>
     <div *ngIf="isAuthenticated">
       <a class="nav-link" routerLinkActive="active" routerLink="/home">
         <fa-icon [icon]="faHome"></fa-icon>
