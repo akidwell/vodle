@@ -15,7 +15,7 @@
           </ng-select>
         </div>
         <div (click)="collapseExpand(false)" class="col-lg-6">
-          <input type="address" class="form-control" id="address" #address="ngModel" name="address"
+          <input validate-on-change type="address" class="form-control" id="address" #address="ngModel" name="address"
             [readonly]="!canEdit" [ngModel]=" (!aiData.interest? '' : aiData.interest) +
                           (!aiData.street1 ? '' : ', ' + aiData.street1) +
                           (!aiData.street2 ? '' : ', ' + aiData.street2) +
@@ -57,24 +57,24 @@
         </div>
         <div class="col-sm-3">
           <label for="interest" class="form-label" title="interest">Interest</label>
-          <input type="text" class="form-control" id="policyEventCode" name="interest" [readonly]="!canEdit"
+          <input validate-on-change type="text" class="form-control" id="policyEventCode" name="interest" [readonly]="!canEdit"
           [required]="canEdit" [(ngModel)]="aiData.interest" #interest="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street1" class="form-label" title="Status">Street Address 1</label>
-          <input type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit"
+          <input validate-on-change type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit" maxlength="40"
           [required]="canEdit" [(ngModel)]="aiData.street1" #street1="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street2" class="form-label" title="Status">Street Address 2</label>
-          <input type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit"
+          <input validate-on-change type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
             [(ngModel)]="aiData.street2" #street2="ngModel">
         </div>
         <div class="row">
           <div class="col-sm-2">
             <label for="zip" class="form-label" title="zip">Zipcode</label>
             <div class="inputspinner">
-              <input type="text" zip-code class="form-control" id="zipCode" [readonly]="aiData.isZipLookup"
+              <input validate-on-change type="text" zip-code class="form-control" id="zipCode" [readonly]="aiData.isZipLookup"
                 [(ngModel)]="aiData.zip" [readonly]="!canEdit" name="zipCode" #zip="ngModel"
                 [required]="canEdit" (ngModelChange)="changeZipCode()">
               <div *ngIf="aiData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="zipCode"
@@ -84,7 +84,7 @@
           </div>
           <div class="col-sm-3">
             <label for="city" class="form-label" title="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city"
+            <input validate-on-change type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city" maxlength="40"
             [required]="canEdit" [readonly]="aiData.isZipLookup || !canEdit" #city="ngModel">
           </div>
           <div class="col-sm-2">
@@ -104,12 +104,12 @@
         <div class="row">
           <div class="col-sm-2">
             <label for="attention" class="form-label" title="attention">Attention</label>
-            <input type="text" class="form-control" id="policyEventCode" name="attention"
+            <input validate-on-change type="text" class="form-control" id="policyEventCode" name="attention"
               [readonly]="!canEdit" [(ngModel)]="aiData.attention" #attention="ngModel">
           </div>
           <div class="col-sm-8">
             <label for="comments" class="form-label" title="comments">Additional Interest Description</label>
-            <input type="text" class="form-control" id="comments" name="comments" [readonly]="!canEdit"
+            <input validate-on-change type="text" class="form-control" id="comments" name="comments" [readonly]="!canEdit"
               [(ngModel)]="aiData.description" #comments="ngModel">
           </div>
         </div>

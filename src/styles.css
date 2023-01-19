@@ -18,18 +18,19 @@ div.card {
 
 /* Validation for required fields */
 .ng-valid[required]:not(.ng-select),
-.ng-valid.required:not(.ng-select){
+.ng-valid.required:not(.ng-select) {
   border-left: 5px solid #42a948;
 }
-.ng-invalid:not(form, .ng-select){
+
+.ng-invalid:not(form, .ng-select) {
   border-left: 5px solid #a94442;
 }
 
-.ng-select.ng-valid[required] .ng-select-container{
+.ng-select.ng-valid[required] .ng-select-container {
   border-left: 5px solid #42a948;
 }
 
-.ng-select.ng-invalid .ng-select-container{
+.ng-select.ng-invalid .ng-select-container {
   border-left: 5px solid #a94442;
 }
 
@@ -240,8 +241,8 @@ body {
 
 /* Make readonly fields grey */
 .form-control[readonly] {
- background-color: #e9ecef;
- opacity: 1;
+  background-color: #e9ecef;
+  opacity: 1;
 }
 
 /* Default spacing on nav items */

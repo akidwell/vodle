@@ -61,6 +61,17 @@ export class PropertyImportComponent {
                     const results2$ = this.quoteService.deleteLineItems(this.quote.quoteId);
                     await lastValueFrom(results2$);
                   }
+
+                  const breakdownIndex = this.quote.propertyQuoteBuildingOptionalCoverage?.findIndex(x => x.coverageCode == 6);
+                  if(breakdownIndex > -1)
+                  {
+                    this.quote.propertyQuoteBuildingOptionalCoverage.forEach((cov, index) => {
+                      if(cov.coverageCode == 6) {this.quote.propertyQuoteBuildingOptionalCoverage.splice(index,1)};
+                    });
+                    const results3$ = this.quoteService.deleteEquipmentBreakdown(this.quote.propertyQuoteId);
+                    await lastValueFrom(results3$);
+                  }
+
                   console.log(this.quote);
                   await this.importQuote(this.quote, file);
                 }

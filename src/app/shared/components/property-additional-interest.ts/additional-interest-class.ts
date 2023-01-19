@@ -36,6 +36,14 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
   isCopy = false;
   isZipLookup = false;
 
+  private _isDuplicate = false;
+  get isDuplicate(): boolean {
+    return this._isDuplicate;
+  }
+  set isDuplicate(value: boolean ) {
+    this._isDuplicate = value;
+  }
+
   constructor(ai?: AdditionalInterestData){
     super();
     if (ai) {
@@ -77,6 +85,11 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       this._isValid = false;
       this.invalidList.push('Additional Interest - Street is required');
     }
+    if (this.emptyStringValueCheck(this._zip)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Additional Interest - Zipcode is required');
+    }
     if (this.emptyStringValueCheck(this._city)){
       this._canBeSaved = false;
       this._isValid = false;
@@ -91,6 +104,11 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Additional Interest - Type is required');
+    }
+    if (this.isDuplicate){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Duplicate Additional Interest exist');
     }
     this._errorMessages = this.invalidList;
   }

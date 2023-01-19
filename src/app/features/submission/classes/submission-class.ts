@@ -55,7 +55,7 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
   // renewablePolicyLockStatus = SubmissionStatusEnum.Bound;
 
   producerRequired = false;
-  producerContactRequired = false;
+  producerContactRequired = true;
   departmentRequired = false;
   underwriterRequired = false;
   sicCodeRequired = false;
@@ -387,7 +387,7 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
     //this.naicsRequired = this.isFieldRequired(this.naicsCodeRequiredStatus, this.naicsReadonly);
     //this.sicCodeRequired = this.isFieldRequired(this.sicCodeRequiredStatus, this.sicCodeReadonly);
     //this.quoteDueDateRequired = this.isFieldRequired(this.quoteDueDateRequiredStatus, this.quoteDueDateReadonly);
-    //this.producerContactRequired = this.isFieldRequired(this.producerContactRequiredStatus, this.producerContactReadonly);
+    this.producerContactRequired = this.isFieldRequired(this.producerContactRequiredStatus, this.producerContactReadonly);
   }
   setReadonlyFields(){
     this.departmentReadonly = this.isFieldReadonly(this.departmentCodeLockStatus);
@@ -426,6 +426,9 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
     if (!this.validatePolicyDates()) {
       valid = false;
     }
+    if (!this.validateProducerContact()) {
+      valid = false;
+    }
     return valid;
   }
   validateQuoted(valid: boolean): boolean {
@@ -442,6 +445,9 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
     if (!this.validatePolicyDates()) {
       valid = false;
     }
+    if (!this.validateProducerContact()) {
+      valid = false;
+    }
     return valid;
   }
   validateBound(valid: boolean): boolean {
@@ -456,6 +462,9 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
       valid = false;
     }
     if (!this.validatePolicyDates()) {
+      valid = false;
+    }
+    if (!this.validateProducerContact()) {
       valid = false;
     }
     return valid;
@@ -481,6 +490,15 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
     if (this._departmentCode === null) {
       valid = false;
       this.invalidList.push('No Department selected.');
+    }
+    return valid;
+  }
+
+  validateProducerContact(): boolean {
+    let valid = true;
+    if (this.producerContact === null) {
+      valid = false;
+      this.invalidList.push('No Producer Contacted selected/created.');
     }
     return valid;
   }
@@ -514,6 +532,7 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
       regionCode: this.regionCode,
       officeCode: this.officeCode,
       insuredCode: this.insuredCode,
+      insured: this.insured,
       policyEffectiveDate: this._policyEffectiveDate,
       policyExpirationDate: this._policyExpirationDate,
       quoteDueDate: this._quoteDueDate,
@@ -532,6 +551,8 @@ export class SubmissionClass extends PolicyDatesRuleClass implements Submission 
       contractorCode: this.contractorCode,
       renewablePolicy: this._renewablePolicy === true ? 1 : 0,
       cancelDate: this.cancelDate,
+      producer: this.producer,
+      producerContact: this.producerContact,
       producerContactId: this._producerContact,
       producerContactName: this.producerContactName,
       producerContactEmail: this.producerContactEmail,

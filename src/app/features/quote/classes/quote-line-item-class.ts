@@ -24,7 +24,13 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
   quoteId: number | null = null;
   isNew = false;
   isCopy = false;
-
+  private _isDuplicate = false;
+  get isDuplicate(): boolean {
+    return this._isDuplicate;
+  }
+  set isDuplicate(value: boolean ) {
+    this._isDuplicate = value;
+  }
 
   get sequence() : number | null {
     return this._sequence;
@@ -133,6 +139,12 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Line Item Code is required');
+    }
+
+    if (this.isDuplicate){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Line Item Code: ' + this.lineItemCode + ' is duplicated ');
     }
     this._errorMessages = this.invalidList;
   }

@@ -48,15 +48,17 @@
       <div class="col-lg-2">
         <input
           type="text"
-          class="form-control"
+          class="form-control right"
           id="limit"
           name="limit"
           click-stop-propagation
           string-to-currency
           validate-on-change
           [validateLevel]="validateQuote"
+          [fullValidate]="true"
           [allowNegative]="false"
           [required]="isLimitRequired"
+          (change)="calculateLawLimitAndExposure()"
           [readonly]="!canEdit || !isLimitAvailable"
           [(ngModel)]="optionalPremiumData.limit"
           #limit="ngModel"
@@ -76,6 +78,7 @@
                 (change)="optionalPremiumData.onChangeSubjectToMax()"
                 [(ngModel)]="optionalPremiumData.isSubjectToMaxAmount"
                 validate-on-change
+                [fullValidate]="true"
                 name="isSubjectToMaxAmount"
                 [readonly]="
                   !canEdit ||
@@ -101,6 +104,7 @@
                 [allowNegative]="false"
                 [required]="canEdit && isPremiumMappingSet && optionalPremiumData.isSubjectToMaxAmount"
                 validate-on-change
+                [fullValidate]="true"
                 [readonly]="
                   !canEdit ||
                   !isPremiumMappingSet ||
@@ -135,7 +139,7 @@
         <input
           type="text"
           string-to-currency
-          class="form-control"
+          class="form-control right"
           id="additionalPremium"
           name="additionalPremium"
           click-stop-propagation
@@ -206,6 +210,7 @@
             id="deductibleValue"
             name="deductibleValue"
             validate-on-change
+            [fullValidate]="true"
             [(ngModel)]="optionalPremiumData.deductible"
             #deductibleValue="ngModel"
           />
@@ -226,6 +231,8 @@
             "
             name="deductibleType"
             click-stop-propagation
+            validate-on-change
+            [fullValidate]="true"
             [readonly]="
               !canEdit ||
               !isPremiumMappingSet ||
@@ -253,13 +260,14 @@
             "
             name="deductibleCode"
             click-stop-propagation
+            validate-on-change
+            [fullValidate]="true"
             [readonly]="
               !canEdit ||
               !isPremiumMappingSet ||
               !optionalPremiumData.isDeductibleSelected
             "
             [clearable]="false"
-            validate-on-change
             [(ngModel)]="optionalPremiumData.deductibleCode"
           >
           </ng-select>

@@ -22,6 +22,10 @@ import { QuoteDisclaimersClass } from './quote-disclaimers-class';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
 import { Warranties } from 'src/app/shared/interfaces/warranties';
 import { QuoteWarrantiesClass } from './quote-warranties-class';
+import { QuoteGeneralRemarksClass } from './quote-general-remarks-class';
+import { GeneralRemarks } from 'src/app/shared/interfaces/general-remarks';
+import { QuoteInternalNotesClass } from './quote-internal-notes-class';
+import { InternalNotes } from 'src/app/shared/interfaces/internal-notes';
 
 export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, Validation, QuoteAfterSave {
   _validateOnLoad = true;
@@ -36,7 +40,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   warningsList: string[] = [];
   warningsMessage = '';
   brokerCommission = 0;
-  advancePremiumValue = 0;
+  //advancePremiumValue = 0;
   totalAdvancePremium = 0;
 
   submissionNumber = 0;
@@ -84,7 +88,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   retainedLimit = null;
   approvalReason = null;
   retroDate = null;
-  quoteExpirationDate = null;
   projectSpecific = false;
   generalAggregateLimits = null;
   productAggregateLimits = null;
@@ -122,7 +125,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   coinsurancePercentage = null;
   productManufactureDate = null;
   discontinuedProducts = null;
-  advancePremium = null;
+  // advancePremium = null;
   variesByLoc = false;
   pcfCharge = null;
   pcfChargeDesc = null;
@@ -153,6 +156,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   subjectivityData:QuoteSubjectivitiesClass[] = [];
   warrantyData:QuoteWarrantiesClass[] = [];
   disclaimerData:QuoteDisclaimersClass[] = [];
+  generalRemarksData:QuoteGeneralRemarksClass[] = [];
+  internalNotesData:QuoteInternalNotesClass[] = [];
 
   propertyQuote!: PropertyQuoteClass;
   quoteValidation!: QuoteValidationClass;
@@ -203,14 +208,12 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set totalPremium(value: number | null) {
     this._totalPremium = value;
-    this.markDirty();
   }
   private _terrorismPremium = 0;
   get terrorismPremium(): number {
     return this._terrorismPremium;
   }
   set terrorismPremium(value: number | null) {
-    this.markDirty();
     this._terrorismPremium = value || 0;
   }
   private _earnedPremiumPct = 0;
@@ -218,7 +221,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._earnedPremiumPct;
   }
   set earnedPremiumPct(value: number | null) {
-    this.markDirty();
     this._earnedPremiumPct = value || 0;
   }
   private _autoCalcMiscPremium = true;
@@ -226,7 +228,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._autoCalcMiscPremium;
   }
   set autoCalcMiscPremium(value: boolean) {
-    this.markDirty();
     this._minimumPremiumRequired = false;
     this._autoCalcMiscPremium = value;
   }
@@ -235,7 +236,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._minimumPremiumRequired;
   }
   set minimumPremiumRequired(value: boolean) {
-    this.markDirty();
     this._minimumPremiumRequired = value;
   }
   private _minimumPremium: number | null = null;
@@ -243,8 +243,14 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     return this._minimumPremium;
   }
   set minimumPremium(value: number | null) {
-    this.markDirty();
     this._minimumPremium = value;
+  }
+  private _advancePremium: number | null = null;
+  get advancePremium(): number | null {
+    return this._advancePremium;
+  }
+  set advancePremium(value: number | null) {
+    this._advancePremium = value;
   }
   get policyEffectiveDate() : Date | null {
     return this._policyEffectiveDate;
@@ -260,6 +266,16 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set policyExpirationDate(value: Date | null) {
     this._policyExpirationDate = value;
+    this.markDirty();
+    this.setWarnings();
+  }
+
+  private _quoteExpirationDate: Date | null = null;
+  get quoteExpirationDate() : Date | null {
+    return this._quoteExpirationDate;
+  }
+  set quoteExpirationDate(value: Date | null) {
+    this._quoteExpirationDate = value;
     this.markDirty();
     this.setWarnings();
   }
@@ -350,7 +366,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     }
     this.disclaimerData = disclaimers;
 
-
     const warranties: QuoteWarrantiesClass[] = [];
     if(quote.warrantyData) {
       quote.warrantyData.forEach((element) => {
@@ -359,6 +374,21 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     }
     this.warrantyData = warranties;
 
+    const generalRemarks: QuoteGeneralRemarksClass[] = [];
+    if(quote.generalRemarksData) {
+      quote.generalRemarksData.forEach((element) => {
+        generalRemarks.push(new QuoteGeneralRemarksClass(element));
+      });
+    }
+    this.generalRemarksData = generalRemarks;
+
+    const internalNotes: QuoteInternalNotesClass[] = [];
+    if(quote.internalNotesData) {
+      quote.internalNotesData.forEach((element) => {
+        internalNotes.push(new QuoteInternalNotesClass(element));
+      });
+    }
+    this.internalNotesData = internalNotes;
 
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -457,44 +487,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       );
   }
 
-  // validatePropertyQuote(quote: Validation){
-  //   quote.validate ? quote.validate(): null;
-  // }
-  // validateCoverageTab(): QuoteChildValidation {
-  //   const validation: QuoteChildValidation = {
-  //     className: 'CoverageClass',
-  //     isDirty: this.quoteCoverages.map(x => x.isDirty).includes(true),
-  //     isValid: this.quoteCoverages.map(x => x.isValid).includes(true),
-  //     canBeSaved: this.quoteCoverages.map(x => x.canBeSaved).includes(true),
-  //     isEmpty: this.quoteCoverages.length === 0,
-  //     errorMessages: this.quoteCoverages.flatMap(x => x.errorMessages)
-  //   };
-  //   return validation;
-  //}
-  // validate(valid: boolean): boolean {
-  //   this.invalidList = [];
-  //   if (!this.validateName()) {
-  //     valid = false;
-  //   }
-  //   return valid;
-  // }
-
-  // validateName(): boolean {
-  //   let valid = true;
-  //   if (!this.name) {
-  //     valid = false;
-  //     this.invalidList.push('First Named Insured is required.');
-  //   }
-  //   return valid;
-  // }
-
-
-  // onSave(savedQuote: QuoteClass) {
-  //   this.onSaveBuilding(this.propertyQuote.propertyQuoteBuildingList,savedQuote);
-  //   this.onSaveDeductible(this.propertyQuote.propertyQuoteDeductibleList,savedQuote);
-  //   this.onSaveMortgagee(this.propertyQuote.propertyQuoteMortgageeList,savedQuote);
-  //   this.onSaveAdditionalInterest(this.propertyQuote.propertyQuoteAdditionalInterestList,savedQuote);
-  // }
   abstract onSave(savedQuote:PropertyQuoteClass): void;
 
   abstract calculateSummaryPremiums(): void;
@@ -514,6 +506,11 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.warrantyData.forEach(c => warranties.push(c.toJSON()));
     const disclaimers: Disclaimers[] = [];
     this.disclaimerData.forEach(c => disclaimers.push(c.toJSON()));
+    const generalRemarks: GeneralRemarks[] = [];
+    this.generalRemarksData.forEach(c => generalRemarks.push(c.toJSON()));
+    const internalNotes: InternalNotes[] = [];
+    this.internalNotesData.forEach(c => internalNotes.push(c.toJSON()));
+    console.log(internalNotes);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,
@@ -545,6 +542,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       subjectivityData: subjectivities,
       warrantyData: warranties,
       disclaimerData: disclaimers,
+      generalRemarksData: generalRemarks,
+      internalNotesData: internalNotes,
       terrorismCoverage: this.terrorismCoverage,
       terrorismCoverageSelected: this.terrorismCoverageSelected,
       terrorismPremium: this.terrorismPremium,

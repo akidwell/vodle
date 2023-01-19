@@ -58,7 +58,6 @@ export class ValidateOnChangeDirective {
       break;
     }
     if (dataObject) {
-      console.log(dataObject);
       if (markDirty) {
         dataObject.markDirty ? dataObject.markDirty() : null;
       }

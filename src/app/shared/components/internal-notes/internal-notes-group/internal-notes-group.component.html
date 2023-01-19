@@ -1,0 +1,36 @@
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">
+   Internal Notes
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div class="card-body" *ngIf="internalNotes.length > 0">
+      <div class="row">
+        <div class="col-sm-8">
+          <label for="note">Note:</label>
+        </div>
+        <div class="col-sm-1">
+          <label for="note">Created By:</label>
+        </div>
+        <div class="col-sm-1">
+          <label for="note">Created Date:</label>
+        </div>
+
+      </div>
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+          <div *ngFor="let item of internalNotes; let i = index">
+            <rsps-internal-notes [type]="type" (copyExisitingNote)=copyExisitingNote($event) [quote]="quote"
+              (deleteExistingNote)=deleteExistingNote($event) [notes]=internalNotes [internalNoteData]=item>
+            </rsps-internal-notes>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div id="mortgageeFooter">
+      <button style="float:left; background:none; border:none;" class="underline"
+        (click)="addnewNote();">Add Internal Notes</button>
+    </div>
+  </div>
+</div>

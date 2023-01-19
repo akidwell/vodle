@@ -1,5 +1,7 @@
 import { Moment } from 'moment';
 import { Disclaimers } from 'src/app/shared/interfaces/disclaimers';
+import { GeneralRemarks } from 'src/app/shared/interfaces/general-remarks';
+import { InternalNotes } from 'src/app/shared/interfaces/internal-notes';
 import { PolicyForm } from 'src/app/shared/interfaces/policy-form';
 import { Subjectivities } from 'src/app/shared/interfaces/subjectivities';
 import { Warranties } from 'src/app/shared/interfaces/warranties';
@@ -7,7 +9,6 @@ import { Submission } from '../../submission/models/submission';
 import { PropertyQuote } from './property-quote';
 import { QuoteLineItem } from './quote-line-item';
 import { QuoteRate } from './quote-rate';
-import { QuoteSubjectivities } from './quote-subjectivities';
 
 export interface Quote {
   submissionNumber: number | null;
@@ -128,6 +129,8 @@ export interface Quote {
   subjectivityData: Subjectivities[];
   warrantyData: Warranties[];
   disclaimerData: Disclaimers[];
+  generalRemarksData: GeneralRemarks[];
+  internalNotesData: InternalNotes[];
   totalPremium: number | null;
   formsVersionDescription: string | null;
   departmentId: number | null;

@@ -13,12 +13,28 @@ import { QuoteClass } from '../../../classes/quote-class';
 export class QuoteSummarySubmissionInfoComponent extends DepartmentComponentBase implements OnInit {
   submission!: SubmissionClass;
   @Input() quote!: QuoteClass;
+  status!: string;
 
   constructor(pageDataService: PageDataService, userAuth: UserAuth) {
     super(userAuth);
   }
   ngOnInit(): void {
     this.submission = this.quote.submission;
+  }
+
+  getSubmissionStatus(): string{
+    switch(this.submission.statusCode){
+    case 0:
+      return 'Live';
+    case 1:
+      return 'Dead';
+    case 2:
+      return 'In Quote';
+    case 8:
+      return 'Bound';
+    default:
+      return '';
+    }
   }
 
 }

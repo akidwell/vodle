@@ -474,7 +474,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
   }
   markDirty() {
     this._isDirty = true;
-    this.propertyQuote.showDirty = true;
   }
   setRequiredFields() {
     // No special rules

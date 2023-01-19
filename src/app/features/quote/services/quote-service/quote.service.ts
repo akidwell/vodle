@@ -72,13 +72,35 @@ export class QuoteService {
   deleteLineItems(id: number): Observable<boolean> {
     return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/quote-line-item/' + id);
   }
+  deleteGeneralRemark(quoteId: number, remarkId: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/general-remarks/' + quoteId + '/remark/' + remarkId);
+  }
+  deleteEquipmentBreakdown(id: number) : Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/optional-coverage/equipment-breakdown/' + id);
+  }
 
+  deleteInternalNote(quoteId: number, noteId: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.config.apiBaseUrl + 'api/quotes/internal-notes/' + quoteId + '/note/' + noteId);
+  }
 
   import(quote: Quote, file: any) {
     const formData = new FormData();
     formData.append('data', JSON.stringify(quote));
     formData.append('file', file);
     return this.http.post<Quote>(this.config.apiBaseUrl + 'api/quotes/import', formData);
+  }
+
+  getPolicyNumber():Observable<string> {
+    return this.http.get<string>(this.config.apiBaseUrl + 'api/quotes/newPolicyNumber', { responseType: 'text' as 'json'})
+      .pipe(
+        map((receivedData: string) => {
+          return receivedData;
+        }));
+  }
+
+  UpdateQuoteAndGetBinderLetter(quote: QuoteClass | null) {
+    const quoteJSON = quote?.toJSON();
+    return this.http.put(this.config.apiBaseUrl + 'api/quotes/binder', quoteJSON, { responseType: 'arraybuffer'});
   }
 
 }

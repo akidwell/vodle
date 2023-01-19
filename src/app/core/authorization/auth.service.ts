@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { UserAuth } from './user-auth';
 import { ConfigService } from '../services/config/config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -16,21 +16,10 @@ import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 export class AuthService {
   tokenJSON: IAuthObject | undefined;
-  public $authenticationState: Observable<any>;
 
   constructor(private userAuth: UserAuth, private http: HttpClient, private jwtHelper: JwtHelperService,
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth, private router: Router, private config: ConfigService, private oktaAuthState: OktaAuthStateService) {
     this.oktaAuthState.authState$.subscribe((isAuthenticated: AuthState) => {
-      if (isAuthenticated) {
-        this.login();
-      }
-    });
-    this.$authenticationState = new Observable((observer: Observer<boolean>) => {
-      this.isAuthenticated().then(val => {
-        observer.next(val);
-      });
-    });
-    this.$authenticationState.subscribe((isAuthenticated: boolean) => {
       if (isAuthenticated) {
         this.login();
       }
@@ -57,11 +46,15 @@ export class AuthService {
       next: token => {
         if (token != null && token != '') {
           this.userAuth.bearerToken = JSON.parse(JSON.stringify(token)).data;
-          this.userAuth.ApiBearerToken = JSON.parse(JSON.stringify(token)).data;
           localStorage.setItem('jwt_token', this.userAuth.bearerToken);
         }
+        this.userAuth.isAuthenticating = false;
       },
-      error: err => console.error(err)
+      error: err => {
+        console.error('login error ' + err.message);
+        this.userAuth.isAuthenticating = false;
+        throw err;
+      }
     });
   }
 
@@ -83,10 +76,11 @@ export class AuthService {
             }
           }
         }),
-        catchError(err => {
-          console.error('Error: ' + err.message);
-          return '';
-        })
+        // Let error get caught later
+        // catchError(err => {
+        //   console.error('Error: ' + err.message);
+        //   return '';
+        // })
       );
   }
 
@@ -95,13 +89,13 @@ export class AuthService {
     this.userAuth.userName = token.userName;
     this.userAuth.isAuthenticated = token.valid == 'True';
     this.userAuth.canExecuteImport = token.CanExecuteImport == 'True';
-    this.userAuth.isApiAuthenticated = token.valid == 'True';
     this.userAuth.canEditPolicy = token.CanExecuteImport == 'True';
     this.userAuth.canEditInsured = token.CanEditInsured == 'True';
     this.userAuth.canEditSubmission = token.CanEditSubmission == 'True';
     this.userAuth.canEditQuote = token.CanEditQuote == 'True';
     this.userAuth.userRole = token.userRole;
     this.userAuth.environment = token.environment;
+    this.userAuth.isApiAuthenticated = token.valid == 'True';
     this.userAuth.loaded();
     if (!this.userAuth.isAuthenticated) {
       this.router.navigate(['/access-denied']);

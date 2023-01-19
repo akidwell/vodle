@@ -22,27 +22,25 @@
                 <div class="col-lg-6">
                     <label class="form-label" title="View">View:</label>
                     <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="radioAvailable" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioAvailable" autocomplete="off"
                             (click)="selectView(formViewType.Available)">
                         <label class="btn btn-outline-dark hide-select" for="radioAvailable">Available ({{availableFormsCount}})
                             <span *ngIf="unselectedFormsCount > 0" class="badge rounded-pill unselected-warning" ngbTooltip="Unselected forms">{{unselectedFormsCount}}
                             </span>
                         </label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioMandatory" autocomplete="off"
                             (click)="selectView(formViewType.Mandatory)">
                         <label class="btn btn-outline-dark hide-select" for="radioMandatory">Mandatory ({{mandatoryFormsCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioOptional" autocomplete="off"
                             (click)="selectView(formViewType.Optional)">
                         <label class="btn btn-outline-dark hide-select" for="radioOptional">Optional ({{optionalFormsCount}})</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
+                        <input validate-on-change type="radio" class="btn-check" name="btnradio" id="radioOnPolicy" autocomplete="off"
                             checked (click)="selectView(formViewType.OnPolicy)">
                         <label class="btn btn-outline-dark hide-select" for="radioOnPolicy">On Policy ({{onPolicyFormsCount}})</label>
-                        <input *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check" name="btnradio" id="radioExpiring" autocomplete="off"
+                        <input validate-on-change *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check" name="btnradio" id="radioExpiring" autocomplete="off"
                             (click)="selectView(formViewType.Expiring)">
                         <label *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" class="btn btn-outline-dark hide-select" for="radioExpiring">Expiring ({{expiringFormsCount}})</label>
                     </div>
-                    <button type="button" class="btn btn-secondary" (click)="getQuote()">Quote</button>
-                    <button type="button" class="btn btn-secondary" (click)="getBinder()">Binder</button>
                 </div>
                 <div class ="col-lg-6">
                     <rsps-policy-forms-search [type]="type" [quote]="quote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>
@@ -68,7 +66,7 @@
                                     [icon]="faExclamationTriangle" ngbTooltip="Special Note" (click)="showSpecialNote(form.formName)"></fa-icon>
                             </td>
                             <td style="text-align:center; width:1%;">
-                                <input type="checkbox" class="form-check-input" id="included" [ngClass]="form.checkboxClass"
+                                <input validate-on-change [fullValidate]="true" type="checkbox" class="form-check-input" id="included" [ngClass]="form.checkboxClass"
                                 [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">

@@ -33,9 +33,8 @@ import { StatusModule } from './shared/components/status-bar/status-bar.module';
 import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
 import { PageDataService } from './core/services/page-data-service/page-data-service';
 import { SubmissionInformationModule } from './shared/components/submission-information/submission-information.module';
-import { MortgageeModule } from './shared/components/propertry-mortgagee/mortgagee.module';
-import { AdditionalInterestModule } from './shared/components/property-additional-interest.ts/additional-interest.module';
 import { PropertyDataService } from './features/quote/services/property-data.service';
+
 
 @NgModule({
   declarations: [
@@ -70,8 +69,7 @@ import { PropertyDataService } from './features/quote/services/property-data.ser
     NoopAnimationsModule,
     PipesModule,
     SubmissionInformationModule,
-    MortgageeModule,
-    AdditionalInterestModule,
+
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerImmediately'

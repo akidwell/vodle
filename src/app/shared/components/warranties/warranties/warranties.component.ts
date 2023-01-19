@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { stringToBase64Url } from '@okta/okta-auth-js/lib/crypto';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
@@ -51,6 +52,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   userWarranty = '';
   sectionHeaderList: WarrantiesClass[] = [];
   mainHeaderList: WarrantiesClass[] = [];
+  addedWarrantyOf = '';
 
   @Input() quote!: QuoteClass;
   @Input() submissionNumber!: number;
@@ -107,7 +109,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
       (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
       (x.sectionHeader < y.sectionHeader ? -1 : 0)
-    );
+    ).reverse();
     // determine if it's the first main header/ section header that way they're only displayed once, not repeated
     let fMainHeader : string | null = '';
     let fSectionHeader : string | null = '';
@@ -117,7 +119,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
         fMainHeader = x.mainHeader;
       }
       if (x.sectionHeader != fSectionHeader){
-        x.firstFilteredSectionHeaderRow = true;
+        x.firstFilteredSectionHeaderRow = !(!x.sectionHeader || x.sectionHeader.length === 0 );
         fSectionHeader = x.sectionHeader;
       }
     }
@@ -132,7 +134,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   // or anytime a warranty is edited/user defined warranty is added
   refreshWarranties() {
     // reget any warranties that were added
-    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || x.isIncluded).sort((x,y) =>
+    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || (x.isIncluded && x.warrantyOf != this.addedWarrantyOf)).sort((x,y) =>
       (x.warrantyOf < y.warrantyOf ? -1 : 0)
     );
     // re add any warranties that were chosed from the warranty dropdown that could be unchecked
@@ -140,13 +142,12 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
       this.filteredWarranties.push(element);
     });
 
-
     // sort by warranty of then by section header
     // TO DO: Sort null section headers first, then other section headers
     this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
       (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
     (x.sectionHeader < y.sectionHeader ? -1 : 0)
-    );
+    ).reverse();
 
     // reset the firstrow flags
     this.warranties.map(
@@ -167,7 +168,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
         fMainHeader = x.mainHeader;
       }
       if (x.sectionHeader != fSectionHeader){
-        x.firstFilteredSectionHeaderRow = true;
+        x.firstFilteredSectionHeaderRow = !(!x.sectionHeader || x.sectionHeader.length === 0 );
         fSectionHeader = x.sectionHeader;
       }
     }
@@ -230,7 +231,8 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   }
 
   addWarranties(sub: WarrantiesClass){
-    this.addedWarranties = this.warranties.filter(x => x.warrantyOf == sub.warrantyOf && !(x.ysnDefault || x.isIncluded));
+    this.addedWarranties = this.warranties.filter(x => x.warrantyOf == sub.warrantyOf );
+    this.addedWarrantyOf = sub.warrantyOf;
     this.refreshWarranties();
   }
   clearAndClose(): void {

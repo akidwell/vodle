@@ -44,7 +44,6 @@ export class SubmissionResolver implements Resolve<SubmissionResolved> {
         }),
         map(submission => ({ submission })),
         catchError((error) => {
-          console.log(error);
           this.router.navigate(['/submission/submission-not-found'], { state: { error: error.message } });
           return of({ submission: null, error: error });
         })
