@@ -13,7 +13,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { SubmissionComponent } from './components/submission-base/submission.component';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';

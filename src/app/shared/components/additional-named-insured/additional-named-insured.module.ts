@@ -8,7 +8,7 @@ import { SharedAdditionalNamedInsuredsComponent } from './additional-named-insur
 import { SharedAdditionalNamedInsuredsGroupComponent } from './additional-named-insureds-group/additional-named-insureds-group.component';
 import { DirectivesModule } from '../../directives/directives.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 
 @NgModule({
   declarations: [SharedAdditionalNamedInsuredsGroupComponent,

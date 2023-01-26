@@ -8,7 +8,7 @@ import { DirectivesModule } from '../../directives/directives.module';
 import { PropertyBuildingComponent } from './property-building/property-building.component';
 import { PropertyBuildingGroupComponent } from './property-building-group/property-building-group.component';
 import { NgxMaskModule } from 'ngx-mask';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 
 @NgModule({
   declarations: [PropertyBuildingComponent,

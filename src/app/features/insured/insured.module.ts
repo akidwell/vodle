@@ -22,7 +22,7 @@ import { InsuredAccountRightComponent } from './components/insured-account-right
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 
 @NgModule({
   declarations: [
