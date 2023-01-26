@@ -4,22 +4,27 @@
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div class="col-lg-4">
+      <input type="search" class="form-control" type="search"  id="filter" name="filter"
+          maxlength="250" #filter="ngModel" placeholder="Filter"
+          [(ngModel)]="insuredSearchResultsService.filter" autocomplete="off">
+  </div>
     <div style="overflow-x: scroll">
       <table class="table table-striped table-bordered" *ngIf="insuredResults.length">
         <thead>
           <tr>
             <th>Insured Code</th>
-            <th>Search Name</th>
+            <th sortable="name" (sort)="onSort($event)">Search Name</th>
             <th>Street Address</th>
-            <th>Insured City</th>
-            <th>Insured State</th>
+            <th sortable="insuredCity" (sort)="onSort($event)">Insured City</th>
+            <th sortable="insuredState" (sort)="onSort($event)">Insured State</th>
             <th>Zip</th>
-            <th>Named Insured</th>
+            <th sortable="insuredName" (sort)="onSort($event)">Named Insured</th>
             <th>Former Name</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let insured of insuredResults; let i = index">
+          <tr *ngFor="let insured of insureds$ | async ; let i = index">
             <ng-container>
               <td><a [routerLink]="[]" (click)="routeToInsured(insured.insuredCode)">
               <td nowrap>{{ insured.insuredCode }}</td></a></td>
@@ -35,6 +40,16 @@
         </tbody>
       </table>
     </div>
+    <div class="d-flex justify-content-between p-2 paging">
+      <ngb-pagination size="sm" [collectionSize]="(total$ | async)!" [(page)]="insuredSearchResultsService.page"
+          [pageSize]="insuredSearchResultsService.pageSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true">
+      </ngb-pagination>
+      <select class="pagination" name="pageSize" [(ngModel)]="insuredSearchResultsService.pageSize">
+          <option [ngValue]="8">8 items per page</option>
+          <option [ngValue]="12">12 items per page</option>
+          <option [ngValue]="15">15 items per page</option>
+      </select>
+  </div>
   </div>
   <div class="card-footer">
     <button *ngIf="canEditInsured" class="footer-button"
