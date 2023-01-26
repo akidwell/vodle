@@ -7,6 +7,7 @@ import { HoverClassDirective } from './hover-class.directive';
 import { MaxIntegerValidator } from './max-integer.directive';
 import { NullValueDirective } from './null-value.directive';
 import { PreventDoubleClickDirective } from './prevent-double-click.directive';
+import { NgbdSortableHeaderDirective } from './sortable-header';
 import { StringToCurrencyDirective } from './string-to-currency';
 import { ValidateOnChangeDirective } from './validate-on-change';
 import { ZipCodeValidator } from './zip-code-validate.directive';
@@ -25,7 +26,8 @@ import { ZipCodeDirective } from './zip-code.directive';
     AutofocusDirective,
     ZipCodeDirective,
     ZipCodeValidator,
-    DomChangeDirective
+    DomChangeDirective,
+    NgbdSortableHeaderDirective
   ],
   exports: [
     NullValueDirective,
@@ -38,7 +40,8 @@ import { ZipCodeDirective } from './zip-code.directive';
     AutofocusDirective,
     ZipCodeDirective,
     ZipCodeValidator,
-    DomChangeDirective
+    DomChangeDirective,
+    NgbdSortableHeaderDirective
   ],
   providers: [ZipCodePipe]
 })
