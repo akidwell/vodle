@@ -29,6 +29,7 @@ export abstract class WarrantiesClass implements Warranties, Validation, QuoteAf
   warrantyOf = '';
   firstFilteredMainHeaderRow = false;
   firstFilteredSectionHeaderRow = false;
+  ysnIsCommon = false;
 
 
   constructor(warrantys?: Warranties){
@@ -95,6 +96,7 @@ export abstract class WarrantiesClass implements Warranties, Validation, QuoteAf
     this.sectionHeader = sub.sectionHeader;
     this.mainHeader = sub.mainHeader;
     this.warrantyOf = sub.warrantyOf ?? '';
+    this.ysnIsCommon = sub.ysnIsCommon;
   }
 
   newInit() {
