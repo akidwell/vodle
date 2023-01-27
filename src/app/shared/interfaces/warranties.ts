@@ -12,4 +12,5 @@ export interface Warranties {
   mainHeader: string | null;
   sectionHeader: string ;
   warrantyOf: string | null;
+  ysnIsCommon: boolean;
 }

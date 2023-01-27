@@ -26,7 +26,8 @@ export class QuoteWarrantiesClass extends WarrantiesClass {
       document: this.document,
       sectionHeader: this.sectionHeader,
       mainHeader: this.mainHeader,
-      warrantyOf: this.warrantyOf
+      warrantyOf: this.warrantyOf,
+      ysnIsCommon: this.ysnIsCommon
     };
   }
 }
