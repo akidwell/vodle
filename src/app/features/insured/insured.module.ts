@@ -8,7 +8,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxMaskModule } from 'ngx-mask';
 import { InsuredContactGroupComponent } from './components/insured-contact-group/insured-contact-group.component';
 import { InsuredContactComponent } from './components/insured-contact/insured-contact.component';
 import { InsuredInformationComponent } from './components/insured-information/insured-information.component';
@@ -22,7 +21,8 @@ import { InsuredAccountRightComponent } from './components/insured-account-right
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -49,12 +49,12 @@ import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/mat
     PipesModule,
     SubmissionActivityModule,
     DragDropModule,
-    MatSlideToggleModule,
-    NgxMaskModule.forRoot()
+    MatSlideToggleModule
   ],
   providers: [
     CanDeactivateGuard,
-    DatePipe
+    DatePipe,
+    provideEnvironmentNgxMask(),
   ]
 })
 export class InsuredModule { }

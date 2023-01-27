@@ -5,9 +5,9 @@ import { PolicyRoutingModule } from './policy-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { PolicyComponent } from './components/policy-base/policy.component';
@@ -49,7 +49,7 @@ import { ConfirmationDialogService } from '../../core/services/confirmation-dial
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { AdditionalNamedInsuredModule } from 'src/app/shared/components/additional-named-insured/additional-named-insured.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -95,10 +95,12 @@ import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/mat
     AdditionalNamedInsuredModule,
     PipesModule,
     DragDropModule,
-    MatSlideToggleModule,
-    NgxMaskModule.forRoot()
+    NgxMaskDirective,
+    NgxMaskPipe,
+    MatSlideToggleModule
   ],
   providers: [
+    provideEnvironmentNgxMask(),
     CanDeactivateGuard,
     DatePipe,
     UpdatePolicyChild,

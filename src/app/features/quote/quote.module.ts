@@ -3,7 +3,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { QuoteRoutingModule } from './quote-routing.module';
 import { QuoteComponent } from './components/common/quote-base/quote.component';
 import { QuoteInformationComponent } from './components/common/quote-information-base/quote-information.component';
-import { NgxMaskModule } from 'ngx-mask';
 import { QuoteNotFoundComponent } from './components/common/quote-not-found/quote-not-found.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -17,7 +16,7 @@ import { QuoteInformationDetailComponent } from './components/common/quote-infor
 import { QuoteInformationDetailProgramComponent } from './components/common/quote-information-detail-program/quote-information-detail-program.component';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
@@ -58,6 +57,7 @@ import { QuoteSummaryPremiumDetailComponent } from './components/common/quote-su
 import { WarrantiesModule } from 'src/app/shared/components/warranties/warranties.module';
 import { GeneralRemarksModule } from 'src/app/shared/components/general-remarks/general-remarks.module';
 import { InternalNotesModule } from 'src/app/shared/components/internal-notes/internal-notes.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -113,10 +113,12 @@ import { InternalNotesModule } from 'src/app/shared/components/internal-notes/in
     DisclaimersModule,
     GeneralRemarksModule,
     InternalNotesModule,
-    WarrantiesModule,
-    NgxMaskModule.forRoot()
+    NgxMaskDirective,
+    NgxMaskPipe,
+    WarrantiesModule
   ],
   providers: [
+    provideEnvironmentNgxMask(),
     CanDeactivateGuard,
     CanDeactivateChildGuard,
     DatePipe,

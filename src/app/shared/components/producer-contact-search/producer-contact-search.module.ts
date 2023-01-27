@@ -5,7 +5,7 @@ import { ProducerContactSearch } from './producer-contact-search.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [ ProducerContactSearch ],
@@ -14,10 +14,12 @@ import { NgxMaskModule } from 'ngx-mask';
     FontAwesomeModule,
     FormsModule,
     NgbModule,
-    NgxMaskModule
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
   exports: [ ProducerContactSearch ],
-  providers: [ FormatDateForDisplay ]
+  providers: [ FormatDateForDisplay, provideEnvironmentNgxMask()
+  ]
 
 })
 export class ProducerContactSearchModule { }

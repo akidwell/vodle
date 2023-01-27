@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
-import { NgxMaskModule } from 'ngx-mask';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { PropertyBuildingCoverageEditDialogComponent } from './property-building-coverage-edit-dialog/property-building-coverage-group-edit-dialog.component';
 import { PropertyBuildingCoverageEditComponent } from '../property-building-coverage-edit/property-building-coverage-edit/property-building-coverage-edit.component';
 
@@ -19,9 +19,9 @@ import { PropertyBuildingCoverageEditComponent } from '../property-building-cove
     NgbModule,
     NgSelectModule,
     FormsModule,
-    DirectivesModule,
-    NgxMaskModule.forRoot()
+    DirectivesModule
   ],
-  exports: [PropertyBuildingCoverageEditComponent]
+  exports: [PropertyBuildingCoverageEditComponent],
+  providers: [provideEnvironmentNgxMask()]
 })
 export class PropertyBuildingCoverageEditModule { }
