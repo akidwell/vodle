@@ -51,7 +51,7 @@
               <tr>
                 <td style="text-align:center; width:1%; vertical-align:middle;">
                   <input validate-on-change type="checkbox" class="form-check-input" id="included"
-                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : ''" [readonly]="!canEdit"
+                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : !sub.isIncluded && sub.ysnIsCommon ? 'common-warranty' : ''" [readonly]="!canEdit" [ngbTooltip]="sub.ysnIsCommon ? 'Is Common Warranty' : ''"
                     [(ngModel)]="sub.isIncluded" name="included" click-stop-propagation>
                 </td>
 
