@@ -97,19 +97,23 @@ ng-select .ng-dropdown-panel {
 }
 
 /* Slide toggle */
-.mat-slide-toggle:not(.mat-disabled) .mat-slide-toggle-bar {
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+.mat-mdc-slide-toggle:not(.mat-disabled) .mat-slide-toggle-bar {
   background-color: #ccd4dc;
 }
 
-.mat-slide-toggle:not(.mat-disabled) .mat-slide-toggle-thumb {
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+.mat-mdc-slide-toggle:not(.mat-disabled) .mat-slide-toggle-thumb {
   background-color: white;
 }
 
-.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+.mat-mdc-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
   background-color: #00ac5d;
 }
 
-.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+.mat-mdc-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
   background-color: white;
 }
 

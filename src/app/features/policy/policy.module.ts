@@ -5,7 +5,7 @@ import { PolicyRoutingModule } from './policy-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -95,10 +95,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     AdditionalNamedInsuredModule,
     PipesModule,
     DragDropModule,
-    MatSlideToggleModule,
-    NgxMaskModule.forRoot()
+    NgxMaskDirective,
+    NgxMaskPipe,
+    MatSlideToggleModule
   ],
   providers: [
+    provideEnvironmentNgxMask(),
     CanDeactivateGuard,
     DatePipe,
     UpdatePolicyChild,

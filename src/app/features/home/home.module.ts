@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgxMaskModule } from 'ngx-mask';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,6 +22,7 @@ import { PolicySearchResultsComponent } from './components/policy-search-results
 import { SubmissionActivityModule } from 'src/app/shared/components/submission-activity/submission-activity.module';
 import { PacerSearchResultsComponent } from './components/pacer-search-results/pacer-search-results.component';
 import { ScrollToTopModule } from 'src/app/core/components/scroll-to-top/scroll-to-top.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -38,11 +38,12 @@ import { ScrollToTopModule } from 'src/app/core/components/scroll-to-top/scroll-
     HomeRoutingModule,
     FormsModule,
     FontAwesomeModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     NgSelectModule,
     NgbModule,
     SearchModule,
     DirectivesModule,
-    NgxMaskModule.forRoot(),
     BusyModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -53,6 +54,7 @@ import { ScrollToTopModule } from 'src/app/core/components/scroll-to-top/scroll-
   ],
   providers: [
     DatePipe,
+    provideEnvironmentNgxMask(),
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     {
       provide: DateAdapter,

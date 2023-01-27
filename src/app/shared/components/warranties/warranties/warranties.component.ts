@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { stringToBase64Url } from '@okta/okta-auth-js/lib/crypto';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
