@@ -20,3 +20,6 @@
 <div *ngIf="loading">
   <rsps-busy></rsps-busy>
 </div>
+<div *ngIf="isAuthenticating">
+  <rsps-busy message="Authenticating..."></rsps-busy>
+</div>

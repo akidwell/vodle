@@ -5,6 +5,8 @@ import { PreviousRouteService } from './core/services/previous-route/previous-ro
 import { HeaderPaddingService } from './core/services/header-padding-service/header-padding.service';
 import { PageDataService } from './core/services/page-data-service/page-data-service';
 import { LayoutEnum } from './core/enums/layout-enum';
+import { UserAuth } from './core/authorization/user-auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'rsps-root',
@@ -18,9 +20,18 @@ export class AppComponent {
   buttonBarOffset = LayoutEnum.button_bar_height;
   private previousUrl!: string;
   private currentUrl!: string;
+  isAuthenticating = false;
+  authenticatingSub: Subscription;
 
   constructor(private router: Router, private previousRouteService: PreviousRouteService, private updateService: UpdateService,
-    public headerPaddingService: HeaderPaddingService, public pageDataService: PageDataService) {
+    public headerPaddingService: HeaderPaddingService, public pageDataService: PageDataService, private userAuth: UserAuth) {
+
+    this.authenticatingSub = this.userAuth._isAuthenticating$.subscribe(
+      async (isAuthenticating: boolean) => {
+        this.isAuthenticating = isAuthenticating;
+      }
+    );
+
     this.updateService.startTimer();
     this.updateService.startConfirmation();
     this.updateService.startLogging();

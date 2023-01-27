@@ -7,7 +7,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
 import { PropertyBuildingCoverageGroupComponent } from './property-building-coverage-group/property-building-coverage-group.component';
 import { PropertyBuildingCoverageComponent } from './property-building-coverage/property-building-coverage.component';
-import { NgxMaskModule } from 'ngx-mask';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [PropertyBuildingCoverageComponent,
@@ -19,9 +19,9 @@ import { NgxMaskModule } from 'ngx-mask';
     NgbModule,
     NgSelectModule,
     FormsModule,
-    DirectivesModule,
-    NgxMaskModule.forRoot()
+    DirectivesModule
   ],
-  exports: [PropertyBuildingCoverageGroupComponent]
+  exports: [PropertyBuildingCoverageGroupComponent],
+  providers:[provideEnvironmentNgxMask()]
 })
 export class PropertyBuildingCoverageModule { }

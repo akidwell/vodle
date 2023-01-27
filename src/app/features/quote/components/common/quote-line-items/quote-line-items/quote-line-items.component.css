@@ -1,6 +1,6 @@
 
 .form-label {
-  overflow: hidden; 
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
@@ -28,3 +28,9 @@
 .dropdown-menu {
   padding: 0px;
 }
+
+::ng-deep .mat-mdc-icon-button._mat-animation-noopable
+{
+  padding-top:0 !important;
+}
+

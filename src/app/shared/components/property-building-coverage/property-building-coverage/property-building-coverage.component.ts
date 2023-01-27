@@ -7,7 +7,6 @@ import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lo
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
-import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property-building-coverage';
 
 @Component({
   selector: 'rsps-property-building-coverage',

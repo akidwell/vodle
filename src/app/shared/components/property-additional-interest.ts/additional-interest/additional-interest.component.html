@@ -3,7 +3,7 @@
     <div>
       <div class="row" *ngIf="collapsed">
         <div class="col-lg-1">
-          <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code"
+          <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code" validate-on-change
             name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit"
             [searchFn]="dropDownSearch" [(ngModel)]="aiData.building">
             <ng-template ng-label-tmp let-item="item">
@@ -38,7 +38,7 @@
         <div class="col-lg-1">
           <label for="building" class="form-label" title="building">Prem/Bldg:</label>
           <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code"  [readonly]="!canEdit"
-            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit"
+            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit" validate-on-change
             [searchFn]="dropDownSearch" [(ngModel)]="aiData.building">
             <ng-template ng-label-tmp let-item="item">
               {{item.code}}
