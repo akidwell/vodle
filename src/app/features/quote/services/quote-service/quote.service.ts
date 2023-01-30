@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ConfigService } from 'src/app/core/services/config/config.service';
 import { QuoteData } from 'src/app/features/policy/models/policy';
-import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { DepartmentClass } from '../../classes/department-class';
 import { QuoteClass } from '../../classes/quote-class';

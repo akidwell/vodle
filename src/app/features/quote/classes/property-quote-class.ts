@@ -1,7 +1,7 @@
 
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Code } from 'src/app/core/models/code';
-import { MortgageeClass } from 'src/app/shared/components/propertry-mortgagee/mortgagee-class';
+import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { AdditionalInterestData } from '../models/additional-interest';
