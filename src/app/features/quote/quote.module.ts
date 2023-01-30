@@ -32,7 +32,7 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
 import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
 import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
 import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
-import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
+import { MortgageeModule } from 'src/app/shared/components/property-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
