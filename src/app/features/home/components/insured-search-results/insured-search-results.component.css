@@ -101,7 +101,7 @@ th[sortable].desc::before,
 th[sortable].asc:before {
   content: "";
   display: block;
-  background: url('./assets/images/sort-up-solid.svg') no-repeat;
+  background: url('/assets/images/sort-up-solid.svg') no-repeat;
   width: 1rem;
   height: 1.2rem;
   float: left;
@@ -109,7 +109,7 @@ th[sortable].asc:before {
 }
 
 th[sortable].desc:before {
-  background: url('./assets/images/sort-down-solid.svg') no-repeat;
+  background: url('/assets/images/sort-down-solid.svg') no-repeat;
 }
 
 ngb-pagination {
