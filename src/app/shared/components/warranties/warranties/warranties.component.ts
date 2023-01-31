@@ -138,7 +138,8 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     );
     // re add any warranties that were chosed from the warranty dropdown that could be unchecked
     this.addedWarranties.map(element => {
-      this.filteredWarranties.push(element);
+      if(!this.filteredWarranties.includes(element))
+        this.filteredWarranties.push(element);
     });
 
     // sort by warranty of then by section header
@@ -148,6 +149,13 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     (x.sectionHeader < y.sectionHeader ? -1 : 0)
     ).reverse();
 
+    this.filteredWarranties.sort(function(a, b){
+      let x = a.warrantyOf.toLowerCase();
+      let y = b.warrantyOf.toLowerCase();
+      if (x < y) {return -1;}
+      if (x > y) {return 1;}
+      return 0;
+    });
     // reset the firstrow flags
     this.warranties.map(
       x => {
