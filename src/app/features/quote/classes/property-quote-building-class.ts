@@ -550,7 +550,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
     return !value;
   }
   get validateAddress(): boolean {
-    return !(!this.street1 || !this.city);
+    return !(!this.street1 || !this.city || !this.zip);
   }
 
   toJSON() {
