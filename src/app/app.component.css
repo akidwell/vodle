@@ -117,3 +117,33 @@ body {
   margin: 0.5em;
   z-index: 2;
 }
+
+::ng-deep .mat-mdc-icon-button._mat-animation-noopable {
+   padding-top:0px !important;
+   border:none;
+   height: 50px !important;
+   width: 50px !important;
+   vertical-align: middle !important;
+}
+
+::ng-deep .mat-mdc-icon-button svg {
+ vertical-align: middle !important;
+}
+
+::ng-deep .mdc-form-field>label {
+  color: white !important;
+}
+::ng-deep.mat-mdc-slide-toggle.mat-warn {
+
+  --mdc-switch-selected-focus-state-layer-color:white !important;
+  --mdc-switch-selected-handle-color: white !important;
+  --mdc-switch-selected-hover-state-layer-color: white !important;
+  --mdc-switch-selected-pressed-state-layer-color: #00ac5d !important;
+  --mdc-switch-selected-focus-handle-color: white !important;
+  --mdc-switch-selected-hover-handle-color: white !important;
+  --mdc-switch-selected-pressed-handle-color: white !important;
+  --mdc-switch-selected-focus-track-color: #00ac5d !important;
+  --mdc-switch-selected-hover-track-color: #00ac5d !important;
+  --mdc-switch-selected-pressed-track-color: #00ac5d !important;
+  --mdc-switch-selected-track-color: #00ac5d !important;
+}
