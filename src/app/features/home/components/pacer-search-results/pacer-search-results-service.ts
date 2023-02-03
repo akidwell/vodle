@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { SortColumn, SortDirection } from 'src/app/shared/directives/sortable-header';
@@ -17,12 +18,22 @@ export interface SortableInsuredPageState {
   }
 
 function matches(policy: InsuredSearchResponses, term: string) {
+  const datePipe = new DatePipe('en-US');
+  const effectiveDate = datePipe.transform(policy.effectiveDate, 'MM/dd/yyyy');
+  const recDate = datePipe.transform(policy.recievedDate, 'MM/dd/yyyy');
+
   return policy.name?.toLowerCase().includes(term)
       || policy.insuredCity?.toLowerCase().includes(term)
       || policy.insuredState?.toLowerCase().includes(term)
-      || policy.zip?.includes(term)
+      || policy.zip?.toLowerCase().includes(term)
       || policy.insuredName?.toLowerCase().includes(term)
-      || policy.streetAddress?.toLowerCase().includes(term);
+      || policy.streetAddress?.toLowerCase().includes(term)
+      || policy.type?.toLowerCase().includes(term)
+      || policy.subStatus?.toLowerCase().includes(term)
+      || policy.policyNumber?.toLowerCase().includes(term)
+      || policy.producer?.toLowerCase().includes(term)
+      || effectiveDate?.toLowerCase().includes(term)
+      || recDate?.toLowerCase().includes(term);
 }
 
 const compare = (v1: string | number , v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
@@ -45,7 +56,7 @@ function sort(insureds: InsuredSearchResponses[], column: SortColumn, direction:
 }
 
 @Injectable({ providedIn: 'root' })
-export class InsuredSearchResultsService {
+export class PacerSearchResultsService {
   private _search$ = new Subject<void>();
   private _total$ = new BehaviorSubject<number>(0);
   private _loading$ = new BehaviorSubject<boolean>(true);
