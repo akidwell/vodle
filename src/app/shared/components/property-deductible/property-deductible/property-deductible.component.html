@@ -58,6 +58,10 @@
                     <input type="checkbox" class="form-check-input" id="subjectToMin"
                         [(ngModel)]="deductible.isSubjectToMin" validate-on-change [fullValidate]="true" name="subjectToMin"
                         [hidden]="!deductible.isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded">
+
+                        <div class="help-tip"  [hidden]="!deductible.isSubjectToMinVisible">
+                          <p>Check accompanying box to view additional Subject To Min options</p>
+                      </div>
                 </div>
                 <div class="col-lg-1" *ngIf="collapsed">
                     <div ngbDropdown class="d-inline-block" *ngIf="canEdit">
