@@ -14,6 +14,7 @@ import { ProgramClass } from '../../../classes/program-class';
 import { QuoteClass } from '../../../classes/quote-class';
 import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 import { QuoteService } from '../../../services/quote-service/quote.service';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'rsps-quote-summary-quote-bind',
@@ -22,6 +23,7 @@ import { QuoteService } from '../../../services/quote-service/quote.service';
 })
 export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   @Input() program!: ProgramClass;
+  faCircleExclamation = faCircleExclamation;
   quoteExpirationDays = 30;
   quoteExpirationDate!: moment.Moment;
   formatDateForDisplay: FormatDateForDisplay;
@@ -43,6 +45,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     super(userAuth);
     this.formatDateForDisplay = formatDate;
     this.changeQuoteExpirationDate();
+    this.canPrintQuote();
   }
 
   ngOnInit(): void {
@@ -60,6 +63,10 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   changeQuoteExpirationDate() {
     this.quoteExpirationDate = moment().startOf('day').add(this.quoteExpirationDays, 'd');
     this.quoteLetterExpirationDisplay = this.formatDateForDisplay.formatDateForDisplay(this.quoteExpirationDate) || '--';
+  }
+
+  errorMessages(){
+    return this.quoteData?.validationResults.errorMessages;
   }
 
   async generateQuoteLetter() {
@@ -131,6 +138,11 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
       this.quoteData.quoteExpirationDate = this.quoteExpirationDate.toDate();
     }
     await this.quoteSavingService.saveQuote();
+  }
+
+  canPrintQuote()
+  {
+    return !this.quoteData?.validationResults.errorMessages.length;
   }
 }
 
