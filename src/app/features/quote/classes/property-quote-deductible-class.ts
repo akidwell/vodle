@@ -183,18 +183,23 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     }
     if (this.validateAmount()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateDeductibleType()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateDeductibleCode()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateSubjectToMinPercent()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateSubjectToMinAmount()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     this._errorMessages = this.invalidList;
   }
