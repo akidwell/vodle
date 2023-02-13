@@ -24,6 +24,8 @@ import { ProgramClass } from './program-class';
 import * as moment from 'moment';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
+import { ValidationClass } from 'src/app/shared/classes/validation-class';
+import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
   propertyQuoteId = 0;
@@ -551,6 +553,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   validateClass(): void {
     //this.validate();
     const childValidations: QuoteValidationClass[] = [];
+
+    const classcode = this.validateClassCode();
+    if (classcode) 
+    {
+       this._isValid = false;      
+       this.validationResults.errorMessages.push(classcode);      
+       this._errorMessages.push(classcode);    
+    }
+
     if (this.propertyQuote) {
       childValidations.push(this.validationResults);
     }
