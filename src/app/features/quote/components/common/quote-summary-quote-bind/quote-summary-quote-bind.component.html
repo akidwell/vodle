@@ -1,7 +1,12 @@
 <div class="row" *ngIf="quoteData">
-  <div class="col-lg-3">
+  <div class="col-lg-3" >
     <label for="quoteLetter" style="width:100%">&nbsp;</label>
-    <button type="button" [disabled]="isSaving || isBusy" name="quoteLetter" class="btn btn-primary" (click)="generateQuoteLetter()">Quote Letter</button>
+    <button type="button" [disabled]="isSaving || isBusy || !canPrintQuote()" 
+            ngbToolTip="Can print quote" ngbDisableTooltip="Cannot print quote" title="title"
+            name="quoteLetter" class="btn btn-primary" (click)="generateQuoteLetter()">
+      Quote Letter</button>
+      &nbsp;
+      <fa-icon class="errors fa-xl" [icon]="faCircleExclamation" [title]="this.quoteData?.validationResults?.errorMessages?.join('\n')" ngbToolTip="Can print quote" *ngIf="!canPrintQuote()"></fa-icon>
   </div>
   <div class="col-lg-3">
     <label for="quoteDate">Quote Date</label>
@@ -45,7 +50,9 @@
 <div class="row" *ngIf="quoteData">
   <div class="col-lg-3">
     <label for="binderLetter" style="width:100%">&nbsp;</label>
-    <button type="button" [disabled]="quoteData.status == 1 || isSaving || isBusy" name="binderLetter" class="btn btn-primary" (click)="generateBinderLetter()">Binder Letter</button>
+    <button type="button" [disabled]="quoteData.status == 1 || isSaving || isBusy" 
+    ngbToolTip="Can print quote" ngbDisableTooltip="Cannot print quote" title="title"
+    name="binderLetter" class="btn btn-primary" (click)="generateBinderLetter()">Binder Letter</button>
   </div>
   <div class="col-lg-3">
     <label for="binderDate">Binder Date</label>

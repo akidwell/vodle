@@ -3,7 +3,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { QuoteRoutingModule } from './quote-routing.module';
 import { QuoteComponent } from './components/common/quote-base/quote.component';
 import { QuoteInformationComponent } from './components/common/quote-information-base/quote-information.component';
-import { NgxMaskModule } from 'ngx-mask';
 import { QuoteNotFoundComponent } from './components/common/quote-not-found/quote-not-found.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -33,7 +32,7 @@ import { QuotePremiumComponent } from './components/common/quote-premium-base/qu
 import { QuotePropertyPremiumComponent } from './components/property/quote-property-premium/quote-property-premium.component';
 import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
 import { PropertyPremiumRateComponent } from './components/property/quote-property-premium-rate/property-premium-rate.component';
-import { MortgageeModule } from 'src/app/shared/components/propertry-mortgagee/mortgagee.module';
+import { MortgageeModule } from 'src/app/shared/components/property-mortgagee/mortgagee.module';
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 import { QuoteDataValidationService } from './services/quote-data-validation-service/quote-data-validation-service.service';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
@@ -58,6 +57,7 @@ import { QuoteSummaryPremiumDetailComponent } from './components/common/quote-su
 import { WarrantiesModule } from 'src/app/shared/components/warranties/warranties.module';
 import { GeneralRemarksModule } from 'src/app/shared/components/general-remarks/general-remarks.module';
 import { InternalNotesModule } from 'src/app/shared/components/internal-notes/internal-notes.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -113,10 +113,12 @@ import { InternalNotesModule } from 'src/app/shared/components/internal-notes/in
     DisclaimersModule,
     GeneralRemarksModule,
     InternalNotesModule,
-    WarrantiesModule,
-    NgxMaskModule.forRoot()
+    NgxMaskDirective,
+    NgxMaskPipe,
+    WarrantiesModule
   ],
   providers: [
+    provideEnvironmentNgxMask(),
     CanDeactivateGuard,
     CanDeactivateChildGuard,
     DatePipe,

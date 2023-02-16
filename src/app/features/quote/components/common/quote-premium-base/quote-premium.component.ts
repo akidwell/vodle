@@ -7,6 +7,7 @@ import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteLineItemClass } from '../../../classes/quote-line-item-class';
 import { QuoteRateClass } from '../../../classes/quote-rate-class';
+import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 
 @Component({
   selector: 'rsps-quote-premium',
@@ -24,8 +25,10 @@ export class QuotePremiumComponent implements OnInit {
   effectiveDate!: Date | Moment | null;
   quoteLineItemData!: QuoteLineItemClass[];
   type = SharedComponentType.Quote;
+  isSaving = false;
+  saveSub!: Subscription;
 
-  constructor(private pageDataService: PageDataService) {
+  constructor(private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) {
   }
 
   ngOnInit(): void {
@@ -42,6 +45,9 @@ export class QuotePremiumComponent implements OnInit {
           this.rate = selectedProgram.quoteData?.quoteRates[0] ?? new QuoteRateClass();
         }
       }
+    );
+    this.saveSub = this.quoteSavingService.isSaving$.subscribe(
+      (isSaving) => (this.isSaving = isSaving)
     );
   }
 }

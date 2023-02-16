@@ -68,3 +68,55 @@
 .underline:hover {
   text-decoration: underline;
 }
+
+/* Header */
+thead {
+  border-top: .1rem solid;
+  border-bottom: .1rem solid;
+}
+
+/* Header Sorting */
+th[sortable] {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+th[sortable]:not(.desc):hover,
+th[sortable]:not(.asc):hover {
+  text-decoration: underline;
+}
+
+th[sortable].desc,
+th[sortable].asc {
+  color: #FDFD81;
+}
+
+table tr th[sortable]:first-child.desc, th[sortable]:first-child.asc {
+  padding-left: 1rem;
+}
+
+th[sortable].desc::before,
+th[sortable].asc:before {
+  content: "";
+  display: block;
+  background: url('./assets/images/sort-up-solid.svg') no-repeat;
+  width: 1rem;
+  height: 1.2rem;
+  float: left;
+  z-index: 1;
+}
+
+th[sortable].desc:before {
+  background: url('./assets/images/sort-down-solid.svg') no-repeat;
+}
+
+ngb-pagination {
+  height: 2rem;
+  padding: 0;
+}
+
+.custom-select {
+  height: 2rem;
+}

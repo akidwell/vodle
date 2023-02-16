@@ -7,8 +7,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectivesModule } from '../../directives/directives.module';
 import { PropertyBuildingComponent } from './property-building/property-building.component';
 import { PropertyBuildingGroupComponent } from './property-building-group/property-building-group.component';
-import { NgxMaskModule } from 'ngx-mask';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [PropertyBuildingComponent,
@@ -21,9 +21,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     NgSelectModule,
     FormsModule,
     DirectivesModule,
-    NgxMaskModule,
     MatSlideToggleModule
   ],
-  exports: [PropertyBuildingGroupComponent]
+  exports: [PropertyBuildingGroupComponent],
+  providers:[provideEnvironmentNgxMask()]
 })
 export class PropertyBuildingModule { }

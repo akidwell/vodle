@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SubmissionRoutingModule } from './submission-routing.module';
-import { AdditionalNamedInsuredModule } from '../../shared/components/additional-named-insured/additional-named-insured.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxMaskModule } from 'ngx-mask';
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 import { BusyModule } from 'src/app/core/components/busy/busy.module';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
@@ -22,6 +20,7 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { EndorsementStoredValues } from '../policy/services/endorsement-stored-values/endorsement-stored-values.service';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
 import { SubmissionInfoBaseComponent } from './components/submission-info-base/submission-info-base.component';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -41,10 +40,10 @@ import { SubmissionInfoBaseComponent } from './components/submission-info-base/s
     MatNativeDateModule,
     MatFormFieldModule,
     PipesModule,
-    SubmissionInformationModule,
-    NgxMaskModule.forRoot()
+    SubmissionInformationModule
   ],
   providers: [
+    provideEnvironmentNgxMask(),
     CanDeactivateGuard,
     DatePipe,
     FormatDateForDisplay,

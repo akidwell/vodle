@@ -1,4 +1,9 @@
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy, UrlSegment } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class CustomReuseStrategy extends RouteReuseStrategy {
   private savedHandles: Map<string, DetachedRouteHandle> = new Map();

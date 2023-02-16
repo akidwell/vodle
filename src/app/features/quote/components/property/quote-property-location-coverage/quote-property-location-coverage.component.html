@@ -1,3 +1,12 @@
+<div *ngIf="isSaving">
+  <div class="spinner-wrapper" >
+      <h3>
+      <span class="badge rounded-pill refresh">
+          <div class="spinner-border small"></div>
+      </span>
+      </h3>
+  </div>
+</div>
 <rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit">
 </rsps-property-import>
 <rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit"

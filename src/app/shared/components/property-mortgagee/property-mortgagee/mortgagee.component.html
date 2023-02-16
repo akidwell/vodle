@@ -4,7 +4,7 @@
       <div class="row" *ngIf="collapsed">
           <div class="col-lg-1">
             <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
-                bindValue="code" name="building"  [required]="canEdit"
+                bindValue="code" name="building"  [required]="canEdit" validate-on-change
                 [virtualScroll]="true" click-stop-propagation
                 [clearable]="false"
                 [searchFn]="dropDownSearch" [(ngModel)]="mortgageeData.building">
@@ -42,7 +42,7 @@
             <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
                 bindValue="code" name="building"  [required]="canEdit"  [readonly]="!canEdit"
                 [virtualScroll]="true" click-stop-propagation
-                [clearable]="false"
+                [clearable]="false" validate-on-change
                 [searchFn]="dropDownSearch" [(ngModel)]="mortgageeData.building">
                 <ng-template ng-label-tmp let-item="item">
                     {{item.code}}
@@ -54,7 +54,7 @@
         </div>
         <div class="col-lg-2">
           <label for="mortgageType" class="form-label" title="mortgageType">Mortgage Type</label>
-          <ng-select id="mortgageeType" [items]="mortgageeRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false"
+          <ng-select id="mortgageeType" [items]="mortgageeRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false" validate-on-change
             [readonly]="!canEdit" [required]="canEdit" name="mortgageeType" [(ngModel)]="mortgageeData.mortgageeType" #mortgageeType="ngModel">
           </ng-select>
         </div>

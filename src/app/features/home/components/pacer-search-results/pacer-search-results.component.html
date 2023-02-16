@@ -4,24 +4,29 @@
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
   </div>
   <div #collapse="ngbCollapse" *ngIf="pacerSearchResults.length > 0" [(ngbCollapse)]="collapsed">
+    <div class="col-lg-4">
+      <input type="search" class="form-control" type="search"  id="filter" name="filter"
+          maxlength="250" #filter="ngModel" placeholder="Filter"
+          [(ngModel)]="pacerSearchResultsService.filter" autocomplete="off">
+  </div>
     <div style="overflow-x: scroll">
       <table class="table table-striped table-bordered" *ngIf=" pacerSearchResults.length ">
         <thead>
           <tr>
             <th>Pacer Id</th>
-            <th>First Named Insured</th>
+            <th sortable="name" (sort)="onSort($event)">First Named Insured</th>
             <th>Address</th>
-            <th class="col-sm-2">Other Named Insured</th>
-            <th>Effective Date</th>
-            <th>Received Date</th>
-            <th>Producer</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Policy No.</th>
+            <th sortable="insuredName" (sort)="onSort($event)" class="col-sm-2">Other Named Insured</th>
+            <th sortable="effectiveDate" (sort)="onSort($event)" >Effective Date</th>
+            <th sortable="recievedDate" (sort)="onSort($event)" >Received Date</th>
+            <th sortable="producer" (sort)="onSort($event)">Producer</th>
+            <th sortable="type" (sort)="onSort($event)" >Type</th>
+            <th sortable="subStatus" (sort)="onSort($event)" >Status</th>
+            <th sortable="policyNumber" (sort)="onSort($event)" >Policy No.</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let insured of pacerSearchResults; let i = index">
+          <tr *ngFor="let insured of  insureds$ | async; let i = index">
             <ng-container>
               <td nowrap>{{ insured.pacerId }}</td>
               <td><a [routerLink]="[]" (click)="routeToNewInsuredFromPacer(insured)">{{ insured.name }}</a></td>
@@ -39,6 +44,16 @@
         </tbody>
       </table>
     </div>
+    <div class="d-flex justify-content-between p-2 paging">
+      <ngb-pagination size="sm" [collectionSize]="(total$ | async)!" [(page)]="pacerSearchResultsService.page"
+          [pageSize]="pacerSearchResultsService.pageSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true">
+      </ngb-pagination>
+      <select class="pagination" name="pageSize" [(ngModel)]="pacerSearchResultsService.pageSize">
+          <option [ngValue]="8">8 items per page</option>
+          <option [ngValue]="12">12 items per page</option>
+          <option [ngValue]="15">15 items per page</option>
+      </select>
+  </div>
   </div>
   <div *ngIf="pacerSearchResults.length > 0" class="card-footer">
     <div class="footer-count">Results:{{pacerSearchResults.length }}</div>

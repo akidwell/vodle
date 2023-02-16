@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { stringToBase64Url } from '@okta/okta-auth-js/lib/crypto';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
@@ -139,7 +138,8 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     );
     // re add any warranties that were chosed from the warranty dropdown that could be unchecked
     this.addedWarranties.map(element => {
-      this.filteredWarranties.push(element);
+      if(!this.filteredWarranties.includes(element))
+        this.filteredWarranties.push(element);
     });
 
     // sort by warranty of then by section header
@@ -149,6 +149,13 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     (x.sectionHeader < y.sectionHeader ? -1 : 0)
     ).reverse();
 
+    this.filteredWarranties.sort(function(a, b){
+      let x = a.warrantyOf.toLowerCase();
+      let y = b.warrantyOf.toLowerCase();
+      if (x < y) {return -1;}
+      if (x > y) {return 1;}
+      return 0;
+    });
     // reset the firstrow flags
     this.warranties.map(
       x => {
