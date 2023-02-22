@@ -555,11 +555,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     const childValidations: QuoteValidationClass[] = [];
 
     const classcode = this.validateClassCode();
-    if (classcode) 
+    if (classcode)
     {
-       this._isValid = false;      
-       this.validationResults.errorMessages.push(classcode);      
-       this._errorMessages.push(classcode);    
+      this._isValid = false;
+      this.validationResults.errorMessages.push(classcode);
+      this._errorMessages.push(classcode);
     }
 
     if (this.propertyQuote) {
@@ -746,26 +746,75 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
     });
   }
-  calculateSummaryPremiums(): void {
-    //Add all commission eligible premium
+  // calculateSummaryPremiums(): void {
+  //   //Add all commission eligible premium
+  //   let premiumCommissionAvailable = this.quoteRates[0].premium ?? 0;
+  //   this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
+  //   premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+  //   this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
+  //   //Add all non-commission eligible items for total premium
+  //   let advancePremiumValue = premiumCommissionAvailable;
+  //   if (this.autoCalcMiscPremium) {
+  //     this.advancePremium = advancePremiumValue;
+  //     this.minimumPremium = this.advancePremium;
+  //     this.totalAdvancePremium = advancePremiumValue;
+
+  //   } else if (!this.autoCalcMiscPremium && this.minimumPremiumRequired){
+  //     this.totalAdvancePremium = Number(this.advancePremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+  //   }
+  //   this.minimumEarnedPremium = (Number(this.advancePremium) * (this.earnedPremiumPct)) ?? 0;
+
+  //   this.quoteLineItems.map((surchargeOrFee) => (advancePremiumValue += surchargeOrFee.amount ?? 0));
+  // }
+  calculatePropertyPremiums(): void {
+    let propPremValue = 0;
+    let ratesTotal = 0;
+
+    // calculate broker commission, but not displayed on UI
     let premiumCommissionAvailable = this.quoteRates[0].premium ?? 0;
     this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
     premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
-    //Add all non-commission eligible items for total premium
-    let advancePremiumValue = premiumCommissionAvailable;
-    if (this.autoCalcMiscPremium) {
-      this.advancePremium = advancePremiumValue;
-      this.minimumPremium = this.advancePremium;
-      this.totalAdvancePremium = advancePremiumValue;
 
-    } else if (!this.autoCalcMiscPremium && this.minimumPremiumRequired){
-      this.totalAdvancePremium = Number(this.advancePremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+    // calculate property premium
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => ((coverage.isAccepted && !coverage.isFlat) ? propPremValue += coverage.additionalPremium ?? 0 : 0));
+
+    this.quoteRates.map((x) =>(ratesTotal += x.premium ?? 0));
+
+    if(!this.overridePremium){
+      this.propertyPremium = propPremValue + ratesTotal;
     }
-    this.minimumEarnedPremium = (Number(this.advancePremium) * (this.earnedPremiumPct)) ?? 0;
 
-    this.quoteLineItems.map((surchargeOrFee) => (advancePremiumValue += surchargeOrFee.amount ?? 0));
+    // calculate flat prem
+    let flatPremValue = 0;
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isFlat ? flatPremValue += coverage.additionalPremium ?? 0 : 0));
+    this.flatPremium = flatPremValue;
+
+    //sub total premium
+    this.propertySubTotalPremium = (this.propertyPremium ?? 0) + this.flatPremium;
+
+    // total advance premium
+    this.totalAdvancePremium = Number(this.propertySubTotalPremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+
+    // minimum premiums
+    if(this.overrideMinPolPrem){
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    } else {
+      this.minimumPremium = this.totalAdvancePremium;
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    }
   }
+
+  calculateMinEarnedPrem(): void {
+    if(this.overrideMinPolPrem){
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    } else {
+      this.minimumPremium = this.totalAdvancePremium;
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    }
+  }
+
+
   onSave(savedQuote: PropertyQuoteClass) {
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
     this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();
