@@ -2,3 +2,12 @@
 .right {
   text-align: right;
 }
+
+.form-label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  margin-bottom: 0px;
+}
