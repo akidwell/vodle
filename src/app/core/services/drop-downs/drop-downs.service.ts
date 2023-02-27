@@ -1103,6 +1103,29 @@ export class DropDownsService {
     }
     return observable;
   }
+////////////////////////////////////////
+  // Submission Statuses
+  private cacheSubmissionStatuses: Code[] | null = null;
+  private cacheSubmissionStatuses$!: Observable<Code[]> | null;
+
+  getSubmissionStatuses(): Observable<Code[]> {
+    let observable: Observable<Code[]>;
+    if (this.cacheSubmissionStatuses) {
+      observable = of(this.cacheSubmissionStatuses);
+    } else if (this.cacheSubmissionStatuses$) {
+      observable = this.cacheSubmissionStatuses$;
+    } else {
+      this.cacheSubmissionStatuses$ = this.http
+        .get<Code[]>(this.config.apiBaseUrl + 'api/dropdowns/submission-statuses')
+        .pipe(
+          tap((res) => (this.cacheSubmissionStatuses = res)),
+          share(),
+          finalize(() => (this.cacheSubmissionStatuses$ = null))
+        );
+      observable = this.cacheSubmissionStatuses$;
+    }
+    return observable;
+  }
 
   ////////////////////////////////////////
   // Mark Decline Reasons

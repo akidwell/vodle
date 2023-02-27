@@ -1,6 +1,6 @@
  .sticky {
    background-color: #f2f4f6;
-   position: fixed;
+   /* position: fixed; */
    width: 100%;
    z-index: 10;
  }

@@ -86,3 +86,15 @@ export interface NewEndorsementData {
     backout: boolean;
     isRewrite: boolean;
   }
+
+export interface AdvancedSearchRequest {
+  departmentCode: number | null;
+  programID: number | null;
+  status: number | null;
+  underwriterID: number | null;
+  subStartDate: Date | null;
+  subEndDate: Date | null;
+  polEffStartDate: Date | null;
+  polEffEndDate: Date | null;
+  filter: string | null;
+}
