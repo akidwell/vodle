@@ -92,7 +92,7 @@ export interface Quote {
   formsVersion: number | null; //intVersion in PAUL
   // specPlusEndorsement: boolean;
   // proRatePremium: boolean;
-  // overridePremium: boolean;
+  overridePremium: boolean;
   // ratingDataChanged: boolean | null;
   rated: boolean | null;
   // overrideTRIAPremium: boolean;
@@ -134,4 +134,8 @@ export interface Quote {
   totalPremium: number | null;
   formsVersionDescription: string | null;
   departmentId: number | null;
+  flatPremium: number | null;
+  propertyPremium: number | null;
+  propertySubTotalPremium: number | null;
+  overrideMinPolPrem: boolean;
 }

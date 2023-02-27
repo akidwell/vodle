@@ -34,8 +34,10 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
 
   ngOnInit(): void {
     this.quoteData = this.program.quoteData instanceof PropertyQuoteClass ? this.program.quoteData : null;
+    console.log(this.quoteData);
     this.rate = this.quoteData?.quoteRates[0] ?? null;
-    this.quoteData?.calculateSummaryPremiums();
+    this.quoteData?.calculatePropertyPremiums();
+    this.quoteData?.calculateMinEarnedPrem();
     this.effectiveDate = this.program.quoteData?.policyEffectiveDate || moment().startOf('day');
     const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate?.toString();
     this.optionalCoveragesSubscription = this.dropdowns.getPropertyOptionalCoverages(this.program?.programId || 0, effectiveDate).subscribe({
@@ -60,6 +62,6 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
     if(this.quoteData){
       this.quoteData.earnedPremiumPct = Number(percent/100);
     }
-    this.quoteData?.calculateSummaryPremiums();
+    this.quoteData?.calculateMinEarnedPrem();
   }
 }
