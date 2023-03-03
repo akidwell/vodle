@@ -287,6 +287,7 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
       this._itv = Math.round((buildingLimit ?? 0) / (this._squareFeet ?? 1));
       this.markDirty();
     }
+    console.log('ITV' + this._itv);
   }
 
   constructor(building?: PropertyBuilding) {
@@ -540,6 +541,68 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Csp Code for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?' + ' is required'));
+    }
+    if (this.emptyStringValueCheck(this._occupancy)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Occupancy is required');
+    }
+    if (this.emptyStringValueCheck(this._construction)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Construction is required');
+    }
+    if (this.emptyNumberValueCheck(this._yearBuilt)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Year Built is required');
+    }
+    console.log('itv' + this._itv);
+    if (this._itv == null || this._itv == undefined){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('ITV is required');
+    }
+    console.log('sprinklered' + this._sprinklered);
+    if (this._sprinklered == null || this._sprinklered == undefined){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Sprinkler is required');
+    }
+    if (this.emptyNumberValueCheck(this._hvac)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('HVAC is required');
+    }
+    if (this.emptyNumberValueCheck(this._roof)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Roof is required');
+    }
+    if (this.emptyNumberValueCheck(this._wiring)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Wiring is required');
+    }
+    if (this.emptyNumberValueCheck(this._plumbing)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Plumbing is required');
+    }
+    if (this.emptyNumberValueCheck(this._squareFeet)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Square Feet is required');
+    }
+    if (this.emptyNumberValueCheck(this._stories)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Stories is required');
+    }
+    if (this.emptyNumberValueCheck(this._protectionClass)){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Protection Class is required');
     }
     this._errorMessages = this.invalidList;
   }

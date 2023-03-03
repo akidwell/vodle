@@ -322,7 +322,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
     return this._isDirty;
   }
 
-  set isDity(value: boolean) {
+  set isDirty(value: boolean) {
     this._isDirty = value;
   }
 

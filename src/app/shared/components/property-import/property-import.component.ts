@@ -143,6 +143,9 @@ export class PropertyImportComponent {
     if (this.pageDataService.selectedProgram != null) {
       this.pageDataService.selectedProgram.quoteData = quote;
       this.pageDataService.refreshProgram();
+      if(this.quote.programId == 112){
+        this.pageDataService.registerPropertyData(this.pageDataService.selectedProgram);
+      }
     }
   }
 }
