@@ -94,7 +94,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       this.deductibleType = null;
       this.subjectToMinPercent = null;
       this.subjectToMinAmount = null;
-      this.isSubjectToMin = null;
+      this.isSubjectToMin = false;
       this.deductibleCode = null;
     }
     this._isDirty = true;
