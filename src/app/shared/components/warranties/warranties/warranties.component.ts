@@ -44,8 +44,8 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   @ViewChild('userModal') private modalContent2!: TemplateRef<WarrantiesComponent>;
 
   private modalRef!: NgbModalRef;
-  userDefinedInfo: WarrantiesClass = ({} as any) as WarrantiesClass;
-  editWarranty: WarrantiesClass = ({} as any) as WarrantiesClass;
+  userDefinedInfo: WarrantiesClass = ({}) as WarrantiesClass;
+  editWarranty: WarrantiesClass = ({}) as WarrantiesClass;
   desc = '';
   warrantyOfs = '';
   userWarranty = '';
@@ -98,7 +98,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     });
 
     //The warranty of dropdown list at the top of the card
-    // Just want the distinct warranty ofs to display in that dropdown
+    // Just want the distinct warrantyOfs to display in that dropdown
     this.optionalWarranties = this._optionalWarranties.filter((item,i,arr) => arr.findIndex((x) => (x.warrantyOf === item.warrantyOf)) === i);
 
     //when we first display the list, only show those that are included and default
@@ -122,7 +122,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
         fSectionHeader = x.sectionHeader;
       }
     }
-
   }
 
   ngOnDestroy() {
@@ -142,20 +141,22 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
         this.filteredWarranties.push(element);
     });
 
-    // sort by warranty of then by section header
+    // sort by warrantyOf then by section header
     // TO DO: Sort null section headers first, then other section headers
     this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
       (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
-    (x.sectionHeader < y.sectionHeader ? -1 : 0)
+      (x.sectionHeader < y.sectionHeader ? -1 : 0)
     ).reverse();
 
     this.filteredWarranties.sort(function(a, b){
-      let x = a.warrantyOf.toLowerCase();
-      let y = b.warrantyOf.toLowerCase();
+      const x = a.warrantyOf.toLowerCase();
+      const y = b.warrantyOf.toLowerCase();
       if (x < y) {return -1;}
       if (x > y) {return 1;}
       return 0;
     });
+    // mandatory values first
+    this.filteredWarranties.sort((x, y) => Number(y.ysnDefault) - Number(x.ysnDefault));
     // reset the firstrow flags
     this.warranties.map(
       x => {
@@ -165,7 +166,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     );
 
     // determine if it's the first main header/ section header that way they're only displayed once, not repeated
-    console.log(this.filteredWarranties);
     let fMainHeader : string | null = '';
     let fSectionHeader : string | null = '';
 
@@ -243,7 +243,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     this.refreshWarranties();
   }
   clearAndClose(): void {
-    const newUserDefinedInfo: WarrantiesClass = ({} as any) as WarrantiesClass;
+    const newUserDefinedInfo: WarrantiesClass = ({}) as WarrantiesClass;
     this.userDefinedInfo = newUserDefinedInfo;
     this.desc = '';
     this.userDefinedInfo.description = null;
@@ -263,7 +263,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     // and don't want to set isDirty in the ExisitingInit Function as that is truly for what's from the DB
     const lastAdded = this.quote.warrantyData.length - 1;
     this.quote.warrantyData[lastAdded].isDirty = true;
-    const newUserDefinedInfo: WarrantiesClass = ({} as any) as WarrantiesClass;
+    const newUserDefinedInfo: WarrantiesClass = ({}) as WarrantiesClass;
     this.editWarranty = newUserDefinedInfo;
     this.userDefinedInfo = newUserDefinedInfo;
     this.refreshWarranties();
