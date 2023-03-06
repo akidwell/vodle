@@ -692,6 +692,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingOptionalCoverage.forEach(c => {
       c.markImported();
     });
+    this.validate();
   }
   validateDeductibles() {
     this.propertyQuoteDeductibleList.map(c => {
