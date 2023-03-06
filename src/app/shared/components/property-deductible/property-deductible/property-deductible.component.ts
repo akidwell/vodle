@@ -46,6 +46,7 @@ export class PropertyDeductibleComponent implements OnInit {
         this.buildingList = results;
         if (this.buildingList.find(c => c.code == this.deductible.building) == null) {
           this.deductible.buildingNumber = null;
+          this.deductible.isDirty = true;
           this.deductible.validate();
         }
       }
@@ -99,4 +100,8 @@ export class PropertyDeductibleComponent implements OnInit {
       document.getElementById(this.anchorId)?.scrollIntoView();
     }, 250);
   }
+  markDirty(): void {
+    this.deductible.isDirty = true;
+  }
+
 }

@@ -791,7 +791,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.flatPremium = flatPremValue;
 
     //sub total premium
-    this.propertySubTotalPremium = (this.propertyPremium ?? 0) + this.flatPremium;
+    let subTotal = 0;
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? subTotal += coverage.additionalPremium ?? 0 : 0));
+    this.propertySubTotalPremium = subTotal + (this.quoteRates[0].premium ?? 0);
 
     // total advance premium
     this.totalAdvancePremium = Number(this.propertySubTotalPremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);

@@ -11,7 +11,7 @@
       name="policyCoverage" [(ngModel)]="rate.premium" #policyCoverage="ngModel" />
   </div>
   <div class="col-lg-2">
-    <label for="brokerPercent" class="form-label" title="brokerPercent">Broker Commission:</label>
+    <label for="brokerPercent" class="form-label" title="brokerPercent">Commission</label>
     <input validate-on-change type="text" class="form-control right" id="brokerPercent" name="brokerPercent"
       (change)="this.quoteData?.calculatePropertyPremiums()" [readonly]="!canEdit" mask="percent"
       suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="quoteData && quoteData.commissionRate"
