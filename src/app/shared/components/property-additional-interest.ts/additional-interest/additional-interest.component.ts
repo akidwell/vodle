@@ -157,5 +157,9 @@ export class AdditionalInterestComponent {
       document.getElementById(this.anchorId)?.scrollIntoView();
     }, 250);
   }
+
+  markDirty(): void {
+    this.aiData.isDirty = true;
+  }
 }
 

@@ -115,6 +115,9 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   get isDirty() : boolean {
     return this._isDirty;
   }
+  set isDirty(value: boolean ) {
+    this._isDirty = value;
+  }
   get canBeSaved(): boolean {
     return this._canBeSaved;
   }
