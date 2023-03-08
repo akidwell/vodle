@@ -569,26 +569,6 @@ export class PropertyQuoteBuildingClass implements PropertyBuilding, Validation,
       this._isValid = false;
       this.invalidList.push('Sprinkler is required');
     }
-    if (this.emptyNumberValueCheck(this._hvac)){
-      this._canBeSaved = false;
-      this._isValid = false;
-      this.invalidList.push('HVAC is required');
-    }
-    if (this.emptyNumberValueCheck(this._roof)){
-      this._canBeSaved = false;
-      this._isValid = false;
-      this.invalidList.push('Roof is required');
-    }
-    if (this.emptyNumberValueCheck(this._wiring)){
-      this._canBeSaved = false;
-      this._isValid = false;
-      this.invalidList.push('Wiring is required');
-    }
-    if (this.emptyNumberValueCheck(this._plumbing)){
-      this._canBeSaved = false;
-      this._isValid = false;
-      this.invalidList.push('Plumbing is required');
-    }
     if (this.emptyNumberValueCheck(this._squareFeet)){
       this._canBeSaved = false;
       this._isValid = false;
