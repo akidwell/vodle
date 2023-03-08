@@ -228,19 +228,19 @@
                 </div>
             <div class="col-lg-1"></div>
             <div class="col-lg-1">
-                <input validate-on-change type="number" class="form-control" id="roof" name="roof" [readonly]="!canEdit" pattern="[0-9]{4}|null" [required]="canEdit"
+                <input validate-on-change type="number" class="form-control" id="roof" name="roof" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.roof" #roof="ngModel">
             </div>
             <div class="col-lg-1">
-                <input validate-on-change type="number" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" pattern="[0-9]{4}|null" [required]="canEdit"
+                <input validate-on-change type="number" class="form-control" id="wiring" name="wiring" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.wiring" #wiring="ngModel">
             </div>
             <div class="col-lg-1">
-                <input validate-on-change type="number" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit" pattern="[0-9]{4}|null" [required]="canEdit"
+                <input validate-on-change type="number" class="form-control" id="plumbing" name="plumbing" [readonly]="!canEdit" pattern="[0-9]{4}|null"
                     [(ngModel)]="building.plumbing" #plumbing="ngModel">
             </div>
             <div class="col-lg-1">
-                <input validate-on-change type="number"class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" pattern="[0-9]{4}|null" [required]="canEdit"
+                <input validate-on-change type="number"class="form-control" id="hvac" name="hvac" [readonly]="!canEdit" pattern="[0-9]{4}|null" 
                     [(ngModel)]="building.hvac" #hvac="ngModel">
             </div>
         </div>
