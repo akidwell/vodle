@@ -109,6 +109,8 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
       (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
       (x.sectionHeader < y.sectionHeader ? -1 : 0)
     ).reverse();
+    // mandatory values first
+    this.filteredWarranties.sort((x, y) => Number(y.ysnDefault) - Number(x.ysnDefault));
     // determine if it's the first main header/ section header that way they're only displayed once, not repeated
     let fMainHeader : string | null = '';
     let fSectionHeader : string | null = '';
@@ -212,6 +214,16 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
       this.modalRef.result.then(resolve, resolve);
     });
   }
+
+
+  // Warranty isUserDefined
+  //
+  // Update New UNC Path for PeriodicProcess
+  // UAT Issue
+  // WaterMark in PremiumAdmin
+  // THanks Everyone with testing sso
+  // eSubmissions ->
+
 
   async editWarrantyPopup(sub: WarrantiesClass): Promise<void> {
     return new Promise<void>(resolve => {
