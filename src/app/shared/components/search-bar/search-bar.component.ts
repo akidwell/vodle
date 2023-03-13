@@ -9,6 +9,7 @@ import { Code } from 'src/app/core/models/code';
 import { AdvancedSearchClass } from '../../classes/advanced-search-class';
 import { DatePipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
+import { APIVersionService } from 'src/app/core/services/api-version-service/api-version.service';
 
 
 @Component({
@@ -30,18 +31,23 @@ export class SearchBarComponent {
   underwriters$: Observable<Code[]> | undefined;
   programs$: Observable<Code[]> | undefined;
   advancedSearchClass: AdvancedSearchClass = new AdvancedSearchClass();
+  version = ''; // TEMP for quote create
+  versionSub!: Subscription;
 
-  constructor(private policySearchService: PolicySearchService, 
-    private dropdowns: DropDownsService, private datePipe: DatePipe) {
-      
-    }
+
+  constructor(private policySearchService: PolicySearchService,
+    private dropdowns: DropDownsService, private datePipe: DatePipe, private apiService: APIVersionService
+  ) { }
 
   ngOnInit(): void {
     this.collapsed = true;
-    this.departments$ = this.dropdowns.getDepartments(null);
-    this.submissionStatuses$ = this.dropdowns.getSubmissionStatuses();
-    this.underwriters$ = this.dropdowns.getUnderwriters(); 
-    this.programs$ = this.dropdowns.getPrograms();
+    this.versionSub = this.apiService.apiVersion$.subscribe(version => this.version = version);
+    if (this.version == '2.0'){
+      this.departments$ = this.dropdowns.getDepartments(null);
+      this.submissionStatuses$ = this.dropdowns.getSubmissionStatuses();
+      this.underwriters$ = this.dropdowns.getUnderwriters();
+      this.programs$ = this.dropdowns.getPrograms();
+    }
   }
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -49,7 +55,7 @@ export class SearchBarComponent {
 
   clear(): void {
     this.advancedSearchClass = new AdvancedSearchClass();
-    this.searchTerm = "";
+    this.searchTerm = '';
   }
   search(): void {
     window.scrollTo(0,0);
@@ -66,8 +72,8 @@ export class SearchBarComponent {
   }
 
   filterDisplay(): string{
-    return this.collapsed ? "Search Insured, Submission, or Policy" : "Search Submissions";
+    return this.collapsed ? 'Search Insured, Submission, or Policy' : 'Search Submissions';
   }
 
- 
+
 }
