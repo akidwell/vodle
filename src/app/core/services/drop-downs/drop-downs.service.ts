@@ -9,6 +9,7 @@ import { State } from '../../models/state';
 import { PropertyDeductibleLookup } from '../../models/property-deductible-lookup';
 import { PropertyCoverageLookup } from '../../models/property-coverage-lookup';
 import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
+import { DepartmentProgram } from '../../models/department-program';
 
 @Injectable({
   providedIn: 'root',
@@ -300,6 +301,27 @@ export class DropDownsService {
           finalize(() => (this.cachePrograms$ = null))
         );
       observable = this.cachePrograms$;
+    }
+    return observable;
+  }
+
+  private cacheProgramDepartmentMapForDropdown: any | null;
+  private cacheProgramDepartmentMapForDropdown$!: Observable<any> | null;
+  getProgramDepartmentMapForDropdown(): Observable<DepartmentProgram[]> {
+    let observable: Observable<DepartmentProgram[]>;
+    if (this.cacheProgramDepartmentMapForDropdown) {
+      observable = of(this.cacheProgramDepartmentMapForDropdown);
+    } else if (this.cacheProgramDepartmentMapForDropdown$) {
+      observable = this.cacheProgramDepartmentMapForDropdown$;
+    } else {
+      this.cacheProgramDepartmentMapForDropdown$ = this.http
+        .get<DepartmentProgram[]>(this.config.apiBaseUrl + 'api/lookups/program-department-map-for-dropdown')
+        .pipe(
+          tap((res) => (this.cacheProgramDepartmentMapForDropdown = res)),
+          share(),
+          finalize(() => (this.cacheProgramDepartmentMapForDropdown$ = null))
+        );
+      observable = this.cacheProgramDepartmentMapForDropdown$;
     }
     return observable;
   }

@@ -97,4 +97,5 @@ export interface AdvancedSearchRequest {
   polEffStartDate: Date | null;
   polEffEndDate: Date | null;
   filter: string | null;
+  srtRenewalFlag: number | null;
 }

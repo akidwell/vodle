@@ -10,6 +10,7 @@ import { AdvancedSearchClass } from '../../classes/advanced-search-class';
 import { DatePipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { APIVersionService } from 'src/app/core/services/api-version-service/api-version.service';
+import { UserAuth } from 'src/app/core/authorization/user-auth';
 
 
 @Component({
@@ -22,35 +23,39 @@ export class SearchBarComponent {
   faAngleUp = faAngleUp;
   faSearch = faSearch;
   searchTerm = '';
-  sub!: Subscription;
-  advancedSearchRequest!: AdvancedSearchRequest;
   disabled = true;
-  collapsed = true;
-  departments$: Observable<Code[]> | undefined;
-  submissionStatuses$: Observable<Code[]> | undefined;
-  underwriters$: Observable<Code[]> | undefined;
-  programs$: Observable<Code[]> | undefined;
-  advancedSearchClass: AdvancedSearchClass = new AdvancedSearchClass();
+  isAuthenticated = false;
+
+  @Input() public advancedSearchRequest!: AdvancedSearchRequest;
+  @Input() public collapsed = true;
+  
   version = ''; // TEMP for quote create
+  sub!: Subscription;
   versionSub!: Subscription;
+  authSub: Subscription;
+  advancedSearchClass: AdvancedSearchClass = new AdvancedSearchClass();
 
-
-  constructor(private policySearchService: PolicySearchService,
-    private dropdowns: DropDownsService, private datePipe: DatePipe, private apiService: APIVersionService
-  ) { }
+  constructor(private userAuth: UserAuth, private policySearchService: PolicySearchService,
+     private apiService: APIVersionService
+  ) { 
+    this.authSub = this.userAuth.isApiAuthenticated$.subscribe(
+    (isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated
+  );
+}
 
   ngOnInit(): void {
     this.collapsed = true;
     this.versionSub = this.apiService.apiVersion$.subscribe(version => this.version = version);
-    if (this.version == '2.0'){
-      this.departments$ = this.dropdowns.getDepartments(null);
-      this.submissionStatuses$ = this.dropdowns.getSubmissionStatuses();
-      this.underwriters$ = this.dropdowns.getUnderwriters();
-      this.programs$ = this.dropdowns.getPrograms();
-    }
   }
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+  }
+
+  shouldHighlightSearch(){
+    if(this.collapsed)
+      return "input-group-text";
+    else
+      return "input-group-text highlight";
   }
 
   clear(): void {
@@ -68,7 +73,19 @@ export class SearchBarComponent {
   advancedSearch():void {
     window.scrollTo(0,0);
     this.advancedSearchClass.filter = this.searchTerm;
-    this.sub = this.policySearchService.getAdvancedSearch(this.advancedSearchClass).subscribe();
+    if(this.advancedSearchClass.departmentCode != null || 
+      this.advancedSearchClass.filter != '' ||
+      this.advancedSearchClass.polEffEndDate != null ||
+      this.advancedSearchClass.polEffStartDate != null ||
+      this.advancedSearchClass.programID != null || 
+      this.advancedSearchClass.srtRenewalFlag != null ||
+      this.advancedSearchClass.status != null ||
+      this.advancedSearchClass.subEndDate != null ||
+      this.advancedSearchClass.subStartDate != null ||
+      this.advancedSearchClass.underwriterID != null)
+      {
+        this.sub = this.policySearchService.getAdvancedSearch(this.advancedSearchClass).subscribe();
+      }
   }
 
   filterDisplay(): string{

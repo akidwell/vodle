@@ -10,5 +10,6 @@ export class AdvancedSearchClass implements AdvancedSearchRequest{
     status!: number | null;
     underwriterID!: number | null;
     filter!: string | null;
+    srtRenewalFlag!: number | null;
 
 }
