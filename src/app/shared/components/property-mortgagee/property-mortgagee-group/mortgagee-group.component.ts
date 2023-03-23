@@ -93,5 +93,6 @@ export class MortgageeGroupComponent implements OnInit {
     mort.isNew = true;
     mort.mortgageeType = 1;
     this.mortgageeData?.push(mort);
+    this.collapsed = false;
   }
 }

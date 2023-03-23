@@ -97,6 +97,7 @@ export class AdditionalInterestGroupComponent implements OnInit {
     this.aiData?.push(mort);
     ///this.program?.quoteData?.validate();
     this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
+    this.collapsed = false;
   }
 
 }

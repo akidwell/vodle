@@ -6,9 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { AdvancedSearchMenuComponent } from './advanced-search-menu/advanced-search-menu.component';
 
 @NgModule({
-  declarations: [ SearchBarComponent],
+  declarations: [ SearchBarComponent, AdvancedSearchMenuComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,

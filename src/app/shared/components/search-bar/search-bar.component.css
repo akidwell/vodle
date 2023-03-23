@@ -5,6 +5,11 @@
     background-color: green;
 }
 
+.highlight{
+  color: white;
+  background-color: #00274e;
+}
+
 .not-active {
     pointer-events: none;
     cursor: default;

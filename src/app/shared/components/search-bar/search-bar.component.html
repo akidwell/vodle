@@ -1,84 +1,15 @@
-<div class="card" *ngIf=" version == '2.0'">
-  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed" >
-    <div class="form-control">
-      <div class="form-group">
-        <label for="underwriter" title="Underwriter">Underwriter:</label>
-        <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key"
-            [clearable]="true"  name="underwriter" [(ngModel)]="advancedSearchClass.underwriterID"  #department="ngModel">
-        </ng-select>
-        <label for="department" title="Department">Department:</label>
-        <ng-select id="department" [items]="departments$ | async" bindLabel="description" bindValue="key"
-            [clearable]="true"  name="department" [(ngModel)]="advancedSearchClass.departmentCode"  #department="ngModel">
-        </ng-select>
-      </div>
-      <div class="form-group">
-      </div>
-      <div class="form-group">
-        <label for="submissionStatuses" title="Status">Quote Status:</label>
-        <ng-select id="submissionStatuses" [items]="submissionStatuses$ | async" bindLabel="description" bindValue="key"
-            [clearable]="true"  name="submissionStatuses" [(ngModel)]="advancedSearchClass.status"  #department="ngModel">
-        </ng-select>
-      </div>
-      <div class="form-group">
-        <label for="programs" title="Program">Program:</label>
-        <ng-select id="programs" [items]="programs$ | async" bindLabel="description" bindValue="key"
-            [clearable]="true"  name="programs" [(ngModel)]="advancedSearchClass.programID"  #department="ngModel">
-        </ng-select>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="form-control">
-        <div class="info-header">Policy Effective Date by Date Range:</div>
-          <input style="display: inline-block; max-width: 80%;" matInput
-                    [matDatepicker]="startDateCalendar" class="form-control"
-                    [(ngModel)]="advancedSearchClass.polEffStartDate"
-                    name="startDate" placeholder="Start Date">
-          <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="startDateCalendar">
-          </mat-datepicker-toggle>
-          <mat-datepicker #startDateCalendar></mat-datepicker>
-          <input style="display: inline-block; max-width: 80%;" matInput
-                    [matDatepicker]="endDateCalendar" class="form-control"
-                    [(ngModel)]="advancedSearchClass.polEffEndDate"
-                    name="endDate" placeholder="End Date">
-          <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="endDateCalendar">
-          </mat-datepicker-toggle>
-          <mat-datepicker #endDateCalendar></mat-datepicker>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="form-control">
-        <div class="info-header">Submission Create Date by Date Range:</div>
-          <input style="display: inline-block; max-width: 80%;" matInput
-                    [matDatepicker]="startSubDateCalendar" class="form-control"
-                    [(ngModel)]="advancedSearchClass.subStartDate"
-                    name="startSubDate" placeholder="Start Date">
-          <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="startSubDateCalendar">
-          </mat-datepicker-toggle>
-          <mat-datepicker #startSubDateCalendar></mat-datepicker>
-          <input style="display: inline-block; max-width: 80%;" matInput
-                    [matDatepicker]="endSubDateCalendar" class="form-control"
-                    [(ngModel)]="advancedSearchClass.subEndDate"
-                    name="endSubDate" placeholder="End Date">
-          <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 20%;" [for]="endSubDateCalendar">
-          </mat-datepicker-toggle>
-          <mat-datepicker #endSubDateCalendar></mat-datepicker>
-      </div>
-    </div>
-  </div>
-
-</div>
+<rsps-advanced-search-menu *ngIf="version == '2.0' && isAuthenticated" [advancedSearchClass]="advancedSearchClass" [collapsed]="collapsed" [search]="search"></rsps-advanced-search-menu>
 <div class="input-group">
   <button *ngIf=" version == '2.0'" class="input-group-text" (click)="clear()">
     Clear
   </button>
   <div class="input-group-prepend">
-    <button class="input-group-text" (click)="search()">
-      <fa-icon [icon]="faSearch"></fa-icon>
+    <button [class]="shouldHighlightSearch()" (click)="search()">
+      <fa-icon [icon]="faSearch" ></fa-icon>
     </button>
   </div>
   <input style="z-index: 0;"  class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
     [placeholder]="filterDisplay()" autofocus (keydown.enter)="search()" />
-    <!-- <button type="button" (click)="open()" >Advanced Search</button> -->
   <div *ngIf=" version == '2.0'" class="card-header" (click)="collapsed = !collapsed" style="margin: 0px; padding: 6px;">Advanced Search
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>

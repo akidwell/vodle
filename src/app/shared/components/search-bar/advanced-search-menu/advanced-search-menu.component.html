@@ -1,0 +1,78 @@
+<div class="card">
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed" class="form-control">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-lg-2">
+          <label for="underwriter" title="Underwriter">Underwriter:</label>
+          <ng-select id="underwriter" [items]="underwriters$ | async" bindLabel="description" bindValue="key" (keydown.enter)="search()"
+              [clearable]="true"  name="underwriter" [(ngModel)]="advancedSearchClass.underwriterID"  #department="ngModel">
+          </ng-select>
+          <label for="department" title="Department">Department:</label>
+          <ng-select id="department" [items]="departments$ | async" bindLabel="description" bindValue="key" (keydown.enter)="search()"
+              [clearable]="true" (change)="departmentChange()"  name="department" [(ngModel)]="advancedSearchClass.departmentCode"  #department="ngModel">
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <label for="submissionStatuses" title="Status">Quote Status:</label>
+          <ng-select id="submissionStatuses" [items]="submissionStatuses$ | async" bindLabel="description" bindValue="key" (keydown.enter)="search()"
+              [clearable]="true"  name="submissionStatuses" [(ngModel)]="advancedSearchClass.status"  #department="ngModel">
+          </ng-select>
+          <label for="programs" title="Program">Program:</label>
+          <ng-select id="programs" [items]="_filteredPrograms" bindLabel="description" bindValue="key" (keydown.enter)="search()"
+              [clearable]="true"  name="programs" [(ngModel)]="advancedSearchClass.programID"  #department="ngModel">
+          </ng-select>
+        </div>
+        <div class="col-lg-2">
+          <label for="renewalStatus" title="Renewal Status">Renewal Status:</label>
+          <ng-select id="renewalStatus" [items]="_renewalStatuses" bindLabel="description" bindValue="key" (keydown.enter)="search()"
+            [clearable]="true" name="statuses" [(ngModel)]="advancedSearchClass.srtRenewalFlag" #department="ngModel">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="form-group col-lg-4">
+        <div class="info-header">Policy Effective Date by Date Range:</div>
+          <input  matInput (keydown.enter)="search()"
+                  style="display: inline-block; max-width: 40%"
+                  [matDatepicker]="startDateCalendar" 
+                  class="form-control"
+                  [(ngModel)]="advancedSearchClass.polEffStartDate"
+                  name="startDate" placeholder="Start Date">
+          <mat-datepicker-toggle matSuffix [for]="startDateCalendar" style="display: inline-block; max-width: 10%;" >
+          </mat-datepicker-toggle>
+          <mat-datepicker #startDateCalendar></mat-datepicker>&nbsp;
+        <input matInput (keydown.enter)="search()"
+                style="display: inline-block; max-width: 40%"
+                [matDatepicker]="endDateCalendar"
+                class="form-control"
+                [(ngModel)]="advancedSearchClass.polEffEndDate"
+                name="endDate" placeholder="End Date">
+        <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 10%;" [for]="endDateCalendar">
+        </mat-datepicker-toggle>
+        <mat-datepicker #endDateCalendar></mat-datepicker>
+    </div>
+    <div class="form-group col-lg-4">
+        <div class="info-header">Submission Create Date by Date Range:</div>
+          <input matInput (keydown.enter)="search()"
+                    style="display: inline-block; max-width: 40%"
+                    [matDatepicker]="startSubDateCalendar" 
+                    class="form-control"
+                    [(ngModel)]="advancedSearchClass.subStartDate"
+                    name="startSubDate" placeholder="Start Date">
+          <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 10%;" [for]="startSubDateCalendar">
+          </mat-datepicker-toggle>
+          <mat-datepicker #startSubDateCalendar></mat-datepicker>&nbsp;
+          <input matInput (keydown.enter)="search()"
+                    style="display: inline-block; max-width: 40%;"
+                    [matDatepicker]="endSubDateCalendar" 
+                    class="form-control"
+                    [(ngModel)]="advancedSearchClass.subEndDate"
+                    name="endSubDate" placeholder="End Date">
+          <mat-datepicker-toggle matSuffix style="display: inline-block; max-width: 10%;" [for]="endSubDateCalendar">
+          </mat-datepicker-toggle>
+          <mat-datepicker #endSubDateCalendar></mat-datepicker>
+    </div>
+  </div>
+  
+</div>
