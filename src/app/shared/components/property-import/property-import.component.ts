@@ -93,6 +93,7 @@ export class PropertyImportComponent {
       async (quote) => {
         const newQuote = new PropertyQuoteClass(quote);
         newQuote.markImported();
+        newQuote.propertyQuoteBuildingOptionalCoverage.forEach(x => x.isAccepted = true);
         if (await this.checkErrors(quote.importErrors)) {
           if (await this.checkWarning(quote.importWarnings)) {
             this.loadQuote(newQuote);

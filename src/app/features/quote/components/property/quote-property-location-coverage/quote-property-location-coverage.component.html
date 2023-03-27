@@ -1,12 +1,4 @@
-<div *ngIf="isSaving">
-  <div class="spinner-wrapper" >
-      <h3>
-      <span class="badge rounded-pill refresh">
-          <div class="spinner-border small"></div>
-      </span>
-      </h3>
-  </div>
-</div>
+
 <rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit">
 </rsps-property-import>
 <rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit"
@@ -23,3 +15,7 @@
     [coverages]="quote.filteredCoverages" [limitTotal]="quote.limitTotal"
     [coverageCount]="quote.coverageCount" [canEdit]="canEdit">
 </rsps-property-building-coverage-group>
+<div *ngIf="isSaving">
+  <rsps-busy message="Saving..."></rsps-busy>
+</div>
+

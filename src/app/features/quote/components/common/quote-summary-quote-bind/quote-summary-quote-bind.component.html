@@ -1,7 +1,7 @@
 <div class="row" *ngIf="quoteData">
   <div class="col-lg-3" >
     <label for="quoteLetter" style="width:100%">&nbsp;</label>
-    <button type="button" [disabled]="isSaving || isBusy || !canPrintQuote()" 
+    <button type="button" [disabled]="isSaving || isBusy || !canPrintQuote()"
             ngbToolTip="Can print quote" ngbDisableTooltip="Cannot print quote" title="title"
             name="quoteLetter" class="btn btn-primary" (click)="generateQuoteLetter()">
       Quote Letter</button>
@@ -50,7 +50,7 @@
 <div class="row" *ngIf="quoteData">
   <div class="col-lg-3">
     <label for="binderLetter" style="width:100%">&nbsp;</label>
-    <button type="button" [disabled]="quoteData.status == 1 || isSaving || isBusy" 
+    <button type="button" [disabled]="canPrintBinder()"
     ngbToolTip="Can print quote" ngbDisableTooltip="Cannot print quote" title="title"
     name="binderLetter" class="btn btn-primary" (click)="generateBinderLetter()">Binder Letter</button>
   </div>

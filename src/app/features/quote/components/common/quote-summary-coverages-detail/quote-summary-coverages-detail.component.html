@@ -4,7 +4,6 @@
     <input type="text" class="form-control" id="policyCoverage" readonly name="policyCoverage"
       [(ngModel)]="program.programDesc" #policyCoverage="ngModel" />
   </div>
-  <div class="col-lg-2"></div>
   <div class="col-lg-2">
     <label for="policyCoverage" class="form-label" title="Policy Coverage">Premium</label>
     <input type="text" *ngIf="rate" class="form-control right" id="policyCoverage" readonly string-to-currency
@@ -13,9 +12,8 @@
   <div class="col-lg-2">
     <label for="brokerPercent" class="form-label" title="brokerPercent">Commission</label>
     <input validate-on-change type="text" class="form-control right" id="brokerPercent" name="brokerPercent"
-      (change)="this.quoteData?.calculatePropertyPremiums()" [readonly]="!canEdit" mask="percent"
-      suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="quoteData && quoteData.commissionRate"
-      #brokerPercent="ngModel" />
+      (change)="this.quoteData?.calculatePropertyPremiums()" [readonly]="!canEdit" mask="percent" suffix="%"
+      [dropSpecialCharacters]="false" [(ngModel)]="quoteData && quoteData.commissionRate" #brokerPercent="ngModel" />
   </div>
 </div>
 <div class="row">&nbsp;</div>
@@ -25,9 +23,7 @@
       <label for="coverageDesc" class="form-label" title="Optional Coverages / Sublimits">Optional Coverages /
         Sublimits</label>
     </div>
-    <div class="col-lg-2">
-      <label for="coverageDesc" class="form-label" title="limits">Limits</label>
-    </div>
+
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <label for="coverageDesc" class="form-label" title="Accept">Accept</label>
     </div>
@@ -37,20 +33,7 @@
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <label for="coverageDesc" class="form-label" title="Flat">Flat</label>
     </div>
-    <!-- <div class="col-lg-3">
-      <div class="row">
-        <div class="col-lg-6">
-          <label for="accept" class="form-label" title="Accept"
-            >Accept</label
-          >
-        </div>
-        <div class="col-lg-6">
-          <label for="decline" class="form-label" title="Decline"
-            >Decline</label
-          >
-        </div>
-      </div>
-    </div> -->
+
   </div>
   <div *ngFor="let coverage of quoteData.propertyQuoteBuildingOptionalCoverage" class="row">
     <div class="col-lg-5">
@@ -60,14 +43,11 @@
           {{ item.coverageDisplay }}
         </ng-template></ng-select>
     </div>
-    <div class="col-lg-2">
-      <input type="text" *ngIf="program.quoteData" class="form-control right" id="limit" string-to-currency readonly
-        name="limit" [(ngModel)]="coverage.limit" #limit="ngModel" />
-    </div>
+
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
-      <input type="checkbox" class="form-check-input" id="coverageAccepted" [(ngModel)]="coverage.isAccepted" validate-on-change
-        (change)="this.quoteData.calculatePropertyPremiums()" name="coverageAccepted" [readonly]="!canEdit"
-        #coverageAccepted="ngModel" />
+      <input type="checkbox" class="form-check-input" id="coverageAccepted" [(ngModel)]="coverage.isAccepted"
+        validate-on-change (change)="this.quoteData.calculatePropertyPremiums()" name="coverageAccepted"
+        [readonly]="!canEdit" #coverageAccepted="ngModel" />
     </div>
     <div class="col-lg-2">
       <input type="text" *ngIf="program.quoteData" class="form-control right" id="additionalPremium" string-to-currency
@@ -75,15 +55,15 @@
     </div>
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <input type="checkbox" class="form-check-input" id="coverageFlat" [(ngModel)]="coverage.isFlat" validate-on-change
-        (change)="this.quoteData.calculatePropertyPremiums()" name="coverageFlat" [readonly]="!canEdit"
-        #coverageFlat="ngModel" />
+        (change)="this.quoteData.calculatePropertyPremiums()" name="coverageFlat"
+        [readonly]="!canEdit || !coverage.isAccepted" #coverageFlat="ngModel" />
     </div>
   </div>
 </div>
 <div class="row">&nbsp;</div>
 <div *ngIf="quoteData">
   <div class="row">
-    <div class="col-lg-6"></div>
+    <div class="col-lg-4"></div>
     <div class="col-lg-2">
       <label for="minPremium" class="form-label" style="text-align: right; "
         title="Override Policy Premium">Override</label>
@@ -94,12 +74,15 @@
     <div class="col-lg-2">
       <label for="minEarnedPercent" class="form-label" title="Flat Premium">Flat Prem</label>
     </div>
-    <div class="col-lg-7"></div>
-    <div class="col-lg-1"style="text-align: center; vertical-align: middle;">
+    <div class="col-lg-2">
+      <label for="subTotalPremium" class="form-label" title="Sub Total Premium">Sub Total Premium</label>
+    </div>
+    <div class="col-lg-5"></div>
+    <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <input type="checkbox" [fullValidate]="true" class="form-check-input" id="overridePremium"
-        class="form-check-input" validate-on-change [readonly]="!canEdit" style="text-align: center; vertical-align: middle;"
-        [(ngModel)]="quoteData.overridePremium" (change)="this.quoteData.calculatePropertyPremiums()"
-        #overridePremium="ngModel" id="overridePremium" />
+        class="form-check-input" validate-on-change [readonly]="!canEdit"
+        style="text-align: center; vertical-align: middle;" [(ngModel)]="quoteData.overridePremium"
+        (change)="this.quoteData.calculatePropertyPremiums()" #overridePremium="ngModel" id="overridePremium" />
     </div>
     <div class="col-lg-2">
       <input type="text" class="form-control right" id="propertyPremium" [(ngModel)]="quoteData.propertyPremium"
@@ -110,159 +93,155 @@
       <input type="text" class="form-control right" id="flatPremium" [(ngModel)]="quoteData.flatPremium"
         #flatPremium="ngModel" name="flatPremium" validate-on-change [readonly]="true" string-to-currency />
     </div>
+    <div class="col-lg-2">
+      <input type="text" class="form-control right" id="propertySubTotalPremium" readonly validate-on-change
+        name="propertySubTotalPremium" string-to-currency [(ngModel)]="quoteData.propertySubTotalPremium"
+        #propertySubTotalPremium="ngModel" />
+    </div>
   </div>
 
+  <div *ngIf="quoteData">
+    <div class="row">&nbsp;</div>
+    <div class="row">
+      <div class="col-lg-8"></div>
+      <div *ngIf="quoteData.terrorismCoverageSelected == null && quoteData.status == 3">
+        <p style="float:right; color:red; background-color: #ffd1d1;">Please select accept or decline terrorism</p>
+      </div>
+    </div>
+    <div *ngIf="quoteData">
+      <div class="row">
+        <div class="col-lg-8"></div>
+        <div class="col-lg-1">
+          <label class="form-check-label" for="flexRadioDefault1" title="acceptTerrorism">
+            Accept
+          </label>
+        </div>
+        <div class="col-lg-1">
+          <label class="form-check-label" for="flexRadioDefault2" title="declineTerrorism">
+            Decline
+          </label>
+        </div>
+        <div class="col-lg-2">
+          <label for="terrorismPremium" class="form-label" title="terrorismPremium ">TRIPRA Premium</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8"></div>
+        <div class="col-lg-1">
+          <input validate-on-change [fullValidate]="true" type="radio" class="form-check-input"
+            id="terrorismCoverageSelected" (change)="this.quoteData.calculatePropertyPremiums()" [value]="true"
+            [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit"
+            #terrorismCoverageSelected="ngModel" />
+        </div>
+        <div class="col-lg-1">
+          <input validate-on-change [fullValidate]="true" type="radio" class="form-check-input"
+            id="terrorismCoverageSelected" (change)="this.quoteData.calculatePropertyPremiums(); " [value]="false"
+            [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit"
+            #terrorismCoverageSelected="ngModel" />
+        </div>
+        <div class="col-lg-2">
+          <input validate-on-change type="text" class="form-control right" id="terrorismPremium" [disabled]="!canEdit"
+            [readonly]="!canEdit" string-to-currency (change)="this.quoteData.calculatePropertyPremiums()"
+            name="terrorismPremium" [(ngModel)]="quoteData.terrorismPremium" #terrorismPremium="ngModel" />
+        </div>
+      </div>
+    </div>
+
+
+  </div>
   <div class="row">&nbsp;</div>
   <div *ngIf="quoteData">
     <div class="row">
       <div class="col-lg-10"></div>
       <div class="col-lg-2">
-        <label for="subTotalPremium" class="form-label" title="Sub Total Premium">Sub Total Premium</label>
+        <label for="totalAdvancePremium" class="form-label" title="Total Advance Premium">Total Adv. Prem</label>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-10"></div>
       <div class="col-lg-2">
-        <input type="text" class="form-control right" id="propertySubTotalPremium" readonly validate-on-change
-          name="propertySubTotalPremium" string-to-currency [(ngModel)]="quoteData.propertySubTotalPremium"
-          #propertySubTotalPremium="ngModel" />
+        <input type="text" class="form-control right" id="totalAdvancePremium" readonly [disabled]="!canEdit"
+          validate-on-change string-to-currency name="totalAdvancePremium" [(ngModel)]="quoteData.totalAdvancePremium"
+          #totalAdvancePremium="ngModel" />
       </div>
-    </div>
-
-    <div *ngIf="quoteData">
-      <div class="row">&nbsp;</div>
-      <div *ngIf="quoteData">
-        <div class="row">
-          <div class="col-lg-8"></div>
-          <div class="col-lg-1">
-            <label class="form-check-label" for="flexRadioDefault1" title="acceptTerrorism">
-              Accept
-            </label>
-          </div>
-          <div class="col-lg-1">
-            <label class="form-check-label" for="flexRadioDefault2" title="declineTerrorism">
-              Decline
-            </label>
-          </div>
-          <div class="col-lg-2">
-            <label for="terrorismPremium" class="form-label" title="terrorismPremium ">TRIPRA Premium</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-8"></div>
-          <div class="col-lg-1">
-            <input validate-on-change [fullValidate]="true" type="radio" class="form-check-input" id="terrorismAccepted"
-              [value]="true" (change)="this.quoteData.calculatePropertyPremiums()"
-              [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit" #terrorismAccepted="ngModel" />
-          </div>
-          <div class="col-lg-1">
-            <input validate-on-change [fullValidate]="true" type="radio" class="form-check-input" id="terrorismDeclined"
-              [value]="false" (change)="this.quoteData.calculatePropertyPremiums()"
-              [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit" #terrorismAccepted="ngModel" />
-          </div>
-          <div class="col-lg-2">
-            <input validate-on-change type="text" class="form-control right" id="terrorismPremium" [disabled]="!canEdit"
-              [readonly]="!canEdit" string-to-currency (change)="this.quoteData.calculatePropertyPremiums()"
-              name="terrorismPremium" [(ngModel)]="quoteData.terrorismPremium" #terrorismPremium="ngModel" />
-          </div>
-        </div>
-      </div>
-
-
     </div>
     <div class="row">&nbsp;</div>
     <div *ngIf="quoteData">
+      <div class="row" style="font-weight:bold;border-top: 2px solid black;padding-top:5px;">Minimum Policy Premium
+      </div>
       <div class="row">
-        <div class="col-lg-10"></div>
         <div class="col-lg-2">
-          <label for="totalAdvancePremium" class="form-label" title="Total Advance Premium">Total Adv. Prem</label>
+          <label for="minPremium" class="form-label" style="text-align: center; vertical-align: middle;"
+            title="Override Minimum Premium">Override</label>
+        </div>
+        <div class="col-lg-3">
+          <label for="minPremium" class="form-label" title="Min Policy Premium">Min Policy Prem</label>
+        </div>
+        <div class="col-lg-3">
+          <label for="minEarnedPercent" class="form-label" title="Min Earned Premium %">Min Earned Prem %</label>
+        </div>
+        <div class="col-lg-3">
+          <label for="minEarnedPremium" class="form-label" title="Min Earned Premium">Min Earned Prem</label>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-10"></div>
-        <div class="col-lg-2">
-          <input type="text" class="form-control right" id="totalAdvancePremium" readonly [disabled]="!canEdit" validate-on-change
-            string-to-currency name="totalAdvancePremium" [(ngModel)]="quoteData.totalAdvancePremium"
-            #totalAdvancePremium="ngModel" />
+        <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
+          <input type="checkbox" [fullValidate]="true" class="form-check-input" id="overrideMinPolPrem"
+            class="form-check-input" validate-on-change [readonly]="!canEdit"
+            (change)="this.quoteData.calculateMinEarnedPrem()" [(ngModel)]="quoteData.overrideMinPolPrem"
+            #overrideMinPolPrem="ngModel" id="autoCalc" />
+        </div>
+
+        <div class="col-lg-3">
+          <input type="text" class="form-control right" id="minimumPremium" [required]="quoteData.overrideMinPolPrem"
+            name="minimumPremium" validate-on-change [readonly]="!canEdit || !quoteData.overrideMinPolPrem"
+            (change)="this.quoteData.calculateMinEarnedPrem()" string-to-currency [(ngModel)]="quoteData.minimumPremium"
+            #minimumPremium="ngModel" />
+
+        </div>
+        <div class="col-lg-3">
+          <ng-select type="text" id="minEarnedPercent" validate-on-change [items]="percentOptions"
+            [required]="quoteData.overrideMinPolPrem" [disabled]="!canEdit  || !quoteData.overrideMinPolPrem"
+            name="minEarnedPercent" [ngModel]="quoteData.earnedPremiumPct | percent"
+            [ngModelOptions]="{ updateOn: 'blur' }" (ngModelChange)="changeEarnedPremiumPct($event)"
+            #minEarnedPercent="ngModel" [clearable]="false"></ng-select>
+        </div>
+        <div class="col-lg-3">
+          <input type="text" class="form-control right" id="minEarnedPremium" readonly name="minEarnedPremium"
+            string-to-currency [(ngModel)]="quoteData.minimumEarnedPremium" #minEarnedPremium="ngModel" />
         </div>
       </div>
+
       <div class="row">&nbsp;</div>
       <div *ngIf="quoteData">
-        <div class="row" style="font-weight:bold;border-top: 2px solid black;padding-top:5px;">Minimum Policy Premium
+        <div class="row" style="font-weight:bold;border-top: 2px solid black;padding-top:5px;">Surcharges and Fees
         </div>
         <div class="row">
-          <div class="col-lg-2">
-            <label for="minPremium" class="form-label" style="text-align: center; vertical-align: middle;"
-              title="Override Minimum Premium">Override</label>
+          <div class="col-lg-6">
+            <label for="surchargesFees" class="form-label" title="Surcharges / Fees type">Type</label>
           </div>
-          <div class="col-lg-3">
-            <label for="minPremium" class="form-label" title="Min Policy Premium">Min Policy Prem</label>
+          <div class="col-lg-6">
+            <label for="surchargesFees" class="form-label" title="Surcharges / Fees cost">Surcharges/Fees Cost</label>
           </div>
-          <div class="col-lg-3">
-            <label for="minEarnedPercent" class="form-label" title="Min Earned Premium %">Min Earned Prem %</label>
-          </div>
-          <div class="col-lg-3">
-            <label for="minEarnedPremium" class="form-label" title="Min Earned Premium">Min Earned Prem</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
-            <input type="checkbox" [fullValidate]="true" class="form-check-input" id="overrideMinPolPrem"
-              class="form-check-input" validate-on-change [readonly]="!canEdit"
-              (change)="this.quoteData.calculateMinEarnedPrem()" [(ngModel)]="quoteData.overrideMinPolPrem"
-              #overrideMinPolPrem="ngModel" id="autoCalc" />
-          </div>
-
-          <div class="col-lg-3">
-            <input type="text" class="form-control right"  id="minimumPremium"  [required]="quoteData.overrideMinPolPrem"
-              name="minimumPremium" validate-on-change [readonly]="!canEdit || !quoteData.overrideMinPolPrem"
-              (change)="this.quoteData.calculateMinEarnedPrem()" string-to-currency
-              [(ngModel)]="quoteData.minimumPremium" #minimumPremium="ngModel" />
-
-          </div>
-          <div class="col-lg-3">
-            <input type="text" class="form-control right" id="minEarnedPercent" validate-on-change
-              [required]="quoteData.overrideMinPolPrem" [disabled]="!canEdit"
-              [readonly]="!canEdit  || !quoteData.overrideMinPolPrem" name="minEarnedPercent"
-              [ngModel]="quoteData.earnedPremiumPct | percent" [ngModelOptions]="{ updateOn: 'blur' }"
-              (ngModelChange)="changeEarnedPremiumPct($event)" #minEarnedPercent="ngModel" />
-          </div>
-          <div class="col-lg-3">
-            <input type="text" class="form-control right" id="minEarnedPremium" readonly name="minEarnedPremium"
-              string-to-currency [(ngModel)]="quoteData.minimumEarnedPremium" #minEarnedPremium="ngModel" />
-          </div>
-        </div>
-
-        <div class="row">&nbsp;</div>
-        <div *ngIf="quoteData">
-          <div class="row" style="font-weight:bold;border-top: 2px solid black;padding-top:5px;">Surcharges and Fees
-          </div>
-          <div class="row">
+          <div *ngFor="let item of quoteData.quoteLineItems" class="row">
             <div class="col-lg-6">
-              <label for="surchargesFees" class="form-label" title="Surcharges / Fees type">Type</label>
+              <ng-select id="lineItemDescription" [items]="lineitemDescriptions" bindLabel="description" bindValue="key"
+                [readonly]="true" [clearable]="false" name="lineItemDescription" [(ngModel)]="item.lineItemCode"
+                #lineItemCode="ngModel">
+                <ng-template ng-label-tmp let-item="item">
+                  {{ item.description }}
+                  {{ item.state != null ? " (" + item.state + ")" : "" }}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{ item.description }}
+                  {{ item.state != null ? " (" + item.state + ")" : "" }}
+                </ng-template>
+              </ng-select>
             </div>
-            <div class="col-lg-6">
-              <label for="surchargesFees" class="form-label" title="Surcharges / Fees cost">Surcharges/Fees Cost</label>
-            </div>
-            <div *ngFor="let item of quoteData.quoteLineItems" class="row">
-              <div class="col-lg-6">
-                <ng-select id="lineItemDescription" [items]="lineitemDescriptions" bindLabel="description"
-                  bindValue="key" [readonly]="true" [clearable]="false" name="lineItemDescription"
-                  [(ngModel)]="item.lineItemCode" #lineItemCode="ngModel">
-                  <ng-template ng-label-tmp let-item="item">
-                    {{ item.description }}
-                    {{ item.state != null ? " (" + item.state + ")" : "" }}
-                  </ng-template>
-                  <ng-template ng-option-tmp let-item="item">
-                    {{ item.description }}
-                    {{ item.state != null ? " (" + item.state + ")" : "" }}
-                  </ng-template>
-                </ng-select>
-              </div>
-              <div class="col-lg-3">
-                <input type="text" *ngIf="program.quoteData" class="form-control right" id="lineItemAmount" readonly
-                  string-to-currency name="lineItemAmount" [(ngModel)]="item.amount" #lineItemAmount="ngModel" />
-              </div>
+            <div class="col-lg-3">
+              <input type="text" *ngIf="program.quoteData" class="form-control right" id="lineItemAmount" readonly
+                string-to-currency name="lineItemAmount" [(ngModel)]="item.amount" #lineItemAmount="ngModel" />
             </div>
           </div>
         </div>
+      </div>

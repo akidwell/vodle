@@ -17,6 +17,8 @@ export class TermsConditionsComponent implements OnInit {
   classType = SharedComponentType.Quote;
   isSaving = false;
   saveSub!: Subscription;
+  showBusy = false;
+
   constructor(private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) { }
 
   ngOnInit(): void {

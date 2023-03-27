@@ -1,4 +1,3 @@
-import { sequence } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import * as moment from 'moment';
 import { lastValueFrom, Subscription } from 'rxjs';
@@ -7,7 +6,6 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
-import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { DepartmentComponentBase } from 'src/app/shared/component-base/department-component-base';
 import { PolicyFormsService } from 'src/app/shared/components/policy-forms/services/policy-forms.service';
 import { ProgramClass } from '../../../classes/program-class';
@@ -102,6 +100,9 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     this.isBusy = true;
     //await this.updateBinderStatus();
     this.isSaving = true;
+    if(this.quoteData != null){
+      this.quoteData.validated = true;
+    }
     const response$ = this.quoteService.UpdateQuoteAndGetBinderLetter(this.quoteData);
     await lastValueFrom(response$).then((binderLetter) => {
       if (binderLetter) {
@@ -143,6 +144,11 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   canPrintQuote()
   {
     return !this.quoteData?.validationResults.errorMessages.length;
+  }
+
+  canPrintBinder()
+  {
+    return this.quoteData?.status == 1 || this.isSaving || this.isBusy || this.quoteData?.terrorismCoverageSelected == null;
   }
 }
 

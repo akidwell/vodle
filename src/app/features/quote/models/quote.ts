@@ -31,7 +31,7 @@ export interface Quote {
   policySymbol: string;
   policyMod: string | null;
   formName: string;
-  terrorismCoverageSelected: boolean;
+  terrorismCoverageSelected: boolean | null;
   terrorismPremium: number | null;
   terrorismTemplateCode: string;
   grossPremium: number | null;

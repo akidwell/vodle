@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
 import { of, Subscription, tap } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -28,6 +28,8 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
   itemDescriptionSub!: Subscription;
   lineitemDescriptions!: LineItemDescription[];
   quoteData!: PropertyQuoteClass | null;
+  percentOptions: number[] = [35,50,100];
+
   constructor(pageDataService: PageDataService, userAuth: UserAuth, private dropdowns: DropDownsService, private lineItemDescriptionsService: LineItemDescriptionsService) {
     super(userAuth);
   }
