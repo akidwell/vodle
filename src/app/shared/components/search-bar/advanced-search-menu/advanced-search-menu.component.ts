@@ -50,7 +50,7 @@ export class AdvancedSearchMenuComponent {
   departmentChange()
   {
     this._filteredPrograms = [];
-    this.advancedSearchClass.programID = 0;
+    this.advancedSearchClass.programID = null;
     
     var filteredDepartments = this._departmentList?.filter((department) => department.intDepartmentCode == this.advancedSearchClass.departmentCode);
 
