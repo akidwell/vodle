@@ -1,12 +1,3 @@
-<div *ngIf="isSaving">
-  <div class="spinner-wrapper">
-    <h3>
-      <span class="badge rounded-pill">Refreshing...
-        <div class="spinner-border small"></div>
-      </span>
-    </h3>
-  </div>
-</div>
 <rsps-general-remarks-group *ngIf="quote" [type]="classType" [quote]="quote" [generalRemarks]="quote.generalRemarksData"
 [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-general-remarks-group>
 <rsps-warranties *ngIf="quote" [type]="classType" [quote]="quote" [warranties]="quote.warrantyData"
@@ -15,4 +6,7 @@
 [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-subjectivities>
 <rsps-disclaimers *ngIf="quote" [type]="classType" [quote]="quote" [disclaimers]="quote.disclaimerData"
 [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-disclaimers>
+<div *ngIf="isSaving">
+  <rsps-busy message="Saving..."></rsps-busy>
+</div>
 

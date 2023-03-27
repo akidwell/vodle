@@ -80,7 +80,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   modifiedDate = null;
   groupId = 3;
   programId = 0;
-  validated = false;
+  //validated = false;
   ratedPremium = null;
   auditCode = null;
   umuimAccepted = false;
@@ -244,11 +244,11 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   set overridePremium(value: boolean) {
     this._overridePremium = value;
   }
-  private _terrorismCoverageSelected = false;
-  get terrorismCoverageSelected(): boolean {
+  private _terrorismCoverageSelected: boolean | null = null;
+  get terrorismCoverageSelected(): boolean | null {
     return this._terrorismCoverageSelected;
   }
-  set terrorismCoverageSelected(value: boolean) {
+  set terrorismCoverageSelected(value: boolean | null) {
     this._terrorismCoverageSelected = value;
   }
   private _minimumPremium: number | null = null;
@@ -321,6 +321,14 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   }
   set overrideMinPolPrem(value: boolean) {
     this._overrideMinPolPrem = value;
+  }
+
+  private _validated = false;
+  get validated(): boolean {
+    return this._validated;
+  }
+  set validated(value: boolean) {
+    this._validated = value;
   }
 
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {

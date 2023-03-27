@@ -56,6 +56,7 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
   ngOnInit(): void {
     this.collapsed = false;
     this.handleSecurity(this.type);
+    this.internalNotes = this.quote.internalNotesData;
   }
   isValid(): boolean {
     let valid = true;

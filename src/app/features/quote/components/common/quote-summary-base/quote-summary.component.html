@@ -41,7 +41,8 @@
         </div>
       </div>
     </div>
+    <rsps-internal-notes-group *ngIf="program.quoteData" [type]="classType" [quote]="program.quoteData"
+    [submissionNumber]="program.quoteData.submissionNumber" [quoteNumber]="program.quoteData.quoteNumber"></rsps-internal-notes-group>
   </div>
-  <rsps-internal-notes-group *ngIf="quote" [type]="classType" [quote]="quote" [internalNotes]="quote.internalNotesData"
-  [submissionNumber]="quote.submissionNumber" [quoteNumber]="quote.quoteNumber"></rsps-internal-notes-group>
+
 </div>
