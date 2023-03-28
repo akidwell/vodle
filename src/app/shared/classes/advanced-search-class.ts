@@ -11,5 +11,5 @@ export class AdvancedSearchClass implements AdvancedSearchRequest{
     underwriterID!: number | null;
     filter!: string | null;
     srtRenewalFlag!: number | null;
-
+    producerCode!: number | null;
 }

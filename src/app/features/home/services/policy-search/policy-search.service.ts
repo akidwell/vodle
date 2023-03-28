@@ -52,7 +52,8 @@ export class PolicySearchService {
     if(request.subEndDate != null) params = params.append('subEndDate', this.formatDateForDisplay.formatDateForDisplay(request.subEndDate) ?? "");
     if(request.polEffStartDate != null) params = params.append('polEffStartDate', this.formatDateForDisplay.formatDateForDisplay(request.polEffStartDate) ?? "");
     if(request.polEffEndDate != null) params = params.append('polEffEndDate', this.formatDateForDisplay.formatDateForDisplay(request.polEffEndDate) ?? "");
-    if(request.srtRenewalFlag != null) params = params.append('srtNewRenewalFlag', request.srtRenewalFlag)
+    if(request.srtRenewalFlag != null) params = params.append('srtNewRenewalFlag', request.srtRenewalFlag);
+    if(request.producerCode != null) params = params.append('producerCode', request.producerCode);
 
     this._loading$.next(true);
     this.searchResults.next(this.results);

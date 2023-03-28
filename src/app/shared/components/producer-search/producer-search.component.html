@@ -13,6 +13,6 @@
       [ngbTypeahead]="search"
       (selectItem)="selectedProducer($event)"
       placement="bottom-start"
-      placeholder="Producer search" />
+      [placeholder]="producerSearchPlaceholder()" />
   </div>
 </div>
