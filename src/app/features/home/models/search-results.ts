@@ -98,4 +98,5 @@ export interface AdvancedSearchRequest {
   polEffEndDate: Date | null;
   filter: string | null;
   srtRenewalFlag: number | null;
+  producerCode: number | null;
 }

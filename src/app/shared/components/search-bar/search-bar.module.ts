@@ -7,6 +7,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AdvancedSearchMenuComponent } from './advanced-search-menu/advanced-search-menu.component';
+import { ProducerSearch } from '../producer-search/producer-search.component';
+import { ProducerSearchModule } from '../producer-search/producer-search.module';
 
 @NgModule({
   declarations: [ SearchBarComponent, AdvancedSearchMenuComponent],
@@ -16,7 +18,8 @@ import { AdvancedSearchMenuComponent } from './advanced-search-menu/advanced-sea
     FormsModule,
     NgSelectModule,
     NgbCollapse,
-    MatDatepickerModule
+    MatDatepickerModule,
+    ProducerSearchModule
   ],
   exports: [SearchBarComponent]
 
