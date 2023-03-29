@@ -39,6 +39,8 @@
             </div>
         </div>
         <div class="modal-footer">
+            <input name="filtered" type="checkbox" class="form-check-input" id="filtered" [(ngModel)]="filteredOnly">
+            <label for="filtered" class="form-label" title="Filtered">Filtered Only</label>
             <button type="button" class="btn btn-danger" [disabled]="!canUpdate" (click)="update()">Update</button>
             <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
         </div>
