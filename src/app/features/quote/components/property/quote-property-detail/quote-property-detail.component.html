@@ -7,16 +7,15 @@
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
     <div class="card-body">
       <div class="row">
-        <div class="col-lg-6 panel-padding">
+        <div class="grid-container">
           <rsps-quote-property-detail-left [quote]="quote" [buildings]="quote.propertyQuoteBuildingList"
-            [limitTotal]="limitTotal" [largestTiv]="largestTiv" [largestExposure]="largestExposure" [lawLimits]="lawLimits" [subjectAmount]="subjectAmount" [canEdit]="canEdit">
+            [limitTotal]="limitTotal" [largestTiv]="largestTiv" [largestExposure]="largestExposure"
+            [lawLimits]="lawLimits" [subjectAmount]="subjectAmount" [canEdit]="canEdit">
           </rsps-quote-property-detail-left>
-        </div>
-        <div class="col-lg-6 panel-padding">
           <rsps-quote-property-detail-right [quote]="quote" [canEdit]="canEdit"></rsps-quote-property-detail-right>
         </div>
       </div>
     </div>
-    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed"></div>
   </div>
+</div>

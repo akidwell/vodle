@@ -1,4 +1,9 @@
 
-  .panel-padding {
-    padding-left: 4px;
-  }  
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+}
