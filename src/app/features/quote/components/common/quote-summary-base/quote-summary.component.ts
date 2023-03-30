@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
@@ -22,6 +22,8 @@ export class QuoteSummaryComponent extends DepartmentComponentBase {
   classType = SharedComponentType.Quote;
   isSaving = false;
   saveSub!: Subscription;
+  @Input() isBusy = false;
+
 
   constructor(private pageDataService: PageDataService, userAuth: UserAuth, private quoteSavingService: QuoteSavingService) {
     super(userAuth);

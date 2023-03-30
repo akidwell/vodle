@@ -1,13 +1,3 @@
-<div >
-  <div *ngIf="isSaving">
-    <div class="spinner-wrapper">
-      <h3>
-        <span class="badge rounded-pill">Refreshing...
-          <div class="spinner-border small"></div>
-        </span>
-      </h3>
-    </div>
-  </div>
   <div *ngFor="let program of department?.programMappings">
     <div class="card" *ngIf="program.quoteData != null">
       <div class="card-header info-header">
@@ -21,7 +11,7 @@
         <div class="row">
           <div class="col-lg-7" style="border-right:2px solid black">
             <div class="row">
-              <rsps-quote-summary-coverages-detail [program]="program"></rsps-quote-summary-coverages-detail>
+              <rsps-quote-summary-coverages-detail [program]="program" [isBusy]="isBusy"></rsps-quote-summary-coverages-detail>
             </div>
             <!-- <div class="row">
               <rsps-quote-summary-premium-detail></rsps-quote-summary-premium-detail>
@@ -33,7 +23,7 @@
             </div>
             <div class="row">&nbsp;</div>
             <div class="row">
-              <rsps-quote-summary-quote-bind [program]="program"></rsps-quote-summary-quote-bind>
+              <rsps-quote-summary-quote-bind [program]="program" (redirect)="isBusy=$event"></rsps-quote-summary-quote-bind>
             </div>
             <div class="row">
             </div>
@@ -44,5 +34,7 @@
     <rsps-internal-notes-group *ngIf="program.quoteData" [type]="classType" [quote]="program.quoteData"
     [submissionNumber]="program.quoteData.submissionNumber" [quoteNumber]="program.quoteData.quoteNumber"></rsps-internal-notes-group>
   </div>
+  <div *ngIf="isSaving">
+    <rsps-busy message="Saving..."></rsps-busy>
+  </div>
 
-</div>

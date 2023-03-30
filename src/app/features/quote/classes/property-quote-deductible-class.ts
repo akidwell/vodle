@@ -284,6 +284,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     this.isDeductibleTypeLocked = deductible.isDeductibleTypeLocked;
     this.isExcludeLocked = deductible.isExcludeLocked;
     this.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
+    this.guid = deductible.guid;
     this.setReadonlyFields();
     this.setRequiredFields();
   }

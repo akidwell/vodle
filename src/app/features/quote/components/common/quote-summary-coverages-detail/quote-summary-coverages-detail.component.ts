@@ -19,6 +19,8 @@ import { QuoteRateClass } from '../../../classes/quote-rate-class';
 })
 export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBase implements OnInit {
   @Input() program!: ProgramClass;
+  @Input() isBusy = false;
+
   terrorismLabel = 'Terrorism (TRIPRA) Premium:';
   brokerCommissionLabel = 'Broker Commission:';
   rate: QuoteRateClass | null = null;

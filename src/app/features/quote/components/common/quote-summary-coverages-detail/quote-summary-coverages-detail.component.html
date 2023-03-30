@@ -104,7 +104,7 @@
     <div class="row">&nbsp;</div>
     <div class="row">
       <div class="col-lg-8"></div>
-      <div *ngIf="quoteData.terrorismCoverageSelected == null && quoteData.status == 3">
+      <div *ngIf="quoteData.terrorismCoverageSelected == null && quoteData.status == 3 && !isBusy">
         <p style="float:right; color:red; background-color: #ffd1d1;">Please select accept or decline terrorism</p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as moment from 'moment';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -33,8 +33,11 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   isSaving = false;
   saveSub!: Subscription;
   updatedQuotedata!: QuoteClass | null;
-
   quoteData!: QuoteClass | null;
+
+  @Output() redirect:EventEmitter<boolean> = new EventEmitter();
+
+
   constructor( public pageDataService: PageDataService, userAuth: UserAuth, private formatDate: FormatDateForDisplay, private policyFormsService: PolicyFormsService,
     private messageDialogService: MessageDialogService,
     public headerPaddingService: HeaderPaddingService,
@@ -57,6 +60,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     this.saveSub = this.quoteSavingService.isSaving$.subscribe(
       (isSaving) => (this.isSaving = isSaving)
     );
+    this.redirect.emit(this.isBusy);
   }
   changeQuoteExpirationDate() {
     this.quoteExpirationDate = moment().startOf('day').add(this.quoteExpirationDays, 'd');
@@ -74,6 +78,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
       this.quoteLetterGeneratedDisplay = this.formatDateForDisplay.formatDateForDisplay(this.quoteData.printedAt) || '--';
       this.changeQuoteExpirationDate();
       this.isBusy = true;
+      this.redirect.emit(this.isBusy);
       await this.updateQuoteStatus();
       const response$ = this.policyFormsService.getQuote(this.quoteData?.quoteId ?? 0);
       await lastValueFrom(response$).then((quoteLetter) => {
@@ -85,6 +90,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
           document.body.appendChild(element);
           element.click();
           this.isBusy = false;
+          this.redirect.emit(this.isBusy);
         }
       })
         .catch((error) => {
@@ -98,6 +104,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
   }
   async generateBinderLetter() {
     this.isBusy = true;
+    this.redirect.emit(this.isBusy);
     //await this.updateBinderStatus();
     this.isSaving = true;
     if(this.quoteData != null){
@@ -117,6 +124,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     })
       .catch((error) => {
         this.isBusy = false;
+        this.redirect.emit(this.isBusy);
         const message = String.fromCharCode.apply(null, new Uint8Array(error.error) as any);
         this.messageDialogService.open('Binder Letter Error', message);
       });
@@ -130,6 +138,7 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
       this.quoteData.status = 7;
     }
     this.isBusy = false;
+    this.redirect.emit(this.isBusy);
     this.isSaving = false;
   }
 
