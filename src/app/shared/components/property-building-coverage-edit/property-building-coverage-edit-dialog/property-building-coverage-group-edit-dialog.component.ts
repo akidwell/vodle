@@ -22,6 +22,7 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
   causeOfLoss$: Observable<Code[]> | undefined;
   valuations$: Observable<Code[]> | undefined;
   coinsurance$: Observable<Code[]> | undefined;
+  filteredOnly = false;
 
   private modalRef!: NgbModalRef;
 
@@ -41,6 +42,7 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
     this.coinsuranceId = null;
     this.causeOfLossId = null;
     this.valuationId = null;
+    this.filteredOnly = false;
 
     const result$ = this.dropdowns.getPropertyCoverages();
     await lastValueFrom(result$).then((results) =>
@@ -66,8 +68,9 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
   }
 
   update() {
+    const buildingList: PropertyQuoteBuildingClass[] = this.filteredOnly?this.buildings[0].propertyQuote.filteredBuildings:this.buildings;
     let updateCount = 0;
-    this.buildings.map(building => {
+    buildingList.map(building => {
       building.propertyQuoteBuildingCoverage.map(coverage=> {
         if (coverage.propertyCoverageId == this.propertyCoverageId) {
           updateCount++;
