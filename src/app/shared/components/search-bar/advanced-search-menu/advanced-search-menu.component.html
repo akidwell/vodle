@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="margin-top:0px !important; border-color: #f2f4f6 !important">
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed" class="form-control">
     <div class="form-group">
       <div class="row">
@@ -35,7 +35,7 @@
         <div class="info-header">Policy Effective Date by Date Range:</div>
           <input  matInput (keydown.enter)="search()"
                   style="display: inline-block; max-width: 35%"
-                  [matDatepicker]="startDateCalendar" 
+                  [matDatepicker]="startDateCalendar"
                   class="form-control"
                   [(ngModel)]="advancedSearchClass.polEffStartDate"
                   name="startDate" placeholder="Start Date">
@@ -56,7 +56,7 @@
         <div class="info-header">Submission Create Date by Date Range:</div>
           <input matInput (keydown.enter)="search()"
                     style="display: inline-block; max-width: 35%"
-                    [matDatepicker]="startSubDateCalendar" 
+                    [matDatepicker]="startSubDateCalendar"
                     class="form-control"
                     [(ngModel)]="advancedSearchClass.subStartDate"
                     name="startSubDate" placeholder="Start Date">
@@ -65,7 +65,7 @@
           <mat-datepicker #startSubDateCalendar></mat-datepicker>&nbsp;
           <input matInput (keydown.enter)="search()"
                     style="display: inline-block; max-width: 35%;"
-                    [matDatepicker]="endSubDateCalendar" 
+                    [matDatepicker]="endSubDateCalendar"
                     class="form-control"
                     [(ngModel)]="advancedSearchClass.subEndDate"
                     name="endSubDate" placeholder="End Date">
@@ -85,5 +85,5 @@
       ></producer-fuzzy-search>
     </div>
   </div>
-  
+
 </div>
