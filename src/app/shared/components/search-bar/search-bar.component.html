@@ -10,7 +10,7 @@
   </div>
   <input style="z-index: 0;"  class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
     [placeholder]="filterDisplay()" autofocus (keydown.enter)="search()" />
-  <div *ngIf=" version == '2.0'" class="card-header" (click)="collapsed = !collapsed" style="margin: 0px; padding: 6px;">Advanced Search
+  <div *ngIf=" version == '2.0'" class="card-header" (click)="collapsed = !collapsed" style="margin: 0px; padding: 6px; border-radius:.375rem">Advanced Search
     <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
     <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
   </div>
