@@ -158,5 +158,6 @@ export class PolicyLayerGroupComponent implements OnInit {
 
   addNewReinsuranceLayer(): void {
     this.addReinsurance.emit(this.policyLayerData);
+    this.policyLayerCollapsed = false;
   }
 }

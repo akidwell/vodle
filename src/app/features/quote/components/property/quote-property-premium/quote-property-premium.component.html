@@ -21,6 +21,7 @@
         </div>
     </div>
     <div class="card-footer">
-        <button style="float:left" *ngIf="canEdit" class="link-button" (click)="addDeductible();">Add Deductible</button>
+        <button class="footer-button" *ngIf="canEdit"  (click)="addDeductible();">Add Deductible</button>
+        <div class="footer-count">Deductibles: {{this.quote.propertyQuoteDeductibleList.length}}</div>
     </div>
 </div>

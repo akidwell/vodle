@@ -103,6 +103,7 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
     const clone = this.newANI.clone();
     clone.sequenceNo = this.getNextSequence();
     this.aniData.push(clone);
+    this.aniCollapsed = false;
   }
 
   async saveAdditionalNamedInsureds(): Promise<boolean> {

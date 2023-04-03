@@ -39,6 +39,7 @@ export class QuotePropertyPremiumComponent implements OnInit {
   }
 
   addDeductible() {
+    this.accountCollapsed = false;
     if (this.classType == ClassTypeEnum.Quote) {
       const newDeductible = new PropertyQuoteDeductibleClass();
       newDeductible.sequence = this.getNextSequence();

@@ -38,6 +38,7 @@ export class QuoteLineItemsGroupComponent implements OnInit {
     const newLineItem = new QuoteLineItemClass();
     newLineItem.sequence = this.getNextSequence();
     this.quoteLineItemData.push(newLineItem);
+    this.collapsed = false;
   }
 
   copyLineItem(lineItem: QuoteLineItemClass) {
