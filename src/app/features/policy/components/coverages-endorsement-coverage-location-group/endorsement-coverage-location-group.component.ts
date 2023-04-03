@@ -59,6 +59,7 @@ export class EndorsementCoverageLocationGroupComponent implements OnInit {
     this.endorsementCoveragesGroup.coverages.push(newCoverage);
     this.endorsementCoveragesGroup.coverages[0].isFirst = true;
     this.addComponent(newCoverage);
+    this.locationCollapsed = false;
   }
 
   copyExistingCoverage(existingCoverage: EndorsementCoverage) {

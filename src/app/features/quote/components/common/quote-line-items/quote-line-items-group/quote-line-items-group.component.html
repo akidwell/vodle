@@ -30,5 +30,6 @@
     </div>
     <div class="card-footer">
         <button *ngIf="canEdit" class="footer-button" (click)="addLineItem();">Add Line Item</button>
+        <div class="footer-count">Surcharges/Fees: {{this.quoteLineItemData.length}}</div>
     </div>
 </div>

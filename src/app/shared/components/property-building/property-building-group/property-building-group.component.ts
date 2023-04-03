@@ -122,6 +122,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
   }
 
   addBuilding() {
+    this.collapsed = false;
     if (this.classType == ClassTypeEnum.Quote) {
       const newBuilding = new PropertyQuoteBuildingClass();
       this.propertyQuote.addBuilding(newBuilding);

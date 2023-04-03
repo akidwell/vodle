@@ -74,6 +74,7 @@ export class UnderlyingCoveragesComponent implements OnInit {
 
     const newUnderlyingCoverage = this.createNewUnderlyingCoverage(maxSequence);
     this.underlyingCoverages.push(new UCCoverage(newUnderlyingCoverage));
+    this.ucCollapsed = false;
   }
   //Will create and return a new underlying coverage
   createNewUnderlyingCoverage(maxSequence: number): UnderlyingCoverage {

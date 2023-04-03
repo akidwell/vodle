@@ -864,10 +864,12 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   private onSaveGeneralRemarks(savedQuote: PropertyQuoteClass) {
     this.generalRemarksData = savedQuote.generalRemarksData;
+    this.generalRemarksData.map(x => x.isNew = false);
   }
 
   private onSaveInternalNotes(savedQuote: PropertyQuoteClass) {
     this.internalNotesData = savedQuote.internalNotesData;
+    this.internalNotesData.map(x => x.isNew = false);
   }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {

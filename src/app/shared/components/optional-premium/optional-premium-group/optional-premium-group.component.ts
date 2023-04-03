@@ -154,5 +154,6 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
       optionalPremium = new QuoteOptionalPremiumClass();
       this.optionalPremiumData.push(optionalPremium);
     }
+    this.collapsed = false;
   }
 }

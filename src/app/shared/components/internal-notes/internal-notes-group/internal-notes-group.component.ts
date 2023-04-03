@@ -125,5 +125,6 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     const lastAdded = this.quote.internalNotesData.length - 1;
     this.quote.internalNotesData[lastAdded].isDirty = true;
     this.quote.showDirty = true;
+    this.collapsed = false;
   }
 }

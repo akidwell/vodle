@@ -15,9 +15,9 @@ import { deepClone } from 'src/app/core/utils/deep-clone';
 })
 export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   authSub: Subscription;
-  canEditPolicy: boolean = false;
-  invalidMessage: string = "";
-  showInvalid: boolean = false;
+  canEditPolicy = false;
+  invalidMessage = '';
+  showInvalid = false;
   aniData!: AdditionalNamedInsureds[];
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
@@ -52,7 +52,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
 
   isValid(): boolean {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.aniForm.status != 'VALID') {
           return false;
         }
@@ -63,7 +63,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
 
   isDirty() {
     if (this.components != null) {
-      for (let child of this.components) {
+      for (const child of this.components) {
         if (child.aniForm.dirty) {
           return true;
         }
@@ -77,7 +77,7 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
 
   copyExistingAni(existingAni: AdditionalNamedInsureds) {
     this.copyAni = deepClone(existingAni);
-    this.copyAni.name = 'CopyOf ' + existingAni.name
+    this.copyAni.name = 'CopyOf ' + existingAni.name;
     this.copyAni.sequenceNo = this.getNextSequence();
     this.copyAni.createdDate = new Date();
     this.copyAni.isNew = true;
@@ -105,11 +105,12 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
   addNewAdditionalNamedInsured(): void {
     this.newAni = this.createNewAni();
     this.aniData.push(this.newAni);
+    this.aniCollapsed = false;
   }
 
   createNewAni(): AdditionalNamedInsureds {
     return {
-      name: "",
+      name: '',
       role: undefined,
       createdBy: 0,
       policyId: this.policyId,
@@ -118,16 +119,16 @@ export class AdditionalNamedInsuredsGroupComponent implements OnInit {
       modifiedBy: 0,
       createdDate: new Date(),
       isNew: true
-    }
+    };
   }
 
   async saveAdditionalNamedInsureds(): Promise<boolean> {
     if (this.canEditPolicy && this.isDirty()) {
-      let saveCount: number = 0;
+      let saveCount = 0;
       if (this.components != null) {
-        for (let child of this.components) {
+        for (const child of this.components) {
           if (child.aniForm.dirty) {
-            let result = await child.save();
+            const result = await child.save();
             if (result === false) {
               this.notification.show('Additional Named Insureds ' + child.aniData.sequenceNo.toString() + ' not saved.', { classname: 'bg-danger text-light', delay: 5000 });
             }

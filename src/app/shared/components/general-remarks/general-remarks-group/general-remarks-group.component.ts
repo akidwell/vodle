@@ -120,5 +120,6 @@ export class GeneralRemarksGroupComponent extends SharedComponentBase implements
     this.quote.generalRemarksData?.push(newRemark);
     const lastAdded = this.quote.generalRemarksData.length - 1;
     this.quote.generalRemarksData[lastAdded].isDirty = true;
+    this.collapsed = false;
   }
 }

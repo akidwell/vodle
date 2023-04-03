@@ -25,8 +25,9 @@
   </div>
   <div class="card-footer">
     <div id="mortgageeFooter">
-      <button style="float:left; background:none; border:none;" class="underline"
+      <button class="footer-button"
         (click)="addNewAdditionalInterest();">Add Additional Interest</button>
+        <div class="footer-count">Additional Interests: {{this.aiData.length}}</div>
     </div>
   </div>
 </div>

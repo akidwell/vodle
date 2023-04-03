@@ -3,7 +3,7 @@
     <div class="row">
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="remark" name="remark" [readonly]="!canEdit"
+        <input type="text" class="form-control" id="remark" name="remark" [readonly]="!canEdit" validate-on-change
           [required]="canEdit" [(ngModel)]="generalRemarkData.remark" #remark="ngModel">
       </div>
       <div class="col-lg-2">
