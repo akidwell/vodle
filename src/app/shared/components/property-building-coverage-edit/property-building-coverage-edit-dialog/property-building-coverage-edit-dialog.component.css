@@ -1,3 +1,14 @@
 ::ng-deep .ng-dropdown-panel {
   z-index: 1059 !important;
 }
+.bold {
+  font-weight: bold;
+}
+.updates {
+  margin: 1rem 0;
+  padding: 10px 6px 25px;
+  background-color: whitesmoke;
+  border: 1px solid gray;
+  border-radius: 8px;
+  box-shadow: 1px 1px 2px #0003,0 6px 12px #0003;
+}
