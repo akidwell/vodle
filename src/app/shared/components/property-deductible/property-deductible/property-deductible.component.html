@@ -28,7 +28,7 @@
                 <div class="col-lg-2">
                     <input *ngIf="!deductible.isExcluded" type="text" class="form-control right" id="amount"
                         [readonly]="!canEdit || deductible.amountReadonly" validate-on-change
-                        [required]="canEdit && deductible.amountRequired" string-to-currency [allowNegative]="false"
+                        [required]="canEdit && deductible.amountRequired" string-to-currency [allowNegative]="false" [hideSymbol]="false"
                         name="amount" click-stop-propagation [(ngModel)]="deductible.amount" #amount="ngModel">
                     <input *ngIf="deductible.isExcluded" type="text" class="form-control right" id="amount" readonly
                         name="amount" click-stop-propagation value="Excluded">

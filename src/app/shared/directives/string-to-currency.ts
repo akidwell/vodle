@@ -21,6 +21,8 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
   @Input() decimalPlaces = 0;
   @Input() allowNegative = true;
   @Input() hideDecimal = false;
+  /**Determines if the currency symbol ($) should be included.*/
+  @Input() hideSymbol = true;
 
   constructor(protected el: ElementRef) {}
 
@@ -170,6 +172,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
     if (value.length > 0) {
       let decimalLen: number = this.decimalPlaces;
       if (this.hideDecimal) {
+        //why make a string a string, then to a number, and back to a string?
         const truncValue = parseFloat(value.toString()).toString();
         if (truncValue.includes('.')) {
           decimalLen = Math.min(
@@ -180,11 +183,12 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
           decimalLen = 0;
         }
       }
-      const format = '1.' + decimalLen.toString() + '-' + decimalLen.toString();
+      const format = `1.${decimalLen}-${decimalLen}`;
       const currency = currencyPipe.transform(value, 'USD', '', format);
       formattedValue = minusPipe.transform(currency);
     }
-    return formattedValue;
+    const currencySymbol = this.hideSymbol?'':'$';
+    return `${currencySymbol}${formattedValue}`;
   }
 
   @Log({type: 'log'})
@@ -202,7 +206,7 @@ export class StringToCurrencyDirective implements ControlValueAccessor {
       const fact = 10 ** decimalLen;
       input = (Math.floor(Number(input) * fact) / fact).toString();
     }
-    const format = '1.' + decimalLen.toString() + '-' + decimalLen.toString();
+    const format = `1.${decimalLen}-${decimalLen}`;
     let currency = currencyPipe.transform(input, 'USD', '', format);
 
     if (position > 0 && decimalLen == 0 && this.decimalPlaces > 0) {
