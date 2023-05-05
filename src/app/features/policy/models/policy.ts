@@ -28,6 +28,7 @@ export interface AccountInformationResolved {
 export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
+  endorsement: Endorsement;
   policyEventCode: string;
   packageInd: string;
   policyType: string | null;

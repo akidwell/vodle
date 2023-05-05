@@ -17,17 +17,17 @@
             <div class="col-lg-1">
                 <input validate-on-change type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
                     ngbTooltip="Subject Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchSubject"
-                    #subjectNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
+                    #subjectNumber="ngModel" [readonly]="!canEdit || readOnlyQuote" autocomplete="off">
             </div>
             <div class="col-lg-1">
                 <input validate-on-change type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
                     ngbTooltip="Premises Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchPremises"
-                    #premisesNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
+                    #premisesNumber="ngModel" [readonly]="!canEdit || readOnlyQuote" autocomplete="off">
             </div>
             <div class="col-lg-1">
                 <input validate-on-change type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
                     ngbTooltip="Building Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchBuilding"
-                    #buildingNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
+                    #buildingNumber="ngModel" [readonly]="!canEdit || readOnlyQuote" autocomplete="off">
             </div>
             <div class="col-lg-7">
                 <input validate-on-change type="address" class="form-control" id="address" name="address" maxlength="250"
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div *ngFor="let item of policies$ | async; let i = index">
-                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId"
+                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId" [readOnlyQuote]="readOnlyQuote"
                     (copyBuilding)=copyBuilding($event) (deleteBuilding)=deleteBuilding($event)
                     (addCoverage)=addCoverage($event) (filterBuilding)=filterBuilding($event)>
                 </rsps-property-building>

@@ -1,5 +1,5 @@
 .form-label {
-  overflow: hidden; 
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
@@ -65,4 +65,16 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.ng-select.disable-arrow .ng-arrow-wrapper .ng-arrow {
+  display: none;
+}
+
+.ng-select.disable-dropdown ng-dropdown-panel {
+  display: none;
+}
+
+.ng-select.disable-clear-all .ng-clear-wrapper {
+  display: none;
 }

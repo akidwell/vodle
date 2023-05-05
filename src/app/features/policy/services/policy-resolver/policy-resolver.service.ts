@@ -66,7 +66,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
       .pipe(
         tap(async res => {
           // Update history for opened Policy
-          this.historyService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + ' ' + res.formattedPolicyNo, Number(end));
+          this.historyService.updatePolicyHistory(res.policyId, res.policySymbol.trim() + ' ' + res.formattedPolicyNo, Number(end), res.programId);
           // Preload aggreements
           const results$ = this.reinsuranceLookupService.getReinsurance(res.programId, res.policyEffectiveDate);
           await lastValueFrom(results$);

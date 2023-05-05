@@ -12,16 +12,16 @@
                         <div class="col-lg-6">
                             <ng-select id="coverageSelect" [items]="coverages$ | async" bindLabel="name"
                                 bindValue="propertyCoverageId" [clearable]="false" click-stop-propagation validate-on-change
-                                [readonly]="!canEdit || coverage.propertyCoverageIdReadonly"
-                                [required]="canEdit && coverage.propertyCoverageIdRequired" name="coverageSelect"
+                                [readonly]="!canEdit || coverage.propertyCoverageIdReadonly || readOnlyQuote"
+                                [required]="canEdit && coverage.propertyCoverageIdRequired && !readOnlyQuote" name="coverageSelect"
                                 [(ngModel)]="coverage.propertyCoverageId" #coverageSelect="ngModel" #coverageComp
                                 [ngbTooltip]="coverageTooltip" [openDelay]="1000" (change)="changeCoverage($event)">
                             </ng-select>
                         </div>
                         <div class="col-lg-6">
                             <input validate-on-change type="text" class="form-control right" id="limit" name="limit"
-                                [(ngModel)]="coverage.limit" #subjectNumber="ngModel" [readonly]="!canEdit"
-                                [required]="canEdit && coverage.limitRequired" string-to-currency
+                                [(ngModel)]="coverage.limit" #subjectNumber="ngModel" [readonly]="!canEdit || readOnlyQuote"
+                                [required]="canEdit && coverage.limitRequired && !readOnlyQuote" string-to-currency
                                 [allowNegative]="false" click-stop-propagation validate-on-change
                                 [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
                         </div>
@@ -30,8 +30,8 @@
                 <div class="col-lg-1">
                     <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description" bindValue="key"
                         [clearable]="false" click-stop-propagation validate-on-change
-                        [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
-                        [required]="canEdit && coverage.coinsuranceRequired" name="coinsurance"
+                        [readonly]="!canEdit || coverage.causeOfLossIdReadonly || readOnlyQuote"
+                        [required]="canEdit && coverage.coinsuranceRequired && !readOnlyQuote" name="coinsurance"
                         [(ngModel)]="coverage.coinsuranceId" #coinsurance="ngModel" #coinsuranceComp
                         [ngbTooltip]="coinsuranceTooltip" [openDelay]="1000">
                     </ng-select>
@@ -39,23 +39,23 @@
                 <div class="col-lg-3">
                     <ng-select id="causeOfLoss" [items]="causeOfLoss$ | async" bindLabel="description" bindValue="key"
                         [clearable]="false" click-stop-propagation [virtualScroll]="true" validate-on-change
-                        [readonly]="!canEdit || coverage.causeOfLossIdReadonly"
-                        [required]="canEdit && coverage.causeOfLossIdRequired" name="causeOfLoss"
+                        [readonly]="!canEdit || coverage.causeOfLossIdReadonly || readOnlyQuote"
+                        [required]="canEdit && coverage.causeOfLossIdRequired && !readOnlyQuote" name="causeOfLoss"
                         [(ngModel)]="coverage.causeOfLossId" #causeOfLoss="ngModel" #causeOfLossComp
                         [ngbTooltip]="causeOfLossTooltip" [openDelay]="1000">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="valuationId" [items]="valuations$ | async" bindLabel="description" bindValue="key"
-                        [clearable]="false" click-stop-propagation [readonly]="!canEdit || coverage.valuationIdReadonly"
-                        [required]="canEdit && coverage.valuationIdRequired" name="valuationId" validate-on-change
+                        [clearable]="false" click-stop-propagation [readonly]="!canEdit || coverage.valuationIdReadonly || readOnlyQuote"
+                        [required]="canEdit && coverage.valuationIdRequired && !readOnlyQuote" name="valuationId" validate-on-change
                         [(ngModel)]="coverage.valuationId" #valuationId="ngModel" #valuationComp
                         [ngbTooltip]="valuationTooltip" [openDelay]="1000">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <input validate-on-change type="text" class="form-control" id="additionalDetail" name="additionalDetail" maxlength="50"
-                        [(ngModel)]="coverage.additionalDetail" #additionalDetail="ngModel" [readonly]="!canEdit" validate-on-change
+                        [(ngModel)]="coverage.additionalDetail" #additionalDetail="ngModel" [readonly]="!canEdit || readOnlyQuote" validate-on-change
                         click-stop-propagation [ngbTooltip]="coverage.additionalDetail" [openDelay]="1000">
                 </div>
             </div>

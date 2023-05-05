@@ -113,7 +113,7 @@ export class ImportComponent implements OnInit {
     this.sub = this.importService.postImportPolicies(parm).subscribe({
       next: importPolicyResponse => {
         this.importPolicyResponse = importPolicyResponse;
-        this.routeImport();
+        this.routeImport(selectedRow.programId);
       },
       error: err => {
         this.errorMessage = err;
@@ -124,9 +124,12 @@ export class ImportComponent implements OnInit {
   }
 
   // Decide to either show errors or if succesful open up the policy
-  routeImport() {
+  routeImport(programId: number) {
     this.showBusy = false;
-    if (this.importPolicyResponse?.isPolicyImported) {
+    if (this.importPolicyResponse?.isPolicyImported && programId == 112) {
+      this.navigationService.clearReuse();
+      this.router.navigate(['/policy-v2/' + this.importPolicyResponse.policyId.toString() + '/0']);
+    } else if(this.importPolicyResponse?.isPolicyImported && programId != 112) {
       this.navigationService.clearReuse();
       this.router.navigate(['/policy/' + this.importPolicyResponse.policyId.toString() + '/0']);
     }

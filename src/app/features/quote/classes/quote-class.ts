@@ -54,7 +54,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
   policyNumber: string | number = '--';
-  policyMod: string | null = '--';
   carrierCode = '';
   pacCode = '';
   quoteName = null;
@@ -331,6 +330,37 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._validated = value;
   }
 
+  readonlyQuote = false;
+  get readOnlyQuote(): boolean {
+    return this.status == 9;
+  }
+
+
+  private _policyMod = '--';
+  get policyMod(): string {
+    return this._policyMod;
+  }
+  set policyMod(value: string) {
+    this._policyMod = value;
+  }
+
+  private _policyId = 0;
+  get policyId(): number {
+    return this._policyId;
+  }
+  set policyId(value: number) {
+    this._policyId = value;
+  }
+
+  private _quoteIdBound = 0;
+  get quoteIdBound(): number {
+    return this._quoteIdBound;
+  }
+  set quoteIdBound(value: number) {
+    this._quoteIdBound = value;
+  }
+
+
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     super();
     if (quote) {
@@ -357,6 +387,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.policySymbol = quote.policySymbol || '';
     this.policyNumber = quote.policyNumber || '--';
     this.policyMod = quote.policyMod || '--';
+    this.policyId = quote.policyId || 0;
+    this.quoteIdBound = quote.quoteIdBound || 0;
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this._autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
     this._minimumPremium = quote.minimumPremium || null;
@@ -475,6 +507,9 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.status = 1;
     this.riskState = '';
     this.earnedPremiumPct = 35;
+    this.policyId = 0;
+    this.policyMod = '00';
+    this.quoteIdBound = 0;
   }
 
   markClean() {
@@ -700,7 +735,9 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       flatPremium: this.flatPremium,
       propertyPremium: this.propertyPremium,
       propertySubTotalPremium: this.propertySubTotalPremium,
-      overrideMinPolPrem: this.overrideMinPolPrem
+      overrideMinPolPrem: this.overrideMinPolPrem,
+      policyId: this.policyId,
+      quoteIdBound: this.quoteIdBound
     };
   }
 }

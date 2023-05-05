@@ -56,7 +56,7 @@
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <input type="checkbox" class="form-check-input" id="coverageFlat" [(ngModel)]="coverage.isFlat" validate-on-change
         (change)="this.quoteData.calculatePropertyPremiums()" name="coverageFlat"
-        [readonly]="!canEdit || !coverage.isAccepted" #coverageFlat="ngModel" />
+        [readonly]="!canEdit || !coverage.isAccepted || quoteData.readOnlyQuote" #coverageFlat="ngModel" />
     </div>
   </div>
 </div>

@@ -28,8 +28,8 @@
           class="nav-link"
           *ngIf="policy.policyId != null"
           routerLinkActive="active"
-          [routerLink]="[
-            '/policy/' + policy.policyId + '/' + policy.endorsementNumber
+          [routerLink]="[ policy.programId == 112 ?
+            '/policy-v2/' + policy.policyId + '/' + policy.endorsementNumber :   '/policy/' + policy.policyId + '/' + policy.endorsementNumber
           ]"
           (mouseover)="hoverFavorite(policy)"
           (mouseleave)="unhoverFavorite(policy)"
@@ -195,7 +195,7 @@
       ></fa-icon>
     </div>
     <div *ngIf="showFullSidebar" id="close-panel" (click)="toggleSidebar()">
-      <fa-icon class="toggle-icon large" [icon]="faX" ngbTooltip="Hide Sidebar" placement="bottom" container="body" [openDelay]="1000"></fa-icon>   
+      <fa-icon class="toggle-icon large" [icon]="faX" ngbTooltip="Hide Sidebar" placement="bottom" container="body" [openDelay]="1000"></fa-icon>
     </div>
   </div>
 </div>

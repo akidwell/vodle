@@ -27,6 +27,9 @@ export class PolicyService {
   getPolicyInfo(id: number): Observable<PolicyInformation> {
     return this.http.get<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/policyinfo');
   }
+  getPolicyInfoV2(id: number, end: number): Observable<PolicyInformation> {
+    return this.http.get<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/new-policyinfo/' + end.toString());
+  }
   getEndorsement(id: number, endorsementNumber: number): Observable<Endorsement> {
     return this.http.get<Endorsement>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/endorsements/' + endorsementNumber.toString());
   }

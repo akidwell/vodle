@@ -25,6 +25,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   private _coverages: PropertyQuoteBuildingCoverageClass[] = [];
 
   @Input() public propertyQuote!: PropertyQuote;
+  @Input() public readOnlyQuote!: boolean;
   @Input() public limitTotal!: number;
   @Input() public coverageCount!: number;
   @Input() public canEdit = false;
@@ -80,6 +81,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.propertyQuote);
   }
 
   ngOnDestroy(): void {

@@ -33,6 +33,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
   private _buildings: PropertyQuoteBuildingClass[] = [];
 
   @Input() public propertyQuote!: PropertyQuoteClass;
+  @Input() public readOnlyQuote!: boolean;
   @Input() public buildingCount!: number;
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
@@ -90,7 +91,6 @@ export class PropertyBuildingGroupComponent implements OnInit {
     this.searchSub = this.searchThrottle.pipe(debounceTime(500)).subscribe(() => {
       this.propertyQuote.searchAddress = this.searchAddress;
     });
-
   }
 
   ngOnDestroy(): void {

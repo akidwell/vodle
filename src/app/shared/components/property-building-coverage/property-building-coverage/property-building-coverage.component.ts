@@ -23,7 +23,7 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   firstExpand = true;
   anchorId!: string;
   isLoadingAddress = false;
-
+  @Input() public readOnlyQuote!: boolean;
   @Input() public coverage!: PropertyQuoteBuildingCoverageClass;
   @Input() public canEdit = false;
   @Input() public buildingIndex = 0;

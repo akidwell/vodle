@@ -132,9 +132,11 @@ export class QuoteSummaryQuoteBindComponent extends DepartmentComponentBase {
     await lastValueFrom(updated).then((x)=> {
       this.updatedQuotedata = x.programMappings[0].quoteData;
     });
-    if(this.quoteData?.policyNumber != undefined){
+    if(this.updatedQuotedata?.policyNumber != undefined && this.quoteData){
       this.quoteData.policyNumber = this.updatedQuotedata?.policyNumber ?? '';
       this.quoteData.policyMod = this.updatedQuotedata?.policyMod ?? '';
+      this.quoteData.policyId = this.updatedQuotedata?.policyId ?? 0;
+      this.quoteData.quoteIdBound = this.updatedQuotedata?.quoteIdBound ?? 0;
       this.quoteData.status = 7;
     }
     this.isBusy = false;
