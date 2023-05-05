@@ -71,12 +71,13 @@ export class HistoryService {
     this._policyHistory.next(previousHistory);
   }
 
-  updatePolicyHistory(policyId: number, policyNumber: string, endorsementNumber: number) {
+  updatePolicyHistory(policyId: number, policyNumber: string, endorsementNumber: number, programId: number) {
     const previousHistory = this._policyHistory.getValue();
     const history = newHistory();
     history.policyId = policyId;
     history.policyNumber = policyNumber;
     history.endorsementNumber = endorsementNumber;
+    history.programId = programId;
     // Check to see if the policy already exists
     const match = previousHistory.find(x => x.policyId == policyId && x.endorsementNumber == endorsementNumber);
     // If exists than just update open date

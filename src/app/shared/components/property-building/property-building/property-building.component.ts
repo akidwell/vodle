@@ -27,6 +27,8 @@ export class PropertyBuildingComponent implements OnInit {
   isLoadingAddress = false;
   addressSub!: Subscription;
   protectionClassList: number[] = [1,2,3,4,5,6,7,8,9,10];
+  @Input() public readOnlyQuote!: boolean;
+
 
   @Input() public programId!: number;
   @Input() public building!: PropertyQuoteBuildingClass;

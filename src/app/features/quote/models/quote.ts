@@ -138,4 +138,6 @@ export interface Quote {
   propertyPremium: number | null;
   propertySubTotalPremium: number | null;
   overrideMinPolPrem: boolean;
+  policyId: number | null;
+  quoteIdBound: number | null;
 }

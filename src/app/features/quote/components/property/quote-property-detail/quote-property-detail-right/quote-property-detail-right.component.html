@@ -8,7 +8,7 @@
     <div class="col-lg-12">
         <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="key" validate-on-change
 
-            [readonly]="!canEdit" name="cspCode" [(ngModel)]="quote.classCode" [loading]="loadingCsp" [required]="canEdit"
+            [readonly]="!canEdit || quote.readOnlyQuote" name="cspCode" [(ngModel)]="quote.classCode" [loading]="loadingCsp" [required]="canEdit && !quote.readOnlyQuote"
             loadingText="Loading..." [searchFn]="dropDownSearch" #csp="ngModel" (ngModelChange)="changeCspCode($event)"
             [virtualScroll]="true">
             <ng-template ng-label-tmp let-item="item">

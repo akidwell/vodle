@@ -26,6 +26,9 @@ const routes: Routes = [
   { path: 'reports', component: ReportsComponent },
   { path: 'applications', component: ApplicationsComponent },
   {
+    path: 'policy-v2', loadChildren: () => import('./features/policy-v2/policy-v2.module').then(m => m.PolicyV2Module), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+  },
+  {
     path: 'policy', loadChildren: () => import('./features/policy/policy.module').then(m => m.PolicyModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
   },
   {

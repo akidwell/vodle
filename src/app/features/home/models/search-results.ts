@@ -6,6 +6,7 @@ export interface SearchResults {
 }
 
 export interface PolicySearchResponses {
+    programId: number;
     policyId: number;
     policyNumber: string;
     fullPolicyNumber: string;

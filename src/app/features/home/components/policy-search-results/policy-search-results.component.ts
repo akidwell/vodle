@@ -97,7 +97,11 @@ export class PolicySearchResultsComponent implements OnInit {
 
   openPolicy(policy: PolicySearchResponses): void {
     this.navigationService.clearReuse();
-    this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
+    if(policy.programId == 112){
+      this.router.navigate(['/policy-v2/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
+    } else {
+      this.router.navigate(['/policy/' + policy.policyId.toString() + '/' + policy.endorsementNumber.toString()]);
+    }
   }
   @ViewChild('actionModal') private actionComponent: ActionComponent | undefined;
   @ViewChild('modalPipe') modalPipe: any;

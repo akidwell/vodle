@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
@@ -20,6 +20,7 @@ export class QuotePropertyLocationCoverageComponent implements OnInit{
   classType = ClassTypeEnum.Quote;
   isSaving = false;
   saveSub!: Subscription;
+  @Input() public readOnlyQuote!: boolean;
 
   constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) {
     this.authSub = this.userAuth.canEditQuote$.subscribe(
@@ -38,6 +39,7 @@ export class QuotePropertyLocationCoverageComponent implements OnInit{
       (selectedProgram: ProgramClass | null) => {
         if (selectedProgram != null) {
           setTimeout(() => {
+            this.readOnlyQuote = selectedProgram.quoteData?.readOnlyQuote ?? false;
             this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
           });
         }

@@ -6,13 +6,13 @@
     [lawLimits]="quote.lawLimits" [limitTotal]="quote.limitTotal"
     [largestTiv]="quote.largestPremTiv" [subjectAmount]="quote.subjectAmounts">
 </rsps-quote-property-detail>
-<rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote"
+<rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote" [readOnlyQuote]="readOnlyQuote"
     [buildings]="quote.filteredBuildings" [canEdit]="canEdit"
     [buildingCount]="quote.buildingCount" [programId]="quote.programId"></rsps-property-building-group>
-<rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEdit"
+<rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEdit" 
     [buildings]="quote.propertyQuoteBuildingList"></rsps-property-building-coverage-edit>
 <rsps-property-building-coverage-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote.propertyQuote"
-    [coverages]="quote.filteredCoverages" [limitTotal]="quote.limitTotal"
+    [coverages]="quote.filteredCoverages" [limitTotal]="quote.limitTotal" [readOnlyQuote]="readOnlyQuote"
     [coverageCount]="quote.coverageCount" [canEdit]="canEdit">
 </rsps-property-building-coverage-group>
 <div *ngIf="isSaving">

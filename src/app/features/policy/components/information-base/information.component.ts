@@ -102,7 +102,7 @@ export class InformationComponent implements OnInit, PolicySave {
     if (this.policyInfoComp.allowSave()) {
       this.policyService.updatePolicyInfo(this.policyInfo).subscribe(() => {
         this.data['policyInfoData'].policyInfo = deepClone(this.policyInfo);
-        this.historyService.updatePolicyHistory(this.policyInfo.policyId, this.policyInfo.policySymbol.trim() + ' ' + this.policyInfo.formattedPolicyNo, this.endorsement.endorsementNumber);
+        this.historyService.updatePolicyHistory(this.policyInfo.policyId, this.policyInfo.policySymbol.trim() + ' ' + this.policyInfo.formattedPolicyNo, this.endorsement.endorsementNumber, this.policyInfo.programId);
         this.policyInfoComp.policyInfoForm.form.markAsPristine();
         this.policyInfoComp.policyInfoForm.form.markAsUntouched();
         this.notification.show('Policy Information successfully saved.', { classname: 'bg-success text-light', delay: 5000 });
