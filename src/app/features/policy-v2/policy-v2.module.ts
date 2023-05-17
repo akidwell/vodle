@@ -12,12 +12,26 @@ import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-d
 import { ConfirmationDialogService } from '../../core/services/confirmation-dialog/confirmation-dialog.service';
 import { AdditionalNamedInsuredModule } from 'src/app/shared/components/additional-named-insured/additional-named-insured.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { PolicyV2Component } from './components/policy-v2/policy-v2.component';
+import { PolicyV2Component } from './components/policy-base/policy-v2.component';
 import { PolicyV2RoutingModule } from './policy-routing-v2.module';
+import { PolicyInformationV2Component } from './components/common/policy-information-v2/policy-information-v2.component';
+import { PolicyPropertyLocationCoverageComponent } from './components/property/policy-property-location-coverage/policy-property-location-coverage.component';
+import { PolicySummaryComponent } from './components/common/policy-summary/policy-summary.component';
+import { PolicyPropertyMortgageeComponent } from './components/property/policy-property-mortgagee/policy-property-mortgagee.component';
+import { PolicyReinsuranceComponent } from './components/common/policy-reinsurance/policy-reinsurance.component';
+import { PolicyPremiumComponent } from './components/property/policy-premium/policy-premium.component';
+import { CanDeactivateGuard } from './guards/can-deactivate-guard';
+
 
 @NgModule({
   declarations: [
-    PolicyV2Component
+    PolicyV2Component,
+    PolicyInformationV2Component,
+    PolicyPropertyLocationCoverageComponent,
+    PolicySummaryComponent,
+    PolicyPropertyMortgageeComponent,
+    PolicyPremiumComponent,
+    PolicyReinsuranceComponent
   ],
   imports: [
     CommonModule,
@@ -37,6 +51,7 @@ import { PolicyV2RoutingModule } from './policy-routing-v2.module';
   providers: [
     provideEnvironmentNgxMask(),
     DatePipe,
+    CanDeactivateGuard,
     FormatDateForDisplay,
     ConfirmationDialogService,
   ]

@@ -23,30 +23,30 @@ export class PolicyResolver implements Resolve<PolicyResolved> {
     if (isNaN(+id)) {
       const message = `Policy id was not a number: ${id}`;
       this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-      return of({ policy: null, error: message });
+      return of({ policyInfo: null, error: message });
     }
     if (isNaN(+end)) {
       const message = `Endorsement was not a number: ${end}`;
       this.router.navigate(['/policy/policy-not-found'], { state: { error: message } });
-      return of({ policy: null, error: message });
+      return of({ policyInfo: null, error: message });
     }
 
     return this.policyService.getPolicyInfoV2(Number(id), Number(end))
       .pipe(
-        tap(async (policy) => {
+        tap(async (policyInfo) => {
           // Update history for opened Policy
-          this.historyService.updatePolicyHistory(policy?.policyId, policy?.policySymbol.trim() + ' ' + policy?.formattedPolicyNo, Number(end), policy.programId);
+          this.historyService.updatePolicyHistory(policyInfo?.policyId, policyInfo?.policySymbol.trim() + ' ' + policyInfo?.formattedPolicyNo, Number(end), policyInfo.programId);
           // Preload aggreements
-          const results$ = this.reinsuranceLookupService.getReinsurance(policy?.programId, policy?.policyEffectiveDate);
+          const results$ = this.reinsuranceLookupService.getReinsurance(policyInfo?.programId, policyInfo?.policyEffectiveDate);
           await lastValueFrom(results$);
-          const resultsFAC$ = this.reinsuranceLookupService.getFaculativeReinsurance(policy?.policyEffectiveDate);
+          const resultsFAC$ = this.reinsuranceLookupService.getFaculativeReinsurance(policyInfo?.policyEffectiveDate);
           await lastValueFrom(resultsFAC$);
         }),
-        map(policy => ({ policy })),
+        map(policyInfo => ({ policyInfo })),
         catchError((error) => {
           console.log(error);
           this.router.navigate(['/policy/policy-not-found'], { state: { error: error.message } });
-          return of({ policy: null, error: error });
+          return of({ policyInfo: null, error: error });
         })
       );
   }

@@ -8,13 +8,14 @@ import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quot
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { HistoricRoute } from '../../models/historic-route';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 @Injectable()
 export class PageDataService {
   private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
   private _quoteData: DepartmentClass | null = null;
-  private _policyData: PolicyInformation | null = null;
+  private _policyData: PolicyClass | PolicyInformation | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
   private _selectedProgram: ProgramClass | null = null;
@@ -28,7 +29,7 @@ export class PageDataService {
   );
   quoteData$: BehaviorSubject<DepartmentClass | null> = new BehaviorSubject(this._quoteData);
   selectedProgram$: BehaviorSubject<ProgramClass | null> = new BehaviorSubject(this._selectedProgram);
-  policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
+  policyData$: BehaviorSubject<PolicyClass | PolicyInformation |null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
 
@@ -69,11 +70,11 @@ export class PageDataService {
       this.isNoData = false;
     }
   }
-  get policyData(): PolicyInformation | null {
+  get policyData(): PolicyClass | PolicyInformation | null {
     return this._policyData;
   }
 
-  set policyData(val: PolicyInformation | null) {
+  set policyData(val: PolicyClass | PolicyInformation | null) {
     this._policyData = val;
     this.policyData$.next(this._policyData);
     if (val != null) {

@@ -10,6 +10,7 @@ import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementFo
 import { UnderlyingCoverage } from '../../models/schedules';
 import { InvoiceData, InvoiceDetail } from '../../models/invoice';
 import { UCCoverage } from '../../classes/UCCoverage';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +78,11 @@ export class PolicyService {
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/policyinfo', policyInfo);
   }
+
+  updatePolicyInfoV2(policy: PolicyClass): Observable<PolicyClass> {
+    return this.http.put<PolicyClass>(this.config.apiBaseUrl + 'api/policies/new-policyinfo', policy);
+  }
+
   updateAccountInfo(accountInfo: AccountInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/AccountInfo', accountInfo);
   }
