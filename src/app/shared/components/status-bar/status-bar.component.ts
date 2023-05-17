@@ -23,6 +23,7 @@ import { NavigationService } from 'src/app/features/policy/services/navigation/n
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
 import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 
 

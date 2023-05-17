@@ -1,4 +1,7 @@
 import { AdditionalNamedInsured } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { Producer } from '../../submission/models/producer';
+import { Insured } from '../../insured/models/insured';
+
 
 export interface AccountInformation {
   policyId: number;
@@ -29,7 +32,13 @@ export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
   endorsement: Endorsement;
+  additionalNamedInsuredData: AdditionalNamedInsured[];
+  insured: Insured;
+  producer: Producer;
+  commRate: number;
+  departmentId: number;
   policyEventCode: string;
+  endorsementNumber: number;
   packageInd: string;
   policyType: string | null;
   policySymbol: string;
