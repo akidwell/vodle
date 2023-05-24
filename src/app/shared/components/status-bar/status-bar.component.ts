@@ -171,7 +171,7 @@ export class StatusBarComponent implements OnInit {
       return this.pageDataService.quoteData;
     }
   }
-  private checkPolicyData(child: ActivatedRoute): PolicyInformation | null {
+  private checkPolicyData(child: ActivatedRoute): PolicyClass | null {
     if (child.snapshot.data && child.snapshot.data['policyInfoData']) {
       const data = child.snapshot.data['policyInfoData'].policyInfo;
       this.pageDataService.accountInfo = child.snapshot.data['accountData'].accountInfo;

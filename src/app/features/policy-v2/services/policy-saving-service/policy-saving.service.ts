@@ -50,12 +50,10 @@ export class PolicySavingService {
       console.log(policy);
       const results$ = this.policyService.updatePolicyInfoV2(policy);
       await lastValueFrom(results$)
-        .then(async (policyData: PolicyClass) => {
+        .then(async (policyData: PolicyInformation) => {
           this.policy = policyData;
-          const x = new PolicyClass(policyData);
-          x?.onSave(x);
-          x?.afterSave();
-          this.notification.show('Quote Saved.', {
+          const x = new PolicyClass(this.policyService, policyData);
+          this.notification.show('Policy Saved.', {
             classname: 'bg-success text-light',
             delay: 5000,
           });
@@ -64,7 +62,7 @@ export class PolicySavingService {
         })
         .catch((error) => {
           this.isSaving = false;
-          this.messageDialogService.open('Quote Save Error!', error.error.Message);
+          this.messageDialogService.open('Policy Save Error!', error.error.Message);
         });
     }
   }

@@ -28,7 +28,7 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: PolicyInformationV2Component},
+      { path: 'information', component: PolicyInformationV2Component, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent},
       { path: 'mortgagee', component: PolicyPropertyMortgageeComponent },
       { path: 'premium', component: PolicyPremiumComponent },

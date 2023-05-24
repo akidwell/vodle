@@ -12,8 +12,7 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { ReinsuranceLookupService } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup.service';
 import { PolicyClass } from '../../../classes/policy-class';
 import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
-import { AdditionalNamedInsured, coverageANI, insuredANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
-import { AdditionalNamedInsureds } from 'src/app/features/policy/models/policy';
+import { AdditionalNamedInsured, PolicyANIClass, coverageANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 
@@ -56,8 +55,8 @@ export class PolicyInformationV2Component {
   policyInfo!: PolicyClass;
   canSetRetroDate = false;
   canSetClaimsMadeOccurrence = false;
-  newInsuredANI!: coverageANI;
-  aniData!: AdditionalNamedInsured[];
+  newInsuredANI!: PolicyANIClass;
+  aniData!: PolicyANIClass[];
   showBusy = false;
   saveSub!: Subscription;
 
@@ -69,7 +68,7 @@ export class PolicyInformationV2Component {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
-    this.newInsuredANI = new coverageANI(this.policyService);
+    this.newInsuredANI = new PolicyANIClass();
   }
 
   ngOnInit(): void {
@@ -78,11 +77,7 @@ export class PolicyInformationV2Component {
       this.policyInfo.producer = data['policyInfoData'].policyInfo.producer;
       this.policyInfo.insured = data['policyInfoData'].policyInfo.insured;
       this.aniData = data['policyInfoData'].policyInfo.additionalNamedInsuredData;
-
     });
-    console.log(this.policyInfo.producer.name);
-    console.log(this.policyInfo.insured.city);
-
     this.pacCodes$ = this.dropdowns.getPACCodes();
     this.riskGrades$ = this.dropdowns.getRiskGrades(this.policyInfo.programId);
     this.states$ = this.dropdowns.getStates();
@@ -101,10 +96,12 @@ export class PolicyInformationV2Component {
     this.coveragesSub = this.coverageCodes$.subscribe({
       next: codes => {
         this.coverageCodesList = codes;
-        // this.policyInfo.determineClaimsMadeOccurrence();
+        this.policyInfo.coverageCodesList = this.coverageCodesList;
+        this.policyInfo.determineClaimsMadeOccurrence();
       }
-    });
-
+    }
+    );
+    console.log(this.policyInfo.canSetCancelDate);
     this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.showBusy = isSaving)
     );
@@ -121,9 +118,13 @@ export class PolicyInformationV2Component {
     this.claimsMadeOrOccurrence$.push({ code: 'C', key: 0, description: 'Claims-Made' });
     this.claimsMadeOrOccurrence$.push({ code: 'O', key: 1, description: 'Occurrence' });
   }
+
+  dropDownSearch(term: string, item: Code) {
+    term = term.toLowerCase();
+    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
+  }
   changeEffectiveDate() {
     if (this.policyInfo.endorsement.endorsementNumber == 0) {
-      this.policyInfo.changeEffectiveDate();
       // Force Reinsurance drop downs to refresh
       this.reinsuranceLookupService.clearReinsuranceCodes();
       this.reinsuranceLookupService.refreshReinsuranceCodes();
@@ -142,14 +143,19 @@ export class PolicyInformationV2Component {
     if(!checkEndorsementLockStatus) {
       return !this.canEdit;
     } else {
-      if (this.policyInfo.lockEndorsementFields) {
-        return true;
-      } else {
-        return !this.canEdit;
-      }
+      return !this.canEdit;
     }
   }
   changeState(state: State) {
     this.policyInfo.riskLocation.countryCode = state.countryCode;
   }
+
+  getAlerts(): string | null{
+    let alert = 'Following fields are invalid: ';
+    this.policyInfo.errorMessages.map(x => {
+      alert += '<br><li>' + x.message ;
+    });
+    return alert;
+  }
+
 }

@@ -1,8 +1,10 @@
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { ChildBaseClass } from './child-base-class';
+import { ChildBaseClass, ErrorMessageSettings, errorMessageDefaults } from './child-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
+import { PolicyValidation } from 'src/app/shared/interfaces/policy-validation';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
-export abstract class ParentBaseClass implements Validation {
+export abstract class ParentBaseClass implements PolicyValidation {
   isValid = true;
   isDirty = false;
   canBeSaved = true;
@@ -11,12 +13,12 @@ export abstract class ParentBaseClass implements Validation {
   canEdit = true;
   id = 0;
   guid = '';
-  errorMessages: string[] = [];
-
+  markedForDeletion = false;
+  errorMessages: ErrorMessage[] = [];
 
 
   //abstract methods need to be implemented in individual classes as each class will have different needs
-  abstract validate(): Validation;
+  abstract validate(): ErrorMessage[];
 
   //The onGuidNewMatch is a hook for handling the results from a successful adding of a record
   //can be used to update ids or any other information
@@ -41,21 +43,24 @@ export abstract class ParentBaseClass implements Validation {
     this.errorMessages = [];
   }
 
-  validateChildren<T extends ParentBaseClass>(parent: T):string[] {
-    let errorMessages: string[] = [];
+  validateChildren<T extends ParentBaseClass>(parent: T): ErrorMessage[]{
+    console.log(parent);
+    let errorMessages: ErrorMessage[] = [];
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
       //console.log('key: ',key,'object: ', object);
       //Check to see if any property is of ChildBaseClass and validate
+      console.log(object instanceof ChildBaseClass);
       if(object instanceof ChildBaseClass) {
         console.log('ChildBaseClass: ',object);
-        errorMessages = errorMessages.concat(this.validateChildClass(object).errorMessages);
+        errorMessages = errorMessages.concat(this.validateChildClass(object));
+        console.log(errorMessages);
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
       }
       //Check to see if any property is of ParentBaseClass and validate itself and all children
       else if (object instanceof ParentBaseClass) {
         console.log('ParentBaseClass: ',object);
-        errorMessages = errorMessages.concat(this.validateParentClass(object).errorMessages);
+        errorMessages = errorMessages.concat(this.validateParentClass(object));
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
       }
       //Check to see if property is an array and not empty
@@ -65,32 +70,33 @@ export abstract class ParentBaseClass implements Validation {
           //Check to see if any property is of ChildBaseClass and validate
           if(objectInArray instanceof ChildBaseClass) {
             //console.log('ChildBaseClass Array: ',object);
-            errorMessages = errorMessages.concat(this.validateChildClass(objectInArray).errorMessages);
+            errorMessages = errorMessages.concat(this.validateChildClass(objectInArray));
             this.isDirty = this.isDirty ? this.isDirty : object.find(x => x.isDirty) ? true : false;
           }
           //Check to see if any property is of ParentBaseClass and validate itself and all children
           else if (objectInArray instanceof ParentBaseClass) {
             console.log('ParentBaseClass Array: ',object);
-            errorMessages = errorMessages.concat(this.validateParentClass(objectInArray).errorMessages);
+            errorMessages = errorMessages.concat(this.validateParentClass(objectInArray));
             this.isDirty = this.isDirty ? this.isDirty : object.find(x => x.isDirty) ? true : false;
           }
         });
       }
 
     });
+    console.log(errorMessages);
     return errorMessages;
   }
   //validate children classes that are of type ValidationChild (they will never have children classes needed to be validated)
-  validateChildClass<T extends ChildBaseClass>(object:T): Validation {
+  validateChildClass<T extends ChildBaseClass>(object:T): ErrorMessage[] {
     return object.validate();
   }
   //validate children classes that are of type ValidationParent (they could have children classes needing to be validated as well)
-  validateParentClass<T extends ParentBaseClass>(object:T): Validation {
+  validateParentClass<T extends ParentBaseClass>(object:T): ErrorMessage[] {
     return object.validate();
   }
 
-  checkChildrenErrorMessages<T extends ParentBaseClass>(parent: T):string[] {
-    let errorMessages: string[] = [];
+  checkChildrenErrorMessages<T extends ParentBaseClass>(parent: T):ErrorMessage[] {
+    let errorMessages: ErrorMessage[] = [];
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
       //console.log('key: ',key,'object: ', object);
@@ -125,11 +131,11 @@ export abstract class ParentBaseClass implements Validation {
     return errorMessages;
   }
   //bubble up all child class error messages
-  checkChildClassErrors<T extends ChildBaseClass>(object:T): string[] {
+  checkChildClassErrors<T extends ChildBaseClass>(object:T): ErrorMessage[] {
     return object.errorMessages;
   }
   //bubble up all parent class error messages
-  checkParentClassErrors<T extends ParentBaseClass>(object:T): string[] {
+  checkParentClassErrors<T extends ParentBaseClass>(object:T): ErrorMessage[] {
     return object.errorMessages;
   }
   markChildrenClean<T extends ParentBaseClass>(parent: T): void {
@@ -248,5 +254,13 @@ export abstract class ParentBaseClass implements Validation {
   //Will determine if the object has the Deletable interface and if it is marked for deletion
   checkIfDeleted<T>(deletable: T) {
     return (deletable as Deletable).markForDeletion === true;
+  }
+  createErrorMessage(message: string, errorMessageSettings: ErrorMessageSettings = errorMessageDefaults) {
+    const errorMessage: ErrorMessage = {
+      message: message,
+      failValidation: errorMessageSettings.failValidation,
+      preventSave: errorMessageSettings.preventSave
+    };
+    this.errorMessages.push(errorMessage);
   }
 }

@@ -1,6 +1,8 @@
 import { lastValueFrom } from 'rxjs';
 import { InsuredService } from 'src/app/features/insured/services/insured-service/insured.service';
+import { ChildBaseClass } from 'src/app/features/policy-v2/classes/base/child-base-class';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
+import { ErrorMessage } from '../../interfaces/errorMessage';
 
 export interface AdditionalNamedInsuredData {
   policyId: number;
@@ -338,3 +340,142 @@ export class insuredANI implements AdditionalNamedInsured {
     };
   }
 }
+
+export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedInsured {
+  onGuidNewMatch(T: ChildBaseClass): void {
+    throw new Error('Method not implemented.');
+  }
+  onGuidUpdateMatch(T: ChildBaseClass): void {
+    throw new Error('Method not implemented.');
+  }
+  policyId = 0;
+  addInsuredCode: number | null = null;
+  insuredCode = 0;
+  endorsementNo = 0;
+  createdDate?: Date | null;
+  isNew = false;
+  canDelete?: boolean = false;
+  showActive = true;
+  invalidList: string[] = [];
+  isDuplicate = false;
+  markedForDeletion = false;
+
+  private _sequenceNo = 0;
+  private _role: number | null = null;
+  private _name: string | null = null;
+  private _isActive: boolean | null = null;
+
+  get sequenceNo() : number {
+    return this._sequenceNo;
+  }
+  set sequenceNo(value: number) {
+    this._sequenceNo = value;
+    this.isDirty = true;
+  }
+  get role() : number | null {
+    return this._role;
+  }
+  set role(value: number | null) {
+    this._role = value;
+    this.isDirty = true;
+  }
+  get name() : string | null {
+    return this._name;
+  }
+  set name(value: string | null) {
+    this._name = value;
+    this.isDirty = true;
+  }
+  get isActive() : boolean | null {
+    return this._isActive;
+  }
+  set isActive(value: boolean | null) {
+    this._isActive = value;
+    this.isDirty = true;
+  }
+
+  constructor(ani?: AdditionalNamedInsured) {
+    super();
+    console.log(ani);
+    if(ani){
+      this.existingInit(ani);
+    }else {
+      this.newInit();
+    }
+  }
+  delete(): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+  clone(): AdditionalNamedInsured {
+    const copy: PolicyANIClass = Object.create(this);
+    copy.createdDate = null;
+    copy.isNew = true;
+    copy.isActive = true;
+    return copy;
+  }
+
+  copy(): AdditionalNamedInsured {
+    const copy: PolicyANIClass = Object.create(this);
+    copy.addInsuredCode = null;
+    copy.name = 'CopyOf ' + this.name;
+    copy.createdDate = null;
+    copy.isNew = true;
+    copy.isActive = true;
+    return copy;
+  }
+
+  existingInit(ani: AdditionalNamedInsured) {
+    this.role = ani.role;
+    this.name = ani.name;
+  }
+
+  newInit(){
+    this.role = null;
+    this.name = null;
+    this.isNew = true;
+  }
+  markClean() {
+    this.isDirty = false;
+  }
+  markDirty() {
+    this.isDirty = true;
+  }
+  async save(): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
+  validate(): ErrorMessage[] {
+    console.log('VALIDATE');
+    this.errorMessages = [];
+    this.validateRole();
+    this.validateName();
+    return this.errorMessages;
+  }
+
+  validateRole(): void {
+    console.log('ROLE' + this.role);
+    if (!this.role) {
+      this.createErrorMessage('Role is required for ANI #' + this.sequenceNo);
+    }
+  }
+  validateName(): void {
+    if (!this.name) {
+      this.createErrorMessage('Name is required for ANI #' + this.sequenceNo);
+    }
+  }
+
+  toJSON() {
+    return {
+      policyId: this.policyId,
+      endorsementNo: this.endorsementNo,
+      addInsuredCode: this.addInsuredCode,
+      insuredCode: this.insuredCode,
+      sequenceNo: this.sequenceNo,
+      role: this.role,
+      name: this.name,
+      isActive: this.isActive,
+      isNew: this.isNew
+    };
+  }
+}
+

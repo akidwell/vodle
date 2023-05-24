@@ -1,19 +1,27 @@
-import { Validation } from 'src/app/shared/interfaces/validation';
-import { Insured } from '../../insured/models/insured';
 import { ParentBaseClass } from './base/parent-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
-import { QuoteData, RiskLocation, Endorsement, PolicyInformation } from '../../policy/models/policy';
+import { PolicyInformation } from '../../policy/models/policy';
 import { TransactionTypes } from 'src/app/core/constants/transaction-types';
 import { Code } from 'src/app/core/models/code';
-import { PolicyValidationClass } from './policy-validation-class';
-import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
 import { Producer } from '../../submission/models/producer';
-import { AdditionalNamedInsured } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsured, AdditionalNamedInsuredData, PolicyANIClass, coverageANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { RiskLocationClass } from './risk-location';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
+import { PolicyService } from '../../policy/services/policy/policy.service';
+import { PolicyQuoteClass } from './policy-quote-class';
+import { DatePipe } from '@angular/common';
+import { EndorsementClass } from './endorsement-class';
+import { InsuredClass } from '../../insured/classes/insured-class';
 
-export class PolicyClass extends ParentBaseClass implements PolicyInformation, Validation {
-  quoteData!: QuoteData;
-  riskLocation!: RiskLocation;
-  endorsement!: Endorsement;
+
+export class PolicyClass extends ParentBaseClass implements PolicyInformation {
+  quoteData!: PolicyQuoteClass;
+  riskLocation!: RiskLocationClass;
+  additionalNamedInsuredData: PolicyANIClass[] = [];
+  endorsement!: EndorsementClass;
+  insured!: InsuredClass;
+  //TODO: Make Producer Class
+  producer!: Producer;
   policyEventCode!: string;
   packageInd!: string;
   policyType!: string | null;
@@ -22,62 +30,175 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation, V
   fullPolicyNo!: string;
   enteredDate!: Date;
   policyInsuredState!: string;
-  policyExpirationDate!: Date;
-  policyExtendedExpDate!: Date | null;
-  policyCancelDate!: Date | null;
-  retroDate!: Date | null;
   programName!: string;
   riskGradeCode!: string;
   auditCode!: string;
   paymentFrequency!: string;
-  deregulationIndicator!: string;
   nyftz!: string | null;
   riskType!: string;
-  assumedCarrier!: string | null;
   coinsurancePercentage!: number;
   productManufactureDate!: Date;
   submissionNumber!: number;
-
   departmentId!: number;
   policyId!: number;
-  commRate!:number;
   endorsementNumber!: number;
-
   policySymbol!: string;
   formattedPolicyNo!: string;
   programId!: number;
-  policyEffectiveDate!: Date;
-
-  producer!: Producer;
-  additionalNamedInsuredData!: AdditionalNamedInsured[];
-  insured!: Insured;
-  isDirty!: boolean;
-  canBeSaved!: boolean;
-  errorMessages!: string[];
-  validationResults!: Validation;
-
-  lockEndorsementFields = this.setEndorsementFieldStatus();
-  dereg!: boolean;
-  assumed!: boolean;
   endorsementChanged = false;
   canSetRetroDate = false;
+  canSetExtensionDate = false;
+  canSetCancelDate = false;
   canSetClaimsMadeOccurrence = false;
   coverageCodesList: Code[] = [];
+  //_validateOnLoad = true;
+  isNew = false;
+  invalidList= '';
 
+  private _commRate : number | null = null;
+  get commRate() : number | null {
+    return this._commRate;
+  }
+  set commRate(value: number | null) {
+    this._commRate = value;
+    this.markDirty();
+  }
 
-  constructor(policy?: PolicyInformation) {
+  private _dereg = false;
+  get dereg() : boolean {
+    this._dereg = this.deregulationIndicator == 'F'? true : false;
+    return this._dereg;
+  }
+  set dereg(value:boolean) {
+    this._dereg = value;
+    this.markDirty();
+  }
+
+  private _deregulationIndicator = '';
+  get deregulationIndicator() : string {
+    return this._deregulationIndicator;
+  }
+  set deregulationIndicator(value: string) {
+    console.log(value);
+    this._deregulationIndicator = value;
+    this.dereg;
+    this.markDirty();
+  }
+
+  private _assumed = false;
+  get assumed() : boolean {
+    this._assumed = this.riskType == 'A'? true : false;
+    return this._assumed;
+  }
+  set assumed(value:boolean) {
+    this._assumed = value;
+    this.assumed;
+    this.markDirty();
+  }
+
+  private _assumedCarrier : string | null = null;
+  get assumedCarrier() : string | null{
+    return this._assumedCarrier;
+  }
+  set assumedCarrier(value: string | null) {
+    console.log(value);
+    this._assumedCarrier = value;
+    this.assumedCarrier;
+    this.markDirty();
+  }
+
+  private _state : string | null = null;
+  get state() : string | null{
+    return this._state;
+  }
+  set state(value: string | null) {
+    this._state = value;
+    this.markDirty();
+  }
+
+  private _policyEffectiveDate : Date = new Date();
+  get policyEffectiveDate() : Date {
+    return this._policyEffectiveDate;
+  }
+  set policyEffectiveDate(value: Date) {
+    this._policyEffectiveDate = value;
+    if (this.endorsement.endorsementNumber == 0) {
+      this.endorsementChanged = true;
+      this.endorsement.transactionEffectiveDate = this.policyEffectiveDate ;
+    }
+    this.markDirty();
+  }
+
+  private _policyExpirationDate : Date = new Date() ;
+  get policyExpirationDate() : Date {
+    return this._policyExpirationDate;
+  }
+  set policyExpirationDate(value: Date ) {
+    this._policyExpirationDate = value;
+    if (this.endorsement.endorsementNumber == 0) {
+      this.endorsementChanged = true;
+      this.endorsement.transactionExpirationDate = this.policyExpirationDate;
+    }
+    this.markDirty();
+  }
+
+  private _retroDate : Date | null = null;
+  get retroDate() : Date | null {
+    return this._retroDate;
+  }
+  set retroDate(value: Date | null) {
+    this._retroDate = value;
+    this.markDirty();
+  }
+
+  private _policyCancelDate : Date | null = null;
+  get policyCancelDate() : Date | null {
+    if (this.isCancelEndorsement(this.endorsement.transactionTypeCode)) {
+      this.canSetCancelDate = true;
+    } else {
+      this.canSetCancelDate = false;
+    }
+    return this._policyCancelDate;
+  }
+  set policyCancelDate(value: Date | null) {
+    this._policyCancelDate = value;
+    this.markDirty();
+  }
+
+  private _policyExtendedExpDate : Date | null = null;
+  get policyExtendedExpDate() : Date | null {
+    if (this.endorsement.transactionTypeCode === TransactionTypes.PolicyExtensionByEndt) {
+      this.canSetExtensionDate = true;
+    } else {
+      this.canSetExtensionDate = false;
+    }
+    return this._policyExtendedExpDate;
+  }
+  set policyExtendedExpDate(value: Date | null) {
+    this._policyExtendedExpDate = value;
+    this.markDirty();
+  }
+
+  constructor(private policyService: PolicyService,policy?: PolicyInformation, ) {
     super();
     if (policy) {
       this.existingInit(policy);
     } else {
       this.newInit();
     }
-    this.validationResults = new PolicyValidationClass(PolicyValidationTabNameEnum.PolicyInfo);
     //this.setWarnings();
   }
   existingInit(policy: PolicyInformation) {
-    this.riskLocation = policy.riskLocation ;
-    this.endorsement = policy.endorsement;
+    this.riskLocation = new RiskLocationClass(policy.riskLocation);
+    this.quoteData = new PolicyQuoteClass(policy.quoteData);
+    policy.additionalNamedInsuredData.forEach(x => {
+      const y = new PolicyANIClass(x);
+      this.additionalNamedInsuredData.push(y);
+    });
+    this.endorsement = new EndorsementClass(policy.endorsement);
+    this.insured = new InsuredClass(policy.insured);
+    //TODO: create producer class
+    this.producer = policy.producer;
     this.policyEventCode = 'B';
     this.packageInd = policy.packageInd;
     this.policyType = policy.policyType;
@@ -86,8 +207,9 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation, V
     this.fullPolicyNo = policy.fullPolicyNo;
     this.enteredDate = new Date();
     this.policyInsuredState = policy.policyInsuredState;
+    this.policyEffectiveDate = policy.policyEffectiveDate;
     this.policyExpirationDate = policy.policyExpirationDate;
-    this.policyExtendedExpDate = policy.policyEffectiveDate;
+    this.policyExtendedExpDate = policy.policyExtendedExpDate;
     this.policyCancelDate = policy.policyCancelDate;
     this.retroDate = policy.retroDate;
     this.programName = policy.programName;
@@ -106,34 +228,51 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation, V
     this.policySymbol = policy.policySymbol;
     this.formattedPolicyNo = policy.formattedPolicyNo;
     this.programId = policy.programId;
-    this.policyEffectiveDate = policy.policyEffectiveDate;
-    this.producer = policy.producer;
-    this.insured = policy.insured;
-    this.additionalNamedInsuredData = policy.additionalNamedInsuredData;
     this.commRate = policy.commRate;
+    this.guid = crypto.randomUUID();
+    this.isNew = false;
+    this.markedForDeletion = false;
     // this.setReadonlyFields();
     // this.setRequiredFields();
   }
   newInit() {
     this.policyId = 0;
+    this.guid = crypto.randomUUID();
+    this.isNew = true;
+    this.markedForDeletion = false;
   }
+  validate(): ErrorMessage[]{
+    console.log('validate  policy');
+    //on load or if dirty validate this
+    console.log('THIS ' + this.isDirty);
+    if (this.isDirty){
+      //TODO: class based validation checks
+      this.canBeSaved = true;
+      this.errorMessages = this.validateChildren(this);
 
-  afterSave() {
-    if (this.validationResults?.canBeSaved) {
-      // this.markStructureClean();
-      this.isDirty = false;
+      this.validateClass();
     }
-  }
-  onSave(savedPolicy:PolicyClass){
-    return this.validationResults;
+    return this.errorMessages;
   }
 
+  validateClass(): void{
+    console.log('comrate' + this.commRate);
+    if(this.commRate == 0){
+      this.createErrorMessage('Comm Rate is required');
+    }
+    const datePipe = new DatePipe('en-US');
+    const effectiveDate = Number(datePipe.transform(this.policyEffectiveDate, 'yyyyMMdd'));
+    const expirationDate = Number(datePipe.transform(this.policyExpirationDate, 'yyyyMMdd'));
+    //const validZip = ZipCodeCountry(this.riskLocation.zip) == this.dropdowns.getCountryByState(this.riskLocation.state);
 
-  validate(): Validation {
-    this.validationResults.canBeSaved = true;
-    this.validationResults.isDirty = true;
-    return this.validationResults;
+    if (effectiveDate >= expirationDate) {
+      this.createErrorMessage('Expiration Date must be after the Effective Date');
+    }
+    // if (!validZip && ZipCodeCountry(this.riskLocation.zip) != this.dropdowns.getCountryByState(this.riskLocation.state)) {
+    //   this.createErrorMessage('Zip Code is invalid for ' + this.riskLocation.countryCode);
+    // }
   }
+
   onGuidNewMatch(T: ParentBaseClass): void {
     throw new Error('Method not implemented.');
   }
@@ -143,32 +282,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation, V
   onChildDeletion(child: Deletable): void {
     throw new Error('Method not implemented.');
   }
-  dropDownSearch(term: string, item: Code) {
-    term = term.toLowerCase();
-    return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
-  }
-
-
-  // isValid(): boolean {
-  //   const effectiveDate = Number(this.datePipe.transform(this.policyEffectiveDate, 'yyyyMMdd'));
-  //   const expirationDate = Number(this.datePipe.transform(this.policyExpirationDate, 'yyyyMMdd'));
-  //   const validZip = ZipCodeCountry(this.riskLocation.zip) == this.dropdowns.getCountryByState(this.riskLocation.state);
-  //   return effectiveDate < expirationDate && validZip && thisForm.status == 'VALID';
-  // }
-
-  // ErrorMessages(): string[] {
-  //   const effectiveDate = Number(this.datePipe.transform(this.policyEffectiveDate, 'yyyyMMdd'));
-  //   const expirationDate = Number(this.datePipe.transform(this.policyExpirationDate, 'yyyyMMdd'));
-  //   const errorMessages: string[] = [];
-
-  //   if (effectiveDate >= expirationDate) {
-  //     errorMessages.push('Expiration Date must be after the Effective Date');
-  //   }
-  //   if (thisForm.controls['riskZipCode'].valid && ZipCodeCountry(this.riskLocation.zip) != this.dropdowns.getCountryByState(this.riskLocation.state)) {
-  //     errorMessages.push('Zip Code is invalid for ' + this.riskLocation.countryCode);
-  //   }
-  //   return errorMessages;
-  // }
 
   setEndorsementFieldStatus(): boolean {
     if (this.endorsement.endorsementNumber > 0) {
@@ -178,72 +291,10 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation, V
     }
   }
 
-
-  checkDereg(): boolean{
-    return this.dereg = this.deregulationIndicator == 'F'? true : false;
-  }
-  checkAssumed(): boolean{
-    return this.assumed = this.riskType == 'A'? true : false;
-  }
   ChangePolicyNumber() {
     this.formattedPolicyNo = this.policyNo + (this.formattedPolicyNo.charAt(this.formattedPolicyNo.length-3) == '-' ? this.formattedPolicyNo.slice(-3) : '');
   }
-  changeEffectiveDate() {
-    if (this.endorsement.endorsementNumber == 0) {
-      this.endorsementChanged = true;
-      this.endorsement.transactionEffectiveDate = this.policyEffectiveDate;
-    }
-  }
-  changeExpirationDate() {
-    if (this.endorsement.endorsementNumber == 0) {
-      this.endorsementChanged = true;
-      this.endorsement.transactionExpirationDate = this.policyExpirationDate;
-    }
-  }
 
-  changePolicySymbol() {
-    if (this.isPrimaryPolicy) {
-      this.endorsementChanged = true;
-      this.endorsement.attachmentPoint = 0;
-      this.endorsement.underlyingLimit = 0;
-    }
-  }
-  changeRetroDate() {
-    this.quoteData.retroDate = this.retroDate;
-  }
-  private get isPrimaryPolicy(): boolean {
-    return (this.policySymbol.trim().toUpperCase() == 'PL') || (this.policySymbol.trim().toUpperCase() == 'PRC');
-  }
-
-  clearNYFTZ() {
-    this.nyftz = null;
-  }
-  clearAssumed() {
-    this.assumedCarrier = null;
-  }
-
-  isExtensionDateActive(): boolean {
-    if (this.lockEndorsementFields && this.endorsement.transactionTypeCode === TransactionTypes.PolicyExtensionByEndt) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  isRetroDateActive(): boolean {
-    if (this.canSetRetroDate) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  isCancelDateActive(): boolean {
-    if (this.lockEndorsementFields && this.isCancelEndorsement(this.endorsement.transactionTypeCode)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
   async determineClaimsMadeOccurrence(){
     const coverageCode = this.quoteData.coverageCode;
     let coverageDetermined = false;
