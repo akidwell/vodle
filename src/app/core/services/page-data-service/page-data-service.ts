@@ -15,7 +15,7 @@ export class PageDataService {
   private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
   private _quoteData: DepartmentClass | null = null;
-  private _policyData: PolicyClass | PolicyInformation | null = null;
+  private _policyData: PolicyClass | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
   private _selectedProgram: ProgramClass | null = null;
@@ -29,7 +29,7 @@ export class PageDataService {
   );
   quoteData$: BehaviorSubject<DepartmentClass | null> = new BehaviorSubject(this._quoteData);
   selectedProgram$: BehaviorSubject<ProgramClass | null> = new BehaviorSubject(this._selectedProgram);
-  policyData$: BehaviorSubject<PolicyClass | PolicyInformation |null> = new BehaviorSubject(this._policyData);
+  policyData$: BehaviorSubject<PolicyClass |null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
 
@@ -70,11 +70,11 @@ export class PageDataService {
       this.isNoData = false;
     }
   }
-  get policyData(): PolicyClass | PolicyInformation | null {
-    return this._policyData;
+  get policyData(): PolicyClass | null {
+    return this._policyData ? this._policyData as PolicyClass : null;
   }
 
-  set policyData(val: PolicyClass | PolicyInformation | null) {
+  set policyData(val: PolicyClass | null) {
     this._policyData = val;
     this.policyData$.next(this._policyData);
     if (val != null) {

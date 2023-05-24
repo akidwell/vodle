@@ -1,6 +1,6 @@
-import { PolicyInformation } from '../../policy/models/policy';
+import { PolicyClass } from '../classes/policy-class';
 
 export interface PolicyResolved {
-    policyInfo: PolicyInformation | null;
+    policyInfo: PolicyClass | null;
     error?: any;
   }

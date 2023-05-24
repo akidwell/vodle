@@ -1,6 +1,8 @@
-import { AdditionalNamedInsured } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsured, AdditionalNamedInsuredData } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { Producer } from '../../submission/models/producer';
 import { Insured } from '../../insured/models/insured';
+import { RiskLocationClass } from '../../policy-v2/classes/risk-location';
+import { Quote } from '../../quote/models/quote';
 
 
 export interface AccountInformation {
@@ -35,7 +37,7 @@ export interface PolicyInformation {
   additionalNamedInsuredData: AdditionalNamedInsured[];
   insured: Insured;
   producer: Producer;
-  commRate: number;
+  commRate: number | null;
   departmentId: number;
   policyEventCode: string;
   endorsementNumber: number;

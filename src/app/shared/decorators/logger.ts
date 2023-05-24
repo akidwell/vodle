@@ -70,17 +70,17 @@ export function Log(params?: LoggerParams): (target: any, propertyKey: string, d
 
       // Only Inputs
       if (params?.inputs && !params?.outputs) {
-        console[options.type](timeStamp, original.name + ' -> IN: ', nameAndValue);
+        //console[options.type](timeStamp, original.name + ' -> IN: ', nameAndValue);
       }
 
       // Only Outputs
       else if (!params?.inputs && params?.outputs) {
-        console[options.type](timeStamp, original.name + ' -> OUT: ', result);
+        //console[options.type](timeStamp, original.name + ' -> OUT: ', result);
       }
 
       // Input and Output
       else {
-        console[options.type](timeStamp, original.name + ' -> IN: ', nameAndValue, ' OUT: ', result);
+        //console[options.type](timeStamp, original.name + ' -> IN: ', nameAndValue, ' OUT: ', result);
       }
 
       return result;
