@@ -71,6 +71,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.validate();
   }
 
+  private _rateEffectiveDate: Date | null = null;
+  get rateEffectiveDate(): Date | null {
+    return this._rateEffectiveDate;
+  }
+  set rateEffectiveDate(value: Date | null) {
+    this.rateEffectiveDate = value;
+  }
+
   get riskDescription() : string | null {
     return this._riskDescription;
   }
@@ -388,6 +396,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteId = propertyQuote.propertyQuoteId;
     //this.quoteId = propertyQuote.quoteId;
     this._riskDescription = propertyQuote.riskDescription;
+    this._rateEffectiveDate = propertyQuote.rateEffectiveDate;
 
     const deductibles: PropertyQuoteDeductibleClass[] = [];
 
@@ -970,6 +979,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       propertyQuoteId: this.propertyQuoteId,
       quoteId: this.quoteId,
       riskDescription: this.riskDescription,
+      rateEffectiveDate: this.rateEffectiveDate,
       propertyQuoteDeductible: deductibles,
       propertyQuoteMortgagee: mortgagee,
       propertyQuoteAdditionalInterest: ai,

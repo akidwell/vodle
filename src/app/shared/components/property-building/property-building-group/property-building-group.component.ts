@@ -37,6 +37,7 @@ export class PropertyBuildingGroupComponent implements OnInit {
   @Input() public buildingCount!: number;
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
+  @Input() public rateEffectiveDate!: Date | null;
   @Input() set buildings(value: PropertyQuoteBuildingClass[]) {
     this._buildings = value;
     this._search$.next();

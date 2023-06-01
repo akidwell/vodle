@@ -8,6 +8,7 @@ export interface PropertyQuote {
   propertyQuoteId: number;
   quoteId: number | null;
   riskDescription: string | null;
+  rateEffectiveDate: Date | null;
 
   // GAM are these needed? Need to look at more closely!!!
   propertyQuoteDeductibleList?: PropertyDeductible[];

@@ -15,6 +15,7 @@ export class QuotePropertyDetailRightComponent implements OnInit {
   @Input() public quote!: PropertyQuoteClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
+  @Input() public rateEffectiveDate!: Date | null;
   cspCodes$: Observable<Code[]> | undefined;
   loadingCsp = true;
   cspCode: Code = {code:'', key:0, description:''};
@@ -30,7 +31,7 @@ export class QuotePropertyDetailRightComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', '2020-01-01', this.quote.programId.toString() || '*')
+    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', this.rateEffectiveDate?.toString() ?? '', this.quote.programId.toString() || '*')
       .pipe(tap(() => this.loadingCsp = false));
 
     this.previousCspCode = this.quote.classCode;
