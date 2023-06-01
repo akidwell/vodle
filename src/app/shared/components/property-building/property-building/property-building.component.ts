@@ -35,6 +35,7 @@ export class PropertyBuildingComponent implements OnInit {
   @Input() public canEdit = false;
   @Input() public index = 0;
   @Input() public classType!: ClassTypeEnum;
+  @Input() public rateEffectiveDate!: Date | null;
   @Output() deleteBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
   @Output() copyBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
   @Output() addCoverage: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
@@ -50,7 +51,7 @@ export class PropertyBuildingComponent implements OnInit {
       this.collapseExpand(false);
       this.focus();
     }
-    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', '2020-01-01', this.programId.toString() ?? '*')
+    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', this.rateEffectiveDate?.toString() ?? '', this.programId.toString() ?? '*')
       .pipe(tap(() => this.loadingCsp = false));
   }
 
