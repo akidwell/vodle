@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
-import { faE, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faE, faEdit, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -25,6 +25,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   faExclamationTriangle = faExclamationTriangle;
   faCircleE = faE;
   faCircle = faCircle;
+  faEdit = faEdit;
   showExpiring = false;
   //expiringFormsLoading = false;
   //expiringForms: EndorsementSubjectivityData[] | null = null;
