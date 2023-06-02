@@ -101,29 +101,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     // Just want the distinct warrantyOfs to display in that dropdown
     this.optionalWarranties = this._optionalWarranties.filter((item,i,arr) => arr.findIndex((x) => (x.warrantyOf === item.warrantyOf)) === i);
 
-    //when we first display the list, only show those that are included and default
-    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || x.isIncluded).sort((x,y) =>
-      (x.warrantyOf < y.warrantyOf ? -1 : 0));
-    //sort by the warranty of then section header
-    this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
-      (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
-      (x.sectionHeader < y.sectionHeader ? -1 : 0)
-    ).reverse();
-    // mandatory values first
-    this.filteredWarranties.sort((x, y) => Number(y.ysnDefault) - Number(x.ysnDefault));
-    // determine if it's the first main header/ section header that way they're only displayed once, not repeated
-    let fMainHeader : string | null = '';
-    let fSectionHeader : string | null = '';
-    for (const x of this.filteredWarranties) {
-      if (x.mainHeader != fMainHeader) {
-        x.firstFilteredMainHeaderRow = true;
-        fMainHeader = x.mainHeader;
-      }
-      if (x.sectionHeader != fSectionHeader){
-        x.firstFilteredSectionHeaderRow = !(!x.sectionHeader || x.sectionHeader.length === 0 );
-        fSectionHeader = x.sectionHeader;
-      }
-    }
+    this.refreshWarranties()
   }
 
   ngOnDestroy() {
@@ -133,32 +111,19 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   //this gets called any time you choose a warranty of the warranty list (optional warranties)
   // or anytime a warranty is edited/user defined warranty is added
   refreshWarranties() {
-    // reget any warranties that were added
-    this.filteredWarranties = this.warranties.filter(x => x.ysnDefault || (x.isIncluded && x.warrantyOf != this.addedWarrantyOf)).sort((x,y) =>
-      (x.warrantyOf < y.warrantyOf ? -1 : 0)
-    );
-    // re add any warranties that were chosed from the warranty dropdown that could be unchecked
-    this.addedWarranties.map(element => {
-      if(!this.filteredWarranties.includes(element))
-        this.filteredWarranties.push(element);
-    });
+    this.filteredWarranties = [...this.warranties]
+    this.filteredWarranties.sort((a, b) =>
+      // Mandatory values first
+      (Number(b.ysnDefault) - Number(a.ysnDefault)) ||
+      // Alphabetically by warranty type
+      (a.warrantyOf.localeCompare(b.warrantyOf, undefined, {sensitivity: 'base'})) ||
+      // Alphabetically by section, with null headers first
+      (a.sectionHeader == null ? -1 : a.sectionHeader.localeCompare(b.sectionHeader)));
 
-    // sort by warrantyOf then by section header
-    // TO DO: Sort null section headers first, then other section headers
-    this.filteredWarranties = this.filteredWarranties.sort((x,y) =>
-      (x.warrantyOf < y.warrantyOf ? -1 : 0) &&
-      (x.sectionHeader < y.sectionHeader ? -1 : 0)
-    ).reverse();
+    // determine if it's the first main header/ section header that way they're only displayed once, not repeated
+    let fMainHeader : string | null = '';
+    let fSectionHeader : string | null = '';
 
-    this.filteredWarranties.sort(function(a, b){
-      const x = a.warrantyOf.toLowerCase();
-      const y = b.warrantyOf.toLowerCase();
-      if (x < y) {return -1;}
-      if (x > y) {return 1;}
-      return 0;
-    });
-    // mandatory values first
-    this.filteredWarranties.sort((x, y) => Number(y.ysnDefault) - Number(x.ysnDefault));
     // reset the firstrow flags
     this.warranties.map(
       x => {
@@ -166,10 +131,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
         x.firstFilteredSectionHeaderRow = false;
       }
     );
-
-    // determine if it's the first main header/ section header that way they're only displayed once, not repeated
-    let fMainHeader : string | null = '';
-    let fSectionHeader : string | null = '';
 
     for (const x of this.filteredWarranties) {
       if (x.mainHeader != fMainHeader) {
@@ -249,11 +210,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     });
   }
 
-  addWarranties(sub: WarrantiesClass){
-    this.addedWarranties = this.warranties.filter(x => x.warrantyOf == sub.warrantyOf );
-    this.addedWarrantyOf = sub.warrantyOf;
-    this.refreshWarranties();
-  }
   clearAndClose(): void {
     const newUserDefinedInfo: WarrantiesClass = ({}) as WarrantiesClass;
     this.userDefinedInfo = newUserDefinedInfo;

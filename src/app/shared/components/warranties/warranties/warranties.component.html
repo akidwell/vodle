@@ -11,9 +11,7 @@
         <label for="warranty">Warranty</label>
         <div class="col-lg-3">
           <ng-select id="description" [items]="optionalWarranties" [clearable]="false" [readonly]="!canEdit"
-            name="description" [(ngModel)]="warrantyOfs" bindLabel="warrantyOf" bindValue="warrantyOf"
-            (change)="addWarranties($event)">
-          </ng-select>
+            name="description" [(ngModel)]="warrantyOfs" bindLabel="warrantyOf" bindValue="warrantyOf"/>
           <ng-template ng-label-tmp let-item="item">
             {{item.warrantyOf}}
           </ng-template>
