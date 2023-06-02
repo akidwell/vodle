@@ -30,23 +30,13 @@
     <div class="card-body table-body">
       <div class="table-responsive">
         <table class="table table-bordered" *ngIf="true">
-          <thead>
-            <tr>
-
-              <th style="text-align:center;">Included</th>
-              <th nowrap>Description</th>
-              <th></th>
-            </tr>
-          </thead>
-
           <tbody>
             <ng-container *ngFor="let sub of filteredWarranties">
               <tr *ngIf="sub.firstFilteredMainHeaderRow">
-                <td colspan="12" style="background:#f2f4f6">{{sub.mainHeader}}
+                <td colspan="12" style="background:#335271; color:#f2f4f6">{{sub.warrantyOf}}:</td>
               </tr>
               <tr *ngIf="sub.firstFilteredSectionHeaderRow">
-                <td colspan="12" style="background:#d1d1d1; font-weight: bold;"><u>{{ sub.sectionHeader}}</u>
-                </td>
+                <td colspan="12" style="background:#f2f4f6"><u>{{sub.sectionHeader}}</u></td>
               </tr>
               <tr>
                 <td style="text-align:center; width:1%; vertical-align:middle;">
