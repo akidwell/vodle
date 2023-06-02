@@ -10,6 +10,7 @@ import { QuoteClass } from 'src/app/features/quote/classes/quote-class';
 import { QuoteWarrantiesClass } from 'src/app/features/quote/classes/quote-warranties-class';
 import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
 import { WarrantiesClass } from 'src/app/shared/classes/warranties-class';
+import { WarrantyTypeView } from 'src/app/core/enums/form-view-type';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 
 @Component({
@@ -29,6 +30,7 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   showExpiring = false;
   //expiringFormsLoading = false;
   //expiringForms: EndorsementSubjectivityData[] | null = null;
+  currentView = WarrantyTypeView.OnPolicy;
   allWarrantiesCount = 0;
   mandatoryWarrantiesCount = 0;
   optionalWarrantiesCount = 0;
@@ -70,7 +72,6 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
   }
   get optionalWarranties(): WarrantiesClass[] {
     return this._optionalWarranties;
-
   }
   get addedWarranties(){
     return this._addedWarranties;
@@ -101,21 +102,44 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
     //The warranty of dropdown list at the top of the card
     // Just want the distinct warrantyOfs to display in that dropdown
     this.optionalWarranties = this._optionalWarranties.filter((item,i,arr) => arr.findIndex((x) => (x.warrantyOf === item.warrantyOf)) === i);
-
-    this.refreshWarranties()
   }
 
   ngOnDestroy() {
     this.saveSub?.unsubscribe();
   }
 
-  //this gets called any time you choose a warranty of the warranty list (optional warranties)
-  // or anytime a warranty is edited/user defined warranty is added
-  refreshWarranties() {
-    this.filteredWarranties = [...this.warranties]
+  public get viewType(): typeof WarrantyTypeView {
+    return WarrantyTypeView;
+  }
+
+  /**
+   * Updates `filteredWarranties` and warranty counts.
+   * Called whenever user filters by warranty type or when a warranty is edited or added.
+   * @param currentView Optionally supply a new view to filter on.
+   */
+  refreshWarranties(currentView?: WarrantyTypeView) {
+    if (typeof currentView !== "undefined") {
+      this.currentView = currentView;
+    }
+
+    // Filter warranties based on view selection
+    switch (this.currentView) {
+      case WarrantyTypeView.Available:
+        this.filteredWarranties = [...this.warranties];
+        break;
+      case WarrantyTypeView.Optional:
+        this.filteredWarranties = this.warranties.filter(w => !w.ysnDefault);
+        break;
+      case WarrantyTypeView.Mandatory:
+        this.filteredWarranties = this.warranties.filter(w => w.ysnDefault);
+        break;
+      case WarrantyTypeView.OnPolicy:
+        this.filteredWarranties = this.warranties.filter(w => w.isIncluded);
+        break;
+      default: break;
+    }
+
     this.filteredWarranties.sort((a, b) =>
-      // Mandatory values first
-      (Number(b.ysnDefault) - Number(a.ysnDefault)) ||
       // Alphabetically by warranty type
       (a.warrantyOf.localeCompare(b.warrantyOf, undefined, {sensitivity: 'base'})) ||
       // Alphabetically by section, with null headers first
@@ -162,7 +186,9 @@ export class WarrantiesComponent extends SharedComponentBase implements OnInit {
 
   setWarrantiesCount() {
     this.allWarrantiesCount = this.warranties.length;
-    this.onPolicyWarrantiesCount = this.warranties.filter((c) => c.isIncluded).length;
+    this.mandatoryWarrantiesCount = this.warranties.filter(c => c.ysnDefault).length;
+    this.optionalWarrantiesCount = this.warranties.filter(c => !c.ysnDefault).length;
+    this.onPolicyWarrantiesCount = this.warranties.filter(c => c.isIncluded).length;
   }
 
   async userDefinedPopup(): Promise<void> {
