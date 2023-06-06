@@ -102,6 +102,9 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
   addNewAdditionalNamedInsured(): void {
     const clone = this.newANI.clone();
     clone.sequenceNo = this.getNextSequence();
+    clone.guid = crypto.randomUUID(),
+    clone.isNew = true;
+    clone.createdDate = new Date(),
     this.aniData.push(clone);
     this.aniCollapsed = false;
   }
@@ -154,6 +157,10 @@ export class SharedAdditionalNamedInsuredsGroupComponent implements OnInit {
     else {
       this.dragDropClass = '';
     }
+  }
+
+  get aniCount(): number {
+    return this.aniData.filter(x=> !x.markForDeletion).length;
   }
 
 }

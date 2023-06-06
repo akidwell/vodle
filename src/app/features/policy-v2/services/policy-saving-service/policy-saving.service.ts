@@ -16,7 +16,7 @@ export class PolicySavingService {
 
 
   policySub!: Subscription;
-  policy: PolicyClass |PolicyInformation | null = null;
+  policy: PolicyInformation | null = null;
 
   isSaving$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _isSaving= false;
@@ -36,13 +36,14 @@ export class PolicySavingService {
   ) {
     console.log('init');
     this.policySub = this.pageDataService.policyData$.subscribe(
-      (policy: PolicyClass | PolicyInformation |null) => {
+      (policy: PolicyInformation |null) => {
         this.policy = policy;
       }
     );
   }
 
   async savePolicy() {
+    console.log('IN SAVE POLICY');
     const policy = this.policy;
     if (policy && this.policy instanceof PolicyClass && policy instanceof PolicyClass) {
       console.log('policy: ', policy, 'id: ');
@@ -52,7 +53,10 @@ export class PolicySavingService {
       await lastValueFrom(results$)
         .then(async (policyData: PolicyInformation) => {
           this.policy = policyData;
-          const x = new PolicyClass(this.policyService, policyData);
+          const x = new PolicyClass(policyData);
+          console.log('X:' + policyData);
+          this.pageDataService.policyData = x;
+          x.onSaveCompletion([x]);
           this.notification.show('Policy Saved.', {
             classname: 'bg-success text-light',
             delay: 5000,

@@ -34,7 +34,7 @@ export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
   endorsement: Endorsement;
-  additionalNamedInsuredData: AdditionalNamedInsured[];
+  additionalNamedInsuredData: AdditionalNamedInsuredData[];
   insured: Insured;
   producer: Producer;
   commRate: number | null;

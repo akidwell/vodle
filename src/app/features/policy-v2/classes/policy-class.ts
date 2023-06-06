@@ -4,10 +4,9 @@ import { PolicyInformation } from '../../policy/models/policy';
 import { TransactionTypes } from 'src/app/core/constants/transaction-types';
 import { Code } from 'src/app/core/models/code';
 import { Producer } from '../../submission/models/producer';
-import { AdditionalNamedInsured, AdditionalNamedInsuredData, PolicyANIClass, coverageANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsuredData, PolicyANIClass } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { RiskLocationClass } from './risk-location';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
-import { PolicyService } from '../../policy/services/policy/policy.service';
 import { PolicyQuoteClass } from './policy-quote-class';
 import { DatePipe } from '@angular/common';
 import { EndorsementClass } from './endorsement-class';
@@ -71,7 +70,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
   set dereg(value:boolean) {
     this._dereg = value;
-    this.markDirty();
   }
 
   private _deregulationIndicator = '';
@@ -93,7 +91,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   set assumed(value:boolean) {
     this._assumed = value;
     this.assumed;
-    this.markDirty();
   }
 
   private _assumedCarrier : string | null = null;
@@ -104,15 +101,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     console.log(value);
     this._assumedCarrier = value;
     this.assumedCarrier;
-    this.markDirty();
-  }
-
-  private _state : string | null = null;
-  get state() : string | null{
-    return this._state;
-  }
-  set state(value: string | null) {
-    this._state = value;
     this.markDirty();
   }
 
@@ -179,7 +167,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.markDirty();
   }
 
-  constructor(private policyService: PolicyService,policy?: PolicyInformation, ) {
+  constructor(policy?: PolicyInformation ) {
     super();
     if (policy) {
       this.existingInit(policy);
@@ -195,31 +183,30 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       const y = new PolicyANIClass(x);
       this.additionalNamedInsuredData.push(y);
     });
+    console.log(this.additionalNamedInsuredData);
     this.endorsement = new EndorsementClass(policy.endorsement);
     this.insured = new InsuredClass(policy.insured);
     //TODO: create producer class
     this.producer = policy.producer;
-    this.policyEventCode = 'B';
     this.packageInd = policy.packageInd;
     this.policyType = policy.policyType;
     this.policyNo = policy.policyNo;
     this.policyModNo = policy.policyModNo;
     this.fullPolicyNo = policy.fullPolicyNo;
     this.enteredDate = new Date();
-    this.policyInsuredState = policy.policyInsuredState;
-    this.policyEffectiveDate = policy.policyEffectiveDate;
-    this.policyExpirationDate = policy.policyExpirationDate;
-    this.policyExtendedExpDate = policy.policyExtendedExpDate;
-    this.policyCancelDate = policy.policyCancelDate;
-    this.retroDate = policy.retroDate;
+    this._policyEffectiveDate = policy.policyEffectiveDate;
+    this._policyExpirationDate = policy.policyExpirationDate;
+    this._policyExtendedExpDate = policy.policyExtendedExpDate;
+    this._policyCancelDate = policy.policyCancelDate;
+    this._retroDate = policy.retroDate;
     this.programName = policy.programName;
     this.riskGradeCode = policy.riskGradeCode;
     this.auditCode = policy.auditCode;
     this.paymentFrequency = policy.paymentFrequency;
-    this.deregulationIndicator = policy.deregulationIndicator;
+    this._deregulationIndicator = policy.deregulationIndicator;
     this.nyftz = policy.nyftz;
     this.riskType = policy.riskType;
-    this.assumedCarrier = policy.assumedCarrier;
+    this._assumedCarrier = policy.assumedCarrier;
     this.coinsurancePercentage = policy.coinsurancePercentage;
     this.productManufactureDate = policy.productManufactureDate;
     this.submissionNumber = policy.submissionNumber;
@@ -227,13 +214,17 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.policyId = policy.policyId;
     this.policySymbol = policy.policySymbol;
     this.formattedPolicyNo = policy.formattedPolicyNo;
+    this.policyEventCode = policy.policyEventCode;
     this.programId = policy.programId;
-    this.commRate = policy.commRate;
+    console.log(policy.commRate);
+    this._commRate = policy.commRate;
     this.guid = crypto.randomUUID();
     this.isNew = false;
     this.markedForDeletion = false;
+    this.isDirty = false;
     // this.setReadonlyFields();
     // this.setRequiredFields();
+    console.log('THIS POLICY' + this.invalidList);
   }
   newInit() {
     this.policyId = 0;
@@ -242,9 +233,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.markedForDeletion = false;
   }
   validate(): ErrorMessage[]{
-    console.log('validate  policy');
     //on load or if dirty validate this
-    console.log('THIS ' + this.isDirty);
     if (this.isDirty){
       //TODO: class based validation checks
       this.canBeSaved = true;
@@ -256,7 +245,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   validateClass(): void{
-    console.log('comrate' + this.commRate);
     if(this.commRate == 0){
       this.createErrorMessage('Comm Rate is required');
     }
@@ -274,13 +262,25 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   onGuidNewMatch(T: ParentBaseClass): void {
-    throw new Error('Method not implemented.');
+    this.isNew = false;
+    return;
   }
-  onGuidUpdateMatch(T: ParentBaseClass): void {
-    throw new Error('Method not implemented.');
+  onGuidUpdateMatch(T: ParentBaseClass){
+    this.hasUpdate = false;
+    return;
   }
   onChildDeletion(child: Deletable): void {
-    throw new Error('Method not implemented.');
+    console.log('delete child');
+    if(child instanceof PolicyANIClass){
+      this.deleteAddNamedInsured(child);
+    }
+  }
+  deleteAddNamedInsured(child: PolicyANIClass) {
+    const location = this.additionalNamedInsuredData.find((c) => c.id == child.id);
+    if(location) {
+      const index = this.additionalNamedInsuredData.indexOf(location);
+      this.additionalNamedInsuredData.splice(index, 1);
+    }
   }
 
   setEndorsementFieldStatus(): boolean {
@@ -351,5 +351,49 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     } else {
       return false;
     }
+  }
+
+  toJSON(): PolicyInformation{
+    const ai: AdditionalNamedInsuredData [] = [];
+    this.additionalNamedInsuredData.forEach(c => ai.push(c.toJSON()));
+    return{
+      policyId: this.policyId,
+      policyEffectiveDate: this.policyEffectiveDate,
+      quoteData: this.quoteData,
+      riskLocation: this.riskLocation,
+      endorsement: this.endorsement,
+      additionalNamedInsuredData: ai,
+      insured: this.insured,
+      producer: this.producer,
+      commRate: this.commRate,
+      departmentId: this.departmentId,
+      policyEventCode: this.policyEventCode,
+      endorsementNumber: this.endorsementNumber,
+      packageInd: this.packageInd,
+      policyModNo: this.policyModNo,
+      policyType: this.policyType,
+      policySymbol: this.policySymbol,
+      policyNo: this.policyNo,
+      fullPolicyNo: this.fullPolicyNo,
+      formattedPolicyNo: this.formattedPolicyNo,
+      enteredDate: this.enteredDate,
+      policyInsuredState: this.policyInsuredState,
+      policyExpirationDate: this.policyExpirationDate,
+      policyExtendedExpDate: this.policyExtendedExpDate,
+      policyCancelDate: this.policyCancelDate,
+      retroDate: this.retroDate,
+      programId: this.programId,
+      programName: this.programName,
+      riskGradeCode: this.riskGradeCode,
+      auditCode: this.auditCode,
+      paymentFrequency: this.paymentFrequency,
+      deregulationIndicator: this.deregulationIndicator,
+      nyftz: this.nyftz,
+      riskType: this.riskType,
+      assumedCarrier: this.assumedCarrier,
+      coinsurancePercentage: this.coinsurancePercentage,
+      productManufactureDate: this.productManufactureDate,
+      submissionNumber: this.submissionNumber
+    };
   }
 }

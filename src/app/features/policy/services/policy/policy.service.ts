@@ -31,7 +31,7 @@ export class PolicyService {
   getPolicyInfoV2(id: number, end: number): Observable<PolicyClass> {
     return this.http.get<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/new-policyinfo/' + end.toString()).pipe(
       map((recievedData: PolicyInformation) => {
-        return new PolicyClass(this, recievedData);
+        return new PolicyClass(recievedData);
       })
     );
   }
@@ -83,8 +83,8 @@ export class PolicyService {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/policyinfo', policyInfo);
   }
 
-  updatePolicyInfoV2(policy: PolicyClass): Observable<PolicyClass> {
-    return this.http.put<PolicyClass>(this.config.apiBaseUrl + 'api/policies/new-policyinfo', policy);
+  updatePolicyInfoV2(policy: PolicyClass): Observable<PolicyInformation> {
+    return this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/new-policyinfo', policy);
   }
 
   updateAccountInfo(accountInfo: AccountInformation): Observable<boolean> {

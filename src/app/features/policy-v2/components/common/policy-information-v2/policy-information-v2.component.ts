@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +11,7 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { ReinsuranceLookupService } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup.service';
 import { PolicyClass } from '../../../classes/policy-class';
 import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
-import { AdditionalNamedInsured, PolicyANIClass, coverageANI } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { PolicyANIClass } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 
@@ -59,7 +58,7 @@ export class PolicyInformationV2Component {
   aniData!: PolicyANIClass[];
   showBusy = false;
   saveSub!: Subscription;
-
+  programSub!: Subscription;
 
   accountCollapsed= false;
 
@@ -92,6 +91,8 @@ export class PolicyInformationV2Component {
     this.programs$ = this.dropdowns.getPrograms();
     this.policySymbols$ = this.dropdowns.getPolicySymbols();
     this.populateClaimsMadeOccurrence();
+
+    console.log(this.policyInfo.policyEventCode);
 
     this.coveragesSub = this.coverageCodes$.subscribe({
       next: codes => {
@@ -128,14 +129,6 @@ export class PolicyInformationV2Component {
       // Force Reinsurance drop downs to refresh
       this.reinsuranceLookupService.clearReinsuranceCodes();
       this.reinsuranceLookupService.refreshReinsuranceCodes();
-    }
-  }
-
-  isDirectQuoteFieldReadOnly(): boolean{
-    if(this.canEdit && this.endorsementStatusService.directQuote) {
-      return false;
-    } else {
-      return true;
     }
   }
 

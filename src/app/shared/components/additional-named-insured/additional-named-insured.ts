@@ -3,6 +3,7 @@ import { InsuredService } from 'src/app/features/insured/services/insured-servic
 import { ChildBaseClass } from 'src/app/features/policy-v2/classes/base/child-base-class';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { ErrorMessage } from '../../interfaces/errorMessage';
+import { Deletable } from '../../interfaces/deletable';
 
 export interface AdditionalNamedInsuredData {
   policyId: number;
@@ -16,6 +17,8 @@ export interface AdditionalNamedInsuredData {
   isActive?: boolean | null;
   canDelete?: boolean | null;
   isNew: boolean;
+  markForDeletion?: boolean | null;
+  guid: string ;
 }
 
 export interface AdditionalNamedInsured extends AdditionalNamedInsuredData {
@@ -32,6 +35,7 @@ export interface AdditionalNamedInsured extends AdditionalNamedInsuredData {
 
 export class coverageANI implements AdditionalNamedInsured {
   policyId = 0;
+  guid = crypto.randomUUID();
   endorsementNo = 0;
   addInsuredCode: number | null = null;
   insuredCode?: number;
@@ -182,7 +186,8 @@ export class coverageANI implements AdditionalNamedInsured {
       sequenceNo: this.sequenceNo,
       role: this.role,
       name: this.name,
-      isNew: this.isNew
+      isNew: this.isNew,
+      guid: crypto.randomUUID()
     };
   }
 }
@@ -199,6 +204,7 @@ export class insuredANI implements AdditionalNamedInsured {
   private _isDirty = false;
   invalidList: string[] = [];
   isDuplicate = false;
+  guid = crypto.randomUUID();
 
   private _sequenceNo = 0;
   private _role: number | null = null;
@@ -336,65 +342,82 @@ export class insuredANI implements AdditionalNamedInsured {
       role: this.role,
       name: this.name,
       isActive: this.isActive,
-      isNew: this.isNew
+      isNew: this.isNew,
+      guid: crypto.randomUUID()
     };
   }
 }
 
-export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedInsured {
-  onGuidNewMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
+export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedInsured, Deletable {
+  onGuidNewMatch(T: PolicyANIClass): void {
+    this.addInsuredCode = T.addInsuredCode;
+    this._name = T.name;
+    this.isNew = false;
+    return;
   }
-  onGuidUpdateMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
+  onGuidUpdateMatch(T: PolicyANIClass){
+    this._name = T.name;
+    this.hasUpdate = false;
   }
   policyId = 0;
   addInsuredCode: number | null = null;
   insuredCode = 0;
   endorsementNo = 0;
-  createdDate?: Date | null;
   isNew = false;
-  canDelete?: boolean = false;
-  showActive = true;
+  canDelete?: boolean = true;
+  showActive = false;
   invalidList: string[] = [];
   isDuplicate = false;
-  markedForDeletion = false;
-
+  private _markForDeletion = false;
   private _sequenceNo = 0;
   private _role: number | null = null;
   private _name: string | null = null;
   private _isActive: boolean | null = null;
+  private _createdDate!: Date | null | undefined ;
+
+  get createdDate() : Date | null | undefined {
+    return this._createdDate;
+  }
+  set createdDate(value: Date | null | undefined ) {
+    this._createdDate = value;
+  }
 
   get sequenceNo() : number {
     return this._sequenceNo;
   }
   set sequenceNo(value: number) {
     this._sequenceNo = value;
-    this.isDirty = true;
+    this.markDirty();
   }
   get role() : number | null {
     return this._role;
   }
   set role(value: number | null) {
     this._role = value;
-    this.isDirty = true;
+    this.markDirty();
   }
   get name() : string | null {
     return this._name;
   }
   set name(value: string | null) {
     this._name = value;
-    this.isDirty = true;
+    this.markDirty();
   }
   get isActive() : boolean | null {
     return this._isActive;
   }
   set isActive(value: boolean | null) {
     this._isActive = value;
-    this.isDirty = true;
+  }
+  get markForDeletion() : boolean {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean) {
+    this._markForDeletion = value;
+    this.markDirty();
   }
 
-  constructor(ani?: AdditionalNamedInsured) {
+  constructor(ani?: AdditionalNamedInsuredData) {
     super();
     console.log(ani);
     if(ani){
@@ -403,9 +426,16 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
       this.newInit();
     }
   }
-  delete(): Promise<boolean> {
+  onDelete(): void {
     throw new Error('Method not implemented.');
   }
+  delete(): Promise<boolean> {
+    console.log('IN DELETE');
+    return new Promise((resolve) => {
+      console.log('RESOLVE NAME' + resolve.name);
+      if(resolve.name)this.markForDeletion = true;});
+  }
+
   clone(): AdditionalNamedInsured {
     const copy: PolicyANIClass = Object.create(this);
     copy.createdDate = null;
@@ -424,15 +454,22 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
     return copy;
   }
 
-  existingInit(ani: AdditionalNamedInsured) {
-    this.role = ani.role;
-    this.name = ani.name;
+  existingInit(ani: AdditionalNamedInsuredData) {
+    this._role = ani.role;
+    this._name = ani.name;
+    this._createdDate = ani.createdDate;
+    this._isActive = ani.isActive ?? true;
+    this._sequenceNo = ani.sequenceNo;
+    this.guid = crypto.randomUUID();
+    this.isNew = false;
   }
 
   newInit(){
     this.role = null;
     this.name = null;
-    this.isNew = true;
+    this.guid = crypto.randomUUID();
+    this.isActive = true;
+    this.createdDate = new Date();
   }
   markClean() {
     this.isDirty = false;
@@ -454,17 +491,17 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
 
   validateRole(): void {
     console.log('ROLE' + this.role);
-    if (!this.role) {
+    if (!this.role && !this.markForDeletion) {
       this.createErrorMessage('Role is required for ANI #' + this.sequenceNo);
     }
   }
   validateName(): void {
-    if (!this.name) {
+    if (!this.name && !this.markForDeletion) {
       this.createErrorMessage('Name is required for ANI #' + this.sequenceNo);
     }
   }
 
-  toJSON() {
+  toJSON(): AdditionalNamedInsuredData {
     return {
       policyId: this.policyId,
       endorsementNo: this.endorsementNo,
@@ -474,7 +511,10 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
       role: this.role,
       name: this.name,
       isActive: this.isActive,
-      isNew: this.isNew
+      isNew: this.isNew,
+      canDelete: this.canDelete,
+      markForDeletion: this.markForDeletion ?? false,
+      guid: this.guid
     };
   }
 }

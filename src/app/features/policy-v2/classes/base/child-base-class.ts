@@ -48,6 +48,7 @@ export abstract class ChildBaseClass implements PolicyValidation{
 
   onSaveCompletion(T:ChildBaseClass[]) {
     const match = T.find(c => c.guid && c.guid.length > 0 && c.guid == this.guid);
+    console.log('CHILDBASECLASS' + T);
     if(this.isNew) {
       if (match) {
         this.onGuidNewMatch(match);
