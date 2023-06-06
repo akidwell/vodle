@@ -20,9 +20,10 @@ export class PageDataService {
   private _lastSubmission: HistoricRoute | null = null;
   private _selectedProgram: ProgramClass | null = null;
   private _resetLastSubmission = true;
-
+  private _readOnly = false;
   private _noData = true;
 
+  readOnly$: BehaviorSubject<boolean> = new BehaviorSubject(this._readOnly);
   insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
   submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(
     this._submissionData
@@ -142,5 +143,14 @@ export class PageDataService {
   }
   refreshProgram() {
     this.selectedProgram$.next(this._selectedProgram);
+  }
+
+
+  set readOnly(val: boolean) {
+    this._readOnly = val;
+    this.readOnly$.next(this._readOnly);
+  }
+  get readOnly(): boolean {
+    return this.policyData?.policyEventCode == 'B';
   }
 }

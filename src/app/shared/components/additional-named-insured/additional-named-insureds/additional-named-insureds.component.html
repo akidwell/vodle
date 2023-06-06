@@ -1,5 +1,5 @@
-<div class="row component-row">
-  <div class="col-lg-3">
+<div class="row component-row" *ngIf="!aniData.markForDeletion">
+  <div  class="col-lg-3">
     <ng-select id="role" [items]="aniRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false"
       [readonly]="!canEdit || canDrag" [required]="canEdit" name="role" [(ngModel)]="aniData.role" #role="ngModel">
     </ng-select>

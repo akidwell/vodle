@@ -77,12 +77,13 @@ export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
   }
 
   existingInit(loc: RiskLocation) {
-    this.city = loc.city;
-    this.state = loc.state;
-    this.zip = loc.zip;
-    this.street = loc.street;
-    this.countryCode = loc.countryCode;
-    this.taxCode = loc.taxCode;
+    this._policyId = loc.policyId;
+    this._city = loc.city;
+    this._state = loc.state;
+    this._zip = loc.zip;
+    this._street = loc.street;
+    this._countryCode = loc.countryCode;
+    this._taxCode = loc.taxCode;
     this.guid = crypto.randomUUID();
     this.isNew = false;
   }
@@ -114,6 +115,18 @@ export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
   }
   onGuidUpdateMatch(T: ChildBaseClass): void {
     throw new Error('Method not implemented.');
+  }
+
+  toJSON(): RiskLocation {
+    return {
+      city: this.city,
+      state: this.state,
+      zip: this.zip,
+      street: this.street,
+      policyId: this.policyId,
+      taxCode: this.taxCode,
+      countryCode: this.countryCode
+    };
   }
 
 }

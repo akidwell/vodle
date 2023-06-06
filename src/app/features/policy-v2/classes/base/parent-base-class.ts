@@ -178,6 +178,7 @@ export abstract class ParentBaseClass implements PolicyValidation {
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
       const savedObject = saved[key as keyof T];
+      console.log('KEYS:' +Object.keys(parent));
       //Check to see if any property is of ValidationChildClass and mark as not dirty
       if(object instanceof ChildBaseClass && savedObject instanceof ChildBaseClass) {
         //need to convert single object to array
@@ -222,7 +223,7 @@ export abstract class ParentBaseClass implements PolicyValidation {
           if(this.checkIfDeleted(objectInArray)) {
             this.onChildDeletion(objectInArray);
             objectInArray.onDelete();
-            //object.splice(index, 1);
+            object.splice(index, 1);
           }
         });
       }
@@ -232,11 +233,13 @@ export abstract class ParentBaseClass implements PolicyValidation {
   //T will be all saved instances of this objects class in an array
   //for the parent level quote or policy object it will only have item in the array
   onSaveCompletion(T:ParentBaseClass[]) {
+    console.log('T:' +T);
     const match = T.find(c => c.guid && c.guid.length > 0 && c.guid == this.guid);
     if(this.isNew) {
       if (match) {
         this.onGuidNewMatch(match);
         this.isNew = false;
+        this.isDirty = false;
       }
     } else {
       if (match && match.hasUpdate) {
@@ -253,6 +256,7 @@ export abstract class ParentBaseClass implements PolicyValidation {
 
   //Will determine if the object has the Deletable interface and if it is marked for deletion
   checkIfDeleted<T>(deletable: T) {
+    console.log('DELETEBAE:' + deletable);
     return (deletable as Deletable).markForDeletion === true;
   }
   createErrorMessage(message: string, errorMessageSettings: ErrorMessageSettings = errorMessageDefaults) {
