@@ -77,10 +77,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     return this._deregulationIndicator;
   }
   set deregulationIndicator(value: string) {
-    console.log(value);
     this._deregulationIndicator = value;
     this.dereg;
-    this.markDirty();
   }
 
   private _assumed = false;
@@ -98,10 +96,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     return this._assumedCarrier;
   }
   set assumedCarrier(value: string | null) {
-    console.log(value);
     this._assumedCarrier = value;
     this.assumedCarrier;
-    this.markDirty();
   }
 
   private _policyEffectiveDate : Date = new Date();
@@ -110,11 +106,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
   set policyEffectiveDate(value: Date) {
     this._policyEffectiveDate = value;
+    this.markDirty();
     if (this.endorsement.endorsementNumber == 0) {
       this.endorsementChanged = true;
       this.endorsement.transactionEffectiveDate = this.policyEffectiveDate ;
     }
-    this.markDirty();
   }
 
   private _policyExpirationDate : Date = new Date() ;
@@ -123,11 +119,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
   set policyExpirationDate(value: Date ) {
     this._policyExpirationDate = value;
+    this.markDirty();
     if (this.endorsement.endorsementNumber == 0) {
       this.endorsementChanged = true;
       this.endorsement.transactionExpirationDate = this.policyExpirationDate;
     }
-    this.markDirty();
   }
 
   private _retroDate : Date | null = null;
@@ -136,7 +132,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
   set retroDate(value: Date | null) {
     this._retroDate = value;
-    this.markDirty();
   }
 
   private _policyCancelDate : Date | null = null;
@@ -218,13 +213,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.programId = policy.programId;
     console.log(policy.commRate);
     this._commRate = policy.commRate;
-    this.guid = crypto.randomUUID();
+    this.guid = policy.guid || crypto.randomUUID();
     this.isNew = false;
     this.markedForDeletion = false;
-    this.isDirty = false;
     // this.setReadonlyFields();
     // this.setRequiredFields();
-    console.log('THIS POLICY' + this.invalidList);
   }
   newInit() {
     this.policyId = 0;
@@ -236,11 +229,10 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     //on load or if dirty validate this
     if (this.isDirty){
       //TODO: class based validation checks
-      this.canBeSaved = true;
-      this.errorMessages = this.validateChildren(this);
-
       this.validateClass();
     }
+    this.errorMessages = this.validateChildren(this);
+
     return this.errorMessages;
   }
 
@@ -393,7 +385,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       assumedCarrier: this.assumedCarrier,
       coinsurancePercentage: this.coinsurancePercentage,
       productManufactureDate: this.productManufactureDate,
-      submissionNumber: this.submissionNumber
+      submissionNumber: this.submissionNumber,
+      guid: this.guid
     };
   }
 }

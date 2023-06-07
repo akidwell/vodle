@@ -52,11 +52,12 @@ export class PolicySavingService {
       const results$ = this.policyService.updatePolicyInfoV2(policy);
       await lastValueFrom(results$)
         .then(async (policyData: PolicyInformation) => {
-          this.policy = policyData;
+          //this.policy = policyData;
           const x = new PolicyClass(policyData);
           console.log('X:' + policyData);
-          this.pageDataService.policyData = x;
-          x.onSaveCompletion([x]);
+          //this.pageDataService.policyData = x;
+          policy.onSaveCompletion([x]);
+          policy.markClean();
           this.notification.show('Policy Saved.', {
             classname: 'bg-success text-light',
             delay: 5000,

@@ -19,6 +19,7 @@ export interface AdditionalNamedInsuredData {
   isNew: boolean;
   markForDeletion?: boolean | null;
   guid: string ;
+  isDirty?: boolean | null;
 }
 
 export interface AdditionalNamedInsured extends AdditionalNamedInsuredData {
@@ -358,6 +359,7 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
   onGuidUpdateMatch(T: PolicyANIClass){
     this._name = T.name;
     this.hasUpdate = false;
+    this.isNew = false;
   }
   policyId = 0;
   addInsuredCode: number | null = null;
@@ -368,6 +370,7 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
   showActive = false;
   invalidList: string[] = [];
   isDuplicate = false;
+
   private _markForDeletion = false;
   private _sequenceNo = 0;
   private _role: number | null = null;
@@ -401,6 +404,7 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
   }
   set name(value: string | null) {
     this._name = value;
+    this.isDirty = true;
     this.markDirty();
   }
   get isActive() : boolean | null {
@@ -427,12 +431,10 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
     }
   }
   onDelete(): void {
-    throw new Error('Method not implemented.');
+    console.log('delete match');
   }
   delete(): Promise<boolean> {
-    console.log('IN DELETE');
     return new Promise((resolve) => {
-      console.log('RESOLVE NAME' + resolve.name);
       if(resolve.name)this.markForDeletion = true;});
   }
 
@@ -460,8 +462,12 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
     this._createdDate = ani.createdDate;
     this._isActive = ani.isActive ?? true;
     this._sequenceNo = ani.sequenceNo;
-    this.guid = crypto.randomUUID();
-    this.isNew = false;
+    this.guid = ani.guid || crypto.randomUUID();
+    this.isNew = ani.isNew || false;
+    this.policyId = ani?.policyId ?? 0;
+    this.addInsuredCode = ani?.addInsuredCode ?? null;
+    this.insuredCode = ani?.insuredCode ?? 0;
+    this.endorsementNo = ani?.endorsementNo ?? 0;
   }
 
   newInit(){
