@@ -17,15 +17,25 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
   quoteNumber!: string;
   carrierCode!: string;
   coverageCode!: string;
-  creditDays!: string;
   claimsMadeOrOccurrence!: string;
   retroDate!: Date | null;
 
+  private _creditDays = '';
+  get creditDays() : string {
+    return this._creditDays;
+  }
+  set creditDays(value: string) {
+    this._creditDays = value;
+    this.markDirty();
+  }
+
+
   existingInit(quote: QuoteData) {
+    console.log(quote);
     this.pacCode = quote.pacCode;
     this.quoteNumber = quote.quoteNumber;
     this.carrierCode = quote.carrierCode;
-    this.creditDays = quote.creditDays;
+    this._creditDays = quote.creditDays;
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence;
     this.retroDate = quote.retroDate;
     this.coverageCode = quote.coverageCode;
@@ -54,5 +64,17 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
   }
   onGuidUpdateMatch(T: ChildBaseClass): void {
     throw new Error('Method not implemented.');
+  }
+
+  toJSON(): QuoteData{
+    return{
+      creditDays: this.creditDays,
+      carrierCode: this.carrierCode,
+      retroDate : this.retroDate,
+      pacCode: this.pacCode,
+      quoteNumber : this.quoteNumber,
+      coverageCode: this.coverageCode,
+      claimsMadeOrOccurrence: this.claimsMadeOrOccurrence
+    };
   }
 }

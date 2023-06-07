@@ -68,6 +68,7 @@ export interface PolicyInformation {
   coinsurancePercentage: number;
   productManufactureDate: Date;
   submissionNumber: number;
+  guid: string | null;
 }
 
 export interface PolicyInformationResolved {
