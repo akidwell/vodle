@@ -23,8 +23,8 @@
           </div>
           <div class="col-lg-1">
             <label for="commissionRate">Comm Rate</label>
-            <input type="text" class="form-control" id="commissionRate" [readonly]="isFieldReadOnly(false)" [required]="!isFieldReadOnly(false)" mask="percent"
-              suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="policyInfo.commRate" name="commissionRate"
+            <input type="text" class="form-control" id="commissionRate" [required]="true"
+            [readonly]="false" mask="percent" suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="policyInfo.commRate" name="commissionRate"
               #commissionRate="ngModel">
           </div>
         </div>
@@ -167,20 +167,20 @@
           <div class="row">
             <div class="col-lg-3 col-md-4">
               <label for="riskCity"  class="form-label"  title="Policy City">Policy City</label>
-              <input id="riskCity" class="form-control" [readonly]="isFieldReadOnly(false)" name="riskCity"
-                [required]="!isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
+              <input id="riskCity" class="form-control" [readonly]="false" name="riskCity"
+                [required]="true" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
             </div>
             <div class="col-lg-3 col-md-4">
               <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
               <ng-select id="riskState" [items]="states$ | async" bindLabel="name" bindValue="code"
-                [clearable]="false" [readonly]="isFieldReadOnly(false)" name="riskState"
-                [required]="!isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel" (change)="this.changeState($event)">
+                [clearable]="false" [readonly]="false" name="riskState"
+                [required]="true" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel" (change)="this.changeState($event)">
               </ng-select>
             </div>
             <div class="col-lg-2 col-md-4">
               <label for="riskZipCode"  class="form-label" title="Policy Zip Code">Policy Zip Code</label>
-              <input type="text" class="form-control" id="riskZipCode" [required]="!isFieldReadOnly(false)"
-                [readonly]="isFieldReadOnly(false)" [(ngModel)]="policyInfo.riskLocation.zip" zip-code
+              <input type="text" class="form-control" id="riskZipCode" [required]="true"
+                [readonly]="false" [(ngModel)]="policyInfo.riskLocation.zip" zip-code
                 #riskZipCode="ngModel" name="riskZipCode">
             </div>
           </div>
@@ -188,26 +188,18 @@
           <div class="row">
             <div class="col-lg-3 col-md-6">
               <label for="policyEffectiveDate" class="form-label" title="Effective Date">Effective Date</label>
-              <div *ngIf="!isFieldReadOnly(true)">
-                  <input type="date" class="form-control" id="enteredDate" required="!isFieldReadOnly"
-                  [ngModel]="policyInfo.policyEffectiveDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.policyEffectiveDate=$event"
+              <div>
+                  <input type="date" class="form-control" id="enteredDate"[required]="true"
+                  [readonly]="false" [ngModel]="policyInfo.policyEffectiveDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.policyEffectiveDate=$event"
                   name="policyEffectiveDate" #policyEffectiveDate="ngModel">
-              </div>
-              <div *ngIf="isFieldReadOnly(true)">
-                <input type="text" class="form-control" id="policyEffectiveDate" readonly
-                  [ngModel]="policyInfo.policyEffectiveDate | date:'MM/dd/yyyy'" name="policyEffectiveDate">
               </div>
             </div>
             <div class="col-lg-3 col-md-6">
               <label for="policyExpirationDate" class="form-label" title="Expiration Date">Expiration Date</label>
-                <div *ngIf="!isFieldReadOnly(true)">
-                  <input type="date" class="form-control" id="enteredDate" required="!isFieldReadOnly"
-                  [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.policyExpirationDate=$event"
+                <div >
+                  <input type="date" class="form-control" id="enteredDate" [required]="true"
+                  [readonly]="false" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.policyExpirationDate=$event"
                   name="policyExpirationDate" #policyExpirationDate="ngModel">
-              </div>
-              <div *ngIf="isFieldReadOnly(true)">
-                <input type="text" class="form-control" id="policyExpirationDate" readonly
-                  [ngModel]="policyInfo.policyExpirationDate | date:'MM/dd/yyyy'" name="policyExpirationDate">
               </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -230,7 +222,7 @@
             <div class="col-lg-3 col-md-12">
               <label for="carrierCode"  class="form-label" title="Carrier">Carrier</label>
               <ng-select id="carrierCode" [items]="carrierCodes$ | async" bindLabel="description"
-                [required]="!isFieldReadOnly(true)" bindValue="code" [clearable]="false" [readonly]="isFieldReadOnly(true)"
+                [required]="true" bindValue="code" [clearable]="false" [readonly]="false"
                 [(ngModel)]="policyInfo.quoteData.carrierCode" name="carrierCode">
               </ng-select>
             </div>
@@ -278,27 +270,27 @@
             <div class="col-lg-1 col-md-4">
               <label for="riskGradeCode"  class="form-label" title="Risk Grade">Risk Grade</label>
               <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
-                 bindValue="code" [clearable]="false" [readonly]="isFieldReadOnly(true)" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
+                 bindValue="code" [clearable]="false" [readonly]="false" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
               </ng-select>
             </div>
             <div class="col-lg-2 col-md-4">
               <label for="auditCode" class="form-label" title="Audit Code">Audit Code</label>
               <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
-                [required]="!isFieldReadOnly(false)" [clearable]="false" [readonly]="isFieldReadOnly(false)"
+                [required]="true" [clearable]="false" [readonly]="false"
                 [(ngModel)]="policyInfo.auditCode" name="auditCode">
               </ng-select>
             </div>
             <div class="col-lg-2 col-md-4">
               <label for="paymentFrequency" class="form-label" title="Payment Frequency">Payment Frequency</label>
               <ng-select id="paymentFrequency" [items]="paymentFrequencies$ | async" bindLabel="description"
-                [required]="!isFieldReadOnly(true)" bindValue="code" [clearable]="false"
-                [readonly]="isFieldReadOnly(true)" [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
+              [required]="true" [readonly]="false" bindValue="code" [clearable]="false"
+                 [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
               </ng-select>
             </div>
             <div class="col-lg-1 col-md-4">
               <label for="creditDays" class="form-label" title="Credit Days">Credit Days</label>
-              <input type="number" class="form-control" id="creditDays" [required]="!isFieldReadOnly(true)" [readonly]="isFieldReadOnly(true)" maxInt
-                [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
+              <input type="number" class="form-control" id="creditDays"[required]="true"
+              [readonly]="false" maxInt [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
             </div>
             <div class="col-lg-3 col-md-4">
               <label for="deregulationIndicator" class="form-label" title="Deregulation Indictor">Deregulation Indicator</label>
@@ -351,14 +343,13 @@
           <div class="row">
             <div class="col-lg-1">
               <label for="coinsurancePercentage" class="form-label" title="Coinsurance %">Coinsurance %</label>
-              <input type="text" class="form-control" id="coinsurancePercentage" mask="percent" suffix="%" [readonly]="isFieldReadOnly(true)"
-                [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
+              <input type="text" class="form-control" id="coinsurancePercentage" mask="percent" suffix="%" [required]="true"
+              [readonly]="false" [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
                 #coinsurancePercentage="ngModel">
             </div>
             <div class="col-lg-2">
               <label for="productManufactureDate" class="form-label" title="Product Manufacture Date">Product Manufacture Date</label>
-              <input style="display: inline-block; max-width: 80%;" matInput
-                class="form-control" [disabled]="isFieldReadOnly(true)"
+              <input style="display: inline-block; max-width: 80%;" class="form-control" [disabled]="true"
                 [(ngModel)]="policyInfo.productManufactureDate" name="productManufactureDate"
                 #productManufactureDate="ngModel">
 

@@ -55,19 +55,16 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
 
   validateAndSavePolicy(): boolean {
     const policy = this.pageDataService.policyData || undefined;
-    console.log(policy instanceof PolicyClass);
-    if(policy != undefined && policy.isDirty){
-      const results = policy.validate();
-      console.log('RESULTS' + results);
-      //TODO: Add isDirty check as we don't want to save every tab change
-      //if canBeSaved is false we skip the save
-      if (results.length == 0) {
-        this.policySavingService.savePolicy();
-      }
-      //if isValid is false we prevent them from leaving tab
-      return results?.length == 0;
+    const results = policy?.validate();
+    console.log('RESULTS' + results);
+    //TODO: Add isDirty check as we don't want to save every tab change
+    //if canBeSaved is false we skip the save
+    if (results?.length == 0 && policy?.isDirty) {
+      this.policySavingService.savePolicy();
     }
-    return false;
+    //if isValid is false we prevent them from leaving tab
+    return results?.length == 0;
+
   }
 
   checkLeavePolicy(startUrl: string, endUrl: string): boolean {

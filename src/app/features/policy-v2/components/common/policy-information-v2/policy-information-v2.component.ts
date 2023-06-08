@@ -141,14 +141,6 @@ export class PolicyInformationV2Component {
       this.reinsuranceLookupService.refreshReinsuranceCodes();
     }
   }
-
-  isFieldReadOnly(checkEndorsementLockStatus?: boolean): boolean {
-    if(!checkEndorsementLockStatus) {
-      return !this.canEdit;
-    } else {
-      return !this.canEdit;
-    }
-  }
   changeState(state: State) {
     this.policyInfo.riskLocation.countryCode = state.countryCode;
   }
