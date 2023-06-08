@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
@@ -14,6 +14,7 @@ import { EndorsementStatusService } from 'src/app/features/policy/services/endor
 import { PolicyANIClass } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
+import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 
 @Component({
   selector: 'rsps-policy-information-v2',
@@ -62,8 +63,17 @@ export class PolicyInformationV2Component {
 
   accountCollapsed= false;
 
-  constructor(private route: ActivatedRoute,private dropdowns: DropDownsService, private userAuth: UserAuth, private notification: NotificationService, private reinsuranceLookupService: ReinsuranceLookupService,
-    private endorsementStatusService: EndorsementStatusService,private pageDataService: PageDataService, private policyService: PolicyService, private policySavingService: PolicySavingService) {
+  constructor(private route: ActivatedRoute,
+    private dropdowns: DropDownsService,
+    private userAuth: UserAuth,
+    private notification: NotificationService,
+    private reinsuranceLookupService: ReinsuranceLookupService,
+    private endorsementStatusService: EndorsementStatusService,
+    private pageDataService: PageDataService,
+    private policyService: PolicyService,
+    private policySavingService: PolicySavingService,
+    private router: Router,
+    private navigationService: NavigationService) {
     this.authSub = this.userAuth.canEditPolicy$.subscribe(
       (canEdit: boolean) => this.canEdit = canEdit
     );
@@ -151,4 +161,10 @@ export class PolicyInformationV2Component {
     return alert;
   }
 
+  routeToInsured(insuredCode: number | null) {
+    if(insuredCode !== null) {
+      this.navigationService.clearReuse();
+      this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
+    }
+  }
 }

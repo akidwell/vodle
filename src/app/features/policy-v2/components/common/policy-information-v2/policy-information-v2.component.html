@@ -30,9 +30,8 @@
         </div>
         <div class="row">
           <div class="col-md">
-            <label for="namedInsured">Named Insured</label>
-            <input type="text" class="form-control" id="namedInsured" [readonly]="true"
-              [ngModel]="policyInfo.insured.name" name="namedInsured" #namedInsured="ngModel">
+            <label for="namedInsured">Named Insured</label><br>
+            <a (click)="routeToInsured(this.policyInfo.insured.insuredCode)" [routerLink]="[]">{{ policyInfo.insured.name }}</a>
           </div>
           <div class="col-md">
             <label for="producerName">Producer</label>
