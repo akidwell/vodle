@@ -19,6 +19,7 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
   coverageCode!: string;
   claimsMadeOrOccurrence!: string;
   retroDate!: Date | null;
+  programId= 0;
 
   private _creditDays = '';
   get creditDays() : string {
@@ -39,16 +40,17 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
     this.claimsMadeOrOccurrence = quote.claimsMadeOrOccurrence;
     this.retroDate = quote.retroDate;
     this.coverageCode = quote.coverageCode;
+    this.programId = quote.programId;
   }
 
-  validate(): ErrorMessage[]{
+  validateObject(): ErrorMessage[]{
     console.log('validate  policy');
     //on load or if dirty validate this
     console.log('BBBBBBBBBBB' + this);
     console.log('AAAAAAAAAAA ' + this.isDirty);
     if (this.isDirty){
       //TODO: class based validation checks
-      this.errorMessages = [];
+      this.errorMessagesList = [];
       this.canBeSaved = true;
       this.isValid = true;
       console.log(this.pacCode);
@@ -56,14 +58,12 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
         this.createErrorMessage('PacCode is required.');
       }
     }
-    return this.errorMessages;
+    return this.errorMessagesList;
   }
 
   onGuidNewMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
   }
   onGuidUpdateMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
   }
 
   toJSON(): QuoteData{
@@ -74,7 +74,8 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
       pacCode: this.pacCode,
       quoteNumber : this.quoteNumber,
       coverageCode: this.coverageCode,
-      claimsMadeOrOccurrence: this.claimsMadeOrOccurrence
+      claimsMadeOrOccurrence: this.claimsMadeOrOccurrence,
+      programId: this.programId
     };
   }
 }

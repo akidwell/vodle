@@ -1,5 +1,5 @@
-  <div *ngIf="policyInfo.errorMessages.length != 0">
-    <ngb-alert type=danger *ngIf="policyInfo.errorMessages.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
+  <div *ngIf="policyInfo.errorMessagesList.length != 0">
+    <ngb-alert type=danger *ngIf="policyInfo.errorMessagesList.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
   </div>
   <div class="card">
     <div class="card-header" (click)="accountcollapse.toggle()">

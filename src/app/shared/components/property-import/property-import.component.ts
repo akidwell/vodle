@@ -9,13 +9,14 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
+import { PropertyBuildingBaseComponent } from '../property-building/property-building-base-component/property-building-base-component';
 
 @Component({
   selector: 'rsps-property-import',
   templateUrl: './property-import.component.html',
   styleUrls: ['./property-import.component.css'],
 })
-export class PropertyImportComponent {
+export class PropertyImportComponent extends PropertyBuildingBaseComponent {
   sequenceNumber = 0;
   importing = false;
 
@@ -31,7 +32,9 @@ export class PropertyImportComponent {
     private confirmationDialogService: ConfirmationDialogService,
     private notification: NotificationService,
     private messageDialog: MessageDialogService
-  ) { }
+  ) {
+    super();
+  }
 
   async import(e: any) {
     const file = e.target.files[0];
@@ -49,7 +52,9 @@ export class PropertyImportComponent {
               )
               .then(async (result: boolean) => {
                 if (result) {
-                  this.quote.clearBuildings();
+                  this.quote.propertyQuoteBuildingList = [];
+                  this.filteredBuildings = [];
+                  this.filteredCoverages = [];
                   if (this.quote.propertyQuoteId !== null) {
                     const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuoteId);
                     await lastValueFrom(result$);
@@ -66,7 +71,7 @@ export class PropertyImportComponent {
                   if(breakdownIndex > -1)
                   {
                     this.quote.propertyQuoteBuildingOptionalCoverage.forEach((cov, index) => {
-                      if(cov.coverageCode == 6) {this.quote.propertyQuoteBuildingOptionalCoverage.splice(index,1)};
+                      if(cov.coverageCode == 6) {this.quote.propertyQuoteBuildingOptionalCoverage.splice(index,1);}
                     });
                     const results3$ = this.quoteService.deleteEquipmentBreakdown(this.quote.propertyQuoteId);
                     await lastValueFrom(results3$);
@@ -93,6 +98,7 @@ export class PropertyImportComponent {
       async (quote) => {
         const newQuote = new PropertyQuoteClass(quote);
         newQuote.markImported();
+        console.log('QUOTEEEEEE' + newQuote);
         newQuote.propertyQuoteBuildingOptionalCoverage.forEach(x => x.isAccepted = true);
         if (await this.checkErrors(quote.importErrors)) {
           if (await this.checkWarning(quote.importWarnings)) {

@@ -1,4 +1,4 @@
-<div class="component-row">
+<div class="component-row" *ngIf="!building.markForDeletion">
     <div [ngClass]="!building.isExpanded ? 'collapsed' : 'expanded'">
         <div (click)="collapseExpand(false)">
             <div class="row" *ngIf="!building.isExpanded">

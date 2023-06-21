@@ -33,7 +33,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
     }
     else {
 
-      if (component instanceof PolicyInformationV2Component )
+      if (component instanceof PolicyInformationV2Component || component instanceof PolicyPropertyLocationCoverageComponent)
         if(this.validateAndSavePolicy()){
           return true;
         }
@@ -45,7 +45,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
         //TODO: once all the components listed above have the policyInfo data in the component
         //we can remove the "instance of ____" piece
         if (confirm && component instanceof PolicyInformationV2Component) {
-          component.policyInfo.errorMessages = [];
+          component.policyInfo.errorMessagesList = [];
         }
         return confirm;
       });
@@ -55,7 +55,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
 
   validateAndSavePolicy(): boolean {
     const policy = this.pageDataService.policyData || undefined;
-    const results = policy?.validate();
+    const results = policy?.validateObject();
     console.log('RESULTS' + results);
     //TODO: Add isDirty check as we don't want to save every tab change
     //if canBeSaved is false we skip the save
