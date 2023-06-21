@@ -2,6 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { PropertyBuildingCoverageEditDialogComponent } from '../property-building-coverage-edit-dialog/property-building-coverage-group-edit-dialog.component';
+import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
 
 @Component({
   selector: 'rsps-property-building-coverage-edit',
@@ -11,11 +12,11 @@ import { PropertyBuildingCoverageEditDialogComponent } from '../property-buildin
 export class PropertyBuildingCoverageEditComponent {
 
   @Input() public canEdit = false;
-  @Input() public buildings: PropertyQuoteBuildingClass[] = [];
+  @Input() public buildings: PropertyBuildingClass[] = [];
   @ViewChild('modal') private groupEditComponent!: PropertyBuildingCoverageEditDialogComponent;
 
   get hasCoverages() {
-    return this.buildings.some(c => c.propertyQuoteBuildingCoverage.length > 0);
+    return this.buildings.some(c => c.propertyBuildingCoverage.length > 0);
   }
   async groupEdit() {
     return await this.groupEditComponent.open(this.buildings);

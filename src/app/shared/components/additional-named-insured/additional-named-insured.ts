@@ -273,7 +273,7 @@ export class insuredANI implements AdditionalNamedInsured {
     this._isDirty = true;
   }
   async save(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return true;
   }
 
   get isValid(): boolean {
@@ -484,15 +484,15 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
     this.isDirty = true;
   }
   async save(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return true;
   }
 
-  validate(): ErrorMessage[] {
+  validateObject(): ErrorMessage[] {
     console.log('VALIDATE');
-    this.errorMessages = [];
+    this.errorMessagesList = [];
     this.validateRole();
     this.validateName();
-    return this.errorMessages;
+    return this.errorMessagesList;
   }
 
   validateRole(): void {

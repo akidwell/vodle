@@ -118,7 +118,7 @@ export class PolicyInformationV2Component {
     );
   }
   changeProgramId() {
-    if (this.policyInfo.endorsement.endorsementNumber == 0) {
+    if (this.policyInfo.endorsementData.endorsementNumber == 0) {
       // Force Reinsurance drop downs to refresh
       this.reinsuranceLookupService.clearReinsuranceCodes();
       this.reinsuranceLookupService.refreshReinsuranceCodes();
@@ -135,7 +135,7 @@ export class PolicyInformationV2Component {
     return item.code?.toLowerCase().indexOf(term) > -1 || item.key?.toString().toLowerCase().indexOf(term) > -1 || item.description?.toLowerCase().indexOf(term) > -1;
   }
   changeEffectiveDate() {
-    if (this.policyInfo.endorsement.endorsementNumber == 0) {
+    if (this.policyInfo.endorsementData.endorsementNumber == 0) {
       // Force Reinsurance drop downs to refresh
       this.reinsuranceLookupService.clearReinsuranceCodes();
       this.reinsuranceLookupService.refreshReinsuranceCodes();
@@ -147,7 +147,7 @@ export class PolicyInformationV2Component {
 
   getAlerts(): string | null{
     let alert = 'Following fields are invalid: ';
-    this.policyInfo.errorMessages.map(x => {
+    this.policyInfo.errorMessagesList.map(x => {
       alert += '<br><li>' + x.message ;
     });
     return alert;

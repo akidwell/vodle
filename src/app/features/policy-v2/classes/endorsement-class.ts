@@ -1,4 +1,7 @@
 import { Endorsement } from '../../policy/models/policy';
+import { PropertyBuildingClass } from '../../quote/classes/property-building-class';
+import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
+import { PropertyBuilding } from '../../quote/models/property-building';
 import { ChildBaseClass } from './base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
@@ -25,29 +28,59 @@ export class EndorsementClass extends ChildBaseClass implements Endorsement {
   limit!: number;
   underlyingLimit!: number;
   attachmentPoint!: number;
+  endorsementBuilding: PropertyBuildingClass[] = [];
 
 
   existingInit(end: Endorsement) {
     this.endorsementNumber = end.endorsementNumber;
     this.transactionTypeCode = end.transactionTypeCode;
+    this.endorsementBuilding = this.buildingInit(end.endorsementBuilding);
     this.guid = crypto.randomUUID();
   }
-
+  buildingInit(data: PropertyBuilding[]) {
+    const buildings: PropertyBuildingClass[] = [];
+    data.forEach(building => {
+      buildings.push(new PropertyPolicyBuildingClass(building));
+    });
+    return buildings;
+  }
 
   newInit(){
     this.endorsementNumber = 0;
     this.guid = crypto.randomUUID();
   }
 
-  validate(): ErrorMessage[]{
-    return this.errorMessages;
+  validateObject(): ErrorMessage[]{
+    return this.errorMessagesList;
   }
 
   onGuidNewMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
+    
   }
   onGuidUpdateMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
   }
-
+  toJson(): Endorsement {
+    return {
+      policyId: this.policyId,
+      endorsementNumber: this.endorsementNumber,
+      transactionTypeCode: this.transactionTypeCode,
+      transactionEffectiveDate: this.transactionEffectiveDate,
+      transactionExpirationDate: this.transactionExpirationDate,
+      terrorismCode: this.terrorismCode,
+      sir: this.sir,
+      premium: this.premium,
+      limit: this.limit,
+      underlyingLimit: this.underlyingLimit,
+      attachmentPoint: this.attachmentPoint,
+      endorsementBuilding: this.buildingsToJson()
+    };
+  }
+  buildingsToJson(): PropertyBuilding[] {
+    const buildings: PropertyBuilding[] = [];
+    this.endorsementBuilding.forEach(x => {
+      buildings.push(x);
+    });
+    console.log(buildings);
+    return buildings;
+  }
 }

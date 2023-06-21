@@ -1,4 +1,3 @@
-import { Validation } from 'src/app/shared/interfaces/validation';
 import { ChildBaseClass, ErrorMessageSettings, errorMessageDefaults } from './child-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PolicyValidation } from 'src/app/shared/interfaces/policy-validation';
@@ -13,12 +12,10 @@ export abstract class ParentBaseClass implements PolicyValidation {
   canEdit = true;
   id = 0;
   guid = '';
-  markedForDeletion = false;
-  errorMessages: ErrorMessage[] = [];
-
+  errorMessagesList: ErrorMessage[] = [];
 
   //abstract methods need to be implemented in individual classes as each class will have different needs
-  abstract validate(): ErrorMessage[];
+  abstract validateObject(): ErrorMessage[];
 
   //The onGuidNewMatch is a hook for handling the results from a successful adding of a record
   //can be used to update ids or any other information
@@ -40,12 +37,13 @@ export abstract class ParentBaseClass implements PolicyValidation {
 
   resetErrorMessages() {
     this.isValid = true;
-    this.errorMessages = [];
+    this.errorMessagesList = [];
   }
 
   validateChildren<T extends ParentBaseClass>(parent: T): ErrorMessage[]{
     console.log(parent);
-    let errorMessages: ErrorMessage[] = [];
+    let errorMessagesList: ErrorMessage[] = [];
+    this.resetErrorMessages();
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
       //console.log('key: ',key,'object: ', object);
@@ -53,14 +51,14 @@ export abstract class ParentBaseClass implements PolicyValidation {
       console.log(object instanceof ChildBaseClass);
       if(object instanceof ChildBaseClass) {
         console.log('ChildBaseClass: ',object);
-        errorMessages = errorMessages.concat(this.validateChildClass(object));
-        console.log(errorMessages);
+        errorMessagesList = errorMessagesList.concat(this.validateChildClass(object));
+        console.log(errorMessagesList);
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
       }
       //Check to see if any property is of ParentBaseClass and validate itself and all children
       else if (object instanceof ParentBaseClass) {
         console.log('ParentBaseClass: ',object);
-        errorMessages = errorMessages.concat(this.validateParentClass(object));
+        errorMessagesList = errorMessagesList.concat(this.validateParentClass(object));
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
       }
       //Check to see if property is an array and not empty
@@ -70,33 +68,34 @@ export abstract class ParentBaseClass implements PolicyValidation {
           //Check to see if any property is of ChildBaseClass and validate
           if(objectInArray instanceof ChildBaseClass) {
             //console.log('ChildBaseClass Array: ',object);
-            errorMessages = errorMessages.concat(this.validateChildClass(objectInArray));
+            errorMessagesList = errorMessagesList.concat(this.validateChildClass(objectInArray));
             this.isDirty = this.isDirty ? this.isDirty : object.find(x => x.isDirty) ? true : false;
           }
           //Check to see if any property is of ParentBaseClass and validate itself and all children
           else if (objectInArray instanceof ParentBaseClass) {
             console.log('ParentBaseClass Array: ',object);
-            errorMessages = errorMessages.concat(this.validateParentClass(objectInArray));
+            errorMessagesList = errorMessagesList.concat(this.validateParentClass(objectInArray));
             this.isDirty = this.isDirty ? this.isDirty : object.find(x => x.isDirty) ? true : false;
           }
         });
       }
 
     });
-    console.log(errorMessages);
-    return errorMessages;
+    console.log(errorMessagesList);
+    return errorMessagesList;
   }
   //validate children classes that are of type ValidationChild (they will never have children classes needed to be validated)
   validateChildClass<T extends ChildBaseClass>(object:T): ErrorMessage[] {
-    return object.validate();
+    return object.validateObject();
   }
   //validate children classes that are of type ValidationParent (they could have children classes needing to be validated as well)
   validateParentClass<T extends ParentBaseClass>(object:T): ErrorMessage[] {
-    return object.validate();
+    return object.validateObject();
   }
 
   checkChildrenErrorMessages<T extends ParentBaseClass>(parent: T):ErrorMessage[] {
     let errorMessages: ErrorMessage[] = [];
+    this.resetErrorMessages();
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
       //console.log('key: ',key,'object: ', object);
@@ -132,11 +131,11 @@ export abstract class ParentBaseClass implements PolicyValidation {
   }
   //bubble up all child class error messages
   checkChildClassErrors<T extends ChildBaseClass>(object:T): ErrorMessage[] {
-    return object.errorMessages;
+    return object.errorMessagesList;
   }
   //bubble up all parent class error messages
   checkParentClassErrors<T extends ParentBaseClass>(object:T): ErrorMessage[] {
-    return object.errorMessages;
+    return object.errorMessagesList;
   }
   markChildrenClean<T extends ParentBaseClass>(parent: T): void {
     Object.keys(parent).forEach(key => {
@@ -265,6 +264,6 @@ export abstract class ParentBaseClass implements PolicyValidation {
       failValidation: errorMessageSettings.failValidation,
       preventSave: errorMessageSettings.preventSave
     };
-    this.errorMessages.push(errorMessage);
+    this.errorMessagesList.push(errorMessage);
   }
 }

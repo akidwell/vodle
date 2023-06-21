@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject, tap, switchMap, Observable, of } from 'rxjs';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageState } from 'src/app/core/models/page-state';
+import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
 import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
 import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from 'src/app/features/quote/models/property-building-coverage';
@@ -16,7 +17,7 @@ export class QuotePropertyDetailLeftComponent implements OnInit {
   @Input() public quote!: Quote;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
-  @Input() public buildings!: PropertyQuoteBuildingClass[];
+  @Input() public buildings!: PropertyBuildingClass[];
   @Input() public limitTotal!: number;
   @Input() public largestTiv!: number;
   @Input() public lawLimits!: number;
