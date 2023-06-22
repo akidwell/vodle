@@ -1,0 +1,49 @@
+<div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+        <span>Policy Layer {{policyLayerData.policyLayerNo}}</span>
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyLayerCollapsed"/>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyLayerCollapsed"/>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="policyLayerCollapsed">
+        <div class="card-body">
+        <table class="component-row">
+            <tr>
+                <th style="width: 6%"><label>RLN</label></th>
+                <th style="width: 12%"><label>Attatchment Point</label></th>
+                <th style="width: 13%"><label>Reinsurance Limits</label></th>
+                <th style="width: 13%"><label>Ceded Premium</label></th>
+                <th style="width: 10%"><label>Comm Rate</label></th>
+                <th style="width: 12%"><label>Reinsurance Code</label></th>
+                <th style="width: 3%"><label>Fac</label></th>
+                <th style="width: 12%"><label>Intermediary</label></th>
+                <th style="width: 12%"><label>Certificate No</label></th>
+                <th style="width: 7%"><!-- Delete button --></th>
+            </tr>
+            <tr *ngFor="let reinsurance of policyLayerData.reinsuranceData">
+                <td><input [(ngModel)]="reinsurance.reinsLayerNo" readonly type="text" class="form-control" /></td>
+                <td><input [(ngModel)]="reinsurance.attachmentPoint"
+                    string-to-currency type="text" class="form-control" ></td>
+                <td><input [(ngModel)]="reinsurance.reinsLimit"
+                    string-to-currency type="text" class="form-control" ></td>
+                <td><input [(ngModel)]="reinsurance.reinsCededPremium"
+                    string-to-currency type="text" class="form-control" ></td>
+                <td><input [(ngModel)]="reinsurance.reinsCededCommRate" type="text" class="form-control" mask="percent" suffix="%" readonly></td>
+                <td><ng-select [(ngModel)]="reinsurance.treatyNo" type="text" class="form-control"></ng-select></td>
+                <td><input [(ngModel)]="reinsurance.isFaculative" type="checkbox" class="form-check-input"></td>
+                <td><input [(ngModel)]="reinsurance.intermediaryNo" type="text" class="form-control"></td>
+                <td><input [(ngModel)]="reinsurance.reinsCertificateNo" type="text" class="form-control" readonly></td>
+                <td><span class="btn btn-secondary" hover-class="btn-danger" (click)="openDeleteConfirmation(reinsurance)">Delete</span></td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="footer-button" (click)="addNewReinsuranceLayer()">Add Reinsurance Layer</button>
+        <span>
+            Policy Layer Limit: {{totalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
+            &nbsp;
+            Policy Layer Premium: {{totalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
+        </span>
+        <span class="footer-count">Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}</span>
+    </div>
+</div>

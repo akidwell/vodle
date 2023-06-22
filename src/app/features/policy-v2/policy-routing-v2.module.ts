@@ -32,7 +32,7 @@ const routes: Routes = [
       { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent},
       { path: 'mortgagee', component: PolicyPropertyMortgageeComponent },
       { path: 'premium', component: PolicyPremiumComponent },
-      { path: 'reinsurance', component: PolicyReinsuranceComponent },
+      { path: 'reinsurance', component: PolicyReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'summary', component: PolicySummaryComponent},
 
     ],

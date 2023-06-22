@@ -21,7 +21,7 @@ import { PolicyPropertyMortgageeComponent } from './components/property/policy-p
 import { PolicyReinsuranceComponent } from './components/common/policy-reinsurance/policy-reinsurance.component';
 import { PolicyPremiumComponent } from './components/property/policy-premium/policy-premium.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
-
+import { PolicyLayerComponent } from './components/reinsurance/policy-layer/policy-layer.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,8 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
     PolicySummaryComponent,
     PolicyPropertyMortgageeComponent,
     PolicyPremiumComponent,
-    PolicyReinsuranceComponent
+    PolicyReinsuranceComponent,
+    PolicyLayerComponent,
   ],
   imports: [
     CommonModule,
