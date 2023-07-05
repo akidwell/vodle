@@ -10,7 +10,7 @@ export interface PolicyValidation {
   //validation functionality
   isValid: boolean;
   canBeSaved: boolean;
-  errorMessages: ErrorMessage[];
+  errorMessagesList: ErrorMessage[];
   validationResults?: PolicyValidation;
 
   onSaveCompletion(T:PolicyValidation[]): void;

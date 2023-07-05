@@ -3,6 +3,7 @@ import { ChildBaseClass } from './base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
 export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
+
   constructor(policy?: RiskLocation) {
     super();
     if (policy) {
@@ -96,10 +97,10 @@ export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
     this.isNew = true;
   }
 
-  validate(): ErrorMessage[]{
+  validateObject(): ErrorMessage[]{
     if (this.isDirty){
       //TODO: class based validation checks
-      this.errorMessages = [];
+      this.errorMessagesList = [];
       this.canBeSaved = true;
       this.isValid = true;
       console.log(this.city);
@@ -107,14 +108,12 @@ export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
         this.createErrorMessage('City is required.');
       }
     }
-    return this.errorMessages;
+    return this.errorMessagesList;
   }
 
   onGuidNewMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
   }
   onGuidUpdateMatch(T: ChildBaseClass): void {
-    throw new Error('Method not implemented.');
   }
 
   toJSON(): RiskLocation {

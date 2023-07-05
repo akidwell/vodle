@@ -29,7 +29,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: PolicyInformationV2Component, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
-      { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent},
+      { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'mortgagee', component: PolicyPropertyMortgageeComponent },
       { path: 'premium', component: PolicyPremiumComponent },
       { path: 'reinsurance', component: PolicyReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},

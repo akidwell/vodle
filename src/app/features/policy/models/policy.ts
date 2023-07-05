@@ -3,6 +3,7 @@ import { Producer } from '../../submission/models/producer';
 import { Insured } from '../../insured/models/insured';
 import { RiskLocationClass } from '../../policy-v2/classes/risk-location';
 import { Quote } from '../../quote/models/quote';
+import { PropertyBuilding } from '../../quote/models/property-building';
 
 
 export interface AccountInformation {
@@ -33,7 +34,7 @@ export interface AccountInformationResolved {
 export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
-  endorsement: Endorsement;
+  endorsementData: Endorsement;
   additionalNamedInsuredData: AdditionalNamedInsuredData[];
   insured: Insured;
   producer: Producer;
@@ -84,6 +85,7 @@ export interface QuoteData {
   creditDays: string;
   claimsMadeOrOccurrence: string;
   retroDate: Date | null;
+  programId: number;
 }
 export interface RiskLocation {
 
@@ -114,6 +116,7 @@ export interface Endorsement {
   limit: number;
   underlyingLimit: number;
   attachmentPoint: number;
+  endorsementBuilding: PropertyBuilding[];
 }
 
 export interface AdditionalNamedInsuredsResolved {

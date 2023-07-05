@@ -22,6 +22,10 @@ import { PolicyReinsuranceComponent } from './components/common/policy-reinsuran
 import { PolicyPremiumComponent } from './components/property/policy-premium/policy-premium.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { PolicyLayerComponent } from './components/reinsurance/policy-layer/policy-layer.component';
+import { PropertyBuildingGroupComponent } from 'src/app/shared/components/property-building/property-building-group/property-building-group.component';
+import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
+import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
+import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
 
 @NgModule({
   declarations: [
@@ -47,7 +51,10 @@ import { PolicyLayerComponent } from './components/reinsurance/policy-layer/poli
     PipesModule,
     DragDropModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
+    PropertyBuildingModule,
+    PropertyBuildingCoverageModule,
+    PropertyBuildingCoverageEditModule,
   ],
   providers: [
     provideEnvironmentNgxMask(),

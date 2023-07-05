@@ -1,129 +1,27 @@
 
-import { CurrencyPipe } from '@angular/common';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { QuoteAfterSave } from '../models/quote-after-save';
-import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { QuoteValidationClass } from './quote-validation-class';
+import { PropertyBuildingCoverageClass } from './property-building-coverage-class';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
+import { ChildBaseClass } from '../../policy-v2/classes/base/child-base-class';
 
-export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCoverage, Validation, QuoteAfterSave {
-  private _isDirty = false;
+export class PropertyQuoteBuildingCoverageClass extends PropertyBuildingCoverageClass implements Validation, QuoteAfterSave {
+  validateObject(): ErrorMessage[] {
+    return [];
+  }
+  onGuidNewMatch(T: ChildBaseClass): void {console.log('in guid new');}
+  onGuidUpdateMatch(T: ChildBaseClass): void {console.log('in guid update');}
+  public _validationResults: QuoteValidationClass;
   private _isValid = false;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
-  private _validationResults: QuoteValidationClass;
-  private _isDuplicate = false;
-
-  propertyQuoteBuildingCoverageId = 0;
-  propertyQuoteBuildingId = 0;
-  isNew = false;
-  guid = '';
-  isImport = false;
-  focus = false;
-  expand = false;
-  subjectNumber: number | null = null;
-  premisesNumber: number | null = null;
-  buildingNumber: number | null = null;
-  building!: PropertyQuoteBuildingClass;
-  invalidList: string[] = [];
-
-  get buildingIndex(): string {
-    return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
-  }
-
-  private _propertyCoverageId: number | null = null;
-  private _limit: number | null = null;
-  private _coinsuranceId: number | null = null;
-  private _causeOfLossId: number | null = null;
-  private _valuationId: number | null = null;
-  private _additionalDetail: string | null = null;
-
-  get propertyCoverageId() : number | null {
-    return this._propertyCoverageId;
-  }
-  set propertyCoverageId(value: number | null) {
-    this._propertyCoverageId = value;
-    this.building?.calculateITV();
-    this._isDirty = true;
-  }
-
-  get limit() : number | null {
-    return this._limit;
-  }
-  set limit(value: number | null) {
-    this._limit = value;
-    this.building?.calculateITV();
-    this.building?.propertyQuote.calculateSubjectAmounts();
-    this.building?.propertyQuote.calculateLargestPremTiv();
-    this.building?.propertyQuote.calculateLargestExposure();
-    this.building?.propertyQuote.calculateLawLimits();
-    this._isDirty = true;
-  }
-  get coinsuranceId() : number | null {
-    return this._coinsuranceId;
-  }
-  set coinsuranceId(value: number | null) {
-    this._coinsuranceId = value;
-    this._isDirty = true;
-  }
-  get causeOfLossId() : number | null {
-    return this._causeOfLossId;
-  }
-  set causeOfLossId(value: number | null) {
-    this._causeOfLossId = value;
-    this._isDirty = true;
-  }
-  get valuationId() : number | null {
-    return this._valuationId;
-  }
-  set valuationId(value: number | null) {
-    this._valuationId = value;
-    this._isDirty = true;
-  }
-  get additionalDetail() : string | null {
-    return this._additionalDetail;
-  }
-  set additionalDetail(value: string | null) {
-    this._additionalDetail = value;
-    this._isDirty = true;
-  }
-
-  private currencyPipe = new CurrencyPipe('en-US');
-  get limitFormatted(): string {
-    const currency = this.currencyPipe.transform(this.limit, 'USD', 'symbol', '1.0-0');
-    return currency ?? '';
-  }
-  // private percentPipe = new PercentPipe('en-US');
-  // get coinsurancePctFormatted(): string {
-  //   const percent = this.percentPipe.transform((this.coinsurancePct ?? 0) / 100);
-  //   return percent ?? '';
-  // }
-  get isDirty() : boolean {
-    return this._isDirty;
-  }
-  get canBeSaved(): boolean {
-    return this._canBeSaved;
-  }
-  get errorMessages(): string[] {
-    return this._errorMessages;
-  }
-  get isValid(): boolean {
-    return this._isValid;
-  }
-  get validationResults(): QuoteValidationClass {
-    return this._validationResults;
-  }
-  get isDuplicate(): boolean {
-    return this._isDuplicate;
-  }
-  set isDuplicate(value: boolean ) {
-    this._isDuplicate = value;
-    this._isDirty = true;
-  }
 
   constructor(coverage?: PropertyBuildingCoverage) {
+    super(coverage);
     if (coverage) {
       this.existingInit(coverage);
     } else {
@@ -157,25 +55,25 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
       this._isValid = false;
       this.invalidList.push('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
-    if (this.emptyNumberValueCheck(this._propertyCoverageId)){
+    if (this.emptyNumberValueCheck(this.propertyCoverageId)){
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
-    if (this.emptyNumberValueCheck(this._limit)){
+    if (this.emptyNumberValueCheck(this.limit)){
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
-    if (this.emptyNumberValueCheck(this._coinsuranceId)){
+    if (this.emptyNumberValueCheck(this.coinsuranceId)){
       this._isValid = false;
       this.invalidList.push('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
-    if (this.emptyNumberValueCheck(this._causeOfLossId)){
+    if (this.emptyNumberValueCheck(this.causeOfLossId)){
       this._isValid = false;
       this.invalidList.push('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
-    if (this.emptyNumberValueCheck(this._valuationId)){
+    if (this.emptyNumberValueCheck(this.valuationId)){
       this._isValid = false;
       this.invalidList.push('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
@@ -191,12 +89,6 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
   existingInit(coverage: PropertyBuildingCoverage) {
     this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
-    this._propertyCoverageId = coverage.propertyCoverageId;
-    this._limit = coverage.limit;
-    this._coinsuranceId = coverage.coinsuranceId;
-    this._causeOfLossId = coverage.causeOfLossId;
-    this._valuationId = coverage.valuationId;
-    this._additionalDetail = coverage.additionalDetail;
     this.guid = coverage.guid;
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -216,19 +108,15 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     this.propertyQuoteBuildingCoverageId = 0;
     this.propertyQuoteBuildingId = 0;
     this.isNew = true;
-    this._isDirty = true;
+    this.markDirty();
     this.guid = crypto.randomUUID();
     this.expand = true;
   }
-  markClean() {
-    this._isDirty = false;
-  }
+
   markStructureClean(): void {
     this.markClean();
   }
-  markDirty() {
-    this._isDirty = true;
-  }
+
   setRequiredFields() {
     // No special rules
   }
@@ -240,6 +128,8 @@ export class PropertyQuoteBuildingCoverageClass implements PropertyBuildingCover
     return {
       propertyQuoteBuildingCoverageId: this.propertyQuoteBuildingCoverageId,
       propertyQuoteBuildingId: this.propertyQuoteBuildingId,
+      endorsementBuildingId: this.endorsementBuildingId,
+      propertPolicyBuildingCoverageId: this.propertPolicyBuildingCoverageId,
       propertyCoverageId: this.propertyCoverageId,
       limit: this.limit,
       coinsuranceId: this.coinsuranceId,

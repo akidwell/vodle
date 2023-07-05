@@ -21,10 +21,10 @@ export abstract class ChildBaseClass implements PolicyValidation{
   canEdit = true;
   id = 0;
   guid = '';
-  errorMessages: ErrorMessage[] = [];
+  errorMessagesList: ErrorMessage[] = [];
 
   //abstract methods need to be implemented in individual classes as each class will have different needs
-  abstract validate(): ErrorMessage[];
+  abstract validateObject(): ErrorMessage[];
 
   //The onGuidNewMatch is a hook for handling the results from a successful adding of a record
   //can be used to update ids or any other information
@@ -43,7 +43,7 @@ export abstract class ChildBaseClass implements PolicyValidation{
 
   resetErrorMessages() {
     this.isValid = true;
-    this.errorMessages = [];
+    this.errorMessagesList = [];
   }
 
   onSaveCompletion(T:ChildBaseClass[]) {
@@ -70,6 +70,6 @@ export abstract class ChildBaseClass implements PolicyValidation{
       failValidation: errorMessageSettings.failValidation,
       preventSave: errorMessageSettings.preventSave
     };
-    this.errorMessages.push(errorMessage);
+    this.errorMessagesList.push(errorMessage);
   }
 }

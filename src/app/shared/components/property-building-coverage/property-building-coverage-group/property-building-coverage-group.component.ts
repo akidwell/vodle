@@ -11,6 +11,8 @@ import { switchMap, tap } from 'rxjs/operators';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { PropertyQuote } from 'src/app/features/quote/models/property-quote';
+import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
+import { PropertyPolicyBuildingCoverageClass } from 'src/app/features/quote/classes/property-policy-building-coverage-class';
 
 @Component({
   selector: 'rsps-property-building-coverage-group',
@@ -22,7 +24,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   collapsed = false;
   faAngleDown = faAngleDown;
   faAngleUp = faAngleUp;
-  private _coverages: PropertyQuoteBuildingCoverageClass[] = [];
+  private _coverages: PropertyBuildingCoverageClass[] = [];
 
   @Input() public propertyQuote!: PropertyQuote;
   @Input() public readOnlyQuote!: boolean;
@@ -30,17 +32,17 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   @Input() public coverageCount!: number;
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
-  @Input() set coverages(value: PropertyQuoteBuildingCoverageClass[]) {
+  @Input() set coverages(value: PropertyBuildingCoverageClass[]) {
     this._coverages = value;
     this._search$.next();
   }
-  get coverages(): PropertyQuoteBuildingCoverageClass[] {
+  get coverages(): PropertyBuildingCoverageClass[] {
     return this._coverages;
   }
 
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _policies$ = new BehaviorSubject<PropertyQuoteBuildingCoverageClass[]>([]);
+  private _policies$ = new BehaviorSubject<PropertyBuildingCoverageClass[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
   get policies$() { return this._policies$.asObservable(); }
   get total$() { return this._total$.asObservable(); }
@@ -111,15 +113,19 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     return of({coverages, total});
   }
 
-  copyCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
+  copyCoverage(coverage: PropertyBuildingCoverageClass) {
     if (this.classType == ClassTypeEnum.Quote) {
       const clone = deepClone(coverage.toJSON());
-      const newCoverage = new PropertyQuoteBuildingCoverageClass(clone);
-      coverage.building.copyCoverage(newCoverage);
+      const x = new PropertyQuoteBuildingCoverageClass(clone);
+      x.building.copyCoverage(x);
+    } else if(this.classType == ClassTypeEnum.Policy){
+      const clone = deepClone(coverage.toJSON());
+      const x = new PropertyPolicyBuildingCoverageClass(clone);
+      //x.building.copyCoverage(x);
     }
   }
 
-  deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
+  deleteCoverage(coverage: PropertyBuildingCoverageClass) {
     const index = this.coverages.indexOf(coverage, 0);
     if (index > -1) {
       if (!coverage.isNew && coverage.propertyQuoteBuildingCoverageId > 0) {
@@ -127,7 +133,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
           .deleteCoverage(coverage.propertyQuoteBuildingCoverageId)
           .subscribe({
             next: () => {
-              coverage.building.deleteCoverage(coverage);
+              coverage.building.deleteCoverage(coverage as PropertyQuoteBuildingCoverageClass);
               setTimeout(() => {
                 this.notification.show('Coverage deleted.', {
                   classname: 'bg-success text-light',
@@ -145,13 +151,13 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
           });
       }
       else {
-        coverage.building.deleteCoverage(coverage);
+        coverage.building.deleteCoverage(coverage as PropertyQuoteBuildingCoverageClass);
       }
     }
   }
 }
 
 export interface SearchResult {
-  coverages: PropertyQuoteBuildingCoverageClass[];
+  coverages: PropertyBuildingCoverageClass[];
   total: number;
 }

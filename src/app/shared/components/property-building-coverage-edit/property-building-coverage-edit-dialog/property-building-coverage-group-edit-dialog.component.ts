@@ -1,19 +1,24 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { lastValueFrom, Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lookup';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
+import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
+import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
 import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
+import { PropertyBuildingBaseComponent } from '../../property-building/property-building-base-component/property-building-base-component';
 
 @Component({
   selector: 'rsps-property-building-coverage-edit-dialog',
   templateUrl: './property-building-coverage-edit-dialog.component.html',
   styleUrls: ['./property-building-coverage-edit-dialog.component.css']
 })
-export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
-  buildings: PropertyQuoteBuildingClass[] = [];
+export class PropertyBuildingCoverageEditDialogComponent extends PropertyBuildingBaseComponent implements OnInit {
+  buildings: PropertyBuildingClass[] = [];
   filteredCoverage: PropertyCoverageLookup[] = [];
   propertyCoverageId: number | null = null;
   coinsuranceId: number| null = null;
@@ -25,18 +30,20 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
   filteredOnly = false;
 
   private modalRef!: NgbModalRef;
+  @Input() propertyParent!: PropertyQuoteClass | PolicyClass;
 
   @ViewChild('modal') private modalContent!: TemplateRef<PropertyBuildingCoverageEditDialogComponent>;
 
-  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private messageDialogService: MessageDialogService) { }
-
+  constructor(private modalService: NgbModal, private dropdowns: DropDownsService, private messageDialogService: MessageDialogService) {
+    super();
+  }
   ngOnInit(): void {
     this.causeOfLoss$ = this.dropdowns.getPropertyCauseOfLoss();
     this.valuations$ = this.dropdowns.getPropertyValuations();
     this.coinsurance$ = this.dropdowns.getPropertyCoinsurance();
   }
 
-  async open(buildings: PropertyQuoteBuildingClass[]): Promise<boolean> {
+  async open(buildings: PropertyBuildingClass[]): Promise<boolean> {
     this.buildings = buildings;
     this.propertyCoverageId = null;
     this.coinsuranceId = null;
@@ -48,7 +55,7 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
     await lastValueFrom(result$).then((results) =>
     {
       buildings.map(c => {
-        c.propertyQuoteBuildingCoverage.map(coverage=> {
+        c.propertyBuildingCoverage.map(coverage=> {
           if (this.filteredCoverage.find(d => d.propertyCoverageId == coverage.propertyCoverageId) == undefined) {
             const match = results.find(f => f.propertyCoverageId == coverage.propertyCoverageId);
             if (match) {
@@ -68,10 +75,10 @@ export class PropertyBuildingCoverageEditDialogComponent implements OnInit {
   }
 
   update() {
-    const buildingList: PropertyQuoteBuildingClass[] = this.filteredOnly?this.buildings[0].propertyQuote.filteredBuildings:this.buildings;
+    const buildingList: PropertyBuildingClass[] = this.filteredOnly?this.filteredBuildings:this.buildings;
     let updateCount = 0;
     buildingList.map(building => {
-      building.propertyQuoteBuildingCoverage.map(coverage=> {
+      building.propertyBuildingCoverage.map(coverage=> {
         if (coverage.propertyCoverageId == this.propertyCoverageId) {
           updateCount++;
           if (this.coinsuranceId != null) {

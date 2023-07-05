@@ -20,7 +20,7 @@
                         </div>
                         <div class="col-lg-6">
                             <input validate-on-change type="text" class="form-control right" id="limit" name="limit"
-                                [(ngModel)]="coverage.limit" #subjectNumber="ngModel" [readonly]="!canEdit || readOnlyQuote"
+                                [(ngModel)]="limit" #subjectNumber="ngModel" [readonly]="!canEdit || readOnlyQuote"
                                 [required]="canEdit && coverage.limitRequired && !readOnlyQuote" string-to-currency
                                 [allowNegative]="false" click-stop-propagation validate-on-change
                                 [ngbTooltip]="coverage.limitFormatted" [openDelay]="1000">
