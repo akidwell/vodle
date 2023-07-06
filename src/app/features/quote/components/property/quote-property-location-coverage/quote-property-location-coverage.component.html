@@ -9,12 +9,12 @@
 <rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyParent]="quote" [readOnlyQuote]="readOnlyQuote"
     [buildings]="quote.propertyQuoteBuildingList" [canEdit]="canEdit"
     [buildingCount]="quote.buildingCount" [programId]="quote.programId"
-    [rateEffectiveDate]="quote.rateEffectiveDate"></rsps-property-building-group>
-<rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEdit"
+    [rateEffectiveDate]="quote.rateEffectiveDate"></rsps-property-building-group> 
+<rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEdit" [propertyParent]="quote"
     [buildings]="quote.propertyQuoteBuildingList"></rsps-property-building-coverage-edit>
-<rsps-property-building-coverage-group *ngIf="quote" [classType]="classType" [propertyQuote]="quote"
-    [coverages]="filteredCoverages" [limitTotal]="quote.limitTotal" [readOnlyQuote]="readOnlyQuote"
-    [coverageCount]="quote.coverageCount" [canEdit]="canEdit">
+<rsps-property-building-coverage-group *ngIf="quote" [classType]="classType"  [propertyParent]="quote"
+    [readOnlyQuote]="readOnlyQuote" [limitTotal]="quote.limitTotal"
+    [canEdit]="canEdit">
 </rsps-property-building-coverage-group>
 <div *ngIf="isSaving">
   <rsps-busy message="Saving..."></rsps-busy>

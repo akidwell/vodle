@@ -3,11 +3,9 @@ import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
-import { PropertyBuilding } from 'src/app/features/quote/models/property-building';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { faAngleDown, faAngleUp, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
-import { PropertyQuote } from 'src/app/features/quote/models/property-quote';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { PageState } from 'src/app/core/models/page-state';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
@@ -17,6 +15,9 @@ import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-b
 import { PropertyPolicyBuildingClass } from 'src/app/features/quote/classes/property-policy-building-class';
 import { PropertyBuildingBaseComponent } from '../property-building-base-component/property-building-base-component';
 import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
+import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
+import { PropertyQuote } from 'src/app/features/quote/models/property-quote';
 
 @Component({
   selector: 'rsps-property-building-group',
@@ -47,7 +48,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     this._search$.next();
   }
   get buildings(): PropertyBuildingClass[] {
-    return this._buildings;
+    return this.filteredBuildingsService.filteredBuildings;
   }
 
   private _loading$ = new BehaviorSubject<boolean>(true);
@@ -71,8 +72,8 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     searchTerm: ''
   };
 
-  constructor(private notification: NotificationService, private quoteService: QuoteService, private messageDialogService: MessageDialogService) {
-    super();
+  constructor(private notification: NotificationService, private quoteService: QuoteService, private messageDialogService: MessageDialogService, filteredBuildingsService: FilteredBuildingsService) {
+    super(filteredBuildingsService);
     // Get the default size from local storage
     let pageSize = localStorage.getItem('building-page-size');
     if (pageSize == null) {
@@ -99,6 +100,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       //this.searchAddress = this.searchAddress;
     });
     this.filterBuildings();
+    this.filterCoverages();
   }
 
   ngOnDestroy(): void {
@@ -118,7 +120,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     console.log('buildingssss: ', this.buildings);
     // 2.  Set Focus Page
     const focusIndex = buildings.findIndex((c) => c.focus);
-    console.log('focusindex '+ focusIndex, page);
+    console.log('focusindex ', focusIndex, page);
     let focusPage = page;
     if (focusIndex >= 0) {
       buildings[focusIndex].focus = false;
@@ -128,7 +130,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     // 3. paginate
     const total = buildings.length;
     buildings = buildings.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
-    this.filteredBuildings = buildings;
+    this.filteredBuildingsService.filteredBuildings = buildings;
     return of({buildings, total});
   }
 
@@ -144,6 +146,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     }
     else if (this.classType == ClassTypeEnum.Policy) {
       const newBuilding = new PropertyPolicyBuildingClass();
+      console.log('line 148',this.propertyParent);
       if (this.propertyParent instanceof PolicyClass) {
         this.propertyParent.addBuilding(newBuilding);
         newBuilding.isExpanded = true;
@@ -151,16 +154,19 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       }
     }
     this.filterBuildings();
+    this.filterCoverages();
   }
 
   addCoverage(building: PropertyBuildingClass) {
-    if (this.classType == ClassTypeEnum.Quote) {
-      const x = new PropertyQuoteBuildingClass(building);
-      x.addCoverage();
+    console.log('line 156', building instanceof PropertyPolicyBuildingClass);
+    console.log('line 158', this.classType);
+    if (this.propertyParent instanceof PropertyQuoteClass) {
+      this.propertyParent.addCoverage(building as PropertyQuoteBuildingClass);
+      this.filterCoverages();
     }
-    else if (this.classType == ClassTypeEnum.Policy) {
-      const x = new PropertyPolicyBuildingClass(building);
-      x.addCoverage();
+    else if (this.propertyParent instanceof PolicyClass) {
+      this.propertyParent.addCoverage(building as PropertyPolicyBuildingClass);
+      this.filterCoverages();
     }
   }
 
@@ -172,11 +178,11 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       newBuilding.propertyQuoteBuildingId = 0;
       newBuilding.isNew = true;
       newBuilding.markDirty();
-      newBuilding.propertyBuildingCoverage.map(x => x.propertyQuoteBuildingCoverageId = 0);
+      newBuilding.propertyQuoteBuildingCoverage.map(x => x.propertyQuoteBuildingCoverageId = 0);
       newBuilding.guid = crypto.randomUUID();
       //newBuilding.propertyParent = building.propertyParent;
       this.propertyParent.addBuilding(newBuilding);
-      newBuilding.propertyBuildingCoverage.map( x=> x.expand = true);
+      newBuilding.propertyQuoteBuildingCoverage.map( x=> x.expand = true);
       this.filterBuildingsCoverages();
       this.propertyParent.showDirty = true;
     }
@@ -187,11 +193,11 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       newBuilding.endorsementBuildingId = 0;
       newBuilding.isNew = true;
       newBuilding.markDirty();
-      newBuilding.propertyBuildingCoverage.map(x => x.propertPolicyBuildingCoverageId = 0);
+      newBuilding.endorsementBuildingCoverage.map(x => x.endorsementBuildingCoverageId = 0);
       newBuilding.guid = crypto.randomUUID();
       //newBuilding.propertyParent = building.propertyParent;
       this.propertyParent.addBuilding(newBuilding);
-      newBuilding.propertyBuildingCoverage.map( x=> x.expand = true);
+      newBuilding.endorsementBuildingCoverage.map( x=> x.expand = true);
       this.filterBuildingsCoverages();
       this.propertyParent.isDirty = true;
     }
@@ -199,11 +205,10 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
 
   deleteBuilding(building: PropertyBuildingClass) {
     const index = this.buildings.indexOf(building, 0);
+    building.markForDeletion = true;
     if (index > -1) {
       // TO DO :
-      //SEE IF WE NEED THIS - deleted on object save now, not individual save
-
-      // else {
+      console.log('line 202',this.propertyParent);
       if (this.propertyParent instanceof PropertyQuoteClass) {
         if (!building.isNew && building.propertyQuoteBuildingId != null && building.propertyQuoteBuildingId > 0) {
           this.deleteSub = this.quoteService
@@ -234,6 +239,19 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
               },
             });
         }
+        console.log('line 238', building.isNew);
+        if(building.isNew){
+          const index = this.propertyParent.propertyQuoteBuildingList.findIndex(x => x.propertyQuoteBuildingId == building.propertyQuoteBuildingId);
+          this.propertyParent.propertyQuoteBuildingList.splice(index, 1);
+
+          // this.filteredBuildingsService.filteredCoverages.map(x => {
+          //   const index = this.filteredCoverages.indexOf(x, 0);
+          //   if (x.propertyQuoteBuildingId == building.propertyQuoteBuildingId) {
+          //     this.filteredBuildingsService.filteredCoverages.splice(index, 1);
+          //   }});
+          this.propertyParent.deleteBuilding(building);
+        }
+
       }
       if (this.propertyParent instanceof PolicyClass) {
         building.markForDeletion = true;
@@ -242,6 +260,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       // }
     }
     this.filterBuildings();
+    this.filterCoverages();
   }
 
   filterBuilding(building: PropertyBuildingClass) {

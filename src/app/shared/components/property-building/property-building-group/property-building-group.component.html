@@ -60,7 +60,7 @@
             </div>
             <div *ngFor="let item of filteredBuildings; let i = index">
                 <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId" [readOnlyQuote]="readOnlyQuote"
-                    [rateEffectiveDate]="rateEffectiveDate"
+                    [rateEffectiveDate]="rateEffectiveDate"  [filteredCoverages]="filteredCoverages"
                     (copyBuilding)=copyBuilding($event) (deleteBuilding)=deleteBuilding($event)
                     (addCoverage)=addCoverage($event) (filterBuilding)=filterBuilding($event)>
                 </rsps-property-building>

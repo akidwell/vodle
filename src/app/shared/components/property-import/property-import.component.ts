@@ -10,6 +10,7 @@ import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quot
 import { Quote } from 'src/app/features/quote/models/quote';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
 import { PropertyBuildingBaseComponent } from '../property-building/property-building-base-component/property-building-base-component';
+import { FilteredBuildingsService } from '../../services/filtered-buildings/filtered-buildings.service';
 
 @Component({
   selector: 'rsps-property-import',
@@ -31,9 +32,10 @@ export class PropertyImportComponent extends PropertyBuildingBaseComponent {
     private pageDataService: PageDataService,
     private confirmationDialogService: ConfirmationDialogService,
     private notification: NotificationService,
-    private messageDialog: MessageDialogService
+    private messageDialog: MessageDialogService,
+    filteredBuildingsService: FilteredBuildingsService
   ) {
-    super();
+    super(filteredBuildingsService);
   }
 
   async import(e: any) {
@@ -53,8 +55,7 @@ export class PropertyImportComponent extends PropertyBuildingBaseComponent {
               .then(async (result: boolean) => {
                 if (result) {
                   this.quote.propertyQuoteBuildingList = [];
-                  this.filteredBuildings = [];
-                  this.filteredCoverages = [];
+                  this.clearBuildings();
                   if (this.quote.propertyQuoteId !== null) {
                     const result$ = this.quoteService.deleteAllBuildings(this.quote.propertyQuoteId);
                     await lastValueFrom(result$);

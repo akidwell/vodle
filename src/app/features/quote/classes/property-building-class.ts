@@ -8,6 +8,8 @@ import { ParentBaseClass } from '../../policy-v2/classes/base/parent-base-class'
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { PropertyBuildingCoverageClass } from './property-building-coverage-class';
+import { PropertyPolicyBuildingCoverageClass } from './property-policy-building-coverage-class';
+import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
 
 export abstract class PropertyBuildingClass extends ParentBaseClass implements PropertyBuilding {
@@ -46,7 +48,9 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
   public _canBeSaved = true;
   public _errorMessages: string[] = [];
 
-  propertyBuildingCoverage: PropertyBuildingCoverageClass[] = [];
+  propertyQuoteBuildingCoverage: PropertyQuoteBuildingCoverageClass[] = [];
+  endorsementBuildingCoverage: PropertyPolicyBuildingCoverageClass[] = [];
+
 
   taxCode: string | null = null;
 
@@ -101,9 +105,6 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
     this.markDirty();
   }
 
-  get buildingIndex(): string {
-    return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
-  }
   get isDuplicate(): boolean {
     return this._isDuplicate;
   }
@@ -272,7 +273,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
   private zipPipe = new ZipCodePipe();
 
   calculateITV() {
-    const buildingLimit = this.propertyBuildingCoverage.find(c => c.propertyCoverageId == 1)?.limit;
+    const buildingLimit = this.propertyQuoteBuildingCoverage.find(c => c.propertyCoverageId == 1)?.limit;
     if (this._squareFeet == null || buildingLimit == null) {
       this.itv = null;
     }
@@ -286,8 +287,6 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
   constructor(building?: PropertyBuilding) {
     super();
   }
-
-
   classValidation() {
     this.invalidList = [];
     this.errorMessagesList = [];
@@ -414,7 +413,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
 
 
   callChildValidations() {
-    this.childArrayValidate(this.propertyBuildingCoverage);
+    this.childArrayValidate(this.propertyQuoteBuildingCoverage);
   }
   childArrayValidate(children: Validation[]) {
     children.forEach(child => {
@@ -422,7 +421,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
     });
   }
   markChildrenClean() {
-    this.cleanChildArray(this.propertyBuildingCoverage);
+    this.cleanChildArray(this.propertyQuoteBuildingCoverage);
   }
   cleanChildArray(children: QuoteAfterSave[]) {
     children.forEach(child => {
@@ -430,7 +429,29 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
     });
   }
   existingInit(building: PropertyBuilding) {
-    console.log('BUILDING init', building);
+    console.log('UGH BUILDING' + building);
+    console.log('UGH BUILDING2' + building);
+
+    if (building.endorsementBuildingCoverage != null && building.endorsementBuildingCoverage.length > 0){
+      console.log('BUILDING init', building.endorsementBuildingCoverage);
+      building.endorsementBuildingCoverage.forEach(x => {
+        const y = new PropertyPolicyBuildingCoverageClass(x);
+        y.subjectNumber = building.subjectNumber;
+        y.premisesNumber = building.premisesNumber;
+        y.buildingNumber = building.buildingNumber;
+        this.endorsementBuildingCoverage.push(y);
+      });
+      building.endorsementBuildingCoverage = this.endorsementBuildingCoverage;
+    } else if (building.propertyQuoteBuildingCoverage != null && building.propertyQuoteBuildingCoverage.length > 0){
+      console.log('BUILDING init', building.propertyQuoteBuildingCoverage);
+      building.propertyQuoteBuildingCoverage.forEach(x => {
+        const y = new PropertyQuoteBuildingCoverageClass(x);
+        y.subjectNumber = building.subjectNumber;
+        y.premisesNumber = building.premisesNumber;
+        y.buildingNumber = building.buildingNumber;
+        this.propertyQuoteBuildingCoverage.push(y);
+      });
+    }
     this.propertyQuoteBuildingId = building.propertyQuoteBuildingId || 0;
     this.endorsementBuildingId = building.endorsementBuildingId || 0;
     this.propertyQuoteId = building.propertyQuoteId || 0;
@@ -459,7 +480,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
     this._plumbing = building.plumbing;
     this._hvac = building.hvac;
     this._itv = building.itv;
-    this.guid = building.guid;
+    this.guid = building.guid || crypto.randomUUID();
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -468,7 +489,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
     this.isNew = true;
     this.isImport = true;
     this.guid = crypto.randomUUID();
-    this.propertyBuildingCoverage.forEach((c) => {
+    this.propertyQuoteBuildingCoverage.forEach((c) => {
       c.isNew = true;
       c.isImport = true;
       c.guid = crypto.randomUUID();
@@ -536,7 +557,10 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
 
   baseToJSON() {
     const coverages: PropertyBuildingCoverage[] = [];
-    this.propertyBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
+    this.propertyQuoteBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
+
+    const coverages2: PropertyBuildingCoverage[] = [];
+    this.endorsementBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
 
     return {
       subjectNumber: this.subjectNumber,
@@ -565,6 +589,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
       plumbing: this.plumbing,
       hvac: this.hvac,
       propertyQuoteBuildingCoverage: coverages,
+      endorsementBuildingCoverage: coverages2,
       guid: this.guid
     };
   }

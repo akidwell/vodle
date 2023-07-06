@@ -25,6 +25,7 @@ import { PropertyBuildingGroupComponent } from 'src/app/shared/components/proper
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
 import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { PropertyBuildingCoverageModule } from 'src/app/shared/components/proper
     CanDeactivateGuard,
     FormatDateForDisplay,
     ConfirmationDialogService,
+    FilteredBuildingsService
   ]
 })
 export class PolicyV2Module { }

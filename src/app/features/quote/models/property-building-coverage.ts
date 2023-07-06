@@ -1,9 +1,8 @@
-import { PropertyBuilding } from './property-building';
 
 export interface PropertyBuildingCoverage {
   propertyQuoteBuildingCoverageId: number;
   propertyQuoteBuildingId: number;
-  propertPolicyBuildingCoverageId: number;
+  endorsementBuildingCoverageId: number;
   endorsementBuildingId: number;
   propertyCoverageId: number | null;
   limit: number | null;
@@ -12,6 +11,8 @@ export interface PropertyBuildingCoverage {
   valuationId: number | null;
   additionalDetail: string | null;
   guid: string;
+  isNew: boolean;
+  markForDeletion: boolean;
 }
 
 
