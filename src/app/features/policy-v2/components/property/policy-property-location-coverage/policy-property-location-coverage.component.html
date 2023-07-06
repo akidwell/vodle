@@ -4,9 +4,12 @@
 </div>
 </div>
 <rsps-property-building-group *ngIf="policy" [classType]="classType" [propertyParent]="policy" [readOnlyQuote]="false"
-    [buildings]="policy.propertyBuildingList" [canEdit]="canEdit"
+    [buildings]="policy.endorsementData.endorsementBuilding" [canEdit]="canEdit"
     [buildingCount]="policy.buildingCount" [programId]="programId"
     [rateEffectiveDate]="policy.rateEffectiveDate"></rsps-property-building-group>
-    <rsps-property-building-coverage-edit *ngIf="policy" [canEdit]="canEdit"
-    [buildings]="policy.propertyBuildingList"></rsps-property-building-coverage-edit>
+<rsps-property-building-coverage-edit *ngIf="policy" [propertyParent]="policy"  [canEdit]="canEdit"
+    [buildings]="policy.endorsementData.endorsementBuilding"></rsps-property-building-coverage-edit>
+<rsps-property-building-coverage-group *ngIf="policy" [propertyParent]="policy"  [classType]="classType" [propertyParent]="policy"  [limitTotal]="policy.limitTotal"
+   [canEdit]="canEdit">
+</rsps-property-building-coverage-group>
 

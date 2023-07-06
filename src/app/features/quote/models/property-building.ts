@@ -31,7 +31,8 @@ export interface PropertyBuilding {
     wiring: number | null;
     plumbing: number | null;
     hvac: number | null;
-    propertyBuildingCoverage: PropertyBuildingCoverage[];
+    propertyQuoteBuildingCoverage: PropertyBuildingCoverage[];
+    endorsementBuildingCoverage: PropertyBuildingCoverage[];
     markForDeletion?: boolean | null;
     isDirty?: boolean | null;
 }

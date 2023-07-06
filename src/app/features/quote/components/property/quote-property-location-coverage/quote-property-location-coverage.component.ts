@@ -7,6 +7,8 @@ import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 import { PropertyBuildingBaseComponent } from 'src/app/shared/components/property-building/property-building-base-component/property-building-base-component';
+import { PropertyQuoteBuildingCoverageClass } from '../../../classes/property-quote-building-coverage-class';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @Component({
   selector: 'rsps-quote-property-location-coverage',
@@ -25,8 +27,8 @@ export class QuotePropertyLocationCoverageComponent extends PropertyBuildingBase
   programId = 112;
   @Input() public readOnlyQuote!: boolean;
 
-  constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) {
-    super();
+  constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService, filteredBuildingsService: FilteredBuildingsService) {
+    super(filteredBuildingsService);
     this.authSub = this.userAuth.canEditQuote$.subscribe(
       (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
@@ -48,14 +50,15 @@ export class QuotePropertyLocationCoverageComponent extends PropertyBuildingBase
             this.propertyParent = this.quote;
             this.programId = this.quote.programId;
             this.rateEffectiveDate = this.quote.policyEffectiveDate;
-            console.log('PROP PARENT' + this.propertyParent);
-          });
-        }
-      }
-    );
+            this.clearBuildings();
+            this.filterBuildings();
+            console.log('line54',this.filteredCoverages);
+          });}
+      });
     this.saveSub = this.quoteSavingService.isSaving$.subscribe(
       (isSaving) => (this.isSaving = isSaving)
     );
+
   }
 
   ngOnDestroy() {

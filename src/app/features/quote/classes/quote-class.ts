@@ -508,7 +508,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.riskState = '';
     this.earnedPremiumPct = 35;
     this.policyId = 0;
-    this.policyMod = '00';
     this.quoteIdBound = 0;
   }
 

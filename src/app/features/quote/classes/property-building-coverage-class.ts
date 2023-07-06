@@ -1,19 +1,21 @@
-
 import { CurrencyPipe } from '@angular/common';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
-import { QuoteAfterSave } from '../models/quote-after-save';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
 import { QuoteValidationClass } from './quote-validation-class';
 import { ChildBaseClass } from '../../policy-v2/classes/base/child-base-class';
+import { PropertyPolicyBuildingClass } from './property-policy-building-class';
+import { PropertyBuildingClass } from './property-building-class';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
+import { PropertyBuilding } from '../models/property-building';
 
-export abstract class PropertyBuildingCoverageClass extends ChildBaseClass implements PropertyBuildingCoverage, Validation, QuoteAfterSave {
+export abstract class PropertyBuildingCoverageClass extends ChildBaseClass implements PropertyBuildingCoverage {
 
   propertyQuoteBuildingCoverageId = 0;
   propertyQuoteBuildingId = 0;
   endorsementBuildingId = 0;
-  propertPolicyBuildingCoverageId = 0;
+  endorsementBuildingCoverageId = 0;
 
   isNew = false;
   guid = '';
@@ -23,8 +25,14 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   subjectNumber: number | null = null;
   premisesNumber: number | null = null;
   buildingNumber: number | null = null;
-  building!: PropertyQuoteBuildingClass;
   invalidList: string[] = [];
+
+  public _errorMessagesList: ErrorMessage[] = [];
+  public _validateOnLoad = true;
+  public _isDirty = false;
+  public _isValid = true;
+  public _canBeSaved = true;
+  public _errorMessages: string[] = [];
 
   get buildingIndex(): string {
     return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
@@ -37,12 +45,22 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   private _valuationId: number | null = null;
   private _additionalDetail: string | null = null;
 
+  private _markForDeletion = false;
+  get markForDeletion() : boolean {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean) {
+    this._markForDeletion = value;
+    console.log('in markdeletion', value);
+    this.markDirty();
+  }
+
   get propertyCoverageId() : number | null {
     return this._propertyCoverageId;
   }
   set propertyCoverageId(value: number | null) {
     this._propertyCoverageId = value;
-    this.building?.calculateITV();
+    //this.building?.calculateITV();
     this.markDirty();
   }
 
@@ -51,12 +69,9 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   }
   set limit(value: number | null) {
     this._limit = value;
-    this.building?.calculateITV();
-    this.building?.propertyQuote.calculateSubjectAmounts();
-    this.building?.propertyQuote.calculateLargestPremTiv();
-    this.building?.propertyQuote.calculateLargestExposure();
-    this.building?.propertyQuote.calculateLawLimits();
     this.markDirty();
+    console.log('in set limit' , value);
+    console.log(this.isDirty);
   }
   get coinsuranceId() : number | null {
     return this._coinsuranceId;
@@ -115,12 +130,56 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
     }
   }
   errorMessages: string[] = [];
-  validate?(): Validation {
-    return new QuoteValidationClass(QuoteValidationTypeEnum.Child, null);
+  abstract validate(): Validation;
 
+  classValidation() {
+    this.invalidList = [];
+    this.errorMessagesList = [];
+    this.canBeSaved = true;
+    this.isValid = true;
+
+    if (this.isDuplicate){
+      this.canBeSaved = false;
+      this.isValid = false;
+      this.createErrorMessage('Coverage: ' + this.propertyCoverageId + ' is duplicated on ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim());
+      this.invalidList.push('Coverage: ' + this.propertyCoverageId + ' is duplicated on ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim());
+    }
+    if ((this.limit ?? 0 ) > 9999999999){
+      this.canBeSaved = false;
+      this.isValid = false;
+      this.createErrorMessage('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.invalidList.push('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this.propertyCoverageId)){
+      this.canBeSaved = false;
+      this.isValid = false;
+      this.createErrorMessage('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.invalidList.push('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this.limit)){
+      this.canBeSaved = false;
+      this.isValid = false;
+      this.createErrorMessage('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.invalidList.push('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this.coinsuranceId)){
+      this.isValid = false;
+      this.createErrorMessage('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.invalidList.push('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this.causeOfLossId)){
+      this.isValid = false;
+      this.createErrorMessage('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.invalidList.push('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    if (this.emptyNumberValueCheck(this.valuationId)){
+      this.isValid = false;
+      this.createErrorMessage('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.invalidList.push('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+    }
+    this._errorMessages = this.invalidList;
+    this.errorMessages = this.invalidList;
   }
-  validationResults?: Validation | undefined;
-
   emptyNumberValueCheck(value: number | null | undefined) {
     return !value;
   }
@@ -129,15 +188,18 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   }
 
   existingInit(coverage: PropertyBuildingCoverage) {
-    this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
+    console.log('COVERAGE init' , coverage);
+    this.endorsementBuildingId = coverage.endorsementBuildingId;
+    this.endorsementBuildingCoverageId = coverage.endorsementBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
+    this.propertyQuoteBuildingCoverageId = coverage.propertyQuoteBuildingCoverageId;
     this._propertyCoverageId = coverage.propertyCoverageId;
     this._limit = coverage.limit;
     this._coinsuranceId = coverage.coinsuranceId;
     this._causeOfLossId = coverage.causeOfLossId;
     this._valuationId = coverage.valuationId;
     this._additionalDetail = coverage.additionalDetail;
-    this.guid = coverage.guid;
+    this.guid = coverage.guid || crypto.randomUUID();
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -153,8 +215,6 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   valuationIdReadonly = false;
 
   newInit() {
-    this.propertyQuoteBuildingCoverageId = 0;
-    this.propertyQuoteBuildingId = 0;
     this.isNew = true;
     this.guid = crypto.randomUUID();
     this.expand = true;
@@ -172,10 +232,11 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   }
 
   toJSON(): PropertyBuildingCoverage {
+    console.log(this, 'THIS');
     return {
       propertyQuoteBuildingCoverageId: this.propertyQuoteBuildingCoverageId,
       propertyQuoteBuildingId: this.propertyQuoteBuildingId,
-      propertPolicyBuildingCoverageId: this.propertPolicyBuildingCoverageId,
+      endorsementBuildingCoverageId: this.endorsementBuildingCoverageId,
       endorsementBuildingId: this.endorsementBuildingId,
       propertyCoverageId: this.propertyCoverageId,
       limit: this.limit,
@@ -183,7 +244,9 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
       causeOfLossId: this.causeOfLossId,
       valuationId: this.valuationId,
       additionalDetail: this.additionalDetail,
-      guid: this.guid
+      guid: this.guid,
+      isNew: this.isNew,
+      markForDeletion: this.markForDeletion
     };
   }
 }

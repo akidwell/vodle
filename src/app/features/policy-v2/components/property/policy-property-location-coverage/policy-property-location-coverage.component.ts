@@ -9,6 +9,7 @@ import { PolicySavingService } from '../../../services/policy-saving-service/pol
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyBuildingBaseComponent } from 'src/app/shared/components/property-building/property-building-base-component/property-building-base-component';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @Component({
   selector: 'rsps-policy-property-location-coverage',
@@ -28,15 +29,15 @@ export class PolicyPropertyLocationCoverageComponent extends PropertyBuildingBas
 
   @Input() public readOnlyQuote!: boolean;
 
-  constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteSavingService: PolicySavingService) {
-    super();
+  constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private policySavingService: PolicySavingService,filteredBuildingsService: FilteredBuildingsService) {
+    super(filteredBuildingsService);
     this.authSub = this.userAuth.canEditQuote$.subscribe(
       (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
   }
 
   ngOnInit(): void {
-    this.saveSub = this.quoteSavingService.isSaving$.subscribe(
+    this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.isSaving = isSaving)
     );
   }
@@ -49,12 +50,13 @@ export class PolicyPropertyLocationCoverageComponent extends PropertyBuildingBas
             this.policy = policyData as PolicyClass ?? new PolicyClass();
             this.programId = this.policy.quoteData.programId;
             this.rateEffectiveDate = this.policy.policyEffectiveDate;
+            this.propertyParent = this.policy;
             this.filterBuildings();
           });
         }
       }
     );
-    this.saveSub = this.quoteSavingService.isSaving$.subscribe(
+    this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.isSaving = isSaving)
     );
   }
