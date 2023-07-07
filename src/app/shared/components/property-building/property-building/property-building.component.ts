@@ -10,6 +10,7 @@ import { MessageDialogService } from 'src/app/core/services/message-dialog/messa
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
+import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
 
 @Component({
   selector: 'rsps-property-building',
@@ -28,6 +29,7 @@ export class PropertyBuildingComponent implements OnInit {
   addressSub!: Subscription;
   protectionClassList: number[] = [1,2,3,4,5,6,7,8,9,10];
   @Input() public readOnlyQuote!: boolean;
+  @Input() public filteredCoverages: PropertyBuildingCoverageClass[] = [];
 
 
   @Input() public programId!: number;

@@ -58,6 +58,7 @@ import { WarrantiesModule } from 'src/app/shared/components/warranties/warrantie
 import { GeneralRemarksModule } from 'src/app/shared/components/general-remarks/general-remarks.module';
 import { InternalNotesModule } from 'src/app/shared/components/internal-notes/internal-notes.module';
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @NgModule({
   declarations: [
@@ -125,6 +126,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-ma
     FormatDateForDisplay,
     QuoteDataValidationService,
     ConfirmationDialogService,
+    FilteredBuildingsService,
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     {
       provide: DateAdapter,

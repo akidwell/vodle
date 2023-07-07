@@ -30,7 +30,6 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   isLoadingAddress = false;
   @Input() public readOnlyQuote!: boolean;
   @Input() public coverage!: PropertyBuildingCoverageClass;
-  @Input() public building!: PropertyBuildingClass;
   @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
   @Input() public canEdit = false;
   @Input() public buildingIndex = 0;
@@ -50,24 +49,8 @@ export class PropertyBuildingCoverageComponent implements OnInit {
     this.ref.detach();
   }
 
-  private _limit: number | null = null;
-  get limit() : number | null {
-    return this._limit;
-  }
-  set limit(value: number | null) {
-    this._limit = value;
-    this.coverage.limit = value;
-    this.building.calculateITV();
-    this.propertyParent.calculateSubjectAmounts();
-    this.propertyParent.calculateLargestPremTiv();
-    this.propertyParent.calculateLargestExposure();
-    this.propertyParent.calculateLawLimits();
-
-
-  }
-
   ngOnInit(): void {
-    this._limit = this.coverage.limit;
+    console.log('COVERAGrrrE' + this.coverage);
     this.coverages$ = this.dropdowns.getPropertyCoverages();
     lastValueFrom(this.coverages$).then(
       coverages => {
@@ -155,4 +138,5 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   get valuationTooltip(): string {
     return this.valuationComp?.selectedItems?.find((e: NgOption) => typeof e !== 'undefined')?.label ?? '';
   }
+
 }

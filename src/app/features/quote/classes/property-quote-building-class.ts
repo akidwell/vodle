@@ -19,14 +19,22 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
   }
   private _validationResults!: QuoteValidationClass;
   constructor(building?: PropertyBuilding) {
+    console.log('lalala' ,building?.propertyQuoteBuildingCoverage as PropertyQuoteBuildingCoverageClass[]);
     super(building);
     if (building) {
-      this.existingInit(building);
+      this.classInit(building);
     } else {
       this.newInit();
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.validate();
+  }
+  classInit(building: PropertyBuilding) {
+    this.propertyQuoteBuildingId = building.propertyQuoteBuildingId;
+    this._subjectNumber = building.subjectNumber;
+    this._premisesNumber = building.premisesNumber;
+    this._buildingNumber = building.buildingNumber;
+    this.existingInit(building);
   }
   propertyQuote!: PropertyQuoteClass;
   propertyQuoteId: number | null = 0;
@@ -46,10 +54,13 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
   set subjectNumber(value: number | null) {
     this._subjectNumber = value;
     this.markDirty();
-    this.propertyBuildingCoverage.map(c => c.subjectNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.subjectNumber = value);
   }
   get errorMessages(): string[] {
     return this._errorMessages;
+  }
+  get buildingIndex(): string {
+    return (this.subjectNumber ?? '') + '/' + (this.premisesNumber ?? '')+ '/' + (this.buildingNumber ?? '');
   }
   get premisesNumber() : number | null {
     return this._premisesNumber;
@@ -57,7 +68,7 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
   set premisesNumber(value: number | null) {
     this._premisesNumber = value;
     this.markDirty();
-    this.propertyBuildingCoverage.map(c => c.premisesNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.premisesNumber = value);
     // this.propertyQuote.calculateLargestPremTiv();
     // this.propertyQuote.calculateLargestExposure();
     // this.propertyQuote.calculateLawLimits();
@@ -70,11 +81,12 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
   //  this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value;
     this.markDirty();
-    this.propertyBuildingCoverage.map(c => c.buildingNumber = value);
+    this.propertyQuoteBuildingCoverage.map(c => c.buildingNumber = value);
   }
   validate(){
     if (this._validateOnLoad || this.isDirty){
       this.classValidation();
+      console.log('line 88',this.errorMessages);
       this._validateOnLoad = false;
     }
     this._validationResults?.resetValidation();
@@ -82,27 +94,13 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
     this.callChildValidations();
     this._validationResults.mapValues(this);
     console.log('check: ', this._validationResults, this._canBeSaved);
-    this._validationResults.validateChildrenAndMerge(this.propertyBuildingCoverage);
+    console.log('line 95', this.propertyQuoteBuildingCoverage);
+    this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingCoverage);
     console.log(this._validationResults);
     return this._validationResults;
   }
-  addCoverage() {
-    const newCoverage = new PropertyQuoteBuildingCoverageClass();
-    newCoverage.building = this;
-    newCoverage.focus = true;
-    newCoverage.subjectNumber = this._subjectNumber;
-    newCoverage.premisesNumber = this._premisesNumber;
-    newCoverage.buildingNumber = this._buildingNumber;
-    this.propertyBuildingCoverage.push(newCoverage);
-    //this.filterCoverages();
-    this.propertyQuote.calculateSubjectAmounts();
-    this.propertyQuote.calculateLargestPremTiv();
-    this.propertyQuote.calculateLargestExposure();
-    this.propertyQuote.calculateLawLimits();
-  }
 
   copyCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
-    coverage.building = this;
     coverage.expand = true;
     coverage.focus = true;
     coverage.propertyQuoteBuildingCoverageId = 0;
@@ -112,29 +110,34 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
     coverage.buildingNumber = this._buildingNumber;
     coverage.isNew = true;
     coverage.markDirty();
-    this.propertyBuildingCoverage.push(coverage);
-    this.propertyQuote.calculateSubjectAmounts();
-    this.propertyQuote.calculateLargestPremTiv();
-    this.propertyQuote.calculateLargestExposure();
-    this.propertyQuote.calculateLawLimits();
+    this.propertyQuoteBuildingCoverage.push(coverage);
+    // this.propertyQuote.calculateSubjectAmounts();
+    // this.propertyQuote.calculateLargestPremTiv();
+    // this.propertyQuote.calculateLargestExposure();
+    // this.propertyQuote.calculateLawLimits();
   }
 
   deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
-    const index = this.propertyBuildingCoverage.indexOf(coverage, 0);
+    console.log('in delete cov');
+    const index = this.propertyQuoteBuildingCoverage.indexOf(coverage, 0);
+    console.log('in delete cov index', index);
+
     if (index > -1) {
-      this.propertyBuildingCoverage.splice(index, 1);
+      this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage.splice(index, 1));
+      console.log('in delete cov list', this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage));
+
       // Mark dirty to force form rules check
       this.propertyQuote.markDirty();
     }
-    this.propertyQuote.calculateSubjectAmounts();
-    this.propertyQuote.calculateLargestPremTiv();
-    this.propertyQuote.calculateLargestExposure();
-    this.propertyQuote.calculateLawLimits();
+    // this.propertyQuote.calculateSubjectAmounts();
+    // this.propertyQuote.calculateLargestPremTiv();
+    // this.propertyQuote.calculateLargestExposure();
+    // this.propertyQuote.calculateLawLimits();
   }
 
   toJSON() {
     const coverages: PropertyBuildingCoverage[] = [];
-    this.propertyBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
+    this.propertyQuoteBuildingCoverage.forEach(c => coverages.push(c.toJSON()));
 
     return {
       propertyQuoteBuildingId: this.propertyQuoteBuildingId,
@@ -166,7 +169,8 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
       wiring: this.wiring,
       plumbing: this.plumbing,
       hvac: this.hvac,
-      propertyBuildingCoverage: coverages,
+      propertyQuoteBuildingCoverage: coverages,
+      endorsementBuildingCoverage: coverages,
       guid: this.guid
     };
   }

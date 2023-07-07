@@ -27,6 +27,7 @@ import { QuoteOptionalPremium } from '../models/quote-optional-premium';
 import { ValidationClass } from 'src/app/shared/classes/validation-class';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { PropertyBuildingClass } from './property-building-class';
+import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
   propertyQuoteId = 0;
@@ -57,6 +58,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     super(quote, program, submission);
     if (quote && quote.propertyQuote) {
+      console.log(quote.propertyQuote.propertyQuoteBuildingList);
       this.existingClassInit(quote.propertyQuote);
     } else {
       this.newClassInit();
@@ -91,7 +93,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   get limitTotal(): number {
     let total = 0;
     this.propertyQuoteBuildingList.map((c) =>
-      c.propertyBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
+      c.propertyQuoteBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
     );
     return total;
   }
@@ -145,7 +147,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
     console.log(this);
     this.propertyQuoteBuildingList.map((element) => {
-      element.propertyBuildingCoverage.map((x) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
         subAm.subject = Number(element.subjectNumber);
         subAm.limit = x.limit;
@@ -166,14 +168,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   calculateLargestPremTiv(){
     let largest = 0;
     this.propertyQuoteBuildingList.map(x => {
-      if (x.propertyBuildingCoverage.length == 0){
+      if (x.propertyQuoteBuildingCoverage.length == 0){
         this._largestPremTiv = 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
         this.propertyQuoteBuildingList.map((element) => {
-          element.propertyBuildingCoverage.map((x) => {
+          element.propertyQuoteBuildingCoverage.map((x) => {
             const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
             subAm.subject = element.premisesNumber;
             subAm.limit = x.limit;
@@ -209,7 +211,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   get coverageCount(): number {
     let total = 0;
-    this.propertyQuoteBuildingList.map((c) => total += c.propertyBuildingCoverage.length ?? 0
+    this.propertyQuoteBuildingList.map((c) => total += c.propertyQuoteBuildingCoverage.length ?? 0
     );
     return total;
   }
@@ -263,6 +265,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingList.push(building);
     building.propertyQuote = this;
     building.focus = true;
+    building.isNew = true;
     building.isExpanded = true;
     building.markDirty();
     //this.filterBuildings();
@@ -272,28 +275,42 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.calculateLargestExposure();
   }
 
+  addCoverage(building: PropertyQuoteBuildingClass) {
+    const newCoverage = new PropertyQuoteBuildingCoverageClass();
+    newCoverage.focus = true;
+    newCoverage.subjectNumber = building.subjectNumber;
+    newCoverage.premisesNumber = building.premisesNumber;
+    newCoverage.buildingNumber = building.buildingNumber;
+    newCoverage.propertyQuoteBuildingId = building.propertyQuoteBuildingId ?? 0;
+    newCoverage.isNew = true;
+    newCoverage.guid = crypto.randomUUID();
+    building.propertyQuoteBuildingCoverage.push(newCoverage);
+    return newCoverage;
+    //this.filterCoverages();
+    // this.propertyQuote.calculateSubjectAmounts();
+    // this.propertyQuote.calculateLargestPremTiv();
+    // this.propertyQuote.calculateLargestExposure();
+    // this.propertyQuote.calculateLawLimits();
+  }
+
   deleteBuilding(building: PropertyBuildingClass) {
     if (building instanceof PropertyQuoteBuildingClass) {
       const index = this.propertyQuoteBuildingList.indexOf(building, 0);
       if (index > -1) {
         this.propertyQuoteBuildingList.splice(index, 1);
-        // Mark dirty to force form rules check
         this.markDirty();
       }
-      if (building.propertyBuildingCoverage.length > 0) {
-      //this.filterBuildingsCoverages();
-        this.calculateSubjectAmounts();
-        this.calculateLargestPremTiv();
-        this.calculateLawLimits();
-        this.calculateLargestExposure();
+      if (building.propertyQuoteBuildingCoverage.length > 0) {
+        this.propertyQuoteBuildingList.map(x => {
+          if(x.propertyQuoteBuildingId == building.propertyQuoteBuildingId){
+            x.propertyQuoteBuildingCoverage = [];
+          }
+        });
       }
-      else {
-      //this.filterBuildings();
-        this.calculateSubjectAmounts();
-        this.calculateLargestPremTiv();
-        this.calculateLawLimits();
-        this.calculateLargestExposure();
-      }
+      this.calculateSubjectAmounts();
+      this.calculateLargestPremTiv();
+      this.calculateLawLimits();
+      this.calculateLargestExposure();
     }
   }
 
@@ -359,6 +376,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
     const buildings: PropertyQuoteBuildingClass[] = [];
     if(propertyQuote.propertyQuoteBuilding) {
+      console.log('adsfasdf' + propertyQuote.propertyQuoteBuilding);
       propertyQuote.propertyQuoteBuilding.forEach((element) => {
         const building = new PropertyQuoteBuildingClass(element);
         building.propertyQuote = this;
@@ -397,7 +415,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     //this._validationResults.mapValues(this);
     //validate children
     this.callChildValidations();
-
+    console.log('line 42',this.validationResults);
     //tab validations
     this.validateLocationCoverageTab();
     this.validateCoveragesTab();
@@ -423,6 +441,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.generalRemarksData);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
     this._validationResults.validateChildrenAndMerge(this.internalNotesData);
+    console.log('line 428',this.validationResults);
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
     return this._validationResults;
@@ -609,14 +628,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
 
       // Check coverage for duplicates
-      x.propertyBuildingCoverage.map(c => {
+      x.propertyQuoteBuildingCoverage.map(c => {
         if (c.isDuplicate) {
           c.isDuplicate = false;
         }
       });
-      x.propertyBuildingCoverage.map(coverage => {
+      x.propertyQuoteBuildingCoverage.map(coverage => {
         if (!coverage.isDuplicate) {
-          const dupes = x.propertyBuildingCoverage.filter(c => c.propertyCoverageId == coverage.propertyCoverageId);
+          const dupes = x.propertyQuoteBuildingCoverage.filter(c => c.propertyCoverageId == coverage.propertyCoverageId);
           if (dupes.length > 1) {
             dupes.forEach(dupe => {
               dupe.isDuplicate = true;
@@ -761,6 +780,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
 
   onSave(savedQuote: PropertyQuoteClass) {
+    console.log('savedquote', savedQuote);
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
     this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();
     this.submission.policyTerm = PolicyTermEnum.custom;
@@ -775,6 +795,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveWarranties(savedQuote);
     this.onSaveGeneralRemarks(savedQuote);
     this.onSaveInternalNotes(savedQuote);
+    console.log('Property Quote after save: ', this);
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -856,6 +877,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: PropertyQuoteClass): void {
+    console.log('line861', buildings);
     buildings.forEach(building => {
       if (building.isNew) {
         const match = savedQuote.propertyQuoteBuildingList.find(c => c.guid == building.guid);
@@ -863,23 +885,28 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
           building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
         }
         building.isNew = false;
-        building.guid = '';
+        //building.guid = '';
       }
-      this.onSaveCoverage(building.propertyBuildingCoverage, savedQuote);
+      this.onSaveCoverage(building.propertyQuoteBuildingCoverage, savedQuote);
     });
   }
 
   private onSaveCoverage(coverages: PropertyBuildingCoverageClass[], savedQuote: PropertyQuoteClass): void {
+    console.log('line 894', coverages);
+    console.log('line 895' , savedQuote);
     coverages.forEach(coverage => {
       if (coverage.isNew) {
-        const buildingMatch = savedQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
-        const coverageMatch = buildingMatch?.propertyBuildingCoverage.find(c => c.guid == coverage.guid);
+        const buildingMatch = savedQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.propertyQuoteBuildingId);
+        console.log('line 898', buildingMatch);
+        const coverageMatch = savedQuote?.propertyQuoteBuildingList.flatMap(x => x.propertyQuoteBuildingCoverage).find(x => x.guid == coverage.guid);
+        console.log('line 901', coverageMatch);
+
         if (coverageMatch != null) {
-          coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyCoverageId ?? 0;
+          coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId ?? 0;
           coverage.propertyQuoteBuildingId = coverageMatch.propertyQuoteBuildingId;
         }
         coverage.isNew = false;
-        coverage.guid = '';
+        //coverage.guid = '';
       }
     });
   }

@@ -33,7 +33,7 @@
                     <label for="additionalDetail" class="form-label" title="Additional Detail">Additional Detail</label>
                 </div>
             </div>
-            <div *ngFor="let item of policies$ | async; let buildingIndex = index">
+            <div *ngFor="let item of coverages; let buildingIndex = index">
                 <rsps-property-building-coverage [coverage]="item" [canEdit]="canEdit" [buildingIndex]="buildingIndex" [readOnlyQuote]="readOnlyQuote"
                     [coverageIndex]="buildingIndex" (copyCoverage)=copyCoverage($event)
                     (deleteCoverage)=deleteCoverage($event)>
@@ -54,6 +54,6 @@
     <div class="card-footer">
         <span>Total Limit: {{limitTotal | currency: 'USD' : 'symbol':'1.0-0'}}
         </span>
-        <div class="footer-count">Coverages: {{(policies$ | async)?.length}}/{{coverageCount}}</div>
+        <div class="footer-count">Coverages: {{coverages.length}}/{{coverageCount}}</div>
     </div>
 </div>

@@ -16,6 +16,7 @@ import { PropertyBuildingClass } from '../../quote/classes/property-building-cla
 import { PropertyQuoteBuildingClass } from '../../quote/classes/property-quote-building-class';
 import { PropertyBuilding } from '../../quote/models/property-building';
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
+import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
 
 
 export class PolicyClass extends ParentBaseClass implements PolicyInformation {
@@ -59,7 +60,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   //_validateOnLoad = true;
   isNew = false;
   invalidList= '';
-  propertyBuildingList: PropertyBuildingClass[] = [];
 
 
   private _commRate : number | null = null;
@@ -225,20 +225,44 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.guid = policy.guid || crypto.randomUUID();
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
-    this.buildingListInit(policy.endorsementData.endorsementBuilding);
     // this.setReadonlyFields();
     // this.setRequiredFields();
   }
 
   buildingListInit(buildingList: PropertyBuilding[]) {
     buildingList.forEach(building => {
-      this.propertyBuildingList.push(new PropertyPolicyBuildingClass(building));
+      this.endorsementData.endorsementBuilding.push(new PropertyPolicyBuildingClass(building));
     });
   }
   newInit() {
     this.policyId = 0;
     this.guid = crypto.randomUUID();
     this.isNew = true;
+  }
+
+  addCoverage(building: PropertyPolicyBuildingClass) {
+    const newCoverage = new PropertyPolicyBuildingCoverageClass();
+    newCoverage.focus = true;
+    newCoverage.subjectNumber = building.subjectNumber;
+    newCoverage.premisesNumber = building.premisesNumber;
+    newCoverage.buildingNumber = building.buildingNumber;
+    newCoverage.isNew = true;
+    newCoverage.propertyQuoteBuildingId = building.propertyQuoteBuildingId ?? 0;
+    //adds to filtered list
+    building.endorsementBuildingCoverage.push(newCoverage);
+    // adds to parent list
+    this.endorsementData.endorsementBuilding.map(x => {
+      if(x.endorsementBuildingId == building.endorsementBuildingId){
+        x.endorsementBuildingCoverage.push(newCoverage);
+      }
+    });
+    this.markDirty();
+    return newCoverage;
+    //this.filterCoverages();
+    // this.propertyQuote.calculateSubjectAmounts();
+    // this.propertyQuote.calculateLargestPremTiv();
+    // this.propertyQuote.calculateLargestExposure();
+    // this.propertyQuote.calculateLawLimits();
   }
   validateObject(): ErrorMessage[]{
     this.resetErrorMessages();
@@ -330,8 +354,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   calculateSubjectAmounts() {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
     console.log(this);
-    this.propertyBuildingList.map((element) => {
-      element.propertyBuildingCoverage.map((x) => {
+    this.endorsementData.endorsementBuilding.map((element) => {
+      element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
         subAm.subject = Number(element.subjectNumber);
         subAm.limit = x.limit;
@@ -347,11 +371,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   get buildingCount(): number {
-    return this.propertyBuildingList.filter(x=> !x.markForDeletion).length ?? 0;
+    return this.endorsementData.endorsementBuilding.filter(x=> !x.markForDeletion).length ?? 0;
   }
 
   addBuilding(building: PropertyPolicyBuildingClass) {
-    this.propertyBuildingList.push(building);
+    this.endorsementData.endorsementBuilding.push(building);
     building.focus = true;
     building.markDirty();
     building.isExpanded = true;
@@ -365,28 +389,27 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
 
   deleteBuilding(building: PropertyPolicyBuildingClass) {
     console.log('BUILDING POLICY CLASS' + building);
-    const index = this.propertyBuildingList.indexOf(building, 0);
+    const index = this.endorsementData.endorsementBuilding.indexOf(building, 0);
+    this.endorsementData.endorsementBuilding[index].markForDeletion = true;
     console.log('index' + index);
     if (index > -1) {
       // Mark dirty to force form rules check
       this.markDirty();
-      building.markForDeletion = true;
-      this.endorsementData.endorsementBuilding[index].markForDeletion = true;
     }
-    if (building.propertyBuildingCoverage.length > 0) {
-      // this.filterBuildingsCoverages();
+    if (building.endorsementBuildingCoverage.length > 0) {
       this.calculateSubjectAmounts();
       this.calculateLargestPremTiv();
       this.calculateLawLimits();
       this.calculateLargestExposure();
     }
-    else {
-      // this.filterBuildings();
-      this.calculateSubjectAmounts();
-      this.calculateLargestPremTiv();
-      this.calculateLawLimits();
-      this.calculateLargestExposure();
-    }
+  }
+
+  get limitTotal(): number {
+    let total = 0;
+    this.endorsementData.endorsementBuilding.map((c) =>
+      c.endorsementBuildingCoverage.map((coverage) => (total += coverage.limit ?? 0))
+    );
+    return total;
   }
 
   // onPremisesBuildingChange(premisesNumber: number | null, buildingNumber: number | null) {
@@ -414,20 +437,20 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   // }
 
   clearCspCodes() {
-    this.propertyBuildingList.forEach(x => x.cspCode == null);
+    this.endorsementData.endorsementBuilding.forEach(x => x.cspCode == null);
   }
 
   calculateLargestPremTiv(){
     let largest = 0;
-    this.propertyBuildingList.map(x => {
-      if (x.propertyBuildingCoverage.length == 0){
+    this.endorsementData.endorsementBuilding.map(x => {
+      if (x.propertyQuoteBuildingCoverage.length == 0){
         this._largestPremTiv = 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
-        this.propertyBuildingList.map((element) => {
-          element.propertyBuildingCoverage.map((x) => {
+        this.endorsementData.endorsementBuilding.map((element) => {
+          element.propertyQuoteBuildingCoverage.map((x) => {
             const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
             subAm.subject = element.premisesNumber;
             subAm.limit = x.limit;
@@ -463,7 +486,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
 
   get coverageCount(): number {
     let total = 0;
-    this.propertyBuildingList.map((c) => total += c.propertyBuildingCoverage.length ?? 0
+    this.endorsementData.endorsementBuilding.map((c) => total += c.endorsementBuildingCoverage.length ?? 0
     );
     return total;
   }
@@ -542,9 +565,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   toJSON(): PolicyInformation{
     const ai: AdditionalNamedInsuredData [] = [];
     this.additionalNamedInsuredData.forEach(c => ai.push(c.toJSON()));
-    console.log('in property building list ', this.propertyBuildingList);
-    this.endorsementData.endorsementBuilding = this.propertyBuildingList;
-    console.log('in endorsementbuilding ', this.endorsementData.endorsementBuilding);
 
     return{
       policyId: this.policyId,
