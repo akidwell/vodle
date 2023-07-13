@@ -2,13 +2,8 @@ import { CurrencyPipe } from '@angular/common';
 import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
-import { PropertyQuoteBuildingClass } from './property-quote-building-class';
-import { QuoteValidationClass } from './quote-validation-class';
 import { ChildBaseClass } from '../../policy-v2/classes/base/child-base-class';
-import { PropertyPolicyBuildingClass } from './property-policy-building-class';
-import { PropertyBuildingClass } from './property-building-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
-import { PropertyBuilding } from '../models/property-building';
 
 export abstract class PropertyBuildingCoverageClass extends ChildBaseClass implements PropertyBuildingCoverage {
 

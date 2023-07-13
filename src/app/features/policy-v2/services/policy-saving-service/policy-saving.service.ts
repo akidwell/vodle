@@ -52,9 +52,9 @@ export class PolicySavingService {
       const results$ = this.policyService.updatePolicyInfoV2(policy);
       await lastValueFrom(results$)
         .then(async (policyData: PolicyInformation) => {
-          //this.policy = policyData;
           const x = new PolicyClass(policyData);
-          console.log('X:' + policyData);
+          this.policy = policyData;
+          console.log('X:' + x);
           //this.pageDataService.policyData = x;
           policy.onSaveCompletion([x]);
           policy.markClean();
