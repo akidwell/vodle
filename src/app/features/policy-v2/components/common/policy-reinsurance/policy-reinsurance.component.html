@@ -18,5 +18,5 @@
     </div>
 </div>
 <div *ngFor="let layer of policyLayerData">
-    <rsps-policy-layer [policyLayerData]="layer" (addReinsurance)="addReinsurance($event)" />
+    <rsps-policy-layer [policyLayerData]="layer" (deletePolicyLayer)="deletePolicyLayer($event)"/>
 </div>

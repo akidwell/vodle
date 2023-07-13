@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Endorsement, PolicyLayerData, newPolicyLayer, newReinsuranceLayer } from 'src/app/features/policy/models/policy';
+import { ReinsuranceClass } from '../../../classes/reinsurance-class';
 
 @Component({
   selector: 'rsps-policy-reinsurance',
@@ -9,8 +10,8 @@ import { Endorsement, PolicyLayerData, newPolicyLayer, newReinsuranceLayer } fro
 })
 export class PolicyReinsuranceComponent {
 
-  policyId!: number;
-  endorsementNumber!: number;
+  private policyId!: number;
+  private endorsementNumber!: number;
   policyLayerData!: PolicyLayerData[];
   endorsement!: Endorsement;
 
@@ -28,25 +29,29 @@ export class PolicyReinsuranceComponent {
   }
 
   /**
-   * Adds Reinsurance to PolicyLayer data.
-   * Subscribed to PolicyLayerGroup's addReinsurnace EventEmitter.
-   * @param data PolicyLayerData the reinsurance belongs to.
-   */
-  addReinsurance(data: PolicyLayerData) {
-    // Seq is 1 if no reinsurance, otherwise increment max layer no.
-    const nextLayerSeq = Math.max(0, ...data.reinsuranceData.map(d => d.reinsLayerNo)) + 1;
-    const reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, data.policyLayerNo, nextLayerSeq)
-    data.reinsuranceData.push(reinsuranceLayer)
-  }
-
-  /**
-   * Called by Add Policy Layer button.
+   * Adds a new policy layer.
+   * The PolicyLayerComponent handles initialization of the default reinsurnace layer.
    */
   addPolicyLayer(): void {
     // Seq is 1 if no layers, otherwise increment max layer no.
     const nextLayerSeq = Math.max(0, ...this.policyLayerData.map(d => d.policyLayerNo)) + 1
     const policyLayer = newPolicyLayer(this.policyId, this.endorsementNumber, nextLayerSeq);
     this.policyLayerData.push(policyLayer);
-    this.addReinsurance(policyLayer);
+  }
+
+  /**
+   * Deletes a policy layer.
+   * The only way to delete a policy layer is to delete the last reinsurance layer within the policy.
+   * Each policy layer handles the reinsurnace layer logic, so when a policy layer's last reinsurance layer
+   * is deleted, it emits an event, letting this PolicyReinsurnaceComponent handle policy layer deletion.
+   * @param policyLayer The PolicyLayerData to delete
+   */
+  deletePolicyLayer(policyLayer: PolicyLayerData) {
+    const index = this.policyLayerData.indexOf(policyLayer);
+    this.policyLayerData.splice(index, 1);
+    this.policyLayerData.forEach((layer, index) => {
+      layer.policyLayerNo = index + 1;
+      layer.reinsuranceData.forEach(x => x.policyLayerNo = index + 1);
+    })
   }
 }

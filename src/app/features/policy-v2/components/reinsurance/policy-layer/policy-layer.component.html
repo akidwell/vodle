@@ -19,7 +19,7 @@
                 <th style="width: 12%"><label>Certificate No</label></th>
                 <th style="width: 7%"><!-- Delete button --></th>
             </tr>
-            <tr *ngFor="let reinsurance of policyLayerData.reinsuranceData">
+            <tr *ngFor="let reinsurance of reinsuranceLayers">
                 <td><input [(ngModel)]="reinsurance.reinsLayerNo" readonly type="text" class="form-control" /></td>
                 <td><input [(ngModel)]="reinsurance.attachmentPoint"
                     string-to-currency type="text" class="form-control" ></td>
@@ -28,8 +28,15 @@
                 <td><input [(ngModel)]="reinsurance.reinsCededPremium"
                     string-to-currency type="text" class="form-control" ></td>
                 <td><input [(ngModel)]="reinsurance.reinsCededCommRate" type="text" class="form-control" mask="percent" suffix="%" readonly></td>
-                <td><ng-select [(ngModel)]="reinsurance.treatyNo" type="text" class="form-control"></ng-select></td>
-                <td><input [(ngModel)]="reinsurance.isFaculative" type="checkbox" class="form-check-input"></td>
+                <td>
+                    <ng-select [(ngModel)]="reinsurance.treatyNo"
+                        [items]="currentReinsuranceCodes(reinsurance)"
+                        type="text" class="form-control" [clearable]="false">
+                        <ng-template ng-label-tmp let-item="item">{{item.treatyNumber}}</ng-template>
+                        <ng-template ng-option-tmp let-item="item">{{item.treatyNumber}} - {{item.treatyName}}</ng-template>
+                    </ng-select>
+                </td>
+                <td><input [(ngModel)]="reinsurance.isFacultative" type="checkbox" class="form-check-input" (change)="setFacultative(reinsurance)"></td>
                 <td><input [(ngModel)]="reinsurance.intermediaryNo" type="text" class="form-control"></td>
                 <td><input [(ngModel)]="reinsurance.reinsCertificateNo" type="text" class="form-control" readonly></td>
                 <td><span class="btn btn-secondary" hover-class="btn-danger" (click)="openDeleteConfirmation(reinsurance)">Delete</span></td>
