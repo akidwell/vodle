@@ -3,4 +3,5 @@ export enum QuoteValidationTypeEnum {
     Quote = 'quote',
     Tab = 'tab',
     Child = 'child',
+    Policy = 'policy',
   }

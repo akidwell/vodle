@@ -13,13 +13,16 @@ import { deepClone } from 'src/app/core/utils/deep-clone';
 
 import { QuoteDataValidationService } from 'src/app/features/quote/services/quote-data-validation-service/quote-data-validation-service.service';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
+import { PolicyValidationService } from 'src/app/features/policy-v2/services/policy-validation-service/policy-validation.service';
+import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
+import { PropertyAdditionalInterestBaseComponent } from '../additional-interest-base-component';
 
 @Component({
   selector: 'rsps-additional-interest-group',
   templateUrl: './additional-interest-group.component.html',
   styleUrls: ['./additional-interest-group.component.css']
 })
-export class AdditionalInterestGroupComponent implements OnInit {
+export class AdditionalInterestGroupComponent extends PropertyAdditionalInterestBaseComponent implements OnInit {
 
   invalidMessage = '';
   showInvalid = false;
@@ -33,12 +36,15 @@ export class AdditionalInterestGroupComponent implements OnInit {
   quoteId = 0;
   programSub!: Subscription;
   constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute,
-    private pageDataService: PageDataService, private quoteDataValidationService: QuoteDataValidationService) {
+    private pageDataService: PageDataService) {
+      super();
   }
 
   @Input() public aiData: AdditionalInterestClass[] = [];
   @Input() public newAi!: AdditionalInterestClass;
   @Input() public canEdit = false;
+  @Input() public readOnlyQuote!: boolean;
+  @Input() public classType!: ClassTypeEnum;
 
   ngOnInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
@@ -96,7 +102,7 @@ export class AdditionalInterestGroupComponent implements OnInit {
     mort.isNew = true;
     this.aiData?.push(mort);
     ///this.program?.quoteData?.validate();
-    this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
+    // this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
     this.collapsed = false;
   }
 

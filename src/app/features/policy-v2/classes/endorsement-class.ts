@@ -1,3 +1,4 @@
+import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
 import { Endorsement } from '../../policy/models/policy';
 import { PropertyBuildingClass } from '../../quote/classes/property-building-class';
 import { PropertyBuildingCoverageClass } from '../../quote/classes/property-building-coverage-class';
@@ -6,6 +7,9 @@ import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/propert
 import { PropertyBuilding } from '../../quote/models/property-building';
 import { ChildBaseClass } from './base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
+import { MortgageeData } from '../../quote/models/mortgagee';
+import { AdditionalInterestData } from '../../quote/models/additional-interest';
 import { ParentBaseClass } from './base/parent-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PropertyBuildingCoverage } from '../../quote/models/property-building-coverage';
@@ -36,14 +40,37 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   underlyingLimit!: number;
   attachmentPoint!: number;
   endorsementBuilding: PropertyPolicyBuildingClass[] = [];
-
+  endorsementMortgagee: MortgageeClass[] = [];
+  endorsementAdditionalInterest: AdditionalInterestClass[] = [];
 
   existingInit(end: Endorsement) {
     this.endorsementNumber = end.endorsementNumber;
     this.transactionTypeCode = end.transactionTypeCode;
     this.endorsementBuilding = this.buildingInit(end.endorsementBuilding as PropertyBuilding[]);
+    this.endorsementMortgagee = this.mortgageeInit(end.endorsementMortgagee);
+    this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest); 
     this.guid = crypto.randomUUID();
   }
+
+  additionalInterestInit(data: AdditionalInterestData[]){
+    const additionalInterests: AdditionalInterestClass[] = [];
+    if(data){
+      data.forEach(ai => {
+        additionalInterests.push(new AdditionalInterestClass(ai));
+      });
+    }
+    return additionalInterests;
+  }
+  mortgageeInit(data: MortgageeData[]) {
+    const mortgagees: MortgageeClass[] = [];
+    if(data){
+      data.forEach(mortgagee => {
+        mortgagees.push(new MortgageeClass(mortgagee));
+      });
+    }
+    return mortgagees;
+  }
+
   buildingInit(data: PropertyBuilding[]) {
     const buildings: PropertyPolicyBuildingClass[] = [];
     data.forEach(building => {
@@ -98,6 +125,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       underlyingLimit: this.underlyingLimit,
       attachmentPoint: this.attachmentPoint,
       endorsementBuilding: buildings,
+      endorsementMortgagee: this.endorsementMortgagee,
+      endorsementAdditionalInterest: this.endorsementAdditionalInterest
     };
   }
   buildingsToJson(): PropertyBuilding[] {

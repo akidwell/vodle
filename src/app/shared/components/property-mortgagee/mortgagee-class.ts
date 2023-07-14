@@ -44,7 +44,15 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   set isDuplicate(value: boolean ) {
     this._isDuplicate = value;
   }
-
+  private _markForDeletion = false;
+  get markForDeletion() : boolean {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean) {
+    this._markForDeletion = value;
+    console.log('in markdeletion', value);
+    this.markDirty();
+  }
 
   constructor(mortgagee?: MortgageeData){
     super();

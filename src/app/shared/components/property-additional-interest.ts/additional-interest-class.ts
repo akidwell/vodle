@@ -44,8 +44,19 @@ export class AdditionalInterestClass extends BuildingLocationClass implements Ad
     this._isDuplicate = value;
   }
 
+  private _markForDeletion = false;
+  get markForDeletion() : boolean {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean) {
+    this._markForDeletion = value;
+    console.log('in markdeletion', value);
+    this.markDirty();
+  }
+
   constructor(ai?: AdditionalInterestData){
     super();
+    console.log('AI')
     if (ai) {
       this.existingInit(ai);
     } else {
