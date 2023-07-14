@@ -5,19 +5,34 @@ import { MortgageeData } from 'src/app/features/quote/models/mortgagee';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { BuildingLocationClass } from '../../classes/building-location-class';
 import { Validation } from '../../interfaces/validation';
+import { ChildBaseClass } from 'src/app/features/policy-v2/classes/base/child-base-class';
+import { ErrorMessage } from '../../interfaces/errorMessage';
+import { PolicyValidation } from '../../interfaces/policy-validation';
 
-export class MortgageeClass extends BuildingLocationClass implements MortgageeData, Validation, QuoteAfterSave{
+export class MortgageeClass extends ChildBaseClass implements MortgageeData, PolicyValidation{
+  validateObject(): ErrorMessage[] {
+    this.validate();
+    return this.errorMessagesList;
+  }
+  onGuidNewMatch(T: PolicyValidation): void {
+    
+  }
+  onGuidUpdateMatch(T: PolicyValidation): void {
+    
+  }
+  onSaveCompletion(T: PolicyValidation[]): void {
+    
+  }
   private _isDirty = false;
   private _isValid = false;
   private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
-
-  //private _buildingNumber: number | null = null;
+  private _buildingNumber: number | null = null;
   private _attention: string | null = null;
   private _description: string | null = null;
-  //private _premisesNumber: number | null = null;
+  private _premisesNumber: number | null = null;
   private _mortgageHolder: string | null = null;
   private _propertyQuoteId: number | null = null;
   private _propertyQuoteMortgageeId: number | null = null;
@@ -28,7 +43,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   private _zip: string | null = null;
   private _countryCode: string | null = null;
   private _mortgageeType: number | null = 1;
-  //private _isAppliedToAll = false;
+  private _isAppliedToAll = false;
   private _isNew!: boolean;
 
   isNew = false;
@@ -78,46 +93,46 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
 
   classValidation() {
     this.invalidList = [];
-    this._canBeSaved = true;
-    this._isValid = true;
+    this.canBeSaved = true;
+    this.isValid = true;
     if (this.emptyStringValueCheck(this._mortgageHolder)){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Mortgagee - Mortgagee Holder is required');
     }
     if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Premises/Building Number is required');
     }
     if (this.emptyStringValueCheck(this._street1)){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Mortgagee - Street is required');
     }
     if (this.emptyStringValueCheck(this._city)){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Mortgagee - City is required');
     }
     if (this.emptyStringValueCheck(this._state)){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Mortgagee - State is required');
     }
     if (this.emptyStringValueCheck(this._zip)){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Mortgagee - Zip is required');
     }
     if (this.emptyStringValueCheck(this._mortgageeType?.toString())){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Mortgagee - Type is required');
     }
     if (this.isDuplicate){
-      this._canBeSaved = false;
-      this._isValid = false;
+      this.canBeSaved = false;
+      this.isValid = false;
       this.invalidList.push('Duplicate Mortgagees exist');
     }
     this._errorMessages = this.invalidList;
@@ -157,75 +172,73 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
     this.guid = crypto.randomUUID();
   }
 
-  get validationResults(): QuoteValidationClass {
-    return this._validationResults;
-  }
-  get canBeSaved(): boolean {
-    return this._canBeSaved;
-  }
+
+  // get canBeSaved(): boolean {
+  //   return this._canBeSaved;
+  // }
   get errorMessages(): string[] {
     return this._errorMessages;
   }
 
-  // get buildingNumber() : number | null {
-  //   return this._buildingNumber;
-  // }
-  // set buildingNumber(value: number | null) {
-  //   this._buildingNumber = value;
-  //   this._isDirty = true;
-  // }
+  get buildingNumber() : number | null {
+    return this._buildingNumber;
+  }
+  set buildingNumber(value: number | null) {
+    this._buildingNumber = value;
+    this.markDirty();
+  }
 
-  // get building() : string | null {
-  //   if (this._isAppliedToAll) {
-  //     return 'All';
-  //   }
-  //   else if (this._premisesNumber == null || this._buildingNumber == null) {
-  //     return null;
-  //   }
-  //   return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
-  // }
+  get building() : string | null {
+    if (this._isAppliedToAll) {
+      return 'All';
+    }
+    else if (this._premisesNumber == null || this._buildingNumber == null) {
+      return null;
+    }
+    return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
+  }
 
-  // set building(value: string | null) {
-  //   if (value == 'All') {
-  //     this._isAppliedToAll = true;
-  //     this._premisesNumber = null;
-  //     this._buildingNumber = null;
-  //     this._isDirty = true;
-  //   }
-  //   else {
-  //     const parse = value?.split('-');
-  //     if (parse?.length == 2) {
-  //       const premises = parse[0] ?? '';
-  //       const building = parse[1] ?? '';
-  //       this._isAppliedToAll = false;
-  //       this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
-  //       this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
-  //       this._isDirty = true;
-  //     }
-  //     else {
-  //       this._isAppliedToAll = false;
-  //       this._premisesNumber = null;
-  //       this._buildingNumber = null;
-  //       this._isDirty = true;
-  //     }
-  //   }
-  //}
+  set building(value: string | null) {
+    if (value == 'All') {
+      this._isAppliedToAll = true;
+      this._premisesNumber = null;
+      this._buildingNumber = null;
+      this.markDirty();
+    }
+    else {
+      const parse = value?.split('-');
+      if (parse?.length == 2) {
+        const premises = parse[0] ?? '';
+        const building = parse[1] ?? '';
+        this._isAppliedToAll = false;
+        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
+        this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
+        this.markDirty();
+      }
+      else {
+        this._isAppliedToAll = false;
+        this._premisesNumber = null;
+        this._buildingNumber = null;
+        this.markDirty();
+      }
+    }
+  }
 
   get attention() : string | null {
     return this._attention;
   }
   set attention(value: string | null) {
     this._attention = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
-  // get isAppliedToAll() : boolean{
-  //   return this._isAppliedToAll;
-  // }
-  // set isAppliedToAll(value: boolean) {
-  //   this._isAppliedToAll = value;
-  //   this._isDirty = true;
-  // }
+  get isAppliedToAll() : boolean{
+    return this._isAppliedToAll;
+  }
+  set isAppliedToAll(value: boolean) {
+    this._isAppliedToAll = value;
+    this.markDirty();
+  }
 
 
   get description() : string | null {
@@ -233,16 +246,16 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set description(value: string | null) {
     this._description = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
-  // get premisesNumber() : number | null {
-  //   return this._premisesNumber;
-  // }
-  // set premisesNumber(value: number | null) {
-  //   this._premisesNumber= value;
-  //   this._isDirty = true;
-  // }
+  get premisesNumber() : number | null {
+    return this._premisesNumber;
+  }
+  set premisesNumber(value: number | null) {
+    this._premisesNumber= value;
+    this.markDirty();
+  }
 
   get propertyQuoteId() : number | null {
     return this._propertyQuoteId;
@@ -250,7 +263,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
 
   set propertyQuoteId(value: number | null) {
     this._propertyQuoteId = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get propertyQuoteMortgageeId() : number | null {
@@ -259,7 +272,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
 
   set propertyQuoteMortgageeId(value: number | null) {
     this._propertyQuoteMortgageeId = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get mortgageHolder() : string | null {
@@ -267,7 +280,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set mortgageHolder(value: string | null) {
     this._mortgageHolder = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get street1() : string | null {
@@ -275,7 +288,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set street1(value: string | null) {
     this._street1 = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get street2() : string | null {
@@ -283,7 +296,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set street2(value: string | null) {
     this._street2 = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get city() : string | null {
@@ -291,7 +304,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set city(value: string | null) {
     this._city = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get state() : string | null {
@@ -299,7 +312,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set state(value: string | null) {
     this._state = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get zip() : string | null {
@@ -307,7 +320,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set zip(value: string | null) {
     this._zip = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get countryCode() : string | null {
@@ -315,7 +328,7 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set countryCode(value: string | null) {
     this._countryCode = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
   get mortgageeType() : number | null {
@@ -323,35 +336,11 @@ export class MortgageeClass extends BuildingLocationClass implements MortgageeDa
   }
   set mortgageeType(value: number | null) {
     this._mortgageeType = value;
-    this._isDirty = true;
+    this.markDirty();
   }
 
-  get isDirty() : boolean {
-    return this._isDirty;
-  }
-
-  set isDirty(value: boolean) {
-    this._isDirty = value;
-  }
-
-  get isValid(): boolean {
-    const valid = true;
-    //valid = this.validate(valid);
-    return valid;
-  }
-
-  set isValid(value: boolean){
-    this.isValid = value;
-  }
-
-  markClean() {
-    this._isDirty = false;
-  }
   markStructureClean(): void {
     this.markClean();
-  }
-  markDirty() {
-    this._isDirty = true;
   }
 
   toJSON() {

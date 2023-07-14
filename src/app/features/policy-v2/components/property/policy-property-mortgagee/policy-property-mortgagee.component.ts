@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
@@ -8,6 +8,8 @@ import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { PolicyQuoteClass } from '../../../classes/policy-quote-class';
 import { PolicyClass } from '../../../classes/policy-class';
 import { PropertyMorgageeBaseComponent } from 'src/app/shared/components/property-mortgagee/property-mortgagee-base-component';
+import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @Component({
   selector: 'rsps-policy-property-mortgagee',
@@ -24,11 +26,20 @@ export class PolicyPropertyMortgageeComponent extends  PropertyMorgageeBaseCompo
   saveSub!: Subscription;
   rateEffectiveDate: Date | null= null;
   programId = 112;
+  private _buildings: PropertyBuildingClass[] = [];
 
   @Input() public readOnlyQuote!: boolean;
 
-  constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private policySavingService: PolicySavingService) {
-    super();
+  @Input() set buildings(value: PropertyBuildingClass[]) {
+    this._buildings = value;
+    console.log('input buildings: ', value);
+  }
+  get buildings(): PropertyBuildingClass[] {
+    return this.filteredBuildingsService.filteredBuildings;
+  }
+
+  constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private policySavingService: PolicySavingService, public filteredBuildingsService: FilteredBuildingsService) {
+    super(filteredBuildingsService);
     this.authSub = this.userAuth.canEditQuote$.subscribe(
       (canEditQuote: boolean) => this.canEdit = canEditQuote
     );

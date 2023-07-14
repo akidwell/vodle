@@ -13,6 +13,7 @@ import { AdditionalInterestData } from '../../quote/models/additional-interest';
 import { ParentBaseClass } from './base/parent-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PropertyBuildingCoverage } from '../../quote/models/property-building-coverage';
+import { Code } from 'src/app/core/models/code';
 
 export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
@@ -103,7 +104,17 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     });
     return this.errorMessagesList;
   }
-
+  get buildingList(): Code[] {
+    const buildings: Code[] = [];
+    const all: Code = {key: 0, code: 'All', description: 'All'};
+    buildings.push(all);
+    this.endorsementBuilding.forEach((c) => {
+      const building = (c.premisesNumber?.toString() ?? '') + '-' + (c.buildingNumber?.toString() ?? '');
+      const code: Code = {key: 0, code: building, description: building + ' : ' + c.address};
+      buildings.push(code);
+    });
+    return buildings;
+  }
   onGuidNewMatch(T: ChildBaseClass): void {
 
   }

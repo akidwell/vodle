@@ -13,6 +13,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyMorgageeBaseComponent } from '../property-mortgagee-base-component';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @Component({
   selector: 'rsps-mortgagee-group',
@@ -33,8 +34,8 @@ export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent imple
   quoteId = 0;
   programSub!: Subscription;
   
-  constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
-    super();
+  constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService, filteredBuildingsService :FilteredBuildingsService) {
+    super(filteredBuildingsService);
   }
 
   @Input() public mortgageeData: MortgageeClass[] = [];
@@ -81,6 +82,7 @@ export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent imple
     newMortgagee.guid = crypto.randomUUID();
     newMortgagee.mortgageHolder = 'CopyOf ' + existingMortgagee.mortgageHolder;
     newMortgagee.isNew = true;
+    newMortgagee.markDirty();
     this.mortgageeData?.push(newMortgagee);
   }
 

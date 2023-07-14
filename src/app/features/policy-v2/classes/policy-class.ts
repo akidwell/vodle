@@ -292,7 +292,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       this.validateClass();
     }
     this.errorMessagesList = this.validateChildren(this);
-
+    console.log('errorMessages: ',this.errorMessagesList);
     return this.errorMessagesList;
   }
 
@@ -394,8 +394,9 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   addAI(ai: AdditionalInterestClass){
-    this.additionalInterestList.push(ai);
     ai.markDirty();
+    this.markDirty();
+    this.additionalInterestList.push(ai);
     ai.isNew = true;
   }
 
@@ -411,9 +412,10 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   addMortgagee(mortgagee: MortgageeClass){
-    this.mortgageeList.push(mortgagee);
     mortgagee.markDirty();
+    this.markDirty();
     mortgagee.isNew = true;
+    this.mortgageeList.push(mortgagee);
   }
 
   addBuilding(building: PropertyPolicyBuildingClass) {

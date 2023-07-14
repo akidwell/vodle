@@ -29,11 +29,12 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
   ): Observable<boolean> | boolean | Promise<boolean> {
     // Skip checks if bypassFormGuard is set
     if (this.router.getCurrentNavigation()?.extras?.state?.bypassFormGuard) {
+      console.log('SKKKKKIIIIPPPPPPPPPP');
       return true;
     }
     else {
-
-      if (component instanceof PolicyInformationV2Component || component instanceof PolicyPropertyLocationCoverageComponent)
+      console.log(component);
+      if (component instanceof PolicyInformationV2Component || component instanceof PolicyPropertyLocationCoverageComponent || component instanceof PolicyPropertyMortgageeComponent)
         if(this.validateAndSavePolicy()){
           return true;
         }
@@ -56,7 +57,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
   validateAndSavePolicy(): boolean {
     const policy = this.pageDataService.policyData || undefined;
     const results = policy?.validateObject();
-    console.log('RESULTS' + results);
+    console.log('RESULTS', policy, results);
     //TODO: Add isDirty check as we don't want to save every tab change
     //if canBeSaved is false we skip the save
     if (results?.length == 0 && policy?.isDirty) {
