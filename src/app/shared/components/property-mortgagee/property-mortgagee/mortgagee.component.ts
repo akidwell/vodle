@@ -43,7 +43,7 @@ export class MortgageeComponent {
 
 
   private modalRef!: NgbModalRef;
-  @Output() copyExisitingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();
+  @Output() copyExistingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();
   @Output() deleteExistingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();
 
   @Input() mortgageeData!: MortgageeClass;
@@ -74,7 +74,7 @@ export class MortgageeComponent {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
-        if (this.buildingList.find(c => c.code == this.mortgageeData.building) == null) {
+        if (this.buildingList?.find(c => c.code == this.mortgageeData.building) == null) {
           this.mortgageeData.buildingNumber = null;
           this.mortgageeData.isDirty = true;
           this.mortgageeData.validate();
@@ -113,7 +113,7 @@ export class MortgageeComponent {
   }
 
   copyMortgagee(): void {
-    this.copyExisitingMortgagee.emit(this.mortgageeData);
+    this.copyExistingMortgagee.emit(this.mortgageeData);
   }
 
   async cancel(): Promise<void> {

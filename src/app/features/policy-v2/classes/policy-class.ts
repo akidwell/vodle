@@ -16,6 +16,10 @@ import { PropertyBuildingClass } from '../../quote/classes/property-building-cla
 import { PropertyQuoteBuildingClass } from '../../quote/classes/property-quote-building-class';
 import { PropertyBuilding } from '../../quote/models/property-building';
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
+import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
+import { MortgageeData } from '../../quote/models/mortgagee';
+import { AdditionalInterestData } from '../../quote/models/additional-interest';
 import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
 
 
@@ -60,7 +64,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   //_validateOnLoad = true;
   isNew = false;
   invalidList= '';
-
+  additionalInterestList: AdditionalInterestClass[] = [];
+  mortgageeList: MortgageeClass[] = [];
 
   private _commRate : number | null = null;
   get commRate() : number | null {
@@ -225,6 +230,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.guid = policy.guid || crypto.randomUUID();
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
+    this.mortgageeList = policy.endorsementData.endorsementMortgagee;
     // this.setReadonlyFields();
     // this.setRequiredFields();
   }
@@ -234,6 +240,19 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       this.endorsementData.endorsementBuilding.push(new PropertyPolicyBuildingClass(building));
     });
   }
+
+  // mortgageeListInit(mortgagees: MortgageeClass[]){
+  //   mortgagees?.forEach(mortgagee => {
+  //     this.mortgageeList.push(new MortgageeClass(mortgagee))
+  //   })
+  // }
+
+  additionalInterestListInit(additionalInterests: AdditionalInterestData[]){
+    additionalInterests.forEach(ai => {
+      this.additionalInterestList.push(new AdditionalInterestClass(ai))
+    })
+  }
+  
   newInit() {
     this.policyId = 0;
     this.guid = crypto.randomUUID();
@@ -273,7 +292,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       this.validateClass();
     }
     this.errorMessagesList = this.validateChildren(this);
-
+    console.log('errorMessages: ',this.errorMessagesList);
     return this.errorMessagesList;
   }
 
@@ -372,6 +391,31 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
 
   get buildingCount(): number {
     return this.endorsementData.endorsementBuilding.filter(x=> !x.markForDeletion).length ?? 0;
+  }
+
+  addAI(ai: AdditionalInterestClass){
+    ai.markDirty();
+    this.markDirty();
+    this.additionalInterestList.push(ai);
+    ai.isNew = true;
+  }
+
+  deleteAI(ai: AdditionalInterestClass){
+    console.log('AI POLICY CLASS ' + ai);
+    const index = this.additionalInterestList.indexOf(ai, 0);
+    console.log('index ' + index);
+    if(index > -1){
+      this.markDirty();
+      ai.markForDeletion = true;
+      this.endorsementData.endorsementAdditionalInterest[index].markForDeletion = true;
+    }
+  }
+
+  addMortgagee(mortgagee: MortgageeClass){
+    mortgagee.markDirty();
+    this.markDirty();
+    mortgagee.isNew = true;
+    this.mortgageeList.push(mortgagee);
   }
 
   addBuilding(building: PropertyPolicyBuildingClass) {

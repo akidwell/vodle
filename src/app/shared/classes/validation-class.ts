@@ -2,6 +2,7 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Validation } from '../interfaces/validation';
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
+import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
 
 export abstract class ValidationClass implements Validation {
   isValid = false;
@@ -10,10 +11,10 @@ export abstract class ValidationClass implements Validation {
   errorMessages: string[] = [];
   markParentDirty?: () => void;
   isEmpty = false;
-  tabName: QuoteValidationTabNameEnum | null = null;
+  tabName: QuoteValidationTabNameEnum | PolicyValidationTabNameEnum | null = null;
   validationType: QuoteValidationTypeEnum = QuoteValidationTypeEnum.Quote;
 
-  constructor(type: QuoteValidationTypeEnum, tabName: QuoteValidationTabNameEnum | null){
+  constructor(type: QuoteValidationTypeEnum, tabName: QuoteValidationTabNameEnum | PolicyValidationTabNameEnum | null){
     this.isValid = true;
     this.isDirty = false;
     this.canBeSaved = true;
