@@ -11,13 +11,16 @@ import { PageDataService } from 'src/app/core/services/page-data-service/page-da
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
+import { PropertyMorgageeBaseComponent } from '../property-mortgagee-base-component';
+import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @Component({
   selector: 'rsps-mortgagee-group',
   templateUrl: './mortgagee-group.component.html',
   styleUrls: ['./mortgagee-group.component.css']
 })
-export class MortgageeGroupComponent implements OnInit {
+export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent implements OnInit {
 
   invalidMessage = '';
   showInvalid = false;
@@ -30,12 +33,16 @@ export class MortgageeGroupComponent implements OnInit {
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
-  constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService) {
+  
+  constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService, filteredBuildingsService :FilteredBuildingsService) {
+    super(filteredBuildingsService);
   }
 
   @Input() public mortgageeData: MortgageeClass[] = [];
   @Input() public newMortgagee!: MortgageeClass;
   @Input() public canEdit = false;
+  @Input() public readOnlyQuote!: boolean;
+  @Input() public classType!: ClassTypeEnum;
 
   ngOnInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
@@ -68,13 +75,14 @@ export class MortgageeGroupComponent implements OnInit {
     this.showInvalid = false;
   }
 
-  copyExisitingMortgagee(existingMortgagee: MortgageeClass) {
+  copyExistingMortgagee(existingMortgagee: MortgageeClass) {
     const clone = deepClone(existingMortgagee.toJSON());
     const newMortgagee = new MortgageeClass(clone);
     newMortgagee.propertyQuoteMortgageeId = 0;
     newMortgagee.guid = crypto.randomUUID();
     newMortgagee.mortgageHolder = 'CopyOf ' + existingMortgagee.mortgageHolder;
     newMortgagee.isNew = true;
+    newMortgagee.markDirty();
     this.mortgageeData?.push(newMortgagee);
   }
 

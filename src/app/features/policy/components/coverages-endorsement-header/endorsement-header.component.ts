@@ -18,7 +18,7 @@ import { EndorsementStatusService } from '../../services/endorsement-status/endo
   styleUrls: ['./endorsement-header.component.css']
 })
 export class EndorsementHeaderComponent implements OnInit {
-  isReadOnly: boolean = true;
+  isReadOnly = true;
   canEditPolicy: boolean = false;
   authSub: Subscription;
   transactionTypes!: Code[];
@@ -31,7 +31,7 @@ export class EndorsementHeaderComponent implements OnInit {
   isAttachmentPointValid: boolean = false;
   isPolicyCancelled: boolean = false;
   isRewrite: boolean = false;
-  isUnderlyingLimitValid: boolean = false;
+  isUnderlyingLimitValid = false;
   savePolicyInfo: boolean = false;
 
   @Input() public endorsement!: Endorsement;
@@ -46,7 +46,7 @@ export class EndorsementHeaderComponent implements OnInit {
 
   @ViewChild('endorsementHeaderForm', { static: false }) endorsementHeaderForm!: NgForm;
 
-  async ngOnInit():  Promise<void> {
+  async ngOnInit(): Promise<void> {
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: canEdit => {
         this.canEditEndorsement = canEdit;
@@ -58,7 +58,7 @@ export class EndorsementHeaderComponent implements OnInit {
     this.terrorismCodes$ = this.dropdowns.getTerrorismCodes();
     this.checkAttachmentPointValid();
     this.endorsementStoredValuesService.SIR = this.endorsement.sir;
-   // this.checkUnderlyingLimitValid();
+    // this.checkUnderlyingLimitValid();
   }
 
   ngOnDestroy(): void {
@@ -103,7 +103,8 @@ export class EndorsementHeaderComponent implements OnInit {
   }
 
   checkUnderlyingLimitValid(): boolean {
-    return this.policyInfo.policySymbol.trim().toUpperCase() != 'XS' || this.endorsement.underlyingLimit > 0;
+    const excesses = ['ENY', 'XS'];
+    return !excesses.includes(this.policyInfo.policySymbol.trim().toUpperCase()) || this.endorsement.underlyingLimit > 0;
   }
   transactionEffectiveDateIsEditable(): boolean {
     if (this.isCancelSelected() || this.isExtensionDateSelected() || this.isReinstatementSelected()) {
@@ -138,7 +139,7 @@ export class EndorsementHeaderComponent implements OnInit {
       return;
     }
     this.isTransactionExpirationDateValid = true;
-    this.policyInfo.policyExpirationDate = moment(this.policyInfo.policyExpirationDate).startOf("day").toDate();
+    this.policyInfo.policyExpirationDate = moment(this.policyInfo.policyExpirationDate).startOf('day').toDate();
     if(this.isExtensionDateSelected()) {
       this.policyInfo.policyExtendedExpDate = this.endorsement.transactionExpirationDate;
       this.savePolicyInfo = true;
@@ -182,7 +183,7 @@ export class EndorsementHeaderComponent implements OnInit {
   // }
   canSave(): boolean {
     if (this.canEditPolicy && this.endorsementHeaderForm.dirty) {
-      return this.endorsementHeaderForm.status == "VALID";
+      return this.endorsementHeaderForm.status == 'VALID';
     }
     return false;
   }
@@ -190,13 +191,13 @@ export class EndorsementHeaderComponent implements OnInit {
     this.endorsementStoredValuesService.SIR = value;
   }
   get canEdit(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy
+    return this.canEditEndorsement && this.canEditPolicy;
   }
   get canEditTransactionType(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0 && !this.isRewrite
+    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0 && !this.isRewrite;
   }
   get canEditTransactionDates(): boolean {
-    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0
+    return this.canEditEndorsement && this.canEditPolicy && this.endorsement.endorsementNumber > 0;
   }
   get canEditAttachmentPoint(): boolean {
     return this.canEditEndorsement && this.canEditPolicy && (this.isExcessPolicy);
@@ -205,7 +206,8 @@ export class EndorsementHeaderComponent implements OnInit {
     return this.canEditEndorsement && this.canEditPolicy && (this.isExcessPolicy);
   }
   private get isPrimaryPolicy(): boolean {
-    return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC')
+    const primaries = ['PL', 'PNY', 'PRC'];
+    return primaries.includes(this.policyInfo.policySymbol.trim().toUpperCase());
   }
   private get isExcessPolicy(): boolean {
     return !this.isPrimaryPolicy;

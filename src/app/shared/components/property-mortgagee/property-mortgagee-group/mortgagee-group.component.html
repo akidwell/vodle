@@ -16,7 +16,7 @@
       </div>
         <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
           <div *ngFor="let item of mortgageeData; let i = index">
-            <rsps-mortgagee (copyExisitingMortgagee)=copyExisitingMortgagee($event)
+            <rsps-mortgagee (copyExistingMortgagee)=copyExistingMortgagee($event)
               (deleteExistingMortgagee)=deleteExistingMortgagee($event) [mortgagee]=mortgageeData [mortgageeData]=item>
             </rsps-mortgagee>
           </div>

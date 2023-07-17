@@ -8,6 +8,7 @@ import { PolicyClass } from '../../classes/policy-class';
 import { SharedComponentBase } from 'src/app/shared/component-base/shared-component-base';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { AccountInformation } from 'src/app/features/policy/models/policy';
+import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 
 @Component({
   selector: 'rsps-policy-v2',
@@ -30,6 +31,7 @@ export class PolicyV2Component extends SharedComponentBase implements OnInit {
     private route: ActivatedRoute,
     private previousRouteService: PreviousRouteService,
     private router: Router,
+    public propertyDataService: PropertyDataService,
     userAuth: UserAuth) {
     super(userAuth);
   }
@@ -45,6 +47,7 @@ export class PolicyV2Component extends SharedComponentBase implements OnInit {
       this.policy.producer = data['policyInfoData'].policyInfo.producer;
       this.policy.insured = data['policyInfoData'].policyInfo.insured;
       this.accountData = data['accountData'].accountInfo;
+      this.propertyDataService.buildingList = this.policy.endorsementData.buildingList;
     });
     console.log(this.route?.data);
     console.log(this.policy);
