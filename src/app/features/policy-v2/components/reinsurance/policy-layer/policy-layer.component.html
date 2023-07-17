@@ -30,16 +30,20 @@
                 <td><input [(ngModel)]="reinsurance.reinsCededCommRate" type="text" class="form-control" mask="percent" suffix="%" readonly></td>
                 <td>
                     <ng-select [(ngModel)]="reinsurance.treatyNo"
-                        [items]="currentReinsuranceCodes(reinsurance)"
+                        [items]="currentReinsuranceCodes(reinsurance)" (change)="onChangeReinsurnaceCode(reinsurance)"
                         type="text" class="form-control" [clearable]="false">
                         <ng-template ng-label-tmp let-item="item">{{item.treatyNumber}}</ng-template>
                         <ng-template ng-option-tmp let-item="item">{{item.treatyNumber}} - {{item.treatyName}}</ng-template>
                     </ng-select>
                 </td>
-                <td><input [(ngModel)]="reinsurance.isFacultative" type="checkbox" class="form-check-input" (change)="setFacultative(reinsurance)"></td>
+                <td><input [(ngModel)]="reinsurance.isFacultative" type="checkbox" class="form-check-input" (change)="onSetFacultative(reinsurance)"></td>
                 <td><input [(ngModel)]="reinsurance.intermediaryNo" type="text" class="form-control"></td>
                 <td><input [(ngModel)]="reinsurance.reinsCertificateNo" type="text" class="form-control" readonly></td>
-                <td><span class="btn btn-secondary" hover-class="btn-danger" (click)="openDeleteConfirmation(reinsurance)">Delete</span></td>
+                <td>
+                    <span class="btn btn-secondary" hover-class="btn-danger" (click)="openDeleteConfirmation(reinsurance)">
+                        {{ reinsurance.isNew ? 'Remove' : 'Delete' }}
+                    </span>
+                </td>
             </tr>
         </table>
         </div>

@@ -6,7 +6,6 @@ import { ConfirmationDialogService } from 'src/app/core/services/confirmation-di
 import { ReinsuranceClass } from '../../../classes/reinsurance-class';
 import { ReinsuranceLookup } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup.service';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -50,21 +49,22 @@ export class PolicyLayerComponent {
   ngOnInit() {
     this.route.parent?.data.subscribe(async data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
+      // Get values for reinsurance code drop down
+      this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).subscribe(
+        reinsurnaceCodes => {
+          this.reinsuranceCodes = reinsurnaceCodes;
+        }
+      )
+      this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).subscribe(
+        facultativeReinsuranceCodes => {
+          this.reinsuranceFacCodes = facultativeReinsuranceCodes;
+        }
+      )
     });
-    this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).subscribe(
-      reinsurnaceCodes => {
-        this.reinsuranceCodes = reinsurnaceCodes;
-      }
-    )
-    this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).subscribe(
-      facultativeReinsuranceCodes => {
-        this.reinsuranceFacCodes = facultativeReinsuranceCodes;
-      }
-    )
   }
 
   ngOnChanges() {
-    this.reinsuranceLayers = this.policyLayerData.reinsuranceData.map(x => new ReinsuranceClass(x, this));
+    this.reinsuranceLayers = this.policyLayerData.reinsuranceData.map(x => new ReinsuranceClass(x));
     // Add default reinsurance layer if this policy layer is newly created
     if (this.reinsuranceLayers.length == 0) {
       this.addNewReinsuranceLayer();
@@ -74,7 +74,7 @@ export class PolicyLayerComponent {
   addNewReinsuranceLayer() {
     this.policyLayerCollapsed = false;
     const reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayers.length + 1);
-    this.reinsuranceLayers.push(new ReinsuranceClass(reinsuranceLayer, this));
+    this.reinsuranceLayers.push(new ReinsuranceClass(reinsuranceLayer));
   }
 
   totalPolicyLayerLimit(): number {
@@ -95,7 +95,7 @@ export class PolicyLayerComponent {
       if (confirm) {
           let index = this.reinsuranceLayers.indexOf(reinsurance);
           if (index == 0 && this.reinsuranceLayers.length == 1) {
-            // Deleting last reinsurnace layer -> delete policy layer
+            // When the last reinsurance layer is deleted, delete the policy layer.
             // Sibling policy layers must be updated, so we defer this logic to the containing PolicyReinsurnaceComponent.
             this.deletePolicyLayer.emit(this.policyLayerData);
           } else {
@@ -107,7 +107,7 @@ export class PolicyLayerComponent {
     });
   }
 
-  setFacultative(reinsurnace: ReinsuranceClass) {
+  onSetFacultative(reinsurnace: ReinsuranceClass) {
     reinsurnace.treatyNo = null;
     reinsurnace.reinsCertificateNo = null;
   }
@@ -116,7 +116,7 @@ export class PolicyLayerComponent {
     return reinsurnace.isFacultative ? this.reinsuranceFacCodes : this.reinsuranceCodes;
   }
 
-  changeReinsurerCode(reinsurance: ReinsuranceClass): void {
+  onChangeReinsurnaceCode(reinsurance: ReinsuranceClass): void {
     const match = this.currentReinsuranceCodes(reinsurance).find(code => code.treatyNumber == reinsurance.treatyNo);
     if (match != null) {
       reinsurance.reinsCededCommRate = match.cededCommissionRate;

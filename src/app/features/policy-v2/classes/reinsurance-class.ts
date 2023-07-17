@@ -8,12 +8,10 @@ import { PolicyLayerComponent } from '../components/reinsurance/policy-layer/pol
 export class ReinsuranceClass extends ChildBaseClass implements Deletable {
     
     private data!: ReinsuranceLayerData;
-    private parent!: PolicyLayerComponent;
 
-    constructor(layerData: ReinsuranceLayerData, parent: PolicyLayerComponent) {
+    constructor(layerData: ReinsuranceLayerData) {
         super()
         this.data = layerData;
-        this.parent = parent;
     }
 
     /**
