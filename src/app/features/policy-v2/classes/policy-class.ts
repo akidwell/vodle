@@ -12,8 +12,6 @@ import { DatePipe } from '@angular/common';
 import { EndorsementClass } from './endorsement-class';
 import { InsuredClass } from '../../insured/classes/insured-class';
 import { PropertyBuildingCoverageSubjectAmountData } from '../../quote/models/property-building-coverage';
-import { PropertyBuildingClass } from '../../quote/classes/property-building-class';
-import { PropertyQuoteBuildingClass } from '../../quote/classes/property-quote-building-class';
 import { PropertyBuilding } from '../../quote/models/property-building';
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
@@ -220,6 +218,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.productManufactureDate = policy.productManufactureDate;
     this.submissionNumber = policy.submissionNumber;
     this.departmentId = policy.departmentId;
+    this.id = policy.policyId;
     this.policyId = policy.policyId;
     this.policySymbol = policy.policySymbol;
     this.formattedPolicyNo = policy.formattedPolicyNo;
@@ -267,14 +266,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     newCoverage.buildingNumber = building.buildingNumber;
     newCoverage.isNew = true;
     newCoverage.propertyQuoteBuildingId = building.propertyQuoteBuildingId ?? 0;
-    //adds to filtered list
+    newCoverage.guid = crypto.randomUUID();
     building.endorsementBuildingCoverage.push(newCoverage);
-    // adds to parent list
-    this.endorsementData.endorsementBuilding.map(x => {
-      if(x.endorsementBuildingId == building.endorsementBuildingId){
-        x.endorsementBuildingCoverage.push(newCoverage);
-      }
-    });
     this.markDirty();
     return newCoverage;
     //this.filterCoverages();
@@ -419,11 +412,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   addBuilding(building: PropertyPolicyBuildingClass) {
-    this.endorsementData.endorsementBuilding.push(building);
     building.focus = true;
     building.markDirty();
     building.isExpanded = true;
     building.isNew = true;
+    this.endorsementData.endorsementBuilding.push(building);
     //this.filterBuildings();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();

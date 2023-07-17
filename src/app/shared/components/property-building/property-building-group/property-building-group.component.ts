@@ -216,7 +216,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
             .subscribe({
               next: () => {
                 if (this.propertyParent instanceof PropertyQuoteClass) {
-                  this.propertyParent.deleteBuilding(building);
+                  this.propertyParent.deleteBuilding(building as PropertyQuoteBuildingClass);
                   const index = this.filteredBuildings.indexOf(building, 0);
                   if (index > -1) {
                     this.filteredBuildings.splice(index, 1);
@@ -249,7 +249,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
           //   if (x.propertyQuoteBuildingId == building.propertyQuoteBuildingId) {
           //     this.filteredBuildingsService.filteredCoverages.splice(index, 1);
           //   }});
-          this.propertyParent.deleteBuilding(building);
+          this.propertyParent.deleteBuilding(building as PropertyQuoteBuildingClass);
         }
 
       }

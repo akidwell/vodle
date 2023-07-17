@@ -24,13 +24,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
 
   abstract validate(): Validation;
 
-  onGuidNewMatch(T: ParentBaseClass): void {
-    console.log('in guid new match');
-  }
-  onGuidUpdateMatch(T: ParentBaseClass): void {
-    console.log('in guid update match');
 
-  }
   onChildDeletion(child: Deletable): void {
     console.log('in child deletion');
 
@@ -286,6 +280,13 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
 
   constructor(building?: PropertyBuilding) {
     super();
+  }
+  baseOnGuidNewMatch(T: ParentBaseClass): void {
+    this.isNew = false;
+  }
+  baseOnGuidUpdateMatch(T: ParentBaseClass): void {
+    this.hasUpdate = false;
+    this.isNew = false;
   }
   classValidation() {
     this.invalidList = [];

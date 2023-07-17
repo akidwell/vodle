@@ -59,7 +59,10 @@ export class PropertyPolicyBuildingCoverageClass extends PropertyBuildingCoverag
 
   onSaveCompletion(T: PolicyValidation[]): void {
   }
-  onGuidNewMatch(T: PolicyValidation): void {
+  onGuidNewMatch(T: PropertyPolicyBuildingCoverageClass): void {
+    this.endorsementBuildingCoverageId = T.endorsementBuildingCoverageId;
+    this.endorsementBuildingId = T.endorsementBuildingId;
+    this.isNew = false;
   }
   onGuidUpdateMatch(T: PolicyValidation): void {
   }

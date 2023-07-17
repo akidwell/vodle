@@ -60,6 +60,14 @@ export class PropertyPolicyBuildingClass extends PropertyBuildingClass implement
     //   this.markDirty();
     // }
   }
+
+  onGuidNewMatch(T: PropertyPolicyBuildingClass): void {
+    super.baseOnGuidNewMatch(T);
+    this.endorsementBuildingId = T.endorsementBuildingId;
+  }
+  onGuidUpdateMatch(T: PropertyPolicyBuildingClass): void {
+    super.baseOnGuidUpdateMatch(T);
+  }
   errorMessages!: string[];
   propertyPolicyId: number | null = null;
   propertyQuoteId: number | null = 0;
