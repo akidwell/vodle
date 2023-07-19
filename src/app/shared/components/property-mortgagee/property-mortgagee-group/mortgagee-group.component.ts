@@ -9,11 +9,11 @@ import { MortgageeClass } from '../mortgagee-class';
 import { Subscription } from 'rxjs';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyMorgageeBaseComponent } from '../property-mortgagee-base-component';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 @Component({
   selector: 'rsps-mortgagee-group',
@@ -33,7 +33,7 @@ export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent imple
   program!: ProgramClass | null;
   quoteId = 0;
   programSub!: Subscription;
-  
+
   constructor(private notification: NotificationService,private userAuth: UserAuth, private route: ActivatedRoute, private pageDataService: PageDataService, filteredBuildingsService :FilteredBuildingsService) {
     super(filteredBuildingsService);
   }
@@ -45,16 +45,11 @@ export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent imple
   @Input() public classType!: ClassTypeEnum;
 
   ngOnInit(): void {
-    this.programSub = this.pageDataService.selectedProgram$.subscribe(
-      (selectedProgram: ProgramClass | null) => {
-        this.program = selectedProgram;
-        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuoteMortgageeList){
-          this.mortgageeData = this.program?.quoteData?.propertyQuoteMortgageeList;
-        }
-      });
+    //passing in the data using inputs
     this.collapsed = false;
   }
 
+  //TODO: does this get called or used?
   isValid(): boolean {
     let valid = true;
     this.invalidList = [];
@@ -84,6 +79,7 @@ export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent imple
     newMortgagee.isNew = true;
     newMortgagee.markDirty();
     this.mortgageeData?.push(newMortgagee);
+    //TODO: if else for propertyParent possibly
   }
 
   deleteExistingMortgagee(existingMortgagee: MortgageeClass) {
@@ -93,14 +89,17 @@ export class MortgageeGroupComponent extends PropertyMorgageeBaseComponent imple
       if (!existingMortgagee.isNew) {
         this.notification.show('Mortgagee deleted.', { classname: 'bg-success text-light', delay: 5000 });
       }
+      //TODO: if else for propertyParent- quote deletes from DB immediately, policy deletes on the save
     }
   }
 
   addNewMortgagee(): void {
     const mort: MortgageeClass = new MortgageeClass();
-    mort.isNew = true;
-    mort.mortgageeType = 1;
-    this.mortgageeData?.push(mort);
     this.collapsed = false;
+    if (this.propertyParent instanceof PolicyClass) {
+      this.propertyParent.addMortgagee(mort as MortgageeClass);
+    } else if (this.propertyParent instanceof PropertyQuoteClass){
+      this.propertyParent.addMortgagee(mort as MortgageeClass);
+    }
   }
 }

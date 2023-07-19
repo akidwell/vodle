@@ -49,7 +49,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.transactionTypeCode = end.transactionTypeCode;
     this.endorsementBuilding = this.buildingInit(end.endorsementBuilding as PropertyBuilding[]);
     this.endorsementMortgagee = this.mortgageeInit(end.endorsementMortgagee);
-    this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest); 
+    this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest);
     this.guid = crypto.randomUUID();
   }
 
@@ -81,7 +81,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     buildings.forEach(x =>{
       x.endorsementBuildingCoverage.forEach(element => {
         coverages.push(new PropertyPolicyBuildingCoverageClass(element));
-      }); 
+      });
     });
     return buildings;
   }
@@ -94,13 +94,20 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   validateObject(): ErrorMessage[]{
     console.log('in end validat' );
     this.errorMessagesList = [];
+    //buildings
     this.endorsementBuilding.forEach( x =>{
       x.classValidation();
       this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
+      //coverages
       x.endorsementBuildingCoverage.forEach(x => {
         const y = x.validateObject();
         this.errorMessagesList = this.errorMessagesList.concat(y);
       });
+    });
+    //mortgagees
+    this.endorsementMortgagee.forEach(x => {
+      x.classValidation();
+      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
     });
     return this.errorMessagesList;
   }
@@ -123,6 +130,9 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   toJson(): Endorsement {
     const buildings: PropertyBuilding[] = [];
     (this.endorsementBuilding as PropertyPolicyBuildingClass[]).forEach(c => buildings.push(c.toJSON()));
+    const mortgagees: MortgageeData[] = [];
+    (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
+    console.log('line135',mortgagees);
     return {
       policyId: this.policyId,
       endorsementNumber: this.endorsementNumber,
@@ -136,7 +146,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       underlyingLimit: this.underlyingLimit,
       attachmentPoint: this.attachmentPoint,
       endorsementBuilding: buildings,
-      endorsementMortgagee: this.endorsementMortgagee,
+      endorsementMortgagee: mortgagees,
       endorsementAdditionalInterest: this.endorsementAdditionalInterest
     };
   }

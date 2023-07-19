@@ -7,6 +7,7 @@ export interface MortgageeData {
   mortgageHolder: string | null;
   propertyQuoteId: number | null;
   propertyQuoteMortgageeId: number | null;
+  endorsementMortgageeId: number | null;
   street1: string | null;
   street2: string | null;
   state: string | null;

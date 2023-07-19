@@ -290,6 +290,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     // this.propertyQuote.calculateLawLimits();
   }
 
+  addMortgagee(mortgagee: MortgageeClass){
+    mortgagee.markDirty();
+    mortgagee.isNew = true;
+    mortgagee.mortgageeType = 1;
+    this.propertyQuoteMortgageeList.push(mortgagee);
+    this.markDirty();
+  }
+
   deleteBuilding(building: PropertyQuoteBuildingClass) {
     if (building instanceof PropertyQuoteBuildingClass) {
       const index = this.propertyQuoteBuildingList.indexOf(building, 0);
@@ -368,7 +376,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
         ai.push(new AdditionalInterestClass(element));
       });
     }
-    //this.propertyQuoteMortgageeList = mortgagee;
     this.propertyQuoteAdditionalInterestList = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
@@ -412,7 +419,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     //this._validationResults.mapValues(this);
     //validate children
     this.callChildValidations();
-    console.log('line 42',this.validationResults);
     //tab validations
     this.validateLocationCoverageTab();
     this.validateCoveragesTab();
@@ -438,7 +444,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.generalRemarksData);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
     this._validationResults.validateChildrenAndMerge(this.internalNotesData);
-    console.log('line 428',this.validationResults);
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
     return this._validationResults;

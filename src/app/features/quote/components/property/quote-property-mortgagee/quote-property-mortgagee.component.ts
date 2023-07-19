@@ -22,7 +22,7 @@ export class QuotePropertyMortgageeComponent implements OnInit{
   isSaving = false;
   saveSub!: Subscription;
   classType = ClassTypeEnum.Quote;
-  
+
   @Input() public readOnlyQuote!: boolean;
 
   constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) {
@@ -40,10 +40,12 @@ export class QuotePropertyMortgageeComponent implements OnInit{
   ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
-        if (selectedProgram != null) {
-          this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
+        setTimeout(() => {
+          if (selectedProgram != null) {
+            this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
+          }
         }
-      }
+        );}
     );
   }
 }

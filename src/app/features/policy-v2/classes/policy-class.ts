@@ -229,29 +229,9 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.guid = policy.guid || crypto.randomUUID();
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
-    this.mortgageeList = policy.endorsementData.endorsementMortgagee;
     // this.setReadonlyFields();
     // this.setRequiredFields();
   }
-
-  buildingListInit(buildingList: PropertyBuilding[]) {
-    buildingList.forEach(building => {
-      this.endorsementData.endorsementBuilding.push(new PropertyPolicyBuildingClass(building));
-    });
-  }
-
-  // mortgageeListInit(mortgagees: MortgageeClass[]){
-  //   mortgagees?.forEach(mortgagee => {
-  //     this.mortgageeList.push(new MortgageeClass(mortgagee))
-  //   })
-  // }
-
-  additionalInterestListInit(additionalInterests: AdditionalInterestData[]){
-    additionalInterests.forEach(ai => {
-      this.additionalInterestList.push(new AdditionalInterestClass(ai))
-    })
-  }
-  
   newInit() {
     this.policyId = 0;
     this.guid = crypto.randomUUID();
@@ -259,13 +239,14 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   addCoverage(building: PropertyPolicyBuildingClass) {
+    building.endorsementBuildingCoverage.map(x => x.focus = false);
     const newCoverage = new PropertyPolicyBuildingCoverageClass();
     newCoverage.focus = true;
     newCoverage.subjectNumber = building.subjectNumber;
     newCoverage.premisesNumber = building.premisesNumber;
     newCoverage.buildingNumber = building.buildingNumber;
     newCoverage.isNew = true;
-    newCoverage.propertyQuoteBuildingId = building.propertyQuoteBuildingId ?? 0;
+    newCoverage.endorsementBuildingId = building.endorsementBuildingId ?? 0;
     newCoverage.guid = crypto.randomUUID();
     building.endorsementBuildingCoverage.push(newCoverage);
     this.markDirty();
@@ -389,7 +370,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   addAI(ai: AdditionalInterestClass){
     ai.markDirty();
     this.markDirty();
-    this.additionalInterestList.push(ai);
+    this.endorsementData.endorsementAdditionalInterest.push(ai);
     ai.isNew = true;
   }
 
@@ -408,7 +389,9 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     mortgagee.markDirty();
     this.markDirty();
     mortgagee.isNew = true;
-    this.mortgageeList.push(mortgagee);
+    mortgagee.mortgageeType = 1;
+    this.endorsementData.endorsementMortgagee.push(mortgagee);
+    this.endorsementData.markDirty();
   }
 
   addBuilding(building: PropertyPolicyBuildingClass) {
@@ -448,31 +431,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     );
     return total;
   }
-
-  // onPremisesBuildingChange(premisesNumber: number | null, buildingNumber: number | null) {
-  //   this.propertyQuoteDeductibleList.map(c => {
-  //     if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
-  //       c.premisesNumber = null;
-  //       c.buildingNumber = null;
-  //       c.markDirty();
-  //     }
-  //   });
-  //   this.propertyQuoteMortgageeList.map(c => {
-  //     if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
-  //       c.premisesNumber = null;
-  //       c.buildingNumber = null;
-  //       c.markDirty();
-  //     }
-  //   });
-  //   this.propertyQuoteAdditionalInterestList.map(c => {
-  //     if (c.premisesNumber == premisesNumber && c.buildingNumber == buildingNumber) {
-  //       c.premisesNumber = null;
-  //       c.buildingNumber = null;
-  //       c.markDirty();
-  //     }
-  //   });
-  // }
-
   clearCspCodes() {
     this.endorsementData.endorsementBuilding.forEach(x => x.cspCode == null);
   }
