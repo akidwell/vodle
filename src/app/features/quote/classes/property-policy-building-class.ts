@@ -28,10 +28,11 @@ export class PropertyPolicyBuildingClass extends PropertyBuildingClass implement
   deleteCoverage(coverage: PropertyPolicyBuildingCoverageClass) {
     console.log('in delete cov');
     const index = this.endorsementBuildingCoverage.indexOf(coverage, 0);
+    this.endorsementBuildingCoverage.splice(index, 1);
     console.log('in delete cov index', index);
 
     if (index > -1) {
-      this.endorsementBuildingCoverage.splice(index, 1);
+      coverage.markForDeletion = true;
       console.log('in delete cov list', this.endorsementBuildingCoverage);
     }
     // this.propertyQuote.calculateSubjectAmounts();

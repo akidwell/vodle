@@ -180,7 +180,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       newBuilding.markDirty();
       newBuilding.propertyQuoteBuildingCoverage.map(x => x.propertyQuoteBuildingCoverageId = 0);
       newBuilding.guid = crypto.randomUUID();
-      //newBuilding.propertyParent = building.propertyParent;
       this.propertyParent.addBuilding(newBuilding);
       newBuilding.propertyQuoteBuildingCoverage.map( x=> x.expand = true);
       this.filterBuildingsCoverages();
@@ -195,7 +194,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       newBuilding.markDirty();
       newBuilding.endorsementBuildingCoverage.map(x => x.endorsementBuildingCoverageId = 0);
       newBuilding.guid = crypto.randomUUID();
-      //newBuilding.propertyParent = building.propertyParent;
       this.propertyParent.addBuilding(newBuilding);
       newBuilding.endorsementBuildingCoverage.map( x=> x.expand = true);
       this.filterBuildingsCoverages();
@@ -256,6 +254,10 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       if (this.propertyParent instanceof PolicyClass) {
         building.markForDeletion = true;
         this.propertyParent.deleteBuilding(building as PropertyPolicyBuildingClass);
+        if(building.isNew){
+          const index = this.propertyParent.endorsementData.endorsementBuilding.findIndex(x => x.endorsementBuildingId == building.endorsementBuildingId);
+          this.propertyParent.endorsementData.endorsementBuilding.splice(index, 1);
+        }
       }
       // }
     }
