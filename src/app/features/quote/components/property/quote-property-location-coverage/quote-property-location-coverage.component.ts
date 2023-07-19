@@ -7,7 +7,6 @@ import { ProgramClass } from '../../../classes/program-class';
 import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { QuoteSavingService } from '../../../services/quote-saving-service/quote-saving-service.service';
 import { PropertyBuildingBaseComponent } from 'src/app/shared/components/property-building/property-building-base-component/property-building-base-component';
-import { PropertyQuoteBuildingCoverageClass } from '../../../classes/property-quote-building-coverage-class';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
 @Component({

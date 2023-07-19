@@ -1,11 +1,9 @@
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 import { PropertyQuoteClass } from './property-quote-class';
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
-import { ZipCodePipe } from 'src/app/shared/pipes/zip-code.pipe';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingClass } from './property-building-class';
-import { PropertyQuote } from '../models/property-quote';
 import { PropertyBuilding } from '../models/property-building';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { QuoteValidationClass } from './quote-validation-class';
@@ -14,9 +12,7 @@ import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum
 
 export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements Validation, QuoteAfterSave {
 
-  validateObject(): ErrorMessage[] {
-    return [];
-  }
+
   private _validationResults!: QuoteValidationClass;
   constructor(building?: PropertyBuilding) {
     console.log('lalala' ,building?.propertyQuoteBuildingCoverage as PropertyQuoteBuildingCoverageClass[]);
@@ -28,6 +24,16 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
     }
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.validate();
+  }
+  onGuidNewMatch(T: PropertyQuoteBuildingClass): void {
+    super.baseOnGuidNewMatch(T);
+    this.propertyQuoteBuildingId = T.propertyQuoteBuildingId;
+  }
+  onGuidUpdateMatch(T: PropertyQuoteBuildingClass): void {
+    super.baseOnGuidUpdateMatch(T);
+  }
+  validateObject(): ErrorMessage[] {
+    return [];
   }
   classInit(building: PropertyBuilding) {
     this.propertyQuoteBuildingId = building.propertyQuoteBuildingId;
@@ -124,7 +130,9 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
 
     if (index > -1) {
       this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage.splice(index, 1));
+      this.propertyQuoteBuildingCoverage.splice(index, 1);
       console.log('in delete cov list', this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage));
+      coverage.markForDeletion = true;
 
       // Mark dirty to force form rules check
       this.propertyQuote.markDirty();

@@ -201,7 +201,8 @@ export class PolicyInformationComponent implements OnInit {
     this.policyInfo.quoteData.retroDate = this.policyInfo.retroDate;
   }
   private get isPrimaryPolicy(): boolean {
-    return (this.policyInfo.policySymbol.trim().toUpperCase() == 'PL') || (this.policyInfo.policySymbol.trim().toUpperCase() == 'PRC');
+    const primaries = ['PL', 'PNY', 'PRC'];
+    return primaries.includes(this.policyInfo.policySymbol.trim().toUpperCase());
   }
 
   clearNYFTZ() {

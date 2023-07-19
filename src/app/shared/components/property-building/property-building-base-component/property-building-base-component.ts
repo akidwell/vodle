@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
 import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
@@ -95,17 +94,21 @@ export abstract class PropertyBuildingBaseComponent {
     if (this.propertyParent instanceof PropertyQuoteClass) {
       const filtered: PropertyBuildingCoverageClass[] = [];
       this.filteredBuildings.map((element) => {
-        element.propertyQuoteBuildingCoverage.map((x) => {
-          filtered.push(x);
-        });
+        if(!element.markForDeletion){
+          element.propertyQuoteBuildingCoverage.map((x) => {
+            filtered.push(x);
+          });
+        }
       });
       this.filteredBuildingsService.filteredCoverages = filtered;
     } else if(this.propertyParent instanceof PolicyClass){
       const filtered: PropertyBuildingCoverageClass[] = [];
       this.filteredBuildings.map((element) => {
-        element.endorsementBuildingCoverage.map((x) => {
-          filtered.push(x);
-        });
+        if(!element.markForDeletion){
+          element.endorsementBuildingCoverage.map((x) => {
+            filtered.push(x);
+          });
+        }
       });
       this.filteredBuildingsService.filteredCoverages = filtered;
     }

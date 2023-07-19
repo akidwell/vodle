@@ -30,7 +30,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
       { path: 'information', component: PolicyInformationV2Component, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
-      { path: 'mortgagee', component: PolicyPropertyMortgageeComponent },
+      { path: 'mortgagee', component: PolicyPropertyMortgageeComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'premium', component: PolicyPremiumComponent },
       { path: 'reinsurance', component: PolicyReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'summary', component: PolicySummaryComponent},

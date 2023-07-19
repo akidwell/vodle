@@ -4,6 +4,9 @@ import { Insured } from '../../insured/models/insured';
 import { RiskLocationClass } from '../../policy-v2/classes/risk-location';
 import { Quote } from '../../quote/models/quote';
 import { PropertyBuilding } from '../../quote/models/property-building';
+import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
+import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
+import { MortgageeData } from '../../quote/models/mortgagee';
 
 
 export interface AccountInformation {
@@ -117,6 +120,8 @@ export interface Endorsement {
   underlyingLimit: number;
   attachmentPoint: number;
   endorsementBuilding: PropertyBuilding[];
+  endorsementMortgagee: MortgageeData[];
+  endorsementAdditionalInterest: AdditionalInterestClass[];
 }
 
 export interface AdditionalNamedInsuredsResolved {

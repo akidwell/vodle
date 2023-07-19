@@ -13,7 +13,7 @@ export interface PropertyQuote {
   // GAM are these needed? Need to look at more closely!!!
   propertyQuoteDeductibleList?: PropertyDeductible[];
   propertyQuoteBuildingList?: PropertyBuilding[];
-  propertyQuoteMortgageeList?: MortgageeData[];
+  //propertyQuoteMortgageeList?: MortgageeData[];
   propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
   propertyQuoteBuildingOptionalCoverage?: QuoteOptionalPremium[];
   propertyQuoteDeductible?: PropertyDeductible[];

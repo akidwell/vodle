@@ -1,24 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageState } from 'src/app/core/models/page-state';
 import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
-import { PropertyBuildingCoverage } from 'src/app/features/quote/models/property-building-coverage';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
-import { switchMap, tap } from 'rxjs/operators';
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
-import { PropertyQuote } from 'src/app/features/quote/models/property-quote';
 import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
 import { PropertyPolicyBuildingCoverageClass } from 'src/app/features/quote/classes/property-policy-building-coverage-class';
-import { PropertyBuildingBaseComponent } from '../../property-building/property-building-base-component/property-building-base-component';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
-import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
-import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
+
 
 @Component({
   selector: 'rsps-property-building-coverage-group',
@@ -80,15 +75,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     if (!isNaN(Number(pageSize))) {
       this._state.pageSize = Number(pageSize);
     }
-    // this._search$.pipe(
-    //   tap(() => this._loading$.next(true)),
-    //   switchMap(() => this._search()),
-    //   tap(() => this._loading$.next(false)),
-    // ).subscribe(result => {
-    //   console.log('RESUKT',result);
-    //   this._policies$.next(result.coverages);
-    //   this._total$.next(result.total);
-    // });
+
   }
 
   ngOnInit(): void {
@@ -104,25 +91,6 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     Object.assign(this._state, patch);
     this._search$.next();
   }
-
-  // private _search(): Observable<SearchResult> {
-  //   const {pageSize, page} = this._state;
-  //   // 1. Populate from source
-  //   let coverages = this.coverages;
-  //   console.log('coveragesssss' + this.coverages);
-  //   // 2. Set Focus Page
-  //   const focusIndex = coverages.findIndex((c) => c.focus);
-  //   let focusPage = page;
-  //   if (focusIndex >= 0) {
-  //     coverages[focusIndex].focus = false;
-  //     focusPage = Math.floor((focusIndex + 1) / this.pageSize) + ((focusIndex + 1) % this.pageSize == 0 ? 0 : 1);
-  //     this._state.page = focusPage;
-  //   }
-  //   // 3. paginate
-  //   const total = coverages.length;
-  //   coverages = coverages.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
-  //   return of({coverages, total});
-  // }
 
   copyCoverage(coverage: PropertyBuildingCoverageClass) {
     if (this.classType == ClassTypeEnum.Quote) {
@@ -165,10 +133,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
         if(this.propertyParent instanceof PropertyQuoteClass){
           const index2 = this.filteredBuildingsService.filteredCoverages.indexOf(coverage, 0);
           this.coverages.splice(index, 1);
-          console.log('line166', coverage);
           this.filteredBuildingsService.filteredCoverages.splice(index2, 1);
-          console.log('line168', this.filteredBuildingsService.filteredCoverages, this.coverages);
-          console.log('line169', this.propertyParent.propertyQuoteBuildingList);
           this.propertyParent.propertyQuoteBuildingList.map(x => {
             if(x.propertyQuoteBuildingId == coverage.propertyQuoteBuildingId){
               x.deleteCoverage(coverage as PropertyQuoteBuildingCoverageClass);
@@ -177,10 +142,7 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
         } else if(this.propertyParent instanceof PolicyClass){
           const index2 = this.filteredBuildingsService.filteredCoverages.indexOf(coverage, 0);
           this.coverages.splice(index, 1);
-          console.log('line166', coverage);
           this.filteredBuildingsService.filteredCoverages.splice(index2, 1);
-          console.log('line168', this.filteredBuildingsService.filteredCoverages, this.coverages);
-          console.log('line169', this.propertyParent.endorsementData.endorsementBuilding);
           this.propertyParent.endorsementData.endorsementBuilding.map(x => {
             if(x.endorsementBuildingId == coverage.endorsementBuildingId){
               x.deleteCoverage(coverage as PropertyPolicyBuildingCoverageClass);

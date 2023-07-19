@@ -24,9 +24,6 @@ import { ProgramClass } from './program-class';
 import * as moment from 'moment';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
-import { ValidationClass } from 'src/app/shared/classes/validation-class';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
-import { PropertyBuildingClass } from './property-building-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
 export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
@@ -293,7 +290,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     // this.propertyQuote.calculateLawLimits();
   }
 
-  deleteBuilding(building: PropertyBuildingClass) {
+  addMortgagee(mortgagee: MortgageeClass){
+    mortgagee.markDirty();
+    mortgagee.isNew = true;
+    mortgagee.mortgageeType = 1;
+    this.propertyQuoteMortgageeList.push(mortgagee);
+    this.markDirty();
+  }
+
+  deleteBuilding(building: PropertyQuoteBuildingClass) {
     if (building instanceof PropertyQuoteBuildingClass) {
       const index = this.propertyQuoteBuildingList.indexOf(building, 0);
       if (index > -1) {
@@ -371,7 +376,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
         ai.push(new AdditionalInterestClass(element));
       });
     }
-    //this.propertyQuoteMortgageeList = mortgagee;
     this.propertyQuoteAdditionalInterestList = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
@@ -415,7 +419,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     //this._validationResults.mapValues(this);
     //validate children
     this.callChildValidations();
-    console.log('line 42',this.validationResults);
     //tab validations
     this.validateLocationCoverageTab();
     this.validateCoveragesTab();
@@ -441,7 +444,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this._validationResults.validateChildrenAndMerge(this.generalRemarksData);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingOptionalCoverage);
     this._validationResults.validateChildrenAndMerge(this.internalNotesData);
-    console.log('line 428',this.validationResults);
     // Rest flag based on validation
     this.showDirty = this._validationResults.isDirty;
     return this._validationResults;
@@ -609,6 +611,25 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   validateSummaryTab(){
     this.summaryTabValidation?.resetValidation();
+    // this._errorMessages = [];
+    // if(this.overridePremium){
+    //   if(this.propertyPremium == null){
+    //     this._errorMessages.push('Property Premium is Required');
+    //     this._isDirty = true;
+    //     this._isValid = false;
+    //   }
+    // } if(this.overrideMinPolPrem){
+    //   if(this.minimumPremium == null){
+    //     this._errorMessages.push('Minimum Policy Premium is Required');
+    //     this._isDirty = true;
+    //     this._isValid = false;
+    //   }
+    //   if(this.commissionRate == null){
+    //     this._errorMessages.push('Commission Rate is Required');
+    //     this._isDirty = true;
+    //     this._isValid = false;
+    //   }
+    // }
     this.summaryTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
   }
   validateBuildings() {
@@ -756,6 +777,9 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     let subTotal = 0;
     this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? subTotal += coverage.additionalPremium ?? 0 : 0));
     this.propertySubTotalPremium = subTotal + (this.quoteRates[0].premium ?? 0);
+    if(this.overridePremium){
+      this.propertySubTotalPremium = this.propertyPremium ?? 0 + this.flatPremium;
+    }
 
     // total advance premium
     this.totalAdvancePremium = Number(this.propertySubTotalPremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);

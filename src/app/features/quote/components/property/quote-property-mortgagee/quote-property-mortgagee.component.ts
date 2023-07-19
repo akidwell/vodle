@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
@@ -19,9 +19,11 @@ export class QuotePropertyMortgageeComponent implements OnInit{
   canEdit = false;
   quote!: PropertyQuoteClass;
   programSub!: Subscription;
-  classType = ClassTypeEnum.Quote;
   isSaving = false;
   saveSub!: Subscription;
+  classType = ClassTypeEnum.Quote;
+
+  @Input() public readOnlyQuote!: boolean;
 
   constructor(private userAuth: UserAuth, private pageDataService: PageDataService, private quoteSavingService: QuoteSavingService) {
     this.authSub = this.userAuth.canEditQuote$.subscribe(
@@ -38,10 +40,12 @@ export class QuotePropertyMortgageeComponent implements OnInit{
   ngAfterViewInit(): void {
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (selectedProgram: ProgramClass | null) => {
-        if (selectedProgram != null) {
-          this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
+        setTimeout(() => {
+          if (selectedProgram != null) {
+            this.quote = selectedProgram.quoteData as PropertyQuoteClass ?? new PropertyQuoteClass();
+          }
         }
-      }
+        );}
     );
   }
 }
