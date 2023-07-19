@@ -1,9 +1,7 @@
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { ChildBaseClass } from './base/child-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
-import { ActivatedRoute } from '@angular/router';
 import { ReinsuranceLayerData } from '../../policy/models/policy';
-import { PolicyLayerComponent } from '../components/reinsurance/policy-layer/policy-layer.component';
 
 export class ReinsuranceClass extends ChildBaseClass implements Deletable {
     

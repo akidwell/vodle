@@ -1,5 +1,5 @@
 import { Component, Input, Output } from '@angular/core';
-import { PolicyInformation, PolicyLayerData, ReinsuranceLayerData, newReinsuranceLayer } from 'src/app/features/policy/models/policy';
+import { Endorsement, PolicyInformation, PolicyLayerData, ReinsuranceLayerData, newReinsuranceLayer } from 'src/app/features/policy/models/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { EventEmitter } from '@angular/core';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
@@ -7,6 +7,8 @@ import { ReinsuranceClass } from '../../../classes/reinsurance-class';
 import { ReinsuranceLookup } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup';
 import { ReinsuranceLookupService } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup.service';
 import { ActivatedRoute } from '@angular/router';
+import { UserAuth } from 'src/app/core/authorization/user-auth';
+import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
 
 @Component({
   selector: 'rsps-policy-layer',
@@ -18,12 +20,15 @@ export class PolicyLayerComponent {
   faAngleUp = faAngleUp;
   faAngleDown = faAngleDown;
 
-  // Toggles whether panel is open or minimzed
+  // Toggles whether panel is open or minimzed.
   policyLayerCollapsed = false;
 
+  // Check if user has edit rights. Values are subscribed to userAuth and endorsementStatusService.
+  canEditPolicy = false;
+  canEditEndorsement = false;
+
   // Data needed to create new reinsurance layers
-  @Input() policyId!: number;
-  @Input() endorsementNumber!: number;
+  @Input() endorsement!: Endorsement;
 
   /**
    * To implement lazy deletion of reinsurance layers, `policyLayerData.reinsuranceData`
@@ -42,11 +47,17 @@ export class PolicyLayerComponent {
   reinsuranceFacCodes!: ReinsuranceLookup[];
   policyInfo!: PolicyInformation;
 
-  constructor(private route: ActivatedRoute, private confirmationDialogService: ConfirmationDialogService, private reinsuranceLookupService: ReinsuranceLookupService) {
-
+  constructor(private route: ActivatedRoute,
+    private confirmationDialogService: ConfirmationDialogService,
+    private reinsuranceLookupService: ReinsuranceLookupService,
+    private userAuth: UserAuth,
+    private endorsementStatusService: EndorsementStatusService) {
   }
 
   ngOnInit() {
+    this.userAuth.canEditPolicy$.subscribe((canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy);
+    this.endorsementStatusService.canEditEndorsement.subscribe((canEditEndorsement: boolean) => this.canEditEndorsement = canEditEndorsement);
+
     this.route.parent?.data.subscribe(async data => {
       this.policyInfo = data['policyInfoData'].policyInfo;
       // Get values for reinsurance code drop down
@@ -71,9 +82,13 @@ export class PolicyLayerComponent {
     }
   }
 
+  get canEdit(): boolean {
+    return this.canEditEndorsement && this.canEditPolicy;
+  }
+
   addNewReinsuranceLayer() {
     this.policyLayerCollapsed = false;
-    const reinsuranceLayer = newReinsuranceLayer(this.policyId, this.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayers.length + 1);
+    const reinsuranceLayer = newReinsuranceLayer(this.endorsement.policyId, this.endorsement.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayers.length + 1);
     this.reinsuranceLayers.push(new ReinsuranceClass(reinsuranceLayer));
   }
 

@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Endorsement, PolicyLayerData, newPolicyLayer, newReinsuranceLayer } from 'src/app/features/policy/models/policy';
-import { ReinsuranceClass } from '../../../classes/reinsurance-class';
+import { Endorsement, PolicyLayerData, newPolicyLayer } from 'src/app/features/policy/models/policy';
+
+/**
+ * Policy v2 Reinsurance Tab
+ * 
+ * PolicyReinsurnaceComponent
+ *  - PolicyLayerComponent
+ *    - ReinsuranceClass
+ */
 
 @Component({
   selector: 'rsps-policy-reinsurance',
