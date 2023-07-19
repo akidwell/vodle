@@ -8,20 +8,21 @@ import { Validation } from '../../interfaces/validation';
 import { ChildBaseClass } from 'src/app/features/policy-v2/classes/base/child-base-class';
 import { ErrorMessage } from '../../interfaces/errorMessage';
 import { PolicyValidation } from '../../interfaces/policy-validation';
+import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
 
-export class MortgageeClass extends ChildBaseClass implements MortgageeData, PolicyValidation{
+export class MortgageeClass extends ChildBaseClass implements MortgageeData, QuoteValidation, QuoteAfterSave{
   validateObject(): ErrorMessage[] {
     this.validate();
     return this.errorMessagesList;
   }
   onGuidNewMatch(T: PolicyValidation): void {
-    
+
   }
   onGuidUpdateMatch(T: PolicyValidation): void {
-    
+
   }
   onSaveCompletion(T: PolicyValidation[]): void {
-    
+
   }
   private _isDirty = false;
   private _isValid = false;
@@ -36,6 +37,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
   private _mortgageHolder: string | null = null;
   private _propertyQuoteId: number | null = null;
   private _propertyQuoteMortgageeId: number | null = null;
+  private _endorsementMortgageeId: number | null = null;
   private _street1: string | null = null;
   private _street2: string | null = null;
   private _state: string | null = null;
@@ -51,6 +53,10 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
   invalidList: string[] = [];
   isCopy = false;
   isZipLookup = false;
+
+  get validationResults(): QuoteValidationClass {
+    return this._validationResults;
+  }
 
   private _isDuplicate = false;
   get isDuplicate(): boolean {
@@ -79,7 +85,6 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
     this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.validate();
   }
-
   validate(){
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
@@ -95,10 +100,13 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
     this.invalidList = [];
     this.canBeSaved = true;
     this.isValid = true;
+    this.errorMessagesList = [];
+    //TODO: ADD REST OF createErrorMessages for policy side
     if (this.emptyStringValueCheck(this._mortgageHolder)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Mortgagee Holder is required');
+      this.createErrorMessage('Mortgagee - Mortgagee Holder is required');
     }
     if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
       this.canBeSaved = false;
@@ -135,7 +143,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
       this.isValid = false;
       this.invalidList.push('Duplicate Mortgagees exist');
     }
-    this._errorMessages = this.invalidList;
+    this.errorMessages = this.invalidList;
   }
 
   emptyNumberValueCheck(value: number | null | undefined) {
@@ -146,13 +154,16 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
   }
 
   existingInit(mortgagee: MortgageeData){
-    this.isAppliedToAll = mortgagee.isAppliedToAll;
-    this.premisesNumber = mortgagee.premisesNumber;
-    this.buildingNumber = mortgagee.buildingNumber;
+    console.log('line158', mortgagee);
+    //not using the private variable marks the page as dirty on load and we dont want that
+    this._isAppliedToAll = mortgagee.isAppliedToAll;
+    this._premisesNumber = mortgagee.premisesNumber;
+    this._buildingNumber = mortgagee.buildingNumber;
     this._attention = mortgagee.attention;
     this._description = mortgagee.description ;
     this._mortgageHolder = mortgagee.mortgageHolder;
     this._propertyQuoteId = mortgagee.propertyQuoteId;
+    this._endorsementMortgageeId = mortgagee.endorsementMortgageeId;
     this._propertyQuoteMortgageeId = mortgagee.propertyQuoteMortgageeId;
     this._street1 = mortgagee.street1;
     this._street2 = mortgagee.street2;
@@ -167,6 +178,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
   newInit() {
     this.propertyQuoteId = 0;
     this.propertyQuoteMortgageeId = 0;
+    this.endorsementMortgageeId = 0;
     this.mortgageeType = 1;
     this.isNew = true;
     this.guid = crypto.randomUUID();
@@ -178,6 +190,9 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
   // }
   get errorMessages(): string[] {
     return this._errorMessages;
+  }
+  set errorMessages(value: string[]){
+    this._errorMessages = value;
   }
 
   get buildingNumber() : number | null {
@@ -275,6 +290,15 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
     this.markDirty();
   }
 
+  get endorsementMortgageeId() : number | null {
+    return this._endorsementMortgageeId;
+  }
+
+  set endorsementMortgageeId(value: number | null) {
+    this._endorsementMortgageeId = value;
+    this.markDirty();
+  }
+
   get mortgageHolder() : string | null {
     return this._mortgageHolder;
   }
@@ -343,7 +367,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
     this.markClean();
   }
 
-  toJSON() {
+  toJSON(): MortgageeData {
     return {
       buildingNumber: this.buildingNumber,
       attention: this.attention,
@@ -352,6 +376,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Pol
       mortgageHolder: this.mortgageHolder,
       propertyQuoteId: this.propertyQuoteId,
       propertyQuoteMortgageeId: this.propertyQuoteMortgageeId,
+      endorsementMortgageeId: this.endorsementMortgageeId,
       street1: this.street1,
       street2: this.street2,
       state: this.state,

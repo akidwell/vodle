@@ -130,7 +130,9 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
 
     if (index > -1) {
       this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage.splice(index, 1));
+      this.propertyQuoteBuildingCoverage.splice(index, 1);
       console.log('in delete cov list', this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage));
+      coverage.markForDeletion = true;
 
       // Mark dirty to force form rules check
       this.propertyQuote.markDirty();
