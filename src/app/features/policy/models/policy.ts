@@ -7,6 +7,7 @@ import { PropertyBuilding } from '../../quote/models/property-building';
 import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { MortgageeData } from '../../quote/models/mortgagee';
+import { PolicyLayerClass } from '../../policy-v2/classes/policy-layer-class';
 
 
 export interface AccountInformation {
@@ -236,7 +237,7 @@ export interface ReinsuranceLayerData {
   expirationDate: Date | null;
   cededCommissionRat: number | null;
   effectiveDate: Date | null;
-  isFaculative: boolean | null;
+  isFacultative: boolean | null;
   maxLayerLimit?: number | null;
   attachmentPoint: number;
   isNew: boolean;
@@ -274,7 +275,7 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     expirationDate: null,
     cededCommissionRat: null,
     effectiveDate: null,
-    isFaculative: false,
+    isFacultative: false,
     attachmentPoint: 0,
     isNew: true
   };

@@ -132,7 +132,7 @@ export class ReinsuranceLayerComponent implements OnInit {
   changeReinsurerCode(): void {
     let match!: ReinsuranceLookup | undefined;
 
-    if (this.reinsuranceLayer.isFaculative) {
+    if (this.reinsuranceLayer.isFacultative) {
       match = (this.reinsuranceFacCodes.find(c => c.treatyNumber == this.reinsuranceLayer.treatyNo));
     }
     else {
