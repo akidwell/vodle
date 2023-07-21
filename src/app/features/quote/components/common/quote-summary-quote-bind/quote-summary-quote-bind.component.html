@@ -1,7 +1,7 @@
 <div class="row" *ngIf="quoteData">
   <div class="col-lg-3" >
     <label for="quoteLetter" style="width:100%">&nbsp;</label>
-    <button type="button" [disabled]="isSaving || isBusy || !canPrintQuote()"
+    <button type="button" [disabled]="isSaving || isBusy || !canPrintQuote() || quoteData.readOnlyQuote"
             ngbToolTip="Can print quote" ngbDisableTooltip="Cannot print quote" title="title"
             name="quoteLetter" class="btn btn-primary" (click)="generateQuoteLetter()">
       Quote Letter</button>
@@ -27,6 +27,7 @@
       class="form-control"
       id="expirationDays"
       name="expirationDays"
+      [readonly]="quoteData.readOnlyQuote"
       (change)="changeQuoteExpirationDate()"
       [(ngModel)]="quoteExpirationDays"
       #expirationDays="ngModel"
@@ -38,7 +39,7 @@
       type="text"
       class="form-control"
       id="expirationDate"
-      readonly
+      [readonly]="quoteData.readOnlyQuote"
       name="expirationDate"
       [(ngModel)]="quoteLetterExpirationDisplay"
       #expirationDate="ngModel"
@@ -50,7 +51,7 @@
 <div class="row" *ngIf="quoteData">
   <div class="col-lg-3">
     <label for="binderLetter" style="width:100%">&nbsp;</label>
-    <button type="button" [disabled]="canPrintBinder()"
+    <button type="button" [disabled]="canPrintBinder() || quoteData.readOnlyQuote"
     ngbToolTip="Can print quote" ngbDisableTooltip="Cannot print quote" title="title"
     name="binderLetter" class="btn btn-primary" (click)="generateBinderLetter()">Binder Letter</button>
   </div>

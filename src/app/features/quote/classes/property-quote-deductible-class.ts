@@ -124,6 +124,10 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   get errorMessages(): string[] {
     return this._errorMessages;
   }
+  set errorMessages(value: string[]){
+    this._errorMessages = value;
+  }
+
   get isValid(): boolean {
     return this._isValid;
   }
@@ -204,7 +208,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       this._isValid = false;
       //this._canBeSaved = false;
     }
-    this._errorMessages = this.invalidList;
+    this.errorMessages = this.invalidList;
   }
 
   validateAmount(): boolean {

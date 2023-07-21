@@ -25,7 +25,7 @@
     <div id="remarkFooter">
       <div class="row">
         <div class="col-lg-4">
-      <button class="footer-button" (click)="addNewRemark();">Add General Remarks</button>
+      <button *ngIf="!quote.readOnlyQuote" class="footer-button" (click)="addNewRemark();">Add General Remarks</button>
     </div>
     <div class="col-lg-4">
         <div style="background:none; border:none;">*These remarks are displayed on Quote and Binder Letters.</div>

@@ -23,7 +23,7 @@
 </div>
 <div *ngFor="let item of deductibles; let i = index">
     <rsps-property-deductible [index]="i" [programId]="programId" [deductible]=item [canEdit]=canEdit (copyDeductible)=copyDeductible($event)
-        (deleteDeductible)=deleteDeductible($event)>
+        (deleteDeductible)=deleteDeductible($event) [readOnlyQuote]="readOnlyQuote">
     </rsps-property-deductible>
 
 </div>

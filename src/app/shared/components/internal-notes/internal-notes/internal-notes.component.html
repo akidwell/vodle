@@ -3,7 +3,7 @@
     <div class="row">
 
       <div class="col-lg-8">
-        <input type="text" class="form-control" id="note" name="note" [readonly]="!canEdit" maxlength="255" validate-on-change
+        <input type="text" class="form-control" id="note" name="note" [readonly]="!canEdit || quote.readOnlyQuote" maxlength="255" validate-on-change
           [required]="canEdit" [(ngModel)]="internalNoteData.note" #note="ngModel">
       </div>
 
@@ -16,7 +16,7 @@
         <input type="text" class="form-control" id="note" name="note" [readonly]="true"
            [ngModel]="internalNoteData.createdDate | date:'MM/dd/yyyy'" (ngModelChange)="internalNoteData.createdDate=$event" #note="ngModel">
       </div>
-      <div class="col-lg-2">
+      <div *ngIf="!quote.readOnlyQuote" class="col-lg-2">
         <button class="btn btn-secondary" (click)=copyNote() [disabled]="!canEdit">Copy</button>&nbsp;
         <button *ngIf="!internalNoteData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
           [disabled]="!canEdit" hover-class="btn-danger">Delete</button>

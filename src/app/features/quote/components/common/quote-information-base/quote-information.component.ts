@@ -23,6 +23,7 @@ import { DepartmentClass } from '../../../classes/department-class';
 })
 
 export class QuoteInformationComponent implements OnInit {
+  originalDepartmentInfo!: DepartmentClass;
   department!: DepartmentClass;
   submissionCollapsed = false;
   quoteInfoCollapsed = false;
@@ -60,6 +61,7 @@ export class QuoteInformationComponent implements OnInit {
   ngOnInit(): void {
     this.route.parent?.data.subscribe(data => {
       this.department = data['quoteData'].department;
+      this.originalDepartmentInfo = this.department;
     });
     this.states$ = this.dropdowns.getStates();
     this.pageDataService.selectedProgram = null;

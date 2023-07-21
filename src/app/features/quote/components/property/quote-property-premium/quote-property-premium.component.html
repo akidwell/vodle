@@ -10,18 +10,18 @@
     </div>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
         <div *ngIf="quote" class="card-body">
-            <rsps-property-premium-rate [programDescription]="program.programDesc"
+            <rsps-property-premium-rate [programDescription]="program.programDesc" [readOnlyQuote]="quote.readOnlyQuote"
                 [limitTotal]="quote.limitTotal" [rate]="rate" [canEdit]="canEdit">
             </rsps-property-premium-rate>
         </div>
        <div *ngIf="quote" class="card-body top-bordered" >
-            <rsps-property-deductible-group [programId]="program.programId" [classType]="classType"
+            <rsps-property-deductible-group [programId]="program.programId" [classType]="classType" [readOnlyQuote]="quote.readOnlyQuote"
                 [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEdit">
             </rsps-property-deductible-group>
         </div>
     </div>
     <div class="card-footer">
-        <button class="footer-button" *ngIf="canEdit"  (click)="addDeductible();">Add Deductible</button>
+        <button class="footer-button" *ngIf="canEdit && !quote.readOnlyQuote"  (click)="addDeductible();">Add Deductible</button>
         <div class="footer-count">Deductibles: {{this.quote.propertyQuoteDeductibleList.length}}</div>
     </div>
 </div>

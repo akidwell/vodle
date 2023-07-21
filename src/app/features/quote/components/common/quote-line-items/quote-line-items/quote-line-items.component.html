@@ -1,7 +1,7 @@
 <div class="row component-row">
     <div class="col-lg-2">
         <ng-select id="lineItemDescription" [items]="lineitemDescriptions$ | async" bindLabel="description"
-            [readonly]="!canEdit" [required]="canEdit" bindValue="key" [clearable]="false" name="lineItemDescription"
+            [readonly]="!canEdit || readOnlyQuote" [required]="canEdit && !readOnlyQuote" bindValue="key" [clearable]="false" name="lineItemDescription"
             [(ngModel)]="lineItem.lineItemCode" #lineItemCode="ngModel" (change)="changeLineItem($event)">
             <ng-template ng-label-tmp let-item="item">
                 {{item.description}} {{item.state != null ? " (" + item.state + ")" : ""}}
@@ -13,29 +13,29 @@
     </div>
     <div class="col-lg-2">
         <input validate-on-change style="display: inline-block; max-width: 80%;" matInput [matDatepicker]="dueDateCalendar" [hidden]="lineItem.lineItemCode != 7"
-            [readonly]="!canEdit" class="form-control" autocomplete="off" name="dueDate" [(ngModel)]="lineItem.dueDate"
+        [readonly]="!canEdit || readOnlyQuote" class="form-control" autocomplete="off" name="dueDate" [(ngModel)]="lineItem.dueDate"
             #dueDate="ngModel">
-        <mat-datepicker-toggle [hidden]="lineItem.lineItemCode != 7" matSuffix style="display: inline-block; max-width: 20%;" [for]="dueDateCalendar">
+        <mat-datepicker-toggle [hidden]="lineItem.lineItemCode != 7 || readOnlyQuote" matSuffix style="display: inline-block; max-width: 20%;" [for]="dueDateCalendar">
         </mat-datepicker-toggle>
-        <mat-datepicker [hidden]="lineItem.lineItemCode != 7" #dueDateCalendar></mat-datepicker>
+        <mat-datepicker [hidden]="lineItem.lineItemCode != 7 || readOnlyQuote" #dueDateCalendar></mat-datepicker>
     </div>
     <div class="col-lg-1">
-        <input validate-on-change type="checkbox" class="form-check-input" id="received" name="received" [readonly]="!canEdit" *ngIf="lineItem.lineItemCode == 7"
+        <input validate-on-change type="checkbox" class="form-check-input" id="received" name="received" [readonly]="!canEdit || readOnlyQuote" *ngIf="lineItem.lineItemCode == 7"
             [(ngModel)]="lineItem.received" #received="ngModel">
     </div>
     <div class="col-lg-4">
-        <input validate-on-change style="width:100%" type="text" class="form-control" id="notes" name="notes" [readonly]="!canEdit"
+        <input validate-on-change style="width:100%" type="text" class="form-control" id="notes" name="notes" [readonly]="!canEdit || readOnlyQuote"
             [(ngModel)]="lineItem.notes" #dueDate="ngModel">
     </div>
     <div class="col-lg-2">
-        <input validate-on-change type="text" class="form-control right" maxlength="6" maxInt [readonly]="!canEdit" [required]="canEdit"
+        <input validate-on-change type="text" class="form-control right" maxlength="6" maxInt [readonly]="!canEdit || readOnlyQuote" [required]="canEdit && !readOnlyQuote"
             [(ngModel)]="lineItem.amount" name="amount" #amount="ngModel" string-to-currency [decimalPlaces]="2"
             string-to-currency [allowNegative]="false">
 
     </div>
     <div class="col-lg-1">
         <div ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-primary" id="action" [disabled]="!canEdit" ngbDropdownToggle
+            <button *ngIf="!readOnlyQuote" type="button" class="btn btn-outline-primary" id="action" [disabled]="!canEdit" ngbDropdownToggle
                 click-stop-propagation>Actions</button>
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                 <button *ngIf="canEdit" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>

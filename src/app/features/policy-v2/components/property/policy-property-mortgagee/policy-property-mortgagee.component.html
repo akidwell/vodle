@@ -3,9 +3,9 @@
     <ngb-alert type=danger *ngIf="policy.errorMessagesList.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
   </div>
 </div>
-<rsps-mortgagee-group *ngIf="policy" [classType]="classType" [propertyParent]="policy" [readOnlyQuote]="false"
+<rsps-mortgagee-group *ngIf="policy" [classType]="classType" [propertyParent]="policy"
 [canEdit]="canEdit" [mortgageeData]="policy.endorsementData.endorsementMortgagee"></rsps-mortgagee-group>
-<rsps-additional-interest-group *ngIf="policy" [classType]="classType" [propertyParent]="policy" [readOnlyQuote]="false"
+<rsps-additional-interest-group *ngIf="policy" [classType]="classType" [propertyParent]="policy"
 [canEdit]="canEdit" [aiData]="policy.endorsementData.endorsementAdditionalInterest"></rsps-additional-interest-group>
 <div *ngIf="isSaving">
   <rsps-busy message="Saving..."></rsps-busy>

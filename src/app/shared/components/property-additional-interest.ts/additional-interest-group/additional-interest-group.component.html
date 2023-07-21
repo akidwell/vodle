@@ -16,7 +16,7 @@
       </div>
         <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
           <div *ngFor="let item of aiData; let i = index">
-            <rsps-additional-interest (copyExisitingAdditionalInterest)=copyExisitingAdditionalInterest($event)
+            <rsps-additional-interest (copyExisitingAdditionalInterest)=copyExisitingAdditionalInterest($event) [readOnlyQuote]="readOnlyQuote"
               (deleteExistingAdditionalInterest)=deleteExistingAdditionalInterest($event) [ai]=aiData [aiData]=item>
             </rsps-additional-interest>
           </div>
@@ -25,7 +25,7 @@
   </div>
   <div class="card-footer">
     <div id="mortgageeFooter">
-      <button class="footer-button"
+      <button class="footer-button" *ngIf="!readOnlyQuote"
         (click)="addNewAdditionalInterest();">Add Additional Interest</button>
         <div class="footer-count">Additional Interests: {{this.aiData.length}}</div>
     </div>

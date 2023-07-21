@@ -13,7 +13,7 @@
       [ngClass]="program.quoteData != null && program.quoteData.mappingError ? 'mapping-error' : ''">
       <div class="col-lg-2">
         <input validate-on-change style="display: inline-block; max-width: 80%" matInput [matDatepicker]="quoteEffDateCalendar"
-          class="form-control" [required]="canEdit" [readonly]="!canEdit || program.quoteData.readOnlyQuote"
+          class="form-control" [required]="canEdit && !program.quoteData.readOnlyQuote" [readonly]="!canEdit || program.quoteData.readOnlyQuote"
           [(ngModel)]="program.quoteData.policyEffectiveDate" name="quoteEffDate" #polEffDate="ngModel"
           (dateChange)="effectiveDateChange()" />
         <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%"
@@ -22,7 +22,7 @@
       </div>
       <div class="col-lg-2">
         <input validate-on-change style="display: inline-block; max-width: 80%" matInput [matDatepicker]="quoteExpDateCalendar"
-          class="form-control" [required]="canEdit" [readonly]="!canEdit || program.quoteData.readOnlyQuote"
+          class="form-control" [required]="canEdit && !program.quoteData.readOnlyQuote" [readonly]="!canEdit || program.quoteData.readOnlyQuote"
           [(ngModel)]="program.quoteData.policyExpirationDate" name="quoteExpDate" #polEffDate="ngModel" />
         <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%"
           [for]="quoteExpDateCalendar"> </mat-datepicker-toggle>
