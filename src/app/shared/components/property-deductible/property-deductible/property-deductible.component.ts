@@ -27,6 +27,8 @@ export class PropertyDeductibleComponent implements OnInit {
   @Input() public programId!: number;
   @Input() public deductible!: PropertyQuoteDeductibleClass;
   @Input() public canEdit = false;
+  @Input() public readOnlyQuote!: boolean;
+
   @Output() copyDeductible: EventEmitter<PropertyQuoteDeductibleClass> = new EventEmitter();
   @Output() deleteDeductible: EventEmitter<PropertyQuoteDeductibleClass> = new EventEmitter();
 

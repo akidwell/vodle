@@ -1,6 +1,6 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="input-group search-bar">
+<div class="row" *ngIf="canEdit">
+    <div class="col-lg-12"*ngIf="canEdit">
+        <div class="input-group search-bar" >
             <div class="input-group-prepend">
                 <span class="input-group-text" *ngIf="!searching">
                     <fa-icon [icon]="faSearch"></fa-icon>
@@ -10,8 +10,8 @@
                     </span>
                 </span>
             </div>
-            <input id="form-search" class="form-control ml2" type="search" name="searchTerm"
-                [readonly]="!canEdit" [(ngModel)]="searchFormName" placeholder="Forms Library"
+            <input id="form-search" class="form-control ml2" type="search" name="searchTerm" [disabled]="readOnlyQuote"
+                [readonly]="!canEdit || readOnlyQuote" [(ngModel)]="searchFormName" placeholder="Forms Library"
                 [inputFormatter]="displayFormatter" [ngbTypeahead]="search"
                 (selectItem)="selectedItem($event.item)" [resultTemplate]="rt"/>
             <button *ngIf="canEdit" [disabled]="!canAddForm" class="btn margin-left" style="z-index: 1"

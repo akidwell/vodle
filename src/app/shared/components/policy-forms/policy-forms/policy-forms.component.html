@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class ="col-lg-6">
-                    <rsps-policy-forms-search [type]="type" [quote]="quote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>
+                    <rsps-policy-forms-search [type]="type" [quote]="quote" [readOnlyQuote]="readOnlyQuote" (refreshForms)=refreshForms() ></rsps-policy-forms-search>
                 </div>
             </div>
         </div>
@@ -67,10 +67,10 @@
                             </td>
                             <td style="text-align:center; width:1%;">
                                 <input validate-on-change [fullValidate]="true" type="checkbox" class="form-check-input" id="included" [ngClass]="form.checkboxClass"
-                                [readonly]="!canEdit" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
+                                [readonly]="!canEdit || readOnlyQuote" [(ngModel)]="form.isIncluded" name="included" click-stop-propagation (ngModelChange)="checkIncluded()">
                             </td>
                             <td *ngIf="showVariableForm" style="border-left-style: hidden;width:1%;">
-                                <fa-icon *ngIf="form.isVariable && form.isIncluded && canEdit" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
+                                <fa-icon *ngIf="form.isVariable && form.isIncluded && canEdit && !readOnlyQuote" class="faEdit fa-xl pointer" appPreventDoubleClick [icon]="faEdit" (throttledClick)="editVariableForm(form)"
                                     ngbTooltip="Edit Variable Form"></fa-icon>
                                 <fa-icon *ngIf="form.isVariable && (!form.isIncluded || !canEdit)" class="faEdit fa-xl pointer disabled" [icon]="faEdit" ngbTooltip="Edit Variable Form"></fa-icon>
                                 <fa-icon *ngIf="false" class="faCircleE fa-l"

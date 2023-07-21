@@ -18,6 +18,8 @@ export class PropertyDeductibleGroupComponent implements OnInit {
   @Input() public deductibles!: PropertyQuoteDeductibleClass[];
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
+  @Input() public readOnlyQuote!: boolean;
+
 
   constructor(private notification: NotificationService, private quoteService: QuoteService) { }
 

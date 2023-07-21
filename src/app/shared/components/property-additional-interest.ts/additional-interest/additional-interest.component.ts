@@ -46,6 +46,7 @@ export class AdditionalInterestComponent {
 
   @Input() aiData!: AdditionalInterestClass;
   @Input() ai!: AdditionalInterestClass[];
+  @Input() readOnlyQuote!: boolean;
   additionalInterestRoles$: Observable<Code[]> | undefined;
 
   constructor(public headerPaddingService: HeaderPaddingService,

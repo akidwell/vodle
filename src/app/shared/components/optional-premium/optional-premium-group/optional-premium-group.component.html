@@ -48,7 +48,7 @@
   </div>
 
   <div class="card-footer">
-    <button class="footer-button" (click)="addNewOptionalPremium();">Add Optional Premium</button>
+    <button *ngIf="canEdit && !readOnlyQuote" class="footer-button" (click)="addNewOptionalPremium();">Add Optional Premium</button>
     <div class="footer-count">Optional Premiums: {{this.optionalPremiumData.length}}</div>
   </div>
 <!-- <div class="card-body">

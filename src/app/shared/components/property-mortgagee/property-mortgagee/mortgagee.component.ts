@@ -40,7 +40,7 @@ export class MortgageeComponent {
   buildingsSub!: Subscription;
 
   @Input() canDrag = false;
-
+  @Input() readOnlyQuote!: boolean;
 
   private modalRef!: NgbModalRef;
   @Output() copyExistingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();

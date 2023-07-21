@@ -46,6 +46,7 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   deleteSub!: Subscription;
   coverages$!: Observable<OptionalPremiumMapping[]>;
   @Input() public totalPrem!: number | null;
+  @Input() public readOnlyQuote!: boolean;
 
   constructor(private notification: NotificationService,
     userAuth: UserAuth,
