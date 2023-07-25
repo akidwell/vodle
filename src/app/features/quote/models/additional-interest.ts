@@ -7,6 +7,7 @@ export interface AdditionalInterestData {
   interest: string | null;
   propertyQuoteId: number | null;
   propertyQuoteAdditionalInterestId: number | null;
+  endorsementAdditionalInterestId: number | null;
   street1: string | null;
   street2: string | null;
   state: string | null;

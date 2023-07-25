@@ -108,6 +108,17 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.endorsementMortgagee.forEach(x => {
       x.classValidation();
       this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
+      if(!this.isDirty){
+        this.isDirty = x.isDirty;
+      }
+    });
+    //additional interests
+    this.endorsementAdditionalInterest.forEach(x => {
+      x.classValidation();
+      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
+      if(!this.isDirty){
+        this.isDirty = x.isDirty;
+      }
     });
     return this.errorMessagesList;
   }
@@ -132,6 +143,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     (this.endorsementBuilding as PropertyPolicyBuildingClass[]).forEach(c => buildings.push(c.toJSON()));
     const mortgagees: MortgageeData[] = [];
     (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
+    const additionalInterests: AdditionalInterestData[] = [];
+    (this.endorsementAdditionalInterest as AdditionalInterestClass[]).forEach(c => additionalInterests.push(c.toJSON()));
     console.log('line135',mortgagees);
     return {
       policyId: this.policyId,
