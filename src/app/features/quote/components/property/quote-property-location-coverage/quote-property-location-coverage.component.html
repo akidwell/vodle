@@ -1,15 +1,15 @@
 
 <rsps-property-import *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit">
 </rsps-property-import>
-<rsps-quote-property-detail *ngIf="quote" [classType]="classType" [quote]="quote" [canEdit]="canEdit"
+<rsps-property-detail *ngIf="quote" [classType]="classType" [propertyParent]="quote" [canEdit]="canEdit"
     [buildings]="quote.propertyQuoteBuildingList" [largestExposure]="quote.largestExposure"
     [lawLimits]="quote.lawLimits" [limitTotal]="quote.limitTotal"
     [largestTiv]="quote.largestPremTiv" [subjectAmount]="quote.subjectAmounts">
-</rsps-quote-property-detail>
+</rsps-property-detail>
 <rsps-property-building-group *ngIf="quote" [classType]="classType" [propertyParent]="quote" [readOnlyQuote]="readOnlyQuote"
     [buildings]="quote.propertyQuoteBuildingList" [canEdit]="canEdit"
     [buildingCount]="quote.buildingCount" [programId]="quote.programId"
-    [rateEffectiveDate]="quote.rateEffectiveDate"></rsps-property-building-group> 
+    [rateEffectiveDate]="quote.rateEffectiveDate"></rsps-property-building-group>
 <rsps-property-building-coverage-edit *ngIf="quote" [canEdit]="canEdit" [propertyParent]="quote"
     [buildings]="quote.propertyQuoteBuildingList"></rsps-property-building-coverage-edit>
 <rsps-property-building-coverage-group *ngIf="quote" [classType]="classType"  [propertyParent]="quote"

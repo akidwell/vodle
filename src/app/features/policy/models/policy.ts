@@ -72,6 +72,7 @@ export interface PolicyInformation {
   productManufactureDate: Date;
   submissionNumber: number;
   guid: string | null;
+  classCode: number | null;
 }
 
 export interface PolicyInformationResolved {

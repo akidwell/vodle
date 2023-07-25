@@ -1,18 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
-import { PropertyQuoteBuildingClass } from '../../../classes/property-quote-building-class';
-import { PropertyQuoteClass } from '../../../classes/property-quote-class';
-import { PropertyBuildingClass } from '../../../classes/property-building-class';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
+import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
-  selector: 'rsps-quote-property-detail',
-  templateUrl: './quote-property-detail.component.html',
-  styleUrls: ['./quote-property-detail.component.css']
+  selector: 'rsps-property-detail',
+  templateUrl: './property-detail.component.html',
+  styleUrls: ['./property-detail.component.css']
 })
-export class QuotePropertyDetailComponent implements OnInit {
+export class PropertyDetailComponent implements OnInit {
   @Input() public canEdit = false;
-  @Input() public quote!: PropertyQuoteClass;
+  @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public buildings!: PropertyBuildingClass[];
   @Input() public subjectAmount!: Map<any,any>;
@@ -26,8 +26,5 @@ export class QuotePropertyDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.collapsed = false;
-    console.log('QUOTE' + this.quote);
-    console.log('SUBJECT Amount:' + this.limitTotal);
   }
-
 }

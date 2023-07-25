@@ -7,7 +7,7 @@
     </div>
     <div class="col-lg-12">
         <ng-select id="cspCode" [items]="cspCodes$ | async" bindLabel="description" bindValue="key" validate-on-change
-            [readonly]="!canEdit || quote.readOnlyQuote" name="cspCode" [(ngModel)]="quote.classCode" [loading]="loadingCsp" [required]="canEdit && !quote.readOnlyQuote"
+            [readonly]="!canEdit || propertyParent.readOnlyQuote" name="cspCode" [(ngModel)]="propertyParent.classCode" [loading]="loadingCsp" [required]="canEdit && !propertyParent.readOnlyQuote"
             loadingText="Loading..." [searchFn]="dropDownSearch" #csp="ngModel" (ngModelChange)="changeCspCode($event)"
             [virtualScroll]="true">
             <ng-template ng-label-tmp let-item="item">
@@ -21,8 +21,8 @@
     <div class="row">
         <div class="col-lg-12">
             <label for="riskDescription" class="panel-header" title="riskDescription">Risk Description</label>
-            <textarea type="text" class="form-control" id="description" maxlength="255" name="riskDescription" validate-on-change [readonly]="!canEdit || quote.readOnlyQuote" 
-                [(ngModel)]="quote.riskDescription" #riskDescription="ngModel"></textarea>
+            <textarea type="text" class="form-control" id="description" maxlength="255" name="riskDescription" validate-on-change [readonly]="!canEdit || propertyParent.readOnlyQuote"
+                [(ngModel)]="propertyParent.riskDescription" #riskDescription="ngModel"></textarea>
         </div>
     </div>
 
