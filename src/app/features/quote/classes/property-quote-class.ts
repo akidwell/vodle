@@ -298,6 +298,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.markDirty();
   }
 
+  addAdditionalInterest(additionalInterest: AdditionalInterestClass){
+    additionalInterest.markDirty();
+    additionalInterest.isNew = true;
+    additionalInterest.additionalInterestType = 1;
+    this.propertyQuoteAdditionalInterestList.push(additionalInterest);
+    this.markDirty();
+  }
+
   deleteBuilding(building: PropertyQuoteBuildingClass) {
     if (building instanceof PropertyQuoteBuildingClass) {
       const index = this.propertyQuoteBuildingList.indexOf(building, 0);
