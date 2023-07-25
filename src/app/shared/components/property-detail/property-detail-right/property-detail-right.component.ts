@@ -4,15 +4,16 @@ import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
-  selector: 'rsps-quote-property-detail-right',
-  templateUrl: './quote-property-detail-right.component.html',
-  styleUrls: ['./quote-property-detail-right.component.css']
+  selector: 'rsps-property-detail-right',
+  templateUrl: './property-detail-right.component.html',
+  styleUrls: ['./property-detail-right.component.css']
 })
-export class QuotePropertyDetailRightComponent implements OnInit {
-  @Input() public quote!: PropertyQuoteClass;
+export class PropertyDetailRightComponent implements OnInit {
+  @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
   @Input() public rateEffectiveDate!: Date | null;
@@ -31,10 +32,11 @@ export class QuotePropertyDetailRightComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', this.rateEffectiveDate?.toString() ?? '', this.quote.programId.toString() || '*')
+    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', this.rateEffectiveDate?.toString() ?? '', this.propertyParent.programId.toString() || '*')
       .pipe(tap(() => this.loadingCsp = false));
 
-    this.previousCspCode = this.quote.classCode;
+
+    this.previousCspCode = this.propertyParent.classCode;
   }
 
 
@@ -54,16 +56,16 @@ export class QuotePropertyDetailRightComponent implements OnInit {
         .then(async (result: boolean) => {
           if (result) {
             this.previousCspCode = cspCode;
-            this.quote.clearCspCodes();
-            this.quote.cspCode = cspCode;
-            this.quote.classCode = Number(cspCode);
+            this.propertyParent.clearCspCodes();
+            this.propertyParent.cspCode = cspCode;
+            this.propertyParent.classCode = Number(cspCode);
           } else {
-            this.quote.classCode = this.previousCspCode;
+            this.propertyParent.classCode = this.previousCspCode;
           }});
     } else {
       this.previousCspCode = cspCode;
-      this.quote.cspCode = cspCode;
-      this.quote.classCode = Number(cspCode);
+      this.propertyParent.cspCode = cspCode;
+      this.propertyParent.classCode = Number(cspCode);
     }
   }
 }

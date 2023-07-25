@@ -94,32 +94,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   validateObject(): ErrorMessage[]{
     console.log('in end validat' );
     this.errorMessagesList = [];
-    //buildings
-    this.endorsementBuilding.forEach( x =>{
-      x.classValidation();
-      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
-      //coverages
-      x.endorsementBuildingCoverage.forEach(x => {
-        const y = x.validateObject();
-        this.errorMessagesList = this.errorMessagesList.concat(y);
-      });
-    });
-    //mortgagees
-    this.endorsementMortgagee.forEach(x => {
-      x.classValidation();
-      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
-      if(!this.isDirty){
-        this.isDirty = x.isDirty;
-      }
-    });
-    //additional interests
-    this.endorsementAdditionalInterest.forEach(x => {
-      x.classValidation();
-      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
-      if(!this.isDirty){
-        this.isDirty = x.isDirty;
-      }
-    });
+    this.errorMessagesList = this.validateChildren(this);
     return this.errorMessagesList;
   }
   get buildingList(): Code[] {
@@ -145,7 +120,6 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
     const additionalInterests: AdditionalInterestData[] = [];
     (this.endorsementAdditionalInterest as AdditionalInterestClass[]).forEach(c => additionalInterests.push(c.toJSON()));
-    console.log('line135',mortgagees);
     return {
       policyId: this.policyId,
       endorsementNumber: this.endorsementNumber,

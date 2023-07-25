@@ -3,6 +3,11 @@
   <ngb-alert type=danger *ngIf="policy.errorMessagesList.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
 </div>
 </div>
+<rsps-property-detail *ngIf="propertyParent" [classType]="classType" [propertyParent]="propertyParent" [canEdit]="canEdit"
+    [buildings]="policy.endorsementData.endorsementBuilding" [largestExposure]="policy.largestExposure"
+    [lawLimits]="policy.lawLimits" [limitTotal]="policy.limitTotal"
+    [largestTiv]="policy.largestPremTiv" [subjectAmount]="policy.subjectAmounts">
+</rsps-property-detail>
 <rsps-property-building-group *ngIf="policy" [classType]="classType" [propertyParent]="policy" [readOnlyQuote]="false"
     [buildings]="policy.endorsementData.endorsementBuilding" [canEdit]="canEdit"
     [buildingCount]="policy.buildingCount" [programId]="programId"
