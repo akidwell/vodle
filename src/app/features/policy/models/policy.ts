@@ -123,6 +123,7 @@ export interface Endorsement {
   endorsementBuilding: PropertyBuilding[];
   endorsementMortgagee: MortgageeData[];
   endorsementAdditionalInterest: AdditionalInterestClass[];
+  policyLayers: PolicyLayerClass[];
 }
 
 export interface AdditionalNamedInsuredsResolved {

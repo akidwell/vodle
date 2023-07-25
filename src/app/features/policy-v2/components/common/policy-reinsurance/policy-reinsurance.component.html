@@ -17,6 +17,6 @@
         </button>
     </div>
 </div>
-<div *ngFor="let layer of policyLayerData">
-    <rsps-policy-layer [policyLayerData]="layer" [endorsement]="endorsement" (deletePolicyLayer)="deletePolicyLayer($event)"/>
+<div *ngFor="let layer of endorsement.policyLayers">
+    <rsps-policy-layer [policyLayer]="layer" [endorsement]="endorsement" (deletePolicyLayer)="deletePolicyLayer($event)"/>
 </div>

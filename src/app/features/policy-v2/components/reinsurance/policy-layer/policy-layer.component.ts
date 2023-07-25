@@ -1,5 +1,5 @@
 import { Component, Input, Output } from '@angular/core';
-import { Endorsement, PolicyInformation, PolicyLayerData, ReinsuranceLayerData, newReinsuranceLayer } from 'src/app/features/policy/models/policy';
+import { Endorsement, PolicyInformation, PolicyLayerData } from 'src/app/features/policy/models/policy';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { EventEmitter } from '@angular/core';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
@@ -9,6 +9,7 @@ import { ReinsuranceLookupService } from 'src/app/features/policy/services/reins
 import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
+import { PolicyLayerClass } from '../../../classes/policy-layer-class';
 
 @Component({
   selector: 'rsps-policy-layer',
@@ -30,16 +31,9 @@ export class PolicyLayerComponent {
   // Data needed to create new reinsurance layers
   @Input() endorsement!: Endorsement;
 
-  /**
-   * To implement lazy deletion of reinsurance layers, `policyLayerData.reinsuranceData`
-   * is used to create `reinsuranceLayers`. Each ReinsuranceClass is associated with a
-   * reinsurance layer and handles validation and lazy deletion logic.
-   * `policyLayerData` is then ignored.
-   */
-  @Input() policyLayerData!: PolicyLayerData;
-  reinsuranceLayers!: ReinsuranceClass[];
+  @Input() policyLayer!: PolicyLayerClass;
 
-  @Output() deletePolicyLayer: EventEmitter<PolicyLayerData> = new EventEmitter();
+  @Output() deletePolicyLayer: EventEmitter<PolicyLayerClass> = new EventEmitter();
 
   // For looking up reinsurance codes
   // reinsuranceRefreshedSub!: Subscription;
@@ -75,9 +69,8 @@ export class PolicyLayerComponent {
   }
 
   ngOnChanges() {
-    this.reinsuranceLayers = this.policyLayerData.reinsuranceData.map(x => new ReinsuranceClass(x));
     // Add default reinsurance layer if this policy layer is newly created
-    if (this.reinsuranceLayers.length == 0) {
+    if (this.policyLayer.reinsuranceData.length == 0) {
       this.addNewReinsuranceLayer();
     }
   }
@@ -88,36 +81,20 @@ export class PolicyLayerComponent {
 
   addNewReinsuranceLayer() {
     this.policyLayerCollapsed = false;
-    const reinsuranceLayer = newReinsuranceLayer(this.endorsement.policyId, this.endorsement.endorsementNumber, this.policyLayerData.policyLayerNo, this.reinsuranceLayers.length + 1);
-    this.reinsuranceLayers.push(new ReinsuranceClass(reinsuranceLayer));
-  }
-
-  totalPolicyLayerLimit(): number {
-    return this.reinsuranceLayers
-      .map(d => Number(d.reinsLimit) || 0)
-      .reduce((sum, summand) => sum + summand, 0);
-  }
-
-  totalPolicyLayerPremium(): number {
-    return this.reinsuranceLayers
-      .map(d => Number(d.reinsCededPremium) || 0)
-      .reduce((sum, summand) => sum + summand, 0);
+    const reinsuranceLayer = new ReinsuranceClass(this.endorsement.policyId, this.endorsement.endorsementNumber, this.policyLayer.policyLayerNo, this.policyLayer.reinsuranceLayers.length + 1);
+    this.policyLayer.reinsuranceData.push(reinsuranceLayer);
   }
 
   openDeleteConfirmation(reinsurance: ReinsuranceClass) {
     this.confirmationDialogService.open('Delete Confirmation', 'Are you sure you want to delete this Reinsurnace Layer?')
     .then((confirm: boolean) => {
       if (confirm) {
-          let index = this.reinsuranceLayers.indexOf(reinsurance);
-          if (index == 0 && this.reinsuranceLayers.length == 1) {
-            // When the last reinsurance layer is deleted, delete the policy layer.
-            // Sibling policy layers must be updated, so we defer this logic to the containing PolicyReinsurnaceComponent.
-            this.deletePolicyLayer.emit(this.policyLayerData);
-          } else {
-            // Update reinsurnace array and RLNs
-            this.reinsuranceLayers.splice(index, 1)
-            this.reinsuranceLayers.forEach((reinsurance, index) => (reinsurance.reinsLayerNo = index + 1))
-          }
+        this.policyLayer.deleteReinsuranceLayer(reinsurance);
+        if (this.policyLayer.reinsuranceLayers.length == 0) {
+          // When the last reinsurance layer is deleted, delete the policy layer.
+          // Sibling policy layers must be updated, so we defer this logic to the containing PolicyReinsurnaceComponent.
+          this.deletePolicyLayer.emit(this.policyLayer);
+        }
       }
     });
   }

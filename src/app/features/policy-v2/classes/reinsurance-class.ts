@@ -3,69 +3,43 @@ import { ChildBaseClass } from './base/child-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { ReinsuranceLayerData } from '../../policy/models/policy';
 
-export class ReinsuranceClass extends ChildBaseClass implements Deletable {
-    
-    private data!: ReinsuranceLayerData;
+export class ReinsuranceClass extends ChildBaseClass implements Deletable, ReinsuranceLayerData {
 
-    constructor(layerData: ReinsuranceLayerData) {
+    policyId!: number;
+    endorsementNumber!: number;
+    policyLayerNo!: number;
+    reinsLayerNo!: number;
+    reinsLimit: number | null = null;
+    reinsCededPremium: number | null = null;
+    reinsCededCommRate: number = 0;
+    treatyType: string | null = null;
+    treatyNo?: number | null | undefined = undefined;
+    subTreatyNo: number | null = null;
+    reinsurerCode: number | null = null;
+    reinsCertificateNo?: string | null | undefined = null;
+    proflag: number | null = null;
+    enteredDate: Date | null = null;
+    invoiceNo: number | null = null;
+    payableNo: number | null = null;
+    intermediaryNo: number | null = null;
+    facBalance: number | null = null;
+    cededPremium: number | undefined = 0;
+    cededCommission: number | null = null;
+    sumIuscededPrmByTreatyInv: number | null = null;
+    sumProcededPrmByTreatyInv: number | null = null;
+    expirationDate: Date | null = null;
+    cededCommissionRat: number | null = null;
+    effectiveDate: Date | null = null;
+    isFacultative: boolean | null = false;
+    maxLayerLimit?: number | null | undefined = undefined;
+    attachmentPoint: number = 0;
+
+    constructor(policyId: number, endorsementNumber: number, policyLayerNo: number, reinsLayerNo: number) {
         super()
-        this.data = layerData;
-    }
-
-    /**
-     * Reinsurance data defered to inner `data` object.
-     */
-    get reinsLayerNo(): number { return this.data.reinsLayerNo; }
-    set reinsLayerNo(value: number) {
-        this.data.reinsLayerNo = value;
-    }
-    get attachmentPoint(): number {
-        return this.data.attachmentPoint;
-    }
-    set attachmentPoint(value: number) {
-        this.data.attachmentPoint = value;
-    }
-    get reinsLimit(): number | null {
-        return this.data.reinsLimit;
-    }
-    set reinsLimit(value: number | null) {
-        this.data.reinsLimit = value;
-    }
-    get reinsCededPremium(): number | null {
-        return this.data.reinsCededPremium;
-    }
-    set reinsCededPremium(value: number | null) {
-        this.data.reinsCededPremium = value;
-    }
-    get reinsCededCommRate(): number {
-        return this.data.reinsCededCommRate;
-    }
-    set reinsCededCommRate(value: number) {
-        this.data.reinsCededCommRate = value;
-    }
-    get treatyNo(): number | null | undefined {
-        return this.data.treatyNo;
-    }
-    set treatyNo(value: number | null | undefined) {
-        this.data.treatyNo = value;
-    }
-    get isFacultative(): boolean | null {
-        return this.data.isFaculative;
-    }
-    set isFacultative(value: boolean | null) {
-        this.data.isFaculative = value;
-    }
-    get intermediaryNo(): number | null {
-        return this.data.intermediaryNo;
-    }
-    set intermediaryNo(value: number | null) {
-        this.data.intermediaryNo = value;
-    }
-    get reinsCertificateNo(): string | null | undefined {
-        return this.data.reinsCertificateNo;
-    }
-    set reinsCertificateNo(value: string | null | undefined) {
-        this.data.reinsCertificateNo = value;
+        this.policyId = policyId;
+        this.endorsementNumber = endorsementNumber;
+        this.policyLayerNo = policyLayerNo;
+        this.reinsLayerNo = reinsLayerNo;
     }
 
     private _markForDeletion = false;
@@ -82,12 +56,32 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable {
     }
 
     validateObject(): ErrorMessage[] {
-        throw new Error('Method not implemented.');
+        this.errorMessagesList = [];
+        if (this.canEdit) {
+            if (this.reinsLayerNo == 1 && this.attachmentPoint == null) {
+                this.createErrorMessage("Reinsurance layer #1 must have an attachment point.");
+            }
+            if (this.reinsLimit == null) {
+                this.createErrorMessage("Reinsurance limit cannot be empty.");
+            }
+            if (this.reinsCededPremium == null) {
+                this.createErrorMessage("Reinsurance premium cannot be empty.");
+            }
+            if (this.reinsCededCommRate == null) {
+                this.createErrorMessage("Reinsurance commission rate cannot be empty.");
+            }
+            if (this.treatyNo == null) {
+                this.createErrorMessage("Reinsurance code cannot be empty.");
+            }
+        }
+        return this.errorMessagesList;
     }
+
     onGuidNewMatch(T: ChildBaseClass): void {
-        throw new Error('Method not implemented.');
+        this.isNew = false;
     }
+
     onGuidUpdateMatch(T: ChildBaseClass): void {
-        throw new Error('Method not implemented.');
+        this.isNew = false;
     }
 }

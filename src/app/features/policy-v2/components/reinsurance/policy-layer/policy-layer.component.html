@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header" (click)="collapse.toggle()">
-        <span>Policy Layer {{policyLayerData.policyLayerNo}}</span>
+        <span>Policy Layer {{policyLayer.policyLayerNo}}</span>
         <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyLayerCollapsed"/>
         <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyLayerCollapsed"/>
     </div>
@@ -19,7 +19,7 @@
                 <th style="width: 12%"><label>Certificate No</label></th>
                 <th style="width: 7%"><!-- Delete button --></th>
             </tr>
-            <tr *ngFor="let reinsurance of reinsuranceLayers; index as i">
+            <tr *ngFor="let reinsurance of policyLayer.reinsuranceLayers; index as i">
                 <td><input [(ngModel)]="reinsurance.reinsLayerNo" readonly type="text" class="form-control" [required]="canEdit"/></td>
                 <td>
                     <input [(ngModel)]="reinsurance.attachmentPoint"
@@ -63,10 +63,10 @@
     <div class="card-footer">
         <button class="footer-button" (click)="addNewReinsuranceLayer()">Add Reinsurance Layer</button>
         <span>
-            Policy Layer Limit: {{totalPolicyLayerLimit() | currency: 'USD' : 'symbol':'1.0-0' }}
+            Policy Layer Limit: {{this.policyLayer.policyLayerLimit | currency: 'USD' : 'symbol':'1.0-0' }}
             &nbsp;
-            Policy Layer Premium: {{totalPolicyLayerPremium() | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
+            Policy Layer Premium: {{this.policyLayer.policyLayerPremium | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
         </span>
-        <span class="footer-count">Reinsurance Layers: {{policyLayerData.reinsuranceData.length}}</span>
+        <span class="footer-count">Reinsurance Layers: {{policyLayer.reinsuranceData.length}}</span>
     </div>
 </div>
