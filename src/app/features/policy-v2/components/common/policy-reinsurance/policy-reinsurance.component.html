@@ -16,6 +16,7 @@
             Add Policy Layer
         </button>
     </div>
+    <ngb-alert type=danger *ngIf="endorsement.errorMessagesList.length != 0" [innerHTML]="getAlerts()" style="margin: 1em; padding: 1em;"/>
 </div>
 <div *ngFor="let layer of endorsement.policyLayers">
     <rsps-policy-layer [policyLayer]="layer" [endorsement]="endorsement" (deletePolicyLayer)="deletePolicyLayer($event)"/>

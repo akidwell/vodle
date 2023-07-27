@@ -52,4 +52,10 @@ export class PolicyReinsuranceComponent {
   deletePolicyLayer(policyLayer: PolicyLayerClass) {
     this.endorsement.deletePolicyLayer(policyLayer);
   }
+
+  getAlerts(): string | null {
+    return this.endorsement.errorMessagesList
+      .map(e => `<li>${e.message}</li>`)
+      .reduce((alert, message) => alert += message, '');
+  }
 }

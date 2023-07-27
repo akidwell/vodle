@@ -101,6 +101,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   deletePolicyLayer(policyLayer: PolicyLayerClass) {
     const index = this.policyLayers.indexOf(policyLayer);
     if (index >= 0) {
+      policyLayer.markForDeletion = true;
       this.policyLayers.splice(index, 1);
       this.policyLayers.forEach((layer, index) => {
         layer.policyLayerNo = index + 1;
@@ -110,27 +111,27 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   }
 
   validateObject(): ErrorMessage[]{
-    console.log('in end validat' );
-    this.errorMessagesList = [];
-    //buildings
-    this.endorsementBuilding.forEach( x =>{
-      x.classValidation();
-      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
-      //coverages
-      x.endorsementBuildingCoverage.forEach(x => {
-        const y = x.validateObject();
-        this.errorMessagesList = this.errorMessagesList.concat(y);
-      });
-    });
-    //mortgagees
-    this.endorsementMortgagee.forEach(x => {
-      x.classValidation();
-      this.errorMessagesList = this.errorMessagesList.concat(x.errorMessagesList);
-    });
-    // reinsurnace
-    this.policyLayers.forEach(x => {
-      this.errorMessagesList = this.errorMessagesList.concat(x.validateObject());
-    })
+    this.errorMessagesList = this.validateChildren(this);
+
+    // Reinsurance validation
+    if(this.policyLayers.length == 0 ||
+      this.policyLayers[0].reinsuranceLayers.length == 0 ||
+      this.policyLayers[0].reinsuranceLayers[0].attachmentPoint != this.attachmentPoint) {
+      this.createErrorMessage('Attachment point must equal policy attachment point.');
+    }
+    const totalLimit = this.policyLayers
+      .map(p => p.policyLayerLimit)
+      .reduce((sum, summand) => sum + summand, 0);
+    if (totalLimit != this.limit) {
+      this.createErrorMessage('Reinsurance layer limits must total policy limit.');
+    }
+    const totalPremium = this.policyLayers
+      .map(p => p.policyLayerPremium)
+      .reduce((sum, summand) => sum + summand, 0);
+    if (totalPremium != this.premium) {
+      this.createErrorMessage('Reinsurance layer premiums must total policy premium.');
+    }
+
     return this.errorMessagesList;
   }
 

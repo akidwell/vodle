@@ -2,8 +2,9 @@ import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { PolicyLayerData, ReinsuranceLayerData } from '../../policy/models/policy';
 import { ChildBaseClass } from './base/child-base-class';
 import { ReinsuranceClass } from './reinsurance-class';
+import { Deletable } from 'src/app/shared/interfaces/deletable';
 
-export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData {
+export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData, Deletable {
     
     policyId: number;
     endorsementNo: number;
@@ -25,6 +26,16 @@ export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData 
         this.policyLayerNo = policyLayerNo;
     }
 
+    private _markForDeletion = false;
+    get markForDeletion() : boolean {
+        return this._markForDeletion;
+    }
+    set markForDeletion(value: boolean) {
+        this._markForDeletion = value;
+        this.markDirty();
+        this.reinsuranceLayers.forEach(r => r.markForDeletion = value);
+    }
+
     get reinsuranceData(): ReinsuranceLayerData[] {
         return this.reinsuranceLayers;
     }
@@ -42,9 +53,17 @@ export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData 
     }
 
     validateObject(): ErrorMessage[] {
-        return this.reinsuranceLayers
+        // Collect child error messages into one array
+        this.reinsuranceLayers
             .map(l => l.validateObject())
             .reduce((allErrors, errors) => allErrors.concat(errors), [])
+            // Prepend policy layer # to messages
+            .forEach(m => this.createErrorMessage(`Policy Layer ${this.policyLayerNo} - ${m.message}`));
+        return this.errorMessagesList;
+    }
+
+    onDelete(): void {
+        throw new Error('Method not implemented.');
     }
 
     onGuidNewMatch(T: ChildBaseClass): void {

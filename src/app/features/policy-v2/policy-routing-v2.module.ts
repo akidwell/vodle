@@ -23,7 +23,7 @@ const routes: Routes = [
     resolve: {
       policyInfoData: PolicyResolver,
       accountData: AccountInformationResolver,
-      endorsementData: EndorsementResolver,
+      endorsementData: EndorsementResolver, // Kept for backwards compatibility, use endorsement in policyInfoData.
       status: EndorsementStatusResolver
     },
     children: [

@@ -58,20 +58,17 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
     validateObject(): ErrorMessage[] {
         this.errorMessagesList = [];
         if (this.canEdit) {
-            if (this.reinsLayerNo == 1 && this.attachmentPoint == null) {
-                this.createErrorMessage("Reinsurance layer #1 must have an attachment point.");
-            }
             if (this.reinsLimit == null) {
-                this.createErrorMessage("Reinsurance limit cannot be empty.");
+                this.createErrorMessage(`Reinsurance Layer ${this.reinsLayerNo}: Limit cannot be empty.`);
             }
             if (this.reinsCededPremium == null) {
-                this.createErrorMessage("Reinsurance premium cannot be empty.");
+                this.createErrorMessage(`Reinsurance Layer ${this.reinsLayerNo}: Premium cannot be empty.`);
             }
             if (this.reinsCededCommRate == null) {
-                this.createErrorMessage("Reinsurance commission rate cannot be empty.");
+                this.createErrorMessage(`Reinsurance Layer ${this.reinsLayerNo}: Commission rate cannot be empty.`);
             }
             if (this.treatyNo == null) {
-                this.createErrorMessage("Reinsurance code cannot be empty.");
+                this.createErrorMessage(`Reinsurance Layer ${this.reinsLayerNo}: Code cannot be empty.`);
             }
         }
         return this.errorMessagesList;
