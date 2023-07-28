@@ -159,9 +159,9 @@ export class AdditionalInterestClass extends ChildBaseClass implements Additiona
     return !value;
   }
   existingInit(ai: AdditionalInterestData){
-    this.isAppliedToAll = ai.isAppliedToAll;
-    this.buildingNumber = ai.buildingNumber;
-    this.premisesNumber = ai.premisesNumber;
+    this._isAppliedToAll = ai.isAppliedToAll;
+    this._buildingNumber = ai.buildingNumber;
+    this._premisesNumber = ai.premisesNumber;
     this._attention = ai.attention;
     this._description = ai.description;
     this._interest = ai.interest;
