@@ -28,12 +28,12 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: PolicyInformationV2Component, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
-      { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
-      { path: 'mortgagee', component: PolicyPropertyMortgageeComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'premium', component: PolicyPremiumComponent },
-      { path: 'reinsurance', component: PolicyReinsuranceComponent },
-      { path: 'summary', component: PolicySummaryComponent},
+      { path: 'information', title: 'RSPS | Policy | Information', component: PolicyInformationV2Component, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
+      { path: 'coverages', title: 'RSPS | Policy | Coverages', component:  PolicyPropertyLocationCoverageComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
+      { path: 'mortgagee', title: 'RSPS | Policy | Mortgagee', component: PolicyPropertyMortgageeComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'premium', title: 'RSPS | Policy | Premium', component: PolicyPremiumComponent },
+      { path: 'reinsurance', title: 'RSPS | Policy | Reinsurance', component: PolicyReinsuranceComponent },
+      { path: 'summary', title: 'RSPS | Policy | Summary', component: PolicySummaryComponent},
 
     ],
   },

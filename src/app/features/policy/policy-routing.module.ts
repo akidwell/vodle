@@ -32,11 +32,11 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'coverages', component: CoveragesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'schedules', component: SchedulesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'reinsurance', component: ReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
-      { path: 'summary', component: SummaryComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } }
+      { path: 'information', title: 'RSPS | Policy | Information', component: InformationComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'coverages', title: 'RSPS | Policy | Coverages', component: CoveragesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'schedules', title: 'RSPS | Policy | Schedules', component: SchedulesComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'reinsurance', title: 'RSPS | Policy | Reinsurance', component: ReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
+      { path: 'summary', title: 'RSPS | Policy | Summary', component: SummaryComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } }
     ]
   },
   {

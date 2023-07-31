@@ -23,18 +23,19 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: SubmissionInfoBaseComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } }
+      { path: 'information', title: 'RSPS | Submission | Information', component: SubmissionInfoBaseComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } }
     ]
   },
   {
     path: ':id',
+    title: ':id',
     component: SubmissionComponent,
     resolve: {
       submissionData: SubmissionResolver
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: SubmissionInfoBaseComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
+      { path: 'information', title: 'RSPS | Submission | Information', component: SubmissionInfoBaseComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
       // { path: 'submissions', component: InsuredSubmissionActivityComponent, canDeactivate: [CanDeactivateGuard] , data: { saveComponent: true } },
     ]
   }

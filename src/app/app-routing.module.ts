@@ -17,28 +17,62 @@ export function onAuthRequired(_oktaAuth: OktaAuth) {
 const routes: Routes = [
   { path: CALLBACK_PATH, component: OktaCallbackComponent },
   {
-    path: 'home', loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'home',
+    loadChildren: () => import('./features/home/home.module')
+      .then(m => m.HomeModule),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Home'
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
-    path: 'import', loadChildren: () => import('./features/import/import.module').then(m => m.ImportModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'import',
+    loadChildren: () => import('./features/import/import.module')
+      .then(m => m.ImportModule),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Import'
   },
   { path: 'reports', component: ReportsComponent },
   { path: 'applications', component: ApplicationsComponent },
   {
-    path: 'policy-v2', loadChildren: () => import('./features/policy-v2/policy-v2.module').then(m => m.PolicyV2Module), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'policy-v2',
+    loadChildren: () => import('./features/policy-v2/policy-v2.module')
+      .then(m => m.PolicyV2Module),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Policy'
   },
   {
-    path: 'policy', loadChildren: () => import('./features/policy/policy.module').then(m => m.PolicyModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'policy',
+    loadChildren: () => import('./features/policy/policy.module')
+      .then(m => m.PolicyModule),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Policy'
   },
   {
-    path: 'submission', loadChildren: () => import('./features/submission/submission.module').then(m => m.SubmissionModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'submission',
+    loadChildren: () => import('./features/submission/submission.module')
+      .then(m => m.SubmissionModule),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Submission'
   },
   {
-    path: 'insured', loadChildren: () => import('./features/insured/insured.module').then(m => m.InsuredModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'insured',
+    loadChildren: () => import('./features/insured/insured.module')
+      .then(m => m.InsuredModule),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Insured'
   },
   {
-    path: 'quote', loadChildren: () => import('./features/quote/quote.module').then(m => m.QuoteModule), canActivate: [OktaAuthGuard, AuthGuard], data: { onAuthRequired }
+    path: 'quote', loadChildren: () => import('./features/quote/quote.module')
+      .then(m => m.QuoteModule),
+    canActivate: [OktaAuthGuard, AuthGuard],
+    data: { onAuthRequired },
+    title: 'RSPS | Quote'
   },
   { path: 'access-denied', component: AccessDeniedComponent },
   { path: 'logged-out', redirectTo: 'home', pathMatch: 'full' },
@@ -46,9 +80,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    scrollPositionRestoration: 'enabled'
-  })
+  imports: [RouterModule
+    .forRoot(routes, {
+      scrollPositionRestoration: 'enabled'
+    }),
   ],
   exports: [RouterModule],
 })
