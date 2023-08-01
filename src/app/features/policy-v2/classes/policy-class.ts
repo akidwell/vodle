@@ -414,8 +414,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   addAdditionalInterest(ai: AdditionalInterestClass){
     ai.markDirty();
     this.markDirty();
-    this.endorsementData.endorsementAdditionalInterest.push(ai);
     ai.isNew = true;
+    this.endorsementData.endorsementAdditionalInterest.push(ai);
     // this.endorsementData.markDirty();
   }
 
