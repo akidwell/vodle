@@ -401,6 +401,7 @@ export class AdditionalInterestClass extends ChildBaseClass implements Additiona
       street2: this.street2,
       state: this.state,
       city: this.city,
+      isNew: this.isNew,
       zip:this.zip,
       countryCode: this.countryCode,
       isAppliedToAll: this.isAppliedToAll,
