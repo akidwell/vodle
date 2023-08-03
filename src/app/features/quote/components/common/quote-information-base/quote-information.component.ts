@@ -131,40 +131,4 @@ export class QuoteInformationComponent implements OnInit {
         }
       });
   }
-
-  // isValid(): boolean {
-  //   if (!this.canEditSubmission) {
-  //     return true;
-  //   }
-  //   if (this.quote.isValid) {
-  //     this.hideInvalid();
-  //   }
-  //   return this.quote.isValid;
-  // }
-
-  // isDirty(): boolean {
-  //   return this.quote.isDirty;
-  // }
-
-  // hideInvalid(): void {
-  //   this.showInvalid = false;
-  // }
-
-  // showInvalidControls(): void {
-  //   this.invalidMessage = '';
-  //   // Compile all invalide controls in a list
-  //   if (this.quote.invalidList.length > 0) {
-  //     this.showInvalid = true;
-  //     for (const error of this.quote.invalidList) {
-  //       this.invalidMessage += '<br><li>' + error;
-  //     }
-  //   }
-
-  //   if (this.showInvalid) {
-  //     this.invalidMessage = 'Following fields are invalid' + this.invalidMessage;
-  //   }
-  //   else {
-  //     this.hideInvalid();
-  //   }
-  // }
 }

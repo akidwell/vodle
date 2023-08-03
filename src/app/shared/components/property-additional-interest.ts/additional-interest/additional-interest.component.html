@@ -26,9 +26,9 @@
         <div class="col-lg-2">
           <button class="btn btn-secondary" (click)=copyAdditionalInterest() hover-class="btn-primary"
             [disabled]="!canEdit || readOnlyQuote" click-stop-propagation>Copy</button>&nbsp;
-          <button *ngIf="!aiData.isNew || readOnlyQuote" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+          <button *ngIf="!aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
             [disabled]="!canEdit || readOnlyQuote" hover-class="btn-danger" click-stop-propagation>Delete</button>
-          <button *ngIf="aiData.isNew || readOnlyQuote" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
+          <button *ngIf="aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
             [disabled]="!canEdit || readOnlyQuote" hover-class="btn-warning" click-stop-propagation>Remove</button>
         </div>
       </div>

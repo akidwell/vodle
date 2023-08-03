@@ -1,20 +1,20 @@
-<div *ngIf="policy != undefined">
-<div *ngIf="policy.errorMessagesList.length != 0">
-  <ngb-alert type=danger *ngIf="policy.errorMessagesList.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
+<div *ngIf="policyInfo != undefined">
+<div *ngIf="policyInfo.errorMessagesList.length != 0">
+  <ngb-alert type=danger *ngIf="policyInfo.errorMessagesList.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
 </div>
 </div>
 <rsps-property-detail *ngIf="propertyParent" [classType]="classType" [propertyParent]="propertyParent" [canEdit]="canEdit"
-    [buildings]="policy.endorsementData.endorsementBuilding" [largestExposure]="policy.largestExposure"
-    [lawLimits]="policy.lawLimits" [limitTotal]="policy.limitTotal"
-    [largestTiv]="policy.largestPremTiv" [subjectAmount]="policy.subjectAmounts">
+    [buildings]="policyInfo.endorsementData.endorsementBuilding" [largestExposure]="policyInfo.largestExposure"
+    [lawLimits]="policyInfo.lawLimits" [limitTotal]="policyInfo.limitTotal"
+    [largestTiv]="policyInfo.largestPremTiv" [subjectAmount]="policyInfo.subjectAmounts">
 </rsps-property-detail>
-<rsps-property-building-group *ngIf="policy" [classType]="classType" [propertyParent]="policy" [readOnlyQuote]="false"
-    [buildings]="policy.endorsementData.endorsementBuilding" [canEdit]="canEdit"
-    [buildingCount]="policy.buildingCount" [programId]="programId"
-    [rateEffectiveDate]="policy.rateEffectiveDate"></rsps-property-building-group>
-<rsps-property-building-coverage-edit *ngIf="policy" [propertyParent]="policy"  [canEdit]="canEdit"
-    [buildings]="policy.endorsementData.endorsementBuilding"></rsps-property-building-coverage-edit>
-<rsps-property-building-coverage-group *ngIf="policy" [propertyParent]="policy"  [classType]="classType" [propertyParent]="policy"  [limitTotal]="policy.limitTotal"
+<rsps-property-building-group *ngIf="policyInfo" [classType]="classType" [propertyParent]="policyInfo" [readOnlyQuote]="false"
+    [buildings]="policyInfo.endorsementData.endorsementBuilding" [canEdit]="canEdit"
+    [buildingCount]="policyInfo.buildingCount" [programId]="programId"
+    [rateEffectiveDate]="policyInfo.rateEffectiveDate"></rsps-property-building-group>
+<rsps-property-building-coverage-edit *ngIf="policyInfo" [propertyParent]="policyInfo"  [canEdit]="canEdit"
+    [buildings]="policyInfo.endorsementData.endorsementBuilding"></rsps-property-building-coverage-edit>
+<rsps-property-building-coverage-group *ngIf="policyInfo" [propertyParent]="policyInfo"  [classType]="classType" [propertyParent]="policyInfo"  [limitTotal]="policyInfo.limitTotal"
    [canEdit]="canEdit">
 </rsps-property-building-coverage-group>
 

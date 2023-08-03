@@ -16,7 +16,7 @@
           class="form-control" [required]="canEdit && !program.quoteData.readOnlyQuote" [readonly]="!canEdit || program.quoteData.readOnlyQuote"
           [(ngModel)]="program.quoteData.policyEffectiveDate" name="quoteEffDate" #polEffDate="ngModel"
           (dateChange)="effectiveDateChange()" />
-        <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%"
+        <mat-datepicker-toggle matSuffix [disabled]="!canEdit || program.quoteData.readOnlyQuote" style="display: inline-block; max-width: 20%"
           [for]="quoteEffDateCalendar"> </mat-datepicker-toggle>
         <mat-datepicker #quoteEffDateCalendar></mat-datepicker>
       </div>
@@ -24,7 +24,7 @@
         <input validate-on-change style="display: inline-block; max-width: 80%" matInput [matDatepicker]="quoteExpDateCalendar"
           class="form-control" [required]="canEdit && !program.quoteData.readOnlyQuote" [readonly]="!canEdit || program.quoteData.readOnlyQuote"
           [(ngModel)]="program.quoteData.policyExpirationDate" name="quoteExpDate" #polEffDate="ngModel" />
-        <mat-datepicker-toggle matSuffix [disabled]="!canEdit" style="display: inline-block; max-width: 20%"
+        <mat-datepicker-toggle matSuffix [disabled]="!canEdit || program.quoteData.readOnlyQuote" style="display: inline-block; max-width: 20%"
           [for]="quoteExpDateCalendar"> </mat-datepicker-toggle>
         <mat-datepicker #quoteExpDateCalendar></mat-datepicker>
       </div>

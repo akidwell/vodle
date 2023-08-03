@@ -15,6 +15,8 @@ import { PolicyANIClass } from 'src/app/shared/components/additional-named-insur
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
+import { HistoricRoute } from 'src/app/core/models/historic-route';
 
 @Component({
   selector: 'rsps-policy-information-v2',
@@ -60,6 +62,9 @@ export class PolicyInformationV2Component {
   showBusy = false;
   saveSub!: Subscription;
   programSub!: Subscription;
+  prevSub!: Subscription;
+  previousUrl = '';
+  previousLabel = 'Previous';
 
   accountCollapsed= false;
 
@@ -71,6 +76,7 @@ export class PolicyInformationV2Component {
     private endorsementStatusService: EndorsementStatusService,
     private pageDataService: PageDataService,
     private policyService: PolicyService,
+    private previousRouteService: PreviousRouteService,
     private policySavingService: PolicySavingService,
     private router: Router,
     private navigationService: NavigationService) {
@@ -112,6 +118,11 @@ export class PolicyInformationV2Component {
       }
     }
     );
+
+    this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
+      this.previousUrl = previousUrl;
+      this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
+    });
     console.log(this.policyInfo.canSetCancelDate);
     this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.showBusy = isSaving)
@@ -156,7 +167,16 @@ export class PolicyInformationV2Component {
   routeToInsured(insuredCode: number | null) {
     if(insuredCode !== null) {
       this.navigationService.clearReuse();
+      const subRoute: HistoricRoute = this.createRoute(this.policyInfo);
+      this.pageDataService.lastPolicy = subRoute;
       this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
     }
+  }
+  private createRoute(val: PolicyClass): HistoricRoute {
+    return {
+      url: '/policy-v2/' + val.policyId?.toString() + '/' + val.endorsementData.endorsementNumber?.toString() + '/information',
+      type: 'policy-v2',
+      description: 'policy-v2 ' + val.policyId,
+    };
   }
 }
