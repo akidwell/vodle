@@ -45,7 +45,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
       return this.confirmLeave().then(confirm => {
         //TODO: once all the components listed above have the policyInfo data in the component
         //we can remove the "instance of ____" piece
-        if (confirm && component instanceof PolicyInformationV2Component) {
+        if (confirm && (component instanceof PolicyInformationV2Component || component instanceof PolicyPropertyLocationCoverageComponent)) {
           component.policyInfo.errorMessagesList = [];
         }
         return confirm;

@@ -38,7 +38,6 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
-import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 import { OptionalPremiumModule } from 'src/app/shared/components/optional-premium/optional-premium.module';
 import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
@@ -117,7 +116,6 @@ import { PropertyDetailModule } from 'src/app/shared/components/property-detail/
   providers: [
     provideEnvironmentNgxMask(),
     CanDeactivateGuard,
-    CanDeactivateChildGuard,
     DatePipe,
     FormatDateForDisplay,
     QuoteDataValidationService,

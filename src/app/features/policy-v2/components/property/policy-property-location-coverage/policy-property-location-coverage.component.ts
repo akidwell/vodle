@@ -19,7 +19,7 @@ import { FilteredBuildingsService } from 'src/app/shared/services/filtered-build
 export class PolicyPropertyLocationCoverageComponent extends PropertyBuildingBaseComponent implements OnInit{
   authSub: Subscription;
   canEdit = false;
-  policy!: PolicyClass;
+  policyInfo!: PolicyClass;
   policySub!: Subscription;
   classType = ClassTypeEnum.Policy;
   isSaving = false;
@@ -47,10 +47,10 @@ export class PolicyPropertyLocationCoverageComponent extends PropertyBuildingBas
       (policyData: PolicyClass | null) => {
         if (policyData != null) {
           setTimeout(() => {
-            this.policy = policyData as PolicyClass ?? new PolicyClass();
-            this.programId = this.policy.quoteData.programId;
-            this.rateEffectiveDate = this.policy.policyEffectiveDate;
-            this.propertyParent = this.policy;
+            this.policyInfo = policyData as PolicyClass ?? new PolicyClass();
+            this.programId = this.policyInfo.quoteData.programId;
+            this.rateEffectiveDate = this.policyInfo.policyEffectiveDate;
+            this.propertyParent = this.policyInfo;
             this.filterBuildings();
           });
         }
@@ -68,7 +68,7 @@ export class PolicyPropertyLocationCoverageComponent extends PropertyBuildingBas
 
   getAlerts(): string | null{
     let alert = 'Following fields are invalid: ';
-    this.policy.errorMessagesList.map(x => {
+    this.policyInfo.errorMessagesList.map(x => {
       alert += '<br><li>' + x.message ;
     });
     return alert;

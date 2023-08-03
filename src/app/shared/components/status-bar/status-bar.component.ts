@@ -39,6 +39,7 @@ export class StatusBarComponent implements OnInit {
   quoteAuthSub!: Subscription;
   policyAuthSub!: Subscription;
   lastSubmissionSub!: Subscription;
+  lastPolicySub!: Subscription;
   disabled = true;
   history: HistoricRoute[] = [];
   canEditSubmission = false;
@@ -106,6 +107,7 @@ export class StatusBarComponent implements OnInit {
           this.pageDataService.accountInfo = null;
           this.pageDataService.policyData = null;
           this.pageDataService.lastSubmission = null;
+          this.pageDataService.lastPolicy = null;
           this.pageDataService.quoteData = null;
         }),
         map((event) => {

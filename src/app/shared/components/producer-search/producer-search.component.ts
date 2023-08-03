@@ -20,7 +20,7 @@ export class ProducerSearchService {
     if (query === '') {
       return of([]);
     }
-    const policyDateString = moment.isMoment(policyDate) ? policyDate.format('YYYY-MM-DD HH:mm') : policyDate.toLocaleDateString();
+    const policyDateString = moment.isMoment(policyDate) ? policyDate.format('YYYY-MM-DD HH:mm') : new Date(policyDate).toLocaleDateString();
     const params = new HttpParams().append('query', query ).append('departmentCode', department).append('policyDate', policyDateString);
     return this.http
       .get<FuzzySearchResponse>(this.config.apiBaseUrl + 'api/lookups/producer-branch/', {params}).pipe(

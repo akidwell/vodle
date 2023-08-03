@@ -138,6 +138,7 @@ export class DepartmentClass implements Department, Validation {
         this._isValid = false;
         policyDatesErrorMessage = policyDatesErrorMessage.map(m => m = m + ' for Submission: ' + c.quoteData?.submissionNumber);
         this.productSelectionTabValidation.errorMessages = this.productSelectionTabValidation.errorMessages.concat(policyDatesErrorMessage);
+        this._errorMessages = this._validationResults.errorMessages.concat(this.productSelectionTabValidation.errorMessages);
       }
     });
   }
