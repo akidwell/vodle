@@ -131,7 +131,6 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
     this.invalidList = [];
     this._canBeSaved = true;
     if (this.emptyNumberValueCheck(this._amount)){
-      this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Amount is required for Surcharges and Fees.');
     }
