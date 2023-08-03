@@ -253,7 +253,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     let invalid = false;
     if (this._isDeductibleSelected && !this._deductibleType) {
       invalid = true;
-      this._canBeSaved = false;
+      //this._canBeSaved = false;
       this.invalidList.push('Deductible Type is required');
     }
     this._isValid = this._isValid == true ? invalid : false;
@@ -263,7 +263,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     let invalid = false;
     if (this._isDeductibleSelected && !this._deductibleCode) {
       invalid = true;
-      this._canBeSaved = false;
+      //this._canBeSaved = false;
       this.invalidList.push('Deductible Code is required');
     }
     this._isValid = this._isValid == true ? invalid : false;
@@ -272,7 +272,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     let invalid = false;
     if (this.isSubjectToMaxAmount && (this._subjectToMaxPercent ?? 0) == 0) {
       invalid = true;
-      this._canBeSaved = false;
+      //this._canBeSaved = false;
       this.invalidList.push('Subject to Max Amount is required');
     }
     this._isValid = this._isValid == true ? invalid : false;
