@@ -45,7 +45,7 @@ export class PolicyReinsuranceComponent {
   addPolicyLayer(): void {
     // Seq is 1 if no layers, otherwise increment max layer no.
     const nextLayerSeq = Math.max(0, ...this.endorsement.policyLayers.map(d => d.policyLayerNo)) + 1
-    const policyLayer = new PolicyLayerClass(this.policyId, this.endorsementNumber, nextLayerSeq);
+    const policyLayer = PolicyLayerClass.create(this.policyId, this.endorsementNumber, nextLayerSeq);
     this.endorsement.policyLayers.push(policyLayer);
   }
 

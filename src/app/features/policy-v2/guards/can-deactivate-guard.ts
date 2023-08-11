@@ -35,7 +35,8 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
       console.log(component);
       if (component instanceof PolicyInformationV2Component
           || component instanceof PolicyPropertyLocationCoverageComponent
-          || component instanceof PolicyPropertyMortgageeComponent)
+          || component instanceof PolicyPropertyMortgageeComponent
+          || component instanceof PolicyReinsuranceComponent)
         if(this.validateAndSavePolicy()){
           return true;
         }

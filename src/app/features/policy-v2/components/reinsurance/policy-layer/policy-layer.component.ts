@@ -81,7 +81,7 @@ export class PolicyLayerComponent {
 
   addNewReinsuranceLayer() {
     this.policyLayerCollapsed = false;
-    const reinsuranceLayer = new ReinsuranceClass(this.endorsement.policyId, this.endorsement.endorsementNumber, this.policyLayer.policyLayerNo, this.policyLayer.reinsuranceLayers.length + 1);
+    const reinsuranceLayer = ReinsuranceClass.create(this.policyLayer, this.endorsement.policyId, this.endorsement.endorsementNumber, this.policyLayer.policyLayerNo, this.policyLayer.reinsuranceLayers.length + 1);
     this.policyLayer.reinsuranceData.push(reinsuranceLayer);
   }
 

@@ -6,9 +6,9 @@ import { Deletable } from 'src/app/shared/interfaces/deletable';
 
 export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData, Deletable {
     
-    policyId: number;
-    endorsementNo: number;
-    policyLayerNo: number;
+    policyId: number = -1;
+    endorsementNo: number = -1;
+    policyLayerNo: number = -1;
     policyLayerAttachmentPoint: number = 0;
     invoiceNo: number | null = null;
     copyEndorsementNo: number | null = null;
@@ -19,11 +19,41 @@ export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData,
     isNew: boolean = true;
     reinsuranceLayers: ReinsuranceClass[] = [];
 
-    constructor(policyId: number, endorsementNumber: number, policyLayerNo: number) {
+    constructor(policy?: PolicyLayerData) {
         super()
-        this.policyId = policyId;
-        this.endorsementNo = endorsementNumber;
-        this.policyLayerNo = policyLayerNo;
+        if (policy) {
+            this.existingInit(policy);
+        } else {
+            this.newInit()
+        }
+    }
+
+    existingInit(policyData: PolicyLayerData) {
+        this.policyId = policyData.policyId;
+        this.endorsementNo = policyData.endorsementNo;
+        this.policyLayerNo = policyData.policyLayerNo;
+        this.policyLayerAttachmentPoint = policyData.policyLayerAttachmentPoint;
+        this.invoiceNo = policyData.invoiceNo;
+        this.copyEndorsementNo = policyData.copyEndorsementNo;
+        this.endType = policyData.endType;
+        this.transCode = policyData.transCode;
+        this.transEffectiveDate = policyData.transEffectiveDate;
+        this.transExpirationDate = policyData.transExpirationDate;
+        this.isNew = policyData.isNew;
+        this.reinsuranceLayers = policyData.reinsuranceData.map(r => new ReinsuranceClass(this, r));
+    }
+
+    newInit() {
+        
+    }
+
+    static create(policyId: number, endorsementNumber: number, policyLayerNo: number): PolicyLayerClass {
+        const layer = new PolicyLayerClass();
+        layer.policyId = policyId;
+        layer.endorsementNo = endorsementNumber;
+        layer.policyLayerNo = policyLayerNo;
+        layer.markDirty();
+        return layer;
     }
 
     private _markForDeletion = false;
@@ -89,5 +119,26 @@ export class PolicyLayerClass extends ChildBaseClass implements PolicyLayerData,
             // Update reinsurnace array and RLNs
             this.reinsuranceLayers.forEach((reinsurance, index) => (reinsurance.reinsLayerNo = index + 1))
         }
+    }
+
+    toJSON(): PolicyLayerData {
+        return {
+            policyId: this.policyId,
+            endorsementNo: this.endorsementNo,
+            policyLayerNo: this.policyLayerNo,
+            policyLayerAttachmentPoint: this.policyLayerAttachmentPoint,
+            policyLayerLimit: this.policyLayerLimit,
+            policyLayerPremium: this.policyLayerPremium,
+            invoiceNo: this.invoiceNo,
+            copyEndorsementNo: this.copyEndorsementNo,
+            endType: this.endType,
+            transCode: this.transCode,
+            transEffectiveDate: this.transEffectiveDate,
+            transExpirationDate: this.transExpirationDate,
+            isNew: this.isNew,
+            markForDeletion: this.markForDeletion,
+            isDirty: this.isDirty,
+            reinsuranceData: this.reinsuranceLayers.map(r => r.toJSON())
+        };
     }
 }

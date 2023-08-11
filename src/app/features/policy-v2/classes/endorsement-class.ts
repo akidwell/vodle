@@ -1,5 +1,5 @@
 import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
-import { Endorsement } from '../../policy/models/policy';
+import { Endorsement, PolicyLayerData } from '../../policy/models/policy';
 import { PropertyBuildingCoverageClass } from '../../quote/classes/property-building-coverage-class';
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
 import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
@@ -51,7 +51,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.endorsementBuilding = this.buildingInit(end.endorsementBuilding as PropertyBuilding[]);
     this.endorsementMortgagee = this.mortgageeInit(end.endorsementMortgagee);
     this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest);
-    // this.policyLayers = this.policyLayerInit(end.policyLayers);
+    this.policyLayers = end.policyLayers?.map(p => new PolicyLayerClass(p));
     this.guid = crypto.randomUUID();
   }
 
@@ -113,6 +113,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   validateObject(): ErrorMessage[]{
     this.errorMessagesList = this.validateChildren(this);
 
+    /*
     // Reinsurance validation
     if(this.policyLayers.length == 0 ||
       this.policyLayers[0].reinsuranceLayers.length == 0 ||
@@ -131,6 +132,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     if (totalPremium != this.premium) {
       this.createErrorMessage('Reinsurance layer premiums must total policy premium.');
     }
+    */
 
     return this.errorMessagesList;
   }
@@ -174,7 +176,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       endorsementBuilding: buildings,
       endorsementMortgagee: mortgagees,
       endorsementAdditionalInterest: this.endorsementAdditionalInterest,
-      policyLayers: this.policyLayers
+      policyLayers: this.policyLayers.map(p => p.toJSON())
     };
   }
 

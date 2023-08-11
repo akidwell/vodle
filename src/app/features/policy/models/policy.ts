@@ -8,6 +8,7 @@ import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mor
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { MortgageeData } from '../../quote/models/mortgagee';
 import { PolicyLayerClass } from '../../policy-v2/classes/policy-layer-class';
+import { Deletable } from 'src/app/shared/interfaces/deletable';
 
 
 export interface AccountInformation {
@@ -123,7 +124,7 @@ export interface Endorsement {
   endorsementBuilding: PropertyBuilding[];
   endorsementMortgagee: MortgageeData[];
   endorsementAdditionalInterest: AdditionalInterestClass[];
-  policyLayers: PolicyLayerClass[];
+  policyLayers: PolicyLayerData[];
 }
 
 export interface AdditionalNamedInsuredsResolved {
@@ -183,13 +184,15 @@ export interface PolicyLayerData {
   policyLayerAttachmentPoint: number;
   policyLayerLimit?: number;
   policyLayerPremium?: number;
-  invoiceNo: number| null;
-  copyEndorsementNo: number| null;
-  endType: number| null;
-  transCode: number| null;
-  transEffectiveDate: Date| null;
-  transExpirationDate: Date| null;
+  invoiceNo: number | null;
+  copyEndorsementNo: number | null;
+  endType: number | null;
+  transCode: number | null;
+  transEffectiveDate: Date | null;
+  transExpirationDate: Date | null;
   isNew: boolean;
+  markForDeletion: boolean;
+  isDirty: boolean;
   reinsuranceData: ReinsuranceLayerData[];
 }
 
@@ -208,7 +211,9 @@ export const newPolicyLayer = (policyId: number, endorsementNumber: number, poli
     transEffectiveDate: null,
     transExpirationDate: null,
     reinsuranceData: [],
-    isNew: true
+    isNew: true,
+    markForDeletion: false,
+    isDirty: false
   };
 };
 
@@ -242,6 +247,7 @@ export interface ReinsuranceLayerData {
   maxLayerLimit?: number | null;
   attachmentPoint: number;
   isNew: boolean;
+  markForDeletion: boolean;
 }
 
 export interface PolicyLayerDataResolved {
@@ -278,7 +284,8 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     effectiveDate: null,
     isFacultative: false,
     attachmentPoint: 0,
-    isNew: true
+    isNew: true,
+    markForDeletion: false
   };
 };
 
