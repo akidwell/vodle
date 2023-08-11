@@ -223,7 +223,7 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
             reinsCededPremium: this.reinsCededPremium,
             reinsCededCommRate: this.reinsCededCommRate,
             treatyType: this.treatyType,
-            treatyNo: 1,
+            treatyNo: this.treatyNo,
             subTreatyNo: this.subTreatyNo,
             reinsurerCode: this.reinsurerCode,
             reinsCertificateNo: this.reinsCertificateNo,

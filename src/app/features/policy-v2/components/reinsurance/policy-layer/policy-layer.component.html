@@ -38,7 +38,7 @@
                     mask="percent" suffix="%" style="text-align: right;"
                     [required]="canEdit" [readonly]="reinsurance.treatyNo == 1 || !canEdit"></td>
                 <td>
-                    <ng-select [(ngModel)]="reinsurance.treatyNo"
+                    <ng-select [(ngModel)]="reinsurance.treatyNo" bindValue="treatyNumber"
                         [items]="currentReinsuranceCodes(reinsurance)" (change)="onChangeReinsurnaceCode(reinsurance)"
                         type="text" [clearable]="false"
                         [required]="canEdit" [readonly]="!canEdit">
