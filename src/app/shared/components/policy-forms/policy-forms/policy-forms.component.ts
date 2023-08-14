@@ -41,6 +41,7 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   saveSub!: Subscription;
   isBusy = false;
   private _forms!: PolicyFormClass[];
+  readOnlyQuote = false;
 
   @ViewChild('modal') private groupEditComponent!: PolicyFormVariableComponent;
   @Input() quote!: QuoteClass;
@@ -66,6 +67,9 @@ export class PolicyFormsComponent extends SharedComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
+    if(this.quote != null){
+      this.readOnlyQuote = this.quote.readOnlyQuote;
+    }
     this.loadExpiring();
     this.saveSub = this.quoteSavingService.isSaving$.subscribe(
       (isSaving) => (this.isSaving = isSaving)

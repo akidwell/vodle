@@ -117,6 +117,7 @@ export class GeneralRemarksGroupComponent extends SharedComponentBase implements
       newRemark.remarkId = Math.max(...this.generalRemarks.map(v => v.remarkId === null ? 0 : v.remarkId)) + 1;
       newRemark.sortSequence = newRemark.remarkId;
     }
+    this.quote.markDirty();
     this.quote.generalRemarksData?.push(newRemark);
     const lastAdded = this.quote.generalRemarksData.length - 1;
     this.quote.generalRemarksData[lastAdded].isDirty = true;

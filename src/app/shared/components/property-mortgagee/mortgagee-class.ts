@@ -101,7 +101,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Quo
     this.canBeSaved = true;
     this.isValid = true;
     this.errorMessagesList = [];
-    //TODO: ADD REST OF createErrorMessages for policy side
+    
     if (this.emptyStringValueCheck(this._mortgageHolder)){
       this.canBeSaved = false;
       this.isValid = false;
@@ -112,36 +112,43 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Quo
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Premises/Building Number is required');
+      this.createErrorMessage('Premises/Building Number is required');
     }
     if (this.emptyStringValueCheck(this._street1)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Street is required');
+      this.createErrorMessage('Mortgagee - Street is required');
     }
     if (this.emptyStringValueCheck(this._city)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - City is required');
+      this.createErrorMessage('Mortgagee - City is required');
     }
     if (this.emptyStringValueCheck(this._state)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - State is required');
+      this.createErrorMessage('Mortgagee - State is required');
     }
     if (this.emptyStringValueCheck(this._zip)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Zip is required');
+      this.createErrorMessage('Mortgagee - Zip is required');
     }
     if (this.emptyStringValueCheck(this._mortgageeType?.toString())){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Type is required');
+      this.createErrorMessage('Mortgagee - Type is required');
     }
     if (this.isDuplicate){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Duplicate Mortgagees exist');
+      this.createErrorMessage('Duplicate Mortgagees exist');
     }
     this.errorMessages = this.invalidList;
   }

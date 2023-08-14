@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="col-lg-6" style="padding-top:10px" (click)="userDefinedPopup()">
-          <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined Warranty</a>
+          <a *ngIf="!quote.readOnlyQuote" style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined Warranty</a>
         </div>
       </div>
     </div>
@@ -50,11 +50,11 @@
               </tr>
               <tr>
                 <td style="text-align:center; width: 72px;">
-                  <fa-icon class="faEdit fa-xl pointer" [icon]="faEdit" (click)="editWarrantyPopup(sub)" ngbTooltip="Edit" style="cursor: pointer"/>
+                  <fa-icon *ngIf="!quote.readOnlyQuote" class="faEdit fa-xl pointer" [icon]="faEdit" (click)="editWarrantyPopup(sub)" ngbTooltip="Edit" style="cursor: pointer"/>
                 </td>
                 <td style="text-align:center; width:1%; vertical-align:middle;">
                   <input validate-on-change type="checkbox" class="form-check-input"
-                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : !sub.isIncluded && sub.ysnIsCommon ? 'common-warranty' : ''" [readonly]="!canEdit" [ngbTooltip]="sub.ysnIsCommon ? 'Is Common Warranty' : ''"
+                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : !sub.isIncluded && sub.ysnIsCommon ? 'common-warranty' : ''" [readonly]="!canEdit || quote.readOnlyQuote" [ngbTooltip]="sub.ysnIsCommon ? 'Is Common Warranty' : ''"
                     [(ngModel)]="sub.isIncluded" name="included" click-stop-propagation>
                 </td>
                 <td style="vertical-align:middle;">

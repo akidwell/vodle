@@ -16,6 +16,7 @@ import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quot
 import { PolicyValidationService } from 'src/app/features/policy-v2/services/policy-validation-service/policy-validation.service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PropertyAdditionalInterestBaseComponent } from '../additional-interest-base-component';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 @Component({
   selector: 'rsps-additional-interest-group',
@@ -45,15 +46,9 @@ export class AdditionalInterestGroupComponent extends PropertyAdditionalInterest
   @Input() public canEdit = false;
   @Input() public readOnlyQuote!: boolean;
   @Input() public classType!: ClassTypeEnum;
+  @Input() propertyParent!: PropertyQuoteClass | PolicyClass;
 
   ngOnInit(): void {
-    this.programSub = this.pageDataService.selectedProgram$.subscribe(
-      (selectedProgram: ProgramClass | null) => {
-        this.program = selectedProgram;
-        if (this.program?.quoteData instanceof PropertyQuoteClass && this.program?.quoteData?.propertyQuoteAdditionalInterestList){
-          this.aiData = this.program?.quoteData?.propertyQuoteAdditionalInterestList;
-        }
-      });
     this.collapsed = false;
   }
   isValid(): boolean {
@@ -100,9 +95,7 @@ export class AdditionalInterestGroupComponent extends PropertyAdditionalInterest
   addNewAdditionalInterest(): void {
     const mort: AdditionalInterestClass = new AdditionalInterestClass();
     mort.isNew = true;
-    this.aiData?.push(mort);
-    ///this.program?.quoteData?.validate();
-    // this.quoteDataValidationService.updateQuoteValidations(this.program?.quoteData || null);
+    this.propertyParent.addAdditionalInterest(mort);
     this.collapsed = false;
   }
 

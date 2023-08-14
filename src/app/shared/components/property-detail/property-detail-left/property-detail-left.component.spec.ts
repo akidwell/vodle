@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuotePropertyDetailLeftComponent } from './quote-property-detail-left.component';
+import { PropertyDetailLeftComponent } from './property-detail-left.component';
 
 describe('QuotePropertyDetailLeftComponent', () => {
-  let component: QuotePropertyDetailLeftComponent;
-  let fixture: ComponentFixture<QuotePropertyDetailLeftComponent>;
+  let component: PropertyDetailLeftComponent;
+  let fixture: ComponentFixture<PropertyDetailLeftComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ QuotePropertyDetailLeftComponent ]
+      declarations: [ PropertyDetailLeftComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuotePropertyDetailLeftComponent);
+    fixture = TestBed.createComponent(PropertyDetailLeftComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

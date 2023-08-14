@@ -352,7 +352,6 @@ export class insuredANI implements AdditionalNamedInsured {
 export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedInsured, Deletable {
   onGuidNewMatch(T: PolicyANIClass): void {
     this.addInsuredCode = T.addInsuredCode;
-    this._name = T.name;
     this.isNew = false;
     return;
   }

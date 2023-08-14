@@ -113,6 +113,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   validateObject(): ErrorMessage[]{
     this.errorMessagesList = this.validateChildren(this);
 
+    // Uncomment when Reinsurance Validation is ready
     /*
     // Reinsurance validation
     if(this.policyLayers.length == 0 ||
@@ -160,7 +161,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     (this.endorsementBuilding as PropertyPolicyBuildingClass[]).forEach(c => buildings.push(c.toJSON()));
     const mortgagees: MortgageeData[] = [];
     (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
-    console.log('line135',mortgagees);
+    const additionalInterests: AdditionalInterestData[] = [];
+    (this.endorsementAdditionalInterest as AdditionalInterestClass[]).forEach(c => additionalInterests.push(c.toJSON()));
     return {
       policyId: this.policyId,
       endorsementNumber: this.endorsementNumber,

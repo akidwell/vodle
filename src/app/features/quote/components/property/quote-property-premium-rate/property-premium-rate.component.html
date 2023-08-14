@@ -16,18 +16,18 @@
     </div>
     <div class="col-lg-1">
         <label for="finalRate" class="form-label" title="Final Rate">Final Rate</label>
-        <input type="text" class="form-control right" id="finalRate" [readonly]="!canEdit" name="finalRate"
+        <input type="text" class="form-control right" id="finalRate" [readonly]="!canEdit || readOnlyQuote" name="finalRate"
             string-to-currency [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" validate-on-change
             [(ngModel)]="rate.premiumRate" #finalRate="ngModel">
     </div>
     <div class="col-lg-2">
         <label for="flatRate" class="form-label" title="Flat Rate">Flat Rate</label>
         <input type="checkbox" class="form-check-input" id="flatRate" [(ngModel)]="rate.isFlatRate" name="flatRate" validate-on-change
-            [readonly]="!canEdit">
+            [readonly]="!canEdit || readOnlyQuote">
     </div>
     <div class="col-lg-2">
         <label for="Premium" class="form-label" title="Premium">Premium</label>
-        <input type="text" class="form-control right" id="Premium" [readonly]="!canEdit" [required]="canEdit" validate-on-change
+        <input type="text" class="form-control right" id="Premium" [readonly]="!canEdit || readOnlyQuote" [required]="canEdit&& !readOnlyQuote" validate-on-change
             string-to-currency [allowNegative]="false" name="Premium" [(ngModel)]="rate.premium" #Premium="ngModel">
     </div>
 </div>

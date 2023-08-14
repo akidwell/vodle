@@ -65,7 +65,7 @@
             </div>
             <div class="empty-row"></div>
             <div class="row">
-                <div class="col-lg-2">
+                <div *ngIf="!readOnlyQuote" class="col-lg-2">
                     <button class="btn btn-secondary" (click)=copy() hover-class="btn-primary"
                         [disabled]="!canEdit">Copy</button>
                     <button *ngIf="!coverage.isNew" class="btn btn-secondary margin-left"
