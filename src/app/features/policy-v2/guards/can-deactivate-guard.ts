@@ -12,7 +12,6 @@ import { PolicyPropertyLocationCoverageComponent } from '../components/property/
 import { PolicyPropertyMortgageeComponent } from '../components/property/policy-property-mortgagee/policy-property-mortgagee.component';
 import { PolicySavingService } from '../services/policy-saving-service/policy-saving.service';
 import { PolicyValidationService } from '../services/policy-validation-service/policy-validation.service';
-import { PolicyClass } from '../classes/policy-class';
 
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Component> {
@@ -34,7 +33,10 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
     }
     else {
       console.log(component);
-      if (component instanceof PolicyInformationV2Component || component instanceof PolicyPropertyLocationCoverageComponent || component instanceof PolicyPropertyMortgageeComponent)
+      if (component instanceof PolicyInformationV2Component
+          || component instanceof PolicyPropertyLocationCoverageComponent
+          || component instanceof PolicyPropertyMortgageeComponent
+          || component instanceof PolicyReinsuranceComponent)
         if(this.validateAndSavePolicy()){
           return true;
         }

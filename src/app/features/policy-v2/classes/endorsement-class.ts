@@ -1,6 +1,5 @@
 import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
-import { Endorsement } from '../../policy/models/policy';
-import { PropertyBuildingClass } from '../../quote/classes/property-building-class';
+import { Endorsement, PolicyLayerData } from '../../policy/models/policy';
 import { PropertyBuildingCoverageClass } from '../../quote/classes/property-building-coverage-class';
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
 import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
@@ -14,6 +13,7 @@ import { ParentBaseClass } from './base/parent-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PropertyBuildingCoverage } from '../../quote/models/property-building-coverage';
 import { Code } from 'src/app/core/models/code';
+import { PolicyLayerClass } from './policy-layer-class';
 
 export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
@@ -43,6 +43,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   endorsementBuilding: PropertyPolicyBuildingClass[] = [];
   endorsementMortgagee: MortgageeClass[] = [];
   endorsementAdditionalInterest: AdditionalInterestClass[] = [];
+  policyLayers: PolicyLayerClass[] = [];
 
   existingInit(end: Endorsement) {
     this.endorsementNumber = end.endorsementNumber;
@@ -50,6 +51,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.endorsementBuilding = this.buildingInit(end.endorsementBuilding as PropertyBuilding[]);
     this.endorsementMortgagee = this.mortgageeInit(end.endorsementMortgagee);
     this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest);
+    this.policyLayers = end.policyLayers?.map(p => new PolicyLayerClass(p));
     this.guid = crypto.randomUUID();
   }
 
@@ -62,6 +64,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     }
     return additionalInterests;
   }
+
   mortgageeInit(data: MortgageeData[]) {
     const mortgagees: MortgageeClass[] = [];
     if(data){
@@ -91,12 +94,50 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.guid = crypto.randomUUID();
   }
 
+  /**
+   * Deletes a policy layer and updates the layer number of remaining policy layers.
+   * @param policyLayer The policy layer to delete
+   */
+  deletePolicyLayer(policyLayer: PolicyLayerClass) {
+    const index = this.policyLayers.indexOf(policyLayer);
+    if (index >= 0) {
+      policyLayer.markForDeletion = true;
+      this.policyLayers.splice(index, 1);
+      this.policyLayers.forEach((layer, index) => {
+        layer.policyLayerNo = index + 1;
+        layer.reinsuranceData.forEach(x => x.policyLayerNo = index + 1);
+      })
+    }
+  }
+
   validateObject(): ErrorMessage[]{
-    console.log('in end validat' );
-    this.errorMessagesList = [];
     this.errorMessagesList = this.validateChildren(this);
+
+    // Uncomment when Reinsurance Validation is ready
+    /*
+    // Reinsurance validation
+    if(this.policyLayers.length == 0 ||
+      this.policyLayers[0].reinsuranceLayers.length == 0 ||
+      this.policyLayers[0].reinsuranceLayers[0].attachmentPoint != this.attachmentPoint) {
+      this.createErrorMessage('Attachment point must equal policy attachment point.');
+    }
+    const totalLimit = this.policyLayers
+      .map(p => p.policyLayerLimit)
+      .reduce((sum, summand) => sum + summand, 0);
+    if (totalLimit != this.limit) {
+      this.createErrorMessage('Reinsurance layer limits must total policy limit.');
+    }
+    const totalPremium = this.policyLayers
+      .map(p => p.policyLayerPremium)
+      .reduce((sum, summand) => sum + summand, 0);
+    if (totalPremium != this.premium) {
+      this.createErrorMessage('Reinsurance layer premiums must total policy premium.');
+    }
+    */
+
     return this.errorMessagesList;
   }
+
   get buildingList(): Code[] {
     const buildings: Code[] = [];
     const all: Code = {key: 0, code: 'All', description: 'All'};
@@ -108,11 +149,13 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     });
     return buildings;
   }
-  onGuidNewMatch(T: ChildBaseClass): void {
 
+  onGuidNewMatch(T: ChildBaseClass): void {
   }
+
   onGuidUpdateMatch(T: ChildBaseClass): void {
   }
+
   toJson(): Endorsement {
     const buildings: PropertyBuilding[] = [];
     (this.endorsementBuilding as PropertyPolicyBuildingClass[]).forEach(c => buildings.push(c.toJSON()));
@@ -134,9 +177,11 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       attachmentPoint: this.attachmentPoint,
       endorsementBuilding: buildings,
       endorsementMortgagee: mortgagees,
-      endorsementAdditionalInterest: this.endorsementAdditionalInterest
+      endorsementAdditionalInterest: this.endorsementAdditionalInterest,
+      policyLayers: this.policyLayers.map(p => p.toJSON())
     };
   }
+
   buildingsToJson(): PropertyBuilding[] {
     const buildings: PropertyBuilding[] = [];
     const coverages: PropertyBuildingCoverage[] = [];

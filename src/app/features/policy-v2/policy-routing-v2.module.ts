@@ -23,7 +23,7 @@ const routes: Routes = [
     resolve: {
       policyInfoData: PolicyResolver,
       accountData: AccountInformationResolver,
-      endorsementData: EndorsementResolver,
+      endorsementData: EndorsementResolver, // Kept for backwards compatibility, use endorsement in policyInfoData.
       status: EndorsementStatusResolver
     },
     children: [
@@ -32,7 +32,7 @@ const routes: Routes = [
       { path: 'coverages', component:  PolicyPropertyLocationCoverageComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'mortgagee', component: PolicyPropertyMortgageeComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'premium', component: PolicyPremiumComponent },
-      { path: 'reinsurance', component: PolicyReinsuranceComponent },
+      { path: 'reinsurance', component: PolicyReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'summary', component: PolicySummaryComponent},
 
     ],
