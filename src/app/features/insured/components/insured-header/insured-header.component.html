@@ -56,6 +56,16 @@
           [icon]="faLeft"
         ></fa-icon>
       </button>
+      <button  type="button"
+      *ngIf="pageDataService.lastPolicy"
+      class="btn btn-primary"
+      style="margin-left:8px; padding:5px"
+      (click)="navigateToHistoricRoute(pageDataService.lastPolicy)"
+      title="Return to Policy">
+        <fa-icon
+          [icon]="faLeft"
+        ></fa-icon>
+      </button>
     </div>
   </div>
   <rsps-insured-duplicates #modal></rsps-insured-duplicates>

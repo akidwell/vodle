@@ -1,6 +1,6 @@
 
-<rsps-mortgagee-group *ngIf="quote" [classType]="classType" [mortgageeData]="quote.propertyQuoteMortgageeList" [propertyParent]="quote" [readOnlyQuote]="false"></rsps-mortgagee-group>
-<rsps-additional-interest-group *ngIf="quote" [classType]="classType" [propertyParent]="quote" [readOnlyQuote]="false"></rsps-additional-interest-group>
+<rsps-mortgagee-group *ngIf="quote" [classType]="classType" [mortgageeData]="quote.propertyQuoteMortgageeList" [propertyParent]="quote" [readOnlyQuote]="quote.readOnlyQuote"></rsps-mortgagee-group>
+<rsps-additional-interest-group *ngIf="quote" [aiData]="quote.propertyQuoteAdditionalInterestList" [classType]="classType" [propertyParent]="quote" [readOnlyQuote]="quote.readOnlyQuote"></rsps-additional-interest-group>
 <div *ngIf="isSaving">
   <rsps-busy message="Saving..."></rsps-busy>
 </div>

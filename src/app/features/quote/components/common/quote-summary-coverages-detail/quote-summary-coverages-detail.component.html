@@ -1,3 +1,4 @@
+<div *ngIf="quoteData">
 <div class="row">
   <div class="col-lg-6">
     <label for="policyCoverage" class="form-label" title="Policy Coverage">Policy Coverage</label>
@@ -11,10 +12,11 @@
   </div>
   <div class="col-lg-2">
     <label for="brokerPercent" class="form-label" title="brokerPercent">Commission</label>
-    <input validate-on-change type="text" class="form-control right" id="brokerPercent" name="brokerPercent"
-      (change)="this.quoteData?.calculatePropertyPremiums()" [readonly]="!canEdit" mask="percent" suffix="%"
-      [dropSpecialCharacters]="false" [(ngModel)]="quoteData && quoteData.commissionRate" #brokerPercent="ngModel" />
+    <input validate-on-change type="text" class="form-control right" id="brokerPercent" name="brokerPercent" [fullValidate]="true"
+      (change)="this.quoteData.calculatePropertyPremiums()" [readonly]="!canEdit || quoteData.readOnlyQuote" mask="percent" suffix="%" [required]="canEdit && !quoteData.readOnlyQuote"
+      [dropSpecialCharacters]="false" [(ngModel)]="quoteData.commissionRate" #brokerPercent="ngModel" />
   </div>
+</div>
 </div>
 <div class="row">&nbsp;</div>
 <div *ngIf="quoteData">
@@ -47,7 +49,7 @@
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <input type="checkbox" class="form-check-input" id="coverageAccepted" [(ngModel)]="coverage.isAccepted"
         validate-on-change (change)="this.quoteData.calculatePropertyPremiums()" name="coverageAccepted"
-        [readonly]="!canEdit" #coverageAccepted="ngModel" />
+        [readonly]="!canEdit || quoteData.readOnlyQuote" #coverageAccepted="ngModel" />
     </div>
     <div class="col-lg-2">
       <input type="text" *ngIf="program.quoteData" class="form-control right" id="additionalPremium" string-to-currency
@@ -80,14 +82,14 @@
     <div class="col-lg-5"></div>
     <div class="col-lg-1" style="text-align: center; vertical-align: middle;">
       <input type="checkbox" [fullValidate]="true" class="form-check-input" id="overridePremium"
-        class="form-check-input" validate-on-change [readonly]="!canEdit"
+        class="form-check-input" validate-on-change [readonly]="!canEdit || quoteData.readOnlyQuote"
         style="text-align: center; vertical-align: middle;" [(ngModel)]="quoteData.overridePremium"
         (change)="this.quoteData.calculatePropertyPremiums()" #overridePremium="ngModel" id="overridePremium" />
     </div>
     <div class="col-lg-2">
-      <input type="text" class="form-control right" id="propertyPremium" [(ngModel)]="quoteData.propertyPremium"
+      <input type="text" class="form-control right" id="propertyPremium" [(ngModel)]="quoteData.propertyPremium" [required]="quoteData.overridePremium"
         (change)="this.quoteData.calculatePropertyPremiums()" #propertyPremium="ngModel" name="premium"
-        validate-on-change [readonly]="!canEdit || !quoteData.overridePremium" string-to-currency />
+        validate-on-change [readonly]="!canEdit || !quoteData.overridePremium || quoteData.readOnlyQuote" string-to-currency />
     </div>
     <div class="col-lg-2">
       <input type="text" class="form-control right" id="flatPremium" [(ngModel)]="quoteData.flatPremium"
@@ -130,18 +132,18 @@
         <div class="col-lg-1">
           <input validate-on-change [fullValidate]="true" type="radio" class="form-check-input"
             id="terrorismCoverageSelected" (change)="this.quoteData.calculatePropertyPremiums()" [value]="true"
-            [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit"
+            [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit || quoteData.readOnlyQuote"
             #terrorismCoverageSelected="ngModel" />
         </div>
         <div class="col-lg-1">
           <input validate-on-change [fullValidate]="true" type="radio" class="form-check-input"
             id="terrorismCoverageSelected" (change)="this.quoteData.calculatePropertyPremiums(); " [value]="false"
-            [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit"
+            [(ngModel)]="quoteData.terrorismCoverageSelected" [readonly]="!canEdit || quoteData.readOnlyQuote"
             #terrorismCoverageSelected="ngModel" />
         </div>
         <div class="col-lg-2">
           <input validate-on-change type="text" class="form-control right" id="terrorismPremium" [disabled]="!canEdit"
-            [readonly]="!canEdit" string-to-currency (change)="this.quoteData.calculatePropertyPremiums()"
+            [readonly]="!canEdit || quoteData.readOnlyQuote" string-to-currency (change)="this.quoteData.calculatePropertyPremiums()"
             name="terrorismPremium" [(ngModel)]="quoteData.terrorismPremium" #terrorismPremium="ngModel" />
         </div>
       </div>
@@ -187,7 +189,7 @@
       <div class="row">
         <div class="col-lg-2" style="text-align: center; vertical-align: middle;">
           <input type="checkbox" [fullValidate]="true" class="form-check-input" id="overrideMinPolPrem"
-            class="form-check-input" validate-on-change [readonly]="!canEdit"
+            class="form-check-input" validate-on-change [readonly]="!canEdit || quoteData.readOnlyQuote"
             (change)="this.quoteData.calculateMinEarnedPrem()" [(ngModel)]="quoteData.overrideMinPolPrem"
             #overrideMinPolPrem="ngModel" id="autoCalc" />
         </div>

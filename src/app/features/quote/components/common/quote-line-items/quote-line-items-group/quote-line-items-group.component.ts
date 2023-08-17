@@ -18,6 +18,7 @@ export class QuoteLineItemsGroupComponent implements OnInit {
   @Input() public riskState!: string| null;
   @Input() public effectiveDate!: Date | Moment | null;
   @Input() public classType!: ClassTypeEnum;
+  @Input() public readOnlyQuote!: boolean;
   deleteSub!: Subscription;
   authSub: Subscription;
   canEdit = false;

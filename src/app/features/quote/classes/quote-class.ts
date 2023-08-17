@@ -330,11 +330,9 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this._validated = value;
   }
 
-  readonlyQuote = false;
   get readOnlyQuote(): boolean {
     return this.status == 9;
   }
-
 
   private _policyMod = '--';
   get policyMod(): string {

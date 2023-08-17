@@ -18,8 +18,10 @@ export class PageDataService {
   private _policyData: PolicyClass | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
+  private _lastPolicy: HistoricRoute | null = null;
   private _selectedProgram: ProgramClass | null = null;
   private _resetLastSubmission = true;
+  private _resetLastPolicy = true;
   private _readOnly = false;
   private _noData = true;
 
@@ -101,6 +103,19 @@ export class PageDataService {
     }
     if (val) {
       this._resetLastSubmission = false;
+    }
+  }
+  get lastPolicy(): HistoricRoute | null {
+    return this._lastPolicy;
+  }
+  set lastPolicy(val: HistoricRoute | null) {
+    if (this._resetLastPolicy) {
+      this._lastPolicy = val;
+    } else {
+      this._resetLastPolicy = true;
+    }
+    if (val) {
+      this._resetLastPolicy = false;
     }
   }
 

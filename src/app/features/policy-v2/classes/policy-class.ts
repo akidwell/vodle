@@ -64,6 +64,44 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   invalidList= '';
   additionalInterestList: AdditionalInterestClass[] = [];
   mortgageeList: MortgageeClass[] = [];
+  readOnlyQuote = false;
+
+  // top level - property detail right
+  // comes from the quote rates
+  private _classCode! : number | null;
+
+  get classCode() : number | null {
+    return this._classCode;
+  }
+  set classCode(value: number | null) {
+    this._classCode = value == 0 ? null : value;
+    this.markDirty();
+  }
+
+  // building level
+  private _cspCode! : Code;
+
+  get cspCode() : Code {
+    return this._cspCode;
+  }
+  set cspCode(value: Code) {
+    this._cspCode = value;
+    if(value == null){
+      this.endorsementData.endorsementBuilding.map(x => x.cspCode = null);
+    } else {
+      this.endorsementData.endorsementBuilding.map(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
+    }
+  }
+  private _riskDescription: string | null = null;
+
+  get riskDescription() : string | null {
+    return this._riskDescription;
+  }
+  set riskDescription(value: string | null) {
+    this._riskDescription = value;
+    this.markDirty();
+    // this._isDirty = true;
+  }
 
   private _commRate : number | null = null;
   get commRate() : number | null {
@@ -229,6 +267,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.guid = policy.guid || crypto.randomUUID();
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
+    this._classCode = policy.classCode;
+    this.calculateSubjectAmounts();
+    this.calculateLargestPremTiv();
+    this.calculateLawLimits();
+    this.calculateLargestExposure();
     // this.setReadonlyFields();
     // this.setRequiredFields();
   }
@@ -250,12 +293,13 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     newCoverage.guid = crypto.randomUUID();
     building.endorsementBuildingCoverage.push(newCoverage);
     this.markDirty();
-    return newCoverage;
     //this.filterCoverages();
-    // this.propertyQuote.calculateSubjectAmounts();
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
+    this.calculateSubjectAmounts();
+    this.calculateLargestPremTiv();
+    this.calculateLargestExposure();
+    this.calculateLawLimits();
+    return newCoverage;
+
   }
   validateObject(): ErrorMessage[]{
     this.resetErrorMessages();
@@ -348,7 +392,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
     console.log(this);
     this.endorsementData.endorsementBuilding.map((element) => {
-      element.propertyQuoteBuildingCoverage.map((x) => {
+      element.endorsementBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
         subAm.subject = Number(element.subjectNumber);
         subAm.limit = x.limit;
@@ -367,11 +411,12 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     return this.endorsementData.endorsementBuilding.filter(x=> !x.markForDeletion).length ?? 0;
   }
 
-  addAI(ai: AdditionalInterestClass){
+  addAdditionalInterest(ai: AdditionalInterestClass){
     ai.markDirty();
     this.markDirty();
-    this.endorsementData.endorsementAdditionalInterest.push(ai);
     ai.isNew = true;
+    this.endorsementData.endorsementAdditionalInterest.push(ai);
+    // this.endorsementData.markDirty();
   }
 
   deleteAI(ai: AdditionalInterestClass){
@@ -438,14 +483,14 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   calculateLargestPremTiv(){
     let largest = 0;
     this.endorsementData.endorsementBuilding.map(x => {
-      if (x.propertyQuoteBuildingCoverage.length == 0){
+      if (x.endorsementBuildingCoverage.length == 0){
         this._largestPremTiv = 0;
       } else{
 
         const premAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
 
         this.endorsementData.endorsementBuilding.map((element) => {
-          element.propertyQuoteBuildingCoverage.map((x) => {
+          element.endorsementBuildingCoverage.map((x) => {
             const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
             subAm.subject = element.premisesNumber;
             subAm.limit = x.limit;
@@ -599,6 +644,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       coinsurancePercentage: this.coinsurancePercentage,
       productManufactureDate: this.productManufactureDate,
       submissionNumber: this.submissionNumber,
+      classCode: this.classCode,
       guid: this.guid
     };
   }

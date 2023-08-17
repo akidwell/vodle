@@ -27,6 +27,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
 
   quoteData!: PropertyQuoteClass | null;
   @Input() program!: ProgramClass | null;
+  readOnlyQuote = false;
 
   collapsed = true;
   firstExpand = true;
@@ -67,6 +68,9 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   }
   ngOnInit(): void {
     this.quoteData = this.program?.quoteData instanceof PropertyQuoteClass ? this.program.quoteData : null;
+    if (this.quoteData != null) {
+      this.readOnlyQuote = this.quoteData.readOnlyQuote;
+    }
     if (this.optionalPremiumData.isNew) {
       this.collapseExpand(false);
       this.focus();

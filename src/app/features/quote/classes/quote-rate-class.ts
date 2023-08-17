@@ -90,7 +90,7 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     this._canBeSaved = true;
     this._isValid = true;
     const amountValidation = this.validateAmount();
-    if (amountValidation) {
+    if (amountValidation != null) {
       this._isValid = false;
       this.invalidList.push(amountValidation);
     }

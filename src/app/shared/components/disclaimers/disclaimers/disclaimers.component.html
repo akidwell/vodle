@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6" style="padding-top:10px" (click)="userDefinedPopup()">
-                    <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined
+                    <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer" *ngIf="!quote.readOnlyQuote">Add User Defined
                         Disclaimer</a>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                             <td style="text-align:center; width:1%;">
                                 <input validate-on-change [fullValidate]="true" type="checkbox" class="form-check-input" id="included"
                                     [ngClass]="!dis.isIncluded && dis.ysnDefault ? 'mandatory' : ''"
-                                    [readonly]="!canEdit" [(ngModel)]="dis.isIncluded" name="included"
+                                    [readonly]="!canEdit || quote.readOnlyQuote" [(ngModel)]="dis.isIncluded" name="included"
                                     click-stop-propagation>
                             </td>
                             <!-- <td style="border-left-style: hidden;width:1%;">

@@ -8,11 +8,11 @@
     <div class="card-body">
       <div class="row">
         <div class="grid-container">
-          <rsps-quote-property-detail-left [quote]="quote" [buildings]="quote.propertyQuoteBuildingList"
+          <rsps-property-detail-left [propertyParent]="propertyParent" [buildings]="buildings"
             [limitTotal]="limitTotal" [largestTiv]="largestTiv" [largestExposure]="largestExposure"
             [lawLimits]="lawLimits" [subjectAmount]="subjectAmount" [canEdit]="canEdit">
-          </rsps-quote-property-detail-left>
-          <rsps-quote-property-detail-right [quote]="quote" [canEdit]="canEdit" [rateEffectiveDate]="quote.rateEffectiveDate"/>
+          </rsps-property-detail-left>
+          <rsps-property-detail-right [propertyParent]="propertyParent" [canEdit]="canEdit" [rateEffectiveDate]="propertyParent.rateEffectiveDate"/>
         </div>
       </div>
     </div>

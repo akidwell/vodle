@@ -14,7 +14,7 @@ export interface PropertyQuote {
   propertyQuoteDeductibleList?: PropertyDeductible[];
   propertyQuoteBuildingList?: PropertyBuilding[];
   //propertyQuoteMortgageeList?: MortgageeData[];
-  propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
+  // propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
   propertyQuoteBuildingOptionalCoverage?: QuoteOptionalPremium[];
   propertyQuoteDeductible?: PropertyDeductible[];
   propertyQuoteBuilding?: PropertyBuilding[];

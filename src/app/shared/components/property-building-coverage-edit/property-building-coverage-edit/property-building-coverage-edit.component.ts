@@ -28,6 +28,14 @@ export class PropertyBuildingCoverageEditComponent {
     }
     return hasCoverages;
   }
+
+  get readOnlyQuote(): boolean{
+    if(this.propertyParent instanceof PropertyQuoteClass){
+      return this.propertyParent.readOnlyQuote;
+    } else {
+      return false;
+    }
+  }
   async groupEdit() {
     return await this.groupEditComponent.open(this.buildings);
   }

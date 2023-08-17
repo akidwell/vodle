@@ -16,7 +16,7 @@
       </div>
         <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
           <div *ngFor="let item of mortgageeData; let i = index">
-            <rsps-mortgagee (copyExistingMortgagee)=copyExistingMortgagee($event)
+            <rsps-mortgagee (copyExistingMortgagee)=copyExistingMortgagee($event) [readOnlyQuote]="readOnlyQuote"
               (deleteExistingMortgagee)=deleteExistingMortgagee($event) [mortgagee]=mortgageeData [mortgageeData]=item>
             </rsps-mortgagee>
           </div>
@@ -25,7 +25,7 @@
   </div>
   <div class="card-footer">
     <div id="mortgageeFooter">
-      <button class="footer-button" (click)="addNewMortgagee();">Add Mortgagee</button>
+      <button class="footer-button" *ngIf="!readOnlyQuote" (click)="addNewMortgagee();">Add Mortgagee</button>
       <div class="footer-count">Mortgagees: {{this.mortgageeData.length}}</div>
     </div>
   </div>

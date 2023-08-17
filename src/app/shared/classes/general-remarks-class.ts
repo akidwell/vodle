@@ -37,6 +37,7 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
   }
   set remark(value: string | null) {
     this._remark = value;
+    this.markDirty();
   }
 
   get validationResults(): QuoteValidationClass {
@@ -83,25 +84,32 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
 
   validate(){
     this._validationResults.resetValidation();
-    if (this._validateOnLoad || this.isDirty){
-      //TODO: class based validation checks
-      this.classValidation();
-      this._validateOnLoad = false;
-    }
+    //TODO: class based validation checks
+    this.classValidation();
+    this._validateOnLoad = false;
+
     this._validationResults.mapValues(this);
     return this._validationResults;
   }
 
-    abstract classValidation(): void;
-
-    markClean() {
-      this._isDirty = false;
+  classValidation() {
+    this.invalidList = [];
+    this._canBeSaved = true;
+    console.log('line98',this.remark);
+    if (this.remark == null || this.remark == ''){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Remark is required');
     }
-    markStructureClean(): void {
-      this.markClean();
-    }
-    markDirty() {
-      this._isDirty = true;
-    }
+  }
+  markClean() {
+    this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
+  }
+  markDirty() {
+    this._isDirty = true;
+  }
     abstract toJSON(): GeneralRemarks;
 }

@@ -38,6 +38,7 @@ export class PolicyFormsSearchComponent extends SharedComponentBase implements O
 
   @Input() quote!: QuoteClass;
   @Output() refreshForms = new EventEmitter();
+  @Input() readOnlyQuote!: boolean;
 
   constructor(
     userAuth: UserAuth,

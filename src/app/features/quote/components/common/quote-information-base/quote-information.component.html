@@ -4,7 +4,7 @@
       <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
       <ng-select id="riskState" [items]="states$ | async" bindLabel="name" bindValue="code"
         [clearable]="false" [readonly]="department.programMappings[0].quoteData.riskState == '' || department.programMappings[0].quoteData.readOnlyQuote" name="riskState"
-        [required]="canEditSubmission" *ngIf="department.programMappings[0].quoteData"
+        [required]="canEditSubmission && !department.programMappings[0].quoteData.readOnlyQuote" *ngIf="department.programMappings[0].quoteData"
         [(ngModel)]="department.programMappings[0].quoteData.riskState" (ngModelChange)="changeState($event)"
         #riskState="ngModel" >
       </ng-select>

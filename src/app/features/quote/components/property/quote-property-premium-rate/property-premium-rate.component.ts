@@ -13,6 +13,7 @@ export class PropertyPremiumRateComponent implements OnInit {
   @Input() public limitTotal!: number;
   @Input() public rate!: QuoteRate;
   @Input() public canEdit = false;
+  @Input() public readOnlyQuote!: boolean;
 
   constructor() {
   }

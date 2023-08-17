@@ -21,7 +21,6 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/mat
 import { DATE_FORMATS } from 'src/app/core/constants/date-format';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { FormatDateForDisplay } from 'src/app/core/services/format-date/format-date-display.service';
-import { QuotePropertyDetailComponent } from './components/property/quote-property-detail/quote-property-detail.component';
 import { QuoteSubmissionComponent } from './components/common/quote-submission-base/quote-submission.component';
 import { SubmissionInformationModule } from 'src/app/shared/components/submission-information/submission-information.module';
 import { QuoteProgramBaseComponent } from './components/quote-program-base/quote-program-base.component';
@@ -38,10 +37,7 @@ import { QuoteDataValidationService } from './services/quote-data-validation-ser
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
 import { PropertyBuildingCoverageModule } from 'src/app/shared/components/property-building-coverage/property-building-coverage.module';
-import { QuotePropertyDetailLeftComponent } from './components/property/quote-property-detail/quote-property-detail-left/quote-property-detail-left.component';
-import { QuotePropertyDetailRightComponent } from './components/property/quote-property-detail/quote-property-detail-right/quote-property-detail-right.component';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
-import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 import { OptionalPremiumModule } from 'src/app/shared/components/optional-premium/optional-premium.module';
 import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
@@ -59,6 +55,7 @@ import { GeneralRemarksModule } from 'src/app/shared/components/general-remarks/
 import { InternalNotesModule } from 'src/app/shared/components/internal-notes/internal-notes.module';
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
+import { PropertyDetailModule } from 'src/app/shared/components/property-detail/property-detail-module';
 
 @NgModule({
   declarations: [
@@ -68,7 +65,6 @@ import { FilteredBuildingsService } from 'src/app/shared/services/filtered-build
     QuoteHeaderComponent,
     QuoteInformationDetailComponent,
     QuoteInformationDetailProgramComponent,
-    QuotePropertyDetailComponent,
     QuotePremiumComponent,
     TermsConditionsComponent,
     QuoteSummaryComponent,
@@ -81,8 +77,6 @@ import { FilteredBuildingsService } from 'src/app/shared/services/filtered-build
     QuotePropertyLocationCoverageComponent,
     QuotePropertyPremiumComponent,
     PropertyPremiumRateComponent,
-    QuotePropertyDetailLeftComponent,
-    QuotePropertyDetailRightComponent,
     QuotePropertyMortgageeComponent,
     QuoteFormsComponent],
   imports: [
@@ -116,12 +110,12 @@ import { FilteredBuildingsService } from 'src/app/shared/services/filtered-build
     InternalNotesModule,
     NgxMaskDirective,
     NgxMaskPipe,
-    WarrantiesModule
+    WarrantiesModule,
+    PropertyDetailModule
   ],
   providers: [
     provideEnvironmentNgxMask(),
     CanDeactivateGuard,
-    CanDeactivateChildGuard,
     DatePipe,
     FormatDateForDisplay,
     QuoteDataValidationService,
