@@ -15,6 +15,7 @@ import { PolicyANIClass } from 'src/app/shared/components/additional-named-insur
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { HistoricRoute } from 'src/app/core/models/historic-route';
 
@@ -62,6 +63,7 @@ export class PolicyInformationV2Component {
   showBusy = false;
   saveSub!: Subscription;
   programSub!: Subscription;
+  underwriterName: string | null = '';
   prevSub!: Subscription;
   previousUrl = '';
   previousLabel = 'Previous';
@@ -76,6 +78,7 @@ export class PolicyInformationV2Component {
     private endorsementStatusService: EndorsementStatusService,
     private pageDataService: PageDataService,
     private policyService: PolicyService,
+    private submissionService: SubmissionService,
     private previousRouteService: PreviousRouteService,
     private policySavingService: PolicySavingService,
     private router: Router,
@@ -107,6 +110,9 @@ export class PolicyInformationV2Component {
     this.programs$ = this.dropdowns.getPrograms();
     this.policySymbols$ = this.dropdowns.getPolicySymbols();
     this.populateClaimsMadeOccurrence();
+    this.submissionService.getSubmission(this.policyInfo.submissionNumber).subscribe(submission => {
+      this.underwriterName = submission.underwriterName;
+    })
 
     console.log(this.policyInfo.policyEventCode);
 
