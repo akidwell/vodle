@@ -15,6 +15,7 @@ import { PolicyANIClass } from 'src/app/shared/components/additional-named-insur
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
 
 @Component({
   selector: 'rsps-policy-information-v2',
@@ -60,6 +61,7 @@ export class PolicyInformationV2Component {
   showBusy = false;
   saveSub!: Subscription;
   programSub!: Subscription;
+  underwriterName: string | null = '';
 
   accountCollapsed= false;
 
@@ -71,6 +73,7 @@ export class PolicyInformationV2Component {
     private endorsementStatusService: EndorsementStatusService,
     private pageDataService: PageDataService,
     private policyService: PolicyService,
+    private submissionService: SubmissionService,
     private policySavingService: PolicySavingService,
     private router: Router,
     private navigationService: NavigationService) {
@@ -101,6 +104,9 @@ export class PolicyInformationV2Component {
     this.programs$ = this.dropdowns.getPrograms();
     this.policySymbols$ = this.dropdowns.getPolicySymbols();
     this.populateClaimsMadeOccurrence();
+    this.submissionService.getSubmission(this.policyInfo.submissionNumber).subscribe(submission => {
+      this.underwriterName = submission.underwriterName;
+    })
 
     console.log(this.policyInfo.policyEventCode);
 
