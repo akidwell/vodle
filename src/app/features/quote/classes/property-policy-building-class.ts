@@ -5,7 +5,7 @@ import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { PropertyBuilding } from '../models/property-building';
 import { QuoteValidationClass } from './quote-validation-class';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { PolicyValidation } from 'src/app/shared/interfaces/policy-validation';
 import { PropertyPolicyBuildingCoverageClass } from './property-policy-building-coverage-class';
 
@@ -46,7 +46,7 @@ export class PropertyPolicyBuildingClass extends PropertyBuildingClass implement
     return this.errorMessagesList;
   }
   validate() {
-    return new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    return new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
   }
   constructor(building?: PropertyBuilding) {
     super(building);

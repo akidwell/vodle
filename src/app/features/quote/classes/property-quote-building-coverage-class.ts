@@ -1,5 +1,5 @@
 
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
 import { QuoteAfterSave } from '../models/quote-after-save';
@@ -28,7 +28,7 @@ export class PropertyQuoteBuildingCoverageClass extends PropertyBuildingCoverage
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, null);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, null);
     this.validate();
   }
   get buildingIndex(): string {

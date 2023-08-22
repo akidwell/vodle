@@ -17,6 +17,8 @@ import { PolicySavingService } from '../../../services/policy-saving-service/pol
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
 import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
 import { HistoricRoute } from 'src/app/core/models/historic-route';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
 @Component({
   selector: 'rsps-policy-information-v2',
@@ -65,8 +67,11 @@ export class PolicyInformationV2Component {
   prevSub!: Subscription;
   previousUrl = '';
   previousLabel = 'Previous';
+  policyInfoErrors: ErrorMessage[] = [];
+
 
   accountCollapsed= false;
+  showErrors = false;
 
   constructor(private route: ActivatedRoute,
     private dropdowns: DropDownsService,
@@ -157,8 +162,8 @@ export class PolicyInformationV2Component {
   }
 
   getAlerts(): string | null{
-    let alert = 'Following fields are invalid: ';
-    this.policyInfo.errorMessagesList.map(x => {
+    let alert = 'The following fields are invalid: ';
+    this.policyInfo.getTabErrors('PolicyInfo').map(x => {
       alert += '<br><li>' + x.message ;
     });
     return alert;

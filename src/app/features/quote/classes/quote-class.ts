@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
 import { SubmissionClass } from '../../submission/classes/submission-class';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
 import { QuoteRateClass } from './quote-rate-class';
@@ -366,7 +366,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     } else if (program && submission) {
       this.newInit(program, submission);
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Quote, null);
     this.setWarnings();
   }
   existingInit(quote: Quote) {

@@ -12,13 +12,15 @@ import { DatePipe } from '@angular/common';
 import { EndorsementClass } from './endorsement-class';
 import { InsuredClass } from '../../insured/classes/insured-class';
 import { PropertyBuildingCoverageSubjectAmountData } from '../../quote/models/property-building-coverage';
-import { PropertyBuilding } from '../../quote/models/property-building';
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
-import { MortgageeData } from '../../quote/models/mortgagee';
-import { AdditionalInterestData } from '../../quote/models/additional-interest';
 import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
+import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
+import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
+import { PolicyValidationClass } from './policy-validation-class';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ErrorMessageSettings } from './base/child-base-class';
 
 
 export class PolicyClass extends ParentBaseClass implements PolicyInformation {
@@ -69,6 +71,18 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   // top level - property detail right
   // comes from the quote rates
   private _classCode! : number | null;
+  policyInfoValidation!: TabValidationClass;
+  coveragesValidation!: TabValidationClass;
+  mortgageeValidation!: TabValidationClass;
+  premiumValidation!: TabValidationClass;
+  reinsuranceValidation!: TabValidationClass;
+  summaryValidation!: TabValidationClass;
+  isPolicyInfoTabAccessible: any;
+  isCoveragesTabAccessible: any;
+  isMortgageeTabAccessible: any;
+  isReinsuranceTabAccessible: any;
+  isPremiumTabAccessible: any;
+  isSummaryTabAccessible: any;
 
   get classCode() : number | null {
     return this._classCode;
@@ -218,8 +232,11 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     } else {
       this.newInit();
     }
-    //this.setWarnings();
+    this.validateObject();
+    this.tabValidationInit();
+    this.fullTabValidation();
   }
+
   existingInit(policy: PolicyInformation) {
     console.log('existing init: ', policy);
     this.riskLocation = new RiskLocationClass(policy.riskLocation);
@@ -281,6 +298,55 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.isNew = true;
   }
 
+  getTabErrors(tabAffinity: string): ErrorMessage[]{
+    return this.errorMessagesList.filter(x => x.tabAffinity == tabAffinity);
+  }
+
+
+  tabValidationInit() {
+    this.policyInfoValidation = new PolicyValidationClass(ValidationTypeEnum.Tab, PolicyValidationTabNameEnum.PolicyInfo);
+    this.coveragesValidation = new PolicyValidationClass(ValidationTypeEnum.Tab, PolicyValidationTabNameEnum.PropertyLocationCoverages);
+    this.mortgageeValidation = new PolicyValidationClass(ValidationTypeEnum.Tab, PolicyValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    this.premiumValidation = new PolicyValidationClass(ValidationTypeEnum.Tab, PolicyValidationTabNameEnum.CoveragePremium);
+    this.reinsuranceValidation = new PolicyValidationClass(ValidationTypeEnum.Tab, PolicyValidationTabNameEnum.Reinsurance);
+    this.summaryValidation = new PolicyValidationClass(ValidationTypeEnum.Tab, PolicyValidationTabNameEnum.Summary);
+  }
+
+  fullTabValidation() {
+    this.canBeSaved = true;
+    this.validateTab(this.policyInfoValidation, ValidationTypeEnum.Tab);
+    this.validateTab(this.coveragesValidation, ValidationTypeEnum.Tab);
+    this.validateTab(this.mortgageeValidation, ValidationTypeEnum.Tab);
+    this.validateTab(this.premiumValidation, ValidationTypeEnum.Tab);
+    this.validateTab(this.reinsuranceValidation, ValidationTypeEnum.Reinsurance);
+    this.validateTab(this.summaryValidation, ValidationTypeEnum.Tab);
+
+    this.determineTabAccessiblity();
+  }
+
+  // isAccessible is a feature used in FOCUS and something i think we'll use
+  // not currently used, but wanted to keep here so it doesn't get forgotten
+  determineTabAccessiblity() {
+    this.isPolicyInfoTabAccessible = true;
+    this.isCoveragesTabAccessible = this.policyInfoValidation.isValid;
+    this.isMortgageeTabAccessible = this.isCoveragesTabAccessible && this.coveragesValidation.isValid;
+    this.isPremiumTabAccessible = this.isMortgageeTabAccessible && this.mortgageeValidation.isValid;
+    this.isReinsuranceTabAccessible = this.isPremiumTabAccessible && this.premiumValidation.isValid;
+    this.isSummaryTabAccessible = this.isReinsuranceTabAccessible && this.reinsuranceValidation.isValid;
+  }
+
+  validateTab(tabValidation: TabValidationClass, tabAffinity: ValidationTypeEnum) {
+    tabValidation.resetValidation();
+    tabValidation.errorMessagesList = this.errorMessagesList.filter(x => x.tabAffinity == tabAffinity);
+    if (tabValidation.errorMessagesList.length > 0) {
+      tabValidation.isValid = tabValidation.errorMessagesList.find(x => x.failValidation) ? false : true;
+      tabValidation.canBeSaved = tabValidation.errorMessagesList.find(x => x.preventSave) ? false : true;
+    } else {
+      tabValidation.isValid = true;
+      tabValidation.canBeSaved = true;
+    }
+  }
+
   addCoverage(building: PropertyPolicyBuildingClass) {
     building.endorsementBuildingCoverage.map(x => x.focus = false);
     const newCoverage = new PropertyPolicyBuildingCoverageClass();
@@ -305,18 +371,19 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.resetErrorMessages();
     //on load or if dirty validate this
     console.log('isdirty ', this.isDirty);
+    this.errorMessagesList = this.validateChildren(this);
     if (this.isDirty){
       //TODO: class based validation checks
       this.validateClass();
     }
-    this.errorMessagesList = this.validateChildren(this);
     console.log('errorMessages: ',this.errorMessagesList);
     return this.errorMessagesList;
   }
 
   validateClass(): void{
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: true};
     if(this.commRate == 0){
-      this.createErrorMessage('Comm Rate is required');
+      this.createErrorMessage('Comm Rate is required', settings);
     }
     const datePipe = new DatePipe('en-US');
     const effectiveDate = Number(datePipe.transform(this.policyEffectiveDate, 'yyyyMMdd'));
@@ -324,7 +391,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     //const validZip = ZipCodeCountry(this.riskLocation.zip) == this.dropdowns.getCountryByState(this.riskLocation.state);
 
     if (effectiveDate >= expirationDate) {
-      this.createErrorMessage('Expiration Date must be after the Effective Date');
+      this.createErrorMessage('Expiration Date must be after the Effective Date', settings);
     }
     // if (!validZip && ZipCodeCountry(this.riskLocation.zip) != this.dropdowns.getCountryByState(this.riskLocation.state)) {
     //   this.createErrorMessage('Zip Code is invalid for ' + this.riskLocation.countryCode);

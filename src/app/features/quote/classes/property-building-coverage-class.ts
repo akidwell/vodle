@@ -1,8 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { PropertyBuildingCoverage } from '../models/property-building-coverage';
-import { ChildBaseClass } from '../../policy-v2/classes/base/child-base-class';
+import { ChildBaseClass, ErrorMessageSettings } from '../../policy-v2/classes/base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
 export abstract class PropertyBuildingCoverageClass extends ChildBaseClass implements PropertyBuildingCoverage {
@@ -128,52 +128,53 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   abstract validate(): Validation;
 
   classValidation() {
+    console.log('in coverage validation');
     this.invalidList = [];
     this.errorMessagesList = [];
     this.canBeSaved = true;
     this.isValid = true;
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.Coverages, failValidation: true};
 
     if (this.isDuplicate){
       this.canBeSaved = false;
       this.isValid = false;
-      this.createErrorMessage('Coverage: ' + this.propertyCoverageId + ' is duplicated on ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim());
+      this.createErrorMessage('Coverage: ' + this.propertyCoverageId + ' is duplicated on ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim(),settings);
       this.invalidList.push('Coverage: ' + this.propertyCoverageId + ' is duplicated on ' + (this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber).trim());
     }
     if ((this.limit ?? 0 ) > 9999999999){
       this.canBeSaved = false;
       this.isValid = false;
-      this.createErrorMessage('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.createErrorMessage('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber, settings);
       this.invalidList.push('Limit: ' + this.limitFormatted + ' exceeds maximum on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     if (this.emptyNumberValueCheck(this.propertyCoverageId)){
       this.canBeSaved = false;
       this.isValid = false;
-      this.createErrorMessage('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.createErrorMessage('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber, settings);
       this.invalidList.push('Property Coverage is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     if (this.emptyNumberValueCheck(this.limit)){
       this.canBeSaved = false;
       this.isValid = false;
-      this.createErrorMessage('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.createErrorMessage('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber, settings);
       this.invalidList.push('Limit is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     if (this.emptyNumberValueCheck(this.coinsuranceId)){
       this.isValid = false;
-      this.createErrorMessage('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.createErrorMessage('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber, settings);
       this.invalidList.push('Coinsurance is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     if (this.emptyNumberValueCheck(this.causeOfLossId)){
       this.isValid = false;
-      this.createErrorMessage('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.createErrorMessage('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber, settings);
       this.invalidList.push('Cause of Loss is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     if (this.emptyNumberValueCheck(this.valuationId)){
       this.isValid = false;
-      this.createErrorMessage('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
+      this.createErrorMessage('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber, settings);
       this.invalidList.push('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     this._errorMessages = this.invalidList;
-    this.errorMessages = this.invalidList;
   }
   emptyNumberValueCheck(value: number | null | undefined) {
     return !value;
@@ -195,8 +196,7 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
     this._valuationId = coverage.valuationId;
     this._additionalDetail = coverage.additionalDetail;
     this.guid = coverage.guid || crypto.randomUUID();
-    this.setReadonlyFields();
-    this.setRequiredFields();
+    this.isDirty = false;
   }
 
   propertyCoverageIdRequired = true;

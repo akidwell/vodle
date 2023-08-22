@@ -6,11 +6,12 @@ import { EndorsementClass } from '../../../classes/endorsement-class';
 
 /**
  * Policy v2 Reinsurance Tab
- * 
+ *
  * PolicyReinsurnaceComponent
  *  - PolicyLayerComponent <-> PolicyLayerClass
  *    - ReinsuranceClass
  */
+import { PolicyClass } from '../../../classes/policy-class';
 
 @Component({
   selector: 'rsps-policy-reinsurance',
@@ -18,24 +19,28 @@ import { EndorsementClass } from '../../../classes/endorsement-class';
   styleUrls: ['./policy-reinsurance.component.css']
 })
 export class PolicyReinsuranceComponent {
+  policyInfo!: PolicyClass;
+  showErrors = false;
+
 
   private policyId!: number;
   private endorsementNumber!: number;
   endorsement!: EndorsementClass;
 
   constructor(private route: ActivatedRoute) {
-    
+
   }
 
   ngOnInit(): void {
     this.route.parent?.data.subscribe(async data => {
       this.endorsement = data['policyInfoData'].policyInfo.endorsementData;
+      this.policyInfo = data['policyInfoData'].policyInfo;
       if (this.endorsement.policyLayers === undefined) {
         this.endorsement.policyLayers = [];
       }
       this.endorsementNumber = Number(this.route.parent?.snapshot.paramMap.get('end') ?? 0);
       this.policyId = Number(this.route.parent?.snapshot.paramMap.get('id') ?? 0);
-    })
+    });
   }
 
   /**
@@ -53,9 +58,11 @@ export class PolicyReinsuranceComponent {
     this.endorsement.deletePolicyLayer(policyLayer);
   }
 
-  getAlerts(): string | null {
-    return this.endorsement.errorMessagesList
-      .map(e => `<li>${e.message}</li>`)
-      .reduce((alert, message) => alert += message, '');
+  getAlerts(): string | null{
+    let alert = 'The following fields are invalid: ';
+    this.policyInfo.getTabErrors('Reinsurance').map(x => {
+      alert += '<br><li>' + x.message ;
+    });
+    return alert;
   }
 }
