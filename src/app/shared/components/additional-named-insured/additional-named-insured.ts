@@ -1,9 +1,10 @@
 import { lastValueFrom } from 'rxjs';
 import { InsuredService } from 'src/app/features/insured/services/insured-service/insured.service';
-import { ChildBaseClass } from 'src/app/features/policy-v2/classes/base/child-base-class';
+import { ChildBaseClass, ErrorMessageSettings } from 'src/app/features/policy-v2/classes/base/child-base-class';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { ErrorMessage } from '../../interfaces/errorMessage';
 import { Deletable } from '../../interfaces/deletable';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export interface AdditionalNamedInsuredData {
   policyId: number;
@@ -495,14 +496,16 @@ export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedIns
   }
 
   validateRole(): void {
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: true};
     console.log('ROLE' + this.role);
     if (!this.role && !this.markForDeletion) {
-      this.createErrorMessage('Role is required for ANI #' + this.sequenceNo);
+      this.createErrorMessage('Role is required for ANI #' + this.sequenceNo, settings);
     }
   }
   validateName(): void {
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: true};
     if (!this.name && !this.markForDeletion) {
-      this.createErrorMessage('Name is required for ANI #' + this.sequenceNo);
+      this.createErrorMessage('Name is required for ANI #' + this.sequenceNo, settings);
     }
   }
 

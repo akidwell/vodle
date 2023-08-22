@@ -19,7 +19,7 @@ import { FilteredBuildingsService } from 'src/app/shared/services/filtered-build
 export class PolicyPropertyMortgageeComponent extends  PropertyMorgageeBaseComponent implements OnInit {
   authSub: Subscription;
   canEdit = false;
-  policy!: PolicyClass;
+  policyInfo!: PolicyClass;
   policySub!: Subscription;
   classType = ClassTypeEnum.Policy;
   isSaving = false;
@@ -54,12 +54,12 @@ export class PolicyPropertyMortgageeComponent extends  PropertyMorgageeBaseCompo
       (policyData: PolicyClass | null) => {
         if (policyData != null) {
           setTimeout(() => {
-            this.policy = policyData as PolicyClass ?? new PolicyClass();
-            this.programId = this.policy.quoteData.programId;
+            this.policyInfo = policyData as PolicyClass ?? new PolicyClass();
+            this.programId = this.policyInfo.quoteData.programId;
           });
         }
       }
-    ); 
+    );
     this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.isSaving = isSaving)
     );
@@ -70,8 +70,8 @@ export class PolicyPropertyMortgageeComponent extends  PropertyMorgageeBaseCompo
   }
 
   getAlerts(): string | null{
-    let alert = 'Following fields are invalid: ';
-    this.policy.errorMessagesList.map(x => {
+    let alert = 'The following fields are invalid: ';
+    this.policyInfo.getTabErrors('MortgageeAi').map(x => {
       alert += '<br><li>' + x.message ;
     });
     return alert;

@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteAfterSave } from '../models/quote-after-save';
@@ -73,7 +73,7 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
     this.validate();
   }
   validate(){

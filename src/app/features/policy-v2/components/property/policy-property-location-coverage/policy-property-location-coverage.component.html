@@ -1,6 +1,6 @@
 <div *ngIf="policyInfo != undefined">
-<div *ngIf="policyInfo.errorMessagesList.length != 0">
-  <ngb-alert type=danger *ngIf="policyInfo.errorMessagesList.length != 0" [innerHTML]="getAlerts()"></ngb-alert>
+<div *ngIf="this.policyInfo.getTabErrors('Coverages').length != 0">
+  <ngb-alert type=danger [innerHTML]="getAlerts()"></ngb-alert>
 </div>
 </div>
 <rsps-property-detail *ngIf="propertyParent" [classType]="classType" [propertyParent]="propertyParent" [canEdit]="canEdit"

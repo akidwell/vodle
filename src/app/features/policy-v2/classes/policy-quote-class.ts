@@ -1,6 +1,7 @@
 
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteData } from '../../policy/models/policy';
-import { ChildBaseClass } from './base/child-base-class';
+import { ChildBaseClass, ErrorMessageSettings } from './base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
 export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
@@ -44,18 +45,17 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
   }
 
   validateObject(): ErrorMessage[]{
-    console.log('validate  policy');
-    //on load or if dirty validate this
-    console.log('BBBBBBBBBBB' + this);
-    console.log('AAAAAAAAAAA ' + this.isDirty);
+    const settings: ErrorMessageSettings = {preventSave: false, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: false};
     if (this.isDirty){
       //TODO: class based validation checks
       this.errorMessagesList = [];
       this.canBeSaved = true;
       this.isValid = true;
-      console.log(this.pacCode);
       if(this.pacCode == ''){
-        this.createErrorMessage('PacCode is required.');
+        this.createErrorMessage('PacCode is required.', settings);
+      }
+      if(this.creditDays == null){
+        this.createErrorMessage('Credit Days is required.', settings);
       }
     }
     return this.errorMessagesList;

@@ -67,8 +67,8 @@ export class PolicyPropertyLocationCoverageComponent extends PropertyBuildingBas
   }
 
   getAlerts(): string | null{
-    let alert = 'Following fields are invalid: ';
-    this.policyInfo.errorMessagesList.map(x => {
+    let alert = 'The following fields are invalid: ';
+    this.policyInfo.getTabErrors('Coverages').map(x => {
       alert += '<br><li>' + x.message ;
     });
     return alert;

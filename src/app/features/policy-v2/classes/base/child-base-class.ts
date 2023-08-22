@@ -1,21 +1,24 @@
 import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { PolicyValidation } from 'src/app/shared/interfaces/policy-validation';
 import { Validation } from 'src/app/shared/interfaces/validation';
 
 export interface ErrorMessageSettings {
   preventSave: boolean,
-  failValidation: boolean
+  failValidation: boolean,
+  tabAffinity: ValidationTypeEnum,
 }
 export const errorMessageDefaults = {
   preventSave: true,
-  failValidation: true
+  failValidation: true,
+  tabAffinity: ValidationTypeEnum.Tab
 };
 
 export abstract class ChildBaseClass implements PolicyValidation{
   isValid = true;
-  isDirty = false;
-  canBeSaved = true;
+  _isDirty = false;
+  _canBeSaved = true;
   isNew = false;
   hasUpdate = false;
   canEdit = true;
@@ -33,6 +36,21 @@ export abstract class ChildBaseClass implements PolicyValidation{
   //The onGuidUpdateMatch hook allows us to trigger an update on an object by setting the hasUpdate flag in the response on a save
   //functionally works the same as onGuidNewMatch but we can differentiate between new/existing records
   abstract onGuidUpdateMatch(T: ChildBaseClass): void;
+
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  set canBeSaved(value: boolean) {
+    this._canBeSaved = value;
+  }
+
+  get isDirty() : boolean {
+    return this._isDirty;
+  }
+  set isDirty(value: boolean) {
+    this._isDirty = value;
+  }
+
 
   markDirty(){
     this.isDirty = true;
@@ -64,11 +82,12 @@ export abstract class ChildBaseClass implements PolicyValidation{
   canSet() {
     return this.canEdit;
   }
-  createErrorMessage(message: string, errorMessageSettings: ErrorMessageSettings = errorMessageDefaults) {
+  createErrorMessage(message: string, settings?: ErrorMessageSettings) {
     const errorMessage: ErrorMessage = {
       message: message,
-      failValidation: errorMessageSettings.failValidation,
-      preventSave: errorMessageSettings.preventSave
+      tabAffinity: settings?.tabAffinity ?? ValidationTypeEnum.Tab,
+      failValidation: settings?.failValidation ?? false,
+      preventSave: settings?.preventSave ?? false
     };
     this.errorMessagesList.push(errorMessage);
   }

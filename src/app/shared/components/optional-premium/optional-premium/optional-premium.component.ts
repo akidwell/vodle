@@ -3,7 +3,7 @@ import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
@@ -47,7 +47,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   isDeductibleRequired = false;
   isAdditionalDetailRequired = false;
   isAdditionalPremiumRequired = false;
-  validateQuote = QuoteValidationTypeEnum.Quote;
+  validateQuote = ValidationTypeEnum.Quote;
   coverages: OptionalPremiumMapping[] = [];
 
   @Input() canDrag = false;

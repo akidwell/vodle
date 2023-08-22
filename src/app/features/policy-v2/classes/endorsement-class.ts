@@ -4,7 +4,7 @@ import { PropertyBuildingCoverageClass } from '../../quote/classes/property-buil
 import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy-building-class';
 import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
 import { PropertyBuilding } from '../../quote/models/property-building';
-import { ChildBaseClass } from './base/child-base-class';
+import { ChildBaseClass, ErrorMessageSettings } from './base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { MortgageeData } from '../../quote/models/mortgagee';
@@ -14,6 +14,7 @@ import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PropertyBuildingCoverage } from '../../quote/models/property-building-coverage';
 import { Code } from 'src/app/core/models/code';
 import { PolicyLayerClass } from './policy-layer-class';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
@@ -106,35 +107,30 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       this.policyLayers.forEach((layer, index) => {
         layer.policyLayerNo = index + 1;
         layer.reinsuranceData.forEach(x => x.policyLayerNo = index + 1);
-      })
+      });
     }
   }
 
   validateObject(): ErrorMessage[]{
     this.errorMessagesList = this.validateChildren(this);
-
-    // Uncomment when Reinsurance Validation is ready
-    /*
-    // Reinsurance validation
+    const settings: ErrorMessageSettings = {preventSave: false, tabAffinity: ValidationTypeEnum.Reinsurance, failValidation: false};
     if(this.policyLayers.length == 0 ||
       this.policyLayers[0].reinsuranceLayers.length == 0 ||
       this.policyLayers[0].reinsuranceLayers[0].attachmentPoint != this.attachmentPoint) {
-      this.createErrorMessage('Attachment point must equal policy attachment point.');
+      this.createErrorMessage('Attachment point must equal policy attachment point.', settings);
     }
     const totalLimit = this.policyLayers
       .map(p => p.policyLayerLimit)
       .reduce((sum, summand) => sum + summand, 0);
     if (totalLimit != this.limit) {
-      this.createErrorMessage('Reinsurance layer limits must total policy limit.');
+      this.createErrorMessage('Reinsurance layer limits must total policy limit.', settings);
     }
     const totalPremium = this.policyLayers
       .map(p => p.policyLayerPremium)
       .reduce((sum, summand) => sum + summand, 0);
     if (totalPremium != this.premium) {
-      this.createErrorMessage('Reinsurance layer premiums must total policy premium.');
+      this.createErrorMessage('Reinsurance layer premiums must total policy premium.', settings);
     }
-    */
-
     return this.errorMessagesList;
   }
 

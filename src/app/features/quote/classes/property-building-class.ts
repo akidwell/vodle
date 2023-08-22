@@ -10,6 +10,8 @@ import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { PropertyBuildingCoverageClass } from './property-building-coverage-class';
 import { PropertyPolicyBuildingCoverageClass } from './property-policy-building-coverage-class';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ErrorMessageSettings } from '../../policy-v2/classes/base/child-base-class';
 
 
 export abstract class PropertyBuildingClass extends ParentBaseClass implements PropertyBuilding {
@@ -290,128 +292,126 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
   }
   classValidation() {
     this.invalidList = [];
-    this.errorMessagesList = [];
     this.canBeSaved = true;
     this.isValid = true;
-    console.log('in validation');
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.Coverages, failValidation: true};
+    this.errorMessagesList = this.validateChildren(this);
+
     if (this.emptyNumberValueCheck(this.subjectNumber)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Subject Number is required');
-      this.createErrorMessage('Subject Number is required');
+      this.createErrorMessage('Subject Number is required', settings);
     }
     if (this.emptyNumberValueCheck(this.premisesNumber)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Premises Number is required');
-      this.createErrorMessage('Premises Number is required');
+      this.createErrorMessage('Premises Number is required', settings);
     }
     if (this.emptyNumberValueCheck(this.buildingNumber)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building Number is required');
-      this.createErrorMessage('Building Number is required');
+      this.createErrorMessage('Building Number is required', settings);
     }
     if (this.emptyStringValueCheck(this.street1)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Street is required');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Street is required');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Street is required', settings);
     }
     if (this.emptyStringValueCheck(this.city)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' City is required');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' City is required');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' City is required', settings);
     }
     if (this.emptyStringValueCheck(this.state)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' State is required');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' State is required');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' State is required', settings);
     }
     if (this.emptyStringValueCheck(this.zip)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Zip is required');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Zip is required');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Zip is required', settings);
     }
     if ((this.sprinklered ?? 0) > 100){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Sprinklered% mush be <= 100%');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Sprinklered% mush be <= 100%');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Sprinklered% mush be <= 100%', settings);
     }
     if (this.isDuplicate){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' is duplicated', settings);
     }
     if (this.yearBuilt != null && (this.yearBuilt < 1000 || this.yearBuilt > 9999)) {
       this.isValid = false;
       this.invalidList.push('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Year Built is invalid');
-      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Year Built is invalid');
+      this.createErrorMessage('Building: ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?') + ' Year Built is invalid', settings);
     }
     if (this.emptyStringValueCheck(this.cspCode)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Csp Code for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?' + ' is required'));
-      this.createErrorMessage('Csp Code for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?' + ' is required'));
+      this.createErrorMessage('Csp Code for building ' + (this.subjectNumber ?? '?') + '-' + (this.premisesNumber ?? '?') + '-' + (this.buildingNumber ?? '?' + ' is required', settings));
     }
     if (this.emptyStringValueCheck(this.occupancy)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Occupancy is required');
-      this.createErrorMessage('Occupancy is required');
+      this.createErrorMessage('Occupancy is required', settings);
     }
     if (this.emptyStringValueCheck(this.construction)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Construction is required');
-      this.createErrorMessage('Construction is required');
+      this.createErrorMessage('Construction is required', settings);
     }
     if (this.emptyNumberValueCheck(this.yearBuilt)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Year Built is required');
-      this.createErrorMessage('Year Built is required');
+      this.createErrorMessage('Year Built is required', settings);
     }
-    console.log('itv' + this.itv);
     if (this.itv == null || this.itv == undefined){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('ITV is required');
       this.createErrorMessage('ITV is required');
     }
-    console.log('sprinklered' + this.sprinklered);
     if (this.sprinklered == null || this.sprinklered == undefined){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Sprinkler is required');
-      this.createErrorMessage('Sprinkler is required');
+      this.createErrorMessage('Sprinkler is required', settings);
     }
     if (this.emptyNumberValueCheck(this.squareFeet)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Square Feet is required');
-      this.createErrorMessage('Square Feet is required');
+      this.createErrorMessage('Square Feet is required', settings);
     }
     if (this.emptyNumberValueCheck(this.stories)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Stories is required');
-      this.createErrorMessage('Stories is required');
+      this.createErrorMessage('Stories is required', settings);
     }
     if (this.emptyNumberValueCheck(this.protectionClass)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Protection Class is required');
-      this.createErrorMessage('Protection Class is required');
+      this.createErrorMessage('Protection Class is required', settings);
     }
     this._errorMessages = this.invalidList;
   }
-
 
   callChildValidations() {
     this.childArrayValidate(this.propertyQuoteBuildingCoverage);
@@ -430,11 +430,7 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
     });
   }
   existingInit(building: PropertyBuilding) {
-    console.log('UGH BUILDING' + building);
-    console.log('UGH BUILDING2' + building);
-
     if (building.endorsementBuildingCoverage != null && building.endorsementBuildingCoverage.length > 0){
-      console.log('BUILDING init', building.endorsementBuildingCoverage);
       building.endorsementBuildingCoverage.forEach(x => {
         const y = new PropertyPolicyBuildingCoverageClass(x);
         y.subjectNumber = building.subjectNumber;
@@ -444,7 +440,6 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
       });
       building.endorsementBuildingCoverage = this.endorsementBuildingCoverage;
     } else if (building.propertyQuoteBuildingCoverage != null && building.propertyQuoteBuildingCoverage.length > 0){
-      console.log('BUILDING init', building.propertyQuoteBuildingCoverage);
       building.propertyQuoteBuildingCoverage.forEach(x => {
         const y = new PropertyQuoteBuildingCoverageClass(x);
         y.subjectNumber = building.subjectNumber;
