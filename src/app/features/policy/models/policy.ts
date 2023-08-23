@@ -75,6 +75,7 @@ export interface PolicyInformation {
   submissionNumber: number;
   guid: string | null;
   classCode: number | null;
+  riskDescription: string | null;
 }
 
 export interface PolicyInformationResolved {

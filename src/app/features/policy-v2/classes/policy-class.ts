@@ -71,6 +71,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   // top level - property detail right
   // comes from the quote rates
   private _classCode! : number | null;
+  private _riskDescription! : string | null;
   policyInfoValidation!: TabValidationClass;
   coveragesValidation!: TabValidationClass;
   mortgageeValidation!: TabValidationClass;
@@ -91,7 +92,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this._classCode = value == 0 ? null : value;
     this.markDirty();
   }
-
   // building level
   private _cspCode! : Code;
 
@@ -106,8 +106,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       this.endorsementData.endorsementBuilding.map(x => x.cspCode = String(value).toString().padStart(4,'0') + '  ');
     }
   }
-  private _riskDescription: string | null = null;
-
   get riskDescription() : string | null {
     return this._riskDescription;
   }
@@ -285,6 +283,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
     this._classCode = policy.classCode;
+    this._riskDescription = policy.riskDescription;
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
     this.calculateLawLimits();
@@ -712,7 +711,8 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       productManufactureDate: this.productManufactureDate,
       submissionNumber: this.submissionNumber,
       classCode: this.classCode,
-      guid: this.guid
+      guid: this.guid,
+      riskDescription: this.riskDescription
     };
   }
 }
