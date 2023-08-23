@@ -1,5 +1,5 @@
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { GeneralRemarks } from '../interfaces/general-remarks';
@@ -28,7 +28,7 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.TermsAndConditions);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.TermsAndConditions);
     this.validate();
   }
 
@@ -37,6 +37,7 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
   }
   set remark(value: string | null) {
     this._remark = value;
+    this.markDirty();
   }
 
   get validationResults(): QuoteValidationClass {
@@ -83,25 +84,32 @@ export abstract class GeneralRemarksClass implements GeneralRemarks, Validation,
 
   validate(){
     this._validationResults.resetValidation();
-    if (this._validateOnLoad || this.isDirty){
-      //TODO: class based validation checks
-      this.classValidation();
-      this._validateOnLoad = false;
-    }
+    //TODO: class based validation checks
+    this.classValidation();
+    this._validateOnLoad = false;
+
     this._validationResults.mapValues(this);
     return this._validationResults;
   }
 
-    abstract classValidation(): void;
-
-    markClean() {
-      this._isDirty = false;
+  classValidation() {
+    this.invalidList = [];
+    this._canBeSaved = true;
+    console.log('line98',this.remark);
+    if (this.remark == null || this.remark == ''){
+      this._canBeSaved = false;
+      this._isValid = false;
+      this.invalidList.push('Remark is required');
     }
-    markStructureClean(): void {
-      this.markClean();
-    }
-    markDirty() {
-      this._isDirty = true;
-    }
+  }
+  markClean() {
+    this._isDirty = false;
+  }
+  markStructureClean(): void {
+    this.markClean();
+  }
+  markDirty() {
+    this._isDirty = true;
+  }
     abstract toJSON(): GeneralRemarks;
 }

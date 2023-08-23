@@ -251,7 +251,7 @@ export class ReinsuranceComponent implements OnInit {
     }
     if (!this.checkAttachmentPoint()) {
       this.showInvalid = true;
-      this.invalidMessage += '<br><li>Policy Layer 1 attachment point does not eqaul total Policy Attachment point';
+      this.invalidMessage += '<br><li>Policy Layer 1 attachment point does not equal total Policy Attachment point';
     }
     if (!this.checkSubAttachmentPoints()) {
       this.showInvalid = true;

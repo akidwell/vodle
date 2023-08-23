@@ -1,1 +1,23 @@
-<p>policy-reinsurance works!</p>
+<div class="top-info">
+    <div class="row">
+        <div class="col-lg-2">
+            <label>Limit</label>
+            <input type="text" style="text-align: right;" class="form-control" readonly
+                value="{{endorsement.limit | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}">
+        </div>
+        <div class="col-lg-2">
+            <label>Premium</label>
+            <input type="text" style="text-align: right;" class="form-control" readonly
+                value="{{endorsement.premium | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}">
+        </div>
+    </div>
+    <div style="margin-top: 16px;">
+        <button class="btn btn-sm btn-primary pull-right" (click)="addPolicyLayer()">
+            Add Policy Layer
+        </button>
+    </div>
+    <ngb-alert type=danger *ngIf="policyInfo.getTabErrors('Reinsurance').length != 0 && showErrors == true" [innerHTML]="getAlerts()" style="margin: 1em; padding: 1em;"/>
+</div>
+<div *ngFor="let layer of endorsement.policyLayers">
+    <rsps-policy-layer [policyLayer]="layer" [endorsement]="endorsement" (deletePolicyLayer)="deletePolicyLayer($event)"/>
+</div>

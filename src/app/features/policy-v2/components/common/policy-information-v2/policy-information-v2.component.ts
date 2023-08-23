@@ -15,6 +15,11 @@ import { PolicyANIClass } from 'src/app/shared/components/additional-named-insur
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 import { NavigationService } from 'src/app/features/policy/services/navigation/navigation.service';
+import { SubmissionService } from 'src/app/features/submission/services/submission-service/submission-service';
+import { PreviousRouteService } from 'src/app/core/services/previous-route/previous-route.service';
+import { HistoricRoute } from 'src/app/core/models/historic-route';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
 @Component({
   selector: 'rsps-policy-information-v2',
@@ -60,8 +65,15 @@ export class PolicyInformationV2Component {
   showBusy = false;
   saveSub!: Subscription;
   programSub!: Subscription;
+  underwriterName: string | null = '';
+  prevSub!: Subscription;
+  previousUrl = '';
+  previousLabel = 'Previous';
+  policyInfoErrors: ErrorMessage[] = [];
+
 
   accountCollapsed= false;
+  showErrors = false;
 
   constructor(private route: ActivatedRoute,
     private dropdowns: DropDownsService,
@@ -71,6 +83,8 @@ export class PolicyInformationV2Component {
     private endorsementStatusService: EndorsementStatusService,
     private pageDataService: PageDataService,
     private policyService: PolicyService,
+    private submissionService: SubmissionService,
+    private previousRouteService: PreviousRouteService,
     private policySavingService: PolicySavingService,
     private router: Router,
     private navigationService: NavigationService) {
@@ -101,6 +115,9 @@ export class PolicyInformationV2Component {
     this.programs$ = this.dropdowns.getPrograms();
     this.policySymbols$ = this.dropdowns.getPolicySymbols();
     this.populateClaimsMadeOccurrence();
+    this.submissionService.getSubmission(this.policyInfo.submissionNumber).subscribe(submission => {
+      this.underwriterName = submission.underwriterName;
+    })
 
     console.log(this.policyInfo.policyEventCode);
 
@@ -112,6 +129,11 @@ export class PolicyInformationV2Component {
       }
     }
     );
+
+    this.prevSub = this.previousRouteService.previousUrl$.subscribe((previousUrl: string) => {
+      this.previousUrl = previousUrl;
+      this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
+    });
     console.log(this.policyInfo.canSetCancelDate);
     this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.showBusy = isSaving)
@@ -146,8 +168,8 @@ export class PolicyInformationV2Component {
   }
 
   getAlerts(): string | null{
-    let alert = 'Following fields are invalid: ';
-    this.policyInfo.errorMessagesList.map(x => {
+    let alert = 'The following fields are invalid: ';
+    this.policyInfo.getTabErrors('PolicyInfo').map(x => {
       alert += '<br><li>' + x.message ;
     });
     return alert;
@@ -156,7 +178,16 @@ export class PolicyInformationV2Component {
   routeToInsured(insuredCode: number | null) {
     if(insuredCode !== null) {
       this.navigationService.clearReuse();
+      const subRoute: HistoricRoute = this.createRoute(this.policyInfo);
+      this.pageDataService.lastPolicy = subRoute;
       this.router.navigate(['/insured/' + insuredCode.toString() + '/information']);
     }
+  }
+  private createRoute(val: PolicyClass): HistoricRoute {
+    return {
+      url: '/policy-v2/' + val.policyId?.toString() + '/' + val.endorsementData.endorsementNumber?.toString() + '/information',
+      type: 'policy-v2',
+      description: 'policy-v2 ' + val.policyId,
+    };
   }
 }

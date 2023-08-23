@@ -12,7 +12,6 @@ import { QuoteSummaryComponent } from './components/common/quote-summary-base/qu
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
-import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
 
 const routes: Routes = [
@@ -47,24 +46,21 @@ const routes: Routes = [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
           {
             path: 'location',
-            title: 'RSPS | Quote | Location',
-            canDeactivate: [CanDeactivateChildGuard],
+            canDeactivate: [CanDeactivateGuard],
             component: QuotePropertyLocationCoverageComponent,
             data: { saveComponent: true },
           },
-          { path: 'mortgagee', title: 'RSPS | Quote | Mortgagee', canDeactivate: [CanDeactivateChildGuard], component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
-          { path: 'premium', title: 'RSPS | Quote | Premium', canDeactivate: [CanDeactivateChildGuard], component: QuotePremiumComponent, data: { saveComponent: true } },
+          { path: 'mortgagee', canDeactivate: [CanDeactivateGuard], component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
+          { path: 'premium', canDeactivate: [CanDeactivateGuard], component: QuotePremiumComponent, data: { saveComponent: true } },
           {
             path: 'forms',
-            title: 'RSPS | Quote | Forms',
-            canDeactivate: [CanDeactivateChildGuard],
+            canDeactivate: [CanDeactivateGuard],
             component: QuoteFormsComponent,
             data: { saveComponent: true },
           },
           {
             path: 'conditions',
-            title: 'RSPS | Quote | Conditions',
-            canDeactivate: [CanDeactivateChildGuard],
+            canDeactivate: [CanDeactivateGuard],
             component: TermsConditionsComponent,
             data: { saveComponent: true },
           },

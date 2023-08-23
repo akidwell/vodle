@@ -15,7 +15,7 @@
         <a class="nav-link" routerLinkActive='active' [routerLink]="['premium']">Premium</a>
       </li>
             <li class="nav-item">
-        <a class="nav-link" routerLinkActive='active' [routerLink]="['reinsurance']">Reinsurance</a>
+        <a class="nav-link" routerLinkActive='active' [routerLink]="['reinsurance']">Reinsurance{{this.policy.reinsuranceValidation.isValid ? '' : '*'}}</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive='active' [routerLink]="['summary']">Summary</a>

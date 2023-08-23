@@ -1,5 +1,6 @@
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { RiskLocation } from '../../policy/models/policy';
-import { ChildBaseClass } from './base/child-base-class';
+import { ChildBaseClass, ErrorMessageSettings } from './base/child-base-class';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 
 export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
@@ -98,15 +99,19 @@ export class RiskLocationClass extends ChildBaseClass implements RiskLocation {
   }
 
   validateObject(): ErrorMessage[]{
-    if (this.isDirty){
-      //TODO: class based validation checks
-      this.errorMessagesList = [];
-      this.canBeSaved = true;
-      this.isValid = true;
-      console.log(this.city);
-      if(this.city == ''){
-        this.createErrorMessage('City is required.');
-      }
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: true};
+    //TODO: class based validation checks
+    this.errorMessagesList = [];
+    this.canBeSaved = true;
+    this.isValid = true;
+    if(this.city == ''){
+      this.createErrorMessage('City is required.', settings);
+    }
+    if(this.state == ''){
+      this.createErrorMessage('State is required.', settings);
+    }
+    if(this.zip == null || this.zip == ''){
+      this.createErrorMessage('Zip is required.', settings);
     }
     return this.errorMessagesList;
   }

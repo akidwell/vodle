@@ -1,11 +1,11 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { MortgageeData } from 'src/app/features/quote/models/mortgagee';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { BuildingLocationClass } from '../../classes/building-location-class';
 import { Validation } from '../../interfaces/validation';
-import { ChildBaseClass } from 'src/app/features/policy-v2/classes/base/child-base-class';
+import { ChildBaseClass, ErrorMessageSettings } from 'src/app/features/policy-v2/classes/base/child-base-class';
 import { ErrorMessage } from '../../interfaces/errorMessage';
 import { PolicyValidation } from '../../interfaces/policy-validation';
 import { QuoteValidation } from 'src/app/features/quote/models/quote-validation';
@@ -24,9 +24,9 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Quo
   onSaveCompletion(T: PolicyValidation[]): void {
 
   }
-  private _isDirty = false;
-  private _isValid = false;
-  private _canBeSaved = true;
+  // private _isDirty = false;
+  // private _isValid = false;
+  // private _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
@@ -82,7 +82,7 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Quo
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.validate();
   }
   validate(){
@@ -101,54 +101,55 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Quo
     this.canBeSaved = true;
     this.isValid = true;
     this.errorMessagesList = [];
-    
+    const settings: ErrorMessageSettings = {preventSave: false, tabAffinity: ValidationTypeEnum.MortgageeAi, failValidation: false};
+
     if (this.emptyStringValueCheck(this._mortgageHolder)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Mortgagee Holder is required');
-      this.createErrorMessage('Mortgagee - Mortgagee Holder is required');
+      this.createErrorMessage('Mortgagee - Mortgagee Holder is required', settings);
     }
     if (!this.isAppliedToAll && (this.emptyNumberValueCheck(this.premisesNumber) || this.emptyNumberValueCheck(this.buildingNumber))) {
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Premises/Building Number is required');
-      this.createErrorMessage('Premises/Building Number is required');
+      this.createErrorMessage('Premises/Building Number is required', settings);
     }
     if (this.emptyStringValueCheck(this._street1)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Street is required');
-      this.createErrorMessage('Mortgagee - Street is required');
+      this.createErrorMessage('Mortgagee - Street is required', settings);
     }
     if (this.emptyStringValueCheck(this._city)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - City is required');
-      this.createErrorMessage('Mortgagee - City is required');
+      this.createErrorMessage('Mortgagee - City is required', settings);
     }
     if (this.emptyStringValueCheck(this._state)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - State is required');
-      this.createErrorMessage('Mortgagee - State is required');
+      this.createErrorMessage('Mortgagee - State is required', settings);
     }
     if (this.emptyStringValueCheck(this._zip)){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Zip is required');
-      this.createErrorMessage('Mortgagee - Zip is required');
+      this.createErrorMessage('Mortgagee - Zip is required', settings);
     }
     if (this.emptyStringValueCheck(this._mortgageeType?.toString())){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Mortgagee - Type is required');
-      this.createErrorMessage('Mortgagee - Type is required');
+      this.createErrorMessage('Mortgagee - Type is required', settings);
     }
     if (this.isDuplicate){
       this.canBeSaved = false;
       this.isValid = false;
       this.invalidList.push('Duplicate Mortgagees exist');
-      this.createErrorMessage('Duplicate Mortgagees exist');
+      this.createErrorMessage('Duplicate Mortgagees exist', settings);
     }
     this.errorMessages = this.invalidList;
   }

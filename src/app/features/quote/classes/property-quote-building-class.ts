@@ -8,7 +8,7 @@ import { PropertyBuilding } from '../models/property-building';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 import { QuoteValidationClass } from './quote-validation-class';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements Validation, QuoteAfterSave {
 
@@ -22,7 +22,7 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
     this.validate();
   }
   onGuidNewMatch(T: PropertyQuoteBuildingClass): void {

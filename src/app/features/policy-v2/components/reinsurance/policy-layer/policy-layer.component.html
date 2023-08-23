@@ -1,0 +1,72 @@
+<div class="card">
+    <div class="card-header" (click)="collapse.toggle()">
+        <span>Policy Layer {{policyLayer.policyLayerNo}}</span>
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyLayerCollapsed"/>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyLayerCollapsed"/>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="policyLayerCollapsed">
+        <div class="card-body">
+        <table class="component-row">
+            <tr>
+                <th style="width: 6%"><label>RLN</label></th>
+                <th style="width: 12%"><label>Attachment Point</label></th>
+                <th style="width: 13%"><label>Reinsurance Limits</label></th>
+                <th style="width: 13%"><label>Ceded Premium</label></th>
+                <th style="width: 10%"><label>Comm Rate</label></th>
+                <th style="width: 12%"><label>Reinsurance Code</label></th>
+                <th style="width: 3%"><label>Fac</label></th>
+                <th style="width: 12%"><label>Intermediary</label></th>
+                <th style="width: 12%"><label>Certificate No</label></th>
+                <th style="width: 7%"><!-- Delete button --></th>
+            </tr>
+            <tr *ngFor="let reinsurance of policyLayer.reinsuranceLayers; index as i">
+                <td><input [(ngModel)]="reinsurance.reinsLayerNo" readonly type="text" class="form-control" [required]="canEdit"/></td>
+                <td>
+                    <input [(ngModel)]="reinsurance.attachmentPoint"
+                    string-to-currency type="text" class="form-control" style="text-align: right;"
+                    [ngStyle]="{'color': i == 0 ? 'black' : 'transparent'}"
+                    [required]="i == 0 && canEdit" [readonly]="i !== 0 || !canEdit">
+                </td>
+                <td><input [(ngModel)]="reinsurance.reinsLimit"
+                    string-to-currency type="text" class="form-control" maxInt
+                    [required]="canEdit" [readonly]="!canEdit" ></td>
+                <td><input [(ngModel)]="reinsurance.reinsCededPremium"
+                    string-to-currency type="text" class="form-control" maxInt style="text-align: right;"
+                    [required]="canEdit" [readonly]="!canEdit" ></td>
+                <td>
+                    <input [(ngModel)]="reinsurance.reinsCededCommRate" type="text" class="form-control"
+                    mask="percent" suffix="%" style="text-align: right;"
+                    [required]="canEdit" [readonly]="reinsurance.treatyNo == 1 || !canEdit"></td>
+                <td>
+                    <ng-select [(ngModel)]="reinsurance.treatyNo" bindValue="treatyNumber"
+                        [items]="currentReinsuranceCodes(reinsurance)" (change)="onChangeReinsurnaceCode(reinsurance)"
+                        type="text" [clearable]="false"
+                        [required]="canEdit" [readonly]="!canEdit">
+                        <ng-template ng-label-tmp let-item="item">{{item.treatyNumber}}</ng-template>
+                        <ng-template ng-option-tmp let-item="item">{{item.treatyNumber}} - {{item.treatyName}}</ng-template>
+                    </ng-select>
+                </td>
+                <td><input [(ngModel)]="reinsurance.isFacultative" type="checkbox" class="form-check-input" (change)="onSetFacultative(reinsurance)" [readonly]="!canEdit"></td>
+                <td><input [(ngModel)]="reinsurance.intermediaryNo" type="text" class="form-control" [readonly]="!canEdit"
+                    mask="separator.0" thousandSeparator="" maxInt nullValue></td>
+                <td><input [(ngModel)]="reinsurance.reinsCertificateNo" type="text" class="form-control" [readonly]="!reinsurance.isFacultative || !canEdit"></td>
+                <td>
+                    <span class="btn btn-secondary" [attr.hover-class]="reinsurance.isNew ? 'btn-warning' : 'btn-danger'" *ngIf="canEdit"
+                    (click)="openDeleteConfirmation(reinsurance)">
+                        {{ reinsurance.isNew ? 'Remove' : 'Delete' }}
+                    </span>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="footer-button" (click)="addNewReinsuranceLayer()">Add Reinsurance Layer</button>
+        <span>
+            Policy Layer Limit: {{this.policyLayer.policyLayerLimit | currency: 'USD' : 'symbol':'1.0-0' }}
+            &nbsp;
+            Policy Layer Premium: {{this.policyLayer.policyLayerPremium | currency: 'USD' : 'symbol':'1.0-0' | minusSignToParens}}
+        </span>
+        <span class="footer-count">Reinsurance Layers: {{policyLayer.reinsuranceData.length}}</span>
+    </div>
+</div>

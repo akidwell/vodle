@@ -2,11 +2,12 @@ import { ChildBaseClass, ErrorMessageSettings, errorMessageDefaults } from './ch
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PolicyValidation } from 'src/app/shared/interfaces/policy-validation';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export abstract class ParentBaseClass implements PolicyValidation {
   isValid = true;
-  isDirty = false;
-  canBeSaved = true;
+  public _isDirty = false;
+  public _canBeSaved = true;
   isNew = false;
   hasUpdate = false;
   canEdit = true;
@@ -26,6 +27,20 @@ export abstract class ParentBaseClass implements PolicyValidation {
   abstract onGuidUpdateMatch(T: ParentBaseClass): void;
   //Hook for having any children objects be deleted
   abstract onChildDeletion(child: Deletable): void;
+
+  get canBeSaved(): boolean {
+    return this._canBeSaved;
+  }
+  set canBeSaved(value: boolean) {
+    this._canBeSaved = value;
+  }
+
+  get isDirty() : boolean {
+    return this._isDirty;
+  }
+  set isDirty(value: boolean) {
+    this._isDirty = value;
+  }
 
   markClean(): void {
     this.isDirty = false;
@@ -54,6 +69,7 @@ export abstract class ParentBaseClass implements PolicyValidation {
         errorMessagesList = errorMessagesList.concat(this.validateChildClass(object));
         console.log(errorMessagesList);
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
+        this.canBeSaved = this.canBeSaved ? this.canBeSaved: object.canBeSaved;
       }
       //Check to see if any property is of ParentBaseClass and validate itself and all children
       else if (object instanceof ParentBaseClass) {
@@ -259,11 +275,12 @@ export abstract class ParentBaseClass implements PolicyValidation {
     console.log('DELETEBAE:' + deletable);
     return (deletable as Deletable).markForDeletion === true;
   }
-  createErrorMessage(message: string, errorMessageSettings: ErrorMessageSettings = errorMessageDefaults) {
+  createErrorMessage(message: string, errorMessageSettings?: ErrorMessageSettings) {
     const errorMessage: ErrorMessage = {
       message: message,
-      failValidation: errorMessageSettings.failValidation,
-      preventSave: errorMessageSettings.preventSave
+      tabAffinity: errorMessageSettings?.tabAffinity ?? ValidationTypeEnum.Tab,
+      failValidation: errorMessageSettings?.failValidation ?? false,
+      preventSave: errorMessageSettings?.preventSave ?? false
     };
     this.errorMessagesList.push(errorMessage);
   }

@@ -21,6 +21,7 @@ import { PolicyPropertyMortgageeComponent } from './components/property/policy-p
 import { PolicyReinsuranceComponent } from './components/common/policy-reinsurance/policy-reinsurance.component';
 import { PolicyPremiumComponent } from './components/property/policy-premium/policy-premium.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
+import { PolicyLayerComponent } from './components/reinsurance/policy-layer/policy-layer.component';
 import { PropertyBuildingGroupComponent } from 'src/app/shared/components/property-building/property-building-group/property-building-group.component';
 import { PropertyBuildingModule } from 'src/app/shared/components/property-building/property-building.module';
 import { PropertyBuildingCoverageEditModule } from 'src/app/shared/components/property-building-coverage-edit/property-building-coverage-edit.module';
@@ -29,7 +30,7 @@ import { MortgageeModule } from 'src/app/shared/components/property-mortgagee/mo
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 import { PropertyDetailModule } from 'src/app/shared/components/property-detail/property-detail-module';
-
+import { StatusModule } from 'src/app/shared/components/status-bar/status-bar.module';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { PropertyDetailModule } from 'src/app/shared/components/property-detail/
     PolicySummaryComponent,
     PolicyPropertyMortgageeComponent,
     PolicyPremiumComponent,
-    PolicyReinsuranceComponent
+    PolicyReinsuranceComponent,
+    PolicyLayerComponent,
   ],
   imports: [
     CommonModule,
@@ -60,7 +62,8 @@ import { PropertyDetailModule } from 'src/app/shared/components/property-detail/
     PropertyBuildingCoverageEditModule,
     MortgageeModule,
     AdditionalInterestModule,
-    PropertyDetailModule
+    PropertyDetailModule,
+    StatusModule
   ],
   providers: [
     provideEnvironmentNgxMask(),

@@ -7,7 +7,7 @@ import { PropertyBuildingCoverageClass } from './property-building-coverage-clas
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteValidationClass } from './quote-validation-class';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export class PropertyPolicyBuildingCoverageClass extends PropertyBuildingCoverageClass implements PolicyValidation {
   validateObject(): ErrorMessage[] {
@@ -15,7 +15,7 @@ export class PropertyPolicyBuildingCoverageClass extends PropertyBuildingCoverag
     return this.errorMessagesList;
   }
   validate() {
-    return new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
+    return new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyLocationCoverages);
   }
 
   endorsementBuildingCoverageId= 0;
@@ -89,7 +89,7 @@ export class PropertyPolicyBuildingCoverageClass extends PropertyBuildingCoverag
     this.guid = crypto.randomUUID();
     this.expand = true;
   }
-  
+
   markStructureClean(): void {
     this.markClean();
   }

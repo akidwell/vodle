@@ -1,5 +1,5 @@
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteLineItem } from '../models/quote-line-item';
@@ -115,7 +115,7 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
     this.validate();
   }
   validate(){
@@ -131,9 +131,8 @@ export class QuoteLineItemClass implements QuoteLineItem, Validation, QuoteAfter
     this.invalidList = [];
     this._canBeSaved = true;
     if (this.emptyNumberValueCheck(this._amount)){
-      this._canBeSaved = false;
       this._isValid = false;
-      this.invalidList.push('Amount is required');
+      this.invalidList.push('Amount is required for Surcharges and Fees.');
     }
     if (this.emptyNumberValueCheck(this._lineItemCode)){
       this._canBeSaved = false;

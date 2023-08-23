@@ -23,7 +23,7 @@ const routes: Routes = [
     resolve: {
       policyInfoData: PolicyResolver,
       accountData: AccountInformationResolver,
-      endorsementData: EndorsementResolver,
+      endorsementData: EndorsementResolver, // Kept for backwards compatibility, use endorsement in policyInfoData.
       status: EndorsementStatusResolver
     },
     children: [
@@ -32,9 +32,8 @@ const routes: Routes = [
       { path: 'coverages', title: 'RSPS | Policy | Coverages', component:  PolicyPropertyLocationCoverageComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true }},
       { path: 'mortgagee', title: 'RSPS | Policy | Mortgagee', component: PolicyPropertyMortgageeComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'premium', title: 'RSPS | Policy | Premium', component: PolicyPremiumComponent },
-      { path: 'reinsurance', title: 'RSPS | Policy | Reinsurance', component: PolicyReinsuranceComponent },
+      { path: 'reinsurance', title: 'RSPS | Policy | Reinsurance', component: PolicyReinsuranceComponent, canDeactivate: [CanDeactivateGuard], data: { saveComponent: true } },
       { path: 'summary', title: 'RSPS | Policy | Summary', component: PolicySummaryComponent},
-
     ],
   },
   {

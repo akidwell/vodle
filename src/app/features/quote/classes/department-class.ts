@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { SubmissionClass } from '../../submission/classes/submission-class';
@@ -48,7 +48,7 @@ export class DepartmentClass implements Department, Validation {
     }
     this.activeAdmittedStatus = this.defaultAdmittedStatus;
     this.activeClaimsMadeOrOccurrence = this.defaultClaimsMadeOrOccurrence;
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Department, null);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Department, null);
 
     this.productSelectionTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.ProductSelection);
     this.validate();
@@ -138,6 +138,7 @@ export class DepartmentClass implements Department, Validation {
         this._isValid = false;
         policyDatesErrorMessage = policyDatesErrorMessage.map(m => m = m + ' for Submission: ' + c.quoteData?.submissionNumber);
         this.productSelectionTabValidation.errorMessages = this.productSelectionTabValidation.errorMessages.concat(policyDatesErrorMessage);
+        this._errorMessages = this._validationResults.errorMessages.concat(this.productSelectionTabValidation.errorMessages);
       }
     });
   }

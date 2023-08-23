@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { AdditionalInterestData } from 'src/app/features/quote/models/additional-interest';
@@ -58,13 +58,12 @@ export class AdditionalInterestClass extends ChildBaseClass implements Additiona
 
   constructor(ai?: AdditionalInterestData){
     super();
-    console.log('AI')
     if (ai) {
       this.existingInit(ai);
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.validate();
   }
 
@@ -401,6 +400,7 @@ export class AdditionalInterestClass extends ChildBaseClass implements Additiona
       street2: this.street2,
       state: this.state,
       city: this.city,
+      isNew: this.isNew,
       zip:this.zip,
       countryCode: this.countryCode,
       isAppliedToAll: this.isAppliedToAll,

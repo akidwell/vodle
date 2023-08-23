@@ -6,7 +6,7 @@
         <input type="text" class="form-control" id="remark" name="remark" [readonly]="!canEdit || quote.readOnlyQuote" validate-on-change
           [required]="canEdit && !quote.readOnlyQuote" [(ngModel)]="generalRemarkData.remark" #remark="ngModel">
       </div>
-      <div class="col-lg-2" ngIf="!quote.readOnlyQuote">
+      <div class="col-lg-2" *ngIf="!quote.readOnlyQuote">
         <button class="btn btn-secondary" (click)=copyRemark() [disabled]="!canEdit">Copy</button>&nbsp;
         <button *ngIf="!generalRemarkData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
           [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
