@@ -20,7 +20,6 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
   }
 
-
   constructor(endorsement?: Endorsement) {
     super();
     if (endorsement) {
@@ -28,7 +27,6 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     } else {
       this.newInit();
     }
-    //this.setWarnings();
   }
   policyId!: number;
   endorsementNumber!: number;
@@ -107,6 +105,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       this.policyLayers.forEach((layer, index) => {
         layer.policyLayerNo = index + 1;
         layer.reinsuranceData.forEach(x => x.policyLayerNo = index + 1);
+        layer.markDirty();
       });
     }
   }

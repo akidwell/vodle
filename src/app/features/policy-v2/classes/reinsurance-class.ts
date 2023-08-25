@@ -50,6 +50,13 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
   set attachmentPoint(value: number) {
     this._attachmentPoint = value;
     this.markDirty();
+    // Attachment point of first reinsurance layer is tied to the policy layer's attachment point.
+    // All other attachment points are implicitly calculated from limits and the policy attachment point.
+    // Reinsurance layers do not have an attachment point stored in the database.
+    if (this.reinsLayerNo == 1 && this.policyLayer) {
+        this.policyLayer.policyLayerAttachmentPoint = value;
+        this.policyLayer.markDirty();
+    }
   }
 
   _reinsLimit: number | null = null;
@@ -118,7 +125,7 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
   constructor(policyLayer: PolicyLayerClass, data?: ReinsuranceLayerData) {
     super();
     if (data) {
-      this.existingInit(data);
+      this.existingInit(policyLayer, data);
     } else {
       this.newInit();
     }
@@ -132,7 +139,7 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
     this.reinsLayerNo = -1;
   }
 
-  existingInit(data: ReinsuranceLayerData) {
+  existingInit(policyLayer: PolicyLayerClass, data: ReinsuranceLayerData) {
     this.policyId = data.policyId;
     this.endorsementNumber = data.endorsementNumber;
     this.policyLayerNo = data.policyLayerNo;
@@ -162,6 +169,16 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
     this.maxLayerLimit = data.maxLayerLimit;
     this.attachmentPoint = data.attachmentPoint;
     this.isNew = data.isNew;
+
+    /*
+     * Attachment point is associated with the policy layer on the backend / database, but
+     * associated with the reinsurance layer on the UI.
+     * The first reinsurance layer controls the policy layer's attachment point, and the field
+     * is hidden for all subsequent reinsurance layers.
+     */
+    if (this.reinsLayerNo == 1) {
+        this.attachmentPoint = policyLayer.policyLayerAttachmentPoint;
+    }
   }
 
   static create(policyLayer: PolicyLayerClass, policyId: number, endorsementNumber: number, policyLayerNo: number, reinsLayerNo: number): ReinsuranceClass {
