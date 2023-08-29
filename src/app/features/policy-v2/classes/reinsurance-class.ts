@@ -5,6 +5,7 @@ import { ReinsuranceLayerData } from '../../policy/models/policy';
 import { newInvoiceDetail } from '../../policy/models/invoice';
 import { PolicyLayerClass } from './policy-layer-class';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ReinsuranceLookup } from '../../policy/services/reinsurance-lookup/reinsurance-lookup';
 
 export class ReinsuranceClass extends ChildBaseClass implements Deletable, ReinsuranceLayerData {
 

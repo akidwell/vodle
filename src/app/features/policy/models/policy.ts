@@ -8,6 +8,7 @@ import { MortgageeData } from '../../quote/models/mortgagee';
 import { PolicyLayerClass } from '../../policy-v2/classes/policy-layer-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { AdditionalInterestData } from '../../quote/models/additional-interest';
+import { ReinsuranceLookup } from '../services/reinsurance-lookup/reinsurance-lookup';
 
 
 export interface AccountInformation {
@@ -126,6 +127,8 @@ export interface Endorsement {
   endorsementMortgagee: MortgageeData[];
   endorsementAdditionalInterest: AdditionalInterestData[];
   policyLayers: PolicyLayerData[];
+  reinsuranceCodes: ReinsuranceLookup[];
+  reinsuranceFacCodes: ReinsuranceLookup[];
 }
 
 export interface AdditionalNamedInsuredsResolved {
