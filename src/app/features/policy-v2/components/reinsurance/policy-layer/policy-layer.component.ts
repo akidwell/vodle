@@ -10,6 +10,8 @@ import { ActivatedRoute } from '@angular/router';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { EndorsementStatusService } from 'src/app/features/policy/services/endorsement-status/endorsement-status.service';
 import { PolicyLayerClass } from '../../../classes/policy-layer-class';
+import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
+import { PolicyClass } from '../../../classes/policy-class';
 
 @Component({
   selector: 'rsps-policy-layer',
@@ -39,33 +41,22 @@ export class PolicyLayerComponent {
   // reinsuranceRefreshedSub!: Subscription;
   reinsuranceCodes!: ReinsuranceLookup[];
   reinsuranceFacCodes!: ReinsuranceLookup[];
-  policyInfo!: PolicyInformation;
+  policyInfo!: PolicyClass;
 
   constructor(private route: ActivatedRoute,
     private confirmationDialogService: ConfirmationDialogService,
     private reinsuranceLookupService: ReinsuranceLookupService,
     private userAuth: UserAuth,
-    private endorsementStatusService: EndorsementStatusService) {
+    private endorsementStatusService: EndorsementStatusService,
+    private pageDataService: PageDataService) {
   }
 
   ngOnInit() {
     this.userAuth.canEditPolicy$.subscribe((canEditPolicy: boolean) => this.canEditPolicy = canEditPolicy);
     this.endorsementStatusService.canEditEndorsement.subscribe((canEditEndorsement: boolean) => this.canEditEndorsement = canEditEndorsement);
-
-    this.route.parent?.data.subscribe(async data => {
-      this.policyInfo = data['policyInfoData'].policyInfo;
-      // Get values for reinsurance code drop down
-      this.reinsuranceLookupService.getReinsurance(this.policyInfo.programId, this.policyInfo.policyEffectiveDate).subscribe(
-        reinsurnaceCodes => {
-          this.reinsuranceCodes = reinsurnaceCodes;
-        }
-      )
-      this.reinsuranceLookupService.getFaculativeReinsurance(this.policyInfo.policyEffectiveDate).subscribe(
-        facultativeReinsuranceCodes => {
-          this.reinsuranceFacCodes = facultativeReinsuranceCodes;
-        }
-      )
-    });
+    this.policyInfo = this.pageDataService.policyData || new PolicyClass();
+    this.reinsuranceCodes = this.policyInfo.endorsementData.reinsuranceCodes;
+    this.reinsuranceFacCodes = this.policyInfo.endorsementData.reinsuranceFacCodes;
   }
 
   ngOnChanges() {

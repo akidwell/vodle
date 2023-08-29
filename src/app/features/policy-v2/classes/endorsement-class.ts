@@ -15,11 +15,11 @@ import { PropertyBuildingCoverage } from '../../quote/models/property-building-c
 import { Code } from 'src/app/core/models/code';
 import { PolicyLayerClass } from './policy-layer-class';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ReinsuranceLookup } from '../../policy/services/reinsurance-lookup/reinsurance-lookup';
 
 export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
   }
-
 
   constructor(endorsement?: Endorsement) {
     super();
@@ -28,7 +28,6 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     } else {
       this.newInit();
     }
-    //this.setWarnings();
   }
   policyId!: number;
   endorsementNumber!: number;
@@ -45,6 +44,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   endorsementMortgagee: MortgageeClass[] = [];
   endorsementAdditionalInterest: AdditionalInterestClass[] = [];
   policyLayers: PolicyLayerClass[] = [];
+  reinsuranceCodes: ReinsuranceLookup[] = [];
+  reinsuranceFacCodes: ReinsuranceLookup[] = [];
 
   existingInit(end: Endorsement) {
     this.endorsementNumber = end.endorsementNumber;
@@ -54,6 +55,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest);
     this.policyLayers = end.policyLayers?.map(p => new PolicyLayerClass(p));
     this.guid = crypto.randomUUID();
+    this.reinsuranceCodes = end.reinsuranceCodes;
+    this.reinsuranceFacCodes = end.reinsuranceFacCodes;
   }
 
   additionalInterestInit(data: AdditionalInterestData[]){
@@ -115,8 +118,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.errorMessagesList = this.validateChildren(this);
     const settings: ErrorMessageSettings = {preventSave: false, tabAffinity: ValidationTypeEnum.Reinsurance, failValidation: false};
     if(this.policyLayers.length == 0 ||
-      this.policyLayers[0].reinsuranceLayers.length == 0 ||
-      this.policyLayers[0].reinsuranceLayers[0].attachmentPoint != this.attachmentPoint) {
+      this.policyLayers[0].policyLayerAttachmentPoint != this.attachmentPoint) {
       this.createErrorMessage('Attachment point must equal policy attachment point.', settings);
     }
     const totalLimit = this.policyLayers
@@ -131,6 +133,21 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     if (totalPremium != this.premium) {
       this.createErrorMessage('Reinsurance layer premiums must total policy premium.', settings);
     }
+    // Check no limit exceeds maxLimit set in tlkp_ReinsuranceCodes
+    this.policyLayers.forEach((policyLayer, policyIndex) => {
+      policyLayer.reinsuranceLayers.forEach((reinsLayer, reinsIndex) => {
+        const code = this.reinsuranceCodes.find(code => code.treatyNumber == reinsLayer.treatyNo) ?? this.reinsuranceFacCodes.find(code => code.treatyNumber == reinsLayer.treatyNo);
+        const prefix = `Policy Layer ${policyIndex + 1} - Reinsurance Layer ${reinsIndex + 1}:`; // Layers are 1-indexed
+        if (code) {
+          // Hard coded exception for Treaty No. 1: Net
+          if (reinsLayer.treatyNo != 1 && (reinsLayer.reinsLimit ?? 0 > code.maxLayerLimit)) {
+            this.createErrorMessage(`${prefix} Limit is ${reinsLayer.reinsLimit}, but cannot not exceed ${code.maxLayerLimit}.`, settings);
+          }
+        } else {
+          this.createErrorMessage(`${prefix} Unknown treaty number ${reinsLayer.treatyNo}`, settings);
+        }
+      });
+    });
     return this.errorMessagesList;
   }
 
@@ -173,6 +190,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       attachmentPoint: this.attachmentPoint,
       endorsementBuilding: buildings,
       endorsementMortgagee: mortgagees,
+      reinsuranceCodes: [],
+      reinsuranceFacCodes: [],
       endorsementAdditionalInterest: this.endorsementAdditionalInterest,
       policyLayers: this.policyLayers.map(p => p.toJSON())
     };

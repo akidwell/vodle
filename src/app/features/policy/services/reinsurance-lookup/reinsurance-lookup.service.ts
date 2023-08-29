@@ -17,10 +17,11 @@ export class ReinsuranceLookupService {
 
   ////////////////////////////////////////
   // Reinsurance Codes
-  private cacheReinsuranceCodes: any;
-  private cacheReinsuranceCodes$!: Observable<any> | null;
+  cacheReinsuranceCodes: ReinsuranceLookup[] = [];
+  private cacheReinsuranceCodes$!: Observable<ReinsuranceLookup[]> | null;
 
   getReinsurance(programId: number, effectiveDate: Date): Observable<ReinsuranceLookup[]> {
+    console.log('get reinsurance');
     let observable: Observable<any>;
     if (this.cacheReinsuranceCodes) {
       observable = of(this.cacheReinsuranceCodes);
@@ -46,7 +47,7 @@ export class ReinsuranceLookupService {
   }
 
   clearReinsuranceCodes() {
-    this.cacheReinsuranceCodes = null;
+    this.cacheReinsuranceCodes = [];
     this.cacheReinsuranceCodes$ == null;
     this.cacheFaculativeReinsuranceCodes = null;
     this.cacheFaculativeReinsuranceCodes$ == null; 

@@ -12,7 +12,6 @@ export class PolicyLayerClass extends ParentBaseClass implements PolicyLayerData
 
   policyId: number = -1;
   endorsementNo: number = -1;
-  policyLayerNo: number = -1;
   policyLayerAttachmentPoint: number = 0;
   invoiceNo: number | null = null;
   copyEndorsementNo: number | null = null;
@@ -60,6 +59,15 @@ export class PolicyLayerClass extends ParentBaseClass implements PolicyLayerData
     return layer;
   }
 
+  private _policyLayerNo = -1;
+  get policyLayerNo(): number {
+    return this._policyLayerNo;
+  }
+  set policyLayerNo(value: number) {
+    this._policyLayerNo = value;
+    this.markDirty();
+  }
+
   private _markForDeletion = false;
   get markForDeletion() : boolean {
     return this._markForDeletion;
@@ -88,6 +96,9 @@ export class PolicyLayerClass extends ParentBaseClass implements PolicyLayerData
 
   validateObject(): ErrorMessage[] {
     this.errorMessagesList = this.validateChildren(this);
+    if (this.reinsuranceLayers.length < 1) {
+      this.createErrorMessage(`Policy Layer ${this.policyLayerNo} must have at least one reinsurance layer.`)
+    }
     // Collect child error messages into one array
     this.reinsuranceLayers
       .map(l => l.validateObject())
