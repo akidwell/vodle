@@ -27,7 +27,7 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: QuoteInformationComponent },
+      { path: 'information', title: 'RSPS | Insured | Information', component: QuoteInformationComponent },
     ],
   },
   {
@@ -38,9 +38,9 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', canDeactivate: [CanDeactivateGuard], component: QuoteInformationComponent },
-      { path: 'submission', component: QuoteSubmissionComponent },
-      { path: 'program/:quoteId', canDeactivate: [CanDeactivateGuard],
+      { path: 'information', title: 'RSPS | Quote | Information', canDeactivate: [CanDeactivateGuard], component: QuoteInformationComponent },
+      { path: 'submission', title: 'RSPS | Quote | Submission', component: QuoteSubmissionComponent },
+      { path: 'program/:quoteId', title: 'RSPS | Quote | Program', canDeactivate: [CanDeactivateGuard],
         component: QuoteProgramBaseComponent,
         children: [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
@@ -66,7 +66,7 @@ const routes: Routes = [
           },
         ],
       },
-      { path: 'summary', canDeactivate: [CanDeactivateGuard], component: QuoteSummaryComponent }
+      { path: 'summary', title: 'RSPS | Quote | Summary', canDeactivate: [CanDeactivateGuard], component: QuoteSummaryComponent }
     ]
   }
 
