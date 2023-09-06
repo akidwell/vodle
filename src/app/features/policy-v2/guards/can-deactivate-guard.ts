@@ -21,7 +21,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
     private policySavingService: PolicySavingService) { }
 
   canDeactivate(
-    component: PolicyInformationV2Component | PolicyPropertyLocationCoverageComponent | PolicyPropertyMortgageeComponent | PolicyReinsuranceComponent,
+    component: PolicyInformationV2Component | PolicyPropertyLocationCoverageComponent | PolicyPropertyMortgageeComponent | PolicyReinsuranceComponent | PolicyPremiumComponent,
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot
@@ -53,7 +53,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
       errors = component.policyInfo.getTabErrors('Premium');
     } else if (component instanceof PolicyReinsuranceComponent) {
       currentValidation = component.policyInfo.reinsuranceValidation;
-      //TODO
+      // TODO
       // this if will need tweaked depending on how defaulting the layers go
       // place holder now for aesthetic purposes if a user is in the app demoing
       if(component.policyInfo.endorsementData.policyLayers.length == 0){
@@ -86,7 +86,7 @@ export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Comp
     return await this.navigationConfirmationService.open('Leave Confirmation','Unable to save due to errors! Do you wish to leave and lose all changes?');
   }
 
-  async saveIfDirty(component: PolicyInformationV2Component | PolicyPropertyLocationCoverageComponent | PolicyPropertyMortgageeComponent | PolicyReinsuranceComponent,
+  async saveIfDirty(component: PolicyInformationV2Component | PolicyPropertyLocationCoverageComponent | PolicyPropertyMortgageeComponent | PolicyReinsuranceComponent | PolicyPremiumComponent,
     currentValidation: PolicyValidationClass | null, isLeaving: boolean, errors: ErrorMessage[]): Promise<boolean> {
     const policy = component.policyInfo;
     window.scrollTo(0,0);

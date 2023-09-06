@@ -238,7 +238,6 @@ export abstract class ParentBaseClass implements PolicyValidation {
           //Check to see if any property has the Deletable interface and marked for deletion
           if(this.checkIfDeleted(objectInArray)) {
             this.onChildDeletion(objectInArray);
-            objectInArray.onDelete();
             object.splice(index, 1);
           }
         });

@@ -202,7 +202,7 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
   }
 
   onDelete(): void {
-    throw new Error('Method not implemented.');
+    
   }
 
   validateObject(): ErrorMessage[] {

@@ -31,6 +31,7 @@ import { AdditionalInterestModule } from 'src/app/shared/components/property-add
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 import { PropertyDetailModule } from 'src/app/shared/components/property-detail/property-detail-module';
 import { StatusModule } from 'src/app/shared/components/status-bar/status-bar.module';
+import { OptionalPremiumModule } from 'src/app/shared/components/optional-premium/optional-premium.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { StatusModule } from 'src/app/shared/components/status-bar/status-bar.mo
     MortgageeModule,
     AdditionalInterestModule,
     PropertyDetailModule,
-    StatusModule
+    StatusModule,
+    OptionalPremiumModule
   ],
   providers: [
     provideEnvironmentNgxMask(),

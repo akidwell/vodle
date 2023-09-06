@@ -6,5 +6,5 @@
   <rsps-busy message="Saving..."></rsps-busy>
 </div>
 <rsps-quote-property-premium *ngIf="quote" [totalPrem]="quote.totalPremium" [program]="program" [quote]="quote" [rate]="rate" ></rsps-quote-property-premium>
-<rsps-optional-premium-group *ngIf="quote" [type]="componentType" [type]="type" [readOnlyQuote]="quote.readOnlyQuote" [totalPrem]="quote.totalPremium" ></rsps-optional-premium-group>
+<rsps-optional-premium-group *ngIf="quote" [type]="componentType" [type]="type" [readOnlyQuote]="quote.readOnlyQuote" [totalPrem]="quote.totalPremium" [propertyParent]="quote"></rsps-optional-premium-group>
 <rsps-quote-line-items-group *ngIf="quoteLineItemData" [readOnlyQuote]="quote.readOnlyQuote" [quoteLineItemData]="quoteLineItemData" [riskState]="riskState" [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>

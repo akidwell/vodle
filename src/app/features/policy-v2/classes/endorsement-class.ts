@@ -16,6 +16,9 @@ import { Code } from 'src/app/core/models/code';
 import { PolicyLayerClass } from './policy-layer-class';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { ReinsuranceLookup } from '../../policy/services/reinsurance-lookup/reinsurance-lookup';
+import { PolicyOptionalPremium } from '../../policy/models/policy-optional-premium';
+import { PolicyOptionalPremiumV2 } from '../../policy/models/policy-optional-premium';
+import { PolicyOptionalPremiumClassV2 } from './policy-optional-premium-class-v2';
 
 export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
@@ -46,6 +49,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   policyLayers: PolicyLayerClass[] = [];
   reinsuranceCodes: ReinsuranceLookup[] = [];
   reinsuranceFacCodes: ReinsuranceLookup[] = [];
+  endorsementBuildingOptionalCoverage: PolicyOptionalPremiumClassV2[] = [];
 
   existingInit(end: Endorsement) {
     this.endorsementNumber = end.endorsementNumber;
@@ -53,6 +57,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.endorsementBuilding = this.buildingInit(end.endorsementBuilding as PropertyBuilding[]);
     this.endorsementMortgagee = this.mortgageeInit(end.endorsementMortgagee);
     this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest);
+    this.endorsementBuildingOptionalCoverage = this.optionalPremiumInit(end.endorsementBuildingOptionalCoverage);
     this.policyLayers = end.policyLayers?.map(p => new PolicyLayerClass(p));
     this.guid = crypto.randomUUID();
     this.reinsuranceCodes = end.reinsuranceCodes;
@@ -91,6 +96,16 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       });
     });
     return buildings;
+  }
+
+  optionalPremiumInit(data: PolicyOptionalPremiumV2[]) {
+    const optionalPremium:PolicyOptionalPremiumClassV2[] = [];
+    if(data){
+      data.forEach(optional => {
+        optionalPremium.push(new PolicyOptionalPremiumClassV2(optional));
+      });
+    }
+    return optionalPremium;
   }
 
   newInit(){
@@ -176,6 +191,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
     const additionalInterests: AdditionalInterestData[] = [];
     (this.endorsementAdditionalInterest as AdditionalInterestClass[]).forEach(c => additionalInterests.push(c.toJSON()));
+    const endorsementBuildingOptionalCoverage: PolicyOptionalPremium[] = [];
+    (this.endorsementBuildingOptionalCoverage as PolicyOptionalPremiumClassV2[]).forEach(c => endorsementBuildingOptionalCoverage.push(c.toJSON()));
     return {
       policyId: this.policyId,
       endorsementNumber: this.endorsementNumber,
@@ -193,20 +210,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       reinsuranceCodes: [],
       reinsuranceFacCodes: [],
       endorsementAdditionalInterest: this.endorsementAdditionalInterest,
+      endorsementBuildingOptionalCoverage: this.endorsementBuildingOptionalCoverage,
       policyLayers: this.policyLayers.map(p => p.toJSON())
     };
-  }
-
-  buildingsToJson(): PropertyBuilding[] {
-    const buildings: PropertyBuilding[] = [];
-    const coverages: PropertyBuildingCoverage[] = [];
-
-    this.endorsementBuilding.forEach(x => {
-      buildings.push(x);
-      x.endorsementBuildingCoverage.forEach(y => {
-        coverages.push(y);
-      });
-    });
-    return buildings;
   }
 }

@@ -1,38 +1,41 @@
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-class';
-import { QuoteOptionalPremium } from '../models/quote-optional-premium';
+import { PolicyOptionalPremium, PolicyOptionalPremiumV2 } from '../../policy/models/policy-optional-premium';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
-import { ChildBaseClass } from '../../policy-v2/classes/base/child-base-class';
+import { ChildBaseClass } from './base/child-base-class';
 
-export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
+export class PolicyOptionalPremiumClassV2 extends OptionalPremiumClass {
   validateObject(): ErrorMessage[] {
+    this.classValidation();
     return this.errorMessagesList;
   }
   onGuidNewMatch(T: ChildBaseClass): void {
+
   }
   onGuidUpdateMatch(T: ChildBaseClass): void {
+
   }
-  private _quoteId = 0;
-  private _propertyQuoteBuildingOptionalCoverageId: number;
-  private _isAccepted = true;
-  private _isFlat = true;
+  _policyId = 0;
+  _endorsementBuildingOptionalCoverageId: number;
+  _isAccepted = true;
+  _isFlat = true;
 
   isImport!: boolean;
 
-  constructor(optionalPremium?: QuoteOptionalPremium, quoteId?: number) {
+  constructor(optionalPremium?: PolicyOptionalPremiumV2, quoteId?: number) {
     super(optionalPremium);
-    this._quoteId = quoteId || 0;
-    this._propertyQuoteBuildingOptionalCoverageId = optionalPremium ? optionalPremium.propertyQuoteBuildingOptionalCoverageId : 0;
+    this._policyId = quoteId || 0;
+    this._endorsementBuildingOptionalCoverageId = optionalPremium ? optionalPremium.endorsementBuildingOptionalCoverageId : 0;
     this._isAccepted = optionalPremium?.isAccepted ?? true;
     this._isFlat = optionalPremium?.isFlat ?? true;
   }
 
-  get quoteId() : number {
-    return this._quoteId;
+  get policyId() : number {
+    return this._policyId;
   }
 
-  set quoteId(value: number) {
-    this._quoteId = value;
+  set policyId(value: number) {
+    this._policyId = value;
     this.markDirty();
   }
 
@@ -52,30 +55,35 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
     return this._isFlat;
   }
 
-  get propertyQuoteBuildingOptionalCoverageId() : number {
-    return this._propertyQuoteBuildingOptionalCoverageId;
+  get endorsementBuildingOptionalCoverageId() : number {
+    return this._endorsementBuildingOptionalCoverageId;
   }
 
-  set propertyQuoteBuildingOptionalCoverageId(value: number) {
-    this._propertyQuoteBuildingOptionalCoverageId = value;
+  set endorsementBuildingOptionalCoverageId(value: number) {
+    this._endorsementBuildingOptionalCoverageId = value;
     this.markDirty();
   }
+
   classValidation() {
     this.invalidList = [];
+    this.errorMessagesList = [];
     this.canBeSaved = true;
 
-    this.validateLimit();
-    this.validateBuilding();
-    this.validateDeductible();
-    this.validateDeductibleType();
-    this.validateDeductibleCode();
-    this.validateSubjectToMaxAmount();
-    this.validateAdditionalDetail();
-    this.validateAdditionalPremium();
+    if(!this.markForDeletion){
 
-    this.setErrorMessages();
+      this.validateLimit();
+      this.validateBuilding();
+      this.validateDeductible();
+      this.validateDeductibleType();
+      this.validateDeductibleCode();
+      this.validateSubjectToMaxAmount();
+      this.validateAdditionalDetail();
+      this.validateAdditionalPremium();
+
+      this.setErrorMessages();
+    }
   }
-  copy(): QuoteOptionalPremium {
+  copy(): PolicyOptionalPremium {
     const cloned = deepClone(this.toJSON());
     return cloned;
   }
@@ -85,13 +93,13 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
     this.isImport = true;
     this.guid = crypto.randomUUID();
   }
-  toJSON(): QuoteOptionalPremium {
+  toJSON(): PolicyOptionalPremiumV2 {
     return {
-      propertyQuoteBuildingOptionalCoverageId: this._propertyQuoteBuildingOptionalCoverageId,
+      endorsementBuildingOptionalCoverageId: this._endorsementBuildingOptionalCoverageId,
+      policyId: this.policyId,
       buildingNumber: this.buildingNumber,
       premisesNumber: this.premisesNumber,
       isAppliedToAll: this.isAppliedToAll,
-      quoteId: this._quoteId,
       limit: this.limit,
       deductible: this.deductible,
       deductibleCode: this.deductibleCode,
@@ -105,7 +113,8 @@ export class QuoteOptionalPremiumClass extends OptionalPremiumClass {
       isFlat: this.isFlat,
       additionalDetail: this.additionalDetail,
       guid: this.guid,
-      isNew: this.isNew
+      isNew: this.isNew,
+      markForDeletion: this.markForDeletion
     };
   }
 }

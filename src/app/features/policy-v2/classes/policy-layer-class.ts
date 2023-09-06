@@ -7,7 +7,6 @@ import { ParentBaseClass } from './base/parent-base-class';
 
 export class PolicyLayerClass extends ParentBaseClass implements PolicyLayerData, Deletable {
   onChildDeletion(child: Deletable): void {
-      throw new Error('Method not implemented.');
   }
 
   policyId: number = -1;
@@ -109,7 +108,7 @@ export class PolicyLayerClass extends ParentBaseClass implements PolicyLayerData
   }
 
   onDelete(): void {
-    throw new Error('Method not implemented.');
+    
   }
 
   onGuidNewMatch(T: ChildBaseClass): void {

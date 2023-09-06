@@ -1,1 +1,6 @@
-<p>policy-premium works!</p>
+<div *ngIf="policyInfo != undefined">
+  <div *ngIf="this.policyInfo.getTabErrors('Premium').length != 0">
+    <ngb-alert type=danger [innerHTML]="getAlerts()"></ngb-alert>
+  </div>
+  </div>
+<rsps-optional-premium-group *ngIf="propertyParent"  [propertyParent]="policyInfo" [readOnlyQuote]="false" [type]="type"></rsps-optional-premium-group>

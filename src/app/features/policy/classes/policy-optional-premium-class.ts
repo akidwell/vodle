@@ -1,8 +1,17 @@
 import { deepClone } from 'src/app/core/utils/deep-clone';
 import { OptionalPremiumClass } from 'src/app/shared/classes/optional-premium-class';
 import { PolicyOptionalPremium } from '../models/policy-optional-premium';
+import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
+import { ChildBaseClass } from '../../policy-v2/classes/base/child-base-class';
 
 export class PolicyOptionalPremiumClass extends OptionalPremiumClass {
+  validateObject(): ErrorMessage[] {
+    return this.errorMessagesList;
+  }
+  onGuidNewMatch(T: ChildBaseClass): void {
+  }
+  onGuidUpdateMatch(T: ChildBaseClass): void {
+  }
   private _policyId = 0;
   constructor(optionalPremium?: PolicyOptionalPremium) {
     super(optionalPremium);
