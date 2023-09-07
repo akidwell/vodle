@@ -4,13 +4,13 @@ import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-valid
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { OptionalPremium } from '../interfaces/optional-premium';
 import { Validation } from '../interfaces/validation';
-import { BuildingLocationClass } from './building-location-class';
 import { OptionalPremiumMapping } from '../models/optional-premium-mapping';
+import { ChildBaseClass, ErrorMessageSettings } from 'src/app/features/policy-v2/classes/base/child-base-class';
 
-export abstract class OptionalPremiumClass extends BuildingLocationClass implements OptionalPremium, Validation, QuoteAfterSave{
-  private _isDirty = false;
-  private _isValid = false;
-  private _canBeSaved = true;
+export abstract class OptionalPremiumClass extends ChildBaseClass implements OptionalPremium, Validation, QuoteAfterSave{
+  _isDirty = false;
+  _isValid = false;
+  _canBeSaved = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
@@ -25,6 +25,63 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   private _deductibleCode: string | null = null;
   private _additionalPremium: number | null = null;
   private _additionalDetail = '';
+  private _buildingNumber: number | null = null;
+  private _premisesNumber: number | null = null;
+  private _isAppliedToAll = false;
+
+  get buildingNumber() : number | null {
+    return this._buildingNumber;
+  }
+  set buildingNumber(value: number | null) {
+    this._buildingNumber = value;
+  }
+
+  get premisesNumber() : number | null {
+    return this._premisesNumber;
+  }
+  set premisesNumber(value: number | null) {
+    this._premisesNumber= value;
+  }
+
+  get isAppliedToAll() : boolean {
+    return this._isAppliedToAll;
+  }
+  set isAppliedToAll(value: boolean) {
+    this._isAppliedToAll= value;
+  }
+
+  get building() : string | null {
+    if (this._isAppliedToAll) {
+      return 'All';
+    }
+    else if (this._premisesNumber == null || this._buildingNumber == null) {
+      return null;
+    }
+    return this._premisesNumber.toString() + '-' + this._buildingNumber.toString();
+  }
+
+  set building(value: string | null) {
+    if (value == 'All') {
+      this._isAppliedToAll = true;
+      this._premisesNumber = null;
+      this._buildingNumber = null;
+    } else {
+      const parse = value?.split('-');
+      console.log('line70', value, parse);
+      if (parse?.length == 2) {
+        const premises = parse[0] ?? '';
+        const building = parse[1] ?? '';
+        this._isAppliedToAll = false;
+        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
+        this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
+      }
+      else {
+        this._isAppliedToAll = false;
+        this._premisesNumber = null;
+        this._buildingNumber = null;
+      }
+    }
+  }
 
   premiumMapping: OptionalPremiumMapping | null = null;
   isNew = false;
@@ -32,6 +89,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
   invalidList: string[] = [];
   isCopy = false;
   focus = false;
+  settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.Premium, failValidation: true};
 
   isZipLookup = false;
 
@@ -44,6 +102,15 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     }
     this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.PropertyMortgageeAdditionalInterest);
     this.validate();
+  }
+
+  private _markForDeletion = false;
+  get markForDeletion() : boolean {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean) {
+    this._markForDeletion = value;
+    this.markDirty();
   }
   get coverageCode(): number | null {
     return this._coverageCode;
@@ -125,20 +192,6 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     this._canBeSaved = value;
   }
 
-  get isDirty() : boolean {
-    return this._isDirty;
-  }
-  set isDirty(value: boolean) {
-    this._isDirty = value;
-  }
-
-  get isValid(): boolean {
-    return this._isValid;
-  }
-  set isValid(value: boolean){
-    this._isValid = value;
-  }
-
   get errorMessages(): string[] {
     return this._errorMessages;
   }
@@ -163,7 +216,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     this.buildingNumber = optionalPremium.buildingNumber;
     this.premisesNumber = optionalPremium.premisesNumber;
     this.isAppliedToAll = optionalPremium.isAppliedToAll;
-    this.guid = optionalPremium.guid;
+    this.guid = optionalPremium.guid ?? crypto.randomUUID();
     this._coverageCode = optionalPremium.coverageCode;
     this._limit = optionalPremium.limit;
     this._isSubjectToMaxAmount = optionalPremium.isSubjectToMaxAmount;
@@ -222,6 +275,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     if (this.isLimitRequired() && (this.limit ?? 0) == 0) {
       invalid = true;
       this.invalidList.push('Limit is required');
+      this.createErrorMessage('Limit is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -230,6 +284,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     if (this.isAdditionalDetailRequired() && !this._additionalDetail) {
       invalid = true;
       this.invalidList.push('Additional Detail is required');
+      this.createErrorMessage('Additional Detail is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -238,6 +293,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     if (this.isAdditionalPremiumRequired() && !this._additionalPremium) {
       invalid = true;
       this.invalidList.push('Additional Premium is required');
+      this.createErrorMessage('Additional Premium is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -246,6 +302,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
     if (this._isDeductibleSelected && !this.deductible) {
       invalid = true;
       this.invalidList.push('Deductible is required');
+      this.createErrorMessage('Deductible is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -255,6 +312,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
       invalid = true;
       //this._canBeSaved = false;
       this.invalidList.push('Deductible Type is required');
+      this.createErrorMessage('Deductible Type is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -265,6 +323,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
       invalid = true;
       //this._canBeSaved = false;
       this.invalidList.push('Deductible Code is required');
+      this.createErrorMessage('Deductible Code is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -274,6 +333,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
       invalid = true;
       //this._canBeSaved = false;
       this.invalidList.push('Subject to Max Amount is required');
+      this.createErrorMessage('Subject to Max Amount is required', this.settings);
     }
     this._isValid = this._isValid == true ? invalid : false;
   }
@@ -283,6 +343,7 @@ export abstract class OptionalPremiumClass extends BuildingLocationClass impleme
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Premises/Building Number is required');
+      this.createErrorMessage('Premises/Building Number is required', this.settings);
     }
   }
   emptyNumberValueCheck(value: number | null | undefined) {

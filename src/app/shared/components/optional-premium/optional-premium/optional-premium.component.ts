@@ -7,6 +7,7 @@ import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Code } from 'src/app/core/models/code';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { HeaderPaddingService } from 'src/app/core/services/header-padding-service/header-padding.service';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
@@ -26,8 +27,8 @@ export class OptionalPremiumComponent extends SharedComponentBase {
   coveragesSub!: Subscription;
 
   quoteData!: PropertyQuoteClass | null;
-  @Input() program!: ProgramClass | null;
-  readOnlyQuote = false;
+  @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
+  @Input() public readOnlyQuote = false;
 
   collapsed = true;
   firstExpand = true;
@@ -67,7 +68,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
     super(userAuth);
   }
   ngOnInit(): void {
-    this.quoteData = this.program?.quoteData instanceof PropertyQuoteClass ? this.program.quoteData : null;
+    this.quoteData = this.propertyParent instanceof PropertyQuoteClass ? this.propertyParent : null;
     if (this.quoteData != null) {
       this.readOnlyQuote = this.quoteData.readOnlyQuote;
     }
@@ -75,6 +76,7 @@ export class OptionalPremiumComponent extends SharedComponentBase {
       this.collapseExpand(false);
       this.focus();
     }
+    console.log('line79',this.readOnlyQuote);
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;

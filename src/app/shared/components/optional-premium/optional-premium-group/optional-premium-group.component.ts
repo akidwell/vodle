@@ -19,6 +19,8 @@ import * as moment from 'moment';
 import { OptionalPremiumMapping } from 'src/app/shared/models/optional-premium-mapping';
 import { Code } from 'src/app/core/models/code';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
+import { PolicyOptionalPremiumClassV2 } from 'src/app/features/policy-v2/classes/policy-optional-premium-class-v2';
 
 @Component({
   selector: 'rsps-optional-premium-group',
@@ -45,6 +47,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   programSub!: Subscription;
   deleteSub!: Subscription;
   coverages$!: Observable<OptionalPremiumMapping[]>;
+  coverages!: OptionalPremiumMapping[];
+  @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
   @Input() public totalPrem!: number | null;
   @Input() public readOnlyQuote!: boolean;
 
@@ -65,14 +69,29 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
           this.effectiveDate = this.program?.quoteData.policyEffectiveDate;
           this.deductibleTypes$ = this.dropdowns.getDeductibleTypes(this.program.programId);
           this.deductibleCodes$ = this.dropdowns.getDeductibleCodes(this.program.programId);
+          const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate?.toString();
+          this.coverages$ = this.dropdowns.getPropertyOptionalCoverages(this.program?.programId || 0, effectiveDate || moment.toString());
         }
       });
-    const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate?.toString();
 
-    this.coverages$ = this.dropdowns.getPropertyOptionalCoverages(this.program?.programId || 0, effectiveDate || moment.toString());
+    this.programSub = this.pageDataService.policyData$.subscribe(
+      (policy: PolicyClass | null) => {
+        console.log('line 78',policy);
+        if (policy != null && policy.endorsementData.endorsementBuildingOptionalCoverage){
+          this.propertyParent = policy;
+          this.optionalPremiumData = policy.endorsementData?.endorsementBuildingOptionalCoverage;
+          this.riskState = policy?.riskLocation?.state;
+          this.effectiveDate = policy.policyEffectiveDate;
+          this.deductibleTypes$ = this.dropdowns.getDeductibleTypes(policy.programId);
+          this.deductibleCodes$ = this.dropdowns.getDeductibleCodes(policy.programId);
+          const effectiveDate = moment.isMoment(this.effectiveDate) ? this.effectiveDate.format('YYYY-MM-DD HH:mm') : this.effectiveDate?.toString();
+          this.coverages$ = this.dropdowns.getPropertyOptionalCoverages(policy.programId || 0, effectiveDate || moment.toString());
+        }
+      });
+
   }
 
-  ngOnInit(): void {
+  ngOnInit():void {
     this.collapsed = false;
     this.handleSecurity(this.type);
   }
@@ -119,8 +138,15 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   }
 
   deleteExistingOptionalPremium(optionalPremium: OptionalPremiumClass) {
-    if (optionalPremium instanceof PolicyOptionalPremiumClass) {
-      return;
+    if (optionalPremium instanceof PolicyOptionalPremiumClassV2) {
+      optionalPremium.markForDeletion = true;
+      optionalPremium.markDirty();
+
+      //this.propertyParent.deleteOptionalPremium(optionalPremium);
+      if(optionalPremium.isNew && this.propertyParent instanceof PolicyClass){
+        const index = this.propertyParent.endorsementData.endorsementBuildingOptionalCoverage.findIndex(x => x.endorsementBuildingOptionalCoverageId == optionalPremium.endorsementBuildingOptionalCoverageId);
+        this.propertyParent.endorsementData.endorsementBuildingOptionalCoverage.splice(index, 1);
+      }
     }
     if (optionalPremium instanceof QuoteOptionalPremiumClass) {
       console.log(optionalPremium);
@@ -149,7 +175,7 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
   addNewOptionalPremium(): void {
     let optionalPremium: OptionalPremiumClass | null;
     if (this.type === SharedComponentType.Policy) {
-      optionalPremium = new PolicyOptionalPremiumClass();
+      optionalPremium = new PolicyOptionalPremiumClassV2();
       this.optionalPremiumData.push(optionalPremium);
     } else if (this.type === SharedComponentType.Quote) {
       optionalPremium = new QuoteOptionalPremiumClass();
@@ -157,4 +183,8 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
     }
     this.collapsed = false;
   }
+  get optionalPremiumsCount(): number {
+    return this.optionalPremiumData.filter(x=> !x.markForDeletion).length;
+  }
+
 }
