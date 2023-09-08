@@ -155,7 +155,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
         const prefix = `Policy Layer ${policyIndex + 1} - Reinsurance Layer ${reinsIndex + 1}:`; // Layers are 1-indexed
         if (code) {
           // Hard coded exception for Treaty No. 1: Net
-          if (reinsLayer.treatyNo != 1 && (reinsLayer.reinsLimit ?? 0 > code.maxLayerLimit)) {
+          if (reinsLayer.treatyNo != 1 && (reinsLayer.reinsLimit ?? 0) > code.maxLayerLimit) {
             this.createErrorMessage(`${prefix} Limit is ${reinsLayer.reinsLimit}, but cannot not exceed ${code.maxLayerLimit}.`, settings);
           }
         } else {
