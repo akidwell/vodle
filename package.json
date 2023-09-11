@@ -30,7 +30,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
-    "@ng-bootstrap/ng-bootstrap": "^14.0.1",
+    "@ng-bootstrap/ng-bootstrap": "^15.1.1",
     "@ng-select/ng-select": "^10.0.3",
     "@okta/okta-angular": "^6.0.0",
     "@okta/okta-auth-js": "^7.2.0",
