@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
 import { InsuredClass } from '../../classes/insured-class';
 import { newInsuredFromPacer } from '../../models/insured';
@@ -9,7 +9,7 @@ import { InsuredService } from '../insured-service/insured.service';
 @Injectable({
   providedIn: 'root'
 })
-export class InsuredResolver implements Resolve<InsuredResolved> {
+export class InsuredResolver  {
 
   constructor(private router: Router, private insuredService: InsuredService) { }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { InformationComponent } from '../components/information-base/information.component';
 import { CoveragesComponent } from '../components/coverages-base/coverages.component';
 import { SchedulesComponent } from '../components/schedules-base/schedules.component';
@@ -8,7 +8,7 @@ import { SummaryComponent } from '../components/summary-base/summary.component';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 
 @Injectable()
-export class CanDeactivateGuard implements CanDeactivate<InformationComponent> {
+export class CanDeactivateGuard  {
 
   constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService) { }
 

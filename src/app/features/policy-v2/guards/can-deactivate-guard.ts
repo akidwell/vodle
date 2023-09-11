@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, CanDeactivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { PolicyInformationV2Component } from '../components/common/policy-information-v2/policy-information-v2.component';
 import { PolicyReinsuranceComponent } from '../components/common/policy-reinsurance/policy-reinsurance.component';
 import { Injectable } from '@angular/core';
@@ -14,7 +14,7 @@ import { PolicyPremiumComponent } from '../components/property/policy-premium/po
 import { PolicySummaryComponent } from '../components/common/policy-summary/policy-summary.component';
 
 @Injectable()
-export class CanDeactivateGuard implements CanDeactivate<PolicyInformationV2Component> {
+export class CanDeactivateGuard  {
 
   constructor(private router: Router,
     private navigationConfirmationService: NavigationConfirmationService,

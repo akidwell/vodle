@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { HistoryService } from '../../../../core/services/policy-history/policy-history.service';
@@ -12,7 +12,7 @@ import { PolicyResolved } from '../../models/policy-resolved';
   providedIn: 'root'
 })
 
-export class PolicyResolver implements Resolve<PolicyResolved> {
+export class PolicyResolver  {
 
   constructor(private router: Router, private policyService: PolicyService, private historyService: HistoryService, private reinsuranceLookupService: ReinsuranceLookupService) { }
 

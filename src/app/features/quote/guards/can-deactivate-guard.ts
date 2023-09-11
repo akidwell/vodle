@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { QuoteInformationComponent } from '../components/common/quote-information-base/quote-information.component';
@@ -15,7 +15,7 @@ import { TermsConditionsComponent } from '../components/common/terms-conditions-
 import { QuotePropertyMortgageeComponent } from '../components/property/quote-property-mortgagee/quote-property-mortgagee.component';
 
 @Injectable()
-export class CanDeactivateGuard implements CanDeactivate<QuoteInformationComponent> {
+export class CanDeactivateGuard  {
 
   constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService,
     private pageDataService: PageDataService, private quoteDataValidationService: QuoteDataValidationService, private quoteSavingService: QuoteSavingService) { }

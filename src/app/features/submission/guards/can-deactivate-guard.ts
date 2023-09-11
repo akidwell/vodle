@@ -1,18 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {
-  CanDeactivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { SubmissionStatusEnum } from 'src/app/core/enums/submission-status-enum';
 import { SubmissionInfoBaseComponent } from '../components/submission-info-base/submission-info-base.component';
 
 @Injectable()
-export class CanDeactivateGuard implements CanDeactivate<SubmissionInfoBaseComponent> {
+export class CanDeactivateGuard  {
   constructor(
     private router: Router,
     private navigationConfirmationService: NavigationConfirmationService,
