@@ -1,12 +1,12 @@
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { PropertyDeductible } from '../models/property-deductible';
+import { PropertyDeductible, PropertyQuoteDeductible } from '../models/property-deductible';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteValidationClass } from './quote-validation-class';
 import { BuildingLocationClass } from 'src/app/shared/classes/building-location-class';
 
-export class PropertyQuoteDeductibleClass extends BuildingLocationClass implements PropertyDeductible, Validation, QuoteAfterSave {
+export class PropertyQuoteDeductibleClass extends BuildingLocationClass implements Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
@@ -14,6 +14,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
   private _isDuplicate = false;
+  private _markForDeletion: boolean | null = null;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
   sequence: number | null = null;
@@ -34,6 +35,14 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   isNew = false;
   guid = '';
   invalidList: string[] = [];
+
+  get markForDeletion() : boolean | null {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean | null){
+    this._markForDeletion = value;
+    this._isDirty = true;
+  }
 
   get propertyDeductibleId() : number | null {
     return this._propertyDeductibleId;
@@ -142,7 +151,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     this._isDirty = true;
   }
 
-  constructor(deductible?: PropertyDeductible) {
+  constructor(deductible?: PropertyQuoteDeductible) {
     super();
     if (deductible) {
       this.existingInit(deductible);
@@ -268,7 +277,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     return !value;
   }
 
-  existingInit(deductible: PropertyDeductible) {
+  existingInit(deductible: PropertyQuoteDeductible) {
     this.propertyQuoteDeductibleId = deductible.propertyQuoteDeductibleId;
     this.propertyQuoteId = deductible.propertyQuoteId;
     this.sequence = deductible.sequence;
@@ -318,49 +327,6 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     // No special rules
   }
 
-  get deductibleReadonly(): boolean {
-    return this.isDeductibleLocked || this._isExcluded;
-  }
-  get deductibleTypeReadonly(): boolean {
-    return this.isDeductibleTypeLocked || this._isExcluded;
-  }
-  get amountReadonly(): boolean {
-    return this._isSubjectToMin || this._isExcluded;
-  }
-  get isExcludedReadonly(): boolean {
-    return this._propertyDeductibleId === null;
-  }
-  get isExcludedVisible(): boolean {
-    return !this.isExcludeLocked;
-  }
-  get isSubjectToMinVisible(): boolean {
-    return !this.isSubjectToMinLocked && !this._isExcluded;
-  }
-  get subjectToMinVisible(): boolean {
-    return this._isSubjectToMin ?? false;
-  }
-  get deleteVisible(): boolean {
-    return !this.isDeductibleLocked;
-  }
-  get deductibleRequired(): boolean {
-    return !this.deductibleReadonly;
-  }
-  get amountRequired(): boolean {
-    return !this._isSubjectToMin && !this._isExcluded;
-  }
-  get deductibleTypeRequired(): boolean {
-    return !this.deductibleTypeReadonly && !this._isExcluded;
-  }
-  get deductibleCodeRequired(): boolean {
-    return !this._isExcluded;
-  }
-  get subjectToMinPercentRequired(): boolean {
-    return this._isSubjectToMin ?? false;
-  }
-  get subjectToMinAmountRequired(): boolean {
-    return this._isSubjectToMin ?? false;
-  }
-
   toJSON() {
     return {
       propertyQuoteDeductibleId: this.propertyQuoteDeductibleId,
@@ -383,7 +349,26 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       isExcludeLocked: this.isExcludeLocked,
       isSubjectToMinLocked: this.isSubjectToMinLocked,
       isNew: this.isNew,
-      guid: this.guid
+      guid: this.guid,
+      isDirty: null,
+      building: null,
+      markForDeletion: this.markForDeletion,
+      validate: () => null
+      // deleteVisible: false,
+      // subjectToMinAmountRequired: false,
+      // subjectToMinVisible: false,
+      // subjectToMinPercentRequired: false,
+      // isSubjectToMinVisible: false,
+      // isExcludedReadonly: false,
+      // isExcludedVisible: false,
+      // deductibleCodeRequired: false,
+      // deductibleTypeReadonly: false,
+      // deductibleTypeRequired: false,
+      // amountRequired: false,
+      // amountReadonly: false,
+      // deductibleReadonly: false,
+      // deductibleRequired: false,
+      // markDirty: () => null
     };
   }
 }

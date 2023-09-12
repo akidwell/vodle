@@ -1,9 +1,5 @@
-export interface QuoteRate {
+import { Rate } from 'src/app/shared/models/rate';
+
+export interface QuoteRate extends Rate {
     quoteId: number | null;
-    sequenceNo: number | null;
-    rateBasis: number | null;
-    premiumRate: number | null;
-    isFlatRate: boolean | null;
-    premium: number | null;
-    classCode: number | null;
 }

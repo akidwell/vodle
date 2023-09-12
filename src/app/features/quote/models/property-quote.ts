@@ -1,7 +1,7 @@
 import { AdditionalInterestData } from './additional-interest';
 import { MortgageeData } from './mortgagee';
 import { PropertyBuilding } from './property-building';
-import { PropertyDeductible } from './property-deductible';
+import { PropertyDeductible, PropertyQuoteDeductible } from './property-deductible';
 import { QuoteOptionalPremium } from './quote-optional-premium';
 
 export interface PropertyQuote {
@@ -11,12 +11,12 @@ export interface PropertyQuote {
   rateEffectiveDate: Date | null;
 
   // GAM are these needed? Need to look at more closely!!!
-  propertyQuoteDeductibleList?: PropertyDeductible[];
+  propertyQuoteDeductibleList?: PropertyQuoteDeductible[];
   propertyQuoteBuildingList?: PropertyBuilding[];
   //propertyQuoteMortgageeList?: MortgageeData[];
   // propertyQuoteAdditionalInterestList?: AdditionalInterestData[];
   propertyQuoteBuildingOptionalCoverage?: QuoteOptionalPremium[];
-  propertyQuoteDeductible?: PropertyDeductible[];
+  propertyQuoteDeductible?: PropertyQuoteDeductible[];
   propertyQuoteBuilding?: PropertyBuilding[];
   propertyQuoteMortgagee?: MortgageeData[];
   propertyQuoteAdditionalInterest?: AdditionalInterestData[];
