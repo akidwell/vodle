@@ -13,8 +13,12 @@ import { ParentBaseClass } from './base/parent-base-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { PropertyBuildingCoverage } from '../../quote/models/property-building-coverage';
 import { Code } from 'src/app/core/models/code';
+import { PropertyDeductible, PropertyEndorsementDeductible } from '../../quote/models/property-deductible';
+import { PropertyQuoteDeductibleClass } from '../../quote/classes/property-quote-deductible-class';
+import { PropertyPolicyDeductibleClass } from './property-policy-deductible-class';
 import { PolicyLayerClass } from './policy-layer-class';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { PropertyPolicyDeductible } from '../models/property-policy-deductible';
 import { ReinsuranceLookup } from '../../policy/services/reinsurance-lookup/reinsurance-lookup';
 import { PolicyOptionalPremium } from '../../policy/models/policy-optional-premium';
 import { PolicyOptionalPremiumV2 } from '../../policy/models/policy-optional-premium';
@@ -37,15 +41,34 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   transactionTypeCode!: number;
   transactionEffectiveDate!: Date;
   transactionExpirationDate!: Date | null;
-  terrorismCode!: string;
   sir!: number;
-  premium!: number | null;
   limit!: number;
   underlyingLimit!: number;
   attachmentPoint!: number;
   endorsementBuilding: PropertyPolicyBuildingClass[] = [];
   endorsementMortgagee: MortgageeClass[] = [];
   endorsementAdditionalInterest: AdditionalInterestClass[] = [];
+  endorsementDeductible: PropertyPolicyDeductibleClass[] = [];
+
+  
+  private _terrorismCode : string = "";
+  public get terrorismCode() : string {
+    return this._terrorismCode;
+  }
+  public set terrorismCode(v : string) {
+    this._terrorismCode = v;
+    this.markDirty();
+  }
+  
+  private _premium : number = 0;
+  public get premium() : number{
+    return this._premium;
+  }
+  public set premium(v : number) {
+    this._premium = v;
+    this.markDirty();
+  }
+  
   policyLayers: PolicyLayerClass[] = [];
   reinsuranceCodes: ReinsuranceLookup[] = [];
   reinsuranceFacCodes: ReinsuranceLookup[] = [];
@@ -57,11 +80,24 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.endorsementBuilding = this.buildingInit(end.endorsementBuilding as PropertyBuilding[]);
     this.endorsementMortgagee = this.mortgageeInit(end.endorsementMortgagee);
     this.endorsementAdditionalInterest = this.additionalInterestInit(end.endorsementAdditionalInterest);
+    this.endorsementDeductible = this.endorsementDeductibleInit(end.endorsementDeductible);
+    this._terrorismCode = end.terrorismCode;
+    this._premium = end.premium ?? 0;
     this.endorsementBuildingOptionalCoverage = this.optionalPremiumInit(end.endorsementBuildingOptionalCoverage);
     this.policyLayers = end.policyLayers?.map(p => new PolicyLayerClass(p));
     this.guid = crypto.randomUUID();
     this.reinsuranceCodes = end.reinsuranceCodes;
     this.reinsuranceFacCodes = end.reinsuranceFacCodes;
+  }
+
+  endorsementDeductibleInit(data: PropertyPolicyDeductible[]){
+    const deductibles: PropertyPolicyDeductibleClass[] = [];
+    if(data){
+      data.forEach(ded => {
+        deductibles.push(new PropertyPolicyDeductibleClass(ded));
+      });
+    }
+    return deductibles;
   }
 
   additionalInterestInit(data: AdditionalInterestData[]){
@@ -191,6 +227,8 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
     const additionalInterests: AdditionalInterestData[] = [];
     (this.endorsementAdditionalInterest as AdditionalInterestClass[]).forEach(c => additionalInterests.push(c.toJSON()));
+    const endorsementDeductibles: PropertyPolicyDeductible[] = [];
+    (this.endorsementDeductible as PropertyPolicyDeductibleClass[]).forEach(c => endorsementDeductibles.push(c.toJSON()));
     const endorsementBuildingOptionalCoverage: PolicyOptionalPremium[] = [];
     (this.endorsementBuildingOptionalCoverage as PolicyOptionalPremiumClassV2[]).forEach(c => endorsementBuildingOptionalCoverage.push(c.toJSON()));
     return {
@@ -211,6 +249,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       reinsuranceFacCodes: [],
       endorsementAdditionalInterest: this.endorsementAdditionalInterest,
       endorsementBuildingOptionalCoverage: this.endorsementBuildingOptionalCoverage,
+      endorsementDeductible: endorsementDeductibles,
       policyLayers: this.policyLayers.map(p => p.toJSON())
     };
   }

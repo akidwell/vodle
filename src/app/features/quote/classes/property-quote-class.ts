@@ -8,7 +8,7 @@ import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
 import { PropertyBuilding } from '../models/property-building';
 import { PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
-import { PropertyDeductible } from '../models/property-deductible';
+import { PropertyDeductible, PropertyQuoteDeductible } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
@@ -26,7 +26,7 @@ import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
-export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
+export class PropertyQuoteClass extends QuoteClass implements  Validation, QuoteAfterSave {
   propertyQuoteId = 0;
   quote!: QuoteClass;
   //quoteId: number | null = null;
@@ -957,7 +957,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   classToJSON(): PropertyQuote {
-    const deductibles: PropertyDeductible[] = [];
+    const deductibles: PropertyQuoteDeductible[] = [];
     this.propertyQuoteDeductibleList.forEach(c => deductibles.push(c.toJSON()));
 
     const mortgagee: MortgageeData[] = [];

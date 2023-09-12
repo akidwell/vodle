@@ -1,6 +1,33 @@
 <div *ngIf="policyInfo != undefined">
-  <div *ngIf="this.policyInfo.getTabErrors('Premium').length != 0">
-    <ngb-alert type=danger [innerHTML]="getAlerts()"></ngb-alert>
-  </div>
-  </div>
+    <div *ngIf="this.policyInfo.getTabErrors('Premium').length != 0">
+      <ngb-alert type=danger [innerHTML]="getAlerts()"></ngb-alert>
+    </div>
+</div>
+<div class="card">
+    <div >
+        <div style="float:right; font-weight:bold; padding:10px">Total Premium: {{totalPrem | currency: 'USD' : 'symbol':'1.0-0'}}</div>
+    </div>
+    <div class="card-header" (click)="collapse.toggle()">
+        Property Premium
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
+        <div *ngIf="policyInfo" class="card-body">
+            <rsps-property-premium-rate *ngIf="policyInfo" [programDescription]="programDesc" [propertyParent]="policyInfo" 
+                [limitTotal]="policyInfo.limitTotal" [rate]="policyInfo.rating" [premium]="policyInfo.endorsementData.premium"  [canEdit]="canEdit"
+                (updatePremium)=updatePremium($event) (updateTerrorism)="updateTerrorism($event)">
+            </rsps-property-premium-rate>
+        </div>
+       <div *ngIf="policyInfo" class="card-body top-bordered" >
+            <rsps-property-deductible-group [programId]="programId" [classType]="classType" [readOnlyQuote]="policyInfo.readOnlyQuote"
+                [deductibles]="policyInfo.endorsementData.endorsementDeductible" [canEdit]="canEdit" (deleteDeduct)="deleteDeduct($event)">
+            </rsps-property-deductible-group>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="footer-button" *ngIf="canEdit && !policyInfo.readOnlyQuote"  (click)="addDeductible();">Add Deductible</button>
+        <div class="footer-count">Deductibles: {{this.policyInfo.endorsementData.endorsementDeductible.length}}</div>
+    </div>
+</div>
 <rsps-optional-premium-group *ngIf="propertyParent"  [propertyParent]="policyInfo" [readOnlyQuote]="false" [type]="type"></rsps-optional-premium-group>

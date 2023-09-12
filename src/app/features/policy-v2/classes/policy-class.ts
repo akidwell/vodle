@@ -16,6 +16,7 @@ import { PropertyPolicyBuildingClass } from '../../quote/classes/property-policy
 import { AdditionalInterestClass } from 'src/app/shared/components/property-additional-interest.ts/additional-interest-class';
 import { MortgageeClass } from 'src/app/shared/components/property-mortgagee/mortgagee-class';
 import { PropertyPolicyBuildingCoverageClass } from '../../quote/classes/property-policy-building-coverage-class';
+import { PolicyRateClass } from './policy-rate-class';
 import { TabValidationClass } from 'src/app/shared/classes/tab-validation-class';
 import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
 import { PolicyValidationClass } from './policy-validation-class';
@@ -67,7 +68,14 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   additionalInterestList: AdditionalInterestClass[] = [];
   mortgageeList: MortgageeClass[] = [];
   readOnlyQuote = false;
+  private _rate: PolicyRateClass = new PolicyRateClass();
 
+  get rating() : PolicyRateClass {
+    this._rate.premium = this.endorsementData.premium;
+    this._rate.isFlatRate = true;
+    this._rate.premiumRate = 100;
+    return this._rate;
+  }
   // top level - property detail right
   // comes from the quote rates
   private _classCode! : number | null;
@@ -225,6 +233,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
 
   constructor(policy?: PolicyInformation ) {
     super();
+    this.readOnlyQuote = false;
     if (policy) {
       this.existingInit(policy);
     } else {
@@ -283,6 +292,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
     this._classCode = policy.classCode;
+    
     this._riskDescription = policy.riskDescription;
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
@@ -545,7 +555,15 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   clearCspCodes() {
     this.endorsementData.endorsementBuilding.forEach(x => x.cspCode == null);
   }
+  get totalPremium(): number{
+    let optionalPremTotal = 0;
+    let ratesTotal = 0;
 
+    // this.propertyQuoteBuildingOptionalCoverage.map((x) => (optionalPremTotal += x.additionalPremium ?? 0));
+    // this.policyRateClass.map((x) =>(ratesTotal += x.premium ?? 0));
+    ratesTotal = this.endorsementData.premium ?? 0;
+    return Number(optionalPremTotal) + Number(ratesTotal);
+  }
   calculateLargestPremTiv(){
     let largest = 0;
     this.endorsementData.endorsementBuilding.map(x => {

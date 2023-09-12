@@ -4,10 +4,10 @@
             <div class="row">
                 <div class="col-lg-1">
                     <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description"
-                        bindValue="code" [required]="canEdit && deductible.deductibleRequired && !readOnlyQuote" name="building"
+                        bindValue="code" [required]="canEdit && deductibleRequired && !readOnlyQuote" name="building"
                         [virtualScroll]="true" click-stop-propagation validate-on-change   (change)="markDirty()"
-                        [readonly]="!canEdit || deductible.deductibleReadonly || readOnlyQuote" [clearable]="false"
-                        [searchFn]="dropDownSearch" [(ngModel)]="deductible.building" (change)="deductible.markDirty()">
+                        [readonly]="!canEdit || deductibleReadonly || readOnlyQuote" [clearable]="false"
+                        [searchFn]="dropDownSearch" [(ngModel)]="deductible.building" (change)="markDirty()">
                         <ng-template ng-label-tmp let-item="item">
                             {{item.code}}
                         </ng-template>
@@ -18,32 +18,32 @@
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="deductible" [items]="propertyDeductibles$ | async" bindLabel="name"
-                        bindValue="propertyDeductibleId" [required]="canEdit && deductible.deductibleRequired"
+                        bindValue="propertyDeductibleId" [required]="canEdit && deductibleRequired"
                         validate-on-change [fullValidate]="true"
-                        name="deductible" click-stop-propagation [readonly]="!canEdit || deductible.deductibleReadonly"
+                        name="deductible" click-stop-propagation [readonly]="!canEdit || deductibleReadonly"
                         [clearable]="false" [(ngModel)]="deductible.propertyDeductibleId"
                         (change)="changeDeductible($event)">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <input *ngIf="!deductible.isExcluded" type="text" class="form-control right" id="amount"
-                        [readonly]="!canEdit || deductible.amountReadonly || readOnlyQuote" validate-on-change
-                        [required]="canEdit && deductible.amountRequired && !readOnlyQuote" string-to-currency [allowNegative]="false" [hideSymbol]="false"
+                        [readonly]="!canEdit || amountReadonly || readOnlyQuote" validate-on-change
+                        [required]="canEdit && amountRequired && !readOnlyQuote" string-to-currency [allowNegative]="false" [hideSymbol]="false"
                         name="amount" click-stop-propagation [(ngModel)]="deductible.amount" #amount="ngModel">
                     <input *ngIf="deductible.isExcluded" type="text" class="form-control right" id="amount" readonly
                         name="amount" click-stop-propagation value="Excluded">
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="deductibleType" [items]="deductibleTypes$ | async" bindLabel="description"
-                        bindValue="code" [required]="canEdit && deductible.deductibleTypeRequired && !readOnlyQuote" name="deductibleType"
-                        click-stop-propagation [readonly]="!canEdit || deductible.deductibleTypeReadonly || readOnlyQuote"
+                        bindValue="code" [required]="canEdit && deductibleTypeRequired && !readOnlyQuote" name="deductibleType"
+                        click-stop-propagation [readonly]="!canEdit || deductibleTypeReadonly || readOnlyQuote"
                         validate-on-change
                         [clearable]="false" [(ngModel)]="deductible.deductibleType">
                     </ng-select>
                 </div>
                 <div class="col-lg-2">
                     <ng-select id="deductibleCode" [items]="deductibleCodes$ | async" bindLabel="description"
-                        bindValue="code" [required]="canEdit && deductible.deductibleCodeRequired && !readOnlyQuote" name="deductibleCode"
+                        bindValue="code" [required]="canEdit && deductibleCodeRequired && !readOnlyQuote" name="deductibleCode"
                         validate-on-change
                         click-stop-propagation [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote" [clearable]="false"
                         [(ngModel)]="deductible.deductibleCode">
@@ -51,13 +51,13 @@
                 </div>
                 <div class="col-lg-1">
                     <input type="checkbox" class="form-check-input" id="excluded" [(ngModel)]="deductible.isExcluded"
-                        name="excluded" [hidden]="!deductible.isExcludedVisible" click-stop-propagation
-                        validate-on-change [readonly]="!canEdit || deductible.isExcludedReadonly || readOnlyQuote">
+                        name="excluded" [hidden]="!isExcludedVisible" click-stop-propagation
+                        validate-on-change [readonly]="!canEdit || isExcludedReadonly || readOnlyQuote">
                 </div>
                 <div class="col-lg-1">
                     <input type="checkbox" class="form-check-input" id="subjectToMin"
                         [(ngModel)]="deductible.isSubjectToMin" validate-on-change [fullValidate]="true" name="subjectToMin"
-                        [hidden]="!deductible.isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote">
+                        [hidden]="!isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote">
                 </div>
                 <div class="col-lg-1" *ngIf="collapsed">
                     <div ngbDropdown class="d-inline-block" *ngIf="canEdit">
@@ -65,9 +65,9 @@
                             click-stop-propagation>Actions</button>
                         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                             <button *ngIf="canEdit && !readOnlyQuote" class="btn btn-outline-primary" (click)=copy() click-stop-propagation ngbDropdownItem>Copy</button>
-                            <button *ngIf="!deductible.isNew && canEdit && deductible.deleteVisible && !readOnlyQuote" class="btn btn-outline-primary"
+                            <button *ngIf="!deductible.isNew && canEdit && deleteVisible && !readOnlyQuote" class="btn btn-outline-primary"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Delete</button>
-                            <button *ngIf="deductible.isNew && canEdit && deductible.deleteVisible && !readOnlyQuote" class="btn btn-outline-primary"
+                            <button *ngIf="deductible.isNew && canEdit && deleteVisible && !readOnlyQuote" class="btn btn-outline-primary"
                                 (click)=openDeleteConfirmation() click-stop-propagation ngbDropdownItem>Remove</button>
                         </div>
                     </div>
@@ -83,20 +83,20 @@
                         [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote" click-stop-propagation name="comment"
                         [(ngModel)]="deductible.comment" #comment="ngModel">
                 </div>
-                <div class="col-lg-1" *ngIf="deductible.subjectToMinVisible">
+                <div class="col-lg-1" *ngIf="subjectToMinVisible">
                     <label for="subjectToMinPercent" class="form-label" title="%">%</label>
                     <input type="text" class="form-control right" id="subjectToMinPercent" click-stop-propagation
                         [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote" validate-on-change
-                        [required]="canEdit && deductible.subjectToMinPercentRequired && !readOnlyQuote" string-to-currency
+                        [required]="canEdit && subjectToMinPercentRequired && !readOnlyQuote" string-to-currency
                         [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" name="subjectToMinPercent"
                         [(ngModel)]="deductible.subjectToMinPercent" #subjectToMinPercent="ngModel">
                 </div>
-                <div class="col-lg-2" *ngIf="deductible.subjectToMinVisible">
+                <div class="col-lg-2" *ngIf="subjectToMinVisible">
                     <label for="subjectToMinAmount" class="form-label" title="Subject to Min Amount">Subject to Min
                         Amount</label>
                     <input type="text" class="form-control right" id="subjectToMinAmount" validate-on-change click-stop-propagation
                         [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote"
-                        [required]="canEdit && deductible.subjectToMinAmountRequired && !readOnlyQuote" string-to-currency
+                        [required]="canEdit && subjectToMinAmountRequired && !readOnlyQuote" string-to-currency
                         [allowNegative]="false" name="subjectToMinAmount" [(ngModel)]="deductible.subjectToMinAmount"
                         #subjectToMinAmount="ngModel">
                 </div>
@@ -108,10 +108,10 @@
                         *ngIf="canEdit && !readOnlyQuote">Copy</button>
                     <button class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
                         hover-class="btn-danger" click-stop-propagation
-                        *ngIf="!deductible.isNew && canEdit && deductible.deleteVisible && !readOnlyQuote">Delete</button>
+                        *ngIf="!deductible.isNew && canEdit && deleteVisible && !readOnlyQuote">Delete</button>
                     <button class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
                         hover-class="btn-warning" click-stop-propagation
-                        *ngIf="deductible.isNew && canEdit && deductible.deleteVisible && !readOnlyQuote">Remove</button>
+                        *ngIf="deductible.isNew && canEdit && deleteVisible && !readOnlyQuote">Remove</button>
                 </div>
                 <div [id]='anchorId'></div>
             </div>

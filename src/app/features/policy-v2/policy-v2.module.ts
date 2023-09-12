@@ -30,6 +30,8 @@ import { MortgageeModule } from 'src/app/shared/components/property-mortgagee/mo
 import { AdditionalInterestModule } from 'src/app/shared/components/property-additional-interest.ts/additional-interest.module';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 import { PropertyDetailModule } from 'src/app/shared/components/property-detail/property-detail-module';
+import { PropertyPremiumRateModule } from '../quote/components/property/quote-property-premium-rate/property-premium-rate.module';
+import { PropertyDeductibleModule } from 'src/app/shared/components/property-deductible/property-deductible.module';
 import { StatusModule } from 'src/app/shared/components/status-bar/status-bar.module';
 import { OptionalPremiumModule } from 'src/app/shared/components/optional-premium/optional-premium.module';
 
@@ -64,6 +66,8 @@ import { OptionalPremiumModule } from 'src/app/shared/components/optional-premiu
     MortgageeModule,
     AdditionalInterestModule,
     PropertyDetailModule,
+    PropertyPremiumRateModule,
+    PropertyDeductibleModule,
     StatusModule,
     OptionalPremiumModule
   ],

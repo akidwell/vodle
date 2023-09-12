@@ -8,6 +8,8 @@ import { MortgageeData } from '../../quote/models/mortgagee';
 import { PolicyLayerClass } from '../../policy-v2/classes/policy-layer-class';
 import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { AdditionalInterestData } from '../../quote/models/additional-interest';
+import { PropertyDeductible } from '../../quote/models/property-deductible';
+import { PropertyPolicyDeductible } from '../../policy-v2/models/property-policy-deductible';
 import { ReinsuranceLookup } from '../services/reinsurance-lookup/reinsurance-lookup';
 import { OptionalPremium } from 'src/app/shared/interfaces/optional-premium';
 import { PolicyOptionalPremiumV2 } from './policy-optional-premium';
@@ -128,6 +130,7 @@ export interface Endorsement {
   endorsementBuilding: PropertyBuilding[];
   endorsementMortgagee: MortgageeData[];
   endorsementAdditionalInterest: AdditionalInterestData[];
+  endorsementDeductible: PropertyPolicyDeductible[];
   endorsementBuildingOptionalCoverage:PolicyOptionalPremiumV2[];
   policyLayers: PolicyLayerData[];
   reinsuranceCodes: ReinsuranceLookup[];

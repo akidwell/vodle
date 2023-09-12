@@ -49,7 +49,7 @@ export class CanDeactivateGuard  {
       currentValidation = component.policyInfo.mortgageeValidation;
       errors = component.policyInfo.getTabErrors('MortgageeAi');
     }else if (component instanceof PolicyPremiumComponent) {
-      currentValidation = component.policyInfo.mortgageeValidation;
+      currentValidation = component.policyInfo.premiumValidation;
       errors = component.policyInfo.getTabErrors('Premium');
     } else if (component instanceof PolicyReinsuranceComponent) {
       currentValidation = component.policyInfo.reinsuranceValidation;

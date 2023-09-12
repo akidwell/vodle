@@ -56,6 +56,7 @@ import { InternalNotesModule } from 'src/app/shared/components/internal-notes/in
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 import { PropertyDetailModule } from 'src/app/shared/components/property-detail/property-detail-module';
+import { PropertyPremiumRateModule } from './components/property/quote-property-premium-rate/property-premium-rate.module';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,6 @@ import { PropertyDetailModule } from 'src/app/shared/components/property-detail/
     QuoteProgramBaseComponent,
     QuotePropertyLocationCoverageComponent,
     QuotePropertyPremiumComponent,
-    PropertyPremiumRateComponent,
     QuotePropertyMortgageeComponent,
     QuoteFormsComponent],
   imports: [
@@ -111,7 +111,8 @@ import { PropertyDetailModule } from 'src/app/shared/components/property-detail/
     NgxMaskDirective,
     NgxMaskPipe,
     WarrantiesModule,
-    PropertyDetailModule
+    PropertyDetailModule,
+    PropertyPremiumRateModule
   ],
   providers: [
     provideEnvironmentNgxMask(),
