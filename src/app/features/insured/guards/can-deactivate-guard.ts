@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { NavigationConfirmationService } from '../../../core/services/navigation-confirmation/navigation-confirmation.service';
 import { InsuredInformationComponent } from '../components/insured-information/insured-information.component';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 
 @Injectable()
-export class CanDeactivateGuard implements CanDeactivate<InsuredInformationComponent> {
+export class CanDeactivateGuard  {
 
   constructor(private router: Router, private navigationConfirmationService: NavigationConfirmationService, private pageDataService: PageDataService) { }
 

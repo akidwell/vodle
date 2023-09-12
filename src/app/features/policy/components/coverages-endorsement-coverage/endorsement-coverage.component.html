@@ -50,7 +50,7 @@
               [disableTooltip]="false" [ngbTooltip]="coverage.limitsPattern"
               [readonly]="!canEdit || !canEditLimitPattern" [required]="canEdit && canEditLimitPattern"
               [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="setLimitsPatternMask()"
-              (change)="changeLimitsPattern()" [dropSpecialCharacters]="false">
+              (change)="changeLimitsPattern()" [dropSpecialCharacters]="true">
             <div [hidden]="isLimitsPatternValid || !canEdit || !canEditLimitPattern" class="alert alert-danger">
               Invalid Pattern ({{limitMask}})
             </div>
@@ -144,7 +144,7 @@
             <input type="text" class="form-control" id="rate" [readonly]="!canEdit" string-to-currency
               [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false"
               [(ngModel)]="coverage.rateAmount" name="rate" #rate="ngModel">
-          </div>    
+          </div>
           <div class="col-lg-6">
             <label for="limitsPattern">Limits Pattern</label>
             <div *ngIf="canEditLimitPattern">

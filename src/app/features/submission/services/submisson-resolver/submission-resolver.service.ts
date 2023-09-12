@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { HistoryService } from 'src/app/core/services/policy-history/policy-history.service';
 import { SubmissionClass } from '../../classes/submission-class';
@@ -9,7 +9,7 @@ import { SubmissionService } from '../submission-service/submission-service';
 @Injectable({
   providedIn: 'root'
 })
-export class SubmissionResolver implements Resolve<SubmissionResolved> {
+export class SubmissionResolver  {
 
   constructor(private router: Router, private submissionService: SubmissionService, private historyService: HistoryService) { }
 
