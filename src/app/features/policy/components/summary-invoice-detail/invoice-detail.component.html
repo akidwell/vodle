@@ -42,7 +42,7 @@
     <div class="col-lg-1">
       <input type="text" class="form-control" id="commissionRate" readonly
         [ngModel]="invoiceDetail.commissionRate" name="commissionRate" #commissionRate="ngModel" mask="percent"
-        suffix="%" [dropSpecialCharacters]="false">
+        suffix="%" [dropSpecialCharacters]="true">
     </div>
     <div class="col-lg-2">
       <input type="text" class="form-control" id="commissionAmount" readonly

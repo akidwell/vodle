@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, map, catchError, of, tap } from 'rxjs';
 import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { QuoteResolved } from '../../models/quote-resolved';
@@ -8,7 +8,7 @@ import { QuoteService } from '../quote-service/quote.service';
 @Injectable({
   providedIn: 'root'
 })
-export class QuoteResolver implements Resolve<QuoteResolved> {
+export class QuoteResolver  {
 
   constructor(private router: Router, private quoteService: QuoteService) { }
 

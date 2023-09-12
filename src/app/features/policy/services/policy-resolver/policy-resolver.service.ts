@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { HistoryService } from '../../../../core/services/policy-history/policy-history.service';
@@ -13,7 +13,7 @@ import { EndorsementStatusService } from '../endorsement-status/endorsement-stat
 @Injectable({
   providedIn: 'root'
 })
-export class AccountInformationResolver implements Resolve<AccountInformationResolved> {
+export class AccountInformationResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
 
@@ -44,7 +44,7 @@ export class AccountInformationResolver implements Resolve<AccountInformationRes
 @Injectable({
   providedIn: 'root'
 })
-export class PolicyInformationResolver implements Resolve<PolicyInformationResolved> {
+export class PolicyInformationResolver  {
 
   constructor(private router: Router, private policyService: PolicyService, private historyService: HistoryService, private reinsuranceLookupService: ReinsuranceLookupService) { }
 
@@ -85,7 +85,7 @@ export class PolicyInformationResolver implements Resolve<PolicyInformationResol
 @Injectable({
   providedIn: 'root'
 })
-export class EndorsementResolver implements Resolve<EndorsementResolved> {
+export class EndorsementResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
 
@@ -117,7 +117,7 @@ export class EndorsementResolver implements Resolve<EndorsementResolved> {
 @Injectable({
   providedIn: 'root'
 })
-export class EndorsementCoveragesResolver implements Resolve<EndorsementCoveragesResolved> {
+export class EndorsementCoveragesResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EndorsementCoveragesResolved> {
@@ -147,7 +147,7 @@ export class EndorsementCoveragesResolver implements Resolve<EndorsementCoverage
 @Injectable({
   providedIn: 'root'
 })
-export class AdditionalNamedInsuredsResolver implements Resolve<AdditionalNamedInsuredsResolved> {
+export class AdditionalNamedInsuredsResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
 
@@ -179,7 +179,7 @@ export class AdditionalNamedInsuredsResolver implements Resolve<AdditionalNamedI
 @Injectable({
   providedIn: 'root'
 })
-export class EndorsementLocationResolver implements Resolve<EndorsementLocationResolved> {
+export class EndorsementLocationResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
 
@@ -211,7 +211,7 @@ export class EndorsementLocationResolver implements Resolve<EndorsementLocationR
 @Injectable({
   providedIn: 'root'
 })
-export class PolicyLayerResolver implements Resolve<PolicyLayerDataResolved> {
+export class PolicyLayerResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
 
@@ -243,7 +243,7 @@ export class PolicyLayerResolver implements Resolve<PolicyLayerDataResolved> {
 @Injectable({
   providedIn: 'root'
 })
-export class UnderlyingCoveragesResolver implements Resolve<UnderlyingCoveragesResolved> {
+export class UnderlyingCoveragesResolver  {
 
   constructor(private router: Router, private policyService: PolicyService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UnderlyingCoveragesResolved> {
@@ -314,7 +314,7 @@ export class UnderlyingCoveragesResolver implements Resolve<UnderlyingCoveragesR
 @Injectable({
   providedIn: 'root'
 })
-export class EndorsementStatusResolver implements Resolve<EndorsementStatusResolved> {
+export class EndorsementStatusResolver  {
 
   constructor(private router: Router, private endorsementStatusService: EndorsementStatusService) { }
 

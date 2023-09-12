@@ -689,7 +689,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   toJSON(): PolicyInformation{
     const ai: AdditionalNamedInsuredData [] = [];
     this.additionalNamedInsuredData.forEach(c => ai.push(c.toJSON()));
-
+    console.log('line674 ', this.commRate)
     return{
       policyId: this.policyId,
       policyEffectiveDate: this.policyEffectiveDate,

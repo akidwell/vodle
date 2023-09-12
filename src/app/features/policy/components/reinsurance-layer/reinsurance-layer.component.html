@@ -55,7 +55,7 @@
       <div class="commissionRate">
         <input type="text" style="text-align: right" class="form-control" id="commissionRate" #commissionRate="ngModel"
           [readonly]="reinsuranceLayer.treatyNo == 1 || !canEdit" [required]="canEdit" name="commissionRate"
-          [(ngModel)]="reinsuranceLayer.reinsCededCommRate" [dropSpecialCharacters]="false" mask="percent" suffix="%">
+          [(ngModel)]="reinsuranceLayer.reinsCededCommRate" [dropSpecialCharacters]="true" mask="percent" suffix="%">
       </div>
       <div class="reinsuranceCode">
         <div *ngIf="!reinsuranceLayer.isFacultative">

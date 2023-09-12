@@ -29,7 +29,7 @@
           <div class="col-lg-1">
             <label for="commissionRate">Comm Rate</label>
             <input type="text" class="form-control" id="commissionRate" [required]="true"
-            [readonly]="false" mask="percent" suffix="%" [dropSpecialCharacters]="false" [(ngModel)]="policyInfo.commRate" name="commissionRate"
+            [readonly]="false" mask="percent" suffix="%" [dropSpecialCharacters]="true" [(ngModel)]="policyInfo.commRate" name="commissionRate"
               #commissionRate="ngModel">
           </div>
         </div>

@@ -368,13 +368,15 @@ export class EndorsementCoverageComponent implements OnInit {
 
   setLimitsPatternMask(): string {
     let mask = '';
-    if (this.subCodeDefaults != null) {
-      this.subCodeDefaults.defaultLimitPatternDescription
-        .split('/')
-        .forEach(() => (mask = mask + '0*/'));
-      mask = mask.slice(0, -1);
-    }
-    this.limitMask = mask.replace(/0/g, '');
+    setTimeout(() => {
+      if (this.subCodeDefaults != null) {
+        this.subCodeDefaults.defaultLimitPatternDescription
+          .split('/')
+          .forEach(() => (mask = mask + '0*/'));
+        mask = mask.slice(0, -1);
+      }
+      this.limitMask = mask.replace(/0/g, '');
+    });
     return mask;
   }
 

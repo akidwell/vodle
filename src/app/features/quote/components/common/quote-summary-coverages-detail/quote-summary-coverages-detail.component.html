@@ -14,7 +14,7 @@
     <label for="brokerPercent" class="form-label" title="brokerPercent">Commission</label>
     <input validate-on-change type="text" class="form-control right" id="brokerPercent" name="brokerPercent" [fullValidate]="true"
       (change)="this.quoteData.calculatePropertyPremiums()" [readonly]="!canEdit || quoteData.readOnlyQuote" mask="percent" suffix="%" [required]="canEdit && !quoteData.readOnlyQuote"
-      [dropSpecialCharacters]="false" [(ngModel)]="quoteData.commissionRate" #brokerPercent="ngModel" />
+      [dropSpecialCharacters]="true" [(ngModel)]="quoteData.commissionRate" #brokerPercent="ngModel" />
   </div>
 </div>
 </div>
