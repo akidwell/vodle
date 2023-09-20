@@ -81,6 +81,7 @@ export class EndorsementCoverageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('line84', this.coverage);
     this.statusSub = this.endorsementStatusService.canEditEndorsement.subscribe({
       next: (canEdit) => {
         this.canEditEndorsement = canEdit;

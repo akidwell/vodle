@@ -98,7 +98,11 @@ export class PolicyInformationComponent implements OnInit {
     this.coveragesSub = this.coverageCodes$.subscribe({
       next: codes => {
         this.coverageCodesList = codes;
-        this.determineClaimsMadeOccurrence();
+        if(this.policyInfo.quoteData.claimsMadeOrOccurrence == 'C'){
+          this.canSetRetroDate = true;
+        }
+        if(this.policyInfo.quoteData.claimsMadeOrOccurrence == null)
+          this.determineClaimsMadeOccurrence();
       }
     });
   }
