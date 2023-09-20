@@ -4,7 +4,7 @@ def VersionTag= ""
 def buildDate = new Date().format("MMMM d yyyy HH:mm")
 
 pipeline {
-	agent any
+	agent { label 'gitrunner' }
 	stages {
 		stage('Clean Workspace'){
 			steps{
@@ -40,7 +40,7 @@ pipeline {
 					 branches: [[name: "${params['Branch']}"]],
 					doGenerateSubmoduleConfigurations: false, 
 					submoduleCfg: [], 
-					userRemoteConfigs: [[url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
+					userRemoteConfigs: [[url: 'git@cvgapgithub01.td.afg:risksolutions/rsps',credentialsId:'1489f5a0-f928-40b3-95a0-24242439ba37']]
 				])
 			}
 		}
@@ -141,11 +141,11 @@ pipeline {
 					"""
 				    withCredentials([string(credentialsId: "JENKINSSDATOKEN", variable: "JENKINSTOKEN")]) {      	
 					sh """
-          DACREATEOUTPUT=`${SDACMD} createVersion -component 59803989-b407-49e1-8d9e-b718f4d2d947 -status imported -name TFSBLDS:rsps_${fileVersion}`
+          DACREATEOUTPUT=`${GITRUNDACMD} createVersion -component 59803989-b407-49e1-8d9e-b718f4d2d947 -status imported -name TFSBLDS:rsps_${fileVersion}`
           set |grep DACREATEOUT
 					"""
 					sh """
-          DAADDOUTPUT=`${SDACMD} addVersionFiles -component 59803989-b407-49e1-8d9e-b718f4d2d947 -version TFSBLDS:rsps_${fileVersion} -base ${WORKSPACE}/datmp/`
+          DAADDOUTPUT=`${GITRUNDACMD} addVersionFiles -component 59803989-b407-49e1-8d9e-b718f4d2d947 -version TFSBLDS:rsps_${fileVersion} -base ${WORKSPACE}/datmp/`
           set |grep DAADDOUT
 					"""
 				    }						
