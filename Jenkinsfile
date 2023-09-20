@@ -4,7 +4,7 @@ def VersionTag= ""
 def buildDate = new Date().format("MMMM d yyyy HH:mm")
 
 pipeline {
-	agent any
+	agent { label 'gitrunner' }
 	stages {
 		stage('Clean Workspace'){
 			steps{
