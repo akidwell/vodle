@@ -40,7 +40,7 @@ pipeline {
 					 branches: [[name: "${params['Branch']}"]],
 					doGenerateSubmoduleConfigurations: false, 
 					submoduleCfg: [], 
-					userRemoteConfigs: [[url: 'git@cvgapgithub01.td.afg:risksolutions/rsps']]
+					userRemoteConfigs: [[url: 'git@cvgapgithub01.td.afg:risksolutions/rsps',credentialsId:'1489f5a0-f928-40b3-95a0-24242439ba37']]
 				])
 			}
 		}
