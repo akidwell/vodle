@@ -250,6 +250,29 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
       this._validationResults = new PolicyValidationClass(ValidationTypeEnum.Premium, PolicyValidationTabNameEnum.CoveragePremium);
       this.validate();
     }
+
+    static fromPropertyDeductible(deductible: PropertyDeductible): PropertyPolicyDeductibleClass {
+      const policyDeductible = new PropertyPolicyDeductibleClass();
+      policyDeductible.isAppliedToAll = deductible.isAppliedToAll;
+      policyDeductible.premisesNumber = deductible.premisesNumber;
+      policyDeductible.buildingNumber = deductible.buildingNumber;
+      policyDeductible.sequence = deductible.sequence;
+      policyDeductible.deductibleType = deductible.deductibleType;
+      policyDeductible.deductibleCode = deductible.deductibleCode;
+      policyDeductible.comment = deductible.comment;
+      policyDeductible.amount = deductible.amount;
+      policyDeductible.subjectToMinPercent = deductible.subjectToMinPercent;
+      policyDeductible.subjectToMinAmount = deductible.subjectToMinAmount;
+      policyDeductible.isExcluded = deductible.isExcluded;
+      policyDeductible.isSubjectToMin = deductible.isSubjectToMin;
+      policyDeductible.isNew = deductible.isNew;
+      policyDeductible.isDeductibleLocked = deductible.isDeductibleLocked;
+      policyDeductible.isDeductibleTypeLocked = deductible.isDeductibleTypeLocked;
+      policyDeductible.isExcludeLocked = deductible.isExcludeLocked;
+      policyDeductible.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
+      policyDeductible.markDirty();
+      return policyDeductible;
+    }
   
     validateObject(): ErrorMessage[]{
         console.log('validate  deductible');

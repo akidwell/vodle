@@ -27,28 +27,17 @@ export class PropertyDeductibleGroupComponent implements OnInit {
   @Output() deleteDeduct: EventEmitter<PropertyDeductible> = new EventEmitter();
 
   constructor(private notification: NotificationService, private quoteService: QuoteService) {
-    console.log('test');
    }
 
   ngOnInit(): void {
-    console.log('test2');
   }
 
   addDeductible() {
     this.addDeduct.emit();
-
-    // if (this.classType == ClassTypeEnum.Quote) {
-    //   const newDeductible = new PropertyQuoteDeductibleClass();
-    //   newDeductible.sequence = this.getNextSequence();
-    //   this.deductibles.push(newDeductible);
-    // }
-    // else if (this.classType == ClassTypeEnum.Policy) {
-    //   //TODO
-    // }
   }
 
   copyDeductible(deductible: PropertyDeductible) {
-    // this.copyDeduct.emit(deductible);
+    this.copyDeduct.emit(deductible);
     // const clone = deepClone(deductible.toJSON());
     
     // const newMortgagee = new PropertyQuoteDeductibleClass(clone);
