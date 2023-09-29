@@ -4,18 +4,15 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { UserAuth } from 'src/app/core/authorization/user-auth';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PolicyClass } from '../../../classes/policy-class';
-import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
-import { QuoteRateClass } from 'src/app/features/quote/classes/quote-rate-class';
 import { PolicySavingService } from '../../../services/policy-saving-service/policy-saving.service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PolicyRate } from '../../../models/policy-rate';
 import { PropertyPolicyDeductibleClass } from '../../../classes/property-policy-deductible-class';
 import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
-import { sequence } from '@angular/animations';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
-
+import { PropertyPolicyDeductible } from '../../../models/property-policy-deductible';
 
 @Component({
   selector: 'rsps-policy-premium',
@@ -111,16 +108,22 @@ export class PolicyPremiumComponent implements OnInit {
     updateTerrorism(terrorCode: string){
       this.policyInfo.endorsementData.terrorismCode = terrorCode;
     } 
-    addDeductible(){
+
+    addDeduct(){
       const newDeductible = new PropertyPolicyDeductibleClass();
       newDeductible.sequence = this.getNextSequence();
       this.policyInfo.endorsementData.endorsementDeductible.push(newDeductible);
     }
 
+    copyDeduct(deductible: PropertyDeductible) {
+      const copy = PropertyPolicyDeductibleClass.fromPropertyDeductible(deductible);
+      copy.sequence = this.getNextSequence();
+      this.policyInfo.endorsementData.endorsementDeductible.push(copy);
+    }
+
     deleteDeduct(deductible: PropertyDeductible){
       const index = this.deductibles?.findIndex(x => x.sequence == deductible.sequence);
       if (index > -1) {
-        // this.deductibles[index].markForDeletion = true;
         this.policyInfo.endorsementData.endorsementDeductible.find(x => x.sequence == deductible.sequence)!.markForDeletion = true;
 
         this.deductibles?.splice(index, 1);

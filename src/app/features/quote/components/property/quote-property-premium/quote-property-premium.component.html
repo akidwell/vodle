@@ -16,7 +16,8 @@
         </div>
        <div *ngIf="quote" class="card-body top-bordered" >
             <rsps-property-deductible-group [programId]="program.programId" [classType]="classType" [readOnlyQuote]="quote.readOnlyQuote"
-                [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEdit">
+                [deductibles]="quote.propertyQuoteDeductibleList" [canEdit]="canEdit"
+                (addDeduct)="addDeductible()" (copyDeduct)="copyDeductible($event)" (deleteDeduct)="deleteDeductible($event)">
             </rsps-property-deductible-group>
         </div>
     </div>

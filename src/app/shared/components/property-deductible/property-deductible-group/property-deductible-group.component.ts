@@ -27,46 +27,21 @@ export class PropertyDeductibleGroupComponent implements OnInit {
   @Output() deleteDeduct: EventEmitter<PropertyDeductible> = new EventEmitter();
 
   constructor(private notification: NotificationService, private quoteService: QuoteService) {
-    console.log('test');
    }
 
   ngOnInit(): void {
-    console.log('test2');
   }
 
   addDeductible() {
     this.addDeduct.emit();
-
-    // if (this.classType == ClassTypeEnum.Quote) {
-    //   const newDeductible = new PropertyQuoteDeductibleClass();
-    //   newDeductible.sequence = this.getNextSequence();
-    //   this.deductibles.push(newDeductible);
-    // }
-    // else if (this.classType == ClassTypeEnum.Policy) {
-    //   //TODO
-    // }
   }
 
   copyDeductible(deductible: PropertyDeductible) {
-    // this.copyDeduct.emit(deductible);
-    // const clone = deepClone(deductible.toJSON());
-    
-    // const newMortgagee = new PropertyQuoteDeductibleClass(clone);
-    
-    // this.deductibles?.push(deductible);
+    this.copyDeduct.emit(deductible);
   }
 
   deleteDeductible(deductible: PropertyDeductible) {
     this.deleteDeduct.emit(deductible);
-    // const index = this.deductibles?.indexOf(deductible, 0);
-    // if (index > -1) {
-    //   // this.deductibles[index].markForDeletion = true;
-    //   this.deductibles?.splice(index, 1);
-    //   if (!deductible.isNew) {
-    //     this.notification.show('Deductible deleted.', { classname: 'bg-success text-light', delay: 5000 });
-    //   }
-    //   //TODO: if else for propertyParent- quote deletes from DB immediately, policy deletes on the save
-    // }
   }
 
   getNextSequence(): number {

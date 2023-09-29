@@ -21,12 +21,13 @@
         </div>
        <div *ngIf="policyInfo" class="card-body top-bordered" >
             <rsps-property-deductible-group [programId]="programId" [classType]="classType" [readOnlyQuote]="policyInfo.readOnlyQuote"
-                [deductibles]="policyInfo.endorsementData.endorsementDeductible" [canEdit]="canEdit" (deleteDeduct)="deleteDeduct($event)">
+                [deductibles]="policyInfo.endorsementData.endorsementDeductible" [canEdit]="canEdit"
+                (addDeduct)="addDeduct()" (deleteDeduct)="deleteDeduct($event)" (copyDeduct)="copyDeduct($event)">
             </rsps-property-deductible-group>
         </div>
     </div>
     <div class="card-footer">
-        <button class="footer-button" *ngIf="canEdit && !policyInfo.readOnlyQuote"  (click)="addDeductible();">Add Deductible</button>
+        <button class="footer-button" *ngIf="canEdit && !policyInfo.readOnlyQuote"  (click)="addDeduct()">Add Deductible</button>
         <div class="footer-count">Deductibles: {{this.policyInfo.endorsementData.endorsementDeductible.length}}</div>
     </div>
 </div>

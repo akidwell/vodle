@@ -57,7 +57,8 @@
                 <div class="col-lg-1">
                     <input type="checkbox" class="form-check-input" id="subjectToMin"
                         [(ngModel)]="deductible.isSubjectToMin" validate-on-change [fullValidate]="true" name="subjectToMin"
-                        [hidden]="!isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote">
+                        [hidden]="!isSubjectToMinVisible" [readonly]="!canEdit || deductible.isExcluded || readOnlyQuote"
+                        ngbTooltip="Percentage and Subject to Min Amount Required">
                 </div>
                 <div class="col-lg-1" *ngIf="collapsed">
                     <div ngbDropdown class="d-inline-block" *ngIf="canEdit">
