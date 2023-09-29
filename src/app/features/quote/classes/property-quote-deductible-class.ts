@@ -277,6 +277,31 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     return !value;
   }
 
+  static fromPropertyDeductible(propertyDeductible: PropertyDeductible): PropertyQuoteDeductibleClass {
+    const deductible = new PropertyQuoteDeductibleClass();
+    deductible.propertyQuoteDeductibleId = propertyDeductible.propertyDeductibleId;
+    deductible.propertyQuoteId = propertyDeductible.propertyDeductibleId;
+    deductible.sequence = propertyDeductible.sequence;
+    deductible.isAppliedToAll = propertyDeductible.isAppliedToAll;
+    deductible.premisesNumber = propertyDeductible.premisesNumber;
+    deductible.buildingNumber = propertyDeductible.buildingNumber;
+    deductible.deductibleType = propertyDeductible.deductibleType;
+    deductible.amount = propertyDeductible.amount;
+    deductible.subjectToMinPercent = propertyDeductible.subjectToMinPercent;
+    deductible.subjectToMinAmount = propertyDeductible.subjectToMinAmount;
+    deductible.deductibleCode = propertyDeductible.deductibleCode;
+    deductible.comment = propertyDeductible.comment;
+    deductible.isExcluded = propertyDeductible.isExcluded;
+    deductible.isSubjectToMin = propertyDeductible.isSubjectToMin;
+    deductible.isDeductibleLocked = propertyDeductible.isDeductibleLocked;
+    deductible.isExcludeLocked = propertyDeductible.isExcludeLocked;
+    deductible.isSubjectToMinLocked = propertyDeductible.isSubjectToMinLocked;
+    deductible.setReadonlyFields();
+    deductible.setRequiredFields();
+    deductible.markDirty();
+    return deductible;
+  }
+
   existingInit(deductible: PropertyQuoteDeductible) {
     this.propertyQuoteDeductibleId = deductible.propertyQuoteDeductibleId;
     this.propertyQuoteId = deductible.propertyQuoteId;
@@ -350,7 +375,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       isSubjectToMinLocked: this.isSubjectToMinLocked,
       isNew: this.isNew,
       guid: this.guid,
-      isDirty: null,
+      isDirty: this.isDirty,
       building: null,
       markForDeletion: this.markForDeletion,
       validate: () => null

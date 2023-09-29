@@ -110,24 +110,20 @@ export class PolicyPremiumComponent implements OnInit {
     } 
 
     addDeduct(){
-      console.log('policy add deduct')
       const newDeductible = new PropertyPolicyDeductibleClass();
       newDeductible.sequence = this.getNextSequence();
       this.policyInfo.endorsementData.endorsementDeductible.push(newDeductible);
     }
 
     copyDeduct(deductible: PropertyDeductible) {
-      console.log('policy copy deduct')
       const copy = PropertyPolicyDeductibleClass.fromPropertyDeductible(deductible);
       copy.sequence = this.getNextSequence();
       this.policyInfo.endorsementData.endorsementDeductible.push(copy);
     }
 
     deleteDeduct(deductible: PropertyDeductible){
-      console.log('policy delete deduct')
       const index = this.deductibles?.findIndex(x => x.sequence == deductible.sequence);
       if (index > -1) {
-        // this.deductibles[index].markForDeletion = true;
         this.policyInfo.endorsementData.endorsementDeductible.find(x => x.sequence == deductible.sequence)!.markForDeletion = true;
 
         this.deductibles?.splice(index, 1);

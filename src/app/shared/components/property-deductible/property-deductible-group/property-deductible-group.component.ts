@@ -38,24 +38,10 @@ export class PropertyDeductibleGroupComponent implements OnInit {
 
   copyDeductible(deductible: PropertyDeductible) {
     this.copyDeduct.emit(deductible);
-    // const clone = deepClone(deductible.toJSON());
-    
-    // const newMortgagee = new PropertyQuoteDeductibleClass(clone);
-    
-    // this.deductibles?.push(deductible);
   }
 
   deleteDeductible(deductible: PropertyDeductible) {
     this.deleteDeduct.emit(deductible);
-    // const index = this.deductibles?.indexOf(deductible, 0);
-    // if (index > -1) {
-    //   // this.deductibles[index].markForDeletion = true;
-    //   this.deductibles?.splice(index, 1);
-    //   if (!deductible.isNew) {
-    //     this.notification.show('Deductible deleted.', { classname: 'bg-success text-light', delay: 5000 });
-    //   }
-    //   //TODO: if else for propertyParent- quote deletes from DB immediately, policy deletes on the save
-    // }
   }
 
   getNextSequence(): number {
