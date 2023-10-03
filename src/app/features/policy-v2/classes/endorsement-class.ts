@@ -23,6 +23,8 @@ import { ReinsuranceLookup } from '../../policy/services/reinsurance-lookup/rein
 import { PolicyOptionalPremium } from '../../policy/models/policy-optional-premium';
 import { PolicyOptionalPremiumV2 } from '../../policy/models/policy-optional-premium';
 import { PolicyOptionalPremiumClassV2 } from './policy-optional-premium-class-v2';
+import { PolicyRateClass } from './policy-rate-class';
+import { PolicyRate } from '../models/policy-rate';
 
 export class EndorsementClass extends ParentBaseClass implements Endorsement {
   onChildDeletion(child: Deletable): void {
@@ -49,8 +51,21 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   endorsementMortgagee: MortgageeClass[] = [];
   endorsementAdditionalInterest: AdditionalInterestClass[] = [];
   endorsementDeductible: PropertyPolicyDeductibleClass[] = [];
+  rate: PolicyRateClass = new PolicyRateClass();
+//   finalRate!: number;
+//   rateBasis!: number;
 
   
+
+// private _ysnFlatRate : boolean = false;
+// public get ysnFlatRate() : boolean {
+//   return this._ysnFlatRate;
+// }
+// public set ysnFlatRate(v : boolean) {
+//   this._ysnFlatRate = v;
+// }
+
+
   private _terrorismCode : string = "";
   public get terrorismCode() : string {
     return this._terrorismCode;
@@ -88,6 +103,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.guid = crypto.randomUUID();
     this.reinsuranceCodes = end.reinsuranceCodes;
     this.reinsuranceFacCodes = end.reinsuranceFacCodes;
+    this.rate = new PolicyRateClass(end.rate);
   }
 
   endorsementDeductibleInit(data: PropertyPolicyDeductible[]){
@@ -147,6 +163,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
   newInit(){
     this.endorsementNumber = 0;
     this.guid = crypto.randomUUID();
+    this.rate = new PolicyRateClass();
   }
 
   /**
@@ -250,6 +267,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
       endorsementAdditionalInterest: this.endorsementAdditionalInterest,
       endorsementBuildingOptionalCoverage: this.endorsementBuildingOptionalCoverage,
       endorsementDeductible: endorsementDeductibles,
+      rate: this.rate.toJSON(),
       policyLayers: this.policyLayers.map(p => p.toJSON())
     };
   }

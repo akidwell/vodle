@@ -434,6 +434,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
       this.isExcludeLocked = deductible.isExcludeLocked;
       this.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
       this.guid = deductible.guid;
+      this._markForDeletion = false;
       this.setReadonlyFields();
       this.setRequiredFields();
     }

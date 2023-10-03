@@ -4,6 +4,7 @@ import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageState } from 'src/app/core/models/page-state';
 import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
+import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PropertyBuildingCoverage, PropertyBuildingCoverageSubjectAmountData } from 'src/app/features/quote/models/property-building-coverage';
 import { Quote } from 'src/app/features/quote/models/quote';
 
@@ -13,7 +14,7 @@ import { Quote } from 'src/app/features/quote/models/quote';
   styleUrls: ['./property-detail-left.component.css']
 })
 export class PropertyDetailLeftComponent implements OnInit {
-  @Input() public propertyParent!: Quote | PolicyClass;
+  @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
   @Input() public classType!: ClassTypeEnum;
   @Input() public canEdit = false;
   @Input() public buildings!: PropertyBuildingClass[];
