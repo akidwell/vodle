@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Code } from 'src/app/core/models/code';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { Rate } from 'src/app/shared/models/rate';
+import { outputAst } from '@angular/compiler';
 
 @Component({
   selector: 'rsps-property-premium-rate',
@@ -26,11 +27,15 @@ export class PropertyPremiumRateComponent implements OnInit {
 
   @Output() updatePremium: EventEmitter<number> = new EventEmitter();
   @Output() updateTerrorism: EventEmitter<string> = new EventEmitter();
+  @Output() updateYsnFlatRate: EventEmitter<boolean> = new EventEmitter();
+  @Output() updateRateBasis: EventEmitter<number> = new EventEmitter();
+  @Output() updateFinalRate: EventEmitter<number> = new EventEmitter();
 
-  public terrorismCode = '';
+  public selectedTerrorismCode = '';
 
   terrorismOptions: Code[] = [];
   public hasTerrorism = false;
+  public ysnFlatRate = false;
 
   constructor(private dropdowns: DropDownsService) {
     console.log('propertypremiumratecomponent const');
@@ -43,17 +48,32 @@ export class PropertyPremiumRateComponent implements OnInit {
       {key: 1, code: 'I', description: 'Accept'},
       {key: 2, code: 'J', description: 'Decline'}];
       this.isPolicy = true;
+      this.selectedTerrorismCode = this.propertyParent.endorsementData.terrorismCode;
     }
     else
     {
       this.isPolicy = false
+      this.premium = this.rate.premium ?? 0;
     }
   }
   changeTerrorism(event: Code) {
     this.updateTerrorism.emit(event.code);
   }
   changePremium(event: any) {
-    this.updatePremium.emit(this.premium);
+    if(this.isPolicy)
+      this.updatePremium.emit(this.premium);
+    else
+      this.rate.premium = this.premium;
   }
+  changeYsnFlatRate(event: any){
+    this.updateYsnFlatRate.emit(this.rate.isFlatRate);
+  }
+  changeRateBasis(event: any){
+    this.updateRateBasis.emit(this.rate.rateBasis);
+  }
+  changeFinalRate(event: any){
+    this.updateFinalRate.emit(this.rate.premiumRate);
+  }
+
 
 }

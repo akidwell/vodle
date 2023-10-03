@@ -68,14 +68,14 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   additionalInterestList: AdditionalInterestClass[] = [];
   mortgageeList: MortgageeClass[] = [];
   readOnlyQuote = false;
-  private _rate: PolicyRateClass = new PolicyRateClass();
+  // private _rate: PolicyRateClass = new PolicyRateClass();
 
-  get rating() : PolicyRateClass {
-    this._rate.premium = this.endorsementData.premium;
-    this._rate.isFlatRate = true;
-    this._rate.premiumRate = 100;
-    return this._rate;
-  }
+  // get rating() : PolicyRateClass {
+  //   this._rate.premium = this.endorsementData.premium;
+  //   this._rate.isFlatRate = true;
+  //   this._rate.premiumRate = 100;
+  //   return this._rate;
+  // }
   // top level - property detail right
   // comes from the quote rates
   private _classCode! : number | null;

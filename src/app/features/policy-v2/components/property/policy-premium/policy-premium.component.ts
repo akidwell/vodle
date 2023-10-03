@@ -109,6 +109,18 @@ export class PolicyPremiumComponent implements OnInit {
       this.policyInfo.endorsementData.terrorismCode = terrorCode;
     } 
 
+
+    updateYsNFlatRate(isFlatRate: boolean){
+      this.policyInfo.endorsementData.rate.isFlatRate = isFlatRate;
+    }
+    updateRateBasis(rateBasis: number){
+      this.policyInfo.endorsementData.rate.rateBasis = rateBasis;
+    }
+    updateFinalRate(finalRate: number){
+      this.policyInfo.endorsementData.rate.premiumRate = finalRate;
+    }
+
+
     addDeduct(){
       const newDeductible = new PropertyPolicyDeductibleClass();
       newDeductible.sequence = this.getNextSequence();

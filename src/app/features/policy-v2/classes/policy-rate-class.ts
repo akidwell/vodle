@@ -6,7 +6,7 @@ import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
 export class PolicyRateClass extends ChildBaseClass implements PolicyRate {
 //   quoteId: number | null = null;
   sequenceNo: number | null = 0;
-  classCode: number | null = 0;
+  // classCode: number | null = 0;
   invalidList: string[] = [];
 
   _isValid = true;
@@ -15,41 +15,41 @@ export class PolicyRateClass extends ChildBaseClass implements PolicyRate {
   _errorMessages: string[] = [];
   _validateOnLoad = true;
 
-  private _premiumRate: number | null = null;
-  private _premium: number | null = null;
-  private _rateBasis: number | null = null;
-  private _isFlatRate: boolean | null = null;
+  private _premiumRate: number | undefined;
+  private _premium: number | undefined;
+  private _rateBasis: number | undefined;
+  private _isFlatRate: boolean | undefined;
 
-  get premiumRate() : number | null {
+  get premiumRate() : number | undefined {
     return this._premiumRate;
   }
-  set premiumRate(value: number | null) {
+  set premiumRate(value: number | undefined) {
     this._premiumRate = value;
     this._isDirty = true;
   }
-  get premium() : number | null {
+  get premium() : number | undefined {
     return this._premium;
   }
-  set premium(value: number | null) {
+  set premium(value: number | undefined) {
     this._premium = value;
     this._isDirty = true;
   }
-  get rateBasis() : number | null {
+  get rateBasis() : number | undefined {
     return this._rateBasis;
   }
-  set rateBasis(value: number | null) {
+  set rateBasis(value: number | undefined) {
     this._rateBasis = value;
     this._isDirty = true;
   }
-  get isFlatRate() : boolean | null {
+  get isFlatRate() : boolean | undefined {
     return this._isFlatRate;
   }
-  set isFlatRate(value: boolean | null) {
+  set isFlatRate(value: boolean | undefined) {
     this._isFlatRate = value;
     this._isDirty = true;
   }
 
-  constructor(rate?: PolicyRateClass) {
+  constructor(rate?: PolicyRate) {
     super()
     if (rate) {
       this.existingInit(rate);
@@ -58,8 +58,9 @@ export class PolicyRateClass extends ChildBaseClass implements PolicyRate {
     }
     // this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
     this.validate();
-  }
+  };
 
+  
   validateObject(): ErrorMessage[]{
     console.log('validate  policy');
     //on load or if dirty validate this
@@ -112,7 +113,7 @@ export class PolicyRateClass extends ChildBaseClass implements PolicyRate {
     }
     return null;
   }
-  existingInit(rate: PolicyRateClass) {
+  existingInit(rate: PolicyRate) {
     // this.quoteId = rate.quoteId;
     this.sequenceNo = rate.sequenceNo;
     this._premiumRate = rate.premiumRate;
@@ -145,15 +146,14 @@ export class PolicyRateClass extends ChildBaseClass implements PolicyRate {
     // No special rules
   }
 
-  toJSON(classCode: number | null) {
+  toJSON() {
     return {
     //   quoteId: this.quoteId,
       sequenceNo: this.sequenceNo,
       rateBasis: this.rateBasis,
       isFlatRate: this.isFlatRate,
       premiumRate: this.premiumRate,
-      premium: this.premium,
-      classCode: classCode
+      premium: this.premium
     };
   }
 }

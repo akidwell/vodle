@@ -15,8 +15,9 @@
     <div #collapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
         <div *ngIf="policyInfo" class="card-body">
             <rsps-property-premium-rate *ngIf="policyInfo" [programDescription]="programDesc" [propertyParent]="policyInfo" 
-                [limitTotal]="policyInfo.limitTotal" [rate]="policyInfo.rating" [premium]="policyInfo.endorsementData.premium"  [canEdit]="canEdit"
-                (updatePremium)=updatePremium($event) (updateTerrorism)="updateTerrorism($event)">
+                [limitTotal]="policyInfo.limitTotal" [rate]="policyInfo.endorsementData.rate" [premium]="policyInfo.endorsementData.premium"  [canEdit]="canEdit"
+                (updatePremium)=updatePremium($event) (updateTerrorism)="updateTerrorism($event)" (updateRateBasis)="updateRateBasis($event)"
+                (updateYsnFlatRate)="updateYsNFlatRate($event)" (updateFinalRate)="updateFinalRate($event)">
             </rsps-property-premium-rate>
         </div>
        <div *ngIf="policyInfo" class="card-body top-bordered" >

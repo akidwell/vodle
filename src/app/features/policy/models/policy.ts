@@ -13,6 +13,8 @@ import { PropertyPolicyDeductible } from '../../policy-v2/models/property-policy
 import { ReinsuranceLookup } from '../services/reinsurance-lookup/reinsurance-lookup';
 import { OptionalPremium } from 'src/app/shared/interfaces/optional-premium';
 import { PolicyOptionalPremiumV2 } from './policy-optional-premium';
+import { PolicyRateClass } from '../../policy-v2/classes/policy-rate-class';
+import { PolicyRate } from '../../policy-v2/models/policy-rate';
 
 
 export interface AccountInformation {
@@ -135,6 +137,7 @@ export interface Endorsement {
   policyLayers: PolicyLayerData[];
   reinsuranceCodes: ReinsuranceLookup[];
   reinsuranceFacCodes: ReinsuranceLookup[];
+  rate: PolicyRate;
 }
 
 export interface AdditionalNamedInsuredsResolved {
