@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <label for="policyCoverage" class="form-label" title="Policy Coverage">Policy Coverage</label>
         <input type="text" class="form-control" id="policyCoverage" readonly name="policyCoverage"
             [(ngModel)]="programDescription" #policyCoverage="ngModel">
@@ -7,7 +7,7 @@
     <div class="col-lg-2">
         <label for="totalLimit" class="form-label" title="Total Limit Amount">Total Limit Amount</label>
         <input type="text" class="form-control right" id="totalLimit" readonly mask="separator.0" thousandSeparator=","
-            name="totalLimit" [ngModel]="limitTotal" #totalLimit="ngModel">
+            name="totalLimit" string-to-currency [ngModel]="limitTotal" #totalLimit="ngModel">
     </div>
     <div class="col-lg-1">
         <label for="rateBasis" class="form-label" title="Rate Basis">Rate Basis</label>
@@ -25,7 +25,7 @@
         <input type="checkbox" class="form-check-input" id="flatRate" name="flatRate" [(ngModel)]="rate.isFlatRate" validate-on-change
             (change)="changeYsnFlatRate($event)" [readonly]="!canEdit || readOnlyQuote">
     </div>
-    <div *ngIf="isPolicy" class="col-lg-1">
+    <div *ngIf="isPolicy" class="col-lg-2">
         <label for="terrorism" class="form-label" title="Terrorism">Terrorism</label>
         <ng-select id="terrorism" [items]="terrorismOptions" bindValue="code" bindLabel="description"
               name="terrorism" (change)="changeTerrorism($event)" [readonly]="!canEdit || readOnlyQuote"
