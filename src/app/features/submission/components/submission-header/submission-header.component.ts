@@ -14,8 +14,8 @@ export class SubmissionHeaderComponent {
   canEditSubmission = false;
   isReadOnly = true;
   @Input() public submission!: SubmissionClass;
-  policyTermOptions = [{'value': PolicyTermEnum.three_months, 'description': '3 months'},{'value': PolicyTermEnum.six_months, 'description': '6 months'}, {'value': PolicyTermEnum.annual, 'description': 'Annual'}, {'value': PolicyTermEnum.eighteen_months, 'description': '18 months'}, {'value': PolicyTermEnum.custom, 'description': 'Custom'}];
- 
+  policyTermOptions = [{'value': PolicyTermEnum.three_months, 'description': '3 months'},{'value': PolicyTermEnum.six_months, 'description': '6 months'}, {'value': PolicyTermEnum.annual, 'description': 'Annual'}, {'value': PolicyTermEnum.custom, 'description': 'Custom'}];
+
   constructor(private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditSubmission$.subscribe(
       (canEditSubmission: boolean) => this.canEditSubmission = canEditSubmission
