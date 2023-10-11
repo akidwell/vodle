@@ -15,6 +15,7 @@ export class QuoteInformationDetailComponent implements OnInit {
   canEdit = false;
   availableAdmittedOptions: Code[] = [];
   availableClaimsMadeOccurrenceOptions: Code[] = [];
+  readOnlyQuote = false;
   constructor(private userAuth: UserAuth) {
     this.authSub = this.userAuth.canEditQuote$.subscribe(
       (canEditQuote: boolean) => this.canEdit = canEditQuote
@@ -54,7 +55,7 @@ export class QuoteInformationDetailComponent implements OnInit {
       };
       this.availableAdmittedOptions.push(nonAdmit);
     }
-    console.log(this.department);
+    this.readOnlyQuote = this.department.programMappings[0].quoteData?.readOnlyQuote ?? false;
   }
   updateGlobalSettings() {
     this.department.programMappings.forEach(program => {

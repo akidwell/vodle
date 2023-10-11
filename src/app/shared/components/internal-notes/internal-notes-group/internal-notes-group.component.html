@@ -29,8 +29,9 @@
   </div>
   <div class="card-footer">
     <div id="mortgageeFooter">
-      <button style="float:left; background:none; border:none;" class="underline"
+      <button *ngIf="!quote.readOnlyQuote" class="footer-button"
         (click)="addnewNote();">Add Internal Notes</button>
+        <div class="footer-count">Internal Notes: {{this.internalNotes.length}}</div>
     </div>
   </div>
 </div>

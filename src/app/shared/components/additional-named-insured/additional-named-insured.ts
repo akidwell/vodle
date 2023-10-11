@@ -1,6 +1,10 @@
 import { lastValueFrom } from 'rxjs';
 import { InsuredService } from 'src/app/features/insured/services/insured-service/insured.service';
+import { ChildBaseClass, ErrorMessageSettings } from 'src/app/features/policy-v2/classes/base/child-base-class';
 import { PolicyService } from 'src/app/features/policy/services/policy/policy.service';
+import { ErrorMessage } from '../../interfaces/errorMessage';
+import { Deletable } from '../../interfaces/deletable';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
 export interface AdditionalNamedInsuredData {
   policyId: number;
@@ -14,6 +18,9 @@ export interface AdditionalNamedInsuredData {
   isActive?: boolean | null;
   canDelete?: boolean | null;
   isNew: boolean;
+  markForDeletion?: boolean | null;
+  guid: string ;
+  isDirty?: boolean | null;
 }
 
 export interface AdditionalNamedInsured extends AdditionalNamedInsuredData {
@@ -30,6 +37,7 @@ export interface AdditionalNamedInsured extends AdditionalNamedInsuredData {
 
 export class coverageANI implements AdditionalNamedInsured {
   policyId = 0;
+  guid = crypto.randomUUID();
   endorsementNo = 0;
   addInsuredCode: number | null = null;
   insuredCode?: number;
@@ -180,7 +188,8 @@ export class coverageANI implements AdditionalNamedInsured {
       sequenceNo: this.sequenceNo,
       role: this.role,
       name: this.name,
-      isNew: this.isNew
+      isNew: this.isNew,
+      guid: crypto.randomUUID()
     };
   }
 }
@@ -197,6 +206,7 @@ export class insuredANI implements AdditionalNamedInsured {
   private _isDirty = false;
   invalidList: string[] = [];
   isDuplicate = false;
+  guid = crypto.randomUUID();
 
   private _sequenceNo = 0;
   private _role: number | null = null;
@@ -264,7 +274,7 @@ export class insuredANI implements AdditionalNamedInsured {
     this._isDirty = true;
   }
   async save(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return true;
   }
 
   get isValid(): boolean {
@@ -334,7 +344,186 @@ export class insuredANI implements AdditionalNamedInsured {
       role: this.role,
       name: this.name,
       isActive: this.isActive,
-      isNew: this.isNew
+      isNew: this.isNew,
+      guid: crypto.randomUUID()
     };
   }
 }
+
+export class PolicyANIClass extends ChildBaseClass implements AdditionalNamedInsured, Deletable {
+  onGuidNewMatch(T: PolicyANIClass): void {
+    this.addInsuredCode = T.addInsuredCode;
+    this.isNew = false;
+    return;
+  }
+  onGuidUpdateMatch(T: PolicyANIClass){
+    this._name = T.name;
+    this.hasUpdate = false;
+    this.isNew = false;
+  }
+  policyId = 0;
+  addInsuredCode: number | null = null;
+  insuredCode = 0;
+  endorsementNo = 0;
+  isNew = false;
+  canDelete?: boolean = true;
+  showActive = false;
+  invalidList: string[] = [];
+  isDuplicate = false;
+
+  private _markForDeletion = false;
+  private _sequenceNo = 0;
+  private _role: number | null = null;
+  private _name: string | null = null;
+  private _isActive: boolean | null = null;
+  private _createdDate!: Date | null | undefined ;
+
+  get createdDate() : Date | null | undefined {
+    return this._createdDate;
+  }
+  set createdDate(value: Date | null | undefined ) {
+    this._createdDate = value;
+  }
+
+  get sequenceNo() : number {
+    return this._sequenceNo;
+  }
+  set sequenceNo(value: number) {
+    this._sequenceNo = value;
+    this.markDirty();
+  }
+  get role() : number | null {
+    return this._role;
+  }
+  set role(value: number | null) {
+    this._role = value;
+    this.markDirty();
+  }
+  get name() : string | null {
+    return this._name;
+  }
+  set name(value: string | null) {
+    this._name = value;
+    this.isDirty = true;
+    this.markDirty();
+  }
+  get isActive() : boolean | null {
+    return this._isActive;
+  }
+  set isActive(value: boolean | null) {
+    this._isActive = value;
+  }
+  get markForDeletion() : boolean {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean) {
+    this._markForDeletion = value;
+    this.markDirty();
+  }
+
+  constructor(ani?: AdditionalNamedInsuredData) {
+    super();
+    console.log(ani);
+    if(ani){
+      this.existingInit(ani);
+    }else {
+      this.newInit();
+    }
+  }
+  onDelete(): void {
+    console.log('delete match');
+  }
+  delete(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if(resolve.name)this.markForDeletion = true;});
+  }
+
+  clone(): AdditionalNamedInsured {
+    const copy: PolicyANIClass = Object.create(this);
+    copy.createdDate = null;
+    copy.isNew = true;
+    copy.isActive = true;
+    return copy;
+  }
+
+  copy(): AdditionalNamedInsured {
+    const copy: PolicyANIClass = Object.create(this);
+    copy.addInsuredCode = null;
+    copy.name = 'CopyOf ' + this.name;
+    copy.createdDate = null;
+    copy.isNew = true;
+    copy.isActive = true;
+    return copy;
+  }
+
+  existingInit(ani: AdditionalNamedInsuredData) {
+    this._role = ani.role;
+    this._name = ani.name;
+    this._createdDate = ani.createdDate;
+    this._isActive = ani.isActive ?? true;
+    this._sequenceNo = ani.sequenceNo;
+    this.guid = ani.guid || crypto.randomUUID();
+    this.isNew = ani.isNew || false;
+    this.policyId = ani?.policyId ?? 0;
+    this.addInsuredCode = ani?.addInsuredCode ?? null;
+    this.insuredCode = ani?.insuredCode ?? 0;
+    this.endorsementNo = ani?.endorsementNo ?? 0;
+  }
+
+  newInit(){
+    this.role = null;
+    this.name = null;
+    this.guid = crypto.randomUUID();
+    this.isActive = true;
+    this.createdDate = new Date();
+  }
+  markClean() {
+    this.isDirty = false;
+  }
+  markDirty() {
+    this.isDirty = true;
+  }
+  async save(): Promise<boolean> {
+    return true;
+  }
+
+  validateObject(): ErrorMessage[] {
+    console.log('VALIDATE');
+    this.errorMessagesList = [];
+    this.validateRole();
+    this.validateName();
+    return this.errorMessagesList;
+  }
+
+  validateRole(): void {
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: true};
+    console.log('ROLE' + this.role);
+    if (!this.role && !this.markForDeletion) {
+      this.createErrorMessage('Role is required for ANI #' + this.sequenceNo, settings);
+    }
+  }
+  validateName(): void {
+    const settings: ErrorMessageSettings = {preventSave: true, tabAffinity: ValidationTypeEnum.PolicyInfo, failValidation: true};
+    if (!this.name && !this.markForDeletion) {
+      this.createErrorMessage('Name is required for ANI #' + this.sequenceNo, settings);
+    }
+  }
+
+  toJSON(): AdditionalNamedInsuredData {
+    return {
+      policyId: this.policyId,
+      endorsementNo: this.endorsementNo,
+      addInsuredCode: this.addInsuredCode,
+      insuredCode: this.insuredCode,
+      sequenceNo: this.sequenceNo,
+      role: this.role,
+      name: this.name,
+      isActive: this.isActive,
+      isNew: this.isNew,
+      canDelete: this.canDelete,
+      markForDeletion: this.markForDeletion ?? false,
+      guid: this.guid
+    };
+  }
+}
+

@@ -19,8 +19,8 @@
       <div class="reinsuranceCode">
         <label for="reinsuranceCode" *ngIf="index==0">Reinsurance Code</label>
       </div>
-      <div class="isFaculative">
-        <label for="isFaculative" *ngIf="index==0">Fac</label>
+      <div class="isFacultative">
+        <label for="isFacultative" *ngIf="index==0">Fac</label>
       </div>
       <div class="intermediary">
         <label for="intermediary" *ngIf="index==0">Intermediary</label>
@@ -55,10 +55,10 @@
       <div class="commissionRate">
         <input type="text" style="text-align: right" class="form-control" id="commissionRate" #commissionRate="ngModel"
           [readonly]="reinsuranceLayer.treatyNo == 1 || !canEdit" [required]="canEdit" name="commissionRate"
-          [(ngModel)]="reinsuranceLayer.reinsCededCommRate" [dropSpecialCharacters]="false" mask="percent" suffix="%">
+          [(ngModel)]="reinsuranceLayer.reinsCededCommRate" [dropSpecialCharacters]="true" mask="percent" suffix="%">
       </div>
       <div class="reinsuranceCode">
-        <div *ngIf="!reinsuranceLayer.isFaculative">
+        <div *ngIf="!reinsuranceLayer.isFacultative">
           <ng-select id="reinsuranceCode" [items]="reinsuranceCodes$ | async" bindLabel="treatyName"
             [readonly]="!canEdit" bindValue="treatyNumber" [required]="canEdit" [clearable]="false"
             name="reinsuranceCode" [(ngModel)]="reinsuranceLayer.treatyNo" #locationState="ngModel"
@@ -71,7 +71,7 @@
             </ng-template>
           </ng-select>
         </div>
-        <div *ngIf="reinsuranceLayer.isFaculative">
+        <div *ngIf="reinsuranceLayer.isFacultative">
           <ng-select id="reinsuranceFacCode" [items]="reinsuranceFacCodes$ | async" bindLabel="treatyName"
             [readonly]="!canEdit" bindValue="treatyNumber" [required]="canEdit" [clearable]="false"
             name="reinsuranceFacCode" [(ngModel)]="reinsuranceLayer.treatyNo" #locationState="ngModel"
@@ -85,8 +85,8 @@
           </ng-select>
         </div>
       </div>
-      <div class="isFaculative">
-        <input type="checkbox" class="form-check-input" id="isFaculative" [(ngModel)]="reinsuranceLayer.isFaculative" name="isFaculative"
+      <div class="isFacultative">
+        <input type="checkbox" class="form-check-input" id="isFacultative" [(ngModel)]="reinsuranceLayer.isFacultative" name="isFacultative"
           [readonly]="!canEdit" (change)="changeFaculative()" [checked]="reinsuranceLayer.reinsCertificateNo !== null">
       </div>
       <div class="intermediary">
@@ -96,7 +96,7 @@
       </div>
       <div class="certificatNumber">
         <input type="text" class="form-control" id="certificatNumber" #certificatNumber="ngModel" [readonly]="!canEdit"
-          [readonly]="!reinsuranceLayer.isFaculative" name="certificatNumber"
+          [readonly]="!reinsuranceLayer.isFacultative" name="certificatNumber"
           [(ngModel)]="reinsuranceLayer.reinsCertificateNo">
       </div>
       <div class="delete">

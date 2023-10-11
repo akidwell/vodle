@@ -40,10 +40,10 @@ export class MortgageeComponent {
   buildingsSub!: Subscription;
 
   @Input() canDrag = false;
-
+  @Input() readOnlyQuote!: boolean;
 
   private modalRef!: NgbModalRef;
-  @Output() copyExisitingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();
+  @Output() copyExistingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();
   @Output() deleteExistingMortgagee: EventEmitter<MortgageeClass> = new EventEmitter();
 
   @Input() mortgageeData!: MortgageeClass;
@@ -74,11 +74,14 @@ export class MortgageeComponent {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
+        if (this.buildingList?.find(c => c.code == this.mortgageeData.building) == null) {
+          this.mortgageeData.buildingNumber = null;
+          this.mortgageeData.isDirty = true;
+          this.mortgageeData.validate();
+        }
       }
     });
     this.mortgageeRoles$ = this.dropdowns.getMortgageeRoles();
-
-    console.log(this.mortgageeData.isAppliedToAll);
   }
 
   dropDownSearch(term: string, item: Code) {
@@ -110,7 +113,7 @@ export class MortgageeComponent {
   }
 
   copyMortgagee(): void {
-    this.copyExisitingMortgagee.emit(this.mortgageeData);
+    this.copyExistingMortgagee.emit(this.mortgageeData);
   }
 
   async cancel(): Promise<void> {
@@ -158,6 +161,10 @@ export class MortgageeComponent {
     setTimeout(() => {
       document.getElementById(this.anchorId)?.scrollIntoView();
     }, 250);
+  }
+
+  markDirty(): void {
+    this.mortgageeData.isDirty = true;
   }
 }
 

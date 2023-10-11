@@ -17,10 +17,15 @@ export class ReinsuranceLookupService {
 
   ////////////////////////////////////////
   // Reinsurance Codes
-  private cacheReinsuranceCodes: any;
+  /*
+   * Changing the types of the caches to ReinsuranceLookup[] and Observable<ReinsuranceLookup[]>
+   * breaks the dropdown population in Casualty reinsurance. No reinsurance codes load.
+   */
+  private cacheReinsuranceCodes: any = null
   private cacheReinsuranceCodes$!: Observable<any> | null;
 
   getReinsurance(programId: number, effectiveDate: Date): Observable<ReinsuranceLookup[]> {
+    console.log('get reinsurance');
     let observable: Observable<any>;
     if (this.cacheReinsuranceCodes) {
       observable = of(this.cacheReinsuranceCodes);
@@ -39,7 +44,7 @@ export class ReinsuranceLookupService {
             share(),
             finalize(() => this.cacheReinsuranceCodes$ = null)
           );
-        observable = this.cacheReinsuranceCodes$;       
+        observable = this.cacheReinsuranceCodes$;
       } 
     }
     return observable;

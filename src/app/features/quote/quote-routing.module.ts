@@ -12,7 +12,6 @@ import { QuoteSummaryComponent } from './components/common/quote-summary-base/qu
 import { QuotePremiumComponent } from './components/common/quote-premium-base/quote-premium.component';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard';
 import { QuotePropertyMortgageeComponent } from './components/property/quote-property-mortgagee/quote-property-mortgagee.component';
-import { CanDeactivateChildGuard } from './guards/can-deactivate-child-guard';
 import { QuoteFormsComponent } from './components/common/quote-forms-base/quote-forms.component';
 
 const routes: Routes = [
@@ -28,7 +27,7 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', component: QuoteInformationComponent },
+      { path: 'information', title: 'RSPS | Insured | Information', component: QuoteInformationComponent },
     ],
   },
   {
@@ -39,35 +38,35 @@ const routes: Routes = [
     },
     children: [
       { path: '', redirectTo: 'information', pathMatch: 'full' },
-      { path: 'information', canDeactivate: [CanDeactivateGuard], component: QuoteInformationComponent },
-      { path: 'submission', component: QuoteSubmissionComponent },
-      { path: 'program/:quoteId', canDeactivate: [CanDeactivateGuard],
+      { path: 'information', title: 'RSPS | Quote | Information', canDeactivate: [CanDeactivateGuard], component: QuoteInformationComponent },
+      { path: 'submission', title: 'RSPS | Quote | Submission', component: QuoteSubmissionComponent },
+      { path: 'program/:quoteId', title: 'RSPS | Quote | Program', canDeactivate: [CanDeactivateGuard],
         component: QuoteProgramBaseComponent,
         children: [
           { path: '', redirectTo: 'location', pathMatch: 'full' },
           {
             path: 'location',
-            canDeactivate: [CanDeactivateChildGuard],
+            canDeactivate: [CanDeactivateGuard],
             component: QuotePropertyLocationCoverageComponent,
             data: { saveComponent: true },
           },
-          { path: 'mortgagee', canDeactivate: [CanDeactivateChildGuard], component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
-          { path: 'premium', canDeactivate: [CanDeactivateChildGuard], component: QuotePremiumComponent, data: { saveComponent: true } },
+          { path: 'mortgagee', canDeactivate: [CanDeactivateGuard], component: QuotePropertyMortgageeComponent, data: { saveComponent: true } },
+          { path: 'premium', canDeactivate: [CanDeactivateGuard], component: QuotePremiumComponent, data: { saveComponent: true } },
           {
             path: 'forms',
-            canDeactivate: [CanDeactivateChildGuard],
+            canDeactivate: [CanDeactivateGuard],
             component: QuoteFormsComponent,
             data: { saveComponent: true },
           },
           {
             path: 'conditions',
-            canDeactivate: [CanDeactivateChildGuard],
+            canDeactivate: [CanDeactivateGuard],
             component: TermsConditionsComponent,
             data: { saveComponent: true },
           },
         ],
       },
-      { path: 'summary', canDeactivate: [CanDeactivateGuard], component: QuoteSummaryComponent }
+      { path: 'summary', title: 'RSPS | Quote | Summary', canDeactivate: [CanDeactivateGuard], component: QuoteSummaryComponent }
     ]
   }
 

@@ -1,4 +1,4 @@
-<div class="top-info" *ngIf="canEdit && hasCoverages" style="padding-bottom: 0px;display:flex;">
+<div class="top-info" *ngIf="canEdit && hasCoverages && !readOnlyQuote" style="padding-bottom: 0px;display:flex;">
     <button class="btn btn-sm btn-primary margin-left" (click)="groupEdit()">Group Edit</button>
 </div>
-<rsps-property-building-coverage-edit-dialog #modal></rsps-property-building-coverage-edit-dialog>
+<rsps-property-building-coverage-edit-dialog #modal [propertyParent]="propertyParent"></rsps-property-building-coverage-edit-dialog>

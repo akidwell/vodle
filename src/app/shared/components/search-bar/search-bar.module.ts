@@ -3,13 +3,23 @@ import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from './search-bar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { AdvancedSearchMenuComponent } from './advanced-search-menu/advanced-search-menu.component';
+import { ProducerSearch } from '../producer-search/producer-search.component';
+import { ProducerSearchModule } from '../producer-search/producer-search.module';
 
 @NgModule({
-  declarations: [ SearchBarComponent],
+  declarations: [ SearchBarComponent, AdvancedSearchMenuComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
-    FormsModule
+    FormsModule,
+    NgSelectModule,
+    NgbCollapse,
+    MatDatepickerModule,
+    ProducerSearchModule
   ],
   exports: [SearchBarComponent]
 

@@ -1,9 +1,11 @@
 import { PropertyBuildingCoverage } from './property-building-coverage';
 
 export interface PropertyBuilding {
+    propertyQuoteBuildingId: number | null;
+    endorsementBuildingId: number | null;
+    propertyQuoteId: number | null;
+    propertyPolicyId: number | null;
     guid: string;
-    propertyQuoteBuildingId: number;
-    propertyQuoteId: number;
     subjectNumber: number | null;
     premisesNumber: number | null;
     buildingNumber: number | null;
@@ -30,6 +32,9 @@ export interface PropertyBuilding {
     plumbing: number | null;
     hvac: number | null;
     propertyQuoteBuildingCoverage: PropertyBuildingCoverage[];
+    endorsementBuildingCoverage: PropertyBuildingCoverage[];
+    markForDeletion?: boolean | null;
+    isDirty?: boolean | null;
 }
 
 // export interface PropertyBuilding extends PropertyBuildingData {

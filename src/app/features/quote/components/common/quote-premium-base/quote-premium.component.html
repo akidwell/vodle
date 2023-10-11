@@ -3,14 +3,8 @@
 <div><button (click)="this.coveragePremium.setIsValidFlag()">Valid</button>{{this.coveragePremium.isValid ? 'Is Valid' : 'Is Not Valid'}}</div>
 <div><button (click)="this.coveragePremium.setCanBeSavedFlag()">Can Be Saved</button>{{this.coveragePremium.canBeSaved ? 'Can Be Saved' : 'Cannot Be Saved'}}</div> -->
 <div *ngIf="isSaving">
-  <div class="spinner-wrapper" >
-      <h3>
-      <span class="badge rounded-pill refresh">
-          <div class="spinner-border small"></div>
-      </span>
-      </h3>
-  </div>
+  <rsps-busy message="Saving..."></rsps-busy>
 </div>
 <rsps-quote-property-premium *ngIf="quote" [totalPrem]="quote.totalPremium" [program]="program" [quote]="quote" [rate]="rate" ></rsps-quote-property-premium>
-<rsps-optional-premium-group *ngIf="quote" [type]="componentType" [type]="type" [totalPrem]="quote.totalPremium" ></rsps-optional-premium-group>
-<rsps-quote-line-items-group *ngIf="quoteLineItemData" [quoteLineItemData]="quoteLineItemData" [riskState]="riskState" [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>
+<rsps-optional-premium-group *ngIf="quote" [type]="componentType" [type]="type" [readOnlyQuote]="quote.readOnlyQuote" [totalPrem]="quote.totalPremium" [propertyParent]="quote"></rsps-optional-premium-group>
+<rsps-quote-line-items-group *ngIf="quoteLineItemData" [readOnlyQuote]="quote.readOnlyQuote" [quoteLineItemData]="quoteLineItemData" [riskState]="riskState" [effectiveDate]="effectiveDate"></rsps-quote-line-items-group>

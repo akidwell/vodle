@@ -8,27 +8,31 @@ import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quot
 import { PropertyDataService } from 'src/app/features/quote/services/property-data.service';
 import { SubmissionClass } from 'src/app/features/submission/classes/submission-class';
 import { HistoricRoute } from '../../models/historic-route';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 @Injectable()
 export class PageDataService {
   private _insuredData: InsuredClass | null = null;
   private _submissionData: SubmissionClass | null = null;
   private _quoteData: DepartmentClass | null = null;
-  private _policyData: PolicyInformation | null = null;
+  private _policyData: PolicyClass | null = null;
   private _accountInfo: AccountInformation | null = null;
   private _lastSubmission: HistoricRoute | null = null;
+  private _lastPolicy: HistoricRoute | null = null;
   private _selectedProgram: ProgramClass | null = null;
   private _resetLastSubmission = true;
-
+  private _resetLastPolicy = true;
+  private _readOnly = false;
   private _noData = true;
 
+  readOnly$: BehaviorSubject<boolean> = new BehaviorSubject(this._readOnly);
   insuredData$: BehaviorSubject<InsuredClass | null> = new BehaviorSubject(this._insuredData);
   submissionData$: BehaviorSubject<SubmissionClass | null> = new BehaviorSubject(
     this._submissionData
   );
   quoteData$: BehaviorSubject<DepartmentClass | null> = new BehaviorSubject(this._quoteData);
   selectedProgram$: BehaviorSubject<ProgramClass | null> = new BehaviorSubject(this._selectedProgram);
-  policyData$: BehaviorSubject<PolicyInformation | null> = new BehaviorSubject(this._policyData);
+  policyData$: BehaviorSubject<PolicyClass |null> = new BehaviorSubject(this._policyData);
   accountInfo$: BehaviorSubject<AccountInformation | null> = new BehaviorSubject(this._accountInfo);
   noData$: BehaviorSubject<boolean> = new BehaviorSubject(this._noData);
 
@@ -69,11 +73,11 @@ export class PageDataService {
       this.isNoData = false;
     }
   }
-  get policyData(): PolicyInformation | null {
-    return this._policyData;
+  get policyData(): PolicyClass | null {
+    return this._policyData ? this._policyData as PolicyClass : null;
   }
 
-  set policyData(val: PolicyInformation | null) {
+  set policyData(val: PolicyClass | null) {
     this._policyData = val;
     this.policyData$.next(this._policyData);
     if (val != null) {
@@ -99,6 +103,19 @@ export class PageDataService {
     }
     if (val) {
       this._resetLastSubmission = false;
+    }
+  }
+  get lastPolicy(): HistoricRoute | null {
+    return this._lastPolicy;
+  }
+  set lastPolicy(val: HistoricRoute | null) {
+    if (this._resetLastPolicy) {
+      this._lastPolicy = val;
+    } else {
+      this._resetLastPolicy = true;
+    }
+    if (val) {
+      this._resetLastPolicy = false;
     }
   }
 
@@ -141,5 +158,14 @@ export class PageDataService {
   }
   refreshProgram() {
     this.selectedProgram$.next(this._selectedProgram);
+  }
+
+
+  set readOnly(val: boolean) {
+    this._readOnly = val;
+    this.readOnly$.next(this._readOnly);
+  }
+  get readOnly(): boolean {
+    return this.policyData?.policyEventCode == 'B';
   }
 }

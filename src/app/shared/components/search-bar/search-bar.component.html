@@ -1,10 +1,17 @@
-<div class="input-group"  >
-  <div class="input-group">
-    <div class="input-group-prepend">
-      <button class="input-group-text" (click)="search()">
-        <fa-icon [icon]="faSearch"></fa-icon>
-      </button>
-    </div>
-    <input style="z-index: 0;"  class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
-      placeholder="Search Insured, Submission, or Policy" autofocus (keydown.enter)="search()" />
+<rsps-advanced-search-menu *ngIf="version == '2.0' && isAuthenticated" [advancedSearchClass]="advancedSearchClass" [collapsed]="collapsed" [search]="search"></rsps-advanced-search-menu>
+<div class="input-group">
+  <button *ngIf=" version == '2.0'" class="input-group-text" (click)="clear()">
+    Clear
+  </button>
+  <div class="input-group-prepend">
+    <button [class]="shouldHighlightSearch()" (click)="search()">
+      <fa-icon [icon]="faSearch" ></fa-icon>
+    </button>
+  </div>
+  <input style="z-index: 0;"  class="form-control ml2" type="search" name="searchTerm" [(ngModel)]="searchTerm"
+    [placeholder]="filterDisplay()" autofocus (keydown.enter)="search()" />
+  <div *ngIf=" version == '2.0'" class="card-header" (click)="collapsed = !collapsed" style="margin: 0px; padding: 6px; border-radius:.375rem">Advanced Search
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
 </div>

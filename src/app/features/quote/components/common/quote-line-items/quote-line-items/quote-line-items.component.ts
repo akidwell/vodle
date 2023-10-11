@@ -19,6 +19,8 @@ export class QuoteLineItemsComponent implements OnInit {
   @Input() public riskState!: string| null;
   @Input() public effectiveDate!: Date | Moment | null;
   @Input() lineItem!: QuoteLineItemClass;
+  @Input() public readOnlyQuote!: boolean;
+
   @Output() copyLineItem: EventEmitter<QuoteLineItemClass> = new EventEmitter();
   @Output() deleteLineItem: EventEmitter<QuoteLineItemClass> = new EventEmitter();
 

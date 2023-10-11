@@ -31,7 +31,7 @@ export interface Quote {
   policySymbol: string;
   policyMod: string | null;
   formName: string;
-  terrorismCoverageSelected: boolean;
+  terrorismCoverageSelected: boolean | null;
   terrorismPremium: number | null;
   terrorismTemplateCode: string;
   grossPremium: number | null;
@@ -92,7 +92,7 @@ export interface Quote {
   formsVersion: number | null; //intVersion in PAUL
   // specPlusEndorsement: boolean;
   // proRatePremium: boolean;
-  // overridePremium: boolean;
+  overridePremium: boolean;
   // ratingDataChanged: boolean | null;
   rated: boolean | null;
   // overrideTRIAPremium: boolean;
@@ -134,4 +134,10 @@ export interface Quote {
   totalPremium: number | null;
   formsVersionDescription: string | null;
   departmentId: number | null;
+  flatPremium: number | null;
+  propertyPremium: number | null;
+  propertySubTotalPremium: number | null;
+  overrideMinPolPrem: boolean;
+  policyId: number | null;
+  quoteIdBound: number | null;
 }

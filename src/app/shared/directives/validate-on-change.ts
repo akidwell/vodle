@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Directive, ElementRef, forwardRef, HostListener, Input } from '@angular/core';
 import { Log } from '../decorators/logger';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { Validation } from '../interfaces/validation';
 
@@ -11,7 +11,7 @@ import { Validation } from '../interfaces/validation';
   selector: '[validate-on-change]'
 })
 export class ValidateOnChangeDirective {
-  @Input() validateLevel: QuoteValidationTypeEnum = QuoteValidationTypeEnum.Quote;
+  @Input() validateLevel: ValidationTypeEnum = ValidationTypeEnum.Quote;
   @Input() fullValidate = false;
   @Input() markDirty = true;
 
@@ -45,13 +45,13 @@ export class ValidateOnChangeDirective {
   //   }
   // }
 
-  updateData(event: string, type: QuoteValidationTypeEnum, fullValidate: boolean, markDirty: boolean) {
+  updateData(event: string, type: ValidationTypeEnum, fullValidate: boolean, markDirty: boolean) {
     let dataObject: Validation | null = null;
     switch (type) {
-    case QuoteValidationTypeEnum.Quote:
+    case ValidationTypeEnum.Quote:
       dataObject = (this.pageDataService.selectedProgram && this.pageDataService.selectedProgram.quoteData) ? this.pageDataService.selectedProgram.quoteData : null;
       break;
-    case QuoteValidationTypeEnum.Department:
+    case ValidationTypeEnum.Department:
       dataObject = (this.pageDataService.quoteData) ? this.pageDataService.quoteData : null;
       break;
     default:

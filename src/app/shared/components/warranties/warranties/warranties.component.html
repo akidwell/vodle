@@ -8,58 +8,57 @@
   <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
     <div class="card-body">
       <div class="row">
-        <label for="warranty">Warranty</label>
-        <div class="col-lg-3">
-          <ng-select id="description" [items]="optionalWarranties" [clearable]="false" [readonly]="!canEdit"
-            name="description" [(ngModel)]="warrantyOfs" bindLabel="warrantyOf" bindValue="warrantyOf"
-            (change)="addWarranties($event)">
-          </ng-select>
-          <ng-template ng-label-tmp let-item="item">
-            {{item.warrantyOf}}
-          </ng-template>
-          <ng-template ng-option-tmp let-item="item">
-            {{item.warrantyOf}}
-          </ng-template>
+        <div class="col-lg-6">
+          <label class="form-label" title="View">View:</label>
+          <div class="btn-group margin-left" role="group" aria-label="Basic radio toggle button group">
+              <input validate-on-change type="radio" class="btn-check" name="btnradiowarranty" id="radioWarrantyAll" autocomplete="off"
+                  (click)="refreshWarranties(viewType.Available)">
+              <label class="btn btn-outline-dark hide-select" for="radioWarrantyAll">Available
+                  ({{allWarrantiesCount}})</label>
+              <input validate-on-change type="radio" class="btn-check" name="btnradiowarranty" id="radioWarrantyMandatory" autocomplete="off"
+                  (click)="refreshWarranties(viewType.Mandatory)">
+              <label class="btn btn-outline-dark hide-select" for="radioWarrantyMandatory">Mandatory
+                  ({{mandatoryWarrantiesCount}})</label>
+              <input validate-on-change type="radio" class="btn-check" name="btnradiowarranty" id="radioWarrantyOptional" autocomplete="off"
+                  (click)="refreshWarranties(viewType.Optional)">
+              <label class="btn btn-outline-dark hide-select" for="radioWarrantyOptional">Optional
+                  ({{optionalWarrantiesCount}})</label>
+              <input validate-on-change type="radio" class="btn-check" name="btnradiowarranty" id="radioWarrantyOnPolicy" autocomplete="off"
+                  [checked]="true" (click)="refreshWarranties(viewType.OnPolicy)">
+              <label class="btn btn-outline-dark hide-select" for="radioWarrantyOnPolicy">On Policy
+                  ({{onPolicyWarrantiesCount}})</label>
+              <input validate-on-change *ngIf="quote.submission.expiringPolicyId ?? 0 > 0" type="radio" class="btn-check"
+                  name="btnradiowarranty" id="radioExpiring" autocomplete="off"
+                  (click)="refreshWarranties(viewType.Expiring)">
+          </div>
         </div>
-        <div class="col-lg-6"></div>
-        <div class="col-lg-3" style="padding-top:10px" (click)="userDefinedPopup()">
-          <a style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined Warranty</a>
+        <div class="col-lg-6" style="padding-top:10px" (click)="userDefinedPopup()">
+          <a *ngIf="!quote.readOnlyQuote" style="float: right; padding-right: 20px;color: #00274e; cursor: pointer">Add User Defined Warranty</a>
         </div>
       </div>
     </div>
     <div class="card-body table-body">
       <div class="table-responsive">
         <table class="table table-bordered" *ngIf="true">
-          <thead>
-            <tr>
-
-              <th style="text-align:center;">Included</th>
-              <th nowrap>Description</th>
-              <th></th>
-            </tr>
-          </thead>
-
           <tbody>
             <ng-container *ngFor="let sub of filteredWarranties">
               <tr *ngIf="sub.firstFilteredMainHeaderRow">
-                <td colspan="12" style="background:#f2f4f6">{{sub.mainHeader}}
+                <td colspan="12" style="background:#335271; color:#f2f4f6">{{sub.warrantyOf}}:</td>
               </tr>
               <tr *ngIf="sub.firstFilteredSectionHeaderRow">
-                <td colspan="12" style="background:#d1d1d1; font-weight: bold;"><u>{{ sub.sectionHeader}}</u>
-                </td>
+                <td colspan="12" style="background:#f2f4f6"><u>{{sub.sectionHeader}}</u></td>
               </tr>
               <tr>
+                <td style="text-align:center; width: 72px;">
+                  <fa-icon *ngIf="!quote.readOnlyQuote" class="faEdit fa-xl pointer" [icon]="faEdit" (click)="editWarrantyPopup(sub)" ngbTooltip="Edit" style="cursor: pointer"/>
+                </td>
                 <td style="text-align:center; width:1%; vertical-align:middle;">
-                  <input validate-on-change type="checkbox" class="form-check-input" id="included"
-                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : !sub.isIncluded && sub.ysnIsCommon ? 'common-warranty' : ''" [readonly]="!canEdit" [ngbTooltip]="sub.ysnIsCommon ? 'Is Common Warranty' : ''"
+                  <input validate-on-change type="checkbox" class="form-check-input"
+                    [ngClass]="!sub.isIncluded && sub.ysnDefault ? 'mandatory' : !sub.isIncluded && sub.ysnIsCommon ? 'common-warranty' : ''" [readonly]="!canEdit || quote.readOnlyQuote" [ngbTooltip]="sub.ysnIsCommon ? 'Is Common Warranty' : ''"
                     [(ngModel)]="sub.isIncluded" name="included" click-stop-propagation>
                 </td>
-
                 <td style="vertical-align:middle;">
                   {{sub.description}}
-                </td>
-                <td style="text-align:center; width: 71px;">
-                  <button class="btn btn-outline-primary" id="action" (click)="editWarrantyPopup(sub)">Edit</button>
                 </td>
               </tr>
             </ng-container>

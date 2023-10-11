@@ -1,4 +1,21 @@
-import { AdditionalNamedInsured } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { AdditionalNamedInsured, AdditionalNamedInsuredData } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
+import { Producer } from '../../submission/models/producer';
+import { Insured } from '../../insured/models/insured';
+import { RiskLocationClass } from '../../policy-v2/classes/risk-location';
+import { Quote } from '../../quote/models/quote';
+import { PropertyBuilding } from '../../quote/models/property-building';
+import { MortgageeData } from '../../quote/models/mortgagee';
+import { PolicyLayerClass } from '../../policy-v2/classes/policy-layer-class';
+import { Deletable } from 'src/app/shared/interfaces/deletable';
+import { AdditionalInterestData } from '../../quote/models/additional-interest';
+import { PropertyDeductible } from '../../quote/models/property-deductible';
+import { PropertyPolicyDeductible } from '../../policy-v2/models/property-policy-deductible';
+import { ReinsuranceLookup } from '../services/reinsurance-lookup/reinsurance-lookup';
+import { OptionalPremium } from 'src/app/shared/interfaces/optional-premium';
+import { PolicyOptionalPremiumV2 } from './policy-optional-premium';
+import { PolicyRateClass } from '../../policy-v2/classes/policy-rate-class';
+import { PolicyRate } from '../../policy-v2/models/policy-rate';
+
 
 export interface AccountInformation {
   policyId: number;
@@ -28,7 +45,14 @@ export interface AccountInformationResolved {
 export interface PolicyInformation {
   quoteData: QuoteData;
   riskLocation: RiskLocation;
+  endorsementData: Endorsement;
+  additionalNamedInsuredData: AdditionalNamedInsuredData[];
+  insured: Insured;
+  producer: Producer;
+  commRate: number | null;
+  departmentId: number;
   policyEventCode: string;
+  endorsementNumber: number;
   packageInd: string;
   policyType: string | null;
   policySymbol: string;
@@ -56,6 +80,9 @@ export interface PolicyInformation {
   coinsurancePercentage: number;
   productManufactureDate: Date;
   submissionNumber: number;
+  guid: string | null;
+  classCode: number | null;
+  riskDescription: string | null;
 }
 
 export interface PolicyInformationResolved {
@@ -71,6 +98,7 @@ export interface QuoteData {
   creditDays: string;
   claimsMadeOrOccurrence: string;
   retroDate: Date | null;
+  programId: number;
 }
 export interface RiskLocation {
 
@@ -101,6 +129,15 @@ export interface Endorsement {
   limit: number;
   underlyingLimit: number;
   attachmentPoint: number;
+  endorsementBuilding: PropertyBuilding[];
+  endorsementMortgagee: MortgageeData[];
+  endorsementAdditionalInterest: AdditionalInterestData[];
+  endorsementDeductible: PropertyPolicyDeductible[];
+  endorsementBuildingOptionalCoverage:PolicyOptionalPremiumV2[];
+  policyLayers: PolicyLayerData[];
+  reinsuranceCodes: ReinsuranceLookup[];
+  reinsuranceFacCodes: ReinsuranceLookup[];
+  rate: PolicyRate;
 }
 
 export interface AdditionalNamedInsuredsResolved {
@@ -160,13 +197,15 @@ export interface PolicyLayerData {
   policyLayerAttachmentPoint: number;
   policyLayerLimit?: number;
   policyLayerPremium?: number;
-  invoiceNo: number| null;
-  copyEndorsementNo: number| null;
-  endType: number| null;
-  transCode: number| null;
-  transEffectiveDate: Date| null;
-  transExpirationDate: Date| null;
+  invoiceNo: number | null;
+  copyEndorsementNo: number | null;
+  endType: number | null;
+  transCode: number | null;
+  transEffectiveDate: Date | null;
+  transExpirationDate: Date | null;
   isNew: boolean;
+  markForDeletion: boolean;
+  isDirty: boolean;
   reinsuranceData: ReinsuranceLayerData[];
 }
 
@@ -185,7 +224,9 @@ export const newPolicyLayer = (policyId: number, endorsementNumber: number, poli
     transEffectiveDate: null,
     transExpirationDate: null,
     reinsuranceData: [],
-    isNew: true
+    isNew: true,
+    markForDeletion: false,
+    isDirty: false
   };
 };
 
@@ -215,10 +256,11 @@ export interface ReinsuranceLayerData {
   expirationDate: Date | null;
   cededCommissionRat: number | null;
   effectiveDate: Date | null;
-  isFaculative: boolean | null;
+  isFacultative: boolean | null;
   maxLayerLimit?: number | null;
   attachmentPoint: number;
   isNew: boolean;
+  markForDeletion: boolean;
 }
 
 export interface PolicyLayerDataResolved {
@@ -253,9 +295,10 @@ export const newReinsuranceLayer = (policyId: number, endorsementNumber: number,
     expirationDate: null,
     cededCommissionRat: null,
     effectiveDate: null,
-    isFaculative: false,
+    isFacultative: false,
     attachmentPoint: 0,
-    isNew: true
+    isNew: true,
+    markForDeletion: false
   };
 };
 

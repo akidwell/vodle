@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Moment } from 'moment';
 import { SubmissionClass } from '../../submission/classes/submission-class';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { Quote } from '../models/quote';
 import { ProgramClass } from './program-class';
 import { QuoteRateClass } from './quote-rate-class';
@@ -54,13 +54,11 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   claimsMadeOrOccurrence = '';
   admittedStatus = '';
   policyNumber: string | number = '--';
-  policyMod: string | null = '--';
   carrierCode = '';
   pacCode = '';
   quoteName = null;
   policySymbol = '';
   formName = '';
-  terrorismCoverageSelected = false;
   terrorismTemplateCode = '';
   grossPremium = null;
   grossLimits = null;
@@ -81,7 +79,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   modifiedDate = null;
   groupId = 3;
   programId = 0;
-  validated = false;
+  //validated = false;
   ratedPremium = null;
   auditCode = null;
   umuimAccepted = false;
@@ -118,7 +116,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   formsVersion: number | null = null; //intVersion in PAUL
   specPlusEndorsement = false;
   proRatePremium = false;
-  overridePremium = false;
+  //overridePremium = false;
   ratingDataChanged = null;
   rated = null;
   overrideTRIAPremium = false;
@@ -238,6 +236,20 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
   set minimumPremiumRequired(value: boolean) {
     this._minimumPremiumRequired = value;
   }
+  private _overridePremium = false;
+  get overridePremium(): boolean {
+    return this._overridePremium;
+  }
+  set overridePremium(value: boolean) {
+    this._overridePremium = value;
+  }
+  private _terrorismCoverageSelected: boolean | null = null;
+  get terrorismCoverageSelected(): boolean | null {
+    return this._terrorismCoverageSelected;
+  }
+  set terrorismCoverageSelected(value: boolean | null) {
+    this._terrorismCoverageSelected = value;
+  }
   private _minimumPremium: number | null = null;
   get minimumPremium(): number | null {
     return this._minimumPremium;
@@ -280,6 +292,73 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.setWarnings();
   }
 
+
+  private _flatPremium : number | null = null;
+  get flatPremium() : number | null {
+    return this._flatPremium;
+  }
+  set flatPremium(value: number | null) {
+    this._flatPremium = value;
+  }
+  private _propertyPremium: number | null = null;
+  get propertyPremium() : number | null {
+    return this._propertyPremium;
+  }
+  set propertyPremium(value: number | null) {
+    this._propertyPremium = value;
+  }
+  private _propertySubTotalPremium: number | null = null;
+  get propertySubTotalPremium() : number | null {
+    return this._propertySubTotalPremium;
+  }
+  set propertySubTotalPremium(value: number | null) {
+    this._propertySubTotalPremium = value;
+  }
+  private _overrideMinPolPrem = false;
+  get overrideMinPolPrem(): boolean {
+    return this._overrideMinPolPrem;
+  }
+  set overrideMinPolPrem(value: boolean) {
+    this._overrideMinPolPrem = value;
+  }
+
+  private _validated = false;
+  get validated(): boolean {
+    return this._validated;
+  }
+  set validated(value: boolean) {
+    this._validated = value;
+  }
+
+  get readOnlyQuote(): boolean {
+    return this.status == 9;
+  }
+
+  private _policyMod = '--';
+  get policyMod(): string {
+    return this._policyMod;
+  }
+  set policyMod(value: string) {
+    this._policyMod = value;
+  }
+
+  private _policyId = 0;
+  get policyId(): number {
+    return this._policyId;
+  }
+  set policyId(value: number) {
+    this._policyId = value;
+  }
+
+  private _quoteIdBound = 0;
+  get quoteIdBound(): number {
+    return this._quoteIdBound;
+  }
+  set quoteIdBound(value: number) {
+    this._quoteIdBound = value;
+  }
+
+
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     super();
     if (quote) {
@@ -287,7 +366,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     } else if (program && submission) {
       this.newInit(program, submission);
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Quote, null);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Quote, null);
     this.setWarnings();
   }
   existingInit(quote: Quote) {
@@ -306,6 +385,8 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.policySymbol = quote.policySymbol || '';
     this.policyNumber = quote.policyNumber || '--';
     this.policyMod = quote.policyMod || '--';
+    this.policyId = quote.policyId || 0;
+    this.quoteIdBound = quote.quoteIdBound || 0;
     this.terrorismTemplateCode = quote.terrorismTemplateCode || '';
     this._autoCalcMiscPremium = quote.autoCalcMiscPremium || false;
     this._minimumPremium = quote.minimumPremium || null;
@@ -319,6 +400,12 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.createdBy = quote.createdBy || '';
     this.createdDate = quote.createdDate || null;
     this.printedAt = quote.printedAt || null;
+    this._terrorismCoverageSelected = quote.terrorismCoverageSelected;
+    this._overridePremium = quote.overridePremium ?? false;
+    this._propertyPremium = quote.propertyPremium;
+    this._propertySubTotalPremium = quote.propertySubTotalPremium;
+    this._flatPremium = quote.flatPremium;
+    this._overrideMinPolPrem = quote.overrideMinPolPrem;
     this.submission = new SubmissionClass(quote.submission);
     const rates: QuoteRateClass[] = [];
     quote.quoteRates?.forEach(element => {
@@ -417,6 +504,9 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.programId = program.programId;
     this.status = 1;
     this.riskState = '';
+    this.earnedPremiumPct = 35;
+    this.policyId = 0;
+    this.quoteIdBound = 0;
   }
 
   markClean() {
@@ -489,7 +579,11 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
 
   abstract onSave(savedQuote:PropertyQuoteClass): void;
 
-  abstract calculateSummaryPremiums(): void;
+  //abstract calculateSummaryPremiums(): void;
+
+  abstract calculatePropertyPremiums(): void;
+
+  abstract calculateMinEarnedPrem(): void;
 
   abstract toJSON(): Quote;
 
@@ -586,7 +680,7 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       modifiedUserId: this.modifiedUserId,
       modifiedUserName: this.modifiedUserName,
       naicsCode: this.naicsCode,
-      //overridePremium: this.overridePremium,
+      overridePremium: this.overridePremium,
       //overrideTRIAPremium: this.overrideTRIAPremium,
       ownerId: this.ownerId,
       ownerUserId: this.ownerUserId,
@@ -634,7 +728,13 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
       totalPremium: this.totalPremium,
       formsVersionDescription: this.formsVersionDescription,
       departmentId: this.departmentId,
-      policyMod: this.policyMod
+      policyMod: this.policyMod,
+      flatPremium: this.flatPremium,
+      propertyPremium: this.propertyPremium,
+      propertySubTotalPremium: this.propertySubTotalPremium,
+      overrideMinPolPrem: this.overrideMinPolPrem,
+      policyId: this.policyId,
+      quoteIdBound: this.quoteIdBound
     };
   }
 }

@@ -1,4 +1,4 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Validation } from 'src/app/shared/interfaces/validation';
 import { QuoteAfterSave } from '../models/quote-after-save';
@@ -11,10 +11,10 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   classCode: number | null = 0;
   invalidList: string[] = [];
 
-  private _premiumRate: number | null = null;
-  private _premium: number | null = null;
-  private _rateBasis: number | null = null;
-  private _isFlatRate: boolean | null = null;
+  private _premiumRate: number | undefined;
+  private _premium: number | undefined;
+  private _rateBasis: number | undefined;
+  private _isFlatRate: boolean | undefined;
   private _isValid = true;
   private _isDirty = false;
   private _canBeSaved = true;
@@ -22,31 +22,31 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
 
-  get premiumRate() : number | null {
+  get premiumRate() : number | undefined {
     return this._premiumRate;
   }
-  set premiumRate(value: number | null) {
+  set premiumRate(value: number | undefined) {
     this._premiumRate = value;
     this._isDirty = true;
   }
-  get premium() : number | null {
+  get premium() : number | undefined {
     return this._premium;
   }
-  set premium(value: number | null) {
+  set premium(value: number | undefined) {
     this._premium = value;
     this._isDirty = true;
   }
-  get rateBasis() : number | null {
+  get rateBasis() : number | undefined {
     return this._rateBasis;
   }
-  set rateBasis(value: number | null) {
+  set rateBasis(value: number | undefined) {
     this._rateBasis = value;
     this._isDirty = true;
   }
-  get isFlatRate() : boolean | null {
+  get isFlatRate() : boolean | undefined {
     return this._isFlatRate;
   }
-  set isFlatRate(value: boolean | null) {
+  set isFlatRate(value: boolean | undefined) {
     this._isFlatRate = value;
     this._isDirty = true;
   }
@@ -73,7 +73,7 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
     this.validate();
   }
   validate(){
@@ -90,7 +90,7 @@ export class QuoteRateClass implements QuoteRate, Validation, QuoteAfterSave {
     this._canBeSaved = true;
     this._isValid = true;
     const amountValidation = this.validateAmount();
-    if (amountValidation) {
+    if (amountValidation != null) {
       this._isValid = false;
       this.invalidList.push(amountValidation);
     }

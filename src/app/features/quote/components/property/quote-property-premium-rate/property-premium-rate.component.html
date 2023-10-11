@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <label for="policyCoverage" class="form-label" title="Policy Coverage">Policy Coverage</label>
         <input type="text" class="form-control" id="policyCoverage" readonly name="policyCoverage"
             [(ngModel)]="programDescription" #policyCoverage="ngModel">
@@ -7,27 +7,35 @@
     <div class="col-lg-2">
         <label for="totalLimit" class="form-label" title="Total Limit Amount">Total Limit Amount</label>
         <input type="text" class="form-control right" id="totalLimit" readonly mask="separator.0" thousandSeparator=","
-            name="totalLimit" [ngModel]="limitTotal" #totalLimit="ngModel">
+            name="totalLimit" string-to-currency [ngModel]="limitTotal" #totalLimit="ngModel">
     </div>
     <div class="col-lg-1">
         <label for="rateBasis" class="form-label" title="Rate Basis">Rate Basis</label>
         <input type="text" class="form-control right" id="rateBasis" readonly name="rateBasis"
-            [(ngModel)]="rate.rateBasis" #rateBasis="ngModel">
+            [(ngModel)]="rate.rateBasis" #rateBasis="ngModel" (change)="changeRateBasis($event)">
     </div>
     <div class="col-lg-1">
         <label for="finalRate" class="form-label" title="Final Rate">Final Rate</label>
-        <input type="text" class="form-control right" id="finalRate" [readonly]="!canEdit" name="finalRate"
+        <input type="text" class="form-control right" id="finalRate" [readonly]="!canEdit || readOnlyQuote" name="finalRate"
             string-to-currency [decimalPlaces]="5" [hideDecimal]="true" [allowNegative]="false" validate-on-change
-            [(ngModel)]="rate.premiumRate" #finalRate="ngModel">
+            (change)="changeFinalRate($event)" [(ngModel)]="rate.premiumRate" #finalRate="ngModel">
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-1">
         <label for="flatRate" class="form-label" title="Flat Rate">Flat Rate</label>
-        <input type="checkbox" class="form-check-input" id="flatRate" [(ngModel)]="rate.isFlatRate" name="flatRate" validate-on-change
-            [readonly]="!canEdit">
+        <input type="checkbox" class="form-check-input" id="flatRate" name="flatRate" [(ngModel)]="rate.isFlatRate" validate-on-change
+            (change)="changeYsnFlatRate($event)" [readonly]="!canEdit || readOnlyQuote">
+    </div>
+    <div *ngIf="isPolicy" class="col-lg-2">
+        <label for="terrorism" class="form-label" title="Terrorism">Terrorism</label>
+        <ng-select id="terrorism" [items]="terrorismOptions" bindValue="code" bindLabel="description"
+              name="terrorism" (change)="changeTerrorism($event)" [readonly]="!canEdit || readOnlyQuote"
+              [(ngModel)]="selectedTerrorismCode">
+            </ng-select>
     </div>
     <div class="col-lg-2">
         <label for="Premium" class="form-label" title="Premium">Premium</label>
-        <input type="text" class="form-control right" id="Premium" [readonly]="!canEdit" [required]="canEdit" validate-on-change
-            string-to-currency [allowNegative]="false" name="Premium" [(ngModel)]="rate.premium" #Premium="ngModel">
+        <input type="text" class="form-control right" id="Premium" [readonly]="!canEdit || readOnlyQuote" [required]="canEdit&& !readOnlyQuote" validate-on-change
+            string-to-currency [allowNegative]="false" name="Premium" [(ngModel)]="premium" #Premium="ngModel"
+            (change)="changePremium($event)">
     </div>
 </div>

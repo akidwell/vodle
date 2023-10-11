@@ -1,5 +1,6 @@
 export interface History {
   id: number | null;
+  programId: number | null;
   policyId: number | null;
   policyNumber: string | null;
   endorsementNumber: number | null;
@@ -12,6 +13,7 @@ export interface History {
 
 export const newHistory = (): History => ({
   id: null,
+  programId: null,
   policyId: null,
   policyNumber: null,
   endorsementNumber: null,

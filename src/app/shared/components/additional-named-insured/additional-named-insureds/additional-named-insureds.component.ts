@@ -6,6 +6,7 @@ import { ConfirmationDialogService } from 'src/app/core/services/confirmation-di
 import { AdditionalNamedInsured } from '../additional-named-insured';
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { faArrows } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'rsps-shared-additional-named-insureds',
@@ -33,7 +34,7 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   @Output() copyExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
   @Output() deleteExistingAni: EventEmitter<AdditionalNamedInsured> = new EventEmitter();
 
-  constructor(private dropdowns: DropDownsService, private confirmationDialogService: ConfirmationDialogService, private messageDialogService: MessageDialogService) {
+  constructor(private dropdowns: DropDownsService, private router: Router, private confirmationDialogService: ConfirmationDialogService, private messageDialogService: MessageDialogService) {
   }
 
   ngOnInit(): void {
@@ -60,11 +61,14 @@ export class SharedAdditionalNamedInsuredsComponent implements OnInit {
   }
 
   async deleteAni() {
+    console.log(this.router.url);
     if (this.aniData.isNew) {
       setTimeout(() => {
         this.deleteExistingAni.emit(this.aniData);
       });
-    } else {
+    } else if(this.router.url.includes('policy-v2')){
+      this.aniData.markForDeletion = true;
+    }else {
       await this.aniData.delete().then(() => {
         setTimeout(() => {
           this.deleteExistingAni.emit(this.aniData);

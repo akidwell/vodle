@@ -1,0 +1,374 @@
+  <div *ngIf="this.policyInfo.getTabErrors('PolicyInfo').length != 0 && showErrors == true">
+    <ngb-alert type=danger [innerHTML]="getAlerts()"></ngb-alert>
+  </div>
+  <div class="card">
+    <div class="card-header" (click)="accountcollapse.toggle()">
+      Account Information
+      <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="accountCollapsed"></fa-icon>
+      <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!accountCollapsed"></fa-icon>
+    </div>
+    <div #accountcollapse="ngbCollapse" [(ngbCollapse)]="accountCollapsed">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-2">
+            <label for="insuredCode">Insured Code</label>
+            <input type="text" class="form-control" id="insuredCode" [ngModel]="policyInfo.insured.insuredCode"
+              name="insuredCode" [readonly]="true" #insuredCode="ngModel">
+          </div>
+          <div class="col-lg-2"></div>
+          <div class="col-lg-2">
+            <label for="underwriterName">Underwriter</label>
+            <input type="text" class="form-control" id="underwriterName" [ngModel]="underwriterName"
+            name="underwriterName" [readonly] = true>
+          </div>
+          <div class="col-lg-2">
+            <label for="producerCode">Producer Code</label>
+            <input type="text" class="form-control" id="producerCode" [readonly]="true"
+              [ngModel]="policyInfo.producer.producerCode" name="producerCode">
+          </div>
+          <div class="col-lg-1">
+            <label for="commissionRate">Comm Rate</label>
+            <input type="text" class="form-control" id="commissionRate" [required]="true"
+            [readonly]="false" mask="percent" suffix="%" [dropSpecialCharacters]="true" [(ngModel)]="policyInfo.commRate" name="commissionRate"
+              #commissionRate="ngModel">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <label for="namedInsured">Named Insured</label><br>
+            <a (click)="routeToInsured(this.policyInfo.insured.insuredCode)" [routerLink]="[]">{{ policyInfo.insured.name }}</a>
+          </div>
+          <div class="col-md">
+            <label for="producerName">Producer</label>
+            <input type="text" class="form-control" id="producerName" [readonly]="true"
+              [ngModel]="policyInfo.producer.name" name="producerName" #producerName="ngModel">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <input type="text" class="form-control" id="insuredAddress" [readonly]="true" name="insuredAddress"
+              [ngModel]="policyInfo.insured.street2 == null ? policyInfo.insured.street1 : policyInfo.insured.street1 + ' ' + policyInfo.insured.street2 ">
+          </div>
+          <div class="col-md">
+            <input type="text" class="form-control" id="producerAddress" [readonly]="true" name="producerAddress"
+              [ngModel]="policyInfo.producer.street2 == null ? policyInfo.producer.street1 : policyInfo.producer.street1 + ' ' + policyInfo.producer.street2 ">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <input type="text" class="form-control" id="insuredCityStateZip" [readonly]="true"
+              [ngModel]="policyInfo.insured.city + ', ' + policyInfo.insured.state + '  ' + (policyInfo.insured.zip | zipCode)"
+              name="insuredCityStateZip" #insuredCityStateZip="ngModel" (ngModelChange)="policyInfo.insured.zip=$event">
+          </div>
+          <div class="col-md">
+            <input type="text" class="form-control" id="producerCityStateZip" [readonly]="true"
+              [ngModel]="policyInfo.producer.city + ', ' + policyInfo.producer.state + '  ' + (policyInfo.producer.zip | zipCode)"
+              name="producerCityStateZip" #producerCityStateZip="ngModel"
+              (ngModelChange)="policyInfo.producer.zip=$event">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <rsps-shared-additional-named-insureds-group [aniData]="aniData" [newANI]="newInsuredANI" [canEdit]="canEdit"></rsps-shared-additional-named-insureds-group>
+  <div class="content">
+    <div class="card">
+      <div class="card-header" title="Policy Information" (click)="collapse.toggle()">
+        Policy Information
+        <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="policyCollapsed"></fa-icon>
+        <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!policyCollapsed"></fa-icon>
+      </div>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="policyCollapsed">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-2 col-md-4">
+              <label for="policyEventCode" class="form-label" title="Status">Status</label>
+              <input type="text" class="form-control" id="policyEventCode" [readonly]="true"
+                value="{{policyInfo.policyEventCode == 'B'? 'Bound': 'Cancelled'}}">
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="enteredDate" class="form-label" title="Policy Entered Date">Policy Entered Date</label>
+              <input type="date" class="form-control" id="enteredDate"[readonly]="true"
+                [ngModel]="policyInfo.enteredDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.enteredDate=$event"
+                name="enteredDate" #enteredDate="ngModel">
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="claimsMadeOrOccurrence" class="form-label" title="Claimsmade/Occurrence">CLM/OCC</label>
+              <ng-select [items]="this.claimsMadeOrOccurrence$" [clearable]="false" bindLabel="description" bindValue="code" [readonly]="true"
+                id="claimsMadeOrOccurrence" [(ngModel)]="policyInfo.quoteData.claimsMadeOrOccurrence" name="claimsMadeOrOccurrence"
+                #claimsMadeOrOccurrence="ngModel" (change)="policyInfo.changeClaimsMadeOccurrence">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="retroDate" class="form-label" title="Retro Date">Retro Date</label>
+              <div *ngIf="policyInfo.canSetRetroDate">
+                <input style="display: inline-block; max-width: 80%;" class="form-control" [required]="canSetRetroDate"
+                  [(ngModel)]="policyInfo.retroDate" name="retroDate" #retroDate="ngModel">
+              </div>
+              <div *ngIf="!policyInfo.canSetRetroDate">
+                <input type="text" class="form-control" id="retroDate" readonly
+                  [ngModel]="policyInfo.quoteData.retroDate | date:'MM/dd/yyyy'" name="retroDate">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body top-bordered">
+          <div class="row">
+            <div class="col-lg-2 col-md-8">
+              <label for="submissionNumber"  class="form-label" title="Submission Number">Submission No.</label>
+              <input type="text" class="form-control" id="submissionNumber" [readonly]="true"
+                [(ngModel)]="policyInfo.submissionNumber" name="submissionNumber" #submissionNumber="ngModel">
+            </div>
+            <div class="col-lg-1 col-md-4">
+              <label for="quoteNumber" class="form-label" title="Quote Number">Quote No.</label>
+              <input type="text" class="form-control" id="quoteNumber" [readonly]="true"
+                [(ngModel)]="policyInfo.quoteData.quoteNumber" name="quoteNumber" #quoteNo="ngModel">
+            </div>
+            <div class="col-lg-1 col-md-4">
+              <label for="packageInd" class="form-label" title="Package Policy">Package Policy</label>
+              <input type="text" class="form-control" id="packageInd" style="width:37px;" [readonly]="true"
+                [(ngModel)]="policyInfo.packageInd" name="packageInd" #packageInd="ngModel">
+            </div>
+            <div class="col-lg-1 col-md-4">
+              <label for="policyType" class="form-label" title="Master Policy">Master Policy</label>
+              <input type="checkbox" class="form-check-input" id="policyType" [ngModel]="policyInfo.policyType == '1'" name="policyType"
+                [readonly]="true" (ngModelChange)="policyInfo.policyType=$event?'1': null">
+            </div>
+            <div class="col-lg-1 col-md-4">
+              <label for="policySymbol" class="form-label" title="Symbol">Sym</label>
+              <ng-select id="policySymbol" [items]="policySymbols$ | async" bindLabel="description" [readonly]="true"
+                bindValue="code" [clearable]="false" [searchFn]="dropDownSearch" [(ngModel)]="policyInfo.policySymbol"
+                name="policySymbol">
+                <ng-template ng-label-tmp let-item="item">
+                  {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+              <label for="policyNo" class="form-label" title="Policy Number">Policy No.</label>
+              <input type="text" class="form-control" id="policyNo" [ngModel]="policyInfo.policyNo" minlength="7"
+                maxlength="7" (input)="policyInfo.ChangePolicyNumber" (ngModelChange)="policyInfo.policyNo = $event.toUpperCase" name="policyNo"
+                #policyNo="ngModel" [readonly]="true"
+                [required]="false">
+              <div [hidden]="policyNo.valid || policyNo.pristine" class="alert alert-danger">
+                Policy Number is invalid
+              </div>
+            </div>
+            <div class="col-lg-1 col-md-2">
+              <label for="policyModNo"  class="form-label" title="Policy Mod">Mod</label>
+              <input type="text" class="form-control" id="policyModNo" [(ngModel)]="policyInfo.policyModNo"
+                name="policyModNo" #policyModNo="ngModel" >
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="policyId" class="form-label" title="Policy ID">Policy Id</label>
+              <input type="text" class="form-control" id="policyId" minlength="7" maxlength="7"
+                [(ngModel)]="policyInfo.policyId" name="policyId" #policyNumber="ngModel" [readonly]="true">
+              </div>
+          </div>
+          <div class="empty-row"></div>
+          <div class="row">
+            <div class="col-lg-3 col-md-4">
+              <label for="riskCity"  class="form-label"  title="Policy City">Policy City</label>
+              <input id="riskCity" class="form-control" [readonly]="false" name="riskCity"
+                [required]="true" [(ngModel)]="policyInfo.riskLocation.city" #riskCity="ngModel"/>
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
+              <ng-select id="riskState" [items]="states$ | async" bindLabel="name" bindValue="code"
+                [clearable]="false" [readonly]="false" name="riskState"
+                [required]="true" [(ngModel)]="policyInfo.riskLocation.state" #riskState="ngModel" (change)="this.changeState($event)">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="riskZipCode"  class="form-label" title="Policy Zip Code">Policy Zip Code</label>
+              <input type="text" class="form-control" id="riskZipCode" [required]="true"
+                [readonly]="false" [(ngModel)]="policyInfo.riskLocation.zip" zip-code
+                #riskZipCode="ngModel" name="riskZipCode">
+            </div>
+          </div>
+          <div class="empty-row"></div>
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <label for="policyEffectiveDate" class="form-label" title="Effective Date">Effective Date</label>
+              <div>
+                  <input type="date" class="form-control" id="enteredDate"[required]="true"
+                  [readonly]="false" [ngModel]="policyInfo.policyEffectiveDate  | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.policyEffectiveDate=$event"
+                  name="policyEffectiveDate" #policyEffectiveDate="ngModel">
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <label for="policyExpirationDate" class="form-label" title="Expiration Date">Expiration Date</label>
+                <div >
+                  <input type="date" class="form-control" id="enteredDate" [required]="true"
+                  [readonly]="false" [ngModel]="policyInfo.policyExpirationDate | date:'yyyy-MM-dd'" (ngModelChange)="policyInfo.policyExpirationDate=$event"
+                  name="policyExpirationDate" #policyExpirationDate="ngModel">
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <label for="policyExtendedExpDate" class="form-label" title="Extension Exp Date">Extension Exp Date</label>
+              <div >
+                <input type="text" class="form-control" id="policyExtendedExpDate" [readonly]="!policyInfo.canSetExtensionDate" [required]="policyInfo.canSetExtensionDate"
+                  [ngModel]="policyInfo.policyExtendedExpDate | date:'MM/dd/yyyy'" name="policyExtendedExpDate">
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <label for="policyCancelDate" class="form-label" title="Cancel Date">Cancel Date</label>
+              <div>
+                <input type="text" class="form-control" id="policyCancelDateReadonly" [readonly]="!policyInfo.canSetCancelDate" [required]="policyInfo.canSetCancelDate"
+                  [ngModel]="policyInfo.policyCancelDate | date:'MM/dd/yyyy'" name="policyCancelDateReadonly">
+              </div>
+            </div>
+          </div>
+          <div class="empty-row"></div>
+          <div class="row">
+            <div class="col-lg-3 col-md-12">
+              <label for="carrierCode"  class="form-label" title="Carrier">Carrier</label>
+              <ng-select id="carrierCode" [items]="carrierCodes$ | async" bindLabel="description"
+                [required]="true" bindValue="code" [clearable]="false" [readonly]="false"
+                [(ngModel)]="policyInfo.quoteData.carrierCode" name="carrierCode">
+              </ng-select>
+            </div>
+            <div class="col-lg-3 col-md-12">
+              <label for="coverageCode"  class="form-label" title="Coverage Code">Coverage Code </label>
+              <ng-select id="coverageCode" [items]="coverageCodes$ | async" bindLabel="description"
+                 bindValue="code" [clearable]="false" [searchFn]="dropDownSearch" (change)="policyInfo.determineClaimsMadeOccurrence"
+                [readonly]="true" [(ngModel)]="policyInfo.quoteData.coverageCode" name="coverageCode">
+                <ng-template ng-label-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-lg-3 col-md-8">
+              <label for="pacCode"  class="form-label" title="PAC Code">PAC</label>
+              <ng-select class="custom" id="pacCode" [items]="pacCodes$ | async" bindLabel="description" name="pac" [searchFn]="dropDownSearch"
+                bindValue="code" [clearable]="false" [readonly]="true" [(ngModel)]="policyInfo.quoteData.pacCode" #pacCode="ngModel">
+                <ng-template ng-label-tmp let-item="item">
+                {{item.code}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <label for="programId"  class="form-label" title="Program ID">Program ID</label>
+              <ng-select id="programId" [items]="programs$ | async" bindLabel="description" [readonly]="true"
+                bindValue="key" [clearable]="false" [searchFn]="dropDownSearch" [(ngModel)]="policyInfo.programId" name="programId" (change)="changeProgramId">
+                <ng-template ng-label-tmp let-item="item">
+                  {{item.key}} - {{item.description}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.key}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="card-body top-bordered">
+          <div class="row">
+            <div class="col-lg-1 col-md-4">
+              <label for="riskGradeCode"  class="form-label" title="Risk Grade">Risk Grade</label>
+              <ng-select id="riskGradeCode" [items]="riskGrades$ | async" bindLabel="description"
+                 bindValue="code" [clearable]="false" [readonly]="false" [(ngModel)]="policyInfo.riskGradeCode" name="riskGradeCode">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="auditCode" class="form-label" title="Audit Code">Audit Code</label>
+              <ng-select id="auditCode" [items]="auditCodes$ | async" bindLabel="description" bindValue="code"
+                [required]="true" [clearable]="false" [readonly]="false"
+                [(ngModel)]="policyInfo.auditCode" name="auditCode">
+              </ng-select>
+            </div>
+            <div class="col-lg-2 col-md-4">
+              <label for="paymentFrequency" class="form-label" title="Payment Frequency">Payment Frequency</label>
+              <ng-select id="paymentFrequency" [items]="paymentFrequencies$ | async" bindLabel="description"
+              [required]="true" [readonly]="false" bindValue="code" [clearable]="false"
+                 [(ngModel)]="policyInfo.paymentFrequency" name="paymentFrequency">
+              </ng-select>
+            </div>
+            <div class="col-lg-1 col-md-4">
+              <label for="creditDays" class="form-label" title="Credit Days">Credit Days</label>
+              <input type="number" class="form-control" id="creditDays"[required]="true"
+              [readonly]="false" maxInt [(ngModel)]="policyInfo.quoteData.creditDays" name="creditDays" #creditDays="ngModel">
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <label for="deregulationIndicator" class="form-label" title="Deregulation Indictor">Deregulation Indicator</label>
+              <ng-select id="deregulationIndicator" [items]="deregulationIndicators$ | async" bindLabel="description"
+                bindValue="code" [clearable]="false"  [readonly]="true"
+                [(ngModel)]="policyInfo.deregulationIndicator" name="deregulationIndicator">
+              </ng-select>
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <label for="riskType" class="form-label" title="Risk Type">Risk Type</label>
+              <ng-select id="riskType" [items]="riskTypes$ | async" bindLabel="description" bindValue="code"
+                [clearable]="false" [readonly]="true"
+                [(ngModel)]="policyInfo.riskType" name="riskType">
+              </ng-select>
+            </div>
+          </div>
+          <div class="empty-row"*ngIf="policyInfo.assumed || policyInfo.dereg"></div>
+          <div class="row" *ngIf="policyInfo.assumed || policyInfo.dereg">
+            <div class="col-lg-6"></div>
+            <div class="col-lg-3" *ngIf="!policyInfo.dereg"></div>
+            <div class="col-lg-3" *ngIf="policyInfo.dereg">
+              <label for="NYFTZ" class="form-label"  title="NY Free Trade Zone">NY Free Trade Zone</label>
+              <ng-select id="NYFTZ"  [items]="nyFreeTradeZones$ | async" bindLabel="description"
+                 bindValue="code" [clearable]="false"
+                [readonly]="true" [(ngModel)]="policyInfo.nyftz" name="NYFTZ">
+              </ng-select>
+            </div>
+            <div class="col-lg-3" *ngIf="policyInfo.assumed">
+              <label for="assumedCarrier" class="form-label" title="Assumed Carrier">Assumed Carrier</label>
+              <ng-select id="assumedCarrier" [items]="assumedCarriers$ | async" bindLabel="description"
+                 bindValue="code" [clearable]="false"
+                [readonly]="true" [(ngModel)]="policyInfo.assumedCarrier" [searchFn]="dropDownSearch"
+                name="assumedCarrier">
+                <ng-template ng-label-tmp let-item="item">
+                  {{item.description}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  {{item.code}} - {{item.description}}
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="card-body top-bordered" *ngIf="productRecallCovCodes.includes(policyInfo.quoteData.coverageCode)">
+          <div class="row">
+            <div class="col-lg-12">
+              <h5>Product Recall</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-1">
+              <label for="coinsurancePercentage" class="form-label" title="Coinsurance %">Coinsurance %</label>
+              <input type="text" class="form-control" id="coinsurancePercentage" mask="percent" suffix="%" [required]="true"
+              [readonly]="false" [(ngModel)]="policyInfo.coinsurancePercentage" name="coinsurancePercentage"
+                #coinsurancePercentage="ngModel">
+            </div>
+            <div class="col-lg-2">
+              <label for="productManufactureDate" class="form-label" title="Product Manufacture Date">Product Manufacture Date</label>
+              <input style="display: inline-block; max-width: 80%;" class="form-control" [disabled]="true"
+                [(ngModel)]="policyInfo.productManufactureDate" name="productManufactureDate"
+                #productManufactureDate="ngModel">
+
+            </div>
+            <div class="col-lg"></div>
+            <div class="col-lg"></div>
+            <div class="col-lg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+<div *ngIf="showBusy">
+  <rsps-busy message="Saving..."></rsps-busy>
+</div>
+

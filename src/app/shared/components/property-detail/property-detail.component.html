@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header" (click)="collapse.toggle()">
+    Overview
+    <fa-icon style="float: right" [icon]="faAngleDown" *ngIf="collapsed"></fa-icon>
+    <fa-icon style="float: right" [icon]="faAngleUp" *ngIf="!collapsed"></fa-icon>
+  </div>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div class="card-body">
+      <div class="row">
+        <div class="grid-container">
+          <rsps-property-detail-left [propertyParent]="propertyParent" [buildings]="buildings"
+            [limitTotal]="limitTotal" [largestTiv]="largestTiv" [largestExposure]="largestExposure"
+            [lawLimits]="lawLimits" [subjectAmount]="subjectAmount" [canEdit]="canEdit">
+          </rsps-property-detail-left>
+          <rsps-property-detail-right [propertyParent]="propertyParent" [canEdit]="canEdit" [rateEffectiveDate]="propertyParent.rateEffectiveDate"/>
+        </div>
+      </div>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="collapsed"></div>
+  </div>
+</div>

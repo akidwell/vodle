@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../core/authorization/auth.guard';
 import { ImportComponent } from './components/import/import.component';
 
-const routes: Routes = [{ path: '', component: ImportComponent, canActivate: [ AuthGuard ] }];
+const routes: Routes = [{ path: '', title: 'RSPS | Import', component: ImportComponent, canActivate: [ AuthGuard ] }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

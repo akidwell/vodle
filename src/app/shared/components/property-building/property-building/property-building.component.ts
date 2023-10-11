@@ -9,7 +9,8 @@ import { AddressLookupService } from 'src/app/core/services/address-lookup/addre
 import { MessageDialogService } from 'src/app/core/services/message-dialog/message-dialog-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { Code } from 'src/app/core/models/code';
-import { PropertyQuoteBuildingClass } from 'src/app/features/quote/classes/property-quote-building-class';
+import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
+import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
 
 @Component({
   selector: 'rsps-property-building',
@@ -27,16 +28,20 @@ export class PropertyBuildingComponent implements OnInit {
   isLoadingAddress = false;
   addressSub!: Subscription;
   protectionClassList: number[] = [1,2,3,4,5,6,7,8,9,10];
+  @Input() public readOnlyQuote!: boolean;
+  @Input() public filteredCoverages: PropertyBuildingCoverageClass[] = [];
+
 
   @Input() public programId!: number;
-  @Input() public building!: PropertyQuoteBuildingClass;
+  @Input() public building!: PropertyBuildingClass;
   @Input() public canEdit = false;
   @Input() public index = 0;
   @Input() public classType!: ClassTypeEnum;
-  @Output() deleteBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
-  @Output() copyBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
-  @Output() addCoverage: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
-  @Output() filterBuilding: EventEmitter<PropertyQuoteBuildingClass> = new EventEmitter();
+  @Input() public rateEffectiveDate!: Date | null;
+  @Output() deleteBuilding: EventEmitter<PropertyBuildingClass> = new EventEmitter();
+  @Output() copyBuilding: EventEmitter<PropertyBuildingClass> = new EventEmitter();
+  @Output() addCoverage: EventEmitter<PropertyBuildingClass> = new EventEmitter();
+  @Output() filterBuilding: EventEmitter<PropertyBuildingClass> = new EventEmitter();
 
   constructor(private confirmationDialogService: ConfirmationDialogService, private dropdowns: DropDownsService, private addressLookupService: AddressLookupService,
     private messageDialogService: MessageDialogService) { }
@@ -48,8 +53,10 @@ export class PropertyBuildingComponent implements OnInit {
       this.collapseExpand(false);
       this.focus();
     }
-    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', '2020-01-01', this.programId.toString() ?? '*')
+    this.cspCodes$ = this.dropdowns.getCspCodes('IUS', this.rateEffectiveDate?.toString() ?? '', this.programId.toString() ?? '*')
       .pipe(tap(() => this.loadingCsp = false));
+    this.states$ = this.dropdowns.getStates();
+
   }
 
   ngOnDestroy(): void {

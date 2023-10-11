@@ -8,11 +8,11 @@ import { AdditionalInterestData } from '../models/additional-interest';
 import { MortgageeData } from '../models/mortgagee';
 import { PropertyBuilding } from '../models/property-building';
 import { PropertyBuildingCoverageSubjectAmountData } from '../models/property-building-coverage';
-import { PropertyDeductible } from '../models/property-deductible';
+import { PropertyDeductible, PropertyQuoteDeductible } from '../models/property-deductible';
 import { PropertyQuote } from '../models/property-quote';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { PropertyQuoteBuildingClass } from './property-quote-building-class';
-import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
+import { PropertyBuildingCoverageClass } from './property-building-coverage-class';
 import { PropertyQuoteDeductibleClass } from './property-quote-deductible-class';
 import { QuoteOptionalPremiumClass } from './quote-optional-premium-class';
 import { QuoteValidationClass } from './quote-validation-class';
@@ -24,8 +24,9 @@ import { ProgramClass } from './program-class';
 import * as moment from 'moment';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
+import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
 
-export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Validation, QuoteAfterSave {
+export class PropertyQuoteClass extends QuoteClass implements  Validation, QuoteAfterSave {
   propertyQuoteId = 0;
   quote!: QuoteClass;
   //quoteId: number | null = null;
@@ -54,6 +55,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
     super(quote, program, submission);
     if (quote && quote.propertyQuote) {
+      console.log(quote.propertyQuote.propertyQuoteBuildingList);
       this.existingClassInit(quote.propertyQuote);
     } else {
       this.newClassInit();
@@ -67,6 +69,14 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.formsListTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.FormsList);
     this.summaryTabValidation = new TabValidationClass(QuoteValidationTabNameEnum.Summary);
     this.validate();
+  }
+
+  private _rateEffectiveDate: Date | null = null;
+  get rateEffectiveDate(): Date | null {
+    return this._rateEffectiveDate;
+  }
+  set rateEffectiveDate(value: Date | null) {
+    this.rateEffectiveDate = value;
   }
 
   get riskDescription() : string | null {
@@ -150,7 +160,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   get buildingCount(): number {
-    return this.propertyQuoteBuildingList?.length ?? 0;
+    return this.propertyQuoteBuildingList.filter(x=> !x.markForDeletion)?.length ?? 0;
   }
   calculateLargestPremTiv(){
     let largest = 0;
@@ -215,39 +225,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     return buildings;
   }
 
-  private _searchSubject = '';
-  get searchSubject() : string {
-    return this._searchSubject;
-  }
-  set searchSubject(value: string) {
-    this._searchSubject = value;
-    this.filterBuildingsCoverages();
-  }
-  private _searchPremises = '';
-  get searchPremises() : string {
-    return this._searchPremises;
-  }
-  set searchPremises(value: string) {
-    this._searchPremises = value;
-    this.filterBuildingsCoverages();
-  }
-  private _searchBuilding = '';
-  get searchBuilding() : string {
-    return this._searchBuilding;
-  }
-  set searchBuilding(value: string) {
-    this._searchBuilding = value;
-    this.filterBuildingsCoverages();
-  }
-  private _searchAddress = '';
-  get searchAddress() : string {
-    return this._searchAddress;
-  }
-  set searchAddress(value: string) {
-    this._searchAddress = value;
-    this.filterBuildingsCoverages();
-  }
-
   private _cspCode! : Code;
 
   get cspCode() : Code {
@@ -281,33 +258,68 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   addBuilding(building: PropertyQuoteBuildingClass) {
+    building.propertyQuoteBuildingId = 0;
     this.propertyQuoteBuildingList.push(building);
     building.propertyQuote = this;
     building.focus = true;
+    building.isNew = true;
+    building.isExpanded = true;
     building.markDirty();
-    this.filterBuildings();
+    //this.filterBuildings();
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
     this.calculateLawLimits();
     this.calculateLargestExposure();
   }
 
+  addCoverage(building: PropertyQuoteBuildingClass) {
+    const newCoverage = new PropertyQuoteBuildingCoverageClass();
+    newCoverage.focus = true;
+    newCoverage.subjectNumber = building.subjectNumber;
+    newCoverage.premisesNumber = building.premisesNumber;
+    newCoverage.buildingNumber = building.buildingNumber;
+    newCoverage.propertyQuoteBuildingId = building.propertyQuoteBuildingId ?? 0;
+    newCoverage.isNew = true;
+    newCoverage.guid = crypto.randomUUID();
+    building.propertyQuoteBuildingCoverage.push(newCoverage);
+    return newCoverage;
+    //this.filterCoverages();
+    // this.propertyQuote.calculateSubjectAmounts();
+    // this.propertyQuote.calculateLargestPremTiv();
+    // this.propertyQuote.calculateLargestExposure();
+    // this.propertyQuote.calculateLawLimits();
+  }
+
+  addMortgagee(mortgagee: MortgageeClass){
+    mortgagee.markDirty();
+    mortgagee.isNew = true;
+    mortgagee.mortgageeType = 1;
+    this.propertyQuoteMortgageeList.push(mortgagee);
+    this.markDirty();
+  }
+
+  addAdditionalInterest(additionalInterest: AdditionalInterestClass){
+    additionalInterest.markDirty();
+    additionalInterest.isNew = true;
+    additionalInterest.additionalInterestType = 1;
+    this.propertyQuoteAdditionalInterestList.push(additionalInterest);
+    this.markDirty();
+  }
+
   deleteBuilding(building: PropertyQuoteBuildingClass) {
-    const index = this.propertyQuoteBuildingList.indexOf(building, 0);
-    if (index > -1) {
-      this.propertyQuoteBuildingList.splice(index, 1);
-      // Mark dirty to force form rules check
-      this.markDirty();
-    }
-    if (building.propertyQuoteBuildingCoverage.length > 0) {
-      this.filterBuildingsCoverages();
-      this.calculateSubjectAmounts();
-      this.calculateLargestPremTiv();
-      this.calculateLawLimits();
-      this.calculateLargestExposure();
-    }
-    else {
-      this.filterBuildings();
+    if (building instanceof PropertyQuoteBuildingClass) {
+      const index = this.propertyQuoteBuildingList.indexOf(building, 0);
+      if (index > -1) {
+        this.propertyQuoteBuildingList.splice(index, 1);
+        this.markDirty();
+      }
+      if (building.propertyQuoteBuildingCoverage.length > 0) {
+        this.propertyQuoteBuildingList.map(x => {
+          if(x.propertyQuoteBuildingId == building.propertyQuoteBuildingId){
+            x.propertyQuoteBuildingCoverage = [];
+          }
+        });
+      }
       this.calculateSubjectAmounts();
       this.calculateLargestPremTiv();
       this.calculateLawLimits();
@@ -343,49 +355,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingList.forEach(x => x.cspCode == null);
   }
 
-  clearBuildings() {
-    this.propertyQuoteBuildingList = [];
-    this.filteredBuildings = [];
-    this.filteredCoverages = [];
-    // TODO: GAM need to work on this
-    // this.propertyQuoteDeductibleList.map(c => {c.premisesNumber = null; c.buildingNumber = null;});
-  }
-
-  filteredBuildings: PropertyQuoteBuildingClass[] = [];
-  filteredCoverages: PropertyQuoteBuildingCoverageClass[] = [];
-
-  filterBuildings() {
-    const allBuildings: PropertyQuoteBuildingClass[] = [];
-    this.propertyQuoteBuildingList.map((element) => {
-      if ((this.searchSubject == '' || element.subjectNumber == Number(this.searchSubject)) &&
-      (this.searchPremises == '' || element.premisesNumber == Number(this.searchPremises)) &&
-      (this.searchBuilding == '' || element.buildingNumber == Number(this.searchBuilding)) &&
-      (this.searchAddress == '' || element.address.toLowerCase().includes(this.searchAddress.toLowerCase()))) {
-        allBuildings.push(element);
-      }
-    });
-    this.filteredBuildings = allBuildings;
-  }
-
-  filterCoverages() {
-    const filtered: PropertyQuoteBuildingCoverageClass[] = [];
-    this.filteredBuildings.map((element) => {
-      element.propertyQuoteBuildingCoverage.map((x) => {
-        filtered.push(x);
-      });
-    });
-    this.filteredCoverages = filtered;
-  }
-
-  filterBuildingsCoverages() {
-    this.filterBuildings();
-    this.filterCoverages();
-  }
-
   existingClassInit(propertyQuote: PropertyQuote) {
     this.propertyQuoteId = propertyQuote.propertyQuoteId;
     //this.quoteId = propertyQuote.quoteId;
     this._riskDescription = propertyQuote.riskDescription;
+    this._rateEffectiveDate = propertyQuote.rateEffectiveDate;
 
     const deductibles: PropertyQuoteDeductibleClass[] = [];
 
@@ -410,11 +384,11 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
         ai.push(new AdditionalInterestClass(element));
       });
     }
-    //this.propertyQuoteMortgageeList = mortgagee;
     this.propertyQuoteAdditionalInterestList = ai;
 
     const buildings: PropertyQuoteBuildingClass[] = [];
     if(propertyQuote.propertyQuoteBuilding) {
+      console.log('adsfasdf' + propertyQuote.propertyQuoteBuilding);
       propertyQuote.propertyQuoteBuilding.forEach((element) => {
         const building = new PropertyQuoteBuildingClass(element);
         building.propertyQuote = this;
@@ -432,7 +406,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     }
     this.propertyQuoteBuildingOptionalCoverage = optionalCoverages;
 
-    this.filterBuildingsCoverages();
+    //this.filterBuildingsCoverages();
     this.setReadonlyFields();
     this.setRequiredFields();
     this.calculateSubjectAmounts();
@@ -453,7 +427,6 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     //this._validationResults.mapValues(this);
     //validate children
     this.callChildValidations();
-
     //tab validations
     this.validateLocationCoverageTab();
     this.validateCoveragesTab();
@@ -494,7 +467,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.childArrayValidate(this.propertyQuoteDeductibleList);
     this.childArrayValidate(this.propertyQuoteMortgageeList);
     this.childArrayValidate(this.propertyQuoteAdditionalInterestList);
-    this.childArrayValidate(this.propertyQuoteBuildingList);
+    this.childArrayValidate(this.propertyQuoteBuildingList as PropertyQuoteBuildingClass[]);
     this.childArrayValidate(this.quoteLineItems);
     this.childArrayValidate(this.quoteRates);
     this.childArrayValidate(this.quotePolicyForms);
@@ -551,6 +524,15 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   validateClass(): void {
     //this.validate();
     const childValidations: QuoteValidationClass[] = [];
+
+    const classcode = this.validateClassCode();
+    if (classcode)
+    {
+      this._isValid = false;
+      this.validationResults.errorMessages.push(classcode);
+      this._errorMessages.push(classcode);
+    }
+
     if (this.propertyQuote) {
       childValidations.push(this.validationResults);
     }
@@ -604,7 +586,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     if (classCodeValidation) {
       this.propertyQuoteBuildingLocationTabValidation?.errorMessages.push(classCodeValidation);
     }
-    this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAndMerge(this.propertyQuoteBuildingList);
+    this.propertyQuoteBuildingLocationTabValidation?.validateChildrenAndMerge(this.propertyQuoteBuildingList as PropertyQuoteBuildingClass[]);
   }
   validateCoveragesTab() {
     this.coveragesTabValidation?.resetValidation();
@@ -633,11 +615,36 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   validateFormsListTab() {
     this.formsListTabValidation?.resetValidation();
     this.formsListTabValidation?.validateChildrenAsStandalone(this.quotePolicyForms);
+    this.generalRemarksData.forEach(x => x.classValidation());
   }
 
   validateSummaryTab(){
+    this._errorMessages = [];
     this.summaryTabValidation?.resetValidation();
     this.summaryTabValidation?.validateChildrenAsStandalone(this.internalNotesData);
+
+    if(this.overridePremium){
+      if(this.propertyPremium == null){
+        this._errorMessages.push('Property Premium is Required');
+        this._isDirty = true;
+        this._isValid = false;
+        //this._canBeSaved = false;
+      }
+    } if(this.overrideMinPolPrem){
+      if(this.minimumPremium == null){
+        this._errorMessages.push('Minimum Policy Premium is Required');
+        this._isDirty = true;
+        this._isValid = false;
+        this._canBeSaved = false;
+
+      }
+    }
+    if(this.commissionRate?.toString() == ''){
+      this._errorMessages.push('Commission Rate is Required');
+      this._isDirty = true;
+      this._isValid = false;
+      this._canBeSaved = false;
+    }
   }
   validateBuildings() {
     this.propertyQuoteBuildingList.map(c => {
@@ -681,6 +688,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteBuildingOptionalCoverage.forEach(c => {
       c.markImported();
     });
+    this.validate();
   }
   validateDeductibles() {
     this.propertyQuoteDeductibleList.map(c => {
@@ -735,31 +743,86 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       }
     });
   }
-  calculateSummaryPremiums(): void {
-    //Add all commission eligible premium
+  // calculateSummaryPremiums(): void {
+  //   //Add all commission eligible premium
+  //   let premiumCommissionAvailable = this.quoteRates[0].premium ?? 0;
+  //   this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
+  //   premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+  //   this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
+  //   //Add all non-commission eligible items for total premium
+  //   let advancePremiumValue = premiumCommissionAvailable;
+  //   if (this.autoCalcMiscPremium) {
+  //     this.advancePremium = advancePremiumValue;
+  //     this.minimumPremium = this.advancePremium;
+  //     this.totalAdvancePremium = advancePremiumValue;
+
+  //   } else if (!this.autoCalcMiscPremium && this.minimumPremiumRequired){
+  //     this.totalAdvancePremium = Number(this.advancePremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+  //   }
+  //   this.minimumEarnedPremium = (Number(this.advancePremium) * (this.earnedPremiumPct)) ?? 0;
+
+  //   this.quoteLineItems.map((surchargeOrFee) => (advancePremiumValue += surchargeOrFee.amount ?? 0));
+  // }
+  calculatePropertyPremiums(): void {
+    let propPremValue = 0;
+    let ratesTotal = 0;
+
+    // calculate broker commission, but not displayed on UI
     let premiumCommissionAvailable = this.quoteRates[0].premium ?? 0;
     this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? premiumCommissionAvailable += coverage.additionalPremium ?? 0 : 0));
     premiumCommissionAvailable += (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
     this.brokerCommission = premiumCommissionAvailable * (this.commissionRate ? this.commissionRate/100 : 0);
-    //Add all non-commission eligible items for total premium
-    let advancePremiumValue = premiumCommissionAvailable;
-    if (this.autoCalcMiscPremium) {
-      this.advancePremium = advancePremiumValue;
-      this.minimumPremium = this.advancePremium;
-      this.totalAdvancePremium = advancePremiumValue;
 
-    } else if (!this.autoCalcMiscPremium && this.minimumPremiumRequired){
-      this.totalAdvancePremium = Number(this.advancePremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+    // calculate property premium
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => ((coverage.isAccepted && !coverage.isFlat) ? propPremValue += coverage.additionalPremium ?? 0 : 0));
+
+    this.quoteRates.map((x) =>(ratesTotal += x.premium ?? 0));
+
+    if(!this.overridePremium){
+      this.propertyPremium = propPremValue + ratesTotal;
     }
-    this.minimumEarnedPremium = (Number(this.advancePremium) * (this.earnedPremiumPct)) ?? 0;
 
-    this.quoteLineItems.map((surchargeOrFee) => (advancePremiumValue += surchargeOrFee.amount ?? 0));
+    // calculate flat prem
+    let flatPremValue = 0;
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isFlat ? flatPremValue += coverage.additionalPremium ?? 0 : 0));
+    this.flatPremium = flatPremValue;
+
+    //sub total premium
+    let subTotal = 0;
+    this.propertyQuoteBuildingOptionalCoverage.map((coverage) => (coverage.isAccepted ? subTotal += coverage.additionalPremium ?? 0 : 0));
+    this.propertySubTotalPremium = subTotal + (this.quoteRates[0].premium ?? 0);
+    if(this.overridePremium){
+      this.propertySubTotalPremium = this.propertyPremium ?? 0 + this.flatPremium;
+    }
+
+    // total advance premium
+    this.totalAdvancePremium = Number(this.propertySubTotalPremium) + (this.terrorismCoverageSelected ? this.terrorismPremium || 0 : 0);
+
+    // minimum premiums
+    if(this.overrideMinPolPrem){
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    } else {
+      this.minimumPremium = this.totalAdvancePremium;
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    }
   }
+
+  calculateMinEarnedPrem(): void {
+    if(this.overrideMinPolPrem){
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    } else {
+      this.minimumPremium = this.totalAdvancePremium;
+      this.minimumEarnedPremium = (Number(this.minimumPremium) * (this.earnedPremiumPct)) ?? 0;
+    }
+  }
+
+
   onSave(savedQuote: PropertyQuoteClass) {
+    console.log('savedquote', savedQuote);
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
     this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();
     this.submission.policyTerm = PolicyTermEnum.custom;
-    this.onSaveBuilding(this.propertyQuoteBuildingList,savedQuote);
+    this.onSaveBuilding(this.propertyQuoteBuildingList as PropertyQuoteBuildingClass[],savedQuote);
     this.onSaveDeductible(this.propertyQuoteDeductibleList,savedQuote);
     this.onSaveMortgagee(this.propertyQuoteMortgageeList,savedQuote);
     this.onSaveOptionalCoverages(this.propertyQuoteBuildingOptionalCoverage,savedQuote);
@@ -770,6 +833,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.onSaveWarranties(savedQuote);
     this.onSaveGeneralRemarks(savedQuote);
     this.onSaveInternalNotes(savedQuote);
+    console.log('Property Quote after save: ', this);
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -801,10 +865,12 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
 
   private onSaveGeneralRemarks(savedQuote: PropertyQuoteClass) {
     this.generalRemarksData = savedQuote.generalRemarksData;
+    this.generalRemarksData.map(x => x.isNew = false);
   }
 
   private onSaveInternalNotes(savedQuote: PropertyQuoteClass) {
     this.internalNotesData = savedQuote.internalNotesData;
+    this.internalNotesData.map(x => x.isNew = false);
   }
 
   private onSaveMortgagee(mortgagees: MortgageeClass[], savedQuote: PropertyQuoteClass): void {
@@ -849,31 +915,36 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: PropertyQuoteClass): void {
+    console.log('line861', buildings);
     buildings.forEach(building => {
       if (building.isNew) {
         const match = savedQuote.propertyQuoteBuildingList.find(c => c.guid == building.guid);
         if (match != null) {
           building.propertyQuoteBuildingId = match.propertyQuoteBuildingId;
-          building.propertyQuoteId = match.propertyQuoteId;
         }
         building.isNew = false;
-        building.guid = '';
+        //building.guid = '';
       }
       this.onSaveCoverage(building.propertyQuoteBuildingCoverage, savedQuote);
     });
   }
 
-  private onSaveCoverage(coverages: PropertyQuoteBuildingCoverageClass[], savedQuote: PropertyQuoteClass): void {
+  private onSaveCoverage(coverages: PropertyBuildingCoverageClass[], savedQuote: PropertyQuoteClass): void {
+    console.log('line 894', coverages);
+    console.log('line 895' , savedQuote);
     coverages.forEach(coverage => {
       if (coverage.isNew) {
-        const buildingMatch = savedQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.building.propertyQuoteBuildingId);
-        const coverageMatch = buildingMatch?.propertyQuoteBuildingCoverage.find(c => c.guid == coverage.guid);
+        const buildingMatch = savedQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.propertyQuoteBuildingId);
+        console.log('line 898', buildingMatch);
+        const coverageMatch = savedQuote?.propertyQuoteBuildingList.flatMap(x => x.propertyQuoteBuildingCoverage).find(x => x.guid == coverage.guid);
+        console.log('line 901', coverageMatch);
+
         if (coverageMatch != null) {
-          coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId;
+          coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId ?? 0;
           coverage.propertyQuoteBuildingId = coverageMatch.propertyQuoteBuildingId;
         }
         coverage.isNew = false;
-        coverage.guid = '';
+        //coverage.guid = '';
       }
     });
   }
@@ -886,7 +957,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
   }
 
   classToJSON(): PropertyQuote {
-    const deductibles: PropertyDeductible[] = [];
+    const deductibles: PropertyQuoteDeductible[] = [];
     this.propertyQuoteDeductibleList.forEach(c => deductibles.push(c.toJSON()));
 
     const mortgagee: MortgageeData[] = [];
@@ -896,7 +967,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
     this.propertyQuoteAdditionalInterestList.forEach(c => ai.push(c.toJSON()));
 
     const buildings: PropertyBuilding[] = [];
-    this.propertyQuoteBuildingList.forEach(c => buildings.push(c.toJSON()));
+    (this.propertyQuoteBuildingList as PropertyQuoteBuildingClass[]).forEach(c => buildings.push(c.toJSON()));
 
     const optionalCoverages: QuoteOptionalPremium[] = [];
     this.propertyQuoteBuildingOptionalCoverage.forEach(c => optionalCoverages.push(c.toJSON()));
@@ -905,6 +976,7 @@ export class PropertyQuoteClass extends QuoteClass implements PropertyQuote, Val
       propertyQuoteId: this.propertyQuoteId,
       quoteId: this.quoteId,
       riskDescription: this.riskDescription,
+      rateEffectiveDate: this.rateEffectiveDate,
       propertyQuoteDeductible: deductibles,
       propertyQuoteMortgagee: mortgagee,
       propertyQuoteAdditionalInterest: ai,

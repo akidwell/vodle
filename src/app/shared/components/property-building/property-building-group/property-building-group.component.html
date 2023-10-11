@@ -16,17 +16,17 @@
         <div class="row">
             <div class="col-lg-1">
                 <input validate-on-change type="text" class="form-control" id="subjectNumber" name="subjectNumber" maxInt mask="0*"
-                    ngbTooltip="Subject Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchSubject"
+                    ngbTooltip="Subject Number" [openDelay]="1000" [(ngModel)]="searchSubject"
                     #subjectNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
             </div>
             <div class="col-lg-1">
                 <input validate-on-change type="text" class="form-control" id="premisesNumber" name="premisesNumber" maxInt mask="0*"
-                    ngbTooltip="Premises Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchPremises"
+                    ngbTooltip="Premises Number" [openDelay]="1000" [(ngModel)]="searchPremises"
                     #premisesNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
             </div>
             <div class="col-lg-1">
                 <input validate-on-change type="text" class="form-control" id="buildingNumber" name="buildingNumber" maxInt mask="0*"
-                    ngbTooltip="Building Number" [openDelay]="1000" [(ngModel)]="propertyQuote.searchBuilding"
+                    ngbTooltip="Building Number" [openDelay]="1000" [(ngModel)]="searchBuilding"
                     #buildingNumber="ngModel" [readonly]="!canEdit" autocomplete="off">
             </div>
             <div class="col-lg-7">
@@ -58,8 +58,9 @@
                     <label class="form-label" title="Address">Address</label>
                 </div>
             </div>
-            <div *ngFor="let item of policies$ | async; let i = index">
-                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId"
+            <div *ngFor="let item of filteredBuildings; let i = index">
+                <rsps-property-building [building]="item" [canEdit]="canEdit" [index]="i" [classType]="classType" [programId]="programId" [readOnlyQuote]="readOnlyQuote"
+                    [rateEffectiveDate]="rateEffectiveDate"  [filteredCoverages]="filteredCoverages"
                     (copyBuilding)=copyBuilding($event) (deleteBuilding)=deleteBuilding($event)
                     (addCoverage)=addCoverage($event) (filterBuilding)=filterBuilding($event)>
                 </rsps-property-building>
@@ -77,8 +78,8 @@
         </div>
     </div>
     <div class="card-footer">
-        <button class="footer-button" (click)="addBuilding();" *ngIf="canEdit">Add
+        <button class="footer-button" (click)="addBuilding();" *ngIf="canEdit && !readOnlyQuote">Add
             Location/Building</button>
-        <div class="footer-count">Buildings: {{(policies$ | async)?.length}}/{{buildingCount}}</div>
+        <div class="footer-count">Buildings: {{(filteredBuildings)? filteredBuildingCount : 0}}/{{buildingCount}}</div>
     </div>
 </div>

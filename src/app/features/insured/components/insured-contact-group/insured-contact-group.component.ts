@@ -48,6 +48,7 @@ export class InsuredContactGroupComponent {
       newContact.isPrimary = true;
     }
     this.insuredContacts.push(newContact);
+    this.contactsCollapsed = false;
   }
 
   copyExistingContact(contact: InsuredContactClass) {

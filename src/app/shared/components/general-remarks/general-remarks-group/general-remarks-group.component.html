@@ -22,10 +22,18 @@
     </div>
   </div>
   <div class="card-footer">
-    <div id="mortgageeFooter">
-      <button style="float:left; background:none; border:none;" class="underline"
-        (click)="addNewRemark();">Add General Remarks</button>
-        <p style="float:right; background:none; border:none;">*These remarks are displayed on Quote and Binder Letters.</p>
+    <div id="remarkFooter">
+      <div class="row">
+        <div class="col-lg-4">
+      <button *ngIf="!quote.readOnlyQuote" class="footer-button" (click)="addNewRemark();">Add General Remarks</button>
+    </div>
+    <div class="col-lg-4">
+        <div style="background:none; border:none;">*These remarks are displayed on Quote and Binder Letters.</div>
+      </div>
+        <div class="col-lg-4">
+        <div class="footer-count">Remarks: {{this.generalRemarks.length}}</div>
+      </div>
+    </div>
     </div>
   </div>
 </div>

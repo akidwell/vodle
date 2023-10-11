@@ -37,8 +37,8 @@
         </div>
       </div>
       <div *ngFor="let item of optionalPremiumData; let i = index">
-        <rsps-optional-premium (copyExisitingOptionalPremium)=copyOptionalPremium($event) [type]="type" [program]="program"
-          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [coveragesObs$]="coverages$"
+        <rsps-optional-premium (copyExisitingOptionalPremium)=copyOptionalPremium($event) [type]="type" [propertyParent]="propertyParent"
+          (deleteExistingOptionalPremium)=deleteExistingOptionalPremium($event) [coveragesObs$]="coverages$" [readOnlyQuote]="false"
           [deductibleCodes$]="deductibleCodes$" [deductibleTypes$]="deductibleTypes$" [optionalPremiumData]=item>
         </rsps-optional-premium>
       </div>
@@ -48,8 +48,8 @@
   </div>
 
   <div class="card-footer">
-    <button style="float:left; background:none; border:none;" class="underline" (click)="addNewOptionalPremium();">Add
-      Optional Premium</button>
+    <button *ngIf="canEdit && !readOnlyQuote" class="footer-button" (click)="addNewOptionalPremium();">Add Optional Premium</button>
+    <div class="footer-count">Optional Premiums: {{optionalPremiumsCount}}</div>
   </div>
 <!-- <div class="card-body">
     <div class="row">

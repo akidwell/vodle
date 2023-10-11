@@ -1,4 +1,4 @@
-<div class="component-row">
+<div class="component-row" *ngIf="!optionalPremiumData.markForDeletion">
   <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
     <div class="row" (click)="collapseExpand(false)">
       <div class="col-lg-1">
@@ -15,6 +15,7 @@
           [clearable]="false"
           [searchFn]="dropDownSearch"
           [(ngModel)]="optionalPremiumData.building"
+          [readonly]="readOnlyQuote"
         >
           <ng-template ng-label-tmp let-item="item">
             {{ item.code }}
@@ -39,6 +40,8 @@
           validate-on-change
           [searchFn]="dropDownSearch"
           [(ngModel)]="optionalPremiumData.coverageCode"
+          [readonly]="readOnlyQuote"
+
         >
           <ng-template ng-option-tmp let-item="item">
             {{ item.coverageDisplay }}
@@ -57,9 +60,9 @@
           [validateLevel]="validateQuote"
           [fullValidate]="true"
           [allowNegative]="false"
-          [required]="isLimitRequired"
+          [required]="isLimitRequired && !readOnlyQuote"
           (change)="calculateLawLimitAndExposure()"
-          [readonly]="!canEdit || !isLimitAvailable"
+          [readonly]="!canEdit || !isLimitAvailable || readOnlyQuote"
           [(ngModel)]="optionalPremiumData.limit"
           #limit="ngModel"
         />
@@ -102,13 +105,14 @@
                 [decimalPlaces]="5"
                 [hideDecimal]="true"
                 [allowNegative]="false"
-                [required]="canEdit && isPremiumMappingSet && optionalPremiumData.isSubjectToMaxAmount"
+                [required]="canEdit && isPremiumMappingSet && optionalPremiumData.isSubjectToMaxAmount && !readOnlyQuote"
                 validate-on-change
                 [fullValidate]="true"
                 [readonly]="
                   !canEdit ||
                   !isPremiumMappingSet ||
-                  !optionalPremiumData.isSubjectToMaxAmount
+                  !optionalPremiumData.isSubjectToMaxAmount ||
+                  readOnlyQuote
                 "
                 [(ngModel)]="optionalPremiumData.subjectToMaxPercent"
                 #subjectToMaxPercent="ngModel"
@@ -131,7 +135,7 @@
             validate-on-change
             [fullValidate]="true"
             name="maxAmount"
-            [readonly]="!canEdit || !isPremiumMappingSet || !isDeductibleAvailable"
+            [readonly]="!canEdit || !isPremiumMappingSet || !isDeductibleAvailable || readOnlyQuote"
           />
         </div>
       </div>
@@ -146,8 +150,8 @@
           validate-on-change
           [validateLevel]="validateQuote"
           [fullValidate]="true"
-          [readonly]="!canEdit || !isPremiumMappingSet"
-          [required]="canEdit && isPremiumMappingSet && isAdditionalPremiumRequired"
+          [readonly]="!canEdit || !isPremiumMappingSet || readOnlyQuote"
+          [required]="canEdit && isPremiumMappingSet && isAdditionalPremiumRequired && !readOnlyQuote"
           [allowNegative]="false"
           [(ngModel)]="optionalPremiumData.additionalPremium"
           #additionalPremium="ngModel"
@@ -155,7 +159,7 @@
       </div>
       <div class="col-lg-1" *ngIf="collapsed">
         <div ngbDropdown class="d-inline-block" *ngIf="canEdit">
-          <button
+          <button *ngIf="!readOnlyQuote"
             type="button"
             class="btn btn-outline-primary"
             id="action"
@@ -166,7 +170,7 @@
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <button
-              *ngIf="!optionalPremiumData.isNew && canEdit"
+              *ngIf="!optionalPremiumData.isNew && canEdit && !readOnlyQuote"
               hover-class="btn-danger"
               (click)="openDeleteConfirmation()"
               click-stop-propagation
@@ -175,7 +179,7 @@
               Delete
             </button>
             <button
-              *ngIf="optionalPremiumData.isNew && canEdit"
+              *ngIf="optionalPremiumData.isNew && canEdit && !readOnlyQuote"
               hover-class="btn-warning"
               (click)="openDeleteConfirmation()"
               click-stop-propagation
@@ -201,10 +205,11 @@
               !canEdit ||
               !isPremiumMappingSet ||
               !optionalPremiumData.isDeductibleSelected  ||
-              !isDeductibleAvailable
+              !isDeductibleAvailable ||
+              readOnlyQuote
             "
             [required]="
-            canEdit && isPremiumMappingSet && optionalPremiumData.isDeductibleSelected
+            canEdit && isPremiumMappingSet && optionalPremiumData.isDeductibleSelected && !readOnlyQuote
             "
             class="form-control"
             id="deductibleValue"
@@ -227,7 +232,8 @@
             [required]="
               canEdit &&
               isPremiumMappingSet &&
-              optionalPremiumData.isDeductibleSelected
+              optionalPremiumData.isDeductibleSelected &&
+              !readOnlyQuote
             "
             name="deductibleType"
             click-stop-propagation
@@ -237,7 +243,8 @@
               !canEdit ||
               !isPremiumMappingSet ||
               !optionalPremiumData.isDeductibleSelected ||
-              !isDeductibleAvailable
+              !isDeductibleAvailable ||
+              readOnlyQuote
             "
             [clearable]="false"
             [(ngModel)]="optionalPremiumData.deductibleType"
@@ -256,7 +263,8 @@
             [required]="
               canEdit &&
               isPremiumMappingSet &&
-              optionalPremiumData.isDeductibleSelected
+              optionalPremiumData.isDeductibleSelected &&
+              !readOnlyQuote
             "
             name="deductibleCode"
             click-stop-propagation
@@ -265,7 +273,8 @@
             [readonly]="
               !canEdit ||
               !isPremiumMappingSet ||
-              !optionalPremiumData.isDeductibleSelected
+              !optionalPremiumData.isDeductibleSelected ||
+              readOnlyQuote
             "
             [clearable]="false"
             [(ngModel)]="optionalPremiumData.deductibleCode"
@@ -282,13 +291,13 @@
           >
           <input
             type="text"
-            [required]="isPremiumMappingSet && isAdditionalDetailRequired"
+            [required]="isPremiumMappingSet && isAdditionalDetailRequired && !readOnlyQuote"
             class="form-control"
             id="additionalComment"
             name="additionalComment"
             maxlength="50"
             validate-on-change
-            [readonly]="!canEdit || !isPremiumMappingSet"
+            [readonly]="!canEdit || !isPremiumMappingSet || readOnlyQuote"
             [(ngModel)]="optionalPremiumData.additionalDetail"
             #additionalComment="ngModel"
           />
@@ -304,7 +313,7 @@
             (click)="openDeleteConfirmation()"
             hover-class="btn-danger"
             click-stop-propagation
-            *ngIf="!optionalPremiumData.isNew && canEdit"
+            *ngIf="!optionalPremiumData.isNew && canEdit && !readOnlyQuote"
           >
             Delete
           </button>
@@ -313,7 +322,7 @@
             (click)="openDeleteConfirmation()"
             hover-class="btn-warning"
             click-stop-propagation
-            *ngIf="optionalPremiumData.isNew && canEdit"
+            *ngIf="optionalPremiumData.isNew && canEdit && !readOnlyQuote"
           >
             Remove
           </button>

@@ -46,6 +46,7 @@ export class AdditionalInterestComponent {
 
   @Input() aiData!: AdditionalInterestClass;
   @Input() ai!: AdditionalInterestClass[];
+  @Input() readOnlyQuote!: boolean;
   additionalInterestRoles$: Observable<Code[]> | undefined;
 
   constructor(public headerPaddingService: HeaderPaddingService,
@@ -69,6 +70,11 @@ export class AdditionalInterestComponent {
     this.buildingsSub = this.propertyDataService.buildingList$.subscribe({
       next: results => {
         this.buildingList = results;
+        if (this.buildingList.find(c => c.code == this.aiData.building) == null) {
+          this.aiData.buildingNumber = null;
+          this.aiData.isDirty = true;
+          this.aiData.validate();
+        }
       }
     });
     this.additionalInterestRoles$ = this.dropdowns.getAdditonalInterestRoles();
@@ -151,6 +157,10 @@ export class AdditionalInterestComponent {
     setTimeout(() => {
       document.getElementById(this.anchorId)?.scrollIntoView();
     }, 250);
+  }
+
+  markDirty(): void {
+    this.aiData.isDirty = true;
   }
 }
 

@@ -20,7 +20,7 @@ export class ProducerSearchService {
     if (query === '') {
       return of([]);
     }
-    const policyDateString = moment.isMoment(policyDate) ? policyDate.format('YYYY-MM-DD HH:mm') : policyDate.toString();
+    const policyDateString = moment.isMoment(policyDate) ? policyDate.format('YYYY-MM-DD HH:mm') : new Date(policyDate).toLocaleDateString();
     const params = new HttpParams().append('query', query ).append('departmentCode', department).append('policyDate', policyDateString);
     return this.http
       .get<FuzzySearchResponse>(this.config.apiBaseUrl + 'api/lookups/producer-branch/', {params}).pipe(
@@ -131,6 +131,16 @@ export class ProducerSearch {
         this.searching = false;
       })
     );
+
+  producerSearchPlaceholder(): string{
+    if (this.department == 0 || this.department == null || this.department == undefined)
+    {
+      return "Select a Department";
+    }
+    else{
+      return "Producer Search";
+    }
+  }
   performSearch(term: string): Observable<Producer[]> {
     return this._service.search(term, this.department ? this.department : 0, this.policyDate).pipe(
       tap((response) => {

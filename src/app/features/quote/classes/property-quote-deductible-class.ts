@@ -1,12 +1,12 @@
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { PropertyDeductible } from '../models/property-deductible';
+import { PropertyDeductible, PropertyQuoteDeductible } from '../models/property-deductible';
 import { QuoteAfterSave } from '../models/quote-after-save';
 import { QuoteValidationClass } from './quote-validation-class';
 import { BuildingLocationClass } from 'src/app/shared/classes/building-location-class';
 
-export class PropertyQuoteDeductibleClass extends BuildingLocationClass implements PropertyDeductible, Validation, QuoteAfterSave {
+export class PropertyQuoteDeductibleClass extends BuildingLocationClass implements Validation, QuoteAfterSave {
   private _isDirty = false;
   private _isValid = true;
   private _canBeSaved = true;
@@ -14,6 +14,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   private _validateOnLoad = true;
   private _validationResults: QuoteValidationClass;
   private _isDuplicate = false;
+  private _markForDeletion: boolean | null = null;
   propertyQuoteDeductibleId: number | null = null;
   propertyQuoteId: number | null = null;
   sequence: number | null = null;
@@ -34,6 +35,14 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   isNew = false;
   guid = '';
   invalidList: string[] = [];
+
+  get markForDeletion() : boolean | null {
+    return this._markForDeletion;
+  }
+  set markForDeletion(value: boolean | null){
+    this._markForDeletion = value;
+    this._isDirty = true;
+  }
 
   get propertyDeductibleId() : number | null {
     return this._propertyDeductibleId;
@@ -94,7 +103,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       this.deductibleType = null;
       this.subjectToMinPercent = null;
       this.subjectToMinAmount = null;
-      this.isSubjectToMin = null;
+      this.isSubjectToMin = false;
       this.deductibleCode = null;
     }
     this._isDirty = true;
@@ -115,12 +124,19 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
   get isDirty() : boolean {
     return this._isDirty;
   }
+  set isDirty(value: boolean ) {
+    this._isDirty = value;
+  }
   get canBeSaved(): boolean {
     return this._canBeSaved;
   }
   get errorMessages(): string[] {
     return this._errorMessages;
   }
+  set errorMessages(value: string[]){
+    this._errorMessages = value;
+  }
+
   get isValid(): boolean {
     return this._isValid;
   }
@@ -135,14 +151,14 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     this._isDirty = true;
   }
 
-  constructor(deductible?: PropertyDeductible) {
+  constructor(deductible?: PropertyQuoteDeductible) {
     super();
     if (deductible) {
       this.existingInit(deductible);
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.CoveragePremium);
     this.validate();
   }
 
@@ -183,20 +199,25 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     }
     if (this.validateAmount()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateDeductibleType()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateDeductibleCode()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateSubjectToMinPercent()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
     if (this.validateSubjectToMinAmount()) {
       this._isValid = false;
+      //this._canBeSaved = false;
     }
-    this._errorMessages = this.invalidList;
+    this.errorMessages = this.invalidList;
   }
 
   validateAmount(): boolean {
@@ -256,7 +277,32 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     return !value;
   }
 
-  existingInit(deductible: PropertyDeductible) {
+  static fromPropertyDeductible(propertyDeductible: PropertyDeductible): PropertyQuoteDeductibleClass {
+    const deductible = new PropertyQuoteDeductibleClass();
+    deductible.propertyQuoteDeductibleId = propertyDeductible.propertyDeductibleId;
+    deductible.propertyQuoteId = propertyDeductible.propertyDeductibleId;
+    deductible.sequence = propertyDeductible.sequence;
+    deductible.isAppliedToAll = propertyDeductible.isAppliedToAll;
+    deductible.premisesNumber = propertyDeductible.premisesNumber;
+    deductible.buildingNumber = propertyDeductible.buildingNumber;
+    deductible.deductibleType = propertyDeductible.deductibleType;
+    deductible.amount = propertyDeductible.amount;
+    deductible.subjectToMinPercent = propertyDeductible.subjectToMinPercent;
+    deductible.subjectToMinAmount = propertyDeductible.subjectToMinAmount;
+    deductible.deductibleCode = propertyDeductible.deductibleCode;
+    deductible.comment = propertyDeductible.comment;
+    deductible.isExcluded = propertyDeductible.isExcluded;
+    deductible.isSubjectToMin = propertyDeductible.isSubjectToMin;
+    deductible.isDeductibleLocked = propertyDeductible.isDeductibleLocked;
+    deductible.isExcludeLocked = propertyDeductible.isExcludeLocked;
+    deductible.isSubjectToMinLocked = propertyDeductible.isSubjectToMinLocked;
+    deductible.setReadonlyFields();
+    deductible.setRequiredFields();
+    deductible.markDirty();
+    return deductible;
+  }
+
+  existingInit(deductible: PropertyQuoteDeductible) {
     this.propertyQuoteDeductibleId = deductible.propertyQuoteDeductibleId;
     this.propertyQuoteId = deductible.propertyQuoteId;
     this.sequence = deductible.sequence;
@@ -276,6 +322,7 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     this.isDeductibleTypeLocked = deductible.isDeductibleTypeLocked;
     this.isExcludeLocked = deductible.isExcludeLocked;
     this.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
+    this.guid = deductible.guid;
     this.setReadonlyFields();
     this.setRequiredFields();
   }
@@ -305,49 +352,6 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
     // No special rules
   }
 
-  get deductibleReadonly(): boolean {
-    return this.isDeductibleLocked || this._isExcluded;
-  }
-  get deductibleTypeReadonly(): boolean {
-    return this.isDeductibleTypeLocked || this._isExcluded;
-  }
-  get amountReadonly(): boolean {
-    return this._isSubjectToMin || this._isExcluded;
-  }
-  get isExcludedReadonly(): boolean {
-    return this._propertyDeductibleId === null;
-  }
-  get isExcludedVisible(): boolean {
-    return !this.isExcludeLocked;
-  }
-  get isSubjectToMinVisible(): boolean {
-    return !this.isSubjectToMinLocked && !this._isExcluded;
-  }
-  get subjectToMinVisible(): boolean {
-    return this._isSubjectToMin ?? false;
-  }
-  get deleteVisible(): boolean {
-    return !this.isDeductibleLocked;
-  }
-  get deductibleRequired(): boolean {
-    return !this.deductibleReadonly;
-  }
-  get amountRequired(): boolean {
-    return !this._isSubjectToMin && !this._isExcluded;
-  }
-  get deductibleTypeRequired(): boolean {
-    return !this.deductibleTypeReadonly && !this._isExcluded;
-  }
-  get deductibleCodeRequired(): boolean {
-    return !this._isExcluded;
-  }
-  get subjectToMinPercentRequired(): boolean {
-    return this._isSubjectToMin ?? false;
-  }
-  get subjectToMinAmountRequired(): boolean {
-    return this._isSubjectToMin ?? false;
-  }
-
   toJSON() {
     return {
       propertyQuoteDeductibleId: this.propertyQuoteDeductibleId,
@@ -370,7 +374,26 @@ export class PropertyQuoteDeductibleClass extends BuildingLocationClass implemen
       isExcludeLocked: this.isExcludeLocked,
       isSubjectToMinLocked: this.isSubjectToMinLocked,
       isNew: this.isNew,
-      guid: this.guid
+      guid: this.guid,
+      isDirty: this.isDirty,
+      building: null,
+      markForDeletion: this.markForDeletion,
+      validate: () => null
+      // deleteVisible: false,
+      // subjectToMinAmountRequired: false,
+      // subjectToMinVisible: false,
+      // subjectToMinPercentRequired: false,
+      // isSubjectToMinVisible: false,
+      // isExcludedReadonly: false,
+      // isExcludedVisible: false,
+      // deductibleCodeRequired: false,
+      // deductibleTypeReadonly: false,
+      // deductibleTypeRequired: false,
+      // amountRequired: false,
+      // amountReadonly: false,
+      // deductibleReadonly: false,
+      // deductibleRequired: false,
+      // markDirty: () => null
     };
   }
 }

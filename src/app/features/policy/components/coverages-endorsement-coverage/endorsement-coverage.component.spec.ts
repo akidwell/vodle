@@ -10,7 +10,7 @@ describe('EndorsementCoverageComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ EndorsementCoverageComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

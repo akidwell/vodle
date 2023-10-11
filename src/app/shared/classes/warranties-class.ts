@@ -1,5 +1,5 @@
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationClass } from 'src/app/features/quote/classes/quote-validation-class';
 import { QuoteAfterSave } from 'src/app/features/quote/models/quote-after-save';
 import { Validation } from '../interfaces/validation';
@@ -38,7 +38,7 @@ export abstract class WarrantiesClass implements Warranties, Validation, QuoteAf
     } else {
       this.newInit();
     }
-    this._validationResults = new QuoteValidationClass(QuoteValidationTypeEnum.Child, QuoteValidationTabNameEnum.TermsAndConditions);
+    this._validationResults = new QuoteValidationClass(ValidationTypeEnum.Child, QuoteValidationTabNameEnum.TermsAndConditions);
     this.validate();
   }
 

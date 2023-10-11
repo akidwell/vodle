@@ -8,6 +8,9 @@ import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { PropertyQuoteDeductibleClass } from '../../../classes/property-quote-deductible-class';
 import { QuoteClass } from '../../../classes/quote-class';
 import { QuoteRateClass } from '../../../classes/quote-rate-class';
+import { PropertyDeductible } from '../../../models/property-deductible';
+import { QuoteService } from '../../../services/quote-service/quote.service';
+import { NotificationService } from 'src/app/core/components/notification/notification-service';
 
 @Component({
   selector: 'rsps-quote-property-premium',
@@ -29,7 +32,7 @@ export class QuotePropertyPremiumComponent implements OnInit {
   @Input() public totalPrem!: number | null;
 
 
-  constructor(private userAuth: UserAuth) {
+  constructor(private userAuth: UserAuth, private quoteService: QuoteService, private notificationService: NotificationService) {
     this.authSub = this.userAuth.canEditQuote$.subscribe(
       (canEditQuote: boolean) => this.canEdit = canEditQuote
     );
@@ -39,14 +42,38 @@ export class QuotePropertyPremiumComponent implements OnInit {
   }
 
   addDeductible() {
-    if (this.classType == ClassTypeEnum.Quote) {
-      const newDeductible = new PropertyQuoteDeductibleClass();
-      newDeductible.sequence = this.getNextSequence();
-      this.quote.propertyQuoteDeductibleList.push(newDeductible);
-    }
-    else if (this.classType == ClassTypeEnum.Policy) {
-      //TODO
-    }
+    this.accountCollapsed = false;
+    const newDeductible = new PropertyQuoteDeductibleClass();
+    newDeductible.sequence = this.getNextSequence();
+    this.quote.propertyQuoteDeductibleList.push(newDeductible);
+  }
+
+  copyDeductible(deductible: PropertyDeductible) {
+    // Need to copy deductible type?
+    const copy = PropertyQuoteDeductibleClass.fromPropertyDeductible(deductible);
+    copy.sequence = this.getNextSequence();
+    this.quote.propertyQuoteDeductibleList.push(copy);
+  }
+
+  deleteDeductible(deductible: PropertyDeductible) {
+    const index = this.quote.propertyQuoteDeductibleList.findIndex(x => x.sequence == deductible.sequence);
+    if (index > -1) {
+      this.quote.propertyQuoteDeductibleList[index].markForDeletion = true;
+      const deductibleId = this.quote.propertyQuoteDeductibleList[index].propertyQuoteDeductibleId;
+      if (!deductible.isNew && deductibleId != null) {
+        this.quoteService
+          .deleteDeductible(deductibleId)
+          .subscribe(result => {
+            if (result) {
+              setTimeout(() => {
+                this.notificationService.show('Deductible deleted.',{ classname: 'bg-success text-light', delay: 5000 });
+              });
+            }
+          });
+      }
+      this.quote.propertyQuoteDeductibleList.splice(index, 1);
+      this.quote.markDirty();
+     }
   }
 
   getNextSequence(): number {

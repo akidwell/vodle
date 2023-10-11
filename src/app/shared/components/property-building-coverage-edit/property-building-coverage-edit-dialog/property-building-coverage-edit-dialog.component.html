@@ -1,12 +1,12 @@
 <form #locationForm="ngForm">
     <ng-template #modal let-modal>
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Group Edit </h4>
+            <h4 class="modal-title" id="modal-basic-title">Group Edit</h4>
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="col-lg-6">
-                    <label for="coverageSelect" class="form-label" title="Coverage">Coverage</label>
+                    <label for="coverageSelect" class="form-label bold" title="Applies update only to the coverage selected">Coverage</label>
                     <ng-select id="coverageSelect" [items]="filteredCoverage" bindLabel="name" bindValue="propertyCoverageId"
                         [clearable]="false" click-stop-propagation name="coverageSelect" appendTo="body" validate-on-change
                         [(ngModel)]="propertyCoverageId" #coverageSelect="ngModel" #coverageComp
@@ -14,7 +14,7 @@
                     </ng-select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row updates">
                 <div class="col-lg-2">
                     <label for="coinsurance" class="form-label" title="Coinsurance">Coinsurance</label>
                     <ng-select id="coinsurance" [items]="coinsurance$ | async" bindLabel="description" bindValue="key" [disabled]="propertyCoverageId == null"
@@ -39,6 +39,8 @@
             </div>
         </div>
         <div class="modal-footer">
+            <input name="filtered" type="checkbox" class="form-check-input" id="filtered" [(ngModel)]="filteredOnly">
+            <label for="filtered" class="form-label" title="Apply update only to the displayed results of the location filter">Filtered Only</label>
             <button type="button" class="btn btn-danger" [disabled]="!canUpdate" (click)="update()">Update</button>
             <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
         </div>

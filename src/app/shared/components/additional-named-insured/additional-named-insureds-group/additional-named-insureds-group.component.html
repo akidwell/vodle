@@ -8,7 +8,7 @@
     </mat-slide-toggle>
   </div>
   <div #collapse="ngbCollapse" [(ngbCollapse)]="aniCollapsed">
-    <div class="card-body" *ngIf="aniData.length > 0">
+    <div class="card-body" *ngIf="aniData.length > 0 || (aniData.length == 1 && !aniData[0].markForDeletion)">
       <div class="row">
         <div class="col-lg-3">
           <label for="address">Role</label>
@@ -39,6 +39,6 @@
   <div class="card-footer">
       <button *ngIf="canEdit" [disabled]="canDrag" class="footer-button"
         (click)="addNewAdditionalNamedInsured();">Add Additional Named Insured</button>
-      <div class="footer-count">Additional Named Insureds: {{aniData.length}}</div>
+      <div class="footer-count">Additional Named Insureds: {{aniCount }}</div>
     </div>
 </div>

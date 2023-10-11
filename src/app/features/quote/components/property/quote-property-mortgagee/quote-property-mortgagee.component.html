@@ -1,12 +1,7 @@
-<div>
-  <div *ngIf="isSaving">
-    <div class="spinner-wrapper" >
-        <h3>
-        <span class="badge rounded-pill refresh">
-            <div class="spinner-border small"></div>
-        </span>
-        </h3>
-    </div>
-  </div>
-<rsps-mortgagee-group></rsps-mortgagee-group>
-<rsps-additional-interest-group></rsps-additional-interest-group>
+
+<rsps-mortgagee-group *ngIf="quote" [classType]="classType" [mortgageeData]="quote.propertyQuoteMortgageeList" [propertyParent]="quote" [readOnlyQuote]="quote.readOnlyQuote"></rsps-mortgagee-group>
+<rsps-additional-interest-group *ngIf="quote" [aiData]="quote.propertyQuoteAdditionalInterestList" [classType]="classType" [propertyParent]="quote" [readOnlyQuote]="quote.readOnlyQuote"></rsps-additional-interest-group>
+<div *ngIf="isSaving">
+  <rsps-busy message="Saving..."></rsps-busy>
+</div>
+

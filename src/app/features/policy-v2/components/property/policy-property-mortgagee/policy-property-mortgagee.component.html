@@ -1,0 +1,13 @@
+<div *ngIf="policyInfo != undefined">
+  <div *ngIf="policyInfo.getTabErrors('MortgageeAi').length != 0">
+    <ngb-alert type=danger [innerHTML]="getAlerts()"></ngb-alert>
+  </div>
+</div>
+<rsps-mortgagee-group *ngIf="policyInfo" [classType]="classType" [propertyParent]="policyInfo"
+[canEdit]="canEdit" [mortgageeData]="policyInfo.endorsementData.endorsementMortgagee"></rsps-mortgagee-group>
+<rsps-additional-interest-group *ngIf="policyInfo" [classType]="classType" [propertyParent]="policyInfo"
+[canEdit]="canEdit" [aiData]="policyInfo.endorsementData.endorsementAdditionalInterest"></rsps-additional-interest-group>
+<div *ngIf="isSaving">
+  <rsps-busy message="Saving..."></rsps-busy>
+</div>
+

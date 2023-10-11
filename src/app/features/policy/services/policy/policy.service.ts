@@ -10,6 +10,7 @@ import { AccountInformation, AdditionalNamedInsureds, Endorsement, EndorsementFo
 import { UnderlyingCoverage } from '../../models/schedules';
 import { InvoiceData, InvoiceDetail } from '../../models/invoice';
 import { UCCoverage } from '../../classes/UCCoverage';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,13 @@ export class PolicyService {
   }
   getPolicyInfo(id: number): Observable<PolicyInformation> {
     return this.http.get<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/policyinfo');
+  }
+  getPolicyInfoV2(id: number, end: number): Observable<PolicyClass> {
+    return this.http.get<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/new-policyinfo/' + end.toString()).pipe(
+      map((recievedData: PolicyInformation) => {
+        return new PolicyClass(recievedData);
+      })
+    );
   }
   getEndorsement(id: number, endorsementNumber: number): Observable<Endorsement> {
     return this.http.get<Endorsement>(this.config.apiBaseUrl + 'api/policies/' + id.toString() + '/endorsements/' + endorsementNumber.toString());
@@ -74,6 +82,11 @@ export class PolicyService {
   updatePolicyInfo(policyInfo: PolicyInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/policyinfo', policyInfo);
   }
+
+  updatePolicyInfoV2(policy: PolicyClass): Observable<PolicyInformation> {
+    return this.http.put<PolicyInformation>(this.config.apiBaseUrl + 'api/policies/new-policyinfo', policy);
+  }
+
   updateAccountInfo(accountInfo: AccountInformation): Observable<boolean> {
     return this.http.put<boolean>(this.config.apiBaseUrl + 'api/policies/AccountInfo', accountInfo);
   }

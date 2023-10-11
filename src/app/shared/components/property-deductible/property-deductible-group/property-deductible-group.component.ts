@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
+import { deepClone } from 'src/app/core/utils/deep-clone';
+import { PropertyPolicyDeductibleClass } from 'src/app/features/policy-v2/classes/property-policy-deductible-class';
 import { PropertyQuoteDeductibleClass } from 'src/app/features/quote/classes/property-quote-deductible-class';
 import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
 import { QuoteService } from 'src/app/features/quote/services/quote-service/quote.service';
@@ -15,56 +17,31 @@ export class PropertyDeductibleGroupComponent implements OnInit {
   deleteSub!: Subscription;
 
   @Input() public programId!: number;
-  @Input() public deductibles!: PropertyQuoteDeductibleClass[];
+  @Input() public deductibles!: PropertyDeductible[];
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
+  @Input() public readOnlyQuote!: boolean;
 
-  constructor(private notification: NotificationService, private quoteService: QuoteService) { }
+  @Output() addDeduct: EventEmitter<PropertyDeductible> = new EventEmitter();
+  @Output() copyDeduct: EventEmitter<PropertyDeductible> = new EventEmitter();
+  @Output() deleteDeduct: EventEmitter<PropertyDeductible> = new EventEmitter();
+
+  constructor(private notification: NotificationService, private quoteService: QuoteService) {
+   }
 
   ngOnInit(): void {
   }
 
   addDeductible() {
-    if (this.classType == ClassTypeEnum.Quote) {
-      const newDeductible = new PropertyQuoteDeductibleClass();
-      newDeductible.sequence = this.getNextSequence();
-      this.deductibles.push(newDeductible);
-    }
-    else if (this.classType == ClassTypeEnum.Policy) {
-      //TODO
-    }
+    this.addDeduct.emit();
   }
 
   copyDeductible(deductible: PropertyDeductible) {
-    if (this.classType == ClassTypeEnum.Quote) {
-      const newDeductible: PropertyQuoteDeductibleClass = Object.create(deductible);
-      newDeductible.propertyQuoteDeductibleId = null;
-      newDeductible.isNew = true;
-      newDeductible.isDeductibleLocked = false;
-      newDeductible.isDeductibleTypeLocked = false;
-      newDeductible.isExcludeLocked = false;
-      newDeductible.isSubjectToMinLocked = false;
-      newDeductible.markDirty();
-      this.deductibles.push(newDeductible);
-    }
+    this.copyDeduct.emit(deductible);
   }
 
-  deleteDeductible(deductible: PropertyQuoteDeductibleClass) {
-    const index = this.deductibles.indexOf(deductible, 0);
-    if (index > -1) {
-      this.deductibles.splice(index, 1);
-      if (!deductible.isNew && deductible.propertyQuoteDeductibleId != null) {
-        this.deleteSub = this.quoteService
-          .deleteDeductible(deductible.propertyQuoteDeductibleId)
-          .subscribe((result) => {
-            if (result) {
-              setTimeout(() => {
-                this.notification.show('Deductible deleted.', { classname: 'bg-success text-light', delay: 5000 });
-              });
-            }
-          });
-      }
-    }
+  deleteDeductible(deductible: PropertyDeductible) {
+    this.deleteDeduct.emit(deductible);
   }
 
   getNextSequence(): number {

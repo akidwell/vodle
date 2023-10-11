@@ -3,8 +3,8 @@
     <div>
       <div class="row" *ngIf="collapsed">
         <div class="col-lg-1">
-          <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code" validate-on-change
-            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit"
+          <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code" validate-on-change [readonly]="!canEdit || readOnlyQuote"
+            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit && !readOnlyQuote" (change)="markDirty()"
             [searchFn]="dropDownSearch" [(ngModel)]="aiData.building">
             <ng-template ng-label-tmp let-item="item">
               {{item.code}}
@@ -16,7 +16,7 @@
         </div>
         <div (click)="collapseExpand(false)" class="col-lg-6">
           <input validate-on-change type="address" class="form-control" id="address" #address="ngModel" name="address"
-            [readonly]="!canEdit" [ngModel]=" (!aiData.interest? '' : aiData.interest) +
+            [readonly]="!canEdit || readOnlyQuote" [ngModel]=" (!aiData.interest? '' : aiData.interest) +
                           (!aiData.street1 ? '' : ', ' + aiData.street1) +
                           (!aiData.street2 ? '' : ', ' + aiData.street2) +
                           (!aiData.city ? '' : ', ' + aiData.city ) +
@@ -25,11 +25,11 @@
         </div>
         <div class="col-lg-2">
           <button class="btn btn-secondary" (click)=copyAdditionalInterest() hover-class="btn-primary"
-            [disabled]="!canEdit" click-stop-propagation>Copy</button>&nbsp;
+            [disabled]="!canEdit || readOnlyQuote" click-stop-propagation>Copy</button>&nbsp;
           <button *ngIf="!aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-            [disabled]="!canEdit" hover-class="btn-danger" click-stop-propagation>Delete</button>
+            [disabled]="!canEdit || readOnlyQuote" hover-class="btn-danger" click-stop-propagation>Delete</button>
           <button *ngIf="aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-            [disabled]="!canEdit" hover-class="btn-warning" click-stop-propagation>Remove</button>
+            [disabled]="!canEdit || readOnlyQuote" hover-class="btn-warning" click-stop-propagation>Remove</button>
         </div>
       </div>
     </div>
@@ -37,8 +37,8 @@
       <div class="row">
         <div class="col-lg-1">
           <label for="building" class="form-label" title="building">Prem/Bldg:</label>
-          <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code"  [readonly]="!canEdit"
-            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit" validate-on-change
+          <ng-select class="max-width" id="building" [items]="buildingList" bindLabel="description" bindValue="code"  [readonly]="!canEdit || readOnlyQuote"
+            name="building" [virtualScroll]="true" click-stop-propagation [clearable]="false" [required]="canEdit && !readOnlyQuote" validate-on-change (change)="markDirty()"
             [searchFn]="dropDownSearch" [(ngModel)]="aiData.building">
             <ng-template ng-label-tmp let-item="item">
               {{item.code}}
@@ -51,23 +51,23 @@
         <div class="col-lg-2">
           <label for="mortgageType" class="form-label" title="additionalInterestType">Additional Interest Type</label>
           <ng-select id="additionalInterestType" [items]="additionalInterestRoles$ | async" bindLabel="description" bindValue="key" [clearable]="false"
-          [readonly]="!canEdit" [required]="canEdit" name="additionalInterestType" [(ngModel)]="aiData.additionalInterestType"
+          [readonly]="!canEdit || readOnlyQuote" [required]="canEdit && !readOnlyQuote" name="additionalInterestType" [(ngModel)]="aiData.additionalInterestType"
            #aiType="ngModel" >
           </ng-select>
         </div>
         <div class="col-sm-3">
           <label for="interest" class="form-label" title="interest">Interest</label>
-          <input validate-on-change type="text" class="form-control" id="policyEventCode" name="interest" [readonly]="!canEdit"
-          [required]="canEdit" [(ngModel)]="aiData.interest" #interest="ngModel">
+          <input validate-on-change type="text" class="form-control" id="policyEventCode" name="interest" [readonly]="!canEdit || readOnlyQuote"
+          [required]="canEdit && !readOnlyQuote" [(ngModel)]="aiData.interest" #interest="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street1" class="form-label" title="Status">Street Address 1</label>
-          <input validate-on-change type="text" class="form-control" id="street1" name="street1" [readonly]="!canEdit" maxlength="40"
-          [required]="canEdit" [(ngModel)]="aiData.street1" #street1="ngModel">
+          <input validate-on-change type="text" class="form-control" id="street1" name="street1" maxlength="40"
+          [readonly]="!canEdit || readOnlyQuote" [required]="canEdit && !readOnlyQuote" [(ngModel)]="aiData.street1" #street1="ngModel">
         </div>
         <div class="col-sm-3">
           <label for="street2" class="form-label" title="Status">Street Address 2</label>
-          <input validate-on-change type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit" maxlength="40"
+          <input validate-on-change type="text" class="form-control" id="street2" name="street2" [readonly]="!canEdit || readOnlyQuote" maxlength="40"
             [(ngModel)]="aiData.street2" #street2="ngModel">
         </div>
         <div class="row">
@@ -75,8 +75,8 @@
             <label for="zip" class="form-label" title="zip">Zipcode</label>
             <div class="inputspinner">
               <input validate-on-change type="text" zip-code class="form-control" id="zipCode" [readonly]="aiData.isZipLookup"
-                [(ngModel)]="aiData.zip" [readonly]="!canEdit" name="zipCode" #zip="ngModel"
-                [required]="canEdit" (ngModelChange)="changeZipCode()">
+                [(ngModel)]="aiData.zip" name="zipCode" #zip="ngModel"
+                [readonly]="!canEdit || readOnlyQuote" [required]="canEdit && !readOnlyQuote" (ngModelChange)="changeZipCode()">
               <div *ngIf="aiData.isZipLookup" id="spinner" class="spinner-border spinner-border-sm" role="zipCode"
                 aria-hidden="true">
               </div>
@@ -85,7 +85,7 @@
           <div class="col-sm-3">
             <label for="city" class="form-label" title="city">City</label>
             <input validate-on-change type="text" class="form-control" id="city" name="city" [(ngModel)]="aiData.city" maxlength="40"
-            [required]="canEdit" [readonly]="aiData.isZipLookup || !canEdit" #city="ngModel">
+           [required]="canEdit && !readOnlyQuote" [readonly]="aiData.isZipLookup || !canEdit || readOnlyQuote" #city="ngModel">
           </div>
           <div class="col-sm-2">
             <label for="policyEventCode" class="form-label" title="Status">State</label>
@@ -95,8 +95,8 @@
             </div>
             <div *ngIf="!isLoadingAddress">
               <ng-select id="mortgageeState" [items]="states$ | async" bindLabel="name" bindValue="code"
-                [clearable]="false" [readonly]="!canEdit || aiData.isZipLookup" name="mortgageeState"  [readonly]="!canEdit"
-                [required]="canEdit"  [(ngModel)]="aiData.state" #mortgageeState="ngModel" (change)="changeState($event)">
+                [clearable]="false" [readonly]="!canEdit || aiData.isZipLookup" name="mortgageeState"
+                [required]="canEdit && !readOnlyQuote" [readonly]="aiData.isZipLookup || !canEdit || readOnlyQuote"  [(ngModel)]="aiData.state" #mortgageeState="ngModel" (change)="changeState($event)">
               </ng-select>
             </div>
           </div>
@@ -105,11 +105,11 @@
           <div class="col-sm-2">
             <label for="attention" class="form-label" title="attention">Attention</label>
             <input validate-on-change type="text" class="form-control" id="policyEventCode" name="attention"
-              [readonly]="!canEdit" [(ngModel)]="aiData.attention" #attention="ngModel">
+            [readonly]="!canEdit || readOnlyQuote" [(ngModel)]="aiData.attention" #attention="ngModel">
           </div>
           <div class="col-sm-8">
             <label for="comments" class="form-label" title="comments">Additional Interest Description</label>
-            <input validate-on-change type="text" class="form-control" id="comments" name="comments" [readonly]="!canEdit"
+            <input validate-on-change type="text" class="form-control" id="comments" name="comments" [readonly]="!canEdit || readOnlyQuote"
               [(ngModel)]="aiData.description" #comments="ngModel">
           </div>
         </div>
@@ -118,11 +118,11 @@
       <div class="row">
         <div class="col-lg-2">
           <button class="btn btn-secondary" (click)=copyAdditionalInterest() hover-class="btn-primary"
-            [disabled]="!canEdit">Copy</button>&nbsp;
+            [disabled]="!canEdit || readOnlyQuote">Copy</button>&nbsp;
           <button *ngIf="!aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-            [disabled]="!canEdit" hover-class="btn-danger">Delete</button>
+            [disabled]="!canEdit || readOnlyQuote" hover-class="btn-danger">Delete</button>
           <button *ngIf="aiData.isNew" class="btn btn-secondary margin-left" (click)=openDeleteConfirmation()
-            [disabled]="!canEdit" hover-class="btn-warning">Remove</button>
+            [disabled]="!canEdit || readOnlyQuote" hover-class="btn-warning">Remove</button>
         </div>
         <div [id]='anchorId'></div>
       </div>

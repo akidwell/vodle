@@ -1,10 +1,10 @@
 <div class="top-info">
-  <div class="row" *ngIf="department">
+  <div class="row" *ngIf="department" >
     <div class="col-lg-3">
       <label for="riskState"  class="form-label" title="Policy State">Policy State</label>
       <ng-select id="riskState" [items]="states$ | async" bindLabel="name" bindValue="code"
-        [clearable]="false" [readonly]="department.programMappings[0].quoteData.riskState == ''" name="riskState"
-        [required]="canEditSubmission" *ngIf="department.programMappings[0].quoteData"
+        [clearable]="false" [readonly]="department.programMappings[0].quoteData.riskState == '' || department.programMappings[0].quoteData.readOnlyQuote" name="riskState"
+        [required]="canEditSubmission && !department.programMappings[0].quoteData.readOnlyQuote" *ngIf="department.programMappings[0].quoteData"
         [(ngModel)]="department.programMappings[0].quoteData.riskState" (ngModelChange)="changeState($event)"
         #riskState="ngModel" >
       </ng-select>
@@ -21,7 +21,7 @@
             bindLabel="description"
             bindValue="code"
             placeholder=""
-            [readonly]="!canEditSubmission"
+            [readonly]="!canEditSubmission || (department.programMappings[0].quoteData?.readOnlyQuote ?? false)"
             [clearable]="false"
             name="admittedStatus"
             [(ngModel)]="department.activeAdmittedStatus"
@@ -38,7 +38,7 @@
             bindLabel="description"
             bindValue="code"
             placeholder=""
-            [readonly]="!canEditSubmission"
+            [readonly]="!canEditSubmission || department.programMappings[0].quoteData?.readOnlyQuote ?? false"
             [clearable]="false"
             name="claimsMadeOccurrenceStatus"
             [(ngModel)]="department.activeClaimsMadeOrOccurrence"

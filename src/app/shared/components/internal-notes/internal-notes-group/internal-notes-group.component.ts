@@ -56,6 +56,7 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
   ngOnInit(): void {
     this.collapsed = false;
     this.handleSecurity(this.type);
+    this.internalNotes = this.quote.internalNotesData;
   }
   isValid(): boolean {
     let valid = true;
@@ -124,5 +125,6 @@ export class InternalNotesGroupComponent extends SharedComponentBase implements 
     const lastAdded = this.quote.internalNotesData.length - 1;
     this.quote.internalNotesData[lastAdded].isDirty = true;
     this.quote.showDirty = true;
+    this.collapsed = false;
   }
 }

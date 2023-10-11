@@ -109,6 +109,7 @@ export class EndorsementStatusService {
           this._endorsementReason.next(data?.endorsementReason ?? '');
           this._isRewrite.next(data?.isRewrite ?? false);
           this._invoiced.next(data?.isInvoiced ?? false);
+          this.endorsementNumber = endorsementNo;
           this.status.next(data?.invoiceStatusDescription ?? '');
           const editFlag = data.invoiceStatus == null ? true : (data.invoiceStatus == 'N' || (data.invoiceStatus == 'T' && data.proFlag == 0));
           this.canEditEndorsement.next(editFlag);

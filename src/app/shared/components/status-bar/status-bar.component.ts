@@ -23,6 +23,8 @@ import { NavigationService } from 'src/app/features/policy/services/navigation/n
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
 import { QuoteSavingService } from 'src/app/features/quote/services/quote-saving-service/quote-saving-service.service';
 import { ProgramClass } from 'src/app/features/quote/classes/program-class';
+import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
+import { ReinsuranceLookupService } from 'src/app/features/policy/services/reinsurance-lookup/reinsurance-lookup.service';
 
 
 
@@ -38,6 +40,7 @@ export class StatusBarComponent implements OnInit {
   quoteAuthSub!: Subscription;
   policyAuthSub!: Subscription;
   lastSubmissionSub!: Subscription;
+  lastPolicySub!: Subscription;
   disabled = true;
   history: HistoricRoute[] = [];
   canEditSubmission = false;
@@ -61,7 +64,8 @@ export class StatusBarComponent implements OnInit {
     public elementRef: ElementRef,
     public endorsementStatus: EndorsementStatusService,
     private navigationService: NavigationService,
-    public quoteSavingService: QuoteSavingService
+    public quoteSavingService: QuoteSavingService,
+    private reinsuranceLookupService: ReinsuranceLookupService
   ) {
     this.insuredAuthSub = this.userAuth.canEditInsured$.subscribe(
       (canEditInsured: boolean) => this.canEditInsured = canEditInsured
@@ -105,6 +109,7 @@ export class StatusBarComponent implements OnInit {
           this.pageDataService.accountInfo = null;
           this.pageDataService.policyData = null;
           this.pageDataService.lastSubmission = null;
+          this.pageDataService.lastPolicy = null;
           this.pageDataService.quoteData = null;
         }),
         map((event) => {
@@ -170,12 +175,14 @@ export class StatusBarComponent implements OnInit {
       return this.pageDataService.quoteData;
     }
   }
-  private checkPolicyData(child: ActivatedRoute): PolicyInformation | null {
+  private checkPolicyData(child: ActivatedRoute): PolicyClass | null {
     if (child.snapshot.data && child.snapshot.data['policyInfoData']) {
-      const data = child.snapshot.data['policyInfoData'].policyInfo;
+      const data: PolicyClass = child.snapshot.data['policyInfoData'].policyInfo;
       this.pageDataService.accountInfo = child.snapshot.data['accountData'].accountInfo;
       this.headerPaddingService.buttonBarPadding = 0;
+      
       return data;
+    
     } else {
       return this.pageDataService.policyData;
     }

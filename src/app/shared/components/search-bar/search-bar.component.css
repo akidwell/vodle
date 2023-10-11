@@ -5,15 +5,20 @@
     background-color: green;
 }
 
+.highlight{
+  color: white;
+  background-color: #00274e;
+}
+
 .not-active {
     pointer-events: none;
     cursor: default;
     opacity: 0.6;
 }
 
-  #spinner {
-    position: absolute;
-    top: calc(50%-10px);
-    right: 20px;
-    z-index: 7;
- }
+#spinner {
+  position: absolute;
+  top: calc(50%-10px);
+  right: 20px;
+  z-index: 7;
+}

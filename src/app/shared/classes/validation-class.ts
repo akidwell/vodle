@@ -1,19 +1,22 @@
-import { QuoteValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
+import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { Validation } from '../interfaces/validation';
 import { DepartmentClass } from 'src/app/features/quote/classes/department-class';
+import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
+import { ErrorMessage } from '../interfaces/errorMessage';
 
 export abstract class ValidationClass implements Validation {
   isValid = false;
   isDirty = false;
   canBeSaved = false;
   errorMessages: string[] = [];
+  errorMessagesList: ErrorMessage[] = [];
   markParentDirty?: () => void;
   isEmpty = false;
-  tabName: QuoteValidationTabNameEnum | null = null;
-  validationType: QuoteValidationTypeEnum = QuoteValidationTypeEnum.Quote;
+  tabName: QuoteValidationTabNameEnum | PolicyValidationTabNameEnum | null = null;
+  validationType: ValidationTypeEnum = ValidationTypeEnum.Quote;
 
-  constructor(type: QuoteValidationTypeEnum, tabName: QuoteValidationTabNameEnum | null){
+  constructor(type: ValidationTypeEnum, tabName: QuoteValidationTabNameEnum | PolicyValidationTabNameEnum | null){
     this.isValid = true;
     this.isDirty = false;
     this.canBeSaved = true;
