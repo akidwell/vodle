@@ -49,8 +49,10 @@
             <input type="text" click-stop-propagation class="form-control" id="limits" placement="auto"
               [disableTooltip]="false" [ngbTooltip]="coverage.limitsPattern"
               [readonly]="!canEdit || !canEditLimitPattern" [required]="canEdit && canEditLimitPattern"
-              [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="setLimitsPatternMask()"
-              (change)="changeLimitsPattern()" [dropSpecialCharacters]="false">
+              [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel"
+              (change)="changeLimitsPattern()">
+              <!-- [(ngModel)]="coverage.limitsPattern" name="limits" #limits="ngModel" [mask]="setLimitsPatternMask()"
+              (change)="changeLimitsPattern()" [dropSpecialCharacters]="false"> -->
             <div [hidden]="isLimitsPatternValid || !canEdit || !canEditLimitPattern" class="alert alert-danger">
               Invalid Pattern ({{limitMask}})
             </div>

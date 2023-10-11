@@ -366,17 +366,17 @@ export class EndorsementCoverageComponent implements OnInit {
     return true;
   }
 
-  setLimitsPatternMask(): string {
-    let mask = '';
-    if (this.subCodeDefaults != null) {
-      this.subCodeDefaults.defaultLimitPatternDescription
-        .split('/')
-        .forEach(() => (mask = mask + '0*/'));
-      mask = mask.slice(0, -1);
-    }
-    this.limitMask = mask.replace(/0/g, '');
-    return mask;
-  }
+  // setLimitsPatternMask(): string {
+  //   let mask = '';
+  //   if (this.subCodeDefaults != null) {
+  //     this.subCodeDefaults.defaultLimitPatternDescription
+  //       .split('/')
+  //       .forEach(() => (mask = mask + '0*/'));
+  //     mask = mask.slice(0, -1);
+  //   }
+  //   this.limitMask = mask.replace(/0/g, '');
+  //   return mask;
+  // }
 
   private isNotExcluded(): boolean {
     return (
