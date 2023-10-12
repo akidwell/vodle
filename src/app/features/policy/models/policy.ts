@@ -1,20 +1,13 @@
 import { AdditionalNamedInsured, AdditionalNamedInsuredData } from 'src/app/shared/components/additional-named-insured/additional-named-insured';
 import { Producer } from '../../submission/models/producer';
 import { Insured } from '../../insured/models/insured';
-import { RiskLocationClass } from '../../policy-v2/classes/risk-location';
-import { Quote } from '../../quote/models/quote';
 import { PropertyBuilding } from '../../quote/models/property-building';
 import { MortgageeData } from '../../quote/models/mortgagee';
-import { PolicyLayerClass } from '../../policy-v2/classes/policy-layer-class';
-import { Deletable } from 'src/app/shared/interfaces/deletable';
 import { AdditionalInterestData } from '../../quote/models/additional-interest';
-import { PropertyDeductible } from '../../quote/models/property-deductible';
-import { PropertyPolicyDeductible } from '../../policy-v2/models/property-policy-deductible';
 import { ReinsuranceLookup } from '../services/reinsurance-lookup/reinsurance-lookup';
-import { OptionalPremium } from 'src/app/shared/interfaces/optional-premium';
 import { PolicyOptionalPremiumV2 } from './policy-optional-premium';
-import { PolicyRateClass } from '../../policy-v2/classes/policy-rate-class';
 import { PolicyRate } from '../../policy-v2/models/policy-rate';
+import { PropertyEndorsementDeductible } from '../../quote/models/property-deductible';
 
 
 export interface AccountInformation {
@@ -132,7 +125,7 @@ export interface Endorsement {
   endorsementBuilding: PropertyBuilding[];
   endorsementMortgagee: MortgageeData[];
   endorsementAdditionalInterest: AdditionalInterestData[];
-  endorsementDeductible: PropertyPolicyDeductible[];
+  endorsementDeductible: PropertyEndorsementDeductible[];
   endorsementBuildingOptionalCoverage:PolicyOptionalPremiumV2[];
   policyLayers: PolicyLayerData[];
   reinsuranceCodes: ReinsuranceLookup[];
