@@ -222,7 +222,6 @@ export class ReinsuranceClass extends ChildBaseClass implements Deletable, Reins
         this.createErrorMessage(`Reinsurance Layer ${this.reinsLayerNo}: Code cannot be empty.`, settings);
       }
     }
-    console.log('line207', this.errorMessagesList);
     return this.errorMessagesList;
   }
 

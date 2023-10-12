@@ -9,10 +9,10 @@ import { ProgramClass } from 'src/app/features/quote/classes/program-class';
 import { PageDataService } from 'src/app/core/services/page-data-service/page-data-service';
 import { PolicyRate } from '../../../models/policy-rate';
 import { PropertyPolicyDeductibleClass } from '../../../classes/property-policy-deductible-class';
-import { PropertyDeductible } from 'src/app/features/quote/models/property-deductible';
+import { PropertyDeductible, PropertyEndorsementDeductible, PropertyQuoteDeductible } from 'src/app/features/quote/models/property-deductible';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { SharedComponentType } from 'src/app/core/enums/shared-component-type-enum';
-import { PropertyPolicyDeductible } from '../../../models/property-policy-deductible';
+import { PropertyQuoteDeductibleClass } from 'src/app/features/quote/classes/property-quote-deductible-class';
 
 @Component({
   selector: 'rsps-policy-premium',
@@ -124,25 +124,26 @@ export class PolicyPremiumComponent implements OnInit {
     addDeduct(){
       const newDeductible = new PropertyPolicyDeductibleClass();
       newDeductible.sequence = this.getNextSequence();
+      newDeductible.isNew = true;
       this.policyInfo.endorsementData.endorsementDeductible.push(newDeductible);
     }
 
     copyDeduct(deductible: PropertyDeductible) {
-      const copy = PropertyPolicyDeductibleClass.fromPropertyDeductible(deductible);
+      const copy = new PropertyPolicyDeductibleClass(deductible as PropertyPolicyDeductibleClass);
       copy.sequence = this.getNextSequence();
+      copy.isNew = true;
+      copy.guid = crypto.randomUUID();
       this.policyInfo.endorsementData.endorsementDeductible.push(copy);
     }
 
     deleteDeduct(deductible: PropertyDeductible){
       const index = this.deductibles?.findIndex(x => x.sequence == deductible.sequence);
       if (index > -1) {
-        this.policyInfo.endorsementData.endorsementDeductible.find(x => x.sequence == deductible.sequence)!.markForDeletion = true;
-
-        this.deductibles?.splice(index, 1);
-        if (!deductible.isNew) {
-          this.notification.show('Deductible deleted.', { classname: 'bg-success text-light', delay: 5000 });
-        }
-        //TODO: if else for propertyParent- quote deletes from DB immediately, policy deletes on the save
+        this.deductibles.find(x => x.sequence == deductible.sequence)!.markForDeletion = true;
+        this.deductibles.forEach((deductible, index) => {
+          deductible.sequence = index + 1;
+        });
+        this.policyInfo.endorsementData.markDirty();
       }
     }
 

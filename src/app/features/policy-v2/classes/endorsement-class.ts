@@ -18,7 +18,6 @@ import { PropertyQuoteDeductibleClass } from '../../quote/classes/property-quote
 import { PropertyPolicyDeductibleClass } from './property-policy-deductible-class';
 import { PolicyLayerClass } from './policy-layer-class';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
-import { PropertyPolicyDeductible } from '../models/property-policy-deductible';
 import { ReinsuranceLookup } from '../../policy/services/reinsurance-lookup/reinsurance-lookup';
 import { PolicyOptionalPremium } from '../../policy/models/policy-optional-premium';
 import { PolicyOptionalPremiumV2 } from '../../policy/models/policy-optional-premium';
@@ -106,7 +105,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     this.rate = new PolicyRateClass(end.rate);
   }
 
-  endorsementDeductibleInit(data: PropertyPolicyDeductible[]){
+  endorsementDeductibleInit(data: PropertyEndorsementDeductible[]){
     const deductibles: PropertyPolicyDeductibleClass[] = [];
     if(data){
       data.forEach(ded => {
@@ -184,7 +183,22 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
 
   validateObject(): ErrorMessage[]{
     this.errorMessagesList = this.validateChildren(this);
-    const settings: ErrorMessageSettings = {preventSave: false, tabAffinity: ValidationTypeEnum.Reinsurance, failValidation: false};
+    
+    // Premium Deductible
+    var settings: ErrorMessageSettings = {preventSave: false, tabAffinity: ValidationTypeEnum.Premium, failValidation: false};
+    // Check for duplicates (same prem/bldng and type)
+    // if all is selected more than once for same deductible and same prem/building combo
+    for (var i = 1; i < this.endorsementDeductible.length; i ++) {
+      for (var j = 0; j < i; j ++) {
+        if (this.endorsementDeductible[i].building == this.endorsementDeductible[j].building &&
+          this.endorsementDeductible[i].propertyDeductibleId == this.endorsementDeductible[j].propertyDeductibleId) {
+            this.createErrorMessage(`Deductible #${i+1} has duplicate building and deductible.`, settings);
+          }
+      }
+    }    
+
+    // Reinsurance
+    settings = {preventSave: false, tabAffinity: ValidationTypeEnum.Reinsurance, failValidation: false};
     if(this.policyLayers.length == 0 ||
       this.policyLayers[0].policyLayerAttachmentPoint != this.attachmentPoint) {
       this.createErrorMessage('Attachment point must equal policy attachment point.', settings);
@@ -244,7 +258,7 @@ export class EndorsementClass extends ParentBaseClass implements Endorsement {
     (this.endorsementMortgagee as MortgageeClass[]).forEach(c => mortgagees.push(c.toJSON()));
     const additionalInterests: AdditionalInterestData[] = [];
     (this.endorsementAdditionalInterest as AdditionalInterestClass[]).forEach(c => additionalInterests.push(c.toJSON()));
-    const endorsementDeductibles: PropertyPolicyDeductible[] = [];
+    const endorsementDeductibles: PropertyEndorsementDeductible[] = [];
     (this.endorsementDeductible as PropertyPolicyDeductibleClass[]).forEach(c => endorsementDeductibles.push(c.toJSON()));
     const endorsementBuildingOptionalCoverage: PolicyOptionalPremium[] = [];
     (this.endorsementBuildingOptionalCoverage as PolicyOptionalPremiumClassV2[]).forEach(c => endorsementBuildingOptionalCoverage.push(c.toJSON()));

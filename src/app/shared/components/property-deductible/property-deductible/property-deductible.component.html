@@ -1,4 +1,4 @@
-<div class="component-row">
+<div *ngIf="!deductible.markForDeletion" class="component-row">
     <div [ngClass]="collapsed ? 'collapsed' : 'expanded'">
         <div #locationInfo (click)="collapseExpand(false)">
             <div class="row">
