@@ -32,7 +32,6 @@ export class PolicyPropertyMortgageeComponent extends  PropertyMorgageeBaseCompo
 
   @Input() set buildings(value: PropertyBuildingClass[]) {
     this._buildings = value;
-    console.log('input buildings: ', value);
   }
   get buildings(): PropertyBuildingClass[] {
     return this.filteredBuildingsService.filteredBuildings;

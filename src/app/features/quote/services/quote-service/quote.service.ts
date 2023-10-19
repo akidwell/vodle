@@ -39,7 +39,6 @@ export class QuoteService {
   }
   updateQuote(quote: QuoteClass) {
     const quoteJSON = quote.toJSON();
-    console.log(quoteJSON);
     const headers = { 'Content-Type': 'application/json'};
     return this.http.put<Quote>(this.config.apiBaseUrl + 'api/quotes/', quoteJSON, {headers});
   }

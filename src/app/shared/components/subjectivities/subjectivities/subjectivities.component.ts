@@ -154,7 +154,6 @@ export class SubjectivitiesComponent extends SharedComponentBase implements OnIn
     // and don't want to set isDirty in the ExisitingInit Function as that is truly for what's from the DB
     const lastAdded = this.quote.subjectivityData.length - 1;
     this.quote.subjectivityData[lastAdded].isDirty = true;
-    console.log(this.userDefinedInfo);
     this.refreshSubjectivities();
   }
 

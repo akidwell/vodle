@@ -33,7 +33,6 @@ export class CanDeactivateGuard  {
     const isLeaving = this.checkLeavePolicy(state.url, nextState.url);
     let currentValidation: PolicyValidationClass | null = null;
     let errors: ErrorMessage[] = [];
-    console.log('line 36', component);
     const policy = component.policyInfo;
     policy.fullTabValidation();
     policy.validateObject();
@@ -90,7 +89,6 @@ export class CanDeactivateGuard  {
     currentValidation: PolicyValidationClass | null, isLeaving: boolean, errors: ErrorMessage[]): Promise<boolean> {
     const policy = component.policyInfo;
     window.scrollTo(0,0);
-    console.log('line96', policy.canBeSaved, errors, isLeaving);
     if(errors.length != 0 && !isLeaving){
       return false;
     } else if (policy?.isDirty && policy.canBeSaved && errors.length == 0) {

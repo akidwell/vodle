@@ -162,7 +162,6 @@ export class MortgageeClass extends ChildBaseClass implements MortgageeData, Quo
   }
 
   existingInit(mortgagee: MortgageeData){
-    console.log('line158', mortgagee);
     //not using the private variable marks the page as dirty on load and we dont want that
     this._isAppliedToAll = mortgagee.isAppliedToAll;
     this._premisesNumber = mortgagee.premisesNumber;

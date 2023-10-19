@@ -78,7 +78,6 @@ export class PropertyImportComponent extends PropertyBuildingBaseComponent {
                     await lastValueFrom(results3$);
                   }
 
-                  console.log(this.quote);
                   await this.importQuote(this.quote, file);
                 }
               });
@@ -99,7 +98,6 @@ export class PropertyImportComponent extends PropertyBuildingBaseComponent {
       async (quote) => {
         const newQuote = new PropertyQuoteClass(quote);
         newQuote.markImported();
-        console.log('QUOTEEEEEE' + newQuote);
         newQuote.propertyQuoteBuildingOptionalCoverage.forEach(x => x.isAccepted = true);
         if (await this.checkErrors(quote.importErrors)) {
           if (await this.checkWarning(quote.importWarnings)) {

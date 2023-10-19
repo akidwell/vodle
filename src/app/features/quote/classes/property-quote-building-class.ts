@@ -75,16 +75,16 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
     this._premisesNumber = value;
     this.markDirty();
     this.propertyQuoteBuildingCoverage.map(c => c.premisesNumber = value);
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
   get buildingNumber() : number | null {
     return this._buildingNumber;
   }
   set buildingNumber(value: number | null) {
     // Need to Check with original value
-  //  this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
+    this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value;
     this.markDirty();
     this.propertyQuoteBuildingCoverage.map(c => c.buildingNumber = value);
@@ -92,17 +92,13 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
   validate(){
     if (this._validateOnLoad || this.isDirty){
       this.classValidation();
-      console.log('line 88',this.errorMessages);
       this._validateOnLoad = false;
     }
     this._validationResults?.resetValidation();
 
     this.callChildValidations();
     this._validationResults.mapValues(this);
-    console.log('check: ', this._validationResults, this._canBeSaved);
-    console.log('line 95', this.propertyQuoteBuildingCoverage);
     this._validationResults.validateChildrenAndMerge(this.propertyQuoteBuildingCoverage);
-    console.log(this._validationResults);
     return this._validationResults;
   }
 
@@ -117,30 +113,26 @@ export class PropertyQuoteBuildingClass extends PropertyBuildingClass implements
     coverage.isNew = true;
     coverage.markDirty();
     this.propertyQuoteBuildingCoverage.push(coverage);
-    // this.propertyQuote.calculateSubjectAmounts();
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
 
   deleteCoverage(coverage: PropertyQuoteBuildingCoverageClass) {
-    console.log('in delete cov');
     const index = this.propertyQuoteBuildingCoverage.indexOf(coverage, 0);
-    console.log('in delete cov index', index);
-
     if (index > -1) {
       this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage.splice(index, 1));
       this.propertyQuoteBuildingCoverage.splice(index, 1);
       console.log('in delete cov list', this.propertyQuote.propertyQuoteBuildingList.map(x => x.propertyQuoteBuildingCoverage));
       coverage.markForDeletion = true;
-
       // Mark dirty to force form rules check
       this.propertyQuote.markDirty();
     }
-    // this.propertyQuote.calculateSubjectAmounts();
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
+    this.propertyQuote.calculateSubjectAmounts();
+    this.propertyQuote.calculateLargestPremTiv();
+    this.propertyQuote.calculateLargestExposure();
+    this.propertyQuote.calculateLawLimits();
   }
 
   toJSON() {

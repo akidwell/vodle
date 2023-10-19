@@ -34,7 +34,6 @@ export class PolicySavingService {
   private notification: NotificationService,
   private messageDialogService: MessageDialogService
   ) {
-    console.log('init');
     this.policySub = this.pageDataService.policyData$.subscribe(
       (policy: PolicyInformation |null) => {
         this.policy = policy;
@@ -43,18 +42,14 @@ export class PolicySavingService {
   }
 
   async savePolicy() {
-    console.log('IN SAVE POLICY');
     const policy = this.policy;
     if (policy && this.policy instanceof PolicyClass && policy instanceof PolicyClass) {
-      console.log('policy: ', policy, 'id: ');
       this.isSaving = true;
-      console.log(policy);
       const results$ = this.policyService.updatePolicyInfoV2(policy);
       await lastValueFrom(results$)
         .then(async (policyData: PolicyInformation) => {
           const x = new PolicyClass(policyData);
           this.policy = policyData;
-          console.log('X:' + x);
           //this.pageDataService.policyData = x;
           policy.onSaveCompletion([x]);
           policy.markClean();

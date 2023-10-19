@@ -100,6 +100,7 @@ export class PropertyPolicyBuildingCoverageClass extends PropertyBuildingCoverag
   setReadonlyFields() {
     // No special rules
   }
+  
 
   toJSON(): PropertyBuildingCoverage {
     return {

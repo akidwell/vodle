@@ -51,7 +51,6 @@ export class QuotePropertyLocationCoverageComponent extends PropertyBuildingBase
             this.rateEffectiveDate = this.quote.policyEffectiveDate;
             this.clearBuildings();
             this.filterBuildings();
-            console.log('line54',this.filteredCoverages);
           });}
       });
     this.saveSub = this.quoteSavingService.isSaving$.subscribe(

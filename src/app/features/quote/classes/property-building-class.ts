@@ -97,7 +97,6 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
   }
   set markForDeletion(value: boolean) {
     this._markForDeletion = value;
-    console.log('in markdeletion', value);
     this.markDirty();
   }
 
@@ -277,7 +276,6 @@ export abstract class PropertyBuildingClass extends ParentBaseClass implements P
       this._itv = Math.round((buildingLimit ?? 0) / (this._squareFeet ?? 1));
       this.markDirty();
     }
-    console.log('ITV' + this._itv);
   }
 
   constructor(building?: PropertyBuilding) {

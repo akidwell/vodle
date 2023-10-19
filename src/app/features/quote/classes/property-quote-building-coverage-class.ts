@@ -43,7 +43,6 @@ export class PropertyQuoteBuildingCoverageClass extends PropertyBuildingCoverage
       this._validateOnLoad = false;
     }
     this._validationResults.mapValues(this);
-    console.log('vali results line 43',this);
     return this._validationResults;
   }
 

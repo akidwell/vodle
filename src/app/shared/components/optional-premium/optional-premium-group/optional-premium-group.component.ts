@@ -76,7 +76,6 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
 
     this.programSub = this.pageDataService.policyData$.subscribe(
       (policy: PolicyClass | null) => {
-        console.log('line 78',policy);
         if (policy != null && policy.endorsementData.endorsementBuildingOptionalCoverage){
           this.propertyParent = policy;
           this.optionalPremiumData = policy.endorsementData?.endorsementBuildingOptionalCoverage;
@@ -149,7 +148,6 @@ export class OptionalPremiumGroupComponent extends SharedComponentBase implement
       }
     }
     if (optionalPremium instanceof QuoteOptionalPremiumClass) {
-      console.log(optionalPremium);
       this.deleteQuoteOptionalPremium(optionalPremium);
     }
   }

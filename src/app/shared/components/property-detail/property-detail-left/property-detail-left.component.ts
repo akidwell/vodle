@@ -55,7 +55,6 @@ export class PropertyDetailLeftComponent implements OnInit {
   private _subjectAmount!: Map<any, any>;
 
   @Input() set subjectAmount(value:Map<any, any>) {
-    console.log('line57', value);
     this._subjectAmount = value;
     this._search$.next();
   }
@@ -73,7 +72,6 @@ export class PropertyDetailLeftComponent implements OnInit {
       tap(() => this._loading$.next(false)),
     ).subscribe(result => {
       this._subjects$.next(result.subjects);
-      console.log('line74.', result.subjects);
       this._total$.next(result.total);
     });
   }
@@ -84,7 +82,6 @@ export class PropertyDetailLeftComponent implements OnInit {
   private _search(): Observable<SearchResult> {
     const {pageSize, page} = this._state;
     // 1. Populate from source
-    console.log('line85',this.subjectAmount);
     const array = Array.from(this.subjectAmount);
     let subjects: PropertyBuildingCoverageSubjectAmountData[] = [];
 
@@ -92,13 +89,11 @@ export class PropertyDetailLeftComponent implements OnInit {
       const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
       subAm.subject = x[0];
       subAm.limit = x[1];
-      console.log('line93',subAm);
       subjects.push(subAm);});
 
     const total = subjects.length;
 
     subjects = subjects.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize);
-    console.log('line98', subjects);
     return of({subjects, total});
   }
 }

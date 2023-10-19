@@ -33,14 +33,14 @@
                     <label for="additionalDetail" class="form-label" title="Additional Detail">Additional Detail</label>
                 </div>
             </div>
-            <div *ngFor="let item of coverages; let buildingIndex = index">
+            <div *ngFor="let item of pagedCoverages; let buildingIndex = index">
                 <rsps-property-building-coverage [coverage]="item" [canEdit]="canEdit" [buildingIndex]="buildingIndex" [readOnlyQuote]="readOnlyQuote"
-                    [coverageIndex]="buildingIndex" (copyCoverage)=copyCoverage($event)
+                    [coverageIndex]="buildingIndex" (copyCoverage)=copyCoverage($event) 
                     (deleteCoverage)=deleteCoverage($event)>
                 </rsps-property-building-coverage>
             </div>
             <div class="d-flex justify-content-between p-2 paging">
-                <ngb-pagination class="pagination" [collectionSize]="(total$ | async)!" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                <ngb-pagination class="pagination" [collectionSize]="coverageCount" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
                     [rotate]="true" [boundaryLinks]="true">
                 </ngb-pagination>
                 <select class="custom-select" name="pageSize" [(ngModel)]="pageSize">

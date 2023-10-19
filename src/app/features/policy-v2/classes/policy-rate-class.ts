@@ -60,12 +60,10 @@ export class PolicyRateClass extends ChildBaseClass implements PolicyRate {
     this.validate();
   };
 
-  
+
   validateObject(): ErrorMessage[]{
     console.log('validate  policy');
     //on load or if dirty validate this
-    console.log('BBBBBBBBBBB' + this);
-    console.log('AAAAAAAAAAA ' + this.isDirty);
     if (this.isDirty){
       //TODO: class based validation checks
       this.errorMessagesList = [];

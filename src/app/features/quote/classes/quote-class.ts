@@ -604,7 +604,6 @@ export abstract class QuoteClass extends PolicyDatesRuleClass implements Quote, 
     this.generalRemarksData.forEach(c => generalRemarks.push(c.toJSON()));
     const internalNotes: InternalNotes[] = [];
     this.internalNotesData.forEach(c => internalNotes.push(c.toJSON()));
-    console.log(internalNotes);
     return {
       submissionNumber: this.submissionNumber,
       quoteId: this.quoteId,

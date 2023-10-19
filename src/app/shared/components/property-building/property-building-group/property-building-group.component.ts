@@ -44,7 +44,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
   @Input() public rateEffectiveDate!: Date | null;
   @Input() set buildings(value: PropertyBuildingClass[]) {
     this._buildings = value;
-    console.log('input buildings: ', value);
     this._search$.next();
   }
   get buildings(): PropertyBuildingClass[] {
@@ -88,7 +87,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       switchMap(() => this._search()),
       tap(() => this._loading$.next(false)),
     ).subscribe(result => {
-      console.log('RESUlTTTTt ' + result);
       this._policies$.next(result.buildings);
       this._total$.next(result.total);
     });
@@ -117,10 +115,8 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     const {pageSize, page } = this._state;
     // 1. Populate from source
     let buildings = this.buildings;
-    console.log('buildingssss: ', this.buildings);
     // 2.  Set Focus Page
     const focusIndex = buildings.findIndex((c) => c.focus);
-    console.log('focusindex ', focusIndex, page);
     let focusPage = page;
     if (focusIndex >= 0) {
       buildings[focusIndex].focus = false;
@@ -130,7 +126,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     // 3. paginate
     const total = buildings.length;
     buildings = buildings.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
-    this.filteredBuildingsService.filteredBuildings = buildings;
+    this.filteredBuildingsService.pagedBuildings = buildings;
     return of({buildings, total});
   }
 
@@ -141,15 +137,16 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       if (this.propertyParent instanceof PropertyQuoteClass) {
         this.propertyParent.addBuilding(newBuilding);
         newBuilding.isExpanded = true;
+        this.filteredBuildingsService.pagedBuildings.push(newBuilding);
 
       }
     }
     else if (this.classType == ClassTypeEnum.Policy) {
       const newBuilding = new PropertyPolicyBuildingClass();
-      console.log('line 148',this.propertyParent);
       if (this.propertyParent instanceof PolicyClass) {
         this.propertyParent.addBuilding(newBuilding);
         newBuilding.isExpanded = true;
+        this.filteredBuildingsService.pagedBuildings.push(newBuilding);
 
       }
     }
@@ -158,8 +155,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
   }
 
   addCoverage(building: PropertyBuildingClass) {
-    console.log('line 156', building instanceof PropertyPolicyBuildingClass);
-    console.log('line 158', this.classType);
     if (this.propertyParent instanceof PropertyQuoteClass) {
       this.propertyParent.addCoverage(building as PropertyQuoteBuildingClass);
       this.filterCoverages();
@@ -184,6 +179,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       newBuilding.propertyQuoteBuildingCoverage.map( x=> x.expand = true);
       this.filterBuildingsCoverages();
       this.propertyParent.showDirty = true;
+      this.filteredBuildingsService.pagedBuildings.push(newBuilding);
     }
     else if (this.propertyParent instanceof PolicyClass) {
       const x = new PropertyPolicyBuildingClass(building);
@@ -198,6 +194,7 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
       newBuilding.endorsementBuildingCoverage.map( x=> x.expand = true);
       this.filterBuildingsCoverages();
       this.propertyParent.isDirty = true;
+      this.filteredBuildingsService.pagedBuildings.push(newBuilding);
     }
   }
 
@@ -206,7 +203,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
     building.markForDeletion = true;
     if (index > -1) {
       // TO DO :
-      console.log('line 202',this.propertyParent);
       if (this.propertyParent instanceof PropertyQuoteClass) {
         if (!building.isNew && building.propertyQuoteBuildingId != null && building.propertyQuoteBuildingId > 0) {
           this.deleteSub = this.quoteService
@@ -237,7 +233,6 @@ export class PropertyBuildingGroupComponent extends PropertyBuildingBaseComponen
               },
             });
         }
-        console.log('line 238', building.isNew);
         if(building.isNew){
           const index = this.propertyParent.propertyQuoteBuildingList.findIndex(x => x.propertyQuoteBuildingId == building.propertyQuoteBuildingId);
           this.propertyParent.propertyQuoteBuildingList.splice(index, 1);

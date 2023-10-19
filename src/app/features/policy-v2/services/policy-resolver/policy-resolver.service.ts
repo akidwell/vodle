@@ -17,7 +17,6 @@ export class PolicyResolver  {
   constructor(private router: Router, private policyService: PolicyService, private historyService: HistoryService, private reinsuranceLookupService: ReinsuranceLookupService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PolicyResolved> {
-    console.log(route.paramMap);
     const id = route.paramMap.get('id') ?? '';
     const end = route.paramMap.get('end') ?? 0;
     if (isNaN(+id)) {

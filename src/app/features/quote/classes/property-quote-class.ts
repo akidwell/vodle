@@ -25,8 +25,9 @@ import * as moment from 'moment';
 import { PolicyTermEnum } from 'src/app/core/enums/policy-term-enum';
 import { QuoteOptionalPremium } from '../models/quote-optional-premium';
 import { PropertyQuoteBuildingCoverageClass } from './property-quote-building-coverage-class';
+import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 
-export class PropertyQuoteClass extends QuoteClass implements  Validation, QuoteAfterSave {
+export class PropertyQuoteClass extends QuoteClass implements Validation, QuoteAfterSave {
   propertyQuoteId = 0;
   quote!: QuoteClass;
   //quoteId: number | null = null;
@@ -52,10 +53,9 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
   //private _validationResults: QuoteValidationClass;
   private _lastLargestExposure = 0;
 
-  constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass) {
+  constructor(quote?: Quote, program?: ProgramClass, submission?: SubmissionClass, public filteredBuildingsService?: FilteredBuildingsService,) {
     super(quote, program, submission);
     if (quote && quote.propertyQuote) {
-      console.log(quote.propertyQuote.propertyQuoteBuildingList);
       this.existingClassInit(quote.propertyQuote);
     } else {
       this.newClassInit();
@@ -142,7 +142,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
 
   calculateSubjectAmounts() {
     const subjectAmounts: PropertyBuildingCoverageSubjectAmountData[] = [];
-    console.log(this);
     this.propertyQuoteBuildingList.map((element) => {
       element.propertyQuoteBuildingCoverage.map((x) => {
         const subAm: PropertyBuildingCoverageSubjectAmountData = {} as PropertyBuildingCoverageSubjectAmountData;
@@ -281,13 +280,14 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
     newCoverage.propertyQuoteBuildingId = building.propertyQuoteBuildingId ?? 0;
     newCoverage.isNew = true;
     newCoverage.guid = crypto.randomUUID();
+    newCoverage.expand = true;
     building.propertyQuoteBuildingCoverage.push(newCoverage);
+    this.filteredBuildingsService?.pagedCoverages.push(newCoverage);
+    this.calculateSubjectAmounts();
+    this.calculateLargestPremTiv();
+    this.calculateLargestExposure();
+    this.calculateLawLimits();
     return newCoverage;
-    //this.filterCoverages();
-    // this.propertyQuote.calculateSubjectAmounts();
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
   }
 
   addMortgagee(mortgagee: MortgageeClass){
@@ -388,7 +388,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
 
     const buildings: PropertyQuoteBuildingClass[] = [];
     if(propertyQuote.propertyQuoteBuilding) {
-      console.log('adsfasdf' + propertyQuote.propertyQuoteBuilding);
       propertyQuote.propertyQuoteBuilding.forEach((element) => {
         const building = new PropertyQuoteBuildingClass(element);
         building.propertyQuote = this;
@@ -415,7 +414,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
     this.calculateLargestExposure();
   }
   validate(){
-    console.log('validate property quote');
     //on load or if dirty validate this
     if (this._validateOnLoad || this.isDirty){
       //TODO: class based validation checks
@@ -545,7 +543,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
     if (childValidations.length > 0) {
       this.validationResults.validateChildValidations(childValidations);
     }
-    console.log('final quote validation: ', this.validationResults);
     //this._validateOnLoad = false;
   }
   classValidation() {
@@ -818,7 +815,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
 
 
   onSave(savedQuote: PropertyQuoteClass) {
-    console.log('savedquote', savedQuote);
     this.submission.policyEffectiveDate = moment(savedQuote.policyEffectiveDate).toDate();
     this.submission.policyExpirationDate = moment(savedQuote.policyExpirationDate).toDate();
     this.submission.policyTerm = PolicyTermEnum.custom;
@@ -833,7 +829,7 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
     this.onSaveWarranties(savedQuote);
     this.onSaveGeneralRemarks(savedQuote);
     this.onSaveInternalNotes(savedQuote);
-    console.log('Property Quote after save: ', this);
+    this.calculateSubjectAmounts();
   }
 
   private onSaveForms(savedQuote: PropertyQuoteClass) {
@@ -915,7 +911,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
   }
 
   private onSaveBuilding(buildings: PropertyQuoteBuildingClass[], savedQuote: PropertyQuoteClass): void {
-    console.log('line861', buildings);
     buildings.forEach(building => {
       if (building.isNew) {
         const match = savedQuote.propertyQuoteBuildingList.find(c => c.guid == building.guid);
@@ -930,15 +925,11 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
   }
 
   private onSaveCoverage(coverages: PropertyBuildingCoverageClass[], savedQuote: PropertyQuoteClass): void {
-    console.log('line 894', coverages);
-    console.log('line 895' , savedQuote);
+
     coverages.forEach(coverage => {
       if (coverage.isNew) {
         const buildingMatch = savedQuote.propertyQuoteBuildingList.find(c => c.propertyQuoteBuildingId == coverage.propertyQuoteBuildingId);
-        console.log('line 898', buildingMatch);
         const coverageMatch = savedQuote?.propertyQuoteBuildingList.flatMap(x => x.propertyQuoteBuildingCoverage).find(x => x.guid == coverage.guid);
-        console.log('line 901', coverageMatch);
-
         if (coverageMatch != null) {
           coverage.propertyQuoteBuildingCoverageId = coverageMatch.propertyQuoteBuildingCoverageId ?? 0;
           coverage.propertyQuoteBuildingId = coverageMatch.propertyQuoteBuildingId;
@@ -952,7 +943,6 @@ export class PropertyQuoteClass extends QuoteClass implements  Validation, Quote
   toJSON(): Quote {
     const obj = this.baseToJSON();
     obj.propertyQuote = this.classToJSON();
-    console.log(obj);
     return obj;
   }
 

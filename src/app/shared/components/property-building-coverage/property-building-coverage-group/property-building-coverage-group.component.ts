@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, IterableDiffers, OnInit } from '@angular/core';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, of, switchMap, tap } from 'rxjs';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 import { ClassTypeEnum } from 'src/app/core/enums/class-type-enum';
 import { PageState } from 'src/app/core/models/page-state';
@@ -13,6 +13,7 @@ import { PropertyPolicyBuildingCoverageClass } from 'src/app/features/quote/clas
 import { FilteredBuildingsService } from 'src/app/shared/services/filtered-buildings/filtered-buildings.service';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
+import { PropertyBuildingBaseComponent } from '../../property-building/property-building-base-component/property-building-base-component';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
   templateUrl: './property-building-coverage-group.component.html',
   styleUrls: ['./property-building-coverage-group.component.css']
 })
-export class PropertyBuildingCoverageGroupComponent implements OnInit {
+export class PropertyBuildingCoverageGroupComponent extends PropertyBuildingBaseComponent implements OnInit {
   deleteSub!: Subscription;
   collapsed = false;
   faAngleDown = faAngleDown;
@@ -32,7 +33,6 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   @Input() public canEdit = false;
   @Input() public classType!: ClassTypeEnum;
   @Input() public propertyParent!: PropertyQuoteClass | PolicyClass;
-
 
   get coverages(): PropertyBuildingCoverageClass[] {
     this._coverages = this.filteredBuildingsService.filteredCoverages;
@@ -65,8 +65,12 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     searchTerm: ''
   };
 
-  constructor(private notification: NotificationService, private quoteService: QuoteService, private messageDialogService: MessageDialogService, public filteredBuildingsService: FilteredBuildingsService) {
+  constructor(private notification: NotificationService,
+    public iterableDiffers: IterableDiffers,
+    private quoteService: QuoteService,
+    private messageDialogService: MessageDialogService, public filteredBuildingsService: FilteredBuildingsService) {
     // Get the default size from local storage
+    super(filteredBuildingsService);
     let pageSize = localStorage.getItem('coverage-page-size');
     if (pageSize == null) {
       this.pageSize = this._state.pageSize;
@@ -75,12 +79,43 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
     if (!isNaN(Number(pageSize))) {
       this._state.pageSize = Number(pageSize);
     }
-
+    this._search$.pipe(
+      tap(() => this._loading$.next(true)),
+      switchMap(() => this._search()),
+      tap(() => this._loading$.next(false)),
+    ).subscribe(result => {
+      this._policies$.next(result.coverages);
+      this._total$.next(result.total);
+    });
   }
 
   ngOnInit(): void {
-    console.log('COV' , this.coverages);
+    this._search$.next();
+  }
+  private _search(): Observable<SearchResult> {
+    const {pageSize, page } = this._state;
+    // 1. Populate from source
+    let coverages = this.coverages;
+    // 2.  Set Focus Page
+    const focusIndex = coverages.findIndex((c) => c.focus);
+    let focusPage = page;
+    if (focusIndex >= 0) {
+      coverages[focusIndex].focus = false;
+      focusPage = Math.floor((focusIndex + 1) / this.pageSize) + ((focusIndex + 1) % this.pageSize == 0 ? 0 : 1);
+      this._state.page = focusPage;
+    }
+    // 3. paginate
+    const total = coverages.length;
+    coverages = coverages.slice((focusPage - 1) * pageSize, (focusPage - 1) * pageSize + pageSize);
+    this.filteredBuildingsService.pagedCoverages = coverages;
+    return of({coverages, total});
+  }
 
+  ngDoCheck() {
+    const changes = this.iterableDiffers.find(this.filteredBuildingsService.pagedCoverages);
+    if (changes) {
+      this._search();
+    }
   }
 
   ngOnDestroy(): void {
@@ -93,14 +128,17 @@ export class PropertyBuildingCoverageGroupComponent implements OnInit {
   }
 
   copyCoverage(coverage: PropertyBuildingCoverageClass) {
-    if (this.classType == ClassTypeEnum.Quote) {
+    if (this.propertyParent instanceof PropertyQuoteClass) {
       const clone = deepClone(coverage.toJSON());
       const x = new PropertyQuoteBuildingCoverageClass(clone);
-      //x.building.copyCoverage(x);
-    } else if(this.classType == ClassTypeEnum.Policy){
+      this.propertyParent.propertyQuoteBuildingList.find(x => x.propertyQuoteBuildingId == coverage.propertyQuoteBuildingId)?.copyCoverage(x);
+      this.filterCoverages();
+      this.filteredBuildingsService?.pagedCoverages.push(x as PropertyBuildingCoverageClass);
+    } else if(this.propertyParent instanceof PolicyClass){
       const clone = deepClone(coverage.toJSON());
       const x = new PropertyPolicyBuildingCoverageClass(clone);
-      //x.building.copyCoverage(x);
+      this.propertyParent.endorsementData?.endorsementBuilding?.find(x => x.endorsementBuildingId == coverage.endorsementBuildingId)?.copyCoverage(x);
+      this.filteredBuildingsService?.pagedCoverages.push(clone as PropertyBuildingCoverageClass);
     }
   }
 

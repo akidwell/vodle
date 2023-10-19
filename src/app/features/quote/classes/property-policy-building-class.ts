@@ -18,27 +18,41 @@ export class PropertyPolicyBuildingClass extends PropertyBuildingClass implement
     newCoverage.buildingNumber = this._buildingNumber;
     newCoverage.propertyQuoteBuildingId = this.propertyQuoteBuildingId ?? 0;
     this.endorsementBuildingCoverage.push(newCoverage);
+    this.property.calculateSubjectAmounts();
+    this.property.calculateLargestPremTiv();
+    this.property.calculateLargestExposure();
+    this.property.calculateLawLimits();
     return newCoverage;
-    //this.filterCoverages();
-    // this.propertyQuote.calculateSubjectAmounts();
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
   }
+
   deleteCoverage(coverage: PropertyPolicyBuildingCoverageClass) {
-    console.log('in delete cov');
     const index = this.endorsementBuildingCoverage.indexOf(coverage, 0);
     this.endorsementBuildingCoverage.splice(index, 1);
-    console.log('in delete cov index', index);
 
     if (index > -1) {
       coverage.markForDeletion = true;
-      console.log('in delete cov list', this.endorsementBuildingCoverage);
     }
-    // this.propertyQuote.calculateSubjectAmounts();
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
+    this.property.calculateSubjectAmounts();
+    this.property.calculateLargestPremTiv();
+    this.property.calculateLargestExposure();
+    this.property.calculateLawLimits();
+  }
+
+  copyCoverage(coverage: PropertyPolicyBuildingCoverageClass) {
+    coverage.expand = true;
+    coverage.focus = true;
+    coverage.propertyQuoteBuildingCoverageId = 0;
+    coverage.propertyQuoteBuildingId = 0;
+    coverage.subjectNumber = this._subjectNumber;
+    coverage.premisesNumber = this._premisesNumber;
+    coverage.buildingNumber = this._buildingNumber;
+    coverage.isNew = true;
+    coverage.markDirty();
+    this.endorsementBuildingCoverage.push(coverage);
+    this.property.calculateSubjectAmounts();
+    this.property.calculateLargestPremTiv();
+    this.property.calculateLargestExposure();
+    this.property.calculateLawLimits();
   }
 
   validateObject(): ErrorMessage[] {
@@ -93,16 +107,16 @@ export class PropertyPolicyBuildingClass extends PropertyBuildingClass implement
     this._premisesNumber = value ? parseInt(value.toString()) : null;
     this.markDirty();
     this.endorsementBuildingCoverage.map(c => c.premisesNumber = value);
-    // this.propertyQuote.calculateLargestPremTiv();
-    // this.propertyQuote.calculateLargestExposure();
-    // this.propertyQuote.calculateLawLimits();
+    this.property.calculateLargestPremTiv();
+    this.property.calculateLargestExposure();
+    this.property.calculateLawLimits();
   }
   get buildingNumber() : number | null {
     return this._buildingNumber;
   }
   set buildingNumber(value: number | null) {
     // Need to Check with original value
-  //  this.propertyQuote.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
+    this.property.onPremisesBuildingChange(this._premisesNumber,this._buildingNumber);
     this._buildingNumber = value ? parseInt(value.toString()) : null;
     this.markDirty();
     this.endorsementBuildingCoverage.map(c => c.buildingNumber = value);

@@ -18,7 +18,6 @@ export abstract class PropertyBuildingBaseComponent {
   }
   set searchSubject(value: string) {
     this._searchSubject = value;
-    console.log('in set subject' + value);
     this.filterBuildingsCoverages();
   }
   private _searchPremises = '';
@@ -51,12 +50,20 @@ export abstract class PropertyBuildingBaseComponent {
   get filteredCoverages(): PropertyBuildingCoverageClass[] {
     return this.filteredBuildingsService.filteredCoverages || [];
   }
+
+  get pagedBuildings(): PropertyBuildingClass[] {
+    return this.filteredBuildingsService.pagedBuildings || [];
+  }
+
+
+  get pagedCoverages(): PropertyBuildingCoverageClass[] {
+    return this.filteredBuildingsService.pagedCoverages || [];
+  }
   constructor(public filteredBuildingsService: FilteredBuildingsService) {
 
   }
 
   filterBuildings() {
-    console.log('PROP PARENT' + this.propertyParent);
     if ((this.propertyParent instanceof PropertyQuoteClass)) {
       const allBuildings: PropertyQuoteBuildingClass[] = [];
       this.propertyParent.propertyQuoteBuildingList.map((element) => {
@@ -69,11 +76,8 @@ export abstract class PropertyBuildingBaseComponent {
       });
 
       this.filteredBuildingsService.filteredBuildings = allBuildings;
-
     } else if (this.propertyParent instanceof PolicyClass) {
       const allBuildings: PropertyPolicyBuildingClass[] = [];
-      console.log('BUILDING LIST: ',this.propertyParent.endorsementData.endorsementBuilding);
-      console.log(this.searchSubject);
       this.propertyParent.endorsementData.endorsementBuilding.map((element) => {
         if (!element.markForDeletion && (this.searchSubject == '' || element.subjectNumber == Number(this.searchSubject)) &&
         (this.searchPremises == '' || element.premisesNumber == Number(this.searchPremises)) &&
@@ -83,14 +87,11 @@ export abstract class PropertyBuildingBaseComponent {
         }
       });
       this.filteredBuildingsService.filteredBuildings = allBuildings;
-      console.log(this.filteredBuildings);
     }
     this.filterCoverages();
   }
 
   filterCoverages() {
-    console.log('line 94' , this.filteredBuildings);
-
     if (this.propertyParent instanceof PropertyQuoteClass) {
       const filtered: PropertyBuildingCoverageClass[] = [];
       this.filteredBuildings.map((element) => {

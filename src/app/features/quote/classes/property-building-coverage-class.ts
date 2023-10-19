@@ -46,7 +46,6 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   }
   set markForDeletion(value: boolean) {
     this._markForDeletion = value;
-    console.log('in markdeletion', value);
     this.markDirty();
   }
 
@@ -65,8 +64,6 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   set limit(value: number | null) {
     this._limit = value;
     this.markDirty();
-    console.log('in set limit' , value);
-    console.log(this.isDirty);
   }
   get coinsuranceId() : number | null {
     return this._coinsuranceId;
@@ -128,7 +125,6 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   abstract validate(): Validation;
 
   classValidation() {
-    console.log('in coverage validation');
     this.invalidList = [];
     this.errorMessagesList = [];
     this.canBeSaved = true;
@@ -184,7 +180,6 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   }
 
   existingInit(coverage: PropertyBuildingCoverage) {
-    console.log('COVERAGE init' , coverage);
     this.endorsementBuildingId = coverage.endorsementBuildingId;
     this.endorsementBuildingCoverageId = coverage.endorsementBuildingCoverageId;
     this.propertyQuoteBuildingId = coverage.propertyQuoteBuildingId;
@@ -227,7 +222,6 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
   }
 
   toJSON(): PropertyBuildingCoverage {
-    console.log(this, 'THIS');
     return {
       propertyQuoteBuildingCoverageId: this.propertyQuoteBuildingCoverageId,
       propertyQuoteBuildingId: this.propertyQuoteBuildingId,

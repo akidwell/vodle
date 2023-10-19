@@ -38,7 +38,6 @@ export class QuoteSummaryCoveragesDetailComponent extends DepartmentComponentBas
 
   ngOnInit(): void {
     this.quoteData = this.program.quoteData instanceof PropertyQuoteClass ? this.program.quoteData : null;
-    console.log(this.quoteData);
     this.rate = this.quoteData?.quoteRates[0] ?? null;
     this.quoteData?.calculatePropertyPremiums();
     this.quoteData?.calculateMinEarnedPrem();

@@ -33,7 +33,6 @@ export class PolicyQuoteClass extends ChildBaseClass implements QuoteData {
 
 
   existingInit(quote: QuoteData) {
-    console.log(quote);
     this.pacCode = quote.pacCode;
     this.quoteNumber = quote.quoteNumber;
     this.carrierCode = quote.carrierCode;

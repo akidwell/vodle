@@ -50,8 +50,6 @@ export class QuoteLineItemsComponent implements OnInit {
 
   changeLineItem(lineItemCode: LineItemDescription){
     this.lineItem.lineItemCode = lineItemCode.key;
-    console.log(lineItemCode);
-    console.log(this.lineItem.lineItemCode);
   }
 
 

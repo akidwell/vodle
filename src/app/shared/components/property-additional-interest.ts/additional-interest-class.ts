@@ -52,7 +52,6 @@ export class AdditionalInterestClass extends ChildBaseClass implements Additiona
   }
   set markForDeletion(value: boolean) {
     this._markForDeletion = value;
-    console.log('in markdeletion', value);
     this.markDirty();
   }
 

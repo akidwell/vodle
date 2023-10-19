@@ -63,33 +63,26 @@ export abstract class ParentBaseClass implements PolicyValidation {
       const object = parent[key as keyof T];
       //console.log('key: ',key,'object: ', object);
       //Check to see if any property is of ChildBaseClass and validate
-      console.log(object instanceof ChildBaseClass);
       if(object instanceof ChildBaseClass) {
-        console.log('ChildBaseClass: ',object);
         errorMessagesList = errorMessagesList.concat(this.validateChildClass(object));
-        console.log(errorMessagesList);
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
         this.canBeSaved = this.canBeSaved ? this.canBeSaved: object.canBeSaved;
       }
       //Check to see if any property is of ParentBaseClass and validate itself and all children
       else if (object instanceof ParentBaseClass) {
-        console.log('ParentBaseClass: ',object);
         errorMessagesList = errorMessagesList.concat(this.validateParentClass(object));
         this.isDirty = this.isDirty ? this.isDirty : object.isDirty;
       }
       //Check to see if property is an array and not empty
       else if (Array.isArray(object) && object.length > 0) {
-        console.log('Array: ',object);
         object.forEach(objectInArray => {
           //Check to see if any property is of ChildBaseClass and validate
           if(objectInArray instanceof ChildBaseClass) {
-            //console.log('ChildBaseClass Array: ',object);
             errorMessagesList = errorMessagesList.concat(this.validateChildClass(objectInArray));
             this.isDirty = this.isDirty ? this.isDirty : object.find(x => x.isDirty) ? true : false;
           }
           //Check to see if any property is of ParentBaseClass and validate itself and all children
           else if (objectInArray instanceof ParentBaseClass) {
-            console.log('ParentBaseClass Array: ',object);
             errorMessagesList = errorMessagesList.concat(this.validateParentClass(objectInArray));
             this.isDirty = this.isDirty ? this.isDirty : object.find(x => x.isDirty) ? true : false;
           }
@@ -97,8 +90,6 @@ export abstract class ParentBaseClass implements PolicyValidation {
       }
 
     });
-    console.log(this.isDirty);
-    console.log(errorMessagesList);
     return errorMessagesList;
   }
   //validate children classes that are of type ValidationChild (they will never have children classes needed to be validated)
@@ -115,20 +106,16 @@ export abstract class ParentBaseClass implements PolicyValidation {
     this.resetErrorMessages();
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
-      //console.log('key: ',key,'object: ', object);
       //Check to see if any property is of ChildBaseClass and validate
       if(object instanceof ChildBaseClass) {
-        console.log('ChildBaseClass: ',object);
         errorMessages = errorMessages.concat(this.checkChildClassErrors(object));
       }
       //Check to see if any property is of ParentBaseClass and grab error messages from itself and all children
       else if (object instanceof ParentBaseClass) {
-        console.log('ParentBaseClass: ',object);
         errorMessages = errorMessages.concat(this.checkParentClassErrors(object));
       }
       //Check to see if property is an array and not empty
       else if (Array.isArray(object) && object.length > 0) {
-        console.log('Array: ',object);
         object.forEach(objectInArray => {
           //Check to see if any property is of ChildBaseClass and grab error messages
           if(objectInArray instanceof ChildBaseClass) {
@@ -137,7 +124,6 @@ export abstract class ParentBaseClass implements PolicyValidation {
           }
           //Check to see if any property is of ParentBaseClass and grab error messages from itself and all children
           else if (objectInArray instanceof ParentBaseClass) {
-            console.log('ParentBaseClass Array: ',object);
             errorMessages = errorMessages.concat(this.checkParentClassErrors(objectInArray));
           }
         });
@@ -194,7 +180,6 @@ export abstract class ParentBaseClass implements PolicyValidation {
     Object.keys(parent).forEach(key => {
       const object = parent[key as keyof T];
       const savedObject = saved[key as keyof T];
-      console.log('KEYS:' +Object.keys(parent));
       //Check to see if any property is of ValidationChildClass and mark as not dirty
       if(object instanceof ChildBaseClass && savedObject instanceof ChildBaseClass) {
         //need to convert single object to array
@@ -271,7 +256,6 @@ export abstract class ParentBaseClass implements PolicyValidation {
 
   //Will determine if the object has the Deletable interface and if it is marked for deletion
   checkIfDeleted<T>(deletable: T) {
-    console.log('DELETEBAE:' + deletable);
     return (deletable as Deletable).markForDeletion === true;
   }
   createErrorMessage(message: string, errorMessageSettings?: ErrorMessageSettings) {

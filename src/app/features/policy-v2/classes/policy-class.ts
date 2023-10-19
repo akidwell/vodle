@@ -252,7 +252,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       const y = new PolicyANIClass(x);
       this.additionalNamedInsuredData.push(y);
     });
-    console.log(this.additionalNamedInsuredData);
     this.endorsementData = new EndorsementClass(policy.endorsementData);
     this.insured = new InsuredClass(policy.insured);
     //TODO: create producer class
@@ -292,7 +291,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
     this.isNew = false;
     this.rateEffectiveDate = this.policyEffectiveDate;
     this._classCode = policy.classCode;
-    
+
     this._riskDescription = policy.riskDescription;
     this.calculateSubjectAmounts();
     this.calculateLargestPremTiv();
@@ -385,7 +384,6 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
       //TODO: class based validation checks
       this.validateClass();
     }
-    console.log('errorMessages: ',this.errorMessagesList);
     return this.errorMessagesList;
   }
 
@@ -496,9 +494,7 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   deleteAI(ai: AdditionalInterestClass){
-    console.log('AI POLICY CLASS ' + ai);
     const index = this.additionalInterestList.indexOf(ai, 0);
-    console.log('index ' + index);
     if(index > -1){
       this.markDirty();
       ai.markForDeletion = true;
@@ -593,12 +589,12 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
 
   calculateLawLimits(){
     this._lawLimits = 0;
-    // this.propertyBuildingOptionalCoverage.map((x) =>{
-    //   if(x.coverageCode == 2 || x.coverageCode == 3 || x.coverageCode == 4 || x.coverageCode == 5)
-    //   {
-    //     this._lawLimits += x.limit ?? 0;
-    //   }
-    // });
+    this.endorsementData.endorsementBuildingOptionalCoverage.map((x) =>{
+      if(x.coverageCode == 2 || x.coverageCode == 3 || x.coverageCode == 4 || x.coverageCode == 5)
+      {
+        this._lawLimits += x.limit ?? 0;
+      }
+    });
   }
 
   calculateLargestExposure(){
@@ -687,9 +683,9 @@ export class PolicyClass extends ParentBaseClass implements PolicyInformation {
   }
 
   toJSON(): PolicyInformation{
+    this.calculateSubjectAmounts();
     const ai: AdditionalNamedInsuredData [] = [];
     this.additionalNamedInsuredData.forEach(c => ai.push(c.toJSON()));
-    console.log('line674 ', this.commRate)
     return{
       policyId: this.policyId,
       policyEffectiveDate: this.policyEffectiveDate,

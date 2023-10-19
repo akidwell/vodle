@@ -37,7 +37,6 @@ export class QuoteSavingService {
     private notification: NotificationService,
     private messageDialogService: MessageDialogService
   ) {
-    console.log('init');
     this.programSub = this.pageDataService.selectedProgram$.subscribe(
       (program: ProgramClass | null) => {
         this.program = program;
@@ -80,9 +79,7 @@ export class QuoteSavingService {
   async saveQuote() {
     const quote = this.program?.quoteData;
     if (quote) {
-      console.log('quotes: ', quote, 'id: ');
       this.isSaving = true;
-      console.log(quote);
       const results$ = this.quoteService.updateQuote(quote);
       await lastValueFrom(results$)
         .then(async (quoteData: Quote) => {

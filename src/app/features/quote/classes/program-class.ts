@@ -71,7 +71,6 @@ export class ProgramClass implements Program {
       this.selectedCoverageCarrierMapping = this.programCoverageCarrierMappings.find(m =>
         m.admittedStatus == this._quoteData?.admittedStatus &&
       m.claimsMadeOrOccurrence == this._quoteData.claimsMadeOrOccurrence) || null;
-      console.log('selected: ',this.selectedCoverageCarrierMapping);
       this.availableCarrierCodes = this.allCarrierCodes.filter(carrier => this.selectedCoverageCarrierMapping != null ? this.selectedCoverageCarrierMapping.availableCarrierCodes.includes(carrier.code.trim()) : carrier);
       this.availablePacCodes = this.allPacCodes.filter(pac => this.selectedCoverageCarrierMapping != null ? this.selectedCoverageCarrierMapping.availablePacCodes.includes(pac.code.trim()) : pac);
       if (this.selectedCoverageCarrierMapping == null) {

@@ -49,8 +49,6 @@ export class PolicyV2Component extends SharedComponentBase implements OnInit {
       this.accountData = data['accountData'].accountInfo;
       this.propertyDataService.buildingList = this.policy.endorsementData.buildingList;
     });
-    console.log(this.route?.data);
-    console.log(this.policy);
     // this.saveSub = this.quoteSavingService.isSaving$.subscribe(isSaving => this.isSaving = isSaving);
   }
 

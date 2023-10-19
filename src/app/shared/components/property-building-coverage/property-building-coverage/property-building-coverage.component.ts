@@ -7,10 +7,7 @@ import { PropertyCoverageLookup } from 'src/app/core/models/property-coverage-lo
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog/confirmation-dialog.service';
 import { DropDownsService } from 'src/app/core/services/drop-downs/drop-downs.service';
 import { PolicyClass } from 'src/app/features/policy-v2/classes/policy-class';
-import { PropertyBuildingClass } from 'src/app/features/quote/classes/property-building-class';
 import { PropertyBuildingCoverageClass } from 'src/app/features/quote/classes/property-building-coverage-class';
-import { PropertyPolicyBuildingCoverageClass } from 'src/app/features/quote/classes/property-policy-building-coverage-class';
-import { PropertyQuoteBuildingCoverageClass } from 'src/app/features/quote/classes/property-quote-building-coverage-class';
 import { PropertyQuoteClass } from 'src/app/features/quote/classes/property-quote-class';
 
 @Component({
@@ -50,7 +47,6 @@ export class PropertyBuildingCoverageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('COVERAGrrrE' + this.coverage);
     this.coverages$ = this.dropdowns.getPropertyCoverages();
     lastValueFrom(this.coverages$).then(
       coverages => {

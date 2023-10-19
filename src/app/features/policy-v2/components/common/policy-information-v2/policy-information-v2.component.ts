@@ -117,10 +117,7 @@ export class PolicyInformationV2Component {
     this.populateClaimsMadeOccurrence();
     this.submissionService.getSubmission(this.policyInfo.submissionNumber).subscribe(submission => {
       this.underwriterName = submission.underwriterName;
-    })
-
-    console.log(this.policyInfo.policyEventCode);
-
+    });
     this.coveragesSub = this.coverageCodes$.subscribe({
       next: codes => {
         this.coverageCodesList = codes;
@@ -134,7 +131,6 @@ export class PolicyInformationV2Component {
       this.previousUrl = previousUrl;
       this.previousLabel = this.previousRouteService.getPreviousUrlFormatted();
     });
-    console.log(this.policyInfo.canSetCancelDate);
     this.saveSub = this.policySavingService.isSaving$.subscribe(
       (isSaving) => (this.showBusy = isSaving)
     );
