@@ -21,7 +21,7 @@ export class CanDeactivateGuard  {
     private policySavingService: PolicySavingService) { }
 
   canDeactivate(
-    component: PolicyInformationV2Component | PolicyPropertyLocationCoverageComponent | PolicyPropertyMortgageeComponent | PolicyReinsuranceComponent | PolicyPremiumComponent,
+    component: PolicyInformationV2Component | PolicyPropertyLocationCoverageComponent | PolicyPropertyMortgageeComponent | PolicyPremiumComponent | PolicyReinsuranceComponent,
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
     nextState: RouterStateSnapshot

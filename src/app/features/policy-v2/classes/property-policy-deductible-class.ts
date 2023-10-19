@@ -1,15 +1,12 @@
 import { Validation } from 'src/app/shared/interfaces/validation';
-import { PropertyDeductible } from '../../quote/models/property-deductible';
+import { PropertyDeductible, PropertyEndorsementDeductible } from '../../quote/models/property-deductible';
 import { PolicyValidationClass } from './policy-validation-class';
 import { ChildBaseClass } from './base/child-base-class';
 import { PolicyValidationTabNameEnum } from 'src/app/core/enums/policy-validation-tab-name-enum';
 import { ErrorMessage } from 'src/app/shared/interfaces/errorMessage';
-import { PropertyPolicyDeductible } from '../models/property-policy-deductible';
-import { QuoteValidationTabNameEnum } from 'src/app/core/enums/quote-validation-tab-name-enum';
 import { ValidationTypeEnum } from 'src/app/core/enums/validation-type-enum';
 
-export class PropertyPolicyDeductibleClass extends ChildBaseClass implements PropertyPolicyDeductible, Validation {
-
+export class PropertyPolicyDeductibleClass extends ChildBaseClass implements PropertyEndorsementDeductible, Validation {
   private _isValid = true;
   private _errorMessages: string[] = [];
   private _validateOnLoad = true;
@@ -42,35 +39,35 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
   invalidList: string[] = [];
 
 
-  get markForDeletion() : boolean | null {
+  get markForDeletion(): boolean | null {
     return this._markForDeletion;
   }
-  set markForDeletion(value: boolean | null){
+  set markForDeletion(value: boolean | null) {
     this._markForDeletion = value;
     this._isDirty = true;
   }
-  get buildingNumber() : number | null {
+  get buildingNumber(): number | null {
     return this._buildingNumber;
   }
   set buildingNumber(value: number | null) {
     this._buildingNumber = value;
   }
 
-  get premisesNumber() : number | null {
+  get premisesNumber(): number | null {
     return this._premisesNumber;
   }
   set premisesNumber(value: number | null) {
-    this._premisesNumber= value;
+    this._premisesNumber = value;
   }
 
-  get isAppliedToAll() : boolean {
+  get isAppliedToAll(): boolean {
     return this._isAppliedToAll;
   }
   set isAppliedToAll(value: boolean) {
-    this._isAppliedToAll= value;
+    this._isAppliedToAll = value;
   }
 
-  get building() : string | null {
+  get building(): string | null {
     if (this._isAppliedToAll) {
       return 'All';
     }
@@ -91,8 +88,8 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
         const premises = parse[0] ?? '';
         const building = parse[1] ?? '';
         this._isAppliedToAll = false;
-        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises) ;
-        this._buildingNumber = isNaN(Number(building)) ? null : Number(building) ;
+        this._premisesNumber = isNaN(Number(premises)) ? null : Number(premises);
+        this._buildingNumber = isNaN(Number(building)) ? null : Number(building);
       }
       else {
         this._isAppliedToAll = false;
@@ -101,56 +98,56 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
       }
     }
   }
-  get propertyDeductibleId() : number | null {
+  get propertyDeductibleId(): number | null {
     return this._propertyDeductibleId;
   }
   set propertyDeductibleId(value: number | null) {
     this._propertyDeductibleId = value;
     this._isDirty = true;
   }
-  get deductibleType() : string | null {
+  get deductibleType(): string | null {
     return this._deductibleType;
   }
   set deductibleType(value: string | null) {
     this._deductibleType = value;
     this._isDirty = true;
   }
-  get deductibleCode() : string | null {
+  get deductibleCode(): string | null {
     return this._deductibleCode;
   }
   set deductibleCode(value: string | null) {
     this._deductibleCode = value;
     this._isDirty = true;
   }
-  get subjectToMinPercent() : number | null {
+  get subjectToMinPercent(): number | null {
     return this._subjectToMinPercent;
   }
   set subjectToMinPercent(value: number | null) {
     this._subjectToMinPercent = value;
     this._isDirty = true;
   }
-  get subjectToMinAmount() : number | null {
+  get subjectToMinAmount(): number | null {
     return this._subjectToMinAmount;
   }
   set subjectToMinAmount(value: number | null) {
     this._subjectToMinAmount = value;
     this._isDirty = true;
   }
-  get amount() : number | null {
+  get amount(): number | null {
     return this._amount;
   }
   set amount(value: number | null) {
     this._amount = value;
     this._isDirty = true;
   }
-  get comment() : string | null {
+  get comment(): string | null {
     return this._comment;
   }
   set comment(value: string | null) {
     this._comment = value;
     this._isDirty = true;
   }
-  get isExcluded() : boolean {
+  get isExcluded(): boolean {
     return this._isExcluded;
   }
   set isExcluded(value: boolean) {
@@ -165,7 +162,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     }
     this._isDirty = true;
   }
-  get isSubjectToMin() : boolean | null {
+  get isSubjectToMin(): boolean | null {
     return this._isSubjectToMin;
   }
   set isSubjectToMin(value: boolean | null) {
@@ -178,11 +175,10 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     this._isDirty = true;
   }
 
-
   get errorMessages(): string[] {
     return this._errorMessages;
   }
-  set errorMessages(value: string[]){
+  set errorMessages(value: string[]) {
     this._errorMessages = value;
   }
 
@@ -192,7 +188,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
   get isDuplicate(): boolean {
     return this._isDuplicate;
   }
-  set isDuplicate(value: boolean ) {
+  set isDuplicate(value: boolean) {
     this._isDuplicate = value;
     this._isDirty = true;
   }
@@ -240,7 +236,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     return this._isSubjectToMin ?? false;
   }
 
-  constructor(deductible?: PropertyPolicyDeductible) {
+  constructor(deductible?: PropertyEndorsementDeductible) {
     super();
     if (deductible) {
       this.existingInit(deductible);
@@ -251,42 +247,36 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     this.validate();
   }
 
-  static fromPropertyDeductible(deductible: PropertyDeductible): PropertyPolicyDeductibleClass {
-    const policyDeductible = new PropertyPolicyDeductibleClass();
-    policyDeductible.isAppliedToAll = deductible.isAppliedToAll;
-    policyDeductible.premisesNumber = deductible.premisesNumber;
-    policyDeductible.buildingNumber = deductible.buildingNumber;
-    policyDeductible.sequence = deductible.sequence;
-    policyDeductible.deductibleType = deductible.deductibleType;
-    policyDeductible.deductibleCode = deductible.deductibleCode;
-    policyDeductible.comment = deductible.comment;
-    policyDeductible.amount = deductible.amount;
-    policyDeductible.subjectToMinPercent = deductible.subjectToMinPercent;
-    policyDeductible.subjectToMinAmount = deductible.subjectToMinAmount;
-    policyDeductible.isExcluded = deductible.isExcluded;
-    policyDeductible.isSubjectToMin = deductible.isSubjectToMin;
-    policyDeductible.isNew = deductible.isNew;
-    policyDeductible.isDeductibleLocked = deductible.isDeductibleLocked;
-    policyDeductible.isDeductibleTypeLocked = deductible.isDeductibleTypeLocked;
-    policyDeductible.isExcludeLocked = deductible.isExcludeLocked;
-    policyDeductible.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
-    policyDeductible.markDirty();
-    return policyDeductible;
-  }
-
-  validateObject(): ErrorMessage[]{
-    console.log('validate  deductible');
-    //on load or if dirty validate this
-
-    if (this.isDirty){
-      //TODO: class based validation checks
+  validateObject(): ErrorMessage[] {
+    if (this.isDirty) {
       this.errorMessagesList = [];
       this.canBeSaved = true;
       this.isValid = true;
-      //   console.log(this.pacCode);
-      //   if(this.pacCode == ''){
-      //     this.createErrorMessage('PacCode is required.');
-      //   }
+
+      // If automatically added, amount and type are required
+      if (this.amount == null) {
+        this.createErrorMessage('Deductible Amount is required.');
+      }
+      if (this.deductibleType == null) {
+        this.createErrorMessage('Deductible Type is requried.')
+      }
+      // prem/build, deductible, deduct code required for new deductible
+      if(this.isNew) {
+        if (this.building) {
+          this.createErrorMessage('Prem/Bldg is required.');
+        }
+        if (this.propertyDeductibleId == null) {
+          this.createErrorMessage('Deductible is required.')
+        }
+        if (this.deductibleCode == null) {
+          this.createErrorMessage('Deductible Code is required.');
+        }
+      }
+
+      if (this.errorMessagesList.length > 0) {
+        this.canBeSaved = false;
+        this.isValid = false;
+      }
     }
     return this.errorMessagesList;
   }
@@ -296,8 +286,8 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
   onGuidUpdateMatch(T: ChildBaseClass): void {
   }
 
-  validate(){
-    if (this._validateOnLoad || this.isDirty){
+  validate() {
+    if (this._validateOnLoad || this.isDirty) {
       this.classValidation();
       this._validateOnLoad = false;
     }
@@ -316,12 +306,12 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
       this.invalidList.push('Premises/Building Number is required');
     }
 
-    if (this.emptyNumberValueCheck(this._propertyDeductibleId)){
+    if (this.emptyNumberValueCheck(this._propertyDeductibleId)) {
       this._canBeSaved = false;
       this._isValid = false;
       this.invalidList.push('Deductible is required');
     }
-    if (this.isDuplicate){
+    if (this.isDuplicate) {
       this._canBeSaved = false;
       this._isValid = false;
       if (this.isAppliedToAll) {
@@ -378,7 +368,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
       invalid = true;
       this.invalidList.push('Deductible Code is required');
     }
-    if(this.propertyDeductibleId == 1 && this.deductibleType == 'C' ){
+    if (this.propertyDeductibleId == 1 && this.deductibleType == 'C') {
       invalid = true;
       this.invalidList.push('Deductible Code for AOP should be Per Occurence');
     }
@@ -411,7 +401,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     return !value;
   }
 
-  existingInit(deductible: PropertyPolicyDeductible) {
+  existingInit(deductible: PropertyEndorsementDeductible) {
     this.endorsementDeductibleId = deductible.endorsementDeductibleId;
     this.policyId = deductible.policyId;
     this.endorsementNo = deductible.endorsementNo;
@@ -419,7 +409,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     this.isAppliedToAll = deductible.isAppliedToAll;
     this.premisesNumber = deductible.premisesNumber;
     this.buildingNumber = deductible.buildingNumber;
-    this._propertyDeductibleId = deductible.endorsementDeductibleId;
+    this._propertyDeductibleId = deductible.propertyDeductibleId;
     this._deductibleType = deductible.deductibleType;
     this._amount = deductible.amount;
     this._subjectToMinPercent = deductible.subjectToMinPercent;
@@ -432,7 +422,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     this.isDeductibleTypeLocked = deductible.isDeductibleTypeLocked;
     this.isExcludeLocked = deductible.isExcludeLocked;
     this.isSubjectToMinLocked = deductible.isSubjectToMinLocked;
-    this.guid = deductible.guid;
+    this.guid = deductible.guid || crypto.randomUUID();
     this._markForDeletion = false;
     this.setReadonlyFields();
     this.setRequiredFields();
@@ -464,7 +454,7 @@ export class PropertyPolicyDeductibleClass extends ChildBaseClass implements Pro
     // No special rules
   }
 
-  toJSON() {
+  toJSON(): PropertyEndorsementDeductible {
     return {
       endorsementDeductibleId: this.endorsementDeductibleId,
       policyId: this.policyId,

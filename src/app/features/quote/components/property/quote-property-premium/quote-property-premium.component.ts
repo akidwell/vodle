@@ -8,7 +8,7 @@ import { PropertyQuoteClass } from '../../../classes/property-quote-class';
 import { PropertyQuoteDeductibleClass } from '../../../classes/property-quote-deductible-class';
 import { QuoteClass } from '../../../classes/quote-class';
 import { QuoteRateClass } from '../../../classes/quote-rate-class';
-import { PropertyDeductible } from '../../../models/property-deductible';
+import { PropertyDeductible, PropertyQuoteDeductible } from '../../../models/property-deductible';
 import { QuoteService } from '../../../services/quote-service/quote.service';
 import { NotificationService } from 'src/app/core/components/notification/notification-service';
 
@@ -50,8 +50,10 @@ export class QuotePropertyPremiumComponent implements OnInit {
 
   copyDeductible(deductible: PropertyDeductible) {
     // Need to copy deductible type?
-    const copy = PropertyQuoteDeductibleClass.fromPropertyDeductible(deductible);
+    const copy = new PropertyQuoteDeductibleClass(deductible as PropertyQuoteDeductible);
     copy.sequence = this.getNextSequence();
+    copy.guid = crypto.randomUUID();
+    copy.isNew = true;
     this.quote.propertyQuoteDeductibleList.push(copy);
   }
 
