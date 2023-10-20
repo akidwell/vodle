@@ -171,6 +171,7 @@ export abstract class PropertyBuildingCoverageClass extends ChildBaseClass imple
       this.invalidList.push('Valuation is required on ' + this.subjectNumber + '-' + this.premisesNumber + '-' + this.buildingNumber);
     }
     this._errorMessages = this.invalidList;
+    this.errorMessages = this.invalidList;
   }
   emptyNumberValueCheck(value: number | null | undefined) {
     return !value;
